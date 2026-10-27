@@ -15,7 +15,7 @@ from ..common import Price, log
 MAP = {
     "CU": (1857, "Copper cathode", 1), "AL": (1905, "Aluminium ingot", 1), "ZN": (1932, "Zinc ingot", 1),
     "PB": (1924, "Lead ingot", 1), "NI": (1890, "Nickel cathode", 1), "SN": (1941, "Tin ingot", 1),
-    "RB": (1775, "Rebar HRB400", 1), "HC": (1754, "Hot-rolled coil", 1), "SS": (1803, "Stainless steel 304 CR", 1),
+    "RB": (1775, "Rebar HRB400", 1), "HC": (1752, "Hot-rolled coil", 1), "SS": (1811, "Stainless steel 304 CR", 1),
     "WR": (1772, "Wire rod", 1), "I": (826, "Iron ore (China port spot)", 1), "J": (870, "Metallurgical coke", 1),
     "JM": (864, "Coking coal", 1), "ZC": (865, "Thermal coal", 1), "SA": (955, "Soda ash", 1),
     "UR": (1078, "Urea", 1), "MA": (997, "Methanol", 1), "TA": (1074, "PTA", 1), "EG": (1006, "MEG", 1),
@@ -28,7 +28,7 @@ MAP = {
     "CS": (580, "Corn starch", 1), "JD": (341, "Eggs", 2), "AP": (467, "Apples", 1), "PK": (590, "Peanuts", 1),
     "LH": (70, "Live hogs", 1), "SF": (1716, "Ferrosilicon", 1), "SM": (1718, "Silicomanganese", 1),
     "SI": (917, "Industrial silicon 553", 1), "LC": (960, "Lithium carbonate", 1), "PG": (889, "LPG", 1),
-    "SH": (927, "Caustic soda", 1), "PX": (991, "Paraxylene", 1), "PF": (1607, "Polyester staple fibre", 1),
+    "SH": (928, "Caustic soda", 1), "PX": (991, "Paraxylene", 1), "PF": (1607, "Polyester staple fibre", 1),
     "BR": (1223, "Butadiene rubber", 1), "AO": (933, "Alumina", 1),
     "BZ": (987, "Benzene", 1), "PR": (1186, "Bottle-grade PET chips", 1), "PL": (981, "Propylene", 1),
     "AD": (1906, "Cast aluminium alloy ADC12", 1), "PS": (916, "Polysilicon", 1),

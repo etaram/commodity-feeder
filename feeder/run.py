@@ -26,7 +26,7 @@ from . import fx as fxmod
 
 PARTIAL = DATA / "partial"
 SOURCES = ["yahoo", "westmetall", "em_global", "cn_spot", "eu_agri", "dtn", "ssb", "scrapmonster", "smi",
-           "census", "comext", "comtrade"]
+           "usda", "census", "comext", "comtrade"]
 DAILY = {"yahoo", "westmetall", "em_global", "cn_spot", "smi"}
 CURRENT_WINDOW = 7
 MASS = {"USD/kg": 1.0, "USD/t": 1000.0, "USD/oz": 1 / 32.1507466, "USD/lb": 1 / 2.20462}
@@ -97,6 +97,8 @@ def run_source(name: str) -> int:
             from .sources import scrapers; prices = scrapers.scrapmonster()
         elif name == "smi":
             from .sources import scrapers; prices = scrapers.smi()
+        elif name == "usda":
+            from .sources import usda; prices = usda.fetch()
         elif name == "census":
             from .sources import census; prices = census.fetch(hs_idx)
         elif name == "comext":

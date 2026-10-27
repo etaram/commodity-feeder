@@ -73,7 +73,7 @@ FV = {
     "Onions": (354, "Onions"), "Cauliflowers": (357, "Cauliflowers"), "Peppers": (380, "Sweet peppers"),
     "Egg Plants": (371, "Aubergines"), "Plums": (474, "Plums"), "Carrots": (364, "Carrots"),
     "Ware potatoes": (352, "Ware potatoes"), "Melons": (465, "Melons"), "Lettuces": (360, "Lettuces"),
-    "Cabbage": (358, "Cabbage"), "Water Melons": (464, "Watermelons"), "Courgettes": (384, "Courgettes"),
+    "Cabbage": (359, "Cabbage"), "Water Melons": (464, "Watermelons"), "Courgettes": (384, "Courgettes"),
     "Beans": (368, "Beans"), "Lemons": (460, "Lemons"), "Strawberries": (475, "Strawberries"),
     "Leeks": (356, "Leeks"), "Apricots": (470, "Apricots"), "Mandarins": (456, "Mandarins"),
     "Kiwis": (479, "Kiwifruit"), "Cultivated Mushrooms": (373, "Cultivated mushrooms"),

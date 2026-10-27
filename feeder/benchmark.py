@@ -25,7 +25,7 @@ from .common import DATA, Price
 
 TIER = {
     "yahoo": 1, "westmetall": 1, "em_global": 1, "derived": 1,
-    "eu_agri": 2, "ssb": 2, "usda_mars": 2, "eia": 2,
+    "eu_agri": 2, "ssb": 2, "usda_mars": 2, "usda": 2, "usda_gdt": 1, "eia": 2,
     "dtn": 3, "scrapmonster": 3, "smi": 3, "cn_spot": 3,
     "comext": 4, "census": 4, "comtrade": 4,
 }
@@ -33,11 +33,11 @@ TIER_LABEL = {1: "T1 Exchange benchmark", 2: "T2 Official market reporting",
               3: "T3 Industry assessment", 4: "T4 Trade statistics (unit value)"}
 # preference inside a tier (lower is better)
 INTRA = {"westmetall": 0, "yahoo": 1, "em_global": 2, "derived": 1,
-         "eu_agri": 0, "ssb": 0, "usda_mars": 1, "eia": 1,
+         "eu_agri": 0, "ssb": 0, "usda_mars": 1, "usda": 1, "usda_gdt": 3, "eia": 1,
          "scrapmonster": 0, "dtn": 0, "smi": 1, "cn_spot": 2,
          "comext": 0, "census": 1, "comtrade": 2}
 # freshness limit (days) for a source to count as available this run
-MAX_AGE = {"yahoo": 5, "westmetall": 6, "em_global": 5, "derived": 6, "eu_agri": 30, "ssb": 30, "usda_mars": 30,
+MAX_AGE = {"yahoo": 5, "westmetall": 6, "em_global": 5, "derived": 6, "eu_agri": 30, "ssb": 30, "usda_mars": 30, "usda": 40, "usda_gdt": 21,
            "eia": 30, "dtn": 30, "scrapmonster": 60, "smi": 10, "cn_spot": 7, "comext": 150, "census": 150,
            "comtrade": 180}
 

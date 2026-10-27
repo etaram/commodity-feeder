@@ -38,6 +38,7 @@ FEED = {
     "ssb": (2, 21, "https://www.ssb.no/en/statbank1/table/03024/"),
     "scrapmonster": (30, 45, "https://www.scrapmonster.com/metal-prices/minor-metals"),
     "smi": (5, 5, "https://strategicmetalsinvest.com/current-strategic-metals-prices/"),
+    "usda": (20, 35, "https://www.ams.usda.gov/market-news"),
     "census": (800, 120, "https://api.census.gov/data/timeseries/intltrade/imports/hs"),
     "comext": (800, 120, "https://ec.europa.eu/eurostat/comext/newxtweb/"),
     "comtrade": (300, 150, "https://comtradeplus.un.org/"),

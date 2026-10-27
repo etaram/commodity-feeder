@@ -22,7 +22,7 @@ from feeder.labels import product_from_feed  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 D = ROOT / "data"
 
-TIER_OF_KEY = {"yahoo": 1, "westmetall": 1, "em_global": 1, "derived": 1, "eu_agri": 2, "ssb": 2,
+TIER_OF_KEY = {"yahoo": 1, "westmetall": 1, "em_global": 1, "derived": 1, "eu_agri": 2, "ssb": 2, "usda": 2, "usda_gdt": 1,
                "dtn": 3, "scrapmonster": 3, "smi": 3, "cn_spot": 3, "comext": 4, "census": 4, "comtrade": 4}
 SOURCE_NAME = {
     "yahoo": "CME/NYMEX/COMEX/ICE futures (Yahoo Finance)",
@@ -31,6 +31,8 @@ SOURCE_NAME = {
     "derived": "Exchange benchmark of the same good (converted)",
     "eu_agri": "European Commission Agri-food Data Portal",
     "ssb": "Statistics Norway (SSB)",
+    "usda": "USDA AMS Market News",
+    "usda_gdt": "Global Dairy Trade auction (via USDA AMS)",
     "dtn": "DTN Retail Fertilizer Trends",
     "scrapmonster": "Institute for Rare Earths and Metals (via ScrapMonster)",
     "smi": "Strategic Metals Invest",

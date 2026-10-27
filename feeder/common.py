@@ -25,6 +25,8 @@ SOURCE_RANK = {
     "em_global": 2,
     "eu_agri": 3,
     "usda_mars": 3,
+    "usda": 3,
+    "usda_gdt": 2,
     "eia": 3,
     "dtn": 3,
     "ssb": 3,
