@@ -30,6 +30,9 @@ MAP = {
     "SI": (917, "Industrial silicon 553", 1), "LC": (960, "Lithium carbonate", 1), "PG": (889, "LPG", 1),
     "SH": (927, "Caustic soda", 1), "PX": (991, "Paraxylene", 1), "PF": (1607, "Polyester staple fibre", 1),
     "BR": (1223, "Butadiene rubber", 1), "AO": (933, "Alumina", 1),
+    "BZ": (987, "Benzene", 1), "PR": (1186, "Bottle-grade PET chips", 1), "PL": (981, "Propylene", 1),
+    "AD": (1906, "Cast aluminium alloy ADC12", 1), "PS": (916, "Polysilicon", 1),
+    "WH": (536, "Strong gluten wheat", 1), "RS": (593, "Rapeseed", 1), "OP": (1396, "Offset paper", 1),
     "AU": (1679, "Gold", 1_000_000), "AG": (1675, "Silver", 1000),
 }
 # rows that are quoted per kg in USD in the Master (precious metals stay per kg there)

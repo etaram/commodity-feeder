@@ -20,6 +20,7 @@ log = logging.getLogger("feeder")
 SOURCE_RANK = {
     "yahoo": 1,
     "westmetall": 2,
+    "em_global": 2,
     "cn_spot": 3,
     "eu_agri": 4,
     "usda_mars": 4,
@@ -32,7 +33,7 @@ SOURCE_RANK = {
 FIELDS = [
     "row", "id", "hs6", "name",
     "unit_usd", "price_type", "price_usd", "orig_price", "orig_ccy",
-    "price_date", "source", "link", "calc", "source_key",
+    "price_date", "source", "link", "calc", "source_key", "quality",
 ]
 
 
@@ -52,6 +53,7 @@ class Price:
     id: str = ""
     hs6: str = ""
     name: str = ""
+    quality: str = "OK"
 
     def as_row(self) -> dict:
         d = asdict(self)
@@ -61,7 +63,7 @@ class Price:
 
 def session() -> requests.Session:
     s = requests.Session()
-    retry = Retry(total=4, backoff_factor=2, status_forcelist=(429, 500, 502, 503, 504),
+    retry = Retry(total=2, backoff_factor=1, status_forcelist=(429, 500, 502, 503, 504),
                   allowed_methods=("GET", "POST"))
     s.mount("https://", HTTPAdapter(max_retries=retry))
     s.mount("http://", HTTPAdapter(max_retries=retry))

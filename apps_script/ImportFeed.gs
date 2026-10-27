@@ -4,7 +4,8 @@
  *
  * Merge rule per row: write the feed price if the cell is empty, or if the feed
  * price date is newer than the date already in the sheet (column L).
- * Columns written: G-O (unit..calculation), P (previous price), R (last update).
+ * Columns written: G-O (unit..calculation), P (previous price), R (last update),
+ * T (notes: a [QA: ...] tag when the feed flags a price for checking).
  * ARRAYFORMULA columns A, C, F, Q, S are never touched.
  *
  * Setup: paste this file into Extensions > Apps Script (next to CommodityUpdater.gs),
@@ -42,6 +43,7 @@ function importFeed() {
   var n = 2000;
   var block = master.getRange(2, 7, n, 10).getValues();   // G..P
   var rcol = master.getRange(2, 18, n, 1).getValues();    // R
+  var tcol = master.getRange(2, 20, n, 1).getValues();    // T notes
   var ids = master.getRange(2, 1, n, 5).getValues();      // A..E for History
   var hist = [];
   var changed = 0;
@@ -61,6 +63,9 @@ function importFeed() {
     block[i] = [r[col.unit_usd], r[col.price_type], price, parseFloat(r[col.orig_price]) || r[col.orig_price],
                 r[col.orig_ccy], newDate, r[col.source], r[col.link], r[col.calc], prev];
     rcol[i] = [now];
+    var q = col.quality !== undefined ? r[col.quality] : 'OK';
+    var note = String(tcol[i][0] || '').replace(/\s*\[QA:[^\]]*\]/g, '');
+    tcol[i] = [q && q !== 'OK' ? (note + ' [QA: ' + q + ']').trim() : note];
     hist.push([now, ids[i][0], ids[i][4], price, r[col.orig_price], r[col.orig_ccy], newDate, r[col.source]]);
     changed++;
   });
@@ -68,6 +73,7 @@ function importFeed() {
   if (changed) {
     master.getRange(2, 7, n, 10).setValues(block);
     master.getRange(2, 18, n, 1).setValues(rcol);
+    master.getRange(2, 20, n, 1).setValues(tcol);
     var h = ss.getSheetByName('History');
     h.getRange(h.getLastRow() + 1, 1, hist.length, hist[0].length).setValues(hist);
   }

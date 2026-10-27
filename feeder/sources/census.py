@@ -101,7 +101,8 @@ def fetch(hs_idx: dict) -> list[Price]:
             for base, (v, _) in by_month[m].items():
                 tot[base] += v
         base = max(tot, key=tot.get)
-        latest = months[0]
+        share = tot[base] / sum(tot.values())
+        quality = "OK" if share >= 0.6 else f"CHECK: unit '{base}' covers only {share:.0%} of import value"
         used = []
         v = q = 0.0
         for m in months:  # widen window until value is meaningful
@@ -129,6 +130,6 @@ def fetch(hs_idx: dict) -> list[Price]:
                 source=f"US Census Bureau, imports HS {code}, {period}",
                 link=f"{LINK}?get=I_COMMODITY,GEN_VAL_MO,GEN_QY1_MO,UNIT_QY1&COMM_LVL=HS10&time={used[0]}",
                 calc=f"{v:,.0f} USD / {qshow:,.1f} {qunit} = {uv:.4f} {unit}",
-                source_key="census"))
+                source_key="census", quality=quality))
     log.info("census: %d prices", len(out))
     return out
