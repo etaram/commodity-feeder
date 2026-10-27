@@ -194,10 +194,38 @@ def merge() -> int:
         best[row] = b
     bm.save_map(bmap)
 
+    # benchmark registry: one designated benchmark per row (tools/build_registry.py).
+    # Rows whose designated benchmark is a manual source keep their sheet price; the feed price
+    # becomes the check price for them.
+    from .labels import product_from_feed
+    layer_a = {r["row"]: r["name"] for r in master if r["layer"] == "API"}
+    reg = {}
+    rp = DATA / "benchmark_registry.csv"
+    if rp.exists():
+        with open(rp, encoding="utf-8") as f:
+            reg = {int(r["row"]): r for r in csv.DictReader(f)}
     with open(DATA / "prices.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader()
         for row in sorted(best):
-            w.writerow(best[row].as_row())
+            d = best[row].as_row()
+            r = reg.get(row)
+            if r:
+                d["designated_source"] = r["designated_source"]
+                d["tier"] = r["tier"] or d["tier"]
+                if r["mode"] == "manual":
+                    d["benchmark_product"] = r["benchmark_product"]
+                    d["mode"] = "manual"
+                    d["check_source"] = d["source"][:160]
+                    d["check_price"] = d["price_usd"]
+                    d["deviation_pct"] = ""
+                    for k in ("price_type", "price_usd", "orig_price", "orig_ccy", "price_date", "source", "link", "calc"):
+                        d[k] = ""
+                    d["quality"] = "OK"
+                else:
+                    d["mode"] = "feed"
+            if d.get("mode") != "manual":
+                d["benchmark_product"] = product_from_feed(d, layer_a)
+            w.writerow(d)
     with open(DATA / "candidates.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader()
         for row in sorted(by):

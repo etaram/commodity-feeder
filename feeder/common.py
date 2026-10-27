@@ -41,6 +41,7 @@ FIELDS = [
     "unit_usd", "price_type", "price_usd", "orig_price", "orig_ccy",
     "price_date", "source", "link", "calc", "source_key", "quality",
     "tier", "selection", "check_source", "check_price", "deviation_pct",
+    "designated_source", "benchmark_product", "mode",
 ]
 
 
