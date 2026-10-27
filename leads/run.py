@@ -215,6 +215,33 @@ def merge_awards():
     out.sort(key=lambda x: (-x["won_usd_est"], -x["wins_12m"]))
     write("competitors.csv", out[:2500])
     log.info("awards %d (12m), recent %d, buyers %d, competitors %d", len(rows), len(recent), len(buyers), len(out))
+    return buyers
+
+
+def write_digest(tenders, buyers):
+    """Plain-text daily summary (Hebrew headings) used by the scheduled e-mail."""
+    t = today()
+    new = [r for r in tenders if r["new"] and r["score"] >= 50][:15]
+    isr = [r for r in tenders if r["country"] == "ISR"][:10]
+    soon = [b for b in buyers if b["next_expected"] and str(t) <= b["next_expected"] <= str(t + dt.timedelta(days=45))]
+    soon = sorted(soon, key=lambda b: -b["total_usd"])[:10]
+    L = [f"Leads Engine - {t:%d/%m/%Y}", "",
+         f"מכרזים פתוחים: {len(tenders)} | חדשים: {sum(1 for r in tenders if r['new'])} | "
+         f"נסגרים תוך 14 יום: {sum(1 for r in tenders if r['days_left'] != '' and 0 <= r['days_left'] <= 14)}", ""]
+    def line(r):
+        v = f"{r['est_value_usd']:,} USD" if r["est_value_usd"] != "" else "ללא היקף"
+        return (f"- [{r['score']}] {r['group']} | {r['country']} | {r['buyer'][:60]} | {r['title'][:120]} | "
+                f"{v} | הגשה עד {r['deadline'] or 'לא צוין'} | {r['link']}")
+    L.append("מכרזים חדשים עם ציון 50 ומעלה:")
+    L += [line(r) for r in new] or ["- אין חדשים"]
+    L += ["", "ישראל (מכרזים והודעות פטור פתוחות):"]
+    L += [line(r) for r in isr] or ["- אין"]
+    L += ["", "קונים חוזרים שצפויים לצאת למכרז ב-45 הימים הקרובים (לפי היסטוריית TED):"]
+    L += [f"- {b['buyer'][:70]} | {b['country']} | {b['group']} | {b['awards_12m']} זכיות ב-12 חודשים, "
+          f"{b['total_usd']:,} USD | צפוי בסביבות {b['next_expected']} | ספקים נוכחיים: {b['current_suppliers'][:80]}"
+          for b in soon] or ["- אין"]
+    L += ["", "הטבלה המלאה: https://docs.google.com/spreadsheets/d/1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y/edit"]
+    (LEADS / "digest.txt").write_text("\n".join(L), encoding="utf-8")
 
 
 def write(name, rows, cols=None):
@@ -236,7 +263,8 @@ def merge():
     seen_p.write_text(json.dumps(seen, sort_keys=True, indent=0))
     enp = LEADS / "enrich.json"
     imp, sup, n = merge_importyeti(bm, json.loads(enp.read_text()) if enp.exists() else {})
-    merge_awards()
+    buyers = merge_awards()
+    write_digest(tenders, buyers or [])
     write("tenders.csv", tenders)
     write("importers.csv", imp)
     write("suppliers.csv", sup)
