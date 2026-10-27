@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-27T15:17:55",
+  "finished_utc": "2026-10-27T15:28:51",
   "fx_source": "ECB via Frankfurter 2026-10-27",
   "fx": {
     "EUR": 1.1150012265013491,
@@ -21,50 +21,139 @@
   "sources": {
     "yahoo": {
       "ok": true,
-      "prices": 0,
-      "sec": 305
+      "prices": 33,
+      "sec": 26,
+      "newest_date": "2026-10-27",
+      "log": [
+        "INFO yahoo: no data for JKM=F",
+        "INFO yahoo: 33 prices"
+      ]
     },
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 8
+      "sec": 8,
+      "newest_date": "2026-10-26",
+      "log": [
+        "INFO westmetall: 6 prices"
+      ]
     },
     "em_global": {
       "ok": true,
-      "prices": 0,
-      "sec": 40
+      "prices": 22,
+      "sec": 59,
+      "newest_date": "2026-10-27",
+      "log": [
+        "INFO em_global board: 640 rows",
+        "INFO em_global: 22 prices"
+      ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 2
+      "sec": 3,
+      "newest_date": "2026-10-27",
+      "log": [
+        "INFO cn_spot: 52 prices (2026-10-27)"
+      ]
+    },
+    "eu_agri": {
+      "ok": true,
+      "prices": 64,
+      "sec": 11,
+      "newest_date": "2026-10-31",
+      "log": [
+        "INFO eu_agri: 64 prices"
+      ]
+    },
+    "dtn": {
+      "ok": true,
+      "prices": 7,
+      "sec": 1,
+      "newest_date": "2026-10-09",
+      "log": [
+        "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/10/14/uan32-leads-fertilizer-prices-higher"
+      ]
+    },
+    "ssb": {
+      "ok": true,
+      "prices": 2,
+      "sec": 1,
+      "newest_date": "2026-10-18",
+      "log": [
+        "INFO ssb_salmon: 2 prices (2026U42)"
+      ]
+    },
+    "scrapmonster": {
+      "ok": true,
+      "prices": 34,
+      "sec": 0,
+      "newest_date": "2026-09-21",
+      "log": [
+        "INFO scrapmonster: 34 prices, 221 unmapped items"
+      ]
+    },
+    "smi": {
+      "ok": true,
+      "prices": 5,
+      "sec": 0,
+      "newest_date": "2026-10-27",
+      "log": [
+        "INFO smi: 5 prices (as of 2026-10-27)"
+      ]
     },
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 1
+      "sec": 0,
+      "newest_date": null,
+      "log": [
+        "WARNING census 2026-09: Expecting value: line 1 column 1 (char 0)",
+        "WARNING census 2026-08: Expecting value: line 1 column 1 (char 0)",
+        "WARNING census 2026-07: Expecting value: line 1 column 1 (char 0)",
+        "WARNING census 2026-06: Expecting value: line 1 column 1 (char 0)",
+        "WARNING census 2026-05: Expecting value: line 1 column 1 (char 0)",
+        "WARNING census 2026-04: Expecting value: line 1 column 1 (char 0)",
+        "WARNING census: no data"
+      ]
     },
     "comext": {
       "ok": true,
-      "prices": 0,
-      "sec": 5
+      "prices": 1918,
+      "sec": 114,
+      "newest_date": "2026-08-31",
+      "log": [
+        "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
+        "INFO comext: 1918 prices"
+      ]
     },
     "comtrade": {
       "ok": true,
-      "prices": 1170,
-      "sec": 391
+      "prices": 3,
+      "sec": 16,
+      "newest_date": "2026-08-31",
+      "log": [
+        "INFO comtrade: 25 HS codes still missing",
+        "INFO comtrade period 202608 (preview)",
+        "INFO comtrade: 3 prices, 3 calls"
+      ]
     }
   },
-  "rows_with_price": 1228,
-  "candidates": 1228,
-  "flagged": 0,
+  "rows_with_price": 1962,
+  "candidates": 2146,
+  "flagged": 15,
   "by_source_selected": {
-    "yahoo": 0,
-    "westmetall": 6,
-    "em_global": 0,
+    "yahoo": 32,
+    "westmetall": 5,
+    "em_global": 4,
     "cn_spot": 52,
+    "eu_agri": 57,
+    "dtn": 6,
+    "ssb": 2,
+    "scrapmonster": 27,
+    "smi": 5,
     "census": 0,
-    "comext": 0,
-    "comtrade": 1170
+    "comext": 1769,
+    "comtrade": 3
   }
 }
