@@ -6,6 +6,10 @@ import re
 
 from .common import LEADS, log, polite, session, today
 
+UA = "commodity-feeder/1.0 (https://github.com/etaram/commodity-feeder; leads enrichment)"
+BIZ = ("company", "business", "manufacturer", "producer", "corporation", "enterprise", "brand", "group", "firm",
+       "importer", "distributor", "retailer", "supplier", "conglomerate")
+
 API = "https://www.wikidata.org/w/api.php"
 CACHE = LEADS / "enrich.json"
 SUFFIX = re.compile(r"\b(inc|incorporated|llc|l l c|ltd|limited|corp|corporation|co|company|lp|llp|plc|sa|s a|"
@@ -20,14 +24,21 @@ def norm(name):
 def lookup(s, name):
     r = s.get(API, params={"action": "wbsearchentities", "search": name, "language": "en", "type": "item",
                            "limit": 5, "format": "json"}, timeout=30)
-    hits = [h for h in r.json().get("search", []) if norm(h.get("label", "")) == norm(name)]
+    nw = norm(name).split()
+    hits = []
+    for h in r.json().get("search", []):
+        lw = norm(h.get("label", "")).split()
+        if not lw or not nw or lw[0] != nw[0]:
+            continue
+        if lw == nw or set(lw) <= set(nw) or set(nw) <= set(lw):
+            hits.append(h)
     if not hits:
         return ""
     r = s.get(API, params={"action": "wbgetentities", "ids": "|".join(h["id"] for h in hits),
                            "props": "claims|descriptions", "languages": "en", "format": "json"}, timeout=30)
     for qid, e in r.json().get("entities", {}).items():
         desc = (e.get("descriptions", {}).get("en", {}) or {}).get("value", "").lower()
-        if any(w in desc for w in ("person", "album", "film", "song", "football", "village", "river")):
+        if not any(w in desc for w in BIZ):
             continue
         for c in e.get("claims", {}).get("P856", []):
             v = c.get("mainsnak", {}).get("datavalue", {}).get("value")
@@ -38,7 +49,7 @@ def lookup(s, name):
 
 def run(companies, limit=250):
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
-    s = session(); t = today(); n = 0
+    s = session(); s.headers["User-Agent"] = UA; t = today(); n = 0
     for name in companies:
         c = cache.get(name)
         if c and (t - dt.date.fromisoformat(c["checked"])).days < 60:
@@ -48,7 +59,7 @@ def run(companies, limit=250):
         try:
             cache[name] = {"website": lookup(s, name), "checked": str(t)}
         except Exception as e:  # noqa: BLE001
-            log.warning("wikidata %s: %s", name, e); continue
+            log.warning("wikidata %s: %s", name, e); polite(2); continue
         n += 1; polite(0.3)
     CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=0, sort_keys=True))
     log.info("enrich: looked up %d, cached %d", n, len(cache))

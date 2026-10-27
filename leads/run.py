@@ -74,7 +74,8 @@ def score(r, usd, days, new):
     m = r.get("match")
     m = 15 if m in (None, "") else 20 if m >= 5 else 14 if m >= 4 else 8
     reg = 20 if r["country"] == "ISR" else 15 if r["source"] == "World Bank" else 10
-    return v + d + m + reg + (5 if new else 0) + (5 if r.get("contact") else 0)
+    pen = 15 if "exemption" in r["source"] else 0  # intent to contract with a named supplier: objection window only
+    return max(0, v + d + m + reg + (5 if new else 0) + (5 if r.get("contact") else 0) - pen)
 
 
 def merge_tenders(bm, seen):
@@ -167,7 +168,7 @@ def merge_awards():
         r["usd"] = round(v * rates[c]) if isinstance(v, (int, float)) and c in rates else ""
         r["gname"] = BY_ID.get(r["group"], {}).get("name", r["group"])
     cut = str(t - dt.timedelta(days=180))
-    recent = sorted((r for r in rows if r["published"] >= cut), key=lambda r: -(r["usd"] or 0))[:3000]
+    recent = sorted((r for r in rows if r["published"] >= cut), key=lambda r: -(r["usd"] or 0))[:2000]
     write("awards.csv", [{
         "published": r["published"], "group": r["gname"], "country": r["country"], "buyer": r["buyer"],
         "title": r["title"][:200], "winners": "; ".join(r["winners"])[:200], "winner_country": r["winner_country"],

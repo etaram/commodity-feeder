@@ -9,7 +9,12 @@ from .taxonomy import GROUPS
 
 BASE = "https://mr.gov.il"
 ACTIVE = {"פורסם", "חדש", "עודכן", "בעדכון", "עתידי", "Published"}
-SERVICE = re.compile(r"שירות|יועצ|ייעוץ|חקיר|בדיק|תחזוק|הדרכ|מחקר|RFI|RFD")
+SERVICE = re.compile(r"שירות|יועצ|ייעוץ|חקיר|בדיק|תחזוק|הדרכ|מחקר|RFI|RFD|הארכת|הרחבת|שוברי|כיבוס")
+HE_GROUP = [("DAIRY", r"חלב|גבינ|ביצ|יוגורט|חמא"), ("MEAT", r"בשר|עוף|עופות|הודו|דגים|דג "),
+            ("SOFTS", r"קפה|סוכר|תה |קקאו|תבלינ"), ("GRAIN", r"קמח|לחם|אורז|דגנ|חיטה|פסטה|מאפ"),
+            ("FRUITVEG", r"פירות|ירקות|פרי|ירק"), ("OILSEED", r"שמן|טחינה|שומשום|חומוס"),
+            ("FUEL", r"דלק|סולר|בנזין|גז |גפ\"מ|חמצן"), ("STEEL", r"פלדה|ברזל|מתכת"),
+            ("CHEM", r"כימ|כלור|חומצ"), ("WOODPAPER", r"נייר|עץ|קרטון"), ("PLASTIC", r"פלסטיק|גומי|ניילון")]
 SUPPLY = re.compile(r"אספק|רכש|רכיש|לאספקת")
 FIELD = {"שם המפרסם": "buyer", "מס' פרסום": "pubno", "סטטוס": "status", "מס׳ הליך": "procno",
          "תאריך פרסום": "published", "תאריך עדכון": "updated", "מועד אחרון להגשה": "deadline"}
@@ -54,14 +59,15 @@ def fetch(max_pages=3):
                     st = it.get("status", "").split(" ")[0]
                     if it["pid"] in seen or not any(it.get("status", "").startswith(a) for a in ACTIVE):
                         continue
-                    if SERVICE.search(it["title"]) and not SUPPLY.search(it["title"]):
+                    if SERVICE.search(it["title"]) or not (SUPPLY.search(it["title"]) or kind == "TENDER"):
                         continue
                     dl = _d(it.get("deadline"))
-                    if dl and dl < t:
+                    if (dl and dl < t) or (kind == "EXEMPTION" and not dl):
                         continue
+                    gid = next((k for k, rx in HE_GROUP if re.search(rx, it["title"])), g["id"])
                     seen.add(it["pid"])
                     rows.append({
-                        "id": f"MR-{it['pid']}", "source": "mr.gov.il (Israel)" if kind == "TENDER" else "mr.gov.il exemption notice (Israel)", "group": g["id"],
+                        "id": f"MR-{it['pid']}", "source": "mr.gov.il (Israel)" if kind == "TENDER" else "mr.gov.il exemption notice (Israel)", "group": gid,
                         "country": "ISR", "buyer": it.get("buyer", ""), "title": it["title"][:300],
                         "classification": f"mr.gov.il category {cat}", "notice_type": f"{it.get('kind', '')} | {st}",
                         "published": str(_d(it.get("published")) or ""), "deadline": str(dl or ""),
