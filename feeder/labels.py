@@ -14,9 +14,9 @@ def product_from_feed(p: dict, layer_a_name: dict) -> str:
         base = re.sub(r"\s*\[benchmark for this HS code\]", "", s)
         return f"{base} - converted to this HS code's unit"
     if k == "eu_agri":
-        m = re.search(r"Portal - (.+?)( \(ex-packaging station\))? \(\d+ reports", s)
-        item = m.group(1) if m else s
-        return f"{item} - EU market price, average of euro-area Member States" + (" (ex-packaging station)" if "ex-packaging" in s else "")
+        item = s.split(" - ", 1)[-1].split(" (")[0]
+        basis = "Commission EU average" if "Commission EU average" in s else "average of euro-area Member States"
+        return f"{item} - EU market price, {basis}" + (" (ex-packaging station)" if "ex-packaging" in s else "")
     if k == "cn_spot":
         m = re.search(r"- (.+?) \[", s)
         return f"{m.group(1) if m else s} - China domestic spot, ex-VAT"

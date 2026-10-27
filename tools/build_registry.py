@@ -87,7 +87,8 @@ def main():
             name = full[m["hs6"]]
         rows.append({"row": row, "id": m["id"], "hs6": m["hs6"], "name_full": name, "designated_key": key,
                      "designated_source": SOURCE_NAME.get(key, key), "tier": TIER_LABEL.get(tier, ""),
-                     "benchmark_product": prod, "mode": mode, "check": chk})
+                     "benchmark_product": prod, "mode": mode, "check": chk,
+                     "manual_unit": mn["unit"] if (mn and mode == "manual") else ""})
     with open(D / "benchmark_registry.csv", "w", newline="", encoding="utf-8") as fo:
         w = csv.DictWriter(fo, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
     from collections import Counter

@@ -101,6 +101,7 @@ def fetch(hs_idx: dict, fx: dict, skip_rows: set[int] | None = None) -> list[Pri
                 break
         if not used or q <= 0:
             continue
+        quality = "OK" if v >= MIN_VALUE_EUR else f"CHECK: thin trade, only {v:,.0f} EUR imported in {len(used)} month(s)"
         eur_kg = v / q
         usd = eur_kg * eurusd; unit = "USD/kg"; qshow = f"{q:,.0f} kg"
         if usd < 0.5:
@@ -122,6 +123,6 @@ def fetch(hs_idx: dict, fx: dict, skip_rows: set[int] | None = None) -> list[Pri
                 price_date=pdate, source=f"Eurostat Comext {ds}, HS {code}, {period}",
                 link="https://ec.europa.eu/eurostat/comext/newxtweb/",
                 calc=f"{v:,.0f} EUR / {qshow} = {eur_kg:.4f} EUR/kg x {eurusd:.5f} EURUSD = {usd:.4f} {unit}",
-                source_key="comext"))
+                source_key="comext", quality=quality))
     log.info("comext: %d prices", len(out))
     return out

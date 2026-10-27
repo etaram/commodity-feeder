@@ -108,7 +108,12 @@ def _get(s, path, params):
 
 
 def _avg_latest(recs, label):
-    """recs: list of dicts with price,endDate,memberStateCode. Returns (avg, end_date, n, countries)."""
+    """EU benchmark for one product.
+
+    Uses the Commission's own EU average when it is published for the latest week; otherwise the mean of
+    each euro-area Member State's most recent report within 14 days of the latest week, so one early
+    reporter does not stand for the whole EU. Returns (avg, end_date, n, countries).
+    """
     rows = []
     for x in recs:
         if x.get("memberStateCode") in NON_EURO:
@@ -119,13 +124,20 @@ def _avg_latest(recs, label):
     if not rows:
         return None
     last = max(r[0] for r in rows)
-    sel = [r for r in rows if r[0] == last]
-    eu = [r for r in sel if r[2] == "EU"]
-    if eu:  # the Commission's own EU average takes precedence over a simple country mean
-        sel = eu
-    else:
-        sel = [r for r in sel if r[2] != "EU"]
-    return st.mean(r[1] for r in sel), last, len(sel), sorted({r[2] for r in sel})
+    eu = [r for r in rows if r[2] == "EU" and r[0] == last]
+    if eu:
+        return st.mean(r[1] for r in eu), last, 1, ["EU"]
+    window = last - dt.timedelta(days=14)
+    latest_by_ms = {}
+    for d, p, ms in rows:
+        if ms == "EU" or d < window:
+            continue
+        if ms not in latest_by_ms or d > latest_by_ms[ms][0]:
+            latest_by_ms[ms] = (d, [p])
+        elif d == latest_by_ms[ms][0]:
+            latest_by_ms[ms][1].append(p)
+    vals = [st.mean(v[1]) for v in latest_by_ms.values()]
+    return st.mean(vals), last, len(vals), sorted(latest_by_ms)
 
 
 def fetch(fx: dict) -> list[Price]:
@@ -144,7 +156,7 @@ def fetch(fx: dict) -> list[Price]:
         per = "100 kg" if kg == 100 else "t"
         return Price(row=row, unit_usd=unit, price_type="EU market price, weekly average of euro-area Member States",
                      price_usd=usd, orig_price=round(avg, 2), orig_ccy="EUR", price_date=end.isoformat(),
-                     source=f"European Commission Agri-food Data Portal - {label}{extra} ({n} reports: {','.join(ctry[:8])})",
+                     source=f"European Commission Agri-food Data Portal - {label}{extra} (" + ("Commission EU average" if ctry == ["EU"] else f"{n} Member States: {','.join(ctry[:8])}") + ")",
                      link=LINK, calc=f"avg {avg:,.2f} EUR/{per} -> {eur_per_kg*(1000 if unit=='USD/t' else 1):,.4f} EUR/{unit.split('/')[1]} x {eur:.5f} EURUSD = {usd:,.4f} {unit}",
                      source_key="eu_agri")
 

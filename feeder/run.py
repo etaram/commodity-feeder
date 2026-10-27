@@ -130,9 +130,14 @@ def merge() -> int:
     by_row = {r["row"]: r for r in master}
     rates, fx_src = _fx()
     prev = {}
+    prev_full = {}
     if (DATA / "prices.csv").exists():
         with open(DATA / "prices.csv", encoding="utf-8") as f:
             for r in csv.DictReader(f):
+                try:
+                    prev_full[int(r["row"])] = r
+                except (ValueError, KeyError):
+                    pass
                 try:
                     prev[int(r["row"])] = (float(r["price_usd"]), r["unit_usd"])
                 except (ValueError, KeyError):
@@ -204,6 +209,7 @@ def merge() -> int:
     if rp.exists():
         with open(rp, encoding="utf-8") as f:
             reg = {int(r["row"]): r for r in csv.DictReader(f)}
+    written = {}
     with open(DATA / "prices.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader()
         for row in sorted(best):
@@ -226,6 +232,8 @@ def merge() -> int:
             if d.get("mode") != "manual":
                 d["benchmark_product"] = product_from_feed(d, layer_a)
             w.writerow(d)
+            written[row] = d
+    _write_sheet_stage(best_rows=written, prev_full=prev_full, reg=reg)
     with open(DATA / "candidates.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader()
         for row in sorted(by):
@@ -262,3 +270,45 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+STAGE_COLS = ["G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R", "T", "U", "V", "W", "X", "Y", "AA"]
+
+
+def _write_sheet_stage(best_rows: dict, prev_full: dict, reg: dict) -> None:
+    """Write data/import/master_stage.csv (one line per Master row 2..2001, columns G..P,R,T,U..Y,AA)
+    and data/import/history_stage.csv (rows whose benchmark price changed since the previous run).
+    The sheet's hidden Feed_Stage/Feed_Merge tabs turn these into a merge that keeps manual benchmarks."""
+    imp = DATA / "import"; imp.mkdir(exist_ok=True)
+    ts = (dt.datetime.utcnow() + dt.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M")
+    hist = []
+    with open(imp / "master_stage.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f); w.writerow(STAGE_COLS)
+        for row in range(2, 2002):
+            d = best_rows.get(row); g = reg.get(row, {})
+            out = {k: "" for k in STAGE_COLS}
+            if g:
+                out.update({"U": g.get("benchmark_product", ""), "V": g.get("designated_source", ""),
+                            "W": g.get("tier", ""), "AA": g.get("designated_key", "")})
+            if d:
+                cp = d.get("check_price", "")
+                mu = g.get("manual_unit", "") if d.get("mode") == "manual" else d.get("unit_usd", "")
+                cu = d.get("unit_usd", "") if d.get("mode") == "manual" else mu
+                if cp not in ("", None) and mu and cu and mu != cu:
+                    cp = float(cp) * MASS[mu] / MASS[cu] if (mu in MASS and cu in MASS) else ""
+                out.update({"X": d.get("check_source", ""), "Y": cp})
+                if d.get("mode") != "manual" and d.get("price_usd"):
+                    pv = prev_full.get(row, {})
+                    prev_price = pv.get("price_usd", "") if pv.get("unit_usd") == d["unit_usd"] else ""
+                    out.update({"G": d["unit_usd"], "H": d["price_type"], "I": d["price_usd"], "J": d["orig_price"],
+                                "K": d["orig_ccy"], "L": d["price_date"], "M": d["source"], "N": d["link"],
+                                "O": d["calc"], "P": prev_price, "R": ts,
+                                "T": "" if d.get("quality") in ("", "OK") else f"[QA: {d['quality']}]",
+                                "U": d.get("benchmark_product") or out["U"], "AA": d.get("source_key", out["AA"])})
+                    if str(pv.get("price_usd")) != str(d["price_usd"]) or pv.get("price_date") != d["price_date"]:
+                        hist.append([ts, d["id"], d["name"], d["price_usd"], d["orig_price"], d["orig_ccy"],
+                                     d["price_date"], d["source"]])
+            w.writerow([out[k] for k in STAGE_COLS])
+    with open(imp / "history_stage.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f); w.writerow(["ts", "id", "name", "price_usd", "orig", "ccy", "date", "source"]); w.writerows(hist)
+    log.info("sheet stage: %d history rows", len(hist))
