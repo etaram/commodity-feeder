@@ -16,7 +16,7 @@ from statistics import median
 from urllib.parse import quote_plus
 
 from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_rows, save_partial, today
-from .taxonomy import BY_ID, CH2GROUP
+from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "worldbank", "ebrd", "mrgov"]
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
@@ -162,7 +162,10 @@ def merge_awards():
     rates, t = _rates(), today()
     rows = []
     for f in sorted((LEADS / "awards").glob("*.json")):
-        rows += json.loads(f.read_text())
+        for r in json.loads(f.read_text()):
+            gid, _ = match_cpv(r["cpv"].split()[:1])
+            if gid:
+                r["group"] = gid; rows.append(r)
     for r in rows:
         v, c = r.get("value"), r.get("currency")
         r["usd"] = round(v * rates[c]) if isinstance(v, (int, float)) and c in rates else ""

@@ -35,7 +35,7 @@ def _fetch_month(s, m, cpvs):
         batch = r.json().get("notices", [])
         for n in batch:
             cpv = list(dict.fromkeys(n.get("classification-cpv") or []))
-            gid, depth = match_cpv(cpv)
+            gid, depth = match_cpv(cpv[:1])
             if not gid:
                 continue
             wn = n.get("winner-name") or {}

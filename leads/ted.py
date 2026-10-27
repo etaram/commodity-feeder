@@ -1,6 +1,7 @@
 """EU tenders from TED (Tenders Electronic Daily) Search API v3 - free, no key.
 Open contract notices for SUPPLIES whose CPV falls in one of the commodity groups."""
 import datetime as dt
+import html
 
 from .common import clean, log, session, today
 from .taxonomy import GROUPS, match_cpv
@@ -67,7 +68,7 @@ def fetch():
         if nature and "supplies" not in nature:
             continue
         cpv = list(dict.fromkeys(n.get("classification-cpv") or []))
-        gid, depth = match_cpv(cpv)
+        gid, depth = match_cpv(cpv[:1])  # main CPV only: secondary codes pull in unrelated notices
         if not gid:
             continue
         dls = sorted(d for d in (_date(x) for x in (n.get("deadline-receipt-tender-date-lot") or [])) if d)
@@ -82,7 +83,7 @@ def fetch():
             except (TypeError, ValueError):
                 pass
         cur = _first(n.get("estimated-value-cur-lot")) or ("EUR" if vals else "")
-        title = clean(_first(n.get("notice-title")))
+        title = clean(html.unescape(html.unescape(_first(n.get("notice-title")))))
         pn = n.get("publication-number", "")
         rows.append({
             "id": f"TED-{pn}", "source": "TED (EU)", "group": gid,
