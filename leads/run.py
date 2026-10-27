@@ -175,6 +175,8 @@ def merge_awards():
     for r in rows:
         v, c = r.get("value"), r.get("currency")
         r["usd"] = round(v * rates[c]) if isinstance(v, (int, float)) and c in rates else ""
+        if r["usd"] != "" and r["usd"] > 2_000_000_000:  # framework ceilings and data-entry errors
+            r["usd"] = ""
         r["gname"] = BY_ID.get(r["group"], {}).get("name", r["group"])
     cut = str(t - dt.timedelta(days=180))
     recent = sorted((r for r in rows if r["published"] >= cut), key=lambda r: -(r["usd"] or 0))[:2000]
@@ -204,6 +206,7 @@ def merge_awards():
         buyers.append({
             "buyer": lst[-1]["buyer"], "country": country, "group": g, "awards_12m": len(lst),
             "total_usd": round(sum(r["usd"] or 0 for r in lst)), "award_months": " ".join(months),
+            "median_award_usd": round(median([r["usd"] for r in lst if r["usd"]])) if any(r["usd"] for r in lst) else "",
             "last_award": lst[-1]["published"], "next_expected": str(nxt),
             "current_suppliers": "; ".join(w for w, _ in sorted(wins.items(), key=lambda x: -x[1])[:3])[:200],
             "avg_bids": round(sum(r["bids"] for r in lst if r["bids"] != "") / max(1, sum(1 for r in lst if r["bids"] != "")), 1),
@@ -240,7 +243,7 @@ def _bench_usd_kg(bm, hs6):
 def merge_markets(bm):
     d = LEADS / "markets"
     if not d.exists():
-        return
+        return []
     names = json.loads((d / "_reporters.json").read_text()) if (d / "_reporters.json").exists() else {}
     hs_name = {r["hs6"]: r["name"] for r in master_rows()}
     out = []
@@ -269,6 +272,58 @@ def merge_markets(bm):
     out.sort(key=lambda x: -x["signal_score"])
     write("markets.csv", out[:3000])
     log.info("market signals rows %d", len(out))
+    return out
+
+
+def merge_opportunities(tenders, buyers, markets):
+    """One pool of deal hypotheses for the Deal Desk: open tenders, predicted re-tenders, price arbitrage."""
+    from .regions import region
+    t = today(); out = []
+    bids = {(_norm_buyer(b["buyer"]), b["country"]): b for b in buyers}
+    for r in tenders:
+        if r["score"] < 55:
+            continue
+        b = bids.get((_norm_buyer(r["buyer"]), r["country"]))
+        out.append({
+            "opp_id": f"T:{r['id']}", "type": "Tender", "group": r["group"], "country": r["country"],
+            "region": region(r["country"]), "buyer": r["buyer"], "what": r["title"][:160], "hs6": "",
+            "buyer_price_usd_kg": "", "benchmark_usd_kg": "", "spread_pct": "",
+            "deal_value_usd": r["est_value_usd"], "market_imports_usd": "",
+            "competitors_est": b["avg_bids"] if b and b["avg_bids"] else "",
+            "incumbent": b["current_suppliers"][:120] if b else "", "key_date": r["deadline"],
+            "link": r["link"], "evidence": f"open tender, score {r['score']}, closes {r['deadline'] or 'n/a'}",
+            "contact": r.get("contact", ""),
+        })
+    for b in buyers:
+        nxt = b["next_expected"]
+        if not nxt or not (str(t) <= nxt <= str(t + dt.timedelta(days=120))) or not b["total_usd"]:
+            continue
+        out.append({
+            "opp_id": f"R:{_norm_buyer(b['buyer'])[:40]}|{b['country']}|{b['group'][:12]}", "type": "Recompete",
+            "group": b["group"], "country": b["country"], "region": region(b["country"]), "buyer": b["buyer"],
+            "what": f"Expected new tender ({b['award_months']} buying pattern, {b['awards_12m']} awards in 12 months)",
+            "hs6": "", "buyer_price_usd_kg": "", "benchmark_usd_kg": "", "spread_pct": "",
+            "deal_value_usd": b["median_award_usd"], "market_imports_usd": "",
+            "competitors_est": b["avg_bids"] or "", "incumbent": b["current_suppliers"][:120], "key_date": nxt,
+            "link": b["last_notice"], "evidence": f"last award {b['last_award']}, avg {b['avg_bids']} bids per award",
+            "contact": b["buyer_email"],
+        })
+    for m in markets:
+        p, imp = m["premium_vs_benchmark_pct"], m["imports_usd"]
+        if p == "" or p < 10 or imp < 20_000_000:
+            continue
+        out.append({
+            "opp_id": f"A:{m['hs6'].replace('HS ', '')}|{m['country'][:30]}", "type": "Arbitrage", "group": m["group"],
+            "country": m["country"], "region": region(m["country"]), "buyer": "(importers in market)",
+            "what": f"{m['product'][:110]} - pays {p}% above benchmark", "hs6": m["hs6"],
+            "buyer_price_usd_kg": m["unit_value_usd_kg"], "benchmark_usd_kg": m["benchmark_usd_kg"], "spread_pct": p,
+            "deal_value_usd": "", "market_imports_usd": imp, "competitors_est": "", "incumbent": "",
+            "key_date": "", "link": "https://comtradeplus.un.org/",
+            "evidence": f"{m['year']} imports {imp:,} USD, growth {m['growth_pct']}%, benchmark {m['benchmark_source']}",
+            "contact": "",
+        })
+    write("opportunities.csv", out)
+    log.info("opportunities %d", len(out))
 
 
 def write_digest(tenders, buyers):
@@ -317,7 +372,8 @@ def merge():
     enp = LEADS / "enrich.json"
     imp, sup, n = merge_importyeti(bm, json.loads(enp.read_text()) if enp.exists() else {})
     buyers = merge_awards()
-    merge_markets(bm)
+    markets = merge_markets(bm)
+    merge_opportunities(tenders, buyers or [], markets or [])
     write_digest(tenders, buyers or [])
     write("tenders.csv", tenders)
     write("importers.csv", imp)
