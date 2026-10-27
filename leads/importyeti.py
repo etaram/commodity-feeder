@@ -83,7 +83,7 @@ def fetch(per_run=PER_RUN):
                 (CACHE / f"{h}.json").write_text(json.dumps(p, ensure_ascii=False))
                 state[h] = str(t)
                 done += 1; fails = 0
-            elif p["total_shipments"] in ("", "0"):
+            elif p["total_shipments"] == "0":
                 state[h] = str(t)  # heading with no US sea shipments
             else:
                 fails += 1  # page served without the company list: view limit for this IP
