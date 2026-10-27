@@ -65,3 +65,16 @@ Actions tab -> commodity-feed -> Run workflow.
 
 ## Keys
 Settings -> Secrets and variables -> Actions -> New repository secret: `CENSUS_KEY`, `COMTRADE_KEY`.
+
+## Leads engine (`leads/`, workflow `leads.yml`, every 4 hours)
+
+Separate Google Sheet "Leads Engine - Tenders & Importers" reads `data/leads/*.csv` with IMPORTDATA.
+
+| Source | What it gives | Access |
+|---|---|---|
+| TED API v3 (EU) | Open contract notices for supplies, matched to commodity groups by CPV | free, no key |
+| World Bank procurement notices | Goods tenders in World Bank financed projects, by keyword | free, no key |
+| mr.gov.il | Open Israeli government tenders in commodity categories | public site |
+| ImportYeti HS pages | Top US importers and their foreign suppliers per HS heading (US Customs bills of lading) | public site, ~24 headings per run, refresh every 14 days |
+
+`leads/taxonomy.py` maps each commodity group to HS chapters, CPV codes, keywords and mr.gov.il categories, and to the tracker rows used as the price benchmark.
