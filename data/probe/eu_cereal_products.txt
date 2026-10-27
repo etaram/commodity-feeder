@@ -1,0 +1,62 @@
+URL: https://api.tech.ec.europa.eu/agrifood/api/cereal/products
+STATUS: 200
+TYPE: application/json
+
+[ {
+  "productName" : "Breadmaking common wheat",
+  "productCode" : "BLTPAN"
+}, {
+  "productName" : "Breadmaking common wheat - TVT",
+  "productCode" : "BLTPAN"
+}, {
+  "productName" : "Durum wheat",
+  "productCode" : "DUR"
+}, {
+  "productName" : "Feed barley",
+  "productCode" : "ORGFOUR"
+}, {
+  "productName" : "Feed maize",
+  "productCode" : "MAI"
+}, {
+  "productName" : "Feed oats",
+  "productCode" : "AVO"
+}, {
+  "productName" : "Feed rye",
+  "productCode" : "SEGFOUR"
+}, {
+  "productName" : "Feed wheat",
+  "productCode" : "BLTFOUR"
+}, {
+  "productName" : "Grain sorghum",
+  "productCode" : "SOR"
+}, {
+  "productName" : "Malting barley",
+  "productCode" : "ORGBRAS"
+}, {
+  "productName" : "Malting barley - M2RH",
+  "productCode" : "ORGBRAS"
+}, {
+  "productName" : "Malting barley - M2RP",
+  "productCode" : "ORGBRAS"
+}, {
+  "productName" : "Malting barley - M6RH",
+  "productCode" : "ORGBRAS"
+}, {
+  "productName" : "Milling oats",
+  "productCode" : "AVOMILL"
+}, {
+  "productName" : "Milling rye",
+  "productCode" : "SEGPAN"
+}, {
+  "productName" : "Milling wheat",
+  "productCode" : "BLTPAN"
+}, {
+  "productName" : "Rye of breadmaking quality",
+  "productCode" : "SEGPAN"
+}, {
+  "productName" : "Triticale",
+  "productCode" : "TRI"
+}, {
+  "productName" : "Wheat bran",
+  "productCode" : "SON"
+} ]
