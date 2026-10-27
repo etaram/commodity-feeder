@@ -1,9 +1,11 @@
-usda_fvwtrds https://www.ams.usda.gov/mnreports/fvwtrds.pdf
-usda_3668 https://www.ams.usda.gov/mnreports/ams_3668.pdf
-usda_2461 https://www.ams.usda.gov/mnreports/ams_2461.pdf
-usda_2498 https://www.ams.usda.gov/mnreports/ams_2498.pdf
-usda_3510 https://www.ams.usda.gov/mnreports/ams_3510.pdf
-usda_2843 https://www.ams.usda.gov/mnreports/ams_2843.pdf
-usda_1604 https://www.ams.usda.gov/mnreports/ams_1604.pdf
-usda_2725 https://www.ams.usda.gov/mnreports/ams_2725.pdf
-usda_dywdairy https://www.ams.usda.gov/mnreports/dywweeklyreport.pdf
+ted1 POST https://api.ted.europa.eu/v3/notices/search {"query":"classification-cpv IN (14700000 44100000) AND publication-date>=20261001","fields":["publication-number","notice-title","buyer-name","buyer-country","classification-cpv","publication-date","notice-type","deadline-receipt-tender-date-lot","total-value","links"],"limit":3,"page":1}
+ted2 POST https://api.ted.europa.eu/v3/notices/search {"query":"PD>=20261020","fields":["publication-number"],"limit":2,"page":1}
+gov_tenders https://data.gov.il/api/3/action/datastore_search?resource_id=7038b3e6-a74d-442e-b16b-466c8196124a&limit=5&sort=_id%20desc
+gov_exempt https://data.gov.il/api/3/action/datastore_search?resource_id=65c8fced-c50c-400e-94fb-ef1a208c43e5&limit=5&sort=_id%20desc
+gov_tenders_q https://data.gov.il/api/3/action/datastore_search?resource_id=7038b3e6-a74d-442e-b16b-466c8196124a&limit=5&q=%D7%91%D7%98%D7%95%D7%9F
+wb https://search.worldbank.org/api/v2/procnotices?format=json&rows=3&qterm=cement
+sam https://api.sam.gov/opportunities/v2/search?api_key=DEMO_KEY&limit=2&postedFrom=10/20/2026&postedTo=10/27/2026&ncode=331110
+ungm https://www.ungm.org/Public/Notice
+iy_search CFFI https://www.importyeti.com/search?q=hot%20rolled%20steel%20coil
+iy_hs CFFI https://www.importyeti.com/hs-codes/7208
+iy_company CFFI https://www.importyeti.com/company/nucor

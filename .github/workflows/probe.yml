@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - run: pip install requests
+      - run: pip install requests curl_cffi
       - run: python tools/probe.py
       - run: |
           git config user.name "commodity-feed-bot"
