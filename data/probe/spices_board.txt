@@ -1,2 +1,2 @@
 URL: https://www.indianspices.com/marketing/price/domestic/current-market-price.html
-ERROR: HTTPSConnectionPool(host='www.indianspices.com', port=443): Max retries exceeded with url: /marketing/price/domestic/current-market-price.html (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7fdd6dcbe7e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+ERROR: HTTPSConnectionPool(host='www.indianspices.com', port=443): Max retries exceeded with url: /marketing/price/domestic/current-market-price.html (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f1a69e32450>: Failed to establish a new connection: [Errno 111] Connection refused'))
