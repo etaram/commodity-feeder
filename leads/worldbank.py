@@ -6,7 +6,7 @@ from .common import clean, log, polite, session, today
 from .taxonomy import GROUPS
 
 URL = "https://search.worldbank.org/api/v2/procnotices"
-NOISE = re.compile(r"vehicle|equipment|computer|medic|pharma|drug|vaccine|paracetamol|furniture|consult")
+NOISE = re.compile(r"vehicle|equipment|computer|medic|pharma|drug|vaccine|paracetamol|parac|amoxi|furniture|consult")
 OPEN_TYPES = {"Invitation for Bids", "Request for Bids", "Request for Quotations", "Invitation for Prequalification",
               "Request for Expression of Interest", "General Procurement Notice"}
 

@@ -147,6 +147,10 @@ def merge():
     status.append(["importyeti", iym.get("ran", ""), n,
                    f"{n} HS headings cached; this run {iym.get('meta', {}).get('scanned', 0)}, "
                    f"due {iym.get('meta', {}).get('due', '')}"])
+    gb = _group_bench(bm)
+    write("groups.csv", [{"group": g["name"], "hs_chapters": " ".join(g["hs"]), "ted_cpv": " ".join(g["cpv"]),
+                          "worldbank_keywords": ", ".join(g["wb"]), "mr_gov_categories": " ".join(g["mr"]),
+                          "benchmark": gb.get(g["id"], "")} for g in BY_ID.values()])
     write("status.csv", [dict(zip(["source", "last_run_utc", "rows", "note"], s)) for s in status])
     log.info("tenders %d, importers %d, suppliers %d", len(tenders), len(imp), len(sup))
 
