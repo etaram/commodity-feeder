@@ -8,7 +8,8 @@ from .taxonomy import GROUPS, match_cpv
 URL = "https://api.ted.europa.eu/v3/notices/search"
 FIELDS_FULL = ["publication-number", "notice-title", "buyer-name", "buyer-country", "classification-cpv",
                "publication-date", "notice-type", "deadline-receipt-tender-date-lot", "estimated-value-lot",
-               "estimated-value-cur-lot", "contract-nature", "place-of-performance"]
+               "estimated-value-cur-lot", "contract-nature", "place-of-performance", "organisation-email-buyer",
+               "organisation-tel-buyer", "organisation-city-buyer"]
 FIELDS_MIN = ["publication-number", "notice-title", "buyer-name", "buyer-country", "classification-cpv",
               "publication-date", "notice-type", "deadline-receipt-tender-date-lot", "estimated-value-lot",
               "contract-nature"]
@@ -90,6 +91,8 @@ def fetch():
             "classification": " ".join(cpv[:6]), "notice_type": n.get("notice-type", ""),
             "published": str(_date(n.get("publication-date")) or ""), "deadline": str(deadline or ""),
             "value": round(sum(vals)) if vals else "", "currency": cur if vals else "",
-            "link": f"https://ted.europa.eu/en/notice/-/detail/{pn}", "contact": "", "match": depth,
+            "link": f"https://ted.europa.eu/en/notice/-/detail/{pn}", "contact": clean(" ".join(dict.fromkeys((n.get("organisation-email-buyer") or [])[:1] +
+                                                      (n.get("organisation-tel-buyer") or [])[:1])), 120),
+            "match": depth,
         })
     return rows, {"query": used[0] if used else "", "notices": len(notices)}

@@ -41,11 +41,10 @@ def parse(page):
 
 def fetch(max_pages=3):
     rows, seen, t = [], set(), today()
-    for g in GROUPS:
-        for cat in g["mr"]:
+    for kind, g, cat in [(k, g, c) for k in ("TENDER", "EXEMPTION") for g in GROUPS for c in g["mr"]]:
             for page in range(max_pages):
                 q = quote(f":updateDate:archive:false:category:{cat}", safe=":")
-                url = f"{BASE}/ilgstorefront/he/search/?q={q}&s=TENDER&page={page}"
+                url = f"{BASE}/ilgstorefront/he/search/?q={q}&s={kind}&page={page}"
                 try:
                     r = cffi_get(url)
                 except Exception as e:  # noqa: BLE001
@@ -62,7 +61,7 @@ def fetch(max_pages=3):
                         continue
                     seen.add(it["pid"])
                     rows.append({
-                        "id": f"MR-{it['pid']}", "source": "mr.gov.il (Israel)", "group": g["id"],
+                        "id": f"MR-{it['pid']}", "source": "mr.gov.il (Israel)" if kind == "TENDER" else "mr.gov.il exemption notice (Israel)", "group": g["id"],
                         "country": "ISR", "buyer": it.get("buyer", ""), "title": it["title"][:300],
                         "classification": f"mr.gov.il category {cat}", "notice_type": f"{it.get('kind', '')} | {st}",
                         "published": str(_d(it.get("published")) or ""), "deadline": str(dl or ""),

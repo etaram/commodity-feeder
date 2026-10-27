@@ -22,6 +22,18 @@ jobs:
         run: python -m leads.run --source ted
         timeout-minutes: 10
         continue-on-error: true
+      - name: fts
+        run: python -m leads.run --source fts
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: ebrd
+        run: python -m leads.run --source ebrd
+        timeout-minutes: 5
+        continue-on-error: true
+      - name: awards
+        run: python -m leads.run --source awards
+        timeout-minutes: 15
+        continue-on-error: true
       - name: worldbank
         run: python -m leads.run --source worldbank
         timeout-minutes: 10
@@ -33,6 +45,10 @@ jobs:
       - name: importyeti
         run: python -m leads.run --source importyeti
         timeout-minutes: 15
+        continue-on-error: true
+      - name: enrich
+        run: python -m leads.run --source enrich
+        timeout-minutes: 10
         continue-on-error: true
       - name: merge
         run: python -m leads.run --merge

@@ -11,11 +11,14 @@ import logging
 import re
 import sys
 import traceback
+from collections import defaultdict
+from statistics import median
+from urllib.parse import quote_plus
 
 from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_rows, save_partial, today
 from .taxonomy import BY_ID, CH2GROUP
 
-TENDER_SOURCES = ["ted", "worldbank", "mrgov"]
+TENDER_SOURCES = ["ted", "fts", "worldbank", "ebrd", "mrgov"]
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
         "articles", "prepared", "preserved", "fresh", "chilled", "frozen", "similar", "suitable", "kind", "used"}
 
@@ -29,6 +32,18 @@ def run_source(name):
         from . import mrgov as m
     elif name == "importyeti":
         from . import importyeti as m
+    elif name == "fts":
+        from . import fts as m
+    elif name == "ebrd":
+        from . import ebrd as m
+    elif name == "awards":
+        from . import awards as m
+    elif name == "enrich":
+        from . import enrich
+        imp, _, _ = merge_importyeti(benchmarks(), {})
+        names = [r["company"] for r in sorted(imp, key=lambda r: (r["relevance"] != "match", -r["shipments_12m"]))]
+        enrich.run(list(dict.fromkeys(names)))
+        return
     else:
         raise SystemExit(f"unknown source {name}")
     rows, meta = m.fetch()
@@ -102,7 +117,8 @@ def _relevant(title, products, g):
     return "match" if any(w[:5] in p for w in words) else "unclear"
 
 
-def merge_importyeti(bm):
+def merge_importyeti(bm, web=None):
+    web = web or {}
     hs_rows = {}
     for r in master_rows():
         h = (r["hs6"] or "")[:4]
@@ -130,8 +146,75 @@ def merge_importyeti(bm):
                     "hs_codes": x["hs_codes"], "products": x["products"][:100],
                     "relevance": _relevant(title, x["products"], g), "flags": x["flags"],
                     "address": x["address"][:70], "benchmark": bench, "profile": x["profile"], "scanned": p["scanned"],
+                    "website": (web.get(x["company"]) or {}).get("website", ""),
+                    "web_search": "https://www.google.com/search?q=" + quote_plus(f'"{x["company"]}" {x["address"][-40:]}'),
+                    "linkedin": "https://www.linkedin.com/search/results/companies/?keywords=" + quote_plus(x["company"]),
                 })
     return imp, sup, n
+
+
+def _norm_buyer(b):
+    return re.sub(r"\s+", " ", re.sub(r"[^\w ]", " ", b.lower())).strip()
+
+
+def merge_awards():
+    rates, t = _rates(), today()
+    rows = []
+    for f in sorted((LEADS / "awards").glob("*.json")):
+        rows += json.loads(f.read_text())
+    for r in rows:
+        v, c = r.get("value"), r.get("currency")
+        r["usd"] = round(v * rates[c]) if isinstance(v, (int, float)) and c in rates else ""
+        r["gname"] = BY_ID.get(r["group"], {}).get("name", r["group"])
+    cut = str(t - dt.timedelta(days=180))
+    recent = sorted((r for r in rows if r["published"] >= cut), key=lambda r: -(r["usd"] or 0))[:3000]
+    write("awards.csv", [{
+        "published": r["published"], "group": r["gname"], "country": r["country"], "buyer": r["buyer"],
+        "title": r["title"][:200], "winners": "; ".join(r["winners"])[:200], "winner_country": r["winner_country"],
+        "winner_size": r["winner_size"], "value_usd": r["usd"], "value": r["value"], "currency": r["currency"],
+        "bids": r["bids"], "buyer_email": r["email"], "link": f"https://ted.europa.eu/en/notice/-/detail/{r['pn']}",
+    } for r in recent])
+    by = defaultdict(list)
+    for r in rows:
+        by[(_norm_buyer(r["buyer"]), r["country"], r["gname"])].append(r)
+    buyers = []
+    for (_, country, g), lst in by.items():
+        if len(lst) < 2:
+            continue
+        lst.sort(key=lambda r: r["published"])
+        dates = [dt.date.fromisoformat(r["published"]) for r in lst if r["published"]]
+        gaps = [(b - a).days for a, b in zip(dates, dates[1:]) if (b - a).days > 20]
+        step = median(gaps) if gaps else 365
+        nxt = dates[-1] + dt.timedelta(days=step) if dates else ""
+        wins = defaultdict(int)
+        for r in lst:
+            for w in r["winners"]:
+                wins[w] += 1
+        months = sorted({d.strftime("%b") for d in dates}, key=lambda m: dt.datetime.strptime(m, "%b").month)
+        buyers.append({
+            "buyer": lst[-1]["buyer"], "country": country, "group": g, "awards_12m": len(lst),
+            "total_usd": round(sum(r["usd"] or 0 for r in lst)), "award_months": " ".join(months),
+            "last_award": lst[-1]["published"], "next_expected": str(nxt),
+            "current_suppliers": "; ".join(w for w, _ in sorted(wins.items(), key=lambda x: -x[1])[:3])[:200],
+            "avg_bids": round(sum(r["bids"] for r in lst if r["bids"] != "") / max(1, sum(1 for r in lst if r["bids"] != "")), 1),
+            "buyer_email": next((r["email"] for r in reversed(lst) if r["email"]), ""),
+            "last_notice": f"https://ted.europa.eu/en/notice/-/detail/{lst[-1]['pn']}",
+        })
+    buyers.sort(key=lambda b: (-b["total_usd"], -b["awards_12m"]))
+    write("buyers.csv", buyers[:3000])
+    comp = defaultdict(lambda: {"wins": 0, "usd": 0, "buyers": set(), "countries": set(), "wc": ""})
+    for r in rows:
+        share = (r["usd"] or 0) / max(1, len(r["winners"]))
+        for w in r["winners"]:
+            c = comp[(w, r["gname"])]
+            c["wins"] += 1; c["usd"] += share; c["buyers"].add(_norm_buyer(r["buyer"])); c["countries"].add(r["country"])
+            c["wc"] = c["wc"] or r["winner_country"].split(",")[0]
+    out = [{"supplier": w, "group": g, "supplier_country": c["wc"], "wins_12m": c["wins"], "won_usd_est": round(c["usd"]),
+            "buyers": len(c["buyers"]), "buyer_countries": " ".join(sorted(c["countries"]))[:80]}
+           for (w, g), c in comp.items()]
+    out.sort(key=lambda x: (-x["won_usd_est"], -x["wins_12m"]))
+    write("competitors.csv", out[:2500])
+    log.info("awards %d (12m), recent %d, buyers %d, competitors %d", len(rows), len(recent), len(buyers), len(out))
 
 
 def write(name, rows, cols=None):
@@ -151,7 +234,9 @@ def merge():
     cutoff = str(today() - dt.timedelta(days=120))
     seen = {k: v for k, v in seen.items() if v >= cutoff}
     seen_p.write_text(json.dumps(seen, sort_keys=True, indent=0))
-    imp, sup, n = merge_importyeti(bm)
+    enp = LEADS / "enrich.json"
+    imp, sup, n = merge_importyeti(bm, json.loads(enp.read_text()) if enp.exists() else {})
+    merge_awards()
     write("tenders.csv", tenders)
     write("importers.csv", imp)
     write("suppliers.csv", sup)
