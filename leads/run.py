@@ -141,10 +141,10 @@ def merge_importyeti(bm, web=None):
                 if k > cap:
                     break
                 lst.append({
-                    "hs4": h, "heading": title[:70], "group": g.get("name", ""), "company": x["company"],
+                    "hs4": f"HS {h}", "heading": title[:70], "group": g.get("name", ""), "company": x["company"],
                     "country": x["country"], "shipments_12m": x["shipments_12m"],
                     "total_shipments": x["total_shipments"], "weight_t": x["weight_t"], "teu": x["teu"],
-                    "hs_codes": x["hs_codes"], "products": x["products"][:100],
+                    "hs_codes": "HS " + x["hs_codes"], "products": x["products"][:100],
                     "relevance": _relevant(title, x["products"], g), "flags": x["flags"],
                     "address": x["address"][:70], "benchmark": bench if role == "importer" else "", "profile": x["profile"], "scanned": p["scanned"],
                     "website_wikidata": (web.get(x["company"]) or {}).get("website", "") if role == "importer" else "",
