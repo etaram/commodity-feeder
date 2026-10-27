@@ -130,7 +130,9 @@ _KW_RX = [(g["id"], _re.compile(r"\b(" + "|".join(_re.escape(k) for k in sorted(
           for g in GROUPS if g["kw"]]
 NOISE = _re.compile(r"\b(injector|pump|filter|valve|hose|gauge|nozzle|assembly|kit|parts?|seal|gasket|sensor|"
                     r"vehicle|truck|services?|consult|maintenance|repair|software|training|study|design|"
-                    r"construction|installation|equipment|dispenser|tank|meter|card)\b", _re.I)
+                    r"construction|installation|equipment|dispenser|tank|meter|card|engines?|engi|guard|power suppl\w*|"
+                    r"barriers?|couplings?|motors?|generators?|batter\w*|electronic|modules?|brackets?|masks?|gloves|"
+                    r"aprons)\b", _re.I)
 
 
 def group_of_text(text):
