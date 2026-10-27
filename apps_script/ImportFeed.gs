@@ -60,6 +60,11 @@ function importFeed() {
     var curDate = cur[5] instanceof Date ? Utilities.formatDate(cur[5], tz, 'yyyy-MM-dd') : String(cur[5] || '');
     var newDate = r[col.price_date];
     if (curPrice !== '' && curPrice !== null && curDate && newDate <= curDate) return;
+    // China domestic spot (VAT-incl.) and monthly trade unit values do not displace a price
+    // that is at most 7 days older: that one is usually an international benchmark.
+    var weak = ['cn_spot', 'census', 'comext', 'comtrade'].indexOf(r[col.source_key]) >= 0;
+    if (weak && curPrice !== '' && curDate &&
+        (new Date(newDate) - new Date(curDate)) / 86400000 <= 7) return;
     var sameUnit = String(cur[0]) === String(r[col.unit_usd]);
     var prev = (curPrice === '' || curPrice === null) ? cur[9] : (sameUnit ? curPrice : '');
     block[i] = [r[col.unit_usd], r[col.price_type], price, parseFloat(r[col.orig_price]) || r[col.orig_price],

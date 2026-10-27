@@ -18,17 +18,19 @@ log = logging.getLogger("feeder")
 
 # Lower number = preferred when two sources give a price with the same date.
 SOURCE_RANK = {
+    # international exchange benchmarks first, then official market reporting, then dealer
+    # assessments, then China domestic spot (VAT-inclusive), then monthly trade unit values
     "yahoo": 1,
     "westmetall": 2,
     "em_global": 2,
-    "cn_spot": 3,
-    "eu_agri": 4,
-    "usda_mars": 4,
-    "eia": 4,
-    "dtn": 4,
-    "ssb": 4,
-    "scrapmonster": 5,
-    "smi": 5,
+    "eu_agri": 3,
+    "usda_mars": 3,
+    "eia": 3,
+    "dtn": 3,
+    "ssb": 3,
+    "scrapmonster": 4,
+    "smi": 4,
+    "cn_spot": 5,
     "census": 7,
     "comext": 8,
     "comtrade": 9,

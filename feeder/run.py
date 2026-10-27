@@ -28,6 +28,7 @@ PARTIAL = DATA / "partial"
 SOURCES = ["yahoo", "westmetall", "em_global", "cn_spot", "eu_agri", "dtn", "ssb", "scrapmonster", "smi",
            "census", "comext", "comtrade"]
 DAILY = {"yahoo", "westmetall", "em_global", "cn_spot", "smi"}
+CURRENT_WINDOW = 7
 MASS = {"USD/kg": 1.0, "USD/t": 1000.0, "USD/oz": 1 / 32.1507466, "USD/lb": 1 / 2.20462}
 
 
@@ -155,7 +156,12 @@ def merge() -> int:
         ok = [c for c in cands if not c.quality.startswith("REJECTED")]
         if not ok:
             continue
-        b = max(ok, key=lambda c: (c.price_date, -SOURCE_RANK.get(c.source_key, 99)))
+        # candidates within CURRENT_WINDOW days of the newest one count as equally current;
+        # among those the better-ranked source wins (benchmark over domestic spot over trade data)
+        newest = max(c.price_date for c in ok)
+        cutoff = (dt.date.fromisoformat(newest) - dt.timedelta(days=CURRENT_WINDOW)).isoformat()
+        current = [c for c in ok if c.price_date >= cutoff]
+        b = min(current, key=lambda c: (SOURCE_RANK.get(c.source_key, 99), [-ord(ch) for ch in c.price_date]))
         # keep one unit per row: previous feed unit if it is a mass unit, else the winner's
         target = prev[row][1] if row in prev and prev[row][1] in MASS and b.unit_usd in MASS else b.unit_usd
         for c in ok:
