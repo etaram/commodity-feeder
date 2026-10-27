@@ -206,12 +206,12 @@ def merge_awards():
         buyers.append({
             "buyer": lst[-1]["buyer"], "country": country, "group": g, "awards_12m": len(lst),
             "total_usd": round(sum(r["usd"] or 0 for r in lst)), "award_months": " ".join(months),
-            "median_award_usd": round(median([r["usd"] for r in lst if r["usd"]])) if any(r["usd"] for r in lst) else "",
             "last_award": lst[-1]["published"], "next_expected": str(nxt),
             "current_suppliers": "; ".join(w for w, _ in sorted(wins.items(), key=lambda x: -x[1])[:3])[:200],
             "avg_bids": round(sum(r["bids"] for r in lst if r["bids"] != "") / max(1, sum(1 for r in lst if r["bids"] != "")), 1),
             "buyer_email": next((r["email"] for r in reversed(lst) if r["email"]), ""),
             "last_notice": f"https://ted.europa.eu/en/notice/-/detail/{lst[-1]['pn']}",
+            "median_award_usd": round(median([r["usd"] for r in lst if r["usd"]])) if any(r["usd"] for r in lst) else "",
         })
     buyers.sort(key=lambda b: (-b["total_usd"], -b["awards_12m"]))
     write("buyers.csv", buyers[:3000])
