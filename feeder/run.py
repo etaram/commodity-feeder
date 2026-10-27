@@ -181,7 +181,7 @@ def merge() -> int:
             b.check_price = round(chk.price_usd, 6 if chk.price_usd < 1 else 4)
             b.deviation_pct = round(dev * 100, 1)
             if abs(dev) > 0.5 and bm.TIER.get(chk.source_key, 4) <= bm.TIER.get(b.source_key, 4) + 1:
-                notes.append(f"CHECK: {dev:+.0%} vs {chk.source_key}")
+                notes.append(f"CHECK: {chk.source_key} check price is {dev:+.0%} vs benchmark")
         pv = prev.get(row)
         if b.source_key in DAILY and pv and pv[1] == b.unit_usd and pv[0] > 0:
             ch = b.price_usd / pv[0] - 1
@@ -193,55 +193,6 @@ def merge() -> int:
         b.id, b.hs6, b.name = m["id"], m["hs6"], m["name"]
         best[row] = b
     bm.save_map(bmap)
-
-    with open(DATA / "prices.csv", encoding="utf-8") as f:
-            for r in csv.DictReader(f):
-                try:
-                    prev[int(r["row"])] = (float(r["price_usd"]), r["unit_usd"])
-                except (ValueError, KeyError):
-                    pass
-    results, reports = [], {}
-    for s in SOURCES:
-        got, rep = _load_partial(s)
-        results += got; reports[s] = rep
-
-    by: dict[int, list[Price]] = {}
-    for p in results:
-        if p.row not in by_row or not p.price_usd or p.price_usd <= 0:
-            continue
-        lo, hi = BOUNDS.get(p.unit_usd, (1e-6, 1e9))
-        if not lo <= p.price_usd <= hi:
-            p.quality = f"REJECTED: {p.price_usd:.4g} {p.unit_usd} outside plausible range"
-        by.setdefault(p.row, []).append(p)
-
-    best = {}
-    for row, cands in by.items():
-        ok = [c for c in cands if not c.quality.startswith("REJECTED")]
-        if not ok:
-            continue
-        # candidates within CURRENT_WINDOW days of the newest one count as equally current;
-        # among those the better-ranked source wins (benchmark over domestic spot over trade data)
-        newest = max(c.price_date for c in ok)
-        cutoff = (dt.date.fromisoformat(newest) - dt.timedelta(days=CURRENT_WINDOW)).isoformat()
-        current = [c for c in ok if c.price_date >= cutoff]
-        b = min(current, key=lambda c: (SOURCE_RANK.get(c.source_key, 99), [-ord(ch) for ch in c.price_date]))
-        # keep one unit per row: previous feed unit if it is a mass unit, else the winner's
-        target = prev[row][1] if row in prev and prev[row][1] in MASS and b.unit_usd in MASS else b.unit_usd
-        for c in ok:
-            _convert(c, target)
-        same = [c.price_usd for c in ok if c.unit_usd == b.unit_usd]
-        notes = [] if b.quality == "OK" else [b.quality]
-        if len(same) >= 2 and max(same) / min(same) > 3:
-            others = ", ".join(f"{c.source_key} {c.price_usd:.4g}" for c in ok if c is not b and c.unit_usd == b.unit_usd)
-            notes.append(f"CHECK: sources disagree >3x ({others})")
-        pv = prev.get(row)
-        if b.source_key in DAILY and pv and pv[1] == b.unit_usd and pv[0] > 0:
-            ch = b.price_usd / pv[0] - 1
-            if abs(ch) > 0.4:
-                notes.append(f"CHECK: {ch:+.0%} vs previous feed price {pv[0]:.4g}")
-        b.quality = "; ".join(notes) or "OK"
-        m = by_row[row]; b.id, b.hs6, b.name = m["id"], m["hs6"], m["name"]
-        best[row] = b
 
     with open(DATA / "prices.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader()
