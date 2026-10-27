@@ -1,0 +1,2 @@
+URL: https://gem.gov.in/
+ERROR: HTTPSConnectionPool(host='gem.gov.in', port=443): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f7a50fa4260>: Failed to establish a new connection: [Errno 111] Connection refused'))
