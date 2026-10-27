@@ -59,6 +59,27 @@ GROUPS = [
     {"id": "PRECIOUS", "name": "Precious metals & stones", "hs": ["71"],
      "cpv": [], "wb": [], "mr": [], "ref": [17, 18]},
 ]
+SUP = {'MEAT': '\\b(meat|beef|pork|poultry|chicken|mutton|lamb|veal|livestock|cattle|halal)\\b|בשר|עופות',
+       'FISH': '\\b(fish|seafood|shrimps?|prawns?|tuna|salmon|squid|sardines?)\\b|דגים',
+       'DAIRY': '\\b(dairy|milk|cheese|butter|whey|eggs?|lactose|casein)\\b|חלב|גבינ|ביצים',
+       'FRUITVEG': '\\b(fruits?|vegetables?|onions?|potato(es)?|garlic|citrus|dates|nuts|cashews?|almonds?|raisins|avocados?|bananas?)\\b|פירות|ירקות',
+       'GRAIN': '\\b(rice|wheat|maize|corn|flour|barley|sorghum|grains?|cereals?|pulses|lentils|chickpeas|oats|millet)\\b|אורז|חיטה|קמח|דגנים',
+       'OILSEED': '\\b(sesame|soybeans?|soya|sunflower|palm oil|vegetable oils?|edible oils?|oilseeds?|groundnuts?|peanuts?|rapeseed|canola|olive oil)\\b|שומשום|שמן',
+       'SOFTS': '\\b(sugar|coffee|tea|cocoa|spices?|pepper|cardamom|turmeric|cinnamon|cloves|ginger|vanilla|saffron|honey)\\b|סוכר|קפה|תבלינ',
+       'FEED': '\\b(animal feed|fodder|soybean meal|fish ?meal|ddgs|alfalfa|feed additives?|livestock feed)\\b|מספוא',
+       'BEVTOB': '\\b(beverages?|juices?|tobacco|wine|beer|spirits)\\b|משקאות|טבק',
+       'FUEL': '\\b(diesel|gasoil|fuel oil|petroleum|crude oil|lpg|lng|bitumen|asphalt|coal|petcoke|jet fuel|gasoline|petrochemicals?|lubricants?|base oil)\\b|דלק|סולר|ביטומן|פחם',
+       'MINERAL': '\\b(cement|clinker|aggregates?|gravel|limestone|gypsum|salt|kaolin|glass|ceramics?|marble|granite|minerals?|iron ore|bentonite|silica)\\b|מלט|צמנט|זכוכית|מחצב',
+       'CHEM': '\\b(chemicals?|caustic soda|soda ash|sulphur|sulfur|sulphuric|acids?|methanol|ammonia|chlorine|dyes?|pigments?|solvents?|resins?|activated carbon|titanium dioxide)\\b|כימיק|גופרית|חומצ',
+       'FERT': '\\b(fertili[sz]ers?|urea|dap|npk|potash|ammonium nitrate|ammonium sulphate|phosphates?)\\b|דשנ',
+       'PLASTIC': '\\b(plastics?|polymers?|polyethylene|pvc|hdpe|ldpe|polypropylene|pet resin|rubber|latex|masterbatch)\\b|פלסטיק|גומי|פולימר',
+       'WOODPAPER': '\\b(timber|lumber|wood|plywood|pulp|paper|kraft|cardboard|cartons?|mdf)\\b|נייר|קרטון|עצים',
+       'TEXTILE': '\\b(cotton|yarns?|fabrics?|textiles?|fibres?|fibers?|jute|wool|leather|hides|coir|polyester)\\b|טקסטיל|כותנה',
+       'STEEL': '\\b(steel|iron|rebars?|billets?|hrc|crc|wire rods?|scrap metal|pig iron|ferro|ferroalloys?|stainless)\\b|פלדה|ברזל|גרוטאות',
+       'NONFERROUS': '\\b(copper|aluminium|aluminum|zinc|nickel|refined lead|lead ingots?|tin ingots?|cobalt|lithium|magnesium|titanium|tungsten|molybdenum|non-ferrous|cathodes?|ingots?)\\b|נחושת|אלומיניום|אבץ|ניקל',
+       'PRECIOUS': '\\b(gold|silver|platinum|palladium|diamonds?|gemstones?)\\b|זהב|יהלומ'}
+for _g in GROUPS:
+    _g["sup"] = SUP.get(_g["id"], "")
 BY_ID = {g["id"]: g for g in GROUPS}
 CH2GROUP = {ch: g["id"] for g in GROUPS for ch in g["hs"]}
 

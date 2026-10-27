@@ -278,7 +278,7 @@ def merge():
     gb = _group_bench(bm)
     write("groups.csv", [{"group": g["name"], "hs_chapters": " ".join(g["hs"]), "ted_cpv": " ".join(g["cpv"]),
                           "worldbank_keywords": ", ".join(g["wb"]), "mr_gov_categories": " ".join(g["mr"]),
-                          "benchmark": gb.get(g["id"], "")} for g in BY_ID.values()])
+                          "benchmark": gb.get(g["id"], ""), "supplier_regex": g["sup"]} for g in BY_ID.values()])
     write("status.csv", [dict(zip(["source", "last_run_utc", "rows", "note"], s)) for s in status])
     log.info("tenders %d, importers %d, suppliers %d", len(tenders), len(imp), len(sup))
 
