@@ -260,7 +260,12 @@ def main(argv=None) -> int:
     ap.add_argument("--merge", action="store_true")
     a = ap.parse_args(argv)
     if a.merge:
-        return merge()
+        try:
+            return merge()
+        except Exception:  # noqa: BLE001
+            (DATA / "merge_error.txt").write_text(traceback.format_exc())
+            log.error("merge failed:\n%s", traceback.format_exc())
+            raise
     if a.source:
         return run_source(a.source)
     for s in SOURCES:
