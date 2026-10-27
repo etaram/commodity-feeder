@@ -35,7 +35,7 @@ GROUPS = [
     {"id": "MINERAL", "name": "Minerals, cement, aggregates & glass", "hs": ["25", "26", "68", "70"],
      "cpv": ["14200000", "14300000", "14400000", "14500000", "14600000", "44111000", "44114000", "44113000"],
      "wb": ["cement", "aggregates", "ballast", "salt", "lime", "bitumen"],
-     "mr": ["ZD060002", "ZD060005", "ZD060007", "ZD19"], "ref": [15]},
+     "mr": ["ZD060002", "ZD060005", "ZD060007", "ZD19"], "ref": [808, 791]},
     {"id": "CHEM", "name": "Chemicals", "hs": ["28", "29", "38"],
      "cpv": ["24100000", "24200000", "24300000", "24900000"],
      "wb": ["chemicals", "chlorine", "aluminium sulphate", "reagents"], "mr": ["ZD08", "ZD070001"], "ref": []},
