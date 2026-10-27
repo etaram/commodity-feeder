@@ -30,6 +30,20 @@ The sheet pulls `prices.csv` with `apps_script/ImportFeed.gs` (08:05 and 23:35 A
 
 FX: ECB reference rates via Frankfurter (fallback open.er-api.com).
 
+## Benchmark model (one designated benchmark per commodity)
+`data/benchmark_registry.csv` (built by `tools/build_registry.py`) assigns every Master row ONE benchmark:
+the most reliable tier available (T1 exchange > T2 official market reporting > T3 industry assessment >
+T4 trade statistics); on a tie the automated source wins. Rows whose best benchmark has no free automated
+source (Trading Economics exchange quotes, World Bank, China NBS, USDA, GDT, Spices Board) are `manual`:
+the sheet keeps their price and the scheduled task refreshes them from the same source; the feed price is
+shown only as the check price. HS codes that are exactly an exchange-traded good take the exchange price
+converted to the HS unit (`derived`). China spot prices are ex-VAT (13%, 9% for farm goods and fertiliser).
+
+Sheet integration: each run writes `data/import/master_stage.csv` (G..P, R, T, U..Y, AA per Master row) and
+`data/import/history_stage.csv`. In the sheet, hidden tabs Feed_Stage (IMPORTDATA) and Feed_Merge (formulas
+that keep manual benchmarks) are copied into Master with one copyPaste batch, by the scheduled task or by
+`apps_script/ImportFeed.gs`. Sources tab = registry of sources with live counts and Source_Health status.
+
 ## Quality control (column `quality`, shown in the sheet as a `[QA: ...]` note)
 - plausibility bounds per unit (rejected)
 - cross-source disagreement > 3x among candidates of the same row
