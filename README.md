@@ -85,3 +85,6 @@ Separate Google Sheet "Leads Engine - Tenders & Importers" reads `data/leads/*.c
 - Extra tender sources: UK Find a Tender (OCDS API), EBRD ECEPP, Israeli exemption notices with an open objection window.
 - Contacts: TED buyer e-mail and phone on every EU tender; Wikidata website for leading US importers (exact name matches only) plus web and LinkedIn search links.
 - `digest.txt` is e-mailed every morning at 07:51 Israel time by a scheduled task.
+- More tender sources: SAM.gov (US federal, public search API), CanadaBuys (open data CSV), South Africa eTenders (OCDS API). India's CPPP needs a captcha and GeM refuses non-Indian connections, so India is covered only through World Bank financed notices.
+- `markets.py`: UN Comtrade annual import signals (growth, share, unit value vs tracker benchmark) for ~45 key HS codes, read by the daily BD agent.
+- Supplier matching runs inside the Leads sheet: "Suppliers DB" (IMPORTRANGE of the Sinder Supplier Master) and "Supplier Match" (keyword rule per group from groups.csv). Supplier data is never copied to this public repository.
