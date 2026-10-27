@@ -1,0 +1,1245 @@
+URL: https://api.tech.ec.europa.eu/agrifood/api/poultry/prices?beginDate=01/10/2026&endDate=27/10/2026
+STATUS: 200
+TYPE: application/json
+
+[ {
+  "memberStateCode" : "AT",
+  "memberStateName" : "Austria",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€953.27",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "AT",
+  "memberStateName" : "Austria",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€386.30",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "AT",
+  "memberStateName" : "Austria",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€522.88",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BE",
+  "memberStateName" : "Belgium",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€234.47",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BE",
+  "memberStateName" : "Belgium",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€462.60",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BE",
+  "memberStateName" : "Belgium",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€173.71",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BG",
+  "memberStateName" : "Bulgaria",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€155.64",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BG",
+  "memberStateName" : "Bulgaria",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€202.97",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BG",
+  "memberStateName" : "Bulgaria",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€432.95",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HR",
+  "memberStateName" : "Croatia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€258.17",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HR",
+  "memberStateName" : "Croatia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€608.33",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HR",
+  "memberStateName" : "Croatia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€261.01",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CY",
+  "memberStateName" : "Cyprus",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€395.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CY",
+  "memberStateName" : "Cyprus",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€255.19",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CY",
+  "memberStateName" : "Cyprus",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€650.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CZ",
+  "memberStateName" : "Czechia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€287.60",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CZ",
+  "memberStateName" : "Czechia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€258.60",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CZ",
+  "memberStateName" : "Czechia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€538.74",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EU",
+  "memberStateName" : "European Union",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€249.20",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EU",
+  "memberStateName" : "European Union",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€284.77",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EU",
+  "memberStateName" : "European Union",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€622.09",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "FR",
+  "memberStateName" : "France",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€270.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "FR",
+  "memberStateName" : "France",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€370.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "FR",
+  "memberStateName" : "France",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€790.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "DE",
+  "memberStateName" : "Germany",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€460.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "DE",
+  "memberStateName" : "Germany",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€817.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "DE",
+  "memberStateName" : "Germany",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€337.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EL",
+  "memberStateName" : "Greece",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€598.45",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EL",
+  "memberStateName" : "Greece",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€564.98",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EL",
+  "memberStateName" : "Greece",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€299.87",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HU",
+  "memberStateName" : "Hungary",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€242.94",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HU",
+  "memberStateName" : "Hungary",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€507.25",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HU",
+  "memberStateName" : "Hungary",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€227.83",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IE",
+  "memberStateName" : "Ireland",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€193.07",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IE",
+  "memberStateName" : "Ireland",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€877.77",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IE",
+  "memberStateName" : "Ireland",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€292.26",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IT",
+  "memberStateName" : "Italy",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€321.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IT",
+  "memberStateName" : "Italy",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€871.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IT",
+  "memberStateName" : "Italy",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€378.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "NL",
+  "memberStateName" : "Netherlands",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€540.23",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "NL",
+  "memberStateName" : "Netherlands",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€231.74",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PL",
+  "memberStateName" : "Poland",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€149.28",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PL",
+  "memberStateName" : "Poland",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€449.43",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PL",
+  "memberStateName" : "Poland",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€141.49",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PT",
+  "memberStateName" : "Portugal",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€235.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PT",
+  "memberStateName" : "Portugal",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€567.50",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PT",
+  "memberStateName" : "Portugal",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€267.50",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "RO",
+  "memberStateName" : "Romania",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€226.95",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "RO",
+  "memberStateName" : "Romania",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€232.39",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "RO",
+  "memberStateName" : "Romania",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€436.40",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SK",
+  "memberStateName" : "Slovakia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€230.21",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SK",
+  "memberStateName" : "Slovakia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€492.27",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SK",
+  "memberStateName" : "Slovakia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€278.78",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SI",
+  "memberStateName" : "Slovenia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€280.24",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SI",
+  "memberStateName" : "Slovenia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€642.41",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SI",
+  "memberStateName" : "Slovenia",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€297.81",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "ES",
+  "memberStateName" : "Spain",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€235.03",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "ES",
+  "memberStateName" : "Spain",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€501.30",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "ES",
+  "memberStateName" : "Spain",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€223.90",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SE",
+  "memberStateName" : "Sweden",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€327.24",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SE",
+  "memberStateName" : "Sweden",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€312.11",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SE",
+  "memberStateName" : "Sweden",
+  "beginDate" : "12/10/2026",
+  "endDate" : "18/10/2026",
+  "price" : "€937.31",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 42,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "AT",
+  "memberStateName" : "Austria",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€382.04",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "AT",
+  "memberStateName" : "Austria",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€511.51",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "AT",
+  "memberStateName" : "Austria",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€936.60",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BE",
+  "memberStateName" : "Belgium",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€451.33",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BE",
+  "memberStateName" : "Belgium",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€176.65",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BE",
+  "memberStateName" : "Belgium",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€234.51",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BG",
+  "memberStateName" : "Bulgaria",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€201.45",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BG",
+  "memberStateName" : "Bulgaria",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€431.14",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "BG",
+  "memberStateName" : "Bulgaria",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€168.05",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HR",
+  "memberStateName" : "Croatia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€263.07",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HR",
+  "memberStateName" : "Croatia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€256.84",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HR",
+  "memberStateName" : "Croatia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€696.77",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CY",
+  "memberStateName" : "Cyprus",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€650.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CY",
+  "memberStateName" : "Cyprus",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€255.19",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CY",
+  "memberStateName" : "Cyprus",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€390.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CZ",
+  "memberStateName" : "Czechia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€262.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CZ",
+  "memberStateName" : "Czechia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€284.59",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "CZ",
+  "memberStateName" : "Czechia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€550.14",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EU",
+  "memberStateName" : "European Union",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€287.77",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EU",
+  "memberStateName" : "European Union",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€248.10",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EU",
+  "memberStateName" : "European Union",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€613.95",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "FR",
+  "memberStateName" : "France",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€790.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "FR",
+  "memberStateName" : "France",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€270.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "FR",
+  "memberStateName" : "France",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€370.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "DE",
+  "memberStateName" : "Germany",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€460.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "DE",
+  "memberStateName" : "Germany",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€337.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "DE",
+  "memberStateName" : "Germany",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€818.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EL",
+  "memberStateName" : "Greece",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€285.87",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EL",
+  "memberStateName" : "Greece",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€482.18",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "EL",
+  "memberStateName" : "Greece",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€435.78",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HU",
+  "memberStateName" : "Hungary",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€226.70",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HU",
+  "memberStateName" : "Hungary",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€496.11",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "HU",
+  "memberStateName" : "Hungary",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€247.95",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IE",
+  "memberStateName" : "Ireland",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€291.59",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IE",
+  "memberStateName" : "Ireland",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€915.61",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IE",
+  "memberStateName" : "Ireland",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€194.59",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IT",
+  "memberStateName" : "Italy",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€865.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IT",
+  "memberStateName" : "Italy",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€314.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "IT",
+  "memberStateName" : "Italy",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€374.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "NL",
+  "memberStateName" : "Netherlands",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€540.23",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "NL",
+  "memberStateName" : "Netherlands",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€231.74",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PL",
+  "memberStateName" : "Poland",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€155.49",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PL",
+  "memberStateName" : "Poland",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€163.84",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PL",
+  "memberStateName" : "Poland",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€426.59",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PT",
+  "memberStateName" : "Portugal",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€235.00",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PT",
+  "memberStateName" : "Portugal",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€567.50",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "PT",
+  "memberStateName" : "Portugal",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€267.50",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "RO",
+  "memberStateName" : "Romania",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€436.91",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "RO",
+  "memberStateName" : "Romania",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€233.14",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "RO",
+  "memberStateName" : "Romania",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€226.37",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SK",
+  "memberStateName" : "Slovakia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€223.74",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SK",
+  "memberStateName" : "Slovakia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€491.63",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SK",
+  "memberStateName" : "Slovakia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€263.42",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SI",
+  "memberStateName" : "Slovenia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€271.36",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SI",
+  "memberStateName" : "Slovenia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€626.79",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SI",
+  "memberStateName" : "Slovenia",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€297.03",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "ES",
+  "memberStateName" : "Spain",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€499.10",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "ES",
+  "memberStateName" : "Spain",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€219.87",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "ES",
+  "memberStateName" : "Spain",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€233.86",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SE",
+  "memberStateName" : "Sweden",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€921.53",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Breast Fillet",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SE",
+  "memberStateName" : "Sweden",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€337.46",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Legs",
+  "priceType" : "Selling price"
+}, {
+  "memberStateCode" : "SE",
+  "memberStateName" : "Sweden",
+  "beginDate" : "05/10/2026",
+  "endDate" : "11/10/2026",
+  "price" : "€343.26",
+  "unit" : "national currency/100kg",
+  "weekNumber" : 41,
+  "productName" : "Whole broiler (65%)",
+  "priceType" : "Selling price"
+} ]

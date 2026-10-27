@@ -1,0 +1,12 @@
+URL: https://api.tech.ec.europa.eu/agrifood/api/wine/prices?beginDate=01/10/2026&endDate=27/10/2026
+STATUS: 404
+TYPE: application/json
+
+{
+  "error" : "Not Found",
+  "status" : "404",
+  "message" : "No results found for the selected parameter(s).",
+  "technicalErrorMessage" : "No data available for these parameters",
+  "apiSubErrors" : [ ],
+  "timestamp" : "27/10/2026 16:19:58"
+}
