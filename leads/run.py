@@ -51,6 +51,17 @@ def _group_bench(bm):
     return out
 
 
+def score(r, usd, days, new):
+    """0-100: size of the order, time left to bid, how precisely it matches a tracked commodity, region."""
+    v = 8 if usd == "" else 4 if usd < 50_000 else 10 if usd < 250_000 else 18 if usd < 1_000_000 else \
+        25 if usd < 5_000_000 else 30
+    d = 10 if days == "" else 0 if days < 3 else 10 if days <= 7 else 20 if days <= 30 else 15
+    m = r.get("match")
+    m = 15 if m in (None, "") else 20 if m >= 5 else 14 if m >= 4 else 8
+    reg = 20 if r["country"] == "ISR" else 15 if r["source"] == "World Bank" else 10
+    return v + d + m + reg + (5 if new else 0) + (5 if r.get("contact") else 0)
+
+
 def merge_tenders(bm, seen):
     rates, gb, t = _rates(), _group_bench(bm), today()
     rows, status = [], []
@@ -70,15 +81,17 @@ def merge_tenders(bm, seen):
             usd = round(float(r["value"]) * rates[r["currency"]])
         dl = r.get("deadline") or ""
         days = (dt.date.fromisoformat(dl) - t).days if dl else ""
+        new = (t - dt.date.fromisoformat(first)).days <= 2
         out.append({
-            "new": "NEW" if (t - dt.date.fromisoformat(first)).days <= 2 else "",
+            "score": score(r, usd, days, new),
+            "new": "NEW" if new else "",
             "deadline": dl, "days_left": days, "group": g.get("name", r["group"]), "source": r["source"],
             "country": r["country"], "buyer": r["buyer"], "title": r["title"], "est_value_usd": usd,
             "est_value": r.get("value", ""), "currency": r.get("currency", ""), "published": r["published"],
             "notice_type": r["notice_type"], "classification": r["classification"], "contact": r.get("contact", ""),
             "benchmark": gb.get(r["group"], ""), "link": r["link"], "first_seen": first, "id": r["id"],
         })
-    out.sort(key=lambda x: (x["deadline"] or "9999", x["group"]))
+    out.sort(key=lambda x: (-x["score"], x["deadline"] or "9999"))
     return out, status
 
 

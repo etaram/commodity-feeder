@@ -3,7 +3,7 @@ Open contract notices for SUPPLIES whose CPV falls in one of the commodity group
 import datetime as dt
 
 from .common import clean, log, session, today
-from .taxonomy import GROUPS, group_of_cpv
+from .taxonomy import GROUPS, match_cpv
 
 URL = "https://api.ted.europa.eu/v3/notices/search"
 FIELDS_FULL = ["publication-number", "notice-title", "buyer-name", "buyer-country", "classification-cpv",
@@ -66,7 +66,7 @@ def fetch():
         if nature and "supplies" not in nature:
             continue
         cpv = list(dict.fromkeys(n.get("classification-cpv") or []))
-        gid = group_of_cpv(cpv)
+        gid, depth = match_cpv(cpv)
         if not gid:
             continue
         dls = sorted(d for d in (_date(x) for x in (n.get("deadline-receipt-tender-date-lot") or [])) if d)
@@ -90,6 +90,6 @@ def fetch():
             "classification": " ".join(cpv[:6]), "notice_type": n.get("notice-type", ""),
             "published": str(_date(n.get("publication-date")) or ""), "deadline": str(deadline or ""),
             "value": round(sum(vals)) if vals else "", "currency": cur if vals else "",
-            "link": f"https://ted.europa.eu/en/notice/-/detail/{pn}", "contact": "",
+            "link": f"https://ted.europa.eu/en/notice/-/detail/{pn}", "contact": "", "match": depth,
         })
     return rows, {"query": used[0] if used else "", "notices": len(notices)}

@@ -63,6 +63,19 @@ BY_ID = {g["id"]: g for g in GROUPS}
 CH2GROUP = {ch: g["id"] for g in GROUPS for ch in g["hs"]}
 
 
+def match_cpv(codes):
+    """(group id, matched prefix length) for a list of CPV codes."""
+    best, blen = None, -1
+    for c in codes:
+        c = str(c)[:8]
+        for g in GROUPS:
+            for gc in g["cpv"]:
+                p = gc.rstrip("0")
+                if c.startswith(p) and len(p) > blen:
+                    best, blen = g["id"], len(p)
+    return best, blen
+
+
 def group_of_cpv(codes):
     """Most specific group for a list of CPV codes (longest prefix match of the group's CPV)."""
     best, blen = None, -1
