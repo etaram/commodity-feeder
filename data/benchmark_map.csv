@@ -72,13 +72,13 @@ row,id,name,designated_source,tier,series,since
 92,H0091,"Animals; live, n.e.c. in chapter 01, other than mammals, reptiles, birds and insects",comext,4,"Eurostat Comext DS-045409, HS 010690, 2026-08",2026-10-27
 93,H0092,"Meat; of bovine animals, carcasses and half-carcasses, fresh or chilled",eu_agri,2,European Commission Agri-food Data Portal - Young bull carcass R3 (1 reports: EU),2026-10-27
 94,H0093,"Meat; of bovine animals, cuts with bone in (excluding carcasses and half-carcasses),...",comext,4,"Eurostat Comext DS-045409, HS 020120, 2026-08",2026-10-27
-95,H0094,"Meat; of bovine animals, boneless cuts, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 020130, 2026-08",2026-10-27
+95,H0094,"Meat; of bovine animals, boneless cuts, fresh or chilled",usda,2,USDA AMS LM_XB459 National Weekly Boxed Beef Cutout - Choice 600-900 lb,2026-10-27
 96,H0095,"Meat; of bovine animals, carcasses and half-carcasses, frozen",comext,4,"Eurostat Comext DS-045409, HS 020210, 2026-05..2026-07",2026-10-27
 97,H0096,"Meat; of bovine animals, cuts with bone in (excluding carcasses and half-carcasses),...",comext,4,"Eurostat Comext DS-045409, HS 020220, 2026-08",2026-10-27
 98,H0097,"Meat; of bovine animals, boneless cuts, frozen",comext,4,"Eurostat Comext DS-045409, HS 020230, 2026-08",2026-10-27
 99,H0098,"Meat; of swine, carcasses and half-carcasses, fresh or chilled",eu_agri,2,European Commission Agri-food Data Portal - Pig carcass S+E (1 reports: EU),2026-10-27
-100,H0099,"Meat; of swine, hams, shoulders and cuts thereof, with bone in, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 020312, 2026-08",2026-10-27
-101,H0100,"Meat; of swine, n.e.c. in item no. 0203.1, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 020319, 2026-08",2026-10-27
+100,H0099,"Meat; of swine, hams, shoulders and cuts thereof, with bone in, fresh or chilled",usda,2,USDA AMS LM_PK602 National Daily Pork FOB Plant - Ham cutout value (215 lb carcass),2026-10-27
+101,H0100,"Meat; of swine, n.e.c. in item no. 0203.1, fresh or chilled",usda,2,USDA AMS LM_PK602 National Daily Pork FOB Plant - Carcass cutout value (215 lb carcass),2026-10-27
 102,H0101,"Meat; of swine, carcasses and half-carcasses, frozen",comext,4,"Eurostat Comext DS-045409, HS 020321, 2026-07",2026-10-27
 103,H0102,"Meat; of swine, hams, shoulders and cuts thereof, with bone in, frozen",comext,4,"Eurostat Comext DS-045409, HS 020322, 2026-05..2026-07",2026-10-27
 104,H0103,"Meat; of swine, n.e.c. in item no. 0203.2, frozen",comext,4,"Eurostat Comext DS-045409, HS 020329, 2026-08",2026-10-27
@@ -284,23 +284,23 @@ row,id,name,designated_source,tier,series,since
 319,H0318,"Dairy produce; milk and cream, not concentrated, not containing added sugar or other...",eu_agri,2,"European Commission Agri-food Data Portal - Raw cow milk (farmgate) (16 reports: AT,BG,DE,EE,ES,FI,FR,HR)",2026-10-27
 320,H0319,"Dairy produce; milk and cream, not concentrated, not containing added sugar or other...",comext,4,"Eurostat Comext DS-045409, HS 040140, 2026-05..2026-08",2026-10-27
 321,H0320,"Dairy produce; milk and cream, not concentrated, not containing added sugar or other...",eu_agri,2,European Commission Agri-food Data Portal - Cream (1 reports: EU),2026-10-27
-322,H0321,"Dairy produce; milk and cream, concentrated or containing added sugar or other...",eu_agri,2,European Commission Agri-food Data Portal - Skimmed milk powder (1 reports: NL),2026-10-27
-323,H0322,"Dairy produce; milk and cream, concentrated, not containing added sugar or other...",eu_agri,2,European Commission Agri-food Data Portal - Whole milk powder (1 reports: NL),2026-10-27
+322,H0321,"Dairy produce; milk and cream, concentrated or containing added sugar or other...",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Skim Milk Powder,2026-10-27
+323,H0322,"Dairy produce; milk and cream, concentrated, not containing added sugar or other...",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Whole Milk Powder,2026-10-27
 324,H0323,"Dairy produce; milk and cream, containing added sugar or other sweetening matter, in...",comext,4,"Eurostat Comext DS-045409, HS 040229, 2026-06..2026-08",2026-10-27
 325,H0324,"Dairy produce; milk and cream, concentrated, not containing added sugar or other...",comext,4,"Eurostat Comext DS-045409, HS 040291, 2026-08",2026-10-27
 326,H0325,"Dairy produce; milk and cream, containing added sugar or other sweetening matter,...",comext,4,"Eurostat Comext DS-045409, HS 040299, 2026-08",2026-10-27
 327,H0326,"Dairy produce; yoghurt, whether or not concentrated or containing added sugar or other...",comext,4,"Eurostat Comext DS-045409, HS 040320, 2026-08",2026-10-27
-328,H0327,"Dairy produce; buttermilk, curdled milk or cream, kephir, fermented or acidified milk...",comext,4,"Eurostat Comext DS-045409, HS 040390, 2026-08",2026-10-27
+328,H0327,"Dairy produce; buttermilk, curdled milk or cream, kephir, fermented or acidified milk...",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Buttermilk Powder,2026-10-27
 329,H0328,"Dairy produce; whey, whether or not concentrated or containing added sugar or other...",eu_agri,2,European Commission Agri-food Data Portal - Whey powder (1 reports: EU),2026-10-27
 330,H0329,"Dairy produce; natural milk constituents (excluding whey), whether or not containing...",comext,4,"Eurostat Comext DS-045409, HS 040490, 2026-08",2026-10-27
-331,H0330,"Dairy produce; derived from milk, butter",eu_agri,2,European Commission Agri-food Data Portal - Butter (1 reports: NL),2026-10-27
+331,H0330,"Dairy produce; derived from milk, butter",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Butter,2026-10-27
 332,H0331,Dairy produce; dairy spreads,comext,4,"Eurostat Comext DS-045409, HS 040520, 2026-07..2026-08",2026-10-27
-333,H0332,Dairy produce; fats and oils derived from milk (other than butter or dairy spreads),comext,4,"Eurostat Comext DS-045409, HS 040590, 2026-08",2026-10-27
-334,H0333,"Dairy produce; fresh cheese (including whey cheese), not fermented, and curd",comext,4,"Eurostat Comext DS-045409, HS 040610, 2026-08",2026-10-27
+333,H0332,Dairy produce; fats and oils derived from milk (other than butter or dairy spreads),usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Anhydrous Milk Fat,2026-10-27
+334,H0333,"Dairy produce; fresh cheese (including whey cheese), not fermented, and curd",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Mozzarella,2026-10-27
 335,H0334,"Dairy produce; cheese of all kinds, grated or powdered",comext,4,"Eurostat Comext DS-045409, HS 040620, 2026-08",2026-10-27
 336,H0335,"Dairy produce; cheese, processed (not grated or powdered)",comext,4,"Eurostat Comext DS-045409, HS 040630, 2026-08",2026-10-27
 337,H0336,"Dairy produce; cheese, blue-veined and other cheese containing veins produced by...",comext,4,"Eurostat Comext DS-045409, HS 040640, 2026-08",2026-10-27
-338,H0337,"Dairy produce; cheese (not grated, powdered or processed), n.e.c. in heading no. 0406",eu_agri,2,European Commission Agri-food Data Portal - Gouda cheese (1 reports: EU),2026-10-27
+338,H0337,"Dairy produce; cheese (not grated, powdered or processed), n.e.c. in heading no. 0406",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Cheese - Cheddar,2026-10-27
 339,H0338,"Birds' eggs, in shell; fresh, fertilised eggs for incubation, of fowls of the species...",comext,4,"Eurostat Comext DS-045409, HS 040711, 2026-08",2026-10-27
 340,H0339,"Birds' eggs, in shell; fresh, fertilised eggs for incubation, other than fowls of the...",comext,4,"Eurostat Comext DS-045409, HS 040719, 2026-08",2026-10-27
 341,H0340,"Birds' eggs, in shell; fresh, not for incubation, of fowls of the species Gallus...",eu_agri,2,"European Commission Agri-food Data Portal - Eggs, barn (class A) (1 reports: NL)",2026-10-27
@@ -314,14 +314,14 @@ row,id,name,designated_source,tier,series,since
 349,H0348,Animal products; insects,comext,4,"Eurostat Comext DS-045409, HS 041010, 2026-06..2026-08",2026-10-27
 350,H0349,"Animal products; edible products of animal origin, not elsewhere specified or...",comext,4,"Eurostat Comext DS-045409, HS 041090, 2026-08",2026-10-27
 351,H0350,"Vegetables; seed potatoes, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070110, 2026-06..2026-08",2026-10-27
-352,H0351,"Vegetables; potatoes (other than seed), fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070190, 2026-08",2026-10-27
-353,H0352,"Vegetables; tomatoes, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070200, 2026-08",2026-10-27
+352,H0351,"Vegetables; potatoes (other than seed), fresh or chilled",usda,2,"USDA AMS National Shipping Point Trends - Potatoes, Upper Valley, Twin Falls-Burley District Idaho",2026-10-27
+353,H0352,"Vegetables; tomatoes, fresh or chilled",usda,2,"USDA AMS National Shipping Point Trends - Tomatoes, Central District California",2026-10-27
 354,H0353,"Vegetables, alliaceous; onions and shallots, fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Onions (ex-packaging station) (2 reports: ES,IT)",2026-10-27
 355,H0354,"Vegetables, alliaceous; garlic, fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Garlic (ex-packaging station) (3 reports: ES,FR,IT)",2026-10-27
 356,H0355,"Vegetables, alliaceous; leeks and other kinds n.e.c. in heading no. 0703, fresh or chilled",eu_agri,2,European Commission Agri-food Data Portal - Leeks (ex-packaging station) (1 reports: ES),2026-10-27
 357,H0356,"Vegetables, brassica; cauliflowers and broccoli, fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Cauliflowers (ex-packaging station) (7 reports: BE,DE,EL,ES,FR,IT,PT)",2026-10-27
 358,H0357,"Vegetables, brassica; brussel sprouts, fresh or chilled",eu_agri,2,European Commission Agri-food Data Portal - Cabbage (ex-packaging station) (1 reports: ES),2026-10-27
-359,H0358,"Vegetables, brassica; edible, n.e.c. in heading no. 0704, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070490, 2026-08",2026-10-27
+359,H0358,"Vegetables, brassica; edible, n.e.c. in heading no. 0704, fresh or chilled",eu_agri,2,European Commission Agri-food Data Portal - Cabbage (ex-packaging station) (1 Member States: ES),2026-10-27
 360,H0359,"Vegetables; cabbage (head) lettuce (lactuca sativa), fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Lettuces (ex-packaging station) (3 reports: ES,IT,PT)",2026-10-27
 361,H0360,"Vegetables; lettuce (lactuca sativa), (other than cabbage lettuce), fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070519, 2026-08",2026-10-27
 362,H0361,"Vegetables; witloff chicory (cichorium intybus var. foliosum), fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070521, 2026-05..2026-06",2026-10-27
@@ -329,10 +329,10 @@ row,id,name,designated_source,tier,series,since
 364,H0363,"Vegetables, root; carrots and turnips, fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Carrots (ex-packaging station) (3 reports: ES,IT,PT)",2026-10-27
 365,H0364,"Vegetables, root; salad beetroot, salsify, celeric, radishes and similar edible roots,...",comext,4,"Eurostat Comext DS-045409, HS 070690, 2026-08",2026-10-27
 366,H0365,"Vegetables; cucumbers and gherkins, fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Cucumbers (ex-packaging station) (6 reports: BG,DE,EL,ES,FR,IT)",2026-10-27
-367,H0366,"Vegetables, leguminous; peas (pisum sativum), shelled or unshelled, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070810, 2026-08",2026-10-27
+367,H0366,"Vegetables, leguminous; peas (pisum sativum), shelled or unshelled, fresh or chilled",usda,2,"USDA AMS National Shipping Point Trends - Peas, Snow, Peru Imports - Ports Of Entry South Florida",2026-10-27
 368,H0367,"Vegetables, leguminous; beans (vigna spp., phaseolus spp.), shelled or unshelled,...",eu_agri,2,"European Commission Agri-food Data Portal - Beans (ex-packaging station) (2 reports: ES,IT)",2026-10-27
 369,H0368,"Vegetables, leguminous; (other than peas and beans), shelled or unshelled, fresh or...",comext,4,"Eurostat Comext DS-045409, HS 070890, 2026-07..2026-08",2026-10-27
-370,H0369,"Vegetables; asparagus, fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070920, 2026-08",2026-10-27
+370,H0369,"Vegetables; asparagus, fresh or chilled",usda,2,"USDA AMS National Shipping Point Trends - Asparagus, Peru Imports - Ports Of Entry South Florida",2026-10-27
 371,H0370,"Vegetables; aubergines, (e.g. plants), fresh or chilled",eu_agri,2,"European Commission Agri-food Data Portal - Aubergines (ex-packaging station) (5 reports: BG,EL,ES,FR,IT)",2026-10-27
 372,H0371,"Vegetables; celery (other than celeriac), fresh or chilled",comext,4,"Eurostat Comext DS-045409, HS 070940, 2026-08",2026-10-27
 373,H0372,"Vegetables; mushrooms of the genus Agaricus, fresh or chilled",eu_agri,2,European Commission Agri-food Data Portal - Cultivated mushrooms (ex-packaging station) (1 reports: ES),2026-10-27
@@ -380,15 +380,15 @@ row,id,name,designated_source,tier,series,since
 415,H0414,"Vegetables, leguminous; broad beans (vicia faba var. major) and horse beans (vicia...",comext,4,"Eurostat Comext DS-045409, HS 071350, 2026-08",2026-10-27
 416,H0415,"Vegetables, leguminous; pigeon peas (Cajanus cajan), shelled, whether or not skinned...",comext,4,"Eurostat Comext DS-045409, HS 071360, 2026-07..2026-08",2026-10-27
 417,H0416,"Vegetables, leguminous; n.e.c. in heading no. 0713, shelled, whether or not skinned or...",comext,4,"Eurostat Comext DS-045409, HS 071390, 2026-08",2026-10-27
-418,H0417,"Vegetable roots and tubers; manioc (cassava), with high starch or inulin content,...",comext,4,"Eurostat Comext DS-045409, HS 071410, 2026-08",2026-10-27
+418,H0417,"Vegetable roots and tubers; manioc (cassava), with high starch or inulin content,...",usda,2,"USDA AMS National Shipping Point Trends - Yuca (Cassava), Central America Imports - Ports Of Entry South Florida",2026-10-27
 419,H0418,"Vegetable roots and tubers; sweet potatoes, with high starch or inulin content, fresh,...",comext,4,"Eurostat Comext DS-045409, HS 071420, 2026-08",2026-10-27
-420,H0419,"Vegetable roots and tubers; yams (Dioscorea spp.) with high starch or inulin content,...",comext,4,"Eurostat Comext DS-045409, HS 071430, 2026-08",2026-10-27
-421,H0420,"Vegetable roots and tubers; taro (Colocasia spp.) with high starch or inulin content,...",comext,4,"Eurostat Comext DS-045409, HS 071440, 2026-08",2026-10-27
-422,H0421,Vegetable roots and tubers; yautia (Xanthosoma spp.) with high starch or inulin...,comext,4,"Eurostat Comext DS-045409, HS 071450, 2026-07..2026-08",2026-10-27
+420,H0419,"Vegetable roots and tubers; yams (Dioscorea spp.) with high starch or inulin content,...",usda,2,"USDA AMS National Shipping Point Trends - Yams (Names), Caribbean Imports - Ports Of Entry South Florida",2026-10-27
+421,H0420,"Vegetable roots and tubers; taro (Colocasia spp.) with high starch or inulin content,...",usda,2,"USDA AMS National Shipping Point Trends - Taro, South America Imports - Ports Of Entry South Florida",2026-10-27
+422,H0421,Vegetable roots and tubers; yautia (Xanthosoma spp.) with high starch or inulin...,usda,2,"USDA AMS National Shipping Point Trends - Malanga/ Yautia, Central America Imports - Ports Of Entry South Florida",2026-10-27
 423,H0422,"Vegetable roots and tubers; arrowroot, salep, Jerusalem artichokes and similar roots...",comext,4,"Eurostat Comext DS-045409, HS 071490, 2026-08",2026-10-27
 424,H0423,"Nuts, edible; coconuts, desiccated",comext,4,"Eurostat Comext DS-045409, HS 080111, 2026-08",2026-10-27
 425,H0424,"Nuts, edible; coconuts, in the inner shell (endocarp)",comext,4,"Eurostat Comext DS-045409, HS 080112, 2026-08",2026-10-27
-426,H0425,"Nuts, edible; coconuts, fresh or dried, other than desiccated or in the inner shell...",comext,4,"Eurostat Comext DS-045409, HS 080119, 2026-08",2026-10-27
+426,H0425,"Nuts, edible; coconuts, fresh or dried, other than desiccated or in the inner shell...",usda,2,"USDA AMS National Shipping Point Trends - Coconuts, Caribbean Imports - Ports Of Entry South Florida",2026-10-27
 427,H0426,"Nuts, edible; brazil nuts, fresh or dried, in shell",comext,4,"Eurostat Comext DS-045409, HS 080121, 2026-08",2026-10-27
 428,H0427,"Nuts, edible; brazil nuts, fresh or dried, shelled",comext,4,"Eurostat Comext DS-045409, HS 080122, 2026-08",2026-10-27
 429,H0428,"Nuts, edible; cashew nuts, fresh or dried, in shell",comext,4,"Eurostat Comext DS-045409, HS 080131, 2026-05..2026-08",2026-10-27
@@ -410,8 +410,8 @@ row,id,name,designated_source,tier,series,since
 445,H0444,"Nuts, edible; pine nuts, fresh or dried, in shell",comext,4,"Eurostat Comext DS-045409, HS 080291, 2026-06..2026-08",2026-10-27
 446,H0445,"Nuts, edible; pine nuts, fresh or dried, shelled",comext,4,"Eurostat Comext DS-045409, HS 080292, 2026-08",2026-10-27
 447,H0446,"Nuts, edible; n.e.c. in heading 0801 and 0802, fresh or dried, whether or not shelled...",comext,4,"Eurostat Comext DS-045409, HS 080299, 2026-08",2026-10-27
-448,H0447,"Fruit, edible; plantains, fresh or dried",comext,4,"Eurostat Comext DS-045409, HS 080310, 2026-08",2026-10-27
-449,H0448,"Fruit, edible; bananas, other than plantains, fresh or dried",comext,4,"Eurostat Comext DS-045409, HS 080390, 2026-08",2026-10-27
+448,H0447,"Fruit, edible; plantains, fresh or dried",usda,2,"USDA AMS National Shipping Point Trends - Plantains, Central America Imports - Ports Of Entry South Florida",2026-10-27
+449,H0448,"Fruit, edible; bananas, other than plantains, fresh or dried",usda,2,"USDA AMS National Shipping Point Trends - Bananas, South America Imports - Ports Of Entry South Florida",2026-10-27
 450,H0449,"Fruit, edible; dates, fresh or dried",comext,4,"Eurostat Comext DS-045409, HS 080410, 2026-08",2026-10-27
 451,H0450,"Fruit, edible; figs, fresh or dried",comext,4,"Eurostat Comext DS-045409, HS 080420, 2026-08",2026-10-27
 452,H0451,"Fruit, edible; pineapples, fresh or dried",comext,4,"Eurostat Comext DS-045409, HS 080430, 2026-08",2026-10-27
@@ -428,7 +428,7 @@ row,id,name,designated_source,tier,series,since
 463,H0462,"Fruit, edible; grapes, dried",comext,4,"Eurostat Comext DS-045409, HS 080620, 2026-08",2026-10-27
 464,H0463,"Fruit, edible; watermelons, fresh",eu_agri,2,"European Commission Agri-food Data Portal - Watermelons (ex-packaging station) (2 reports: BG,ES)",2026-10-27
 465,H0464,"Fruit, edible; melons, other than watermelons, fresh",eu_agri,2,"European Commission Agri-food Data Portal - Melons (ex-packaging station) (2 reports: BG,ES)",2026-10-27
-466,H0465,"Fruit, edible; papaws (papayas), fresh",comext,4,"Eurostat Comext DS-045409, HS 080720, 2026-08",2026-10-27
+466,H0465,"Fruit, edible; papaws (papayas), fresh",usda,2,"USDA AMS National Shipping Point Trends - Papaya, Mexico Crossings Through Texas",2026-10-27
 467,H0466,"Fruit, edible; apples, fresh",eu_agri,2,"European Commission Agri-food Data Portal - Apples (ex-packaging station) (9 reports: BE,BG,DE,EL,ES,FR,HR,IT)",2026-10-27
 468,H0467,"Fruit, edible; pears, fresh",eu_agri,2,"European Commission Agri-food Data Portal - Pears (ex-packaging station) (6 reports: BE,EL,ES,FR,IT,PT)",2026-10-27
 469,H0468,"Fruit, edible; quinces, fresh",comext,4,"Eurostat Comext DS-045409, HS 080840, 2026-05..2026-06",2026-10-27
@@ -438,13 +438,13 @@ row,id,name,designated_source,tier,series,since
 473,H0472,"Fruit, edible; peaches, including nectarines, fresh",eu_agri,2,"European Commission Agri-food Data Portal - Peaches (ex-packaging station) (3 reports: EL,ES,IT)",2026-10-27
 474,H0473,"Fruit, edible; plums and sloes, fresh",eu_agri,2,European Commission Agri-food Data Portal - Plums (ex-packaging station) (1 reports: ES),2026-10-27
 475,H0474,"Fruit, edible; strawberries, fresh",eu_agri,2,European Commission Agri-food Data Portal - Strawberries (ex-packaging station) (1 reports: BE),2026-10-27
-476,H0475,"Fruit, edible; raspberries, blackberries, mulberries, and loganberries, fresh",comext,4,"Eurostat Comext DS-045409, HS 081020, 2026-08",2026-10-27
+476,H0475,"Fruit, edible; raspberries, blackberries, mulberries, and loganberries, fresh",usda,2,"USDA AMS National Shipping Point Trends - Raspberries, Mexico Crossings Through Arizona, California And Texas",2026-10-27
 477,H0476,"Fruit, edible; black, white or red currants and gooseberries, fresh",comext,4,"Eurostat Comext DS-045409, HS 081030, 2026-05..2026-08",2026-10-27
 478,H0477,"Fruit, edible; cranberries, bilberries and other fruits of the genus vaccinium, fresh",comext,4,"Eurostat Comext DS-045409, HS 081040, 2026-08",2026-10-27
 479,H0478,"Fruit, edible; kiwifruit, fresh",comext,4,"Eurostat Comext DS-045409, HS 081050, 2026-08",2026-10-27
 480,H0479,"Fruit, edible; durians, fresh",comext,4,"Eurostat Comext DS-045409, HS 081060, 2026-08",2026-10-27
 481,H0480,"Fruit, edible; persimmons, fresh",comext,4,"Eurostat Comext DS-045409, HS 081070, 2026-06..2026-08",2026-10-27
-482,H0481,"Fruit, edible; fruits n.e.c. in heading no. 0801 to 0810, fresh",comext,4,"Eurostat Comext DS-045409, HS 081090, 2026-08",2026-10-27
+482,H0481,"Fruit, edible; fruits n.e.c. in heading no. 0801 to 0810, fresh",usda,2,"USDA AMS National Shipping Point Trends - Dragon Fruit (Pitaya), South America Imports - Ports Of Entry South Florida",2026-10-27
 483,H0482,"Fruit, edible; strawberries, uncooked or cooked by steaming or boiling in water,...",comext,4,"Eurostat Comext DS-045409, HS 081110, 2026-08",2026-10-27
 484,H0483,"Fruit, edible; raspberries, blackberries, mulberries, loganberries, black, white or...",comext,4,"Eurostat Comext DS-045409, HS 081120, 2026-08",2026-10-27
 485,H0484,"Fruit, edible; fruit and nuts n.e.c. in heading no. 0811, uncooked or cooked, frozen...",comext,4,"Eurostat Comext DS-045409, HS 081190, 2026-08",2026-10-27
@@ -489,7 +489,7 @@ row,id,name,designated_source,tier,series,since
 524,H0523,"Spices; cumin seeds, crushed or ground",comext,4,"Eurostat Comext DS-045409, HS 090932, 2026-08",2026-10-27
 525,H0524,"Spices; seeds of anise, badian, caraway or fennel; juniper berries, neither crushed...",comext,4,"Eurostat Comext DS-045409, HS 090961, 2026-08",2026-10-27
 526,H0525,"Spices; seeds of anise, badian, caraway or fennel; juniper berries, crushed or ground",comext,4,"Eurostat Comext DS-045409, HS 090962, 2026-08",2026-10-27
-527,H0526,"Spices; ginger, neither crushed nor ground",comext,4,"Eurostat Comext DS-045409, HS 091011, 2026-08",2026-10-27
+527,H0526,"Spices; ginger, neither crushed nor ground",usda,2,"USDA AMS National Shipping Point Trends - Ginger Root, Brazil Imports - Ports Of Entry South Florida",2026-10-27
 528,H0527,"Spices; ginger, crushed or ground",comext,4,"Eurostat Comext DS-045409, HS 091012, 2026-08",2026-10-27
 529,H0528,Spices; saffron,comext,4,"Eurostat Comext DS-045409, HS 091020, 2026-08",2026-10-27
 530,H0529,Spices; turmeric (curcuma),comext,4,"Eurostat Comext DS-045409, HS 091030, 2026-08",2026-10-27
@@ -560,7 +560,7 @@ row,id,name,designated_source,tier,series,since
 595,H0594,"Oil seeds; sunflower seeds, whether or not broken",eu_agri,2,European Commission Agri-food Data Portal - Sunflower seed (1 reports: DE),2026-10-27
 596,H0595,"Oil seeds; palm nuts and kernels, whether or not broken",comext,4,"Eurostat Comext DS-045409, HS 120710, 2026-05..2026-08",2026-10-27
 597,H0596,"Oil seeds; cotton seeds, seed, whether or not broken",comext,4,"Eurostat Comext DS-045409, HS 120721, 2026-05..2026-08",2026-10-27
-598,H0597,"Oil seeds; cotton seeds, other than seed, whether or not broken",comext,4,"Eurostat Comext DS-045409, HS 120729, 2026-05..2026-08",2026-10-27
+598,H0597,"Oil seeds; cotton seeds, other than seed, whether or not broken",usda,2,"USDA AMS AMS_3668 - Cottonseed (Whole) Fuzzy, CA-San Joaquin Valley",2026-10-27
 599,H0598,"Oil seeds; castor oil seeds, whether or not broken",comext,4,"Eurostat Comext DS-045409, HS 120730, 2026-05..2026-08",2026-10-27
 600,H0599,"Oil seeds; sesamum seeds, whether or not broken",comext,4,"Eurostat Comext DS-045409, HS 120740, 2026-08",2026-10-27
 601,H0600,"Oil seeds; mustard seeds, whether or not broken",comext,4,"Eurostat Comext DS-045409, HS 120750, 2026-08",2026-10-27
@@ -599,7 +599,7 @@ row,id,name,designated_source,tier,series,since
 634,H0633,Lucerne (alfalfa) meal and pellets,comext,4,"Eurostat Comext DS-045409, HS 121410, 2026-05..2026-08",2026-10-27
 635,H0634,"Forage products including swedes, mangolds, fodder roots, hay, sainfoin, clover,...",comext,4,"Eurostat Comext DS-045409, HS 121490, 2026-08",2026-10-27
 636,H0635,"Pig fat; lard, other than that of heading 0209 and 1503",comext,4,"Eurostat Comext DS-045409, HS 150110, 2026-08",2026-10-27
-637,H0636,"Pig fat; not lard, other than that of heading 0209 or 1503",comext,4,"Eurostat Comext DS-045409, HS 150120, 2026-08",2026-10-27
+637,H0636,"Pig fat; not lard, other than that of heading 0209 or 1503",usda,2,"USDA AMS AMS_3510 - Choice White Grease, Central US",2026-10-27
 638,H0637,Poultry fat; other than that of heading 0209 or 1503,comext,4,"Eurostat Comext DS-045409, HS 150190, 2026-08",2026-10-27
 639,H0638,Tallow; other than those of heading 1503,comext,4,"Eurostat Comext DS-045409, HS 150210, 2026-08",2026-10-27
 640,H0639,"Fats of bovine animals, sheep or goats; excluding tallow, and other than those of...",comext,4,"Eurostat Comext DS-045409, HS 150290, 2026-08",2026-10-27
@@ -646,7 +646,7 @@ row,id,name,designated_source,tier,series,since
 681,H0680,"Microbial fats and oils and their fractions; partly or wholly hydrogenated,...",comext,4,"Eurostat Comext DS-045409, HS 151630, 2026-05..2026-08",2026-10-27
 682,H0681,Margarine; excluding liquid margarine,comext,4,"Eurostat Comext DS-045409, HS 151710, 2026-08",2026-10-27
 683,H0682,"Edible mixtures or preparations of animal, vegetable or microbial fats or oils or of...",comext,4,"Eurostat Comext DS-045409, HS 151790, 2026-08",2026-10-27
-684,H0683,"Animal, vegetable or microbial fats, oils and their fractions; boiled, oxidised,...",comext,4,"Eurostat Comext DS-045409, HS 151800, 2026-08",2026-10-27
+684,H0683,"Animal, vegetable or microbial fats, oils and their fractions; boiled, oxidised,...",usda,2,"USDA AMS AMS_3510 - Yellow Grease, CA-Central Coast",2026-10-27
 685,H0684,"Glycerol, crude; glycerol waters and glycerol lyes",comext,4,"Eurostat Comext DS-045409, HS 152000, 2026-08",2026-10-27
 686,H0685,Vegetable waxes (other than triglycerides); whether or not refined or coloured,comext,4,"Eurostat Comext DS-045409, HS 152110, 2026-08",2026-10-27
 687,H0686,"Waxes, other than vegetable, n.e.c. in heading no. 1521; whether or not refined or...",comext,4,"Eurostat Comext DS-045409, HS 152190, 2026-08",2026-10-27
@@ -656,7 +656,7 @@ row,id,name,designated_source,tier,series,since
 691,H0690,"Sugars; cane sugar, raw, in solid form, other than as specified in Subheading Note 2...",derived,1,Yahoo Finance SB=F (NYB),2026-10-27
 692,H0691,"Sugars; sucrose, chemically pure, in solid form, containing added flavouring or...",comext,4,"Eurostat Comext DS-045409, HS 170191, 2026-08",2026-10-27
 693,H0692,"Sugars; sucrose, chemically pure, in solid form, not containing added flavouring or...",cn_spot,3,100ppi (生意社) spot via AKShare - White sugar,2026-10-27
-694,H0693,"Sugars; lactose and lactose syrup, containing by weight 99% or more lactose, expressed...",comext,4,"Eurostat Comext DS-045409, HS 170211, 2026-08",2026-10-27
+694,H0693,"Sugars; lactose and lactose syrup, containing by weight 99% or more lactose, expressed...",usda_gdt,1,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Lactose,2026-10-27
 695,H0694,"Sugars; lactose and lactose syrup, containing by weight less than 99% lactose,...",comext,4,"Eurostat Comext DS-045409, HS 170219, 2026-07..2026-08",2026-10-27
 696,H0695,"Sugars; maple sugar, chemically pure, in solid form; maple syrup, not containing added...",comext,4,"Eurostat Comext DS-045409, HS 170220, 2026-08",2026-10-27
 697,H0696,"Sugars; glucose and glucose syrup, not containing fructose or containing in the dry...",comext,4,"Eurostat Comext DS-045409, HS 170230, 2026-08",2026-10-27
@@ -682,25 +682,25 @@ row,id,name,designated_source,tier,series,since
 717,H0716,Undenatured ethyl alcohol; of an alcoholic strength by volume of 80% vol. or higher,comext,4,"Eurostat Comext DS-045409, HS 220710, 2026-08",2026-10-27
 718,H0717,"Ethyl alcohol and other spirits; denatured, of any strength",comext,4,"Eurostat Comext DS-045409, HS 220720, 2026-08",2026-10-27
 719,H0718,Vinegar and substitutes for vinegar; obtained from acetic acid,comext,4,"Eurostat Comext DS-045409, HS 220900, 2026-08",2026-10-27
-720,H0719,"Flours, meals and pellets; of meat or meat offal, greaves",comext,4,"Eurostat Comext DS-045409, HS 230110, 2026-08",2026-10-27
+720,H0719,"Flours, meals and pellets; of meat or meat offal, greaves",usda,2,"USDA AMS AMS_3510 - Meat and Bone Meal Ruminant 46-50%, Pacific Northwest",2026-10-27
 721,H0720,"Flours, meals and pellets; of fish or of crustaceans, molluscs or other aquatic...",comext,4,"Eurostat Comext DS-045409, HS 230120, 2026-08",2026-10-27
-722,H0721,"Bran, sharps and other residues; of maize (corn), whether or not in the form of...",comext,4,"Eurostat Comext DS-045409, HS 230210, 2026-08",2026-10-27
+722,H0721,"Bran, sharps and other residues; of maize (corn), whether or not in the form of...",usda,2,"USDA AMS AMS_3668 - Yellow Corn Hominy Feed, Illinois",2026-10-27
 723,H0722,"Bran, sharps and other residues; of wheat, whether or not in the form of pellets,...",eu_agri,2,European Commission Agri-food Data Portal - Wheat bran (1 reports: DE),2026-10-27
 724,H0723,"Bran, sharps and other residues; of other cereals, whether or not in the form of...",comext,4,"Eurostat Comext DS-045409, HS 230240, 2026-07..2026-08",2026-10-27
-725,H0724,"Bran, sharps and other residues; of leguminous plants, whether or not in the form of...",comext,4,"Eurostat Comext DS-045409, HS 230250, 2026-08",2026-10-27
-726,H0725,Residues of starch manufacture and similar residues; whether or not in the form of pellets,comext,4,"Eurostat Comext DS-045409, HS 230310, 2026-08",2026-10-27
+725,H0724,"Bran, sharps and other residues; of leguminous plants, whether or not in the form of...",usda,2,"USDA AMS AMS_3668 - Soybean Hulls, Illinois",2026-10-27
+726,H0725,Residues of starch manufacture and similar residues; whether or not in the form of pellets,usda,2,"USDA AMS AMS_3668 - Corn Gluten Feed Pellets 21%, Central US Bid/Ask/",2026-10-27
 727,H0726,"Beet-pulp, bagasse and other waste of sugar manufacture; whether or not in the form of...",comext,4,"Eurostat Comext DS-045409, HS 230320, 2026-08",2026-10-27
-728,H0727,Brewing or distilling dregs and waste; whether or not in the form of pellets,comext,4,"Eurostat Comext DS-045409, HS 230330, 2026-08",2026-10-27
+728,H0727,Brewing or distilling dregs and waste; whether or not in the form of pellets,usda,2,"USDA AMS AMS_3668 - Corn Distillers Dried Grain 10%, Illinois",2026-10-27
 729,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",derived,1,Yahoo Finance ZM=F (CBT),2026-10-27
 730,H0729,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230500, 2026-06..2026-08",2026-10-27
-731,H0730,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230610, 2026-07..2026-08",2026-10-27
-732,H0731,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230620, 2026-08",2026-10-27
+731,H0730,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",usda,2,"USDA AMS AMS_3668 - Cottonseed Meal 41%, Arkansas",2026-10-27
+732,H0731,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",usda,2,"USDA AMS AMS_3668 - Linseed Meal, Min-Dak",2026-10-27
 733,H0732,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",eu_agri,2,European Commission Agri-food Data Portal - Sunflower seed meal (2 reports: IT),2026-10-27
 734,H0733,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",eu_agri,2,"European Commission Agri-food Data Portal - Rapeseed meal (3 reports: DE,IT)",2026-10-27
 735,H0734,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230649, 2026-08",2026-10-27
 736,H0735,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230650, 2026-07..2026-08",2026-10-27
 737,H0736,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230660, 2026-08",2026-10-27
-738,H0737,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",comext,4,"Eurostat Comext DS-045409, HS 230690, 2026-08",2026-10-27
+738,H0737,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",usda,2,"USDA AMS AMS_3668 - Safflower Meal 25%, CA-San Joaquin Valley",2026-10-27
 739,H0738,Wine lees; argol,comext,4,"Eurostat Comext DS-045409, HS 230700, 2026-08",2026-10-27
 740,H0739,"Vegetable materials and vegetable waste, vegetable residues and by-products; whether...",comext,4,"Eurostat Comext DS-045409, HS 230800, 2026-08",2026-10-27
 741,H0740,"Dog or cat food; put up for retail sale, used in animal feeding",comext,4,"Eurostat Comext DS-045409, HS 230910, 2026-08",2026-10-27
@@ -888,7 +888,7 @@ row,id,name,designated_source,tier,series,since
 925,H0924,Ammonia; anhydrous,dtn,3,DTN Retail Fertilizer Trends - Anhydrous ammonia,2026-10-27
 926,H0925,Ammonia; in aqueous solution,comext,4,"Eurostat Comext DS-045409, HS 281420, 2026-08",2026-10-27
 927,H0926,Sodium hydroxide (caustic soda); solid,cn_spot,3,100ppi (生意社) spot via AKShare - Caustic soda,2026-10-27
-928,H0927,Sodium hydroxide (caustic soda); in aqueous solution (soda lye or liquid soda),comext,4,"Eurostat Comext DS-045409, HS 281512, 2026-08",2026-10-27
+928,H0927,Sodium hydroxide (caustic soda); in aqueous solution (soda lye or liquid soda),cn_spot,3,100ppi (生意社) spot via AKShare - Caustic soda,2026-10-27
 929,H0928,Potassium hydroxide (caustic potash),comext,4,"Eurostat Comext DS-045409, HS 281520, 2026-08",2026-10-27
 930,H0929,Peroxides of sodium or potassium,comext,4,"Eurostat Comext DS-045409, HS 281530, 2026-05..2026-08",2026-10-27
 931,H0930,Zinc; oxide and peroxide,comext,4,"Eurostat Comext DS-045409, HS 281700, 2026-08",2026-10-27
@@ -1711,7 +1711,7 @@ row,id,name,designated_source,tier,series,since
 1749,H1748,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",comext,4,"Eurostat Comext DS-045409, HS 720826, 2026-08",2026-10-27
 1750,H1749,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",comext,4,"Eurostat Comext DS-045409, HS 720827, 2026-08",2026-10-27
 1751,H1750,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",comext,4,"Eurostat Comext DS-045409, HS 720836, 2026-08",2026-10-27
-1752,H1751,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",comext,4,"Eurostat Comext DS-045409, HS 720837, 2026-08",2026-10-27
+1752,H1751,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",cn_spot,3,100ppi (生意社) spot via AKShare - Hot-rolled coil,2026-10-27
 1753,H1752,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",comext,4,"Eurostat Comext DS-045409, HS 720838, 2026-08",2026-10-27
 1754,H1753,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",cn_spot,3,100ppi (生意社) spot via AKShare - Hot-rolled coil,2026-10-27
 1755,H1754,"Iron or non-alloy steel; (not in coils), flat-rolled, of a width 600mm or more,...",comext,4,"Eurostat Comext DS-045409, HS 720840, 2026-08",2026-10-27
@@ -1770,7 +1770,7 @@ row,id,name,designated_source,tier,series,since
 1808,H1807,"Steel, stainless; flat-rolled, width 600mm or more, hot-rolled, (not in coils), of a...",comext,4,"Eurostat Comext DS-045409, HS 721924, 2026-07..2026-08",2026-10-27
 1809,H1808,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled or cold-reduced, of a...",comext,4,"Eurostat Comext DS-045409, HS 721931, 2026-08",2026-10-27
 1810,H1809,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness of 3mm...",comext,4,"Eurostat Comext DS-045409, HS 721932, 2026-08",2026-10-27
-1811,H1810,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness...",comext,4,"Eurostat Comext DS-045409, HS 721933, 2026-08",2026-10-27
+1811,H1810,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness...",cn_spot,3,100ppi (生意社) spot via AKShare - Stainless steel 304 CR,2026-10-27
 1812,H1811,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness of...",comext,4,"Eurostat Comext DS-045409, HS 721934, 2026-08",2026-10-27
 1813,H1812,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness of...",comext,4,"Eurostat Comext DS-045409, HS 721935, 2026-08",2026-10-27
 1814,H1813,"Steel, stainless; flat-rolled, width 600mm or more, n.e.c. in heading no. 7219",comext,4,"Eurostat Comext DS-045409, HS 721990, 2026-08",2026-10-27

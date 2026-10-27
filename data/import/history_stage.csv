@@ -1,45 +1,53 @@
 ts,id,name,price_usd,orig,ccy,date,source
-2026-10-27 20:02,L0001,Crude oil Brent - ICE futures,109.45,109.45,USD,2026-10-27,Yahoo Finance BZ=F (NYM)
-2026-10-27 20:02,L0002,Crude oil WTI - NYMEX futures,99.82,99.82,USD,2026-10-27,Yahoo Finance CL=F (NYM)
-2026-10-27 20:02,L0004,Natural gas Henry Hub - NYMEX futures,3.016,3.016,USD,2026-10-27,Yahoo Finance NG=F (NYM)
-2026-10-27 20:02,L0007,Gasoline RBOB - NYMEX futures,3.0688,3.0688,USD,2026-10-27,Yahoo Finance RB=F (NYM)
-2026-10-27 20:02,L0008,Heating oil / ULSD - NYMEX futures,4.6317,4.6317,USD,2026-10-27,Yahoo Finance HO=F (NYM)
-2026-10-27 20:02,L0009,Gasoil - ICE futures,1394.25,1394.25,USD,2026-10-27,ICE Gasoil G26Z (重柴油2612) via Eastmoney
-2026-10-27 20:02,L0016,Gold - COMEX/LBMA futures,4072.9,4072.9,USD,2026-10-27,Yahoo Finance GC=F (CMX)
-2026-10-27 20:02,L0017,Silver - COMEX/LBMA futures,54.405,54.405,USD,2026-10-27,Yahoo Finance SI=F (CMX)
-2026-10-27 20:02,L0018,Platinum - NYMEX/LPPM futures,1536.0,1536.0,USD,2026-10-27,Yahoo Finance PL=F (NYM)
-2026-10-27 20:02,L0019,Palladium - NYMEX/LPPM futures,1028.0,1028.0,USD,2026-10-27,Yahoo Finance PA=F (NYM)
-2026-10-27 20:02,L0030,Hot-rolled coil - SHFE/CME futures,1525.5984,1384.0,USD,2026-10-27,Yahoo Finance HRC=F (CMX)
-2026-10-27 20:02,L0032,Wheat (SRW) - CBOT futures,6.125,612.5,USc,2026-10-27,Yahoo Finance ZW=F (CBT)
-2026-10-27 20:02,L0033,Wheat (HRW) - KCBT futures,6.5125,651.25,USc,2026-10-27,Yahoo Finance KE=F (CBT)
-2026-10-27 20:02,L0035,Corn - CBOT futures,4.4975,449.75,USc,2026-10-27,Yahoo Finance ZC=F (CBT)
-2026-10-27 20:02,L0036,Soybeans - CBOT futures,12.4525,1245.25,USc,2026-10-27,Yahoo Finance ZS=F (CBT)
-2026-10-27 20:02,L0037,Soybean meal - CBOT futures,335.0,335.0,USD,2026-10-27,Yahoo Finance ZM=F (CBT)
-2026-10-27 20:02,L0038,Soybean oil - CBOT futures,0.6688,66.88,USc,2026-10-27,Yahoo Finance ZL=F (CBT)
-2026-10-27 20:02,L0039,Rough rice - CBOT futures,17.775,17.775,USD,2026-10-27,Yahoo Finance ZR=F (CBT)
-2026-10-27 20:02,L0044,Coffee Arabica - ICE futures,2.9425,294.25,USc,2026-10-27,Yahoo Finance KC=F (NYB)
-2026-10-27 20:02,L0046,Cocoa - ICE futures,5563.0,5563.0,USD,2026-10-27,Yahoo Finance CC=F (NYB)
-2026-10-27 20:02,L0050,Orange juice FCOJ - ICE futures,1.438,143.8,USc,2026-10-27,Yahoo Finance OJ=F (NYB)
-2026-10-27 20:02,L0051,Lumber - CME futures,502.5,502.5,USD,2026-10-27,Yahoo Finance LBR=F (CME)
-2026-10-27 20:02,L0052,Live cattle - CME futures,2.3057,230.575,USc,2026-10-27,Yahoo Finance LE=F (CME)
-2026-10-27 20:02,L0053,Feeder cattle - CME futures,3.464,346.4,USc,2026-10-27,Yahoo Finance GF=F (CME)
-2026-10-27 20:02,L0054,Lean hogs - CME futures,0.6195,61.95,USc,2026-10-27,Yahoo Finance HE=F (CME)
-2026-10-27 20:02,L0055,Class III milk - CME futures,18.06,18.06,USD,2026-10-27,Yahoo Finance DC=F (CME)
-2026-10-27 20:02,H0063,"Cattle; live, other than pure-bred breeding animals",5.0833,230.575,USc,2026-10-27,Yahoo Finance LE=F (CME) [benchmark for this HS code]
-2026-10-27 20:02,H0493,Coffee; not roasted or decaffeinated,6.4871,294.25,USc,2026-10-27,Yahoo Finance KC=F (NYB) [benchmark for this HS code]
-2026-10-27 20:02,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",225.0552,612.5,USc,2026-10-27,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
-2026-10-27 20:02,H0543,"Cereals; maize (corn), other than seed",177.0589,449.75,USc,2026-10-27,Yahoo Finance ZC=F (CBT) [benchmark for this HS code]
-2026-10-27 20:02,H0544,Cereals; rice in the husk (paddy or rough),391.8712,17.775,USD,2026-10-27,Yahoo Finance ZR=F (CBT) [benchmark for this HS code]
-2026-10-27 20:02,H0586,"Soya beans; other than seed, whether or not broken",457.5509,1245.25,USc,2026-10-27,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
-2026-10-27 20:02,H0646,"Vegetable oils; soya-bean oil and its fractions, crude, whether or not degummed, not...",1474.4499,66.88,USc,2026-10-27,Yahoo Finance ZL=F (CBT) [benchmark for this HS code]
-2026-10-27 20:02,H0705,"Cocoa beans; whole or broken, raw or roasted",5563.0,5563.0,USD,2026-10-27,Yahoo Finance CC=F (NYB) [benchmark for this HS code]
-2026-10-27 20:02,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",369.2742,335.0,USD,2026-10-27,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
-2026-10-27 20:02,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",109.45,109.45,USD,2026-10-27,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
-2026-10-27 20:02,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",3.0688,3.0688,USD,2026-10-27,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
-2026-10-27 20:02,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1394.25,1394.25,USD,2026-10-27,ICE Gasoil G26Z (重柴油2612) via Eastmoney [benchmark for this HS code]
-2026-10-27 20:02,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",3.016,3.016,USD,2026-10-27,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
-2026-10-27 20:02,H1316,"Wood; coniferous species, of fir (Abies spp.) and spruce (Picea spp.), sawn or chipped...",212.9472,502.5,USD,2026-10-27,Yahoo Finance LBR=F (CME) [benchmark for this HS code]
-2026-10-27 20:02,H1674,"Metals; silver, unwrought, (but not powder)",1749.1614,54.405,USD,2026-10-27,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
-2026-10-27 20:02,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",130946.7758,4072.9,USD,2026-10-27,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
-2026-10-27 20:02,H1682,"Metals; platinum, unwrought or in powder form",49383.5468,1536.0,USD,2026-10-27,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
-2026-10-27 20:02,H1684,"Metals; palladium, unwrought or in powder form",33050.9675,1028.0,USD,2026-10-27,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
+2026-10-27 20:43,L0001,Crude oil Brent - ICE futures,109.38,109.38,USD,2026-10-27,Yahoo Finance BZ=F (NYM)
+2026-10-27 20:43,L0002,Crude oil WTI - NYMEX futures,99.86,99.86,USD,2026-10-27,Yahoo Finance CL=F (NYM)
+2026-10-27 20:43,L0004,Natural gas Henry Hub - NYMEX futures,3.004,3.004,USD,2026-10-27,Yahoo Finance NG=F (NYM)
+2026-10-27 20:43,L0007,Gasoline RBOB - NYMEX futures,3.063,3.063,USD,2026-10-27,Yahoo Finance RB=F (NYM)
+2026-10-27 20:43,L0008,Heating oil / ULSD - NYMEX futures,4.615,4.615,USD,2026-10-27,Yahoo Finance HO=F (NYM)
+2026-10-27 20:43,L0009,Gasoil - ICE futures,1387.0,1387.0,USD,2026-10-27,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney
+2026-10-27 20:43,L0016,Gold - COMEX/LBMA futures,4069.2,4069.2,USD,2026-10-27,Yahoo Finance GC=F (CMX)
+2026-10-27 20:43,L0017,Silver - COMEX/LBMA futures,54.295,54.295,USD,2026-10-27,Yahoo Finance SI=F (CMX)
+2026-10-27 20:43,L0018,Platinum - NYMEX/LPPM futures,1533.8,1533.8,USD,2026-10-27,Yahoo Finance PL=F (NYM)
+2026-10-27 20:43,L0019,Palladium - NYMEX/LPPM futures,1026.5,1026.5,USD,2026-10-27,Yahoo Finance PA=F (NYM)
+2026-10-27 20:43,L0032,Wheat (SRW) - CBOT futures,6.11,611.0,USc,2026-10-27,Yahoo Finance ZW=F (CBT)
+2026-10-27 20:43,L0033,Wheat (HRW) - KCBT futures,6.5025,650.25,USc,2026-10-27,Yahoo Finance KE=F (CBT)
+2026-10-27 20:43,L0035,Corn - CBOT futures,4.5,450.0,USc,2026-10-27,Yahoo Finance ZC=F (CBT)
+2026-10-27 20:43,L0036,Soybeans - CBOT futures,12.4325,1243.25,USc,2026-10-27,Yahoo Finance ZS=F (CBT)
+2026-10-27 20:43,L0037,Soybean meal - CBOT futures,334.6,334.6,USD,2026-10-27,Yahoo Finance ZM=F (CBT)
+2026-10-27 20:43,L0038,Soybean oil - CBOT futures,0.6661,66.61,USc,2026-10-27,Yahoo Finance ZL=F (CBT)
+2026-10-27 20:43,L0039,Rough rice - CBOT futures,17.79,17.79,USD,2026-10-27,Yahoo Finance ZR=F (CBT)
+2026-10-27 20:43,L0050,Orange juice FCOJ - ICE futures,1.436,143.6,USc,2026-10-27,Yahoo Finance OJ=F (NYB)
+2026-10-27 20:43,L0051,Lumber - CME futures,502.0,502.0,USD,2026-10-27,Yahoo Finance LBR=F (CME)
+2026-10-27 20:43,L0052,Live cattle - CME futures,2.3082,230.825,USc,2026-10-27,Yahoo Finance LE=F (CME)
+2026-10-27 20:43,L0053,Feeder cattle - CME futures,3.4712,347.125,USc,2026-10-27,Yahoo Finance GF=F (CME)
+2026-10-27 20:43,L0054,Lean hogs - CME futures,0.6215,62.15,USc,2026-10-27,Yahoo Finance HE=F (CME)
+2026-10-27 20:43,L0055,Class III milk - CME futures,18.09,18.09,USD,2026-10-27,Yahoo Finance DC=F (CME)
+2026-10-27 20:43,H0063,"Cattle; live, other than pure-bred breeding animals",5.0888,230.825,USc,2026-10-27,Yahoo Finance LE=F (CME) [benchmark for this HS code]
+2026-10-27 20:43,H0099,"Meat; of swine, hams, shoulders and cuts thereof, with bone in, fresh or chilled",1.327,60.19,USD,2026-10-26,USDA AMS LM_PK602 National Daily Pork FOB Plant - Ham cutout value (215 lb carcass)
+2026-10-27 20:43,H0100,"Meat; of swine, n.e.c. in item no. 0203.1, fresh or chilled",1.627,73.8,USD,2026-10-26,USDA AMS LM_PK602 National Daily Pork FOB Plant - Carcass cutout value (215 lb carcass)
+2026-10-27 20:43,H0330,"Dairy produce; derived from milk, butter",4.721,4721.0,USD,2026-10-20,Global Dairy Trade event 414 via USDA Dairy Market News (AMS_1604) - Butter
+2026-10-27 20:43,H0351,"Vegetables; potatoes (other than seed), fresh or chilled",2.6455,6.0,USD,2026-10-19,"USDA AMS National Shipping Point Trends - Potatoes, Upper Valley, Twin Falls-Burley District Idaho"
+2026-10-27 20:43,H0357,"Vegetables, brassica; brussel sprouts, fresh or chilled",2.747,31.15,USD,2026-10-19,"USDA AMS National Shipping Point Trends - Brussels Sprouts, South And Central California And Mexico Crossings Through Southern California An"
+2026-10-27 20:43,H0475,"Fruit, edible; raspberries, blackberries, mulberries, and loganberries, fresh",6.8588,14.0,USD,2026-10-19,"USDA AMS National Shipping Point Trends - Raspberries, Mexico Crossings Through Arizona, California And Texas"
+2026-10-27 20:43,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",224.504,611.0,USc,2026-10-27,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
+2026-10-27 20:43,H0543,"Cereals; maize (corn), other than seed",177.1573,450.0,USc,2026-10-27,Yahoo Finance ZC=F (CBT) [benchmark for this HS code]
+2026-10-27 20:43,H0544,Cereals; rice in the husk (paddy or rough),392.2019,17.79,USD,2026-10-27,Yahoo Finance ZR=F (CBT) [benchmark for this HS code]
+2026-10-27 20:43,H0586,"Soya beans; other than seed, whether or not broken",456.8161,1243.25,USc,2026-10-27,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
+2026-10-27 20:43,H0636,"Pig fat; not lard, other than that of heading 0209 or 1503",1.1023,50.0,USD,2026-10-23,"USDA AMS AMS_3510 - Choice White Grease, Central US"
+2026-10-27 20:43,H0646,"Vegetable oils; soya-bean oil and its fractions, crude, whether or not degummed, not...",1468.4974,66.61,USc,2026-10-27,Yahoo Finance ZL=F (CBT) [benchmark for this HS code]
+2026-10-27 20:43,H0683,"Animal, vegetable or microbial fats, oils and their fractions; boiled, oxidised,...",1.1133,50.5,USD,2026-10-23,"USDA AMS AMS_3510 - Yellow Grease, CA-Central Coast"
+2026-10-27 20:43,H0719,"Flours, meals and pellets; of meat or meat offal, greaves",0.413367,375.0,USD,2026-10-23,"USDA AMS AMS_3510 - Meat and Bone Meal Ruminant 46-50%, Pacific Northwest"
+2026-10-27 20:43,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",368.8333,334.6,USD,2026-10-27,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
+2026-10-27 20:43,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",109.38,109.38,USD,2026-10-27,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
+2026-10-27 20:43,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",3.063,3.063,USD,2026-10-27,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
+2026-10-27 20:43,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1387.0,1387.0,USD,2026-10-27,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney [benchmark for this HS code]
+2026-10-27 20:43,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",3.004,3.004,USD,2026-10-27,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
+2026-10-27 20:43,H0926,Sodium hydroxide (caustic soda); solid,792.5985,0.7108,EUR,2026-08-31,"Eurostat Comext DS-045409, HS 281511, 2026-08"
+2026-10-27 20:43,H1316,"Wood; coniferous species, of fir (Abies spp.) and spruce (Picea spp.), sawn or chipped...",212.7353,502.0,USD,2026-10-27,Yahoo Finance LBR=F (CME) [benchmark for this HS code]
+2026-10-27 20:43,H1674,"Metals; silver, unwrought, (but not powder)",1745.6248,54.295,USD,2026-10-27,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
+2026-10-27 20:43,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",130827.8181,4069.2,USD,2026-10-27,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
+2026-10-27 20:43,H1682,"Metals; platinum, unwrought or in powder form",49312.8151,1533.8,USD,2026-10-27,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
+2026-10-27 20:43,H1684,"Metals; palladium, unwrought or in powder form",33002.7414,1026.5,USD,2026-10-27,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
+2026-10-27 20:43,H1753,"Iron or non-alloy steel; in coils, without patterns in relief, flat-rolled, of a width...",702.5879,0.6301,EUR,2026-08-31,"Eurostat Comext DS-045409, HS 720839, 2026-08"
+2026-10-27 20:43,H1802,"Steel, stainless; flat-rolled, width 600mm or more, hot-rolled, in coils, of a...",2379.0124,2.1336,EUR,2026-08-31,"Eurostat Comext DS-045409, HS 721913, 2026-08"
+2026-10-27 20:43,H1810,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness...",1.8538,13966.67,CNY,2026-10-27,100ppi (生意社) spot via AKShare - Stainless steel 304 CR [SS]

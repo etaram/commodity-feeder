@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-27T18:02:30",
+  "finished_utc": "2026-10-27T18:43:09",
   "fx_source": "ECB via Frankfurter 2026-10-27",
   "fx": {
     "EUR": 1.1150012265013491,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 27,
+      "sec": 26,
       "newest_date": "2026-10-27",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -32,7 +32,7 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 8,
+      "sec": 7,
       "newest_date": "2026-10-26",
       "log": [
         "INFO westmetall: 6 prices"
@@ -41,7 +41,7 @@
     "em_global": {
       "ok": true,
       "prices": 22,
-      "sec": 34,
+      "sec": 37,
       "newest_date": "2026-10-27",
       "log": [
         "INFO em_global board: 640 rows",
@@ -96,10 +96,25 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 1,
+      "sec": 0,
       "newest_date": "2026-10-27",
       "log": [
         "INFO smi: 5 prices (as of 2026-10-27)"
+      ]
+    },
+    "usda": {
+      "ok": true,
+      "prices": 53,
+      "sec": 11,
+      "newest_date": "2026-10-27",
+      "log": [
+        "INFO usda gdt: 8 prices",
+        "INFO usda by-products: 3 prices",
+        "INFO usda feedstuff: 12 prices",
+        "INFO usda beef: 1 prices",
+        "INFO usda pork: 2 prices",
+        "INFO usda eggs: 1 prices",
+        "INFO usda fruit_veg: 26 prices"
       ]
     },
     "census": {
@@ -120,7 +135,7 @@
     "comext": {
       "ok": true,
       "prices": 1918,
-      "sec": 58,
+      "sec": 56,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -130,7 +145,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 8,
+      "sec": 9,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 25 HS codes still missing",
@@ -140,27 +155,28 @@
     }
   },
   "rows_with_price": 1962,
-  "candidates": 2146,
-  "flagged": 216,
+  "candidates": 2199,
+  "flagged": 223,
   "by_source_selected": {
     "yahoo": 31,
     "westmetall": 6,
     "em_global": 4,
     "cn_spot": 30,
-    "eu_agri": 55,
+    "eu_agri": 51,
     "dtn": 7,
     "ssb": 2,
     "scrapmonster": 31,
     "smi": 3,
+    "usda": 30,
     "census": 0,
-    "comext": 1758,
+    "comext": 1724,
     "comtrade": 3,
     "derived": 32
   },
   "by_tier": {
-    "T1 Exchange benchmark": 73,
-    "T2 Official market reporting": 57,
+    "T1 Exchange benchmark": 81,
+    "T2 Official market reporting": 83,
     "T3 Industry assessment": 71,
-    "T4 Trade statistics (unit value)": 1761
+    "T4 Trade statistics (unit value)": 1727
   }
 }
