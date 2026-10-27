@@ -78,8 +78,23 @@ SUP = {'MEAT': '\\b(meat|beef|pork|poultry|chicken|mutton|lamb|veal|livestock|ca
        'STEEL': '\\b(steel|iron|rebars?|billets?|hrc|crc|wire rods?|scrap metal|pig iron|ferro|ferroalloys?|stainless)\\b|פלדה|ברזל|גרוטאות',
        'NONFERROUS': '\\b(copper|aluminium|aluminum|zinc|nickel|refined lead|lead ingots?|tin ingots?|cobalt|lithium|magnesium|titanium|tungsten|molybdenum|non-ferrous|cathodes?|ingots?)\\b|נחושת|אלומיניום|אבץ|ניקל',
        'PRECIOUS': '\\b(gold|silver|platinum|palladium|diamonds?|gemstones?)\\b|זהב|יהלומ'}
+KW_EXTRA = {
+    "MEAT": ["beef", "pork", "poultry", "chicken", "mutton"], "FISH": ["seafood", "tuna", "salmon"],
+    "DAIRY": ["milk", "cheese", "butter", "eggs"], "FRUITVEG": ["fruit", "potatoes", "onions"],
+    "GRAIN": ["corn", "oats"], "OILSEED": ["cooking oil", "soybean", "sunflower oil"],
+    "SOFTS": ["spices", "cocoa"], "FEED": ["hay", "livestock feed"],
+    "FUEL": ["gasoline", "jet fuel", "JP-8", "propane", "heating oil", "asphalt", "natural gas"],
+    "MINERAL": ["gravel", "sand", "road salt", "limestone", "crushed stone", "glass"],
+    "CHEM": ["caustic soda", "sodium hypochlorite", "sulfuric acid", "ferric chloride", "methanol", "polymer"],
+    "FERT": ["fertiliser", "potash", "ammonium nitrate"], "PLASTIC": ["plastic resin", "HDPE", "PVC resin"],
+    "WOODPAPER": ["lumber", "plywood", "pulp"], "TEXTILE": ["fabric", "leather", "wool"],
+    "STEEL": ["steel plate", "steel bar", "stainless steel", "structural steel", "scrap metal"],
+    "NONFERROUS": ["aluminum", "nickel", "titanium", "copper wire", "copper cathode"],
+    "PRECIOUS": ["gold", "silver", "platinum"],
+}
 for _g in GROUPS:
     _g["sup"] = SUP.get(_g["id"], "")
+    _g["kw"] = list(dict.fromkeys(_g["wb"] + KW_EXTRA.get(_g["id"], [])))
 BY_ID = {g["id"]: g for g in GROUPS}
 CH2GROUP = {ch: g["id"] for g in GROUPS for ch in g["hs"]}
 
@@ -108,3 +123,21 @@ def group_of_cpv(codes):
                 if c.startswith(p) and len(p) > blen:
                     best, blen = g["id"], len(p)
     return best
+
+
+import re as _re
+_KW_RX = [(g["id"], _re.compile(r"\b(" + "|".join(_re.escape(k) for k in sorted(g["kw"], key=len, reverse=True)) + r")s?\b", _re.I))
+          for g in GROUPS if g["kw"]]
+NOISE = _re.compile(r"\b(injector|pump|filter|valve|hose|gauge|nozzle|assembly|kit|parts?|seal|gasket|sensor|"
+                    r"vehicle|truck|services?|consult|maintenance|repair|software|training|study|design|"
+                    r"construction|installation|equipment|dispenser|tank|meter|card)\b", _re.I)
+
+
+def group_of_text(text):
+    """Commodity group for a tender title by keyword, or None (noise words exclude)."""
+    if not text or NOISE.search(text):
+        return None
+    for gid, rx in _KW_RX:
+        if rx.search(text):
+            return gid
+    return None

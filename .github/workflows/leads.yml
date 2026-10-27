@@ -26,6 +26,18 @@ jobs:
         run: python -m leads.run --source fts
         timeout-minutes: 10
         continue-on-error: true
+      - name: sam
+        run: python -m leads.run --source sam
+        timeout-minutes: 12
+        continue-on-error: true
+      - name: canadabuys
+        run: python -m leads.run --source canadabuys
+        timeout-minutes: 6
+        continue-on-error: true
+      - name: za
+        run: python -m leads.run --source za
+        timeout-minutes: 8
+        continue-on-error: true
       - name: ebrd
         run: python -m leads.run --source ebrd
         timeout-minutes: 5

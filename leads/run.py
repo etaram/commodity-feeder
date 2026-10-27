@@ -18,7 +18,7 @@ from urllib.parse import quote_plus
 from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_rows, save_partial, today
 from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
-TENDER_SOURCES = ["ted", "fts", "worldbank", "ebrd", "mrgov"]
+TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov"]
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
         "articles", "prepared", "preserved", "fresh", "chilled", "frozen", "similar", "suitable", "kind", "used"}
 
@@ -32,6 +32,12 @@ def run_source(name):
         from . import mrgov as m
     elif name == "importyeti":
         from . import importyeti as m
+    elif name == "sam":
+        from . import sam as m
+    elif name == "canadabuys":
+        from . import canadabuys as m
+    elif name == "za":
+        from . import za as m
     elif name == "fts":
         from . import fts as m
     elif name == "ebrd":
@@ -73,7 +79,7 @@ def score(r, usd, days, new):
     d = 10 if days == "" else 0 if days < 3 else 10 if days <= 7 else 20 if days <= 30 else 15
     m = r.get("match")
     m = 15 if m in (None, "") else 20 if m >= 5 else 14 if m >= 4 else 8
-    reg = 20 if r["country"] == "ISR" else 15 if r["source"] == "World Bank" else 10
+    reg = 20 if r["country"] == "ISR" else 15 if r["source"] in ("World Bank", "eTenders (South Africa)") else 10
     pen = 15 if "exemption" in r["source"] else 0  # intent to contract with a named supplier: objection window only
     return max(0, v + d + m + reg + (5 if new else 0) + (5 if r.get("contact") else 0) - pen)
 

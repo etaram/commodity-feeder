@@ -1,10 +1,5 @@
-za_etenders https://ocds-api.etenders.gov.za/api/OCDSReleases?PageNumber=1&PageSize=3&dateFrom=2026-10-20&dateTo=2026-10-27
-canadabuys https://canadabuys.canada.ca/opendata/pub/openTenderNotice-ouvertAvisAppelOffres.csv
-secop https://www.datos.gov.co/resource/p6dx-8zbt.json?$limit=3
-pncp https://pncp.gov.br/api/consulta/v1/contratacoes/proposta?dataFinal=20261130&pagina=1&tamanhoPagina=10
-gem CFFI https://bidplus.gem.gov.in/all-bids
-cppp CFFI https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
-sam_extract https://falextracts.s3.amazonaws.com/Contract%20Opportunities/datagov/ContractOpportunitiesFullCSV.csv
-sam_web CFFI https://sam.gov/api/prod/sgs/v1/search/?index=opp&page=0&size=5&sort=-modifiedDate&mode=search&is_active=true
-usasp POST https://api.usaspending.gov/api/v2/search/spending_by_award/ {"filters":{"award_type_codes":["A","B","C","D"],"time_period":[{"start_date":"2026-09-01","end_date":"2026-10-27"}],"keywords":["diesel fuel"]},"fields":["Award ID","Recipient Name","Award Amount","Awarding Agency","Start Date","Description"],"limit":3,"page":1}
-ungm3 CFFI https://www.ungm.org/Public/Notice/SearchAjax
+cppp2 CFFI https://eprocure.gov.in/cppp/latestactivetenders
+cppp3 CFFI https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page
+cppp4 https://eprocure.gov.in/cppp/
+gem2 https://gem.gov.in/
+indiadg https://www.tenderdetail.com/
