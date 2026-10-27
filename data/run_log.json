@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-27T17:37:31",
+  "finished_utc": "2026-10-27T18:02:30",
   "fx_source": "ECB via Frankfurter 2026-10-27",
   "fx": {
     "EUR": 1.1150012265013491,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 26,
+      "sec": 27,
       "newest_date": "2026-10-27",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -105,7 +105,7 @@
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 3,
+      "sec": 0,
       "newest_date": null,
       "log": [
         "WARNING census 2026-09: Expecting value: line 1 column 1 (char 0)",
@@ -130,7 +130,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 10,
+      "sec": 8,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 25 HS codes still missing",
@@ -141,7 +141,7 @@
   },
   "rows_with_price": 1962,
   "candidates": 2146,
-  "flagged": 28,
+  "flagged": 216,
   "by_source_selected": {
     "yahoo": 31,
     "westmetall": 6,
