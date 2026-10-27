@@ -253,30 +253,6 @@ def merge() -> int:
     return 0
 
 
-def main(argv=None) -> int:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout)
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--source")
-    ap.add_argument("--merge", action="store_true")
-    a = ap.parse_args(argv)
-    if a.merge:
-        try:
-            return merge()
-        except Exception:  # noqa: BLE001
-            (DATA / "merge_error.txt").write_text(traceback.format_exc())
-            log.error("merge failed:\n%s", traceback.format_exc())
-            raise
-    if a.source:
-        return run_source(a.source)
-    for s in SOURCES:
-        run_source(s)
-    return merge()
-
-
-if __name__ == "__main__":
-    sys.exit(main())
-
-
 STAGE_COLS = ["G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R", "T", "U", "V", "W", "X", "Y", "AA"]
 
 
@@ -317,3 +293,28 @@ def _write_sheet_stage(best_rows: dict, prev_full: dict, reg: dict) -> None:
     with open(imp / "history_stage.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f); w.writerow(["ts", "id", "name", "price_usd", "orig", "ccy", "date", "source"]); w.writerows(hist)
     log.info("sheet stage: %d history rows", len(hist))
+
+
+def main(argv=None) -> int:
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--source")
+    ap.add_argument("--merge", action="store_true")
+    a = ap.parse_args(argv)
+    if a.merge:
+        try:
+            return merge()
+        except Exception:  # noqa: BLE001
+            (DATA / "merge_error.txt").write_text(traceback.format_exc())
+            log.error("merge failed:\n%s", traceback.format_exc())
+            raise
+    if a.source:
+        return run_source(a.source)
+    for s in SOURCES:
+        run_source(s)
+    return merge()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+

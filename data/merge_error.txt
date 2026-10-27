@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/home/runner/work/commodity-feeder/commodity-feeder/feeder/run.py", line 264, in main
-    return merge()
-           ^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/feeder/run.py", line 236, in merge
-    _write_sheet_stage(best_rows=written, prev_full=prev_full, reg=reg)
-    ^^^^^^^^^^^^^^^^^^
-NameError: name '_write_sheet_stage' is not defined
