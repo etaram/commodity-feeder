@@ -64,19 +64,27 @@ def fetch(hs_idx: dict, wanted_codes: list[str]) -> list[Price]:
             for x in r.json().get("data") or []:
                 c = str(x.get("cmdCode")); v = x.get("primaryValue") or 0; w = x.get("netWgt") or 0
                 if c in hs_idx and v and w and w > 0:
-                    a = agg.setdefault(c, [0.0, 0.0]); a[0] += v; a[1] += w
+                    agg.setdefault(c, []).append((str(x.get("reporterCode")), float(v), float(w)))
         except Exception as e:  # noqa: BLE001
             log.warning("comtrade batch %d: %s", i, e)
         polite_sleep(1.2)
     y, m = int(period[:4]), int(period[4:])
     pdate = ((dt.date(y, m, 28) + dt.timedelta(days=4)).replace(day=1) - dt.timedelta(days=1)).isoformat()
+    names = {"156": "CN", "392": "JP", "410": "KR", "699": "IN", "76": "BR"}
     out = []
-    for c, (v, w) in agg.items():
-        if v < MIN_VALUE_USD:
+    for c, recs in agg.items():
+        recs = [r for r in recs if r[1] >= 50_000]          # ignore tiny, noisy flows
+        v = sum(r[1] for r in recs); w = sum(r[2] for r in recs)
+        if v < MIN_VALUE_USD or not recs:
             continue
-        uv = v / w; unit = "USD/kg"; qshow = f"{w:,.0f} kg"
+        uvs = sorted(r[1] / r[2] for r in recs)
+        mid = len(uvs) // 2
+        uv = uvs[mid] if len(uvs) % 2 else (uvs[mid - 1] + uvs[mid]) / 2   # median across importers
+        quality = "OK" if uvs[-1] / uvs[0] <= 5 else f"CHECK: importer unit values range {uvs[0]:.3g}-{uvs[-1]:.3g} USD/kg"
+        per = ", ".join(f"{names.get(r[0], r[0])} {r[1]/r[2]:.3g}" for r in recs)
+        unit = "USD/kg"; mult = 1
         if uv < 0.5:
-            uv *= 1000; unit = "USD/t"; qshow = f"{w/1000:,.1f} t"
+            uv *= 1000; unit = "USD/t"; mult = 1000
         for r in hs_idx[c]:
             out.append(Price(
                 row=r["row"], unit_usd=unit,
@@ -84,6 +92,7 @@ def fetch(hs_idx: dict, wanted_codes: list[str]) -> list[Price]:
                 price_usd=uv, orig_price=round(v, 0), orig_ccy="USD", price_date=pdate,
                 source=f"UN Comtrade, HS {c}, imports of China, Japan, Korea, India, Brazil, {period}",
                 link="https://comtradeplus.un.org/TradeFlow",
-                calc=f"{v:,.0f} USD / {qshow} = {uv:.4f} {unit}", source_key="comtrade"))
+                calc=f"median of importer unit values (USD/kg: {per}) = {uv/mult:.4f} USD/kg" + (" x 1000" if mult > 1 else "") + f" = {uv:.4f} {unit}",
+                source_key="comtrade", quality=quality))
     log.info("comtrade: %d prices, %d calls", len(out), calls)
     return out

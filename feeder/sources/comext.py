@@ -22,6 +22,14 @@ BATCH = 40
 MIN_VALUE_EUR = 200_000
 
 
+def _months(n: int = 5) -> list[str]:
+    """Last n complete months as YYYY-MM (Comext publishes ~6 weeks after month end)."""
+    d = dt.date.today().replace(day=1); out = []
+    for _ in range(n):
+        d = (d - dt.timedelta(days=1)).replace(day=1); out.append(d.strftime("%Y-%m"))
+    return out
+
+
 def _jsonstat(j: dict) -> dict:
     """Return {(product, indicator, time): value} from a JSON-stat 2.0 dataset."""
     ids = j["id"]; size = j["size"]; dims = j["dimension"]
@@ -46,7 +54,8 @@ def _jsonstat(j: dict) -> dict:
 def _query(s, var, products):
     ds, rep, par, vi, qi, _ = var
     params = [("format", "JSON"), ("lang", "en"), ("freq", "M"), ("reporter", rep), ("partner", par),
-              ("flow", "1"), ("indicators", vi), ("indicators", qi), ("lastTimePeriod", "3")]
+              ("flow", "1"), ("indicators", vi), ("indicators", qi)]
+    params += [("time", m) for m in _months()]
     params += [("product", p) for p in products]
     r = s.get(BASE.format(ds=ds), params=params, timeout=120)
     if r.status_code >= 400:
@@ -63,7 +72,7 @@ def fetch(hs_idx: dict, fx: dict, skip_rows: set[int] | None = None) -> list[Pri
     var = None
     for v in VARIANTS:  # find a variant that answers
         try:
-            if _query(s, v, codes[:5]):
+            if _query(s, v, ["100199", "030214", "740311"]):
                 var = v; break
         except Exception as e:  # noqa: BLE001
             log.info("comext variant %s failed: %s", v[:3], e)

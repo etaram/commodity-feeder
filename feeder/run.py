@@ -25,8 +25,27 @@ from .common import DATA, FIELDS, SOURCE_RANK, Price, load_master, hs_index, log
 from . import fx as fxmod
 
 PARTIAL = DATA / "partial"
-SOURCES = ["yahoo", "westmetall", "em_global", "cn_spot", "census", "comext", "comtrade"]
-DAILY = {"yahoo", "westmetall", "em_global", "cn_spot"}
+SOURCES = ["yahoo", "westmetall", "em_global", "cn_spot", "eu_agri", "dtn", "ssb", "scrapmonster", "smi",
+           "census", "comext", "comtrade"]
+DAILY = {"yahoo", "westmetall", "em_global", "cn_spot", "smi"}
+MASS = {"USD/kg": 1.0, "USD/t": 1000.0, "USD/oz": 1 / 32.1507466, "USD/lb": 1 / 2.20462}
+
+
+class _Capture(logging.Handler):
+    def __init__(self):
+        super().__init__(logging.INFO); self.lines = []
+    def emit(self, rec):
+        self.lines.append(f"{rec.levelname} {rec.getMessage()}"[:300])
+
+
+def _convert(p: Price, unit: str) -> None:
+    """Re-express a mass-based price in another mass unit (kg, t, oz, lb), in place."""
+    if p.unit_usd == unit or p.unit_usd not in MASS or unit not in MASS:
+        return
+    f = MASS[unit] / MASS[p.unit_usd]
+    p.price_usd *= f
+    p.calc += f" -> x {f:g} = {p.price_usd:,.4f} {unit}"
+    p.unit_usd = unit
 BOUNDS = {"USD/kg": (0.001, 2_000_000), "USD/t": (1, 2_000_000), "USD/oz": (0.5, 20_000)}
 
 
@@ -55,6 +74,7 @@ def run_source(name: str) -> int:
     hs_idx = hs_index(master)
     rates, fx_src = _fx()
     log.info("FX: %s", fx_src)
+    cap = _Capture(); logging.getLogger().addHandler(cap)
     t0 = dt.datetime.utcnow()
     prices: list[Price] = []
     try:
@@ -66,6 +86,16 @@ def run_source(name: str) -> int:
             from .sources import em_global; prices = em_global.fetch(rates)
         elif name == "cn_spot":
             from .sources import cn_spot; prices = cn_spot.fetch(rates)
+        elif name == "eu_agri":
+            from .sources import eu_agri; prices = eu_agri.fetch(rates)
+        elif name == "dtn":
+            from .sources import scrapers; prices = scrapers.dtn()
+        elif name == "ssb":
+            from .sources import scrapers; prices = scrapers.ssb_salmon(rates)
+        elif name == "scrapmonster":
+            from .sources import scrapers; prices = scrapers.scrapmonster()
+        elif name == "smi":
+            from .sources import scrapers; prices = scrapers.smi()
         elif name == "census":
             from .sources import census; prices = census.fetch(hs_idx)
         elif name == "comext":
@@ -73,7 +103,7 @@ def run_source(name: str) -> int:
         elif name == "comtrade":
             from .sources import comtrade
             covered = set()
-            for other in ("census", "comext", "cn_spot"):
+            for other in ("census", "comext", "cn_spot", "eu_agri", "scrapmonster", "dtn", "ssb"):
                 covered |= {p.row for p in _load_partial(other)[0]}
             missing = sorted({c for c, rows in hs_idx.items() if any(r["row"] not in covered for r in rows)})
             log.info("comtrade: %d HS codes still missing", len(missing))
@@ -85,6 +115,8 @@ def run_source(name: str) -> int:
         log.error("%s failed: %s", name, e)
         report = {"ok": False, "error": f"{type(e).__name__}: {e}", "trace": traceback.format_exc()[-1500:]}
     report["sec"] = (dt.datetime.utcnow() - t0).seconds
+    report["newest_date"] = max((p.price_date for p in prices), default=None)
+    report["log"] = cap.lines[-40:]
     PARTIAL.mkdir(parents=True, exist_ok=True)
     (PARTIAL / f"{name}.json").write_text(json.dumps(
         {"report": report, "prices": [p.__dict__ for p in prices]}, ensure_ascii=False))
@@ -124,6 +156,10 @@ def merge() -> int:
         if not ok:
             continue
         b = max(ok, key=lambda c: (c.price_date, -SOURCE_RANK.get(c.source_key, 99)))
+        # keep one unit per row: previous feed unit if it is a mass unit, else the winner's
+        target = prev[row][1] if row in prev and prev[row][1] in MASS and b.unit_usd in MASS else b.unit_usd
+        for c in ok:
+            _convert(c, target)
         same = [c.price_usd for c in ok if c.unit_usd == b.unit_usd]
         notes = [] if b.quality == "OK" else [b.quality]
         if len(same) >= 2 and max(same) / min(same) > 3:

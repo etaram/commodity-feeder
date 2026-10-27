@@ -31,7 +31,7 @@ jobs:
       - run: pip install -r requirements.txt
       - name: yahoo
         run: python -m feeder.run --source yahoo
-        timeout-minutes: 6
+        timeout-minutes: 4
         continue-on-error: true
       - name: westmetall
         run: python -m feeder.run --source westmetall
@@ -44,6 +44,26 @@ jobs:
       - name: cn_spot
         run: python -m feeder.run --source cn_spot
         timeout-minutes: 6
+        continue-on-error: true
+      - name: eu_agri
+        run: python -m feeder.run --source eu_agri
+        timeout-minutes: 6
+        continue-on-error: true
+      - name: dtn
+        run: python -m feeder.run --source dtn
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: ssb
+        run: python -m feeder.run --source ssb
+        timeout-minutes: 3
+        continue-on-error: true
+      - name: scrapmonster
+        run: python -m feeder.run --source scrapmonster
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: smi
+        run: python -m feeder.run --source smi
+        timeout-minutes: 3
         continue-on-error: true
       - name: census
         run: python -m feeder.run --source census
@@ -59,11 +79,15 @@ jobs:
         continue-on-error: true
       - name: merge
         run: python -m feeder.run --merge
+      - name: monitor
+        run: python -m feeder.monitor
+        timeout-minutes: 8
+        continue-on-error: true
       - name: Commit data
         run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/prices.csv data/candidates.csv data/run_log.json data/raw || true
+          git add data/prices.csv data/candidates.csv data/run_log.json data/source_health.csv data/source_health.json data/raw || true
           git diff --cached --quiet || git commit -m "data: feed run $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase origin main
           git push

@@ -13,6 +13,7 @@
  */
 var FEED_URL = 'https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/prices.csv';
 var FEED_LOG_URL = 'https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/run_log.json';
+var HEALTH_URL = 'https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/source_health.csv';
 
 function setupFeedTriggers() {
   ScriptApp.getProjectTriggers().forEach(function (t) {
@@ -59,7 +60,8 @@ function importFeed() {
     var curDate = cur[5] instanceof Date ? Utilities.formatDate(cur[5], tz, 'yyyy-MM-dd') : String(cur[5] || '');
     var newDate = r[col.price_date];
     if (curPrice !== '' && curPrice !== null && curDate && newDate <= curDate) return;
-    var prev = (curPrice === '' || curPrice === null) ? cur[9] : curPrice;
+    var sameUnit = String(cur[0]) === String(r[col.unit_usd]);
+    var prev = (curPrice === '' || curPrice === null) ? cur[9] : (sameUnit ? curPrice : '');
     block[i] = [r[col.unit_usd], r[col.price_type], price, parseFloat(r[col.orig_price]) || r[col.orig_price],
                 r[col.orig_ccy], newDate, r[col.source], r[col.link], r[col.calc], prev];
     rcol[i] = [now];
@@ -83,6 +85,21 @@ function importFeed() {
     info = 'feed run ' + lj.finished_utc + 'Z, ' + lj.rows_with_price + ' rows in feed';
   } catch (e) { info = 'feed log unavailable'; }
   logFeed_(ss, now, 'OK', info, changed);
+  importHealth_(ss);
+}
+
+/** Copies data/source_health.csv into the Source_Health tab (created on first run). */
+function importHealth_(ss) {
+  try {
+    var resp = UrlFetchApp.fetch(HEALTH_URL + '?t=' + Date.now(), {muteHttpExceptions: true});
+    if (resp.getResponseCode() !== 200) return;
+    var data = Utilities.parseCsv(resp.getContentText('UTF-8'));
+    var sh = ss.getSheetByName('Source_Health') || ss.insertSheet('Source_Health');
+    sh.clearContents();
+    sh.getRange(1, 1, data.length, data[0].length).setValues(data);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, data[0].length).setFontWeight('bold');
+  } catch (e) { /* health tab is informational only */ }
 }
 
 function logFeed_(ss, now, status, msg, n) {

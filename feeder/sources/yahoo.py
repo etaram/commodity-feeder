@@ -59,7 +59,10 @@ def _quote(s, sym):
         try:
             r = s.get(base.format(sym=sym), params={"range": "5d", "interval": "1d"}, timeout=30)
             if r.status_code == 404:
+                log.info("yahoo %s: 404", sym)
                 return None
+            if r.status_code != 200:
+                log.warning("yahoo %s: HTTP %s %s", sym, r.status_code, r.text[:120])
             r.raise_for_status()
             res = r.json()["chart"]["result"]
             if res:
@@ -72,6 +75,7 @@ def _quote(s, sym):
 
 def fetch(master_by_row: dict, fx: dict) -> list[Price]:
     s = session()
+    s.headers["User-Agent"] = "Mozilla/5.0"
     out: list[Price] = []
     for row, (sym, unit, mult, note) in MAP.items():
         meta = _quote(s, sym)

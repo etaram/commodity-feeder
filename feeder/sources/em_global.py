@@ -10,9 +10,22 @@ import datetime as dt
 
 from ..common import Price, DATA, log, LB_PER_KG
 
-# Eastmoney code -> (master row, Master unit, quote currency, multiplier to Master unit, label)
-# Codes are matched case-insensitively against the 代码 column; filled after inspecting the raw board.
-MAP: dict[str, tuple] = {}
+# Eastmoney contract prefix -> (master row, Master unit, quote currency, multiplier to Master unit, label)
+# For each prefix the contract with the largest open interest (持仓量) and a live price is used.
+MAP: dict[str, tuple] = {
+    "B": (2, "USD/bbl", "USD", 1, "ICE Brent"), "CL": (3, "USD/bbl", "USD", 1, "NYMEX WTI"),
+    "NG": (5, "USD/MMBtu", "USD", 1, "NYMEX Henry Hub"), "RB": (8, "USD/gal", "USD", 1, "NYMEX RBOB"),
+    "HO": (9, "USD/gal", "USD", 1, "NYMEX ULSD"), "G": (10, "USD/t", "USD", 1, "ICE Gasoil"),
+    "NCF": (11, "USD/t", "USD", 1, "ICE Newcastle coal"),
+    "GC": (17, "USD/oz", "USD", 1, "COMEX gold"), "SI": (18, "USD/oz", "USD", 1, "COMEX silver"),
+    "PL": (19, "USD/oz", "USD", 1, "NYMEX platinum"), "PA": (20, "USD/oz", "USD", 1, "NYMEX palladium"),
+    "ZW": (33, "USD/bu", "USc", 1, "CBOT wheat"), "ZC": (36, "USD/bu", "USc", 1, "CBOT corn"),
+    "ZS": (37, "USD/bu", "USc", 1, "CBOT soybeans"), "ZM": (38, "USD/short ton", "USD", 1, "CBOT soybean meal"),
+    "ZL": (39, "USD/lb", "USc", 1, "CBOT soybean oil"), "ZR": (40, "USD/cwt", "USD", 1, "CBOT rough rice"),
+    "ZO": (41, "USD/bu", "USc", 1, "CBOT oats"), "MPM": (44, "USD/t", "MYR", 1, "Bursa crude palm oil"),
+    "SB": (48, "USD/lb", "USc", 1, "ICE sugar No.11"), "CT": (50, "USD/lb", "USc", 1, "ICE cotton No.2"),
+    "JRU": (57, "USD/kg", "JPY", 1, "OSE RSS3 rubber"),
+}
 
 
 def fetch(fx: dict) -> list[Price]:
@@ -27,11 +40,16 @@ def fetch(fx: dict) -> list[Price]:
     log.info("em_global board: %d rows", len(df))
     out = []
     today = dt.date.today().isoformat()
+    import re as _re
+    df = df.copy()
+    df["pre"] = df["代码"].astype(str).str.upper().str.replace(r"\d.*$", "", regex=True)
+    df["oi"] = df["持仓量"].fillna(0)
+    df = df[df["最新价"].notna()].sort_values("oi", ascending=False).drop_duplicates("pre")
     for _, x in df.iterrows():
         code = str(x.get("代码", "")).upper()
-        if code not in MAP:
+        if x["pre"] not in MAP:
             continue
-        row, unit, ccy, mult, label = MAP[code]
+        row, unit, ccy, mult, label = MAP[x["pre"]]
         try:
             px = float(x["最新价"])
         except (TypeError, ValueError, KeyError):
@@ -44,7 +62,7 @@ def fetch(fx: dict) -> list[Price]:
         usd = px * rate * mult
         out.append(Price(row=row, unit_usd=unit, price_type="Futures (exchange, Eastmoney board)",
                          price_usd=usd, orig_price=px, orig_ccy=ccy, price_date=today,
-                         source=f"Eastmoney intl futures {code} - {label}",
+                         source=f"{label} {code} ({x.get('名称', '')}) via Eastmoney",
                          link="https://quote.eastmoney.com/center/gridlist.html#futures_global",
                          calc=f"{px} {ccy} x {rate:.6f}" + (f" x {mult:g}" if mult != 1 else "") + f" = {usd:.4f} {unit}",
                          source_key="em_global"))
