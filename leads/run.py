@@ -38,6 +38,8 @@ def run_source(name):
         from . import canadabuys as m
     elif name == "za":
         from . import za as m
+    elif name == "markets":
+        from . import markets as m
     elif name == "fts":
         from . import fts as m
     elif name == "ebrd":
@@ -226,6 +228,49 @@ def merge_awards():
     return buyers
 
 
+def _bench_usd_kg(bm, hs6):
+    rows = [r for r in master_rows() if r["hs6"] == hs6]
+    for r in rows:
+        b = bm.get(int(r["row"]))
+        if b and b[2] in ("USD/kg", "USD/t"):
+            return (b[1] if b[2] == "USD/kg" else b[1] / 1000), b[3]
+    return None, ""
+
+
+def merge_markets(bm):
+    d = LEADS / "markets"
+    if not d.exists():
+        return
+    names = json.loads((d / "_reporters.json").read_text()) if (d / "_reporters.json").exists() else {}
+    hs_name = {r["hs6"]: r["name"] for r in master_rows()}
+    out = []
+    for f in sorted(d.glob("[0-9]*.json")):
+        m = json.loads(f.read_text()); h = m["hs6"]
+        world = sum(x["v"] for x in m["last"].values()) or 1
+        bench, bsrc = _bench_usd_kg(bm, h)
+        for code, cur in m["last"].items():
+            if code in ("0", "97", "490") or cur["v"] < 5_000_000:
+                continue
+            prev = m["prev"].get(code, {}).get("v", 0)
+            growth = (cur["v"] / prev - 1) if prev else None
+            uv = cur["v"] / cur["kg"] if cur["kg"] else None
+            prem = (uv / bench - 1) if (uv and bench) else None
+            score = min(40, cur["v"] / world * 400) + (min(40, max(0, growth) * 100) if growth is not None else 20) + \
+                (min(20, max(0, prem) * 50) if prem is not None else 0)
+            out.append({
+                "hs6": f"HS {h}", "product": hs_name.get(h, "")[:80], "group": BY_ID[m["group"]]["name"],
+                "country": names.get(code, code), "year": m["years"][1], "imports_usd": round(cur["v"]),
+                "prev_year_usd": round(prev), "growth_pct": round(growth * 100, 1) if growth is not None else "",
+                "world_share_pct": round(cur["v"] / world * 100, 2),
+                "unit_value_usd_kg": round(uv, 3) if uv else "", "benchmark_usd_kg": round(bench, 3) if bench else "",
+                "premium_vs_benchmark_pct": round(prem * 100, 1) if prem is not None else "",
+                "benchmark_source": bsrc, "signal_score": round(score), "fetched": m["fetched"],
+            })
+    out.sort(key=lambda x: -x["signal_score"])
+    write("markets.csv", out[:3000])
+    log.info("market signals rows %d", len(out))
+
+
 def write_digest(tenders, buyers):
     """Plain-text daily summary (Hebrew headings) used by the scheduled e-mail."""
     t = today()
@@ -272,6 +317,7 @@ def merge():
     enp = LEADS / "enrich.json"
     imp, sup, n = merge_importyeti(bm, json.loads(enp.read_text()) if enp.exists() else {})
     buyers = merge_awards()
+    merge_markets(bm)
     write_digest(tenders, buyers or [])
     write("tenders.csv", tenders)
     write("importers.csv", imp)

@@ -58,6 +58,10 @@ jobs:
         run: python -m leads.run --source importyeti
         timeout-minutes: 15
         continue-on-error: true
+      - name: markets
+        run: python -m leads.run --source markets
+        timeout-minutes: 8
+        continue-on-error: true
       - name: enrich
         run: python -m leads.run --source enrich
         timeout-minutes: 10
