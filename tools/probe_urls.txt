@@ -1,34 +1,10 @@
-tedf_winner-name POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "winner-name"], "limit": 2, "page": 1}
-tedf_winner-country POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "winner-country"], "limit": 2, "page": 1}
-tedf_tender-value POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "tender-value"], "limit": 2, "page": 1}
-tedf_tender-value-cur POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "tender-value-cur"], "limit": 2, "page": 1}
-tedf_result-value-lot POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "result-value-lot"], "limit": 2, "page": 1}
-tedf_result-value-cur-lot POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "result-value-cur-lot"], "limit": 2, "page": 1}
-tedf_total-value POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "total-value"], "limit": 2, "page": 1}
-tedf_total-value-cur POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "total-value-cur"], "limit": 2, "page": 1}
-tedf_winner-decision-date POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "winner-decision-date"], "limit": 2, "page": 1}
-tedf_organisation-email-buyer POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "organisation-email-buyer"], "limit": 2, "page": 1}
-tedf_organisation-tel-buyer POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "organisation-tel-buyer"], "limit": 2, "page": 1}
-tedf_organisation-city-buyer POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "organisation-city-buyer"], "limit": 2, "page": 1}
-tedf_buyer-city POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "buyer-city"], "limit": 2, "page": 1}
-tedf_organisation-name-tenderer POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "organisation-name-tenderer"], "limit": 2, "page": 1}
-tedf_result-value-notice POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "result-value-notice"], "limit": 2, "page": 1}
-tedf_notice-value POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "notice-value"], "limit": 2, "page": 1}
-tedf_notice-value-cur POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "notice-value-cur"], "limit": 2, "page": 1}
-tedf_winner-size POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "winner-size"], "limit": 2, "page": 1}
-tedf_received-submissions-type-val POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "received-submissions-type-val"], "limit": 2, "page": 1}
-tedf_organisation-country-tenderer POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "organisation-country-tenderer"], "limit": 2, "page": 1}
-tedf_winner-owner-nationality POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (14710000 24400000) AND notice-type IN (can-standard) AND PD>=20261001", "fields": ["publication-number", "winner-owner-nationality"], "limit": 2, "page": 1}
-ted_awcount POST https://api.ted.europa.eu/v3/notices/search {"query": "classification-cpv IN (03000000 09000000 14000000 15000000 19000000 24000000 44100000 44300000) AND notice-type IN (can-standard) AND contract-nature IN (supplies) AND PD>=20251027", "fields": ["publication-number"], "limit": 1, "page": 1}
-fts https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?stages=tender&limit=2&updatedFrom=2026-10-20T00:00:00
-iec1 CFFI https://www.iec.co.il/tenders
-iec2 CFFI https://www.iec.co.il/suppliers
-mek1 CFFI https://www.mekorot.co.il/he/tenders
-iroads CFFI https://www.iroads.co.il/tenders/
-rail CFFI https://www.rail.co.il/he/about/tenders
-ports CFFI https://www.israports.co.il/he/Tenders/Pages/default.aspx
-ebrd CFFI https://ecepp.ebrd.com/delta/noticeSearchResults.html
-adb CFFI https://www.adb.org/projects/tenders
-afdb CFFI https://www.afdb.org/en/projects-and-operations/procurement
-mr_exempt CFFI https://mr.gov.il/ilgstorefront/he/search/?q=%3AupdateDate%3Aarchive%3Afalse&s=EXEMPTION
-mr_cat CFFI https://mr.gov.il/ilgstorefront/he/search/?q=:updateDate:archive:false:category:ZD08&s=TENDER&page=1
+za_etenders https://ocds-api.etenders.gov.za/api/OCDSReleases?PageNumber=1&PageSize=3&dateFrom=2026-10-20&dateTo=2026-10-27
+canadabuys https://canadabuys.canada.ca/opendata/pub/openTenderNotice-ouvertAvisAppelOffres.csv
+secop https://www.datos.gov.co/resource/p6dx-8zbt.json?$limit=3
+pncp https://pncp.gov.br/api/consulta/v1/contratacoes/proposta?dataFinal=20261130&pagina=1&tamanhoPagina=10
+gem CFFI https://bidplus.gem.gov.in/all-bids
+cppp CFFI https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata
+sam_extract https://falextracts.s3.amazonaws.com/Contract%20Opportunities/datagov/ContractOpportunitiesFullCSV.csv
+sam_web CFFI https://sam.gov/api/prod/sgs/v1/search/?index=opp&page=0&size=5&sort=-modifiedDate&mode=search&is_active=true
+usasp POST https://api.usaspending.gov/api/v2/search/spending_by_award/ {"filters":{"award_type_codes":["A","B","C","D"],"time_period":[{"start_date":"2026-09-01","end_date":"2026-10-27"}],"keywords":["diesel fuel"]},"fields":["Award ID","Recipient Name","Award Amount","Awarding Agency","Start Date","Description"],"limit":3,"page":1}
+ungm3 CFFI https://www.ungm.org/Public/Notice/SearchAjax
