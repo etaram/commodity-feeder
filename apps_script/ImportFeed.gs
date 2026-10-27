@@ -45,6 +45,7 @@ function importFeed() {
   var block = master.getRange(2, 7, n, 10).getValues();   // G..P
   var rcol = master.getRange(2, 18, n, 1).getValues();    // R
   var tcol = master.getRange(2, 20, n, 1).getValues();    // T notes
+  var ucol = master.getRange(2, 21, n, 5).getValues();    // U..Y benchmark tier, selection, check source, check price, deviation
   var ids = master.getRange(2, 1, n, 5).getValues();      // A..E for History
   var hist = [];
   var changed = 0;
@@ -70,6 +71,9 @@ function importFeed() {
     block[i] = [r[col.unit_usd], r[col.price_type], price, parseFloat(r[col.orig_price]) || r[col.orig_price],
                 r[col.orig_ccy], newDate, r[col.source], r[col.link], r[col.calc], prev];
     rcol[i] = [now];
+    ucol[i] = [r[col.tier] || '', r[col.selection] || '', r[col.check_source] || '',
+               r[col.check_price] === '' ? '' : parseFloat(r[col.check_price]),
+               r[col.deviation_pct] === '' ? '' : parseFloat(r[col.deviation_pct]) / 100];
     var q = col.quality !== undefined ? r[col.quality] : 'OK';
     var note = String(tcol[i][0] || '').replace(/\s*\[QA:[^\]]*\]/g, '');
     tcol[i] = [q && q !== 'OK' ? (note + ' [QA: ' + q + ']').trim() : note];
@@ -81,6 +85,7 @@ function importFeed() {
     master.getRange(2, 7, n, 10).setValues(block);
     master.getRange(2, 18, n, 1).setValues(rcol);
     master.getRange(2, 20, n, 1).setValues(tcol);
+    master.getRange(2, 21, n, 5).setValues(ucol);
     var h = ss.getSheetByName('History');
     h.getRange(h.getLastRow() + 1, 1, hist.length, hist[0].length).setValues(hist);
   }

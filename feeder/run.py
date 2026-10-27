@@ -151,6 +151,69 @@ def merge() -> int:
             p.quality = f"REJECTED: {p.price_usd:.4g} {p.unit_usd} outside plausible range"
         by.setdefault(p.row, []).append(p)
 
+    from . import benchmark as bm
+    for row in list(by):   # one unit per row before deriving/comparing
+        ok = [c for c in by[row] if not c.quality.startswith("REJECTED")]
+        if not ok:
+            continue
+        lead = min(ok, key=lambda c: (bm.TIER.get(c.source_key, 9), bm.INTRA.get(c.source_key, 9)))
+        target = prev[row][1] if row in prev and prev[row][1] in MASS and lead.unit_usd in MASS else lead.unit_usd
+        for c in ok:
+            _convert(c, target)
+    bm.derive(by)
+    bmap = bm.load_map()
+    today = dt.date.today()
+    best = {}
+    for row, cands in by.items():
+        ok = [c for c in cands if not c.quality.startswith("REJECTED")]
+        if not ok:
+            continue
+        m = by_row[row]
+        b, chk, note = bm.select(row, ok, bmap, m, today)
+        if chk is not None and chk.unit_usd != b.unit_usd:
+            _convert(chk, b.unit_usd)
+        notes = [] if b.quality == "OK" else [b.quality]
+        b.tier = bm.TIER_LABEL.get(bm.TIER.get(b.source_key, 4), "")
+        b.selection = note
+        if chk is not None and chk.unit_usd == b.unit_usd and b.price_usd > 0:
+            dev = chk.price_usd / b.price_usd - 1
+            b.check_source = chk.source[:160]
+            b.check_price = round(chk.price_usd, 6 if chk.price_usd < 1 else 4)
+            b.deviation_pct = round(dev * 100, 1)
+            if abs(dev) > 0.5 and bm.TIER.get(chk.source_key, 4) <= bm.TIER.get(b.source_key, 4) + 1:
+                notes.append(f"CHECK: {dev:+.0%} vs {chk.source_key}")
+        pv = prev.get(row)
+        if b.source_key in DAILY and pv and pv[1] == b.unit_usd and pv[0] > 0:
+            ch = b.price_usd / pv[0] - 1
+            if abs(ch) > 0.4:
+                notes.append(f"CHECK: {ch:+.0%} vs previous feed price {pv[0]:.4g}")
+        if note.startswith("FALLBACK"):
+            notes.append(note)
+        b.quality = "; ".join(notes) or "OK"
+        b.id, b.hs6, b.name = m["id"], m["hs6"], m["name"]
+        best[row] = b
+    bm.save_map(bmap)
+
+    with open(DATA / "prices.csv", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                try:
+                    prev[int(r["row"])] = (float(r["price_usd"]), r["unit_usd"])
+                except (ValueError, KeyError):
+                    pass
+    results, reports = [], {}
+    for s in SOURCES:
+        got, rep = _load_partial(s)
+        results += got; reports[s] = rep
+
+    by: dict[int, list[Price]] = {}
+    for p in results:
+        if p.row not in by_row or not p.price_usd or p.price_usd <= 0:
+            continue
+        lo, hi = BOUNDS.get(p.unit_usd, (1e-6, 1e9))
+        if not lo <= p.price_usd <= hi:
+            p.quality = f"REJECTED: {p.price_usd:.4g} {p.unit_usd} outside plausible range"
+        by.setdefault(p.row, []).append(p)
+
     best = {}
     for row, cands in by.items():
         ok = [c for c in cands if not c.quality.startswith("REJECTED")]
@@ -195,7 +258,8 @@ def merge() -> int:
         "fx_source": fx_src, "fx": {k: rates[k] for k in fxmod.CCYS + ["USD"] if k in rates},
         "sources": reports, "rows_with_price": len(best), "candidates": len(results),
         "flagged": sum(1 for b in best.values() if b.quality != "OK"),
-        "by_source_selected": {k: sum(1 for p in best.values() if p.source_key == k) for k in SOURCES},
+        "by_source_selected": {k: sum(1 for p in best.values() if p.source_key == k) for k in SOURCES + ["derived"]},
+        "by_tier": {t: sum(1 for p in best.values() if p.tier == t) for t in sorted({p.tier for p in best.values()})},
     }
     (DATA / "run_log.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False))
     log.info("merge: %d rows, %d flagged", len(best), summary["flagged"])

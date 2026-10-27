@@ -40,6 +40,7 @@ FIELDS = [
     "row", "id", "hs6", "name",
     "unit_usd", "price_type", "price_usd", "orig_price", "orig_ccy",
     "price_date", "source", "link", "calc", "source_key", "quality",
+    "tier", "selection", "check_source", "check_price", "deviation_pct",
 ]
 
 
@@ -60,11 +61,16 @@ class Price:
     hs6: str = ""
     name: str = ""
     quality: str = "OK"
+    tier: str = ""
+    selection: str = ""
+    check_source: str = ""
+    check_price: str = ""
+    deviation_pct: str = ""
 
     def as_row(self) -> dict:
         d = asdict(self)
         d["price_usd"] = round(self.price_usd, 6 if self.price_usd < 1 else 4)
-        return {k: d[k] for k in FIELDS}
+        return {k: d.get(k, "") for k in FIELDS}
 
 
 def session() -> requests.Session:

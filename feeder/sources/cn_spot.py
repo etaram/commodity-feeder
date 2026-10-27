@@ -35,6 +35,8 @@ MAP = {
     "WH": (536, "Strong gluten wheat", 1), "RS": (593, "Rapeseed", 1), "OP": (1396, "Offset paper", 1),
     "AU": (1679, "Gold", 1_000_000), "AG": (1675, "Silver", 1000),
 }
+# China VAT: 9% for farm produce and fertiliser, 13% for everything else. Benchmarks are shown ex-VAT.
+VAT9 = {"A", "M", "Y", "P", "OI", "RM", "C", "CS", "JD", "AP", "PK", "LH", "SR", "CF", "WH", "RS", "UR"}
 # rows that are quoted per kg in USD in the Master (precious metals stay per kg there)
 PER_KG = {1679, 1675}
 
@@ -74,16 +76,17 @@ def fetch(fx: dict) -> list[Price]:
             continue
         if px <= 0:
             continue
-        cny_t = px * factor
+        vat = 1.09 if sym in VAT9 else 1.13
+        cny_t = px * factor / vat
         if row in PER_KG:
             usd = cny_t / 1000 * cny; unit = "USD/kg"
-            calc = f"{px} CNY/{'g' if sym == 'AU' else 'kg'} x {factor/1000:g} = {cny_t/1000:,.2f} CNY/kg x {cny:.6f} CNYUSD = {usd:,.2f} USD/kg"
+            calc = f"{px} CNY/{'g' if sym == 'AU' else 'kg'} x {factor/1000:g} / {vat} VAT = {cny_t/1000:,.2f} CNY/kg ex-VAT x {cny:.6f} CNYUSD = {usd:,.2f} USD/kg"
         else:
             usd = cny_t * cny; unit = "USD/t"
-            pre = f"{px} CNY/500kg x 2 = {cny_t:,.0f} CNY/t ; " if factor == 2 else f"{px} CNY/t ; "
-            calc = pre + f"x {cny:.6f} CNYUSD = {usd:,.2f} USD/t"
+            pre = f"{px} CNY/500kg x 2" if factor == 2 else f"{px} CNY/t"
+            calc = pre + f" / {vat} VAT = {cny_t:,.0f} CNY/t ex-VAT x {cny:.6f} CNYUSD = {usd:,.2f} USD/t"
         out.append(Price(
-            row=row, unit_usd=unit, price_type="Spot (China domestic, daily, incl. VAT)",
+            row=row, unit_usd=unit, price_type="Spot (China domestic, daily, ex-VAT)",
             price_usd=usd, orig_price=px, orig_ccy="CNY", price_date=used.isoformat(),
             source=f"100ppi (生意社) spot via AKShare - {label} [{sym}]",
             link="https://www.100ppi.com/sf/", calc=calc, source_key="cn_spot"))
