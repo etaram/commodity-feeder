@@ -1,0 +1,12 @@
+URL: https://api.tech.ec.europa.eu/agrifood/v3/api-docs/dairy
+STATUS: 500
+TYPE: application/json
+
+{
+  "error" : "Internal Server Error",
+  "status" : "500",
+  "message" : "An internal error occurred on the server.",
+  "technicalErrorMessage" : "The API cannot provide results. Possibly it does not exist. Please contact us via AGRI-EXT-HELPDESK@ec.europa.eu",
+  "apiSubErrors" : [ ],
+  "timestamp" : "27/10/2026 16:05:43"
+}
