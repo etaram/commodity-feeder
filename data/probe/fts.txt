@@ -1,0 +1,724 @@
+URL: https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?stages=tender&limit=2&updatedFrom=2026-10-20T00:00:00
+STATUS: 200
+TYPE: application/json
+
+{
+    "uri": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?stages=tender&limit=2&updatedFrom=2026-10-20T00:00:00&updatedTo=2026-10-27T19:53:24",
+    "version": "1.1",
+    "extensions": [
+        "https://standard.open-contracting.org/profiles/eu/latest/en/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_amendment_rationale_classifications_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_contract_completion_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_documentation_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_pagination_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_suitability_extension/master/extension.json",
+        "https://raw.githubusercontent.com/portaledcahn/ocds_Links_extension/main/extension.json",
+        "https://raw.githubusercontent.com/cabinetoffice/ocds_uk_extension/main/extension.json"
+    ],
+    "publishedDate": "2026-10-27T17:11:14Z",
+    "publisher": {
+        "name": "Cabinet Office",
+        "scheme": "GB-GOR",
+        "uid": "D2",
+        "uri": "https://www.gov.uk/government/organisations/cabinet-office"
+    },
+    "license": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "publicationPolicy": "https://www.gov.uk/government/publications/open-contracting",
+    "releases": [
+        {
+            "ocid": "ocds-h6vhtk-0791c3",
+            "id": "101778-2026",
+            "date": "2026-10-27T17:11:14Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "ocds-h6vhtk-0791c3",
+                "legalBasis": {
+                    "id": "32014L0024",
+                    "scheme": "CELEX"
+                },
+                "title": "HtH-DPS-Semi-Independent Living",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "85310000",
+                    "description": "Social work services"
+                },
+                "mainProcurementCategory": "services",
+                "description": "Support and life-skills coaching for care leavers living at Hornsey Town Hall (HtH) training flats",
+                "value": {
+                    "amount": 292501,
+                    "currency": "GBP"
+                },
+                "lots": [
+                    {
+                        "id": "1",
+                        "description": "Support and life-skills coaching for care leavers living at Hornsey Town Hall (HtH) training flats",
+                        "value": {
+                            "amount": 292501,
+                            "currency": "GBP"
+                        },
+                        "contractPeriod": {
+                            "startDate": "2027-02-01T00:00:00Z",
+                            "endDate": "2028-01-31T23:59:59Z"
+                        },
+                        "hasRenewal": true,
+                        "renewal": {
+                            "description": "Additional information can be obtained here: https://londonconstructionprogramme.co.uk/services/dynamic-purchasing-systems/"
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    }
+                ],
+                "items": [
+                    {
+                        "id": "1",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "85310000",
+                                "description": "Social work services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKI"
+                            }
+                        ],
+                        "relatedLot": "1"
+                    }
+                ],
+                "submissionMethod": [
+                    "electronicSubmission"
+                ],
+                "submissionMethodDetails": "https://londonconstructionprogramme.co.uk/services/dynamic-purchasing-systems/",
+                "procurementMethod": "selective",
+                "procurementMethodDetails": "Restricted procedure",
+                "coveredBy": [
+                    "GPA"
+                ],
+                "tenderPeriod": {
+                    "endDate": "2026-11-06"
+                },
+                "submissionTerms": {
+                    "languages": [
+                        "en"
+                    ]
+                },
+                "hasRecurrence": true
+            },
+            "parties": [
+                {
+                    "name": "London Borough of Haringey",
+                    "id": "GB-FTS-65081",
+                    "identifier": {
+                        "legalName": "London Borough of Haringey",
+                        "noIdentifierRationale": "notOnAnyRegister"
+                    },
+                    "address": {
+                        "streetAddress": "10 Station Road",
+                        "locality": "London",
+                        "region": "UKI",
+                        "postalCode": "N22 7TR",
+                        "countryName": "United Kingdom"
+                    },
+                    "contactPoint": {
+                        "email": "lcp@haringey.gov.uk",
+                        "url": "https://londonconstructionprogramme.co.uk/services/dynamic-purchasing-systems/"
+                    },
+                    "roles": [
+                        "buyer"
+                    ],
+                    "details": {
+                        "url": "https://londonconstructionprogramme.co.uk/procurement/dpss-and-dpms",
+                        "buyerProfile": "https://londonconstructionprogramme.co.uk/services/dynamic-purchasing-systems/",
+                        "classifications": [
+                            {
+                                "scheme": "TED_CA_TYPE",
+                                "id": "REGIONAL_AUTHORITY",
+                                "description": "Regional or local authority"
+                            },
+                            {
+                                "scheme": "COFOG",
+                                "id": "01",
+                                "description": "General public services"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "London Borough of Haringey",
+                    "id": "GB-FTS-7916",
+                    "identifier": {
+                        "legalName": "London Borough of Haringey"
+                    },
+                    "address": {
+                        "locality": "London",
+                        "countryName": "United Kingdom"
+                    },
+                    "roles": [
+                        "reviewBody"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-FTS-65081",
+                "name": "London Borough of Haringey"
+            },
+            "language": "en"
+        },
+        {
+            "ocid": "ocds-h6vhtk-02c7a5",
+            "id": "101775-2026",
+            "date": "2026-10-27T17:05:42Z",
+            "tag": [
+                "tender"
+            ],
+            "description": "Please note: the Council are obligated to have a live Contract Notice for an ongoing DPS where it has been extended, following the expiration of the previous one.\nThis notice pertains to an EXTENSION - if you have already submitted a bid to join the DPS, PLEASE DO NOT REAPPLY.\nNew applications are welcome.\nThe buyer is using PCS-Tender to conduct this ITT exercise. The Project code is 19697. For more information see: http://www.publiccontractsscotland.gov.uk/info/InfoCentre.aspx?ID=2343\nThe Contracting Authority does not intend to include a sub-contract clause as part of community benefits (as per Section 25 of the Procurement Reform (Scotland) Act 2014) in this contract for the following reason:\nAs per previous notice.\nCommunity benefits are included in this requirement. For more information see: https://www.gov.scot/policies/public-sector-procurement/community-benefits-in-procurement/\nA summary of the expected community benefits has been provided as follows:\nAs per documentation.\n(SC Ref:846821)",
+            "initiationType": "tender",
+            "tender": {
+                "id": "000-EKAF6271",
+                "legalBasis": {
+                    "id": "32014L0024",
+                    "scheme": "CELEX"
+                },
+                "title": "Dynamic Purchasing System for the Provision of Training Services",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "80000000",
+                    "description": "Education and training services"
+                },
+                "mainProcurementCategory": "services",
+                "description": "CURRENT DYNAMIC PURCHASING SYSTEM SUPPLIERS DO NOT NEED TO REAPPLY. (New suppliers are welcome to apply)\nThis Contract Notice has been published to notify of a further year extension to the original 5 year Dynamic Purchasing System until September 2027.\nOriginal description:\nAberdeen City Council are inviting suppliers to bid for a place on a Dynamic Purchasing System for the provision of a range of training services over the course of a five year period. A variety of Lots will be available (listed below) and suppliers are encouraged to come forward to gain a place on a Lot pertaining to the services they offer. This DPS is operated by Aberdeen City Council, but will be open for use by Aberdeenshire Council and the Highland Council.",
+                "value": {
+                    "amount": 14000000,
+                    "currency": "GBP"
+                },
+                "lotDetails": {
+                    "maximumLotsBidPerSupplier": 1e9999
+                },
+                "lots": [
+                    {
+                        "id": "1",
+                        "title": "Corporate Training and Development",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "2",
+                        "title": "Health and Safety Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "4",
+                        "title": "Social Work and Care Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "3",
+                        "title": "Education Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "5",
+                        "title": "Digital and Data Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "6",
+                        "title": "Mechanical Plant & Vehicle Use",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "7",
+                        "title": "Equipment Use Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "8",
+                        "title": "Professional Role Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "9",
+                        "title": "Trades Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    },
+                    {
+                        "id": "10",
+                        "title": "Other Training",
+                        "description": "As per original notice:\nhttps://www.publiccontractsscotland.gov.uk/Authority/Notice_PubView.aspx?ID=SEP428187 Additional information: As per documentation.",
+                        "contractPeriod": {
+                            "durationInDays": 360
+                        },
+                        "hasRenewal": false,
+                        "secondStage": {
+                            "minimumCandidates": 5,
+                            "maximumCandidates": 5
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    }
+                ],
+                "items": [
+                    {
+                        "id": "1",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "1"
+                    },
+                    {
+                        "id": "2",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "2"
+                    },
+                    {
+                        "id": "4",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "4"
+                    },
+                    {
+                        "id": "3",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "3"
+                    },
+                    {
+                        "id": "5",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "5"
+                    },
+                    {
+                        "id": "6",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "6"
+                    },
+                    {
+                        "id": "7",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "7"
+                    },
+                    {
+                        "id": "8",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "8"
+                    },
+                    {
+                        "id": "9",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "9"
+                    },
+                    {
+                        "id": "10",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "80000000",
+                                "description": "Education and training services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKM50"
+                            }
+                        ],
+                        "relatedLot": "10"
+                    }
+                ],
+                "submissionMethod": [
+                    "electronicSubmission"
+                ],
+                "submissionMethodDetails": "https://www.publictendersscotland.publiccontractsscotland.gov.uk/",
+                "selectionCriteria": {
+                    "criteria": [
+                        {
+                            "type": "suitability",
+                            "description": "Not applicable.",
+                            "appliesTo": [
+                                "supplier"
+                            ]
+                        }
+                    ]
+                },
+                "documents": [
+                    {
+                        "documentType": "economicSelectionCriteria",
+                        "id": "economic6"
+                    },
+                    {
+                        "documentType": "technicalSelectionCriteria",
+                        "id": "technical6"
+                    }
+                ],
+                "contractTerms": {
+                    "performanceTerms": "Please see the attached documentation for further information.",
+                    "electronicInvoicingPolicy": "allowed"
+                },
+                "otherRequirements": {
+                    "requiresStaffNamesAndQualifications": true
+                },
+                "procurementMethod": "selective",
+                "procurementMethodDetails": "Restricted procedure",
+                "techniques": {
+                    "hasDynamicPurchasingSystem": true
+                },
+                "coveredBy": [
+                    "GPA"
+                ],
+                "tenderPeriod": {
+                    "endDate": "2027-09-30T12:00:00+01:00"
+                },
+                "secondStage": {
+                    "invitationDate": "2027-09-30T00:00:00+01:00"
+                },
+                "submissionTerms": {
+                    "languages": [
+                        "en"
+                    ]
+                },
+                "hasRecurrence": false
+            },
+            "parties": [
+                {
+                    "name": "Aberdeen City Council",
+                    "id": "GB-FTS-757",
+                    "identifier": {
+                        "legalName": "Aberdeen City Council"
+                    },
+                    "address": {
+                        "streetAddress": "Woodhill House, Westburn Road",
+                        "locality": "Aberdeen",
+                        "region": "UKM50",
+                        "postalCode": "AB16 5GB",
+                        "countryName": "United Kingdom"
+                    },
+                    "contactPoint": {
+                        "telephone": "+44 1467539600",
+                        "email": "peopledevelopment@aberdeencity.gov.uk",
+                        "url": "https://www.publictendersscotland.publiccontractsscotland.gov.uk/"
+                    },
+                    "roles": [
+                        "buyer"
+                    ],
+                    "details": {
+                        "url": "http://www.aberdeencity.gov.uk",
+                        "buyerProfile": "https://www.publiccontractsscotland.gov.uk/search/Search_AuthProfile.aspx?ID=AA00231",
+                        "classifications": [
+                            {
+                                "scheme": "TED_CA_TYPE",
+                                "id": "REGIONAL_AUTHORITY",
+                                "description": "Regional or local authority"
+                            },
+                            {
+                                "scheme": "COFOG",
+                                "id": "01",
+                                "description": "General public services"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Highland Council",
+                    "id": "GB-FTS-180469",
+                    "identifier": {
+                        "legalName": "Highland Council"
+                    },
+                    "address": {
+                        "streetAddress": "Glenurquhart Road",
+                        "locality": "Inverness",
+                        "region": "UKM6",
+                        "postalCode": "IV3 5NX",
+                        "countryName": "United Kingdom"
+                    },
+                    "contactPoint": {
+                        "telephone": "+44 1467530600",
+                        "email": "cpssprocurement@aberdeencity.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ],
+                    "details": {
+                        "url": "http://www.highland.gov.uk",
+                        "buyerProfile": "https://www.publiccontractsscotland.gov.uk/search/Search_AuthProfile.aspx?ID=AA00045"
+                    }
+                },
+                {
+                    "name": "Aberdeenshire Council",
+                    "id": "GB-FTS-756",
+                    "identifier": {
+                        "legalName": "Aberdeenshire Council"
+                    },
+                    "address": {
+                        "streetAddress": "Woodhill House, Westburn Road",
+                        "locality": "Aberdeen",
+                        "region": "UKM50",
+                        "postalCode": "AB16 5GB",
+                        "countryName": "United Kingdom"
+                    },
+                    "contactPoint": {
+                        "telephone": "+44 1467539600",
+                        "email": "cpssprocurement@aberdeencity.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ],
+                    "details": {
+                        "url": "http://www.aberdeenshire.gov.uk",
+                        "buyerProfile": "https://www.publiccontractsscotland.gov.uk/search/Search_AuthProfile.aspx?ID=AA00232"
+                    }
+                },
+                {
+                    "name": "Aberdeen Sheriff Court",
+                    "id": "GB-FTS-5546",
+                    "identifier": {
+                        "legalName": "Aberdeen Sheriff Court"
+                    },
+                    "address": {
+                        "locality": "Aberdeen",
+                        "countryName": "United Kingdom"
+                    },
+                    "roles": [
+                        "reviewBody"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-FTS-757",
+                "name": "Aberdeen City Council"
+            },
+            "links": [
+                {
+                    "rel": "canonical",
+                    "href": "https://api.publiccontractsscotland.gov.uk/v1/Notice?id=ocds-r6ebe6-0000846821"
+                }
+            ],
+            "language": "en"
+        }
+    ],
+    "links": {
+        "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?stages=tender&limit=2&updatedFrom=2026-10-20T00:00:00&updatedTo=2026-10-27T19:53:24&cursor=dXBkYXRlZEZyb209MjAyNi0xMC0yMFQwMDowMDowMHx1cGRhdGVkVG89MjAyNi0xMC0yN1QxOTo1MzoyNHxuZXh0Q3Vyc29yPTc1Mzk3OA=="
+    }
+}
