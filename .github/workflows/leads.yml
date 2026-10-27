@@ -1,0 +1,47 @@
+name: leads
+on:
+  schedule:
+    - cron: "20 4 * * *"
+    - cron: "50 15 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: repo-data-writes
+  cancel-in-progress: false
+jobs:
+  leads:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests curl_cffi
+      - name: ted
+        run: python -m leads.run --source ted
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: worldbank
+        run: python -m leads.run --source worldbank
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: mrgov
+        run: python -m leads.run --source mrgov
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: importyeti
+        run: python -m leads.run --source importyeti
+        timeout-minutes: 15
+        continue-on-error: true
+      - name: merge
+        run: python -m leads.run --merge
+        continue-on-error: true
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A data/leads
+          git diff --cached --quiet || git commit -m "leads: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done
