@@ -1,8 +1,7 @@
 name: leads
 on:
   schedule:
-    - cron: "20 4 * * *"
-    - cron: "50 15 * * *"
+    - cron: "20 */4 * * *"
   workflow_dispatch:
 permissions:
   contents: write

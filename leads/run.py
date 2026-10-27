@@ -102,7 +102,7 @@ def merge_importyeti(bm):
         title = re.sub(r"^\d{4}-", "", p["title"]).replace("-", " ").title()
         bench = next((fmt_bench(bm[r]) for r in hs_rows.get(h, []) if r in bm), "")
         recs = sorted(p["records"], key=lambda x: (-x["shipments_12m"], -x["total_shipments"]))
-        for role, lst, cap in (("importer", imp, 15), ("supplier", sup, 10)):
+        for role, lst, cap in (("importer", imp, 10), ("supplier", sup, 8)):
             k = 0
             for x in recs:
                 if x["role"] != role or (role == "importer" and x["forwarder"]):
@@ -114,9 +114,9 @@ def merge_importyeti(bm):
                     "hs4": h, "heading": title[:70], "group": g.get("name", ""), "company": x["company"],
                     "country": x["country"], "shipments_12m": x["shipments_12m"],
                     "total_shipments": x["total_shipments"], "weight_t": x["weight_t"], "teu": x["teu"],
-                    "hs_codes": x["hs_codes"], "products": x["products"],
+                    "hs_codes": x["hs_codes"], "products": x["products"][:100],
                     "relevance": _relevant(title, x["products"], g), "flags": x["flags"],
-                    "address": x["address"], "benchmark": bench, "profile": x["profile"], "scanned": p["scanned"],
+                    "address": x["address"][:70], "benchmark": bench, "profile": x["profile"], "scanned": p["scanned"],
                 })
     return imp, sup, n
 

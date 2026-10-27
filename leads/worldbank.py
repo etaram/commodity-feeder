@@ -1,10 +1,12 @@
 """World Bank financed procurement notices (goods) - free JSON API, no key."""
 import datetime as dt
+import re
 
 from .common import clean, log, polite, session, today
 from .taxonomy import GROUPS
 
 URL = "https://search.worldbank.org/api/v2/procnotices"
+NOISE = re.compile(r"vehicle|equipment|computer|medic|pharma|drug|vaccine|paracetamol|furniture|consult")
 OPEN_TYPES = {"Invitation for Bids", "Request for Bids", "Request for Quotations", "Invitation for Prequalification",
               "Request for Expression of Interest", "General Procurement Notice"}
 
@@ -39,8 +41,8 @@ def fetch():
                     continue
                 if n.get("notice_type") not in OPEN_TYPES:
                     continue
-                text = f"{n.get('bid_description', '')} {n.get('project_name', '')}".lower()
-                if kw.lower() not in text:
+                text = f"{n.get('bid_description', '')}".lower()
+                if not re.search(r"\b" + re.escape(kw.lower()) + r"s?\b", text) or NOISE.search(text):
                     continue
                 seen.add(n["id"])
                 rows.append({

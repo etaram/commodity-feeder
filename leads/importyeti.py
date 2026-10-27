@@ -81,12 +81,16 @@ def fetch(per_run=PER_RUN):
             if p["records"]:
                 p["hs4"], p["scanned"] = h, str(t)
                 (CACHE / f"{h}.json").write_text(json.dumps(p, ensure_ascii=False))
+                state[h] = str(t)
                 done += 1; fails = 0
-            state[h] = str(t)
+            elif p["total_shipments"] in ("", "0"):
+                state[h] = str(t)  # heading with no US sea shipments
+            else:
+                fails += 1  # page served without the company list: view limit for this IP
         else:
             fails += 1
             log.warning("IY %s: HTTP %s", h, getattr(r, "status_code", "ERR"))
-        if fails >= 4:
+        if fails >= 3:
             log.warning("IY: stopping after repeated failures (rate limit)"); break
         polite(3)
     STATE.write_text(json.dumps(state, indent=0, sort_keys=True))

@@ -9,6 +9,8 @@ from .taxonomy import GROUPS
 
 BASE = "https://mr.gov.il"
 ACTIVE = {"פורסם", "חדש", "עודכן", "בעדכון", "עתידי", "Published"}
+SERVICE = re.compile(r"שירות|יועצ|ייעוץ|חקיר|בדיק|תחזוק|הדרכ|מחקר|RFI|RFD")
+SUPPLY = re.compile(r"אספק|רכש|רכיש|לאספקת")
 FIELD = {"שם המפרסם": "buyer", "מס' פרסום": "pubno", "סטטוס": "status", "מס׳ הליך": "procno",
          "תאריך פרסום": "published", "תאריך עדכון": "updated", "מועד אחרון להגשה": "deadline"}
 
@@ -52,6 +54,8 @@ def fetch(max_pages=3):
                 for it in items:
                     st = it.get("status", "").split(" ")[0]
                     if it["pid"] in seen or not any(it.get("status", "").startswith(a) for a in ACTIVE):
+                        continue
+                    if SERVICE.search(it["title"]) and not SUPPLY.search(it["title"]):
                         continue
                     dl = _d(it.get("deadline"))
                     if dl and dl < t:
