@@ -30,7 +30,7 @@ def lookup(s, name):
         lw = norm(h.get("label", "")).split()
         if not lw or not nw or lw[0] != nw[0]:
             continue
-        if lw == nw or set(lw) <= set(nw) or set(nw) <= set(lw):
+        if lw == nw or set(lw) <= set(nw):
             hits.append(h)
     if not hits:
         return ""

@@ -147,7 +147,7 @@ def merge_importyeti(bm, web=None):
                     "hs_codes": x["hs_codes"], "products": x["products"][:100],
                     "relevance": _relevant(title, x["products"], g), "flags": x["flags"],
                     "address": x["address"][:70], "benchmark": bench, "profile": x["profile"], "scanned": p["scanned"],
-                    "website": (web.get(x["company"]) or {}).get("website", ""),
+                    "website_wikidata": (web.get(x["company"]) or {}).get("website", ""),
                     "web_search": "https://www.google.com/search?q=" + quote_plus(f'"{x["company"]}" {x["address"][-40:]}'),
                     "linkedin": "https://www.linkedin.com/search/results/companies/?keywords=" + quote_plus(x["company"]),
                 })

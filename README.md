@@ -78,3 +78,10 @@ Separate Google Sheet "Leads Engine - Tenders & Importers" reads `data/leads/*.c
 | ImportYeti HS pages | Top US importers and their foreign suppliers per HS heading (US Customs bills of lading) | public site, ~24 headings per run, refresh every 14 days |
 
 `leads/taxonomy.py` maps each commodity group to HS chapters, CPV codes, keywords and mr.gov.il categories, and to the tracker rows used as the price benchmark.
+
+### Leads engine additions
+- Score 0-100 per tender (size, time left, CPV precision, region, new, contact) and a Focus tab in the sheet that filters "My Leads".
+- `awards.py`: TED award notices for 12 months (cached by month) give `awards.csv`, `buyers.csv` (repeat buyers with the month they usually buy and the next expected tender) and `competitors.csv`.
+- Extra tender sources: UK Find a Tender (OCDS API), EBRD ECEPP, Israeli exemption notices with an open objection window.
+- Contacts: TED buyer e-mail and phone on every EU tender; Wikidata website for leading US importers (exact name matches only) plus web and LinkedIn search links.
+- `digest.txt` is e-mailed every morning at 07:51 Israel time by a scheduled task.
