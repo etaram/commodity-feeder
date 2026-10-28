@@ -145,7 +145,13 @@ EXTRA = [
     ("ENV_WASTE", r"reinigung|aseo|nettoyage|cenagoso|forest|biodivers|wetland"),
     ("CONSULTING", r"photograph|videograph|media monitoring|interpret|traducci|translation|fiducia|assur[ée]s sociaux|"
                    r"titres restaurant|arbeitssicherheit"),
-    ("LOGISTICS", r"postal|acheminement|delivery services"),
+    ("LOGISTICS", r"postal|acheminement|delivery services|maritime transport|sea transport|ocean transport|water transport|"
+                  r"deep sea|coastal|inland water|shipping line|container (shipping|line|terminal)|port operat|"
+                  r"terminal operat|stevedor|ship ?management|shipowner|ship owner|ship ?broker|chartering|tanker|"
+                  r"bulk carrier|dry bulk|air cargo|air freight|cargo airline|trucking|truck transport|road transport|"
+                  r"road freight|rail freight|freight rail|customs brok|freight forward|courier|towage|tugboat|"
+                  r"bunker|warehousing|cold storage|3pl|third-party logistics|supply chain|transitaire|despachante|"
+                  r"agente de carga|naviera|armador|transporte mar[ií]timo|transporte de carga"),
     ("CONSUMER", r"signage|beschilderung|electoral material|ear tags|kits"),
     ("AGRI_FOOD", r"ganader|apicult|beekeep|nursery|culinaire|\bfish|seafood|tuna\b|at[uú]n|thon\b|sardin|shrimp|prawn|"
                   r"crustacean|mollus|\bmeat|poultry|dairy|cheese|coffee|cocoa|cacao|\btea\b|fruit|vegetable|\bnuts?\b|"

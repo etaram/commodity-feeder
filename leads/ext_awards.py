@@ -18,13 +18,21 @@ USAS = "https://api.usaspending.gov/api/v2/search/spending_by_award/"
 WB_KEEP = {"Goods", "Works", "Non-consulting Services", "Non-Consulting Services"}
 
 
+VERSION = {"usaspending": "2"}  # bump to force a refresh after the segment list changes
+
+
 def _fresh(name, days=7):
     p = OUT / f"{name}.jsonl"
+    v = OUT / f"{name}.v"
+    if VERSION.get(name) and (not v.exists() or v.read_text().strip() != VERSION[name]):
+        return False
     return p.exists() and (time.time() - p.stat().st_mtime) < days * 86400 and p.stat().st_size > 1000
 
 
 def _write(name, rows):
     OUT.mkdir(parents=True, exist_ok=True)
+    if VERSION.get(name):
+        (OUT / f"{name}.v").write_text(VERSION[name])
     with open(OUT / f"{name}.jsonl", "w", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -115,7 +123,8 @@ def usaspending(s, budget_end):
     base = {"award_type_codes": ["A", "B", "C", "D"], "time_period": period}
     segs = [("foreign", dict(base, recipient_scope="foreign", award_amounts=[{"lower_bound": 25000}]), 100)]
     for code in ["11", "21", "311", "312", "313", "314", "315", "316", "321", "322", "324", "325", "326", "327",
-                 "331", "332", "333", "334", "335", "336", "337", "339", "423", "424", "425"]:
+                 "331", "332", "333", "334", "335", "336", "337", "339", "423", "424", "425",
+                 "481", "483", "484", "486", "488", "492", "493"]:
         segs.append((code, dict(base, recipient_scope="domestic", naics_codes={"require": [code]},
                                 award_amounts=[{"lower_bound": 250000}]), 40))
     rows = []

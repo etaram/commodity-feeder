@@ -67,6 +67,28 @@ def _web_profiles():
     return out
 
 
+ROLES = [("Shipping line / shipowner", r"shipping|naviera|armador|maritime|ocean|sea transport|water transport|"
+                                       r"vessel|tanker|bulk carrier|chartering|ship ?owner|marine transport|deep sea|lines?\b"),
+         ("Port / terminal operator", r"\bports?\b|terminal|stevedor|harbou?r|puerto|porto\b"),
+         ("Freight forwarder / customs broker", r"forward|nvocc|customs|transitaire|despachante|agente de carga|"
+                                                r"freight services|cargo services|clearing|transportation arrangement"),
+         ("Air cargo", r"air cargo|air freight|airline|aviation|481"),
+         ("Trucking / road freight", r"truck|trucking|road transport|road freight|haulage|transporte de carga|484"),
+         ("Rail freight", r"rail"),
+         ("Warehousing / cold storage", r"warehous|storage|cold chain|almacen|armaz|493"),
+         ("Courier / express", r"courier|express|parcel|postal|492"),
+         ("Shipbuilding / ship repair", r"shipbuild|shipyard|ship repair|astillero|estaleiro|336611"),
+         ("Logistics / 3PL", r"logistic|log[ií]stic|supply chain|3pl|transport")]
+ROLES = [(n, re.compile(rx, re.I)) for n, rx in ROLES]
+
+
+def logistics_role(text):
+    for n, rx in ROLES:
+        if rx.search(text):
+            return n
+    return ""
+
+
 FREE_MAIL = re.compile(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|ukr|i\.ua|meta\.ua|bigmir|"
                        r"web\.de|orange|free|laposte|wanadoo|libero|terra|uol|bol|ig|rediffmail|qq|163|126|sina|naver|"
                        r"hanmail|proton|zoho|seznam|wp\.pl|o2|interia|abv|btinternet|sky|comcast|verizon|att|"
@@ -132,6 +154,8 @@ def build():
                 g = a.get("group") or _group(a.get("title") or "")
                 if g:
                     x["groups"][g] += 1
+                if a.get("naics"):
+                    x["naics"] = a["naics"]
                 it = _item(a.get("title") or "")
                 if it and (it in x["items"] or len(x["items"]) < 8):
                     x["items"][it] = x["items"].get(it, 0) + 1
@@ -208,6 +232,8 @@ def build():
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
             "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
+            "logistics_role": logistics_role(f"{name} {x.get('industries', '')} {about} {items} {x.get('naics', '')}")
+            if any(s_ in ("LOGISTICS", "PORTS") for s_, _ in secs[:1]) or "shipbuild" in name.lower() else "",
             "products": about[:300], "web_title": (wp.get("title") or "")[:120], "supplied": items[:240],
             "commodities": "; ".join(BY_ID[g]["name"] for g, _ in sorted(x["groups"].items(), key=lambda y: -y[1])[:3]
                                      if g in BY_ID),

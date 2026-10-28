@@ -15,7 +15,7 @@ URL = "https://query.wikidata.org/sparql"
 UA = "SinderOpportunityEngine/1.0 (https://github.com/etaram/commodity-feeder; procurement research)"
 DIR = LEADS / "companies" / "wikidata"
 KEEP = {"AGRI_FOOD", "ENERGY", "POWER", "MINING_METALS", "CHEMICALS", "TEXTILES", "CONSTR_MAT", "MACHINERY",
-        "TRANSPORT_EQ", "DEFENCE", "HEALTH", "LAB", "ICT", "CONSUMER", "WATER"}
+        "TRANSPORT_EQ", "DEFENCE", "HEALTH", "LAB", "ICT", "CONSUMER", "WATER", "LOGISTICS"}
 TRADE = re.compile(r"trad|wholesale|commodit|import|export|distribut|merchant", re.I)
 PRIORITY = ("NGA ETH EGY ZAF KEN TZA UGA GHA CIV SEN CMR MAR DZA TUN AGO MOZ ZMB ZWE COD SDN BRA ARG CHL PER COL ECU "
             "MEX URY PRY BOL VEN IND PAK BGD VNM THA IDN MYS PHL CHN TUR SAU ARE QAT KWT OMN JOR ISR IRN KAZ UZB UKR "
