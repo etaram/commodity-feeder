@@ -67,6 +67,9 @@ def fetch():
             desc = " ".join(d.get("content", "") for d in o.get("descriptions") or [])
             em = EMAIL.search(desc)
             sector, method = _sector(title)
+            orgs = " ".join(x.get("name") or "" for x in org).upper()
+            if not sector and re.search(r"DEFENSE|ARMY|NAVY|AIR FORCE|MARINE CORPS|SPACE FORCE", orgs):
+                sector, method = "DEFENCE", "military buyer"
             new.append({
                 "id": f"SAM-{o['_id']}", "source": "SAM.gov (USA)", "group": group_of_text(title) or "",
                 "sector": sector, "nature": "", "cpv": "", "country": "USA",

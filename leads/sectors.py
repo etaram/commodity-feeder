@@ -128,7 +128,28 @@ KW = [
                    r"insurance|assurance|seguro|financial|legal|juridique|jur[ií]dic|marketing|communication|"
                    r"recruitment|individual contractor|expert"),
 ]
-_KW = [(s, re.compile(rx, re.I)) for s, rx in KW]
+EXTRA = [
+    ("ICT", r"cyber|informati|num[eé]rique|licen[cs]|ip/mpls|circuit card|synthesi[sz]er|telecommunicat|it services|"
+            r"mesa de servicio|service desk|datenverarbeitung|edv|rechenzentr"),
+    ("DEFENCE", r"vigilancia|seguridad privada|gardiennage|sicherheitsdienst|security guard|brandmelde|fire alarm|"
+                r"police nationale|polic[eí]a|anti-terror|land mine|projectile"),
+    ("HEALTH", r"d[eé]fibrillat|hygien|menstrual|vaccin|tierimpf|impfstoff|anthropom|paracet|amoxi|medizin"),
+    ("ENERGY", r"p[eé]troli|petroleum products"),
+    ("POWER", r"alumbrado|beleuchtung|onduleur|ups\b|אל פסק"),
+    ("LAB", r"laboratoire|labor\b|labtronic|analy[sz]er"),
+    ("TRANSPORT_EQ", r"viaturas|fahrzeug|taxi|fleet"),
+    ("MACHINERY", r"valve|gland|motor|bolts?\b|bearing|gasket|\bseal|fastener|harness|refrigerat|compressor|"
+                  r"hydraul|spare parts|ersatzteil|pi[eè]ces d[eé]tach"),
+    ("SOCIAL", r"formation|insertion|accompagnement|culturel|mus[eé]e|restauration scolaire|crèche|animation"),
+    ("BUILDING", r"travaux|toiture|[eé]tanch[eé]it|sanierung|neubau|umbau|r[eé]fection|mejoramiento|ampliaci[oó]n|corredor"),
+    ("ENV_WASTE", r"reinigung|aseo|nettoyage|cenagoso|forest|biodivers|wetland"),
+    ("CONSULTING", r"photograph|videograph|media monitoring|interpret|traducci|translation|fiducia|assur[ée]s sociaux|"
+                   r"titres restaurant|arbeitssicherheit"),
+    ("LOGISTICS", r"postal|acheminement|delivery services"),
+    ("CONSUMER", r"signage|beschilderung|electoral material|ear tags|kits"),
+    ("AGRI_FOOD", r"ganader|apicult|beekeep|nursery|culinaire"),
+]
+_KW = [(s, re.compile(rx, re.I)) for s, rx in EXTRA + KW]
 
 
 def _prefix_lookup(code, table):
