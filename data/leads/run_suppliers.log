@@ -1,19 +1,21 @@
-Wed Oct 28 10:12:54 UTC 2026
-INFO LatAm awards: Brazil 1102 (4 days), Colombia 23460
+Wed Oct 28 12:05:11 UTC 2026
+INFO LatAm awards: Brazil 960 (4 days), Colombia 23460
 INFO latam_awards: 0 rows
-INFO Prozorro awards: 28130 candidates, 2414 read, 2427 awards
+INFO Prozorro awards: 26751 candidates, 1096 read, 1098 awards
 INFO prozorro_awards: 0 rows
-INFO OCDR 153 BRA 2400: 1 releases, 1 awards, 1 contacts
-INFO OCDR 153 BRA 2304: 1 releases, 3 awards, 3 contacts
-INFO OCDR 144 CHL 2029: 1 releases, 1 awards, 3 contacts
-INFO OCDR 137 ARG 2026: 1734 releases, 2608 awards, 0 contacts
-INFO OCDR 153 BRA 2026: 10717 releases, 17718 awards, 17719 contacts
-INFO OCDR 157 BRA 2026: 19595 releases, 26807 awards, 26807 contacts
-WARNING OCDR 144/2026: HTTPSConnectionPool(host='data.open-contracting.org', port=443): Read timed out. (read timeout=120)
-INFO OCDR 22 DOM 2026: 29183 releases, 24440 awards, 31133 contacts
-INFO OCDR {'files': 7, 'awards': 71578, 'contacts': 75666, 'pending': 180}
+INFO OCDR 110 ECU 2026: 121705 releases, 114148 awards, 114148 contacts
+INFO OCDR 85 GHA 2026: 169 releases, 203 awards, 203 contacts
+INFO OCDR 142 GTM 2026: 342057 releases, 281079 awards, 281079 contacts
+INFO OCDR 122 HND 2026: 46050 releases, 16357 awards, 16600 contacts
+INFO OCDR 123 HND 2026: 43975 releases, 43089 awards, 44757 contacts
+INFO OCDR 147 KEN 2026: 23098 releases, 3980 awards, 3973 contacts
+INFO OCDR 156 LBR 2026: 1227 releases, 292 awards, 292 contacts
+INFO OCDR 64 NGA 2026: 281 releases, 68 awards, 54 contacts
+INFO OCDR 118 NGA 2026: 3 releases, 3 awards, 3 contacts
+INFO OCDR 63 PRY 2026: 5382 releases, 28667 awards, 28710 contacts
+INFO OCDR 135 PER 2026: 60570 releases, 45430 awards, 45430 contacts
+INFO OCDR {'files': 11, 'awards': 533316, 'contacts': 535249, 'pending': 168}
 INFO ocdr: 0 rows
-INFO World Bank awards: 81589 kept of 296096, reached 300000
 INFO USAspending foreign: 10000
 INFO USAspending 11: 2737
 INFO USAspending 21: 317
@@ -63,7 +65,21 @@ WARNING USAspending 400 {"detail":"naics code filtering only supported for codes
 INFO USAspending 424: 0
 WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
 INFO USAspending 425: 0
-INFO external awards {'worldbank': 81589, 'usaspending': 13054}
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 481: 0
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 483: 0
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 484: 0
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 486: 0
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 488: 0
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 492: 0
+WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
+INFO USAspending 493: 0
+INFO external awards {'usaspending': 13054}
 INFO ext_awards: 0 rows
 WARNING wikidata 502
 WARNING wikidata 504
@@ -72,11 +88,9 @@ WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-INFO wikidata companies: 20 countries refreshed (657 companies), 20 countries cached
+INFO wikidata companies: 12 countries refreshed (559 companies), 12 countries cached
 INFO wikidata_companies: 0 rows
-INFO web profiles: 1203 read, 0 websites discovered of 0 tried
+INFO web profiles: 1620 read, 120 websites discovered of 700 tried
 INFO web_contacts: 0 rows
-INFO:leads:universe {'awards': 234193, 'suppliers': 118374, 'with_email': 22323, 'with_phone': 22767, 'exporters': 10227, 'goods': 43585, 'contacts_matched': 61463, 'tier_A': 117724, 'tier_B_notable': 650, 'with_website': 18707, 'quality_40_plus': 29150, 'with_any_contact': 34027, 'region: Europe': 41174, 'region: Latin America': 29500, 'region: Sub-Saharan Africa': 22683, 'region: South Asia': 7077, 'region: unknown': 4449, 'region: Southeast Asia': 3705, 'region: Middle East & North Africa': 2807, 'region: East Asia': 2420, 'region: CIS & Central Asia': 2160, 'region: North America': 1417, 'region: Other': 491, 'region: Oceania': 262, 'region: Israel': 229}
-wrote 118375 rows to Supplier Universe
+INFO:leads:universe {'awards': 781174, 'suppliers': 196531, 'with_email': 53883, 'with_phone': 54410, 'exporters': 11052, 'goods': 56862, 'contacts_matched': 117816, 'tier_A': 195978, 'tier_B_notable': 553, 'with_website': 31981, 'quality_40_plus': 42187, 'with_any_contact': 87512, 'region: Latin America': 92389, 'region: Europe': 53055, 'region: Sub-Saharan Africa': 25651, 'region: South Asia': 7083, 'region: unknown': 4804, 'region: Southeast Asia': 3707, 'region: Middle East & North Africa': 2759, 'region: East Asia': 2436, 'region: CIS & Central Asia': 2161, 'region: North America': 1492, 'region: Other': 499, 'region: Oceania': 265, 'region: Israel': 230}
+wrote 150001 rows to Supplier Universe
