@@ -1,0 +1,34 @@
+name: watchdog
+# GitHub sometimes delays or drops scheduled runs. Every hour this checks when each data workflow last succeeded
+# and starts it again if it is overdue, so the sheets keep updating on their own.
+on:
+  schedule:
+    - cron: "7 * * * *"
+    - cron: "37 * * * *"
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: read
+concurrency:
+  group: watchdog
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          now=$(date -u +%s)
+          for spec in "feed.yml:14" "leads.yml:6" "suppliers.yml:14"; do
+            wf=${spec%%:*}; max_h=${spec##*:}
+            busy=$(gh api "repos/$REPO/actions/workflows/$wf/runs?per_page=5" --jq '[.workflow_runs[]|select(.status!="completed")]|length')
+            last=$(gh api "repos/$REPO/actions/workflows/$wf/runs?status=success&per_page=1" --jq '.workflow_runs[0].updated_at // "1970-01-01T00:00:00Z"')
+            age_h=$(( (now - $(date -u -d "$last" +%s)) / 3600 ))
+            echo "$wf last success $last (${age_h}h ago), active runs: $busy"
+            if [ "$busy" = "0" ] && [ "$age_h" -ge "$max_h" ]; then
+              echo "-> overdue, starting $wf"; gh workflow run "$wf" --repo "$REPO" --ref main
+            fi
+          done
