@@ -1,0 +1,677 @@
+URL: https://fisheries.msc.org/en/fisheries/
+STATUS: 200
+TYPE: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Fisheries - MSC Fisheries</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="https://fisheries.msc.org/static/img/apple-icon-57x57.png"/> 
+    <link rel="apple-touch-icon" sizes="60x60" href="https://fisheries.msc.org/static/img/apple-icon-60x60.png"/> 
+    <link rel="apple-touch-icon" sizes="72x72" href="https://fisheries.msc.org/static/img/apple-icon-72x72.png"/> 
+    <link rel="apple-touch-icon" sizes="76x76" href="https://fisheries.msc.org/static/img/apple-icon-76x76.png"/> 
+    <link rel="apple-touch-icon" sizes="114x114" href="https://fisheries.msc.org/static/img/apple-icon-114x114.png"/> 
+    <link rel="apple-touch-icon" sizes="120x120" href="https://fisheries.msc.org/static/img/apple-icon-120x120.png"/> 
+    <link rel="apple-touch-icon" sizes="144x144" href="https://fisheries.msc.org/static/img/apple-icon-144x144.png"/> 
+    <link rel="apple-touch-icon" sizes="152x152" href="https://fisheries.msc.org/static/img/apple-icon-152x152.png"/> 
+    <link rel="apple-touch-icon" sizes="180x180" href="https://fisheries.msc.org/static/img/apple-icon-180x180.png"/> 
+    <link rel="icon" type="image/png" sizes="192x192" href="https://fisheries.msc.org/static/img//android-icon-192x192.png"/> 
+    <link rel="icon" type="image/png" sizes="32x32" href="https://fisheries.msc.org/static/img/favicon-32x32.png"/> 
+    <link rel="icon" type="image/png" sizes="96x96" href="https://fisheries.msc.org/static/img/favicon-96x96.png"/> 
+    <link rel="icon" type="image/png" sizes="16x16" href="https://fisheries.msc.org/static/img/favicon-16x16.png"/> 
+    <link rel="manifest" href="https://fisheries.msc.org/static/img/manifest.json"/> 
+    <meta name="msapplication-TileColor" content="#ffffff"> 
+    <meta name="msapplication-TileImage" content="https://fisheries.msc.org/static/img/ms-icon-144x144.png"/> 
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WKCLF5S');</script>
+    <!-- End Google Tag Manager -->
+    
+    
+  <link rel="stylesheet" type="text/css" href="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/css/app.css" />
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/modernizr.js"></script></head>
+
+  <body class="
+               view-default
+               ">
+  
+  <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WKCLF5S"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  
+    <header class="site-header">
+    <div
+         class="alert-box alert" data-alert>
+       <div class="row">
+           <div class="column"  aria-live="assertive" role="alertdialog">
+               <p>The website is experiencing an issue with showing the correct coordinates for multiple fisheries; the map might show the fishery to be in a different place than where it should be. We are working to get this issue resolved as soon as possible. </p>
+           </div>
+       </div>
+   </div> 
+   <div class="content">
+        <div class="row">
+            <div class="column medium-6">
+                <a class="site-title" href="https://fisheries.msc.org/">
+                    MSC Fisheries
+                </a>
+            </div>
+            <div class="column medium-6 hide-for-small-only">
+                <div class="right">
+                    <a class="msc-org-link" href="http://www.msc.org">
+                        <span class="looking-for">Are you looking for the MSC's main site?</span>
+                        <span class="go-to">Go to msc.org <i class="icon-angle-circled-right"></i></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+    
+
+
+    <article class="content">
+        <div class="page-content">
+            
+            <div class="row">
+                <div class="column">
+                    <div class="hero"
+                        style="background-image: url('https://fisheries.msc.org/banners/home-hero.jpeg/image')">
+                        <div class="text">
+                            The MSC is partnering with sustainable fisheries across the globe, from large-scale industrial fisheries to small artisanal fisheries, to drive the market for sustainable seafood.
+                        </div>
+                        <div class="slab homepage-search-slab">
+
+                            <h3 class="homepage-search-title">Find information on fisheries in the MSC Programme</h3>
+
+                            <div class="breather">
+                                
+                                <form class="search-form medium-small-search" name="search-entry" method="GET" action="https://fisheries.msc.org/en/fisheries/@@search">
+                                    <div class="row">
+                                        <div class="column small-10 search-text-column">
+                                            <label for="search-text-small" class="hide">Search</label>
+                                            <input id="search-text-small" class="search-text" type="text" placeholder="Search for fisheries in the MSC Programs" name="q" />
+                                            
+                                        </div>
+                                        <div class="column small-2 search-button-column">
+
+                                            <button type="submit" name="search"  class="postfix search-button">
+                                                <i class="icon-search show-for-small-only"></i>
+                                                <span class="show-for-medium-up">Search<i class="icon-search right show-for-large-up"></i></span>
+                                            </button>
+                                            
+                                                                    
+                                        </div>
+                                    </div>
+
+                                    
+        <div id="search-refine" class="content active" data-search-api="/en/fisheries/@@search_api">
+            <div class="row">
+                
+                    
+
+  
+
+  
+    <div
+
+     class="large-3 column deformSeqItem">
+  <input type="hidden" name="__start__" value="uoc_status:sequence" />
+
+    <select data-placeholder="filter by status" data-param-bucket="uoc_status" name="uoc_status" id="deformField7" class=" form-control js-select2-dynamic" multiple="True" style="display: none; ">
+      
+        
+        <option class="js-select2-dynamic" value="certified">Certified (2)</option>
+      
+        
+        <option class="js-select2-dynamic" value="in assessment">In Assessment (1)</option>
+      
+        
+        <option class="js-select2-dynamic" value="withdrawn">Withdrawn (2)</option>
+      
+    </select>
+
+  <input type="hidden" name="__end__" value="uoc_status:sequence" />
+</div>
+  
+
+  
+
+  
+
+
+                
+                    
+
+  
+
+  
+    <div
+
+     class="large-2 column deformSeqItem">
+  <input type="hidden" name="__start__" value="species:sequence" />
+
+    <select data-placeholder="filter by species" data-param-bucket="species" name="species" id="deformField8" class=" form-control js-select2-dynamic" multiple="True" style="display: none; ">
+      
+        
+        <option class="js-select2-dynamic" value="antarctic krill - euphausia superba">Antarctic krill - Euphausia superba (4)</option>
+      
+    </select>
+
+  <input type="hidden" name="__end__" value="species:sequence" />
+</div>
+  
+
+  
+
+  
+
+
+                
+                    
+
+  
+
+  
+    <div
+
+     class="large-2 column deformSeqItem">
+  <input type="hidden" name="__start__" value="location:sequence" />
+
+    <select data-placeholder="filter by ocean area" data-param-bucket="location" name="location" id="deformField10" class=" form-control js-select2-dynamic" multiple="True" style="display: none; ">
+      
+        <optgroup label="Location">
+          <option value="48 (atlantic, antarctic)">48 (Atlantic, Antarctic) (4)</option>
+        </optgroup>
+        
+      
+    </select>
+
+  <input type="hidden" name="__end__" value="location:sequence" />
+</div>
+  
+
+  
+
+  
+
+
+                
+                    
+
+  
+
+  
+    <div
+
+     class="large-3 column deformSeqItem">
+  <input type="hidden" name="__start__" value="certificate_number:sequence" />
+
+    <select data-placeholder="filter by certificate code" data-param-bucket="certificate_number" name="certificate_number" id="deformField11" class=" form-control js-select2-dynamic" multiple="True" style="display: none; ">
+      
+        
+        <option class="js-select2-dynamic" value="msc-f-30022">MSC-F-30022 (1)</option>
+      
+        
+        <option class="js-select2-dynamic" value="msc-f-31191 (f-aco-0100)">MSC-F-31191 (F-ACO-0100) (1)</option>
+      
+        
+        <option class="js-select2-dynamic" value="msc-f-31200 (f-dnv-184887)">MSC-F-31200 (F-DNV-184887) (1)</option>
+      
+        
+        <option class="js-select2-dynamic" value="msc-f-31517">MSC-F-31517 (1)</option>
+      
+    </select>
+
+  <input type="hidden" name="__end__" value="certificate_number:sequence" />
+</div>
+  
+
+  
+
+  
+
+
+                
+                <div class="column large-2">
+                    <button type="submit" name="filters"  class="postfix filter-button">
+                        <i class="icon-funnel show-for-small-only"></i>
+                        <span class="show-for-medium-up">More Filters<i class="icon-filter right show-for-large-up"></i></span>
+                    </button> 
+                </div>
+            </div>
+        </div>
+
+
+
+
+                                    
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!--<div class="row" data-equalizer
+                tal:condition="featured_abouts">
+                <div class="column medium-6"
+                    tal:repeat="featured featured_abouts">
+                    <metal:macro use-macro="view.macros['featured_about']" />
+                </div>
+            </div>-->
+
+            <div class="row">
+                <div class="column">
+                    <hr class="section-break" />
+                </div>
+            </div>
+
+            <div class="row assessment-links">
+                
+
+                    <div class="column large-4">
+                        <a href="https://www.msc.org/track-a-fishery/have-your-say" class="button postfix">
+                                Get involved in the process
+                                <i class="icon-angle-circled-right right"></i>
+                            </a>
+                    </div>
+                
+
+                    <div class="column large-4">
+                        <a href="https://fisheries.msc.org/en/the-msc-conditions-log/" class="button postfix">
+                                Download data on fishery conditions
+                                <i class="icon-angle-circled-right right"></i>
+                            </a>
+                    </div>
+                
+
+                    <div class="column large-4">
+                        <a href="https://msc.us3.list-manage.com/subscribe?u=daf93d949cc79c675731efa45&amp;id=0f133305bd" class="button postfix">
+                                Sign up for fisheries updates
+                                <i class="icon-angle-circled-right right"></i>
+                            </a>
+                    </div>
+                
+            </div>
+
+            <div class="row">
+                <div class="column medium-3">
+                    
+    
+    <div class="bordery">
+        <h3 class="heading bg-icon-consultation">
+            Current consultations
+        </h3>
+
+        <ul class="listing-links">
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/north-atlantic-albacore-artisanal-trolling-fishery/@@assessments">
+                    <h5 class="listing-link-heading">North Atlantic albacore artisanal trolling fishery</h5>
+                    
+                    
+                        <small>
+                            Announcement Comment Draft Report
+                        </small>
+                        <br />
+                        <small class="meta">closes 13 Dec 2026</small>
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/cheng-hung-seafood-frozen-produce-co.-ltd-chsf-indian-ocean-longline-albacore-and-yellowfin-fishery/@@assessments">
+                    <h5 class="listing-link-heading">Cheng Hung Seafood Frozen Produce Co., Ltd (CHSF) Indian Ocean Longline Albacore and Yellowfin Fishery</h5>
+                    
+                    
+                        <small>
+                            Announcement Comment Draft Report
+                        </small>
+                        <br />
+                        <small class="meta">closes 07 Dec 2026</small>
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/small-pelagics-fishery-in-sonora-gulf-of-california/@@assessments">
+                    <h5 class="listing-link-heading">Small Pelagics Fishery in Sonora, Gulf of California</h5>
+                    
+                    
+                        <small>
+                            Surveillance audit announcement
+                        </small>
+                        <br />
+                        <small class="meta">closes 25 Nov 2026</small>
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/new-zealand-albacore-tuna-troll/@@assessments">
+                    <h5 class="listing-link-heading">New Zealand albacore tuna troll</h5>
+                    
+                    
+                        <small>
+                            Announcement Comment Draft Report
+                        </small>
+                        <br />
+                        <small class="meta">closes 24 Nov 2026</small>
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/lake-malaren-lake-vanern-lake-hjalmaren-pikeperch-fishery/@@assessments">
+                    <h5 class="listing-link-heading">Lake Mälaren, Lake Vänern, Lake Hjälmaren pikeperch fishery</h5>
+                    
+                    
+                        <small>
+                            Surveillance audit announcement
+                        </small>
+                        <br />
+                        <small class="meta">closes 22 Nov 2026</small>
+                    
+                </a>
+            </li>
+        </ul>
+        <a
+           class="more"
+           href="https://fisheries.msc.org/en/fisheries/@@recent_listing/current_consultations/close?view_name=%40%40assessments&amp;meta=consultation&amp;icon_class=bg-icon-consultation&amp;title=Current+consultations"
+           data-reveal-id="modal-a6adf28608e04a3ab7031952550d517c"
+           data-reveal-ajax="true">
+            View all <i class="icon-angle-circled-right"></i>
+        </a>
+    </div>
+    <div
+         class='reveal-modal' id="modal-a6adf28608e04a3ab7031952550d517c" data-reveal>
+    </div>
+
+
+                </div>
+
+
+                <div class="column medium-3">
+                    
+    
+    <div class="bordery">
+        <h3 class="heading bg-icon-certified">
+            Recently certified
+        </h3>
+
+        <ul class="listing-links">
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/tasmania-blacklip-and-greenlip-abalone-fishery/@@view">
+                    <h5 class="listing-link-heading">Tasmania blacklip and greenlip abalone fishery</h5>
+                    
+                        <small class="meta">
+                            15 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/southern-king-crab-lithodes-santolla-in-the-central-patagonian-area-by-freezing-and-chilling-trap-setters-in-argentine-sea/@@view">
+                    <h5 class="listing-link-heading">Southern king crab (Lithodes santolla) in the Central Patagonian area by freezing and chilling trap setters in Argentine Sea</h5>
+                    
+                        <small class="meta">
+                            08 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/canada-northern-and-striped-shrimp/@@view">
+                    <h5 class="listing-link-heading">Canada northern and striped shrimp</h5>
+                    
+                        <small class="meta">
+                            06 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/bsai-and-goa-pacific-cod/@@view">
+                    <h5 class="listing-link-heading">BSAI and GOA Pacific cod</h5>
+                    
+                        <small class="meta">
+                            06 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/szlc-csfc-fmlc-mifv-rmi-eez-longline-yellowfin-bigeye-and-albacore-tuna/@@view">
+                    <h5 class="listing-link-heading">SZLC, CSFC, FMLC &amp; MIFV RMI EEZ longline yellowfin, bigeye and albacore tuna</h5>
+                    
+                        <small class="meta">
+                            03 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+        </ul>
+        <a
+           class="more"
+           href="https://fisheries.msc.org/en/fisheries/@@recent_listing/recently_certified/certified_on?view_name=%40%40view&amp;meta=&amp;icon_class=bg-icon-certified&amp;title=Recently+certified"
+           data-reveal-id="modal-f52185b6826146cd90ab8a849fe84b79"
+           data-reveal-ajax="true">
+            View all <i class="icon-angle-circled-right"></i>
+        </a>
+    </div>
+    <div
+         class='reveal-modal' id="modal-f52185b6826146cd90ab8a849fe84b79" data-reveal>
+    </div>
+
+
+                </div>
+
+                <div class="column medium-3">
+                    
+    
+    <div class="bordery">
+        <h3 class="heading bg-icon-assessment">
+            Recently entered assessment
+        </h3>
+
+        <ul class="listing-links">
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/russia-karaginsky-bay-salmon-fisheries/@@view">
+                    <h5 class="listing-link-heading">Russia Karaginsky Bay salmon fisheries</h5>
+                    
+                        <small class="meta">
+                            21 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/north-atlantic-albacore-artisanal-trolling-fishery/@@view">
+                    <h5 class="listing-link-heading">North Atlantic albacore artisanal trolling fishery</h5>
+                    
+                        <small class="meta">
+                            14 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/cheng-hung-seafood-frozen-produce-co.-ltd-chsf-indian-ocean-longline-albacore-and-yellowfin-fishery/@@view">
+                    <h5 class="listing-link-heading">Cheng Hung Seafood Frozen Produce Co., Ltd (CHSF) Indian Ocean Longline Albacore and Yellowfin Fishery</h5>
+                    
+                        <small class="meta">
+                            06 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/tuna-conservancy-purse-seine-fishery-in-the-eastern-pacific-ocean/@@view">
+                    <h5 class="listing-link-heading">Tuna Conservancy purse seine fishery in the Eastern Pacific Ocean</h5>
+                    
+                        <small class="meta">
+                            10 Sep 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/general-tuna-western-and-central-pacific-high-seas-pocket-1-skipjack-yellowfin-and-bigeye-tuna-purse-seine-fishery/@@view">
+                    <h5 class="listing-link-heading">General Tuna Western and Central Pacific High Seas Pocket-1 skipjack, yellowfin, and bigeye tuna purse seine fishery</h5>
+                    
+                        <small class="meta">
+                            08 Aug 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+        </ul>
+        <a
+           class="more"
+           href="https://fisheries.msc.org/en/fisheries/@@recent_listing/recently_entered_assessment/entered_assessment_date?view_name=%40%40view&amp;meta=&amp;icon_class=bg-icon-assessment&amp;title=Recently+entered+assessment"
+           data-reveal-id="modal-a65b00b6ed144d6ea636d09002077b72"
+           data-reveal-ajax="true">
+            View all <i class="icon-angle-circled-right"></i>
+        </a>
+    </div>
+    <div
+         class='reveal-modal' id="modal-a65b00b6ed144d6ea636d09002077b72" data-reveal>
+    </div>
+
+
+                </div>
+
+                <div class="column medium-3">
+                    
+    
+    <div class="bordery">
+        <h3 class="heading bg-icon-improvement">
+            Recently entered Improvement Program
+        </h3>
+
+        <ul class="listing-links">
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/indonesia-southeast-sulawesi-skipjack-and-yellowfin-tuna-purse-seine/@@view">
+                    <h5 class="listing-link-heading">Indonesia Southeast Sulawesi skipjack and yellowfin tuna purse seine</h5>
+                    
+                        <small class="meta">
+                            06 Oct 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/tawi-tawi-free-dive-donkeys-ear-abalone/@@view">
+                    <h5 class="listing-link-heading">Tawi-Tawi free dive donkey's ear abalone</h5>
+                    
+                        <small class="meta">
+                            08 Jul 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/ecuador-south-eastern-pacific-swordfish-longline-fishery/@@view">
+                    <h5 class="listing-link-heading">Ecuador South Eastern Pacific swordfish – longline fishery</h5>
+                    
+                        <small class="meta">
+                            07 Jul 2026
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/lake-winnipeg-north-basin-walleye-lake-whitefish-fisheries/@@view">
+                    <h5 class="listing-link-heading">Lake Winnipeg North Basin Walleye &amp; Lake Whitefish Fisheries</h5>
+                    
+                        <small class="meta">
+                            22 Dec 2025
+                        </small>
+                    
+                    
+                </a>
+            </li>
+            <li>
+                <a href="https://fisheries.msc.org/en/fisheries/peru-jumbo-flying-squid/@@view">
+                    <h5 class="listing-link-heading">Peru Jumbo flying squid</h5>
+                    
+                        <small class="meta">
+                            18 Nov 2025
+                        </small>
+                    
+                    
+                </a>
+            </li>
+        </ul>
+        <a
+           class="more"
+           href="https://fisheries.msc.org/en/fisheries/@@recent_listing/recent_improvement_program/fisheryEntry?view_name=%40%40view&amp;meta=&amp;icon_class=bg-icon-improvement&amp;title=Recently+entered+Improvement+Program"
+           data-reveal-id="modal-7e36dd13cd614f3891f48c79c727c678"
+           data-reveal-ajax="true">
+            View all <i class="icon-angle-circled-right"></i>
+        </a>
+    </div>
+    <div
+         class='reveal-modal' id="modal-7e36dd13cd614f3891f48c79c727c678" data-reveal>
+    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </article>
+
+    <footer class="site-footer row">
+
+      <div class="column show-for-small-only">
+                <a class="msc-org-link" href="http://www.msc.org">
+        <span class="looking-for">Are you looking for the main MSC site?</span>
+        <span class="go-to">
+                        Go to msc.org <i class="icon-angle-circled-right"></i>
+        </span>
+                </a>
+      </div>
+
+      <div class="column"> 
+        <div class="fisheries-footer-info">
+          <abbr title="Copyright">&copy;</abbr>
+2026 Marine Stewardship Council
+
+          <a href="https://fisheries.msc.org/en/fisheries/@@contact">Contact Us</a>
+          <a href="https://fisheries.msc.org/@@login"
+              class="right"
+              id="login-link"><small> MSC staff login </small></a>
+        </div>
+      </div>
+    </footer>
+  <script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/jquery.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/ol.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/foundation.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/jquery.jscroll.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/ol3-popup.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/select2.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/app.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/app-ol.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/search_form.min.js"></script>
+<script type="text/javascript" src="/fanstatic/mscfisheries_theme/:version:2026-05-11T12:59:12/js/search.min.js"></script></body>
+</html>

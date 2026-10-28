@@ -1,0 +1,5 @@
+URL: https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261020&dataFinal=20261027&pagina=1&tamanhoPagina=5
+STATUS: 400
+TYPE: application/json
+
+{"message":"Tamanho de página inválido","path":"/pncp-consulta/v1/contratos","timestamp":"2026-10-28T06:25:41.352-03:00","status":"400","error":"Bad Request"}
