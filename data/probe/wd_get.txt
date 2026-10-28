@@ -1,0 +1,2 @@
+URL: https://query.wikidata.org/sparql?format=json&query=SELECT%20(COUNT(*)%20AS%20%3Fn)%20WHERE%20%7B%3Fc%20wdt%3AP31%2Fwdt%3AP279*%20wd%3AQ4830453%3B%20wdt%3AP452%20%3Fi%3B%20wdt%3AP17%20wd%3AQ1033.%7D
+ERROR: HTTPSConnectionPool(host='query.wikidata.org', port=443): Read timed out. (read timeout=60)

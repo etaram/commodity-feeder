@@ -1,0 +1,5 @@
+URL: https://www.datos.gov.co/resource/jbjy-vk9h.json?$select=count(*)&$where=valor_del_contrato%20%3E%20500000000%20AND%20tipodocproveedor%3D'NIT'%20AND%20fecha_de_firma%20%3E%20'2025-10-28'
+STATUS: 200
+TYPE: application/json;charset=utf-8
+
+[{"count":"23460"}]
