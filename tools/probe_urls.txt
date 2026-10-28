@@ -1,3 +1,6 @@
-traces_js CFFI https://webgate.ec.europa.eu/tracesnt/assets/js/min/establishment-listing.8-2-14-20261210-113641000.min.js
-pncp_ct2 https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261020&dataFinal=20261027&pagina=1&tamanhoPagina=50
-lbma2 CFFI https://www.lbma.org.uk/good-delivery/good-delivery-list
+tr1 CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication?max=5
+tr2 CFFI https://webgate.ec.europa.eu/tracesnt/rest/directory/listing/establishment/publication?max=5
+tr3 CFFI https://webgate.ec.europa.eu/tracesnt/api/directory/listing/establishment/publication?max=5
+tr4 CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/search?max=5
+tr5 CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/EC?max=5
+tr6 CFFI https://webgate.ec.europa.eu/tracesnt/assets/js/min/common.8-2-14-20261210-113641000.min.js
