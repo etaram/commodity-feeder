@@ -12,17 +12,19 @@ def ungm():
     g = s.get("https://www.ungm.org/Public/Notice", timeout=60)
     tok = re.search(r'name="__RequestVerificationToken" type="hidden" value="([^"]+)"', g.text)
     tok = tok.group(1) if tok else ""
-    base = {"PageIndex": 0, "PageSize": 50, "Title": "", "Description": "", "Reference": "", "PublishedFrom": "",
+    base = {"PageIndex": 0, "PageSize": 15, "Title": "", "Description": "", "Reference": "", "PublishedFrom": "",
             "PublishedTo": "", "DeadlineFrom": "", "DeadlineTo": "", "Countries": [], "Agencies": [], "UNSPSCs": [],
-            "NoticeTypes": [], "SortField": "DatePublished", "SortAscending": False, "isPicker": False,
+            "NoticeTypes": [], "SortField": "Deadline", "SortAscending": True, "isPicker": False,
             "IsSustainable": False, "IsActive": True, "NoticeDisplayType": None,
             "NoticeSearchTotalLabelId": "noticeSearchTotal", "TypeOfCompetitions": []}
     hdr = {"X-Requested-With": "XMLHttpRequest", "Referer": "https://www.ungm.org/Public/Notice",
            "Origin": "https://www.ungm.org", "__RequestVerificationToken": tok, "RequestVerificationToken": tok}
+    print("cookies", list(s.cookies.keys()), "tok", tok[:10])
     for i, (url, kw) in enumerate([
         ("https://www.ungm.org/Public/Notice/Search", {"json": base}),
         ("https://www.ungm.org/Public/Notice/Search", {"data": json.dumps(base), "headers2": {"Content-Type": "application/json; charset=UTF-8"}}),
-        ("https://www.ungm.org/Public/Notice/Search", {"json": dict(base, DeadlineFrom="28-Oct-2026")}),
+        ("https://www.ungm.org/Public/Notice/Search", {"data": json.dumps(base, separators=(",", ":")), "headers2": {"Content-Type": "application/json"}}),
+        ("https://www.ungm.org/Public/Notice/SearchEOI", {"json": base}),
     ]):
         h = dict(hdr); h.update(kw.pop("headers2", {}))
         try:
@@ -33,21 +35,8 @@ def ungm():
 def other():
     s = cr.Session(impersonate="chrome")
     for name, method, url, body in [
-        ("x_prozorro_search", "POST", "https://prozorro.gov.ua/api/search/tenders", {"status": ["active.tendering"], "value": {"from": 20000000}, "page": 1}),
-        ("x_pz_a", "POST", "https://prozorro.gov.ua/api/search/tenders", {"status": ["active.tendering"], "value": {"start": 20000000}, "page": 1}),
-        ("x_pz_b", "POST", "https://prozorro.gov.ua/api/search/tenders", {"status": ["active.tendering"], "value.start": 20000000, "page": 1}),
-        ("x_pz_c", "POST", "https://prozorro.gov.ua/api/search/tenders", {"filters": {"status": ["active.tendering"], "value": {"start": 20000000}}, "page": 1}),
-        ("x_pz_fe", "GET", "https://prozorro.gov.ua/en/search/tender?status=active.tendering&value.start=20000000", None),
-        ("x_ungm_js", "GET", "https://www.ungm.org/Scripts/UNGM.js", None),
-        ("x_ungm_common", "GET", "https://www.ungm.org/bundles/ungmcommon?v=w9iy_Y8Y9kyq_MUcS9sxGREj-KMXMFKLYIM2GNCl_g81", None),
-        ("x_ungm_uvm", "GET", "https://www.ungm.org/bundles/uvm?v=m_HjKBABDeh75wS7SJKGv9qu0ZsbBy8vHQDlHNvawDk1", None),
-        ("x_etimad100", "GET", "https://tenders.etimad.sa/Tender/AllSupplierTendersForVisitorAsync?PageSize=100&PageNumber=1", None),
-        ("x_aiib_all", "GET", "https://www.aiib.org/en/opportunities/business/project-procurement/_common/ppo-data-all.js", None),
-        ("x_prozorro_search_get", "GET", "https://prozorro.gov.ua/api/search/tenders?status=active.tendering&value.from=20000000&page=1", None),
-        ("x_etimad", "GET", "https://tenders.etimad.sa/Tender/AllSupplierTendersForVisitorAsync?PageSize=24&PageNumber=1", None),
-        ("x_aiib", "GET", "https://www.aiib.org/en/opportunities/business/project-procurement/_common/ppo-2026.js", None),
-        ("x_isdb", "GET", "https://www.isdb.org/project-procurement/tenders?status=active", None),
-        ("x_afdb_rss", "GET", "https://www.afdb.org/en/documents/project-related-procurement/procurement-notices/specific-procurement-notices/rss.xml", None),
+        ("x_pz_feed", "GET", "https://public-api.prozorro.gov.ua/api/2.5/tenders?descending=1&limit=100&opt_fields=status,value,title,procurementMethodType,mainProcurementCategory,tenderID,tenderPeriod,procuringEntity", None),
+        ("x_pz_one", "GET", "https://public-api.prozorro.gov.ua/api/2.5/tenders?descending=1&limit=5", None),
     ]:
         try:
             r = s.post(url, json=body, timeout=60) if method == "POST" else s.get(url, timeout=60)
@@ -55,6 +44,6 @@ def other():
         except Exception as e:
             print(name, e)
 
-for f in (other,):
+for f in (ungm, other):
     try: f()
     except Exception: traceback.print_exc()

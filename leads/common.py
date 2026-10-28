@@ -75,3 +75,31 @@ def save_partial(name, rows, meta=None):
 
 def polite(sec=2.5):
     time.sleep(sec)
+
+
+CACHE = LEADS / "cache"
+
+
+def rolling(name, new_rows, max_age_days=120):
+    """Merge freshly fetched rows into a per-source rolling cache (one JSON object per line) so each run only has
+    to fetch the last few days. Drops notices whose deadline has passed or that are older than max_age_days."""
+    CACHE.mkdir(parents=True, exist_ok=True)
+    p = CACHE / f"{name}.jsonl"
+    rows = {}
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line); rows[r["id"]] = r
+    for r in new_rows:
+        rows[r["id"]] = r
+    t = str(today()); cut = str(today() - dt.timedelta(days=max_age_days))
+    keep = [r for r in rows.values()
+            if (r.get("deadline") or "9999") >= t and (r.get("published") or t) >= cut]
+    keep.sort(key=lambda r: r["id"])
+    p.write_text("\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in keep) + "\n", encoding="utf-8")
+    return keep, (p.stat().st_size if p.exists() else 0)
+
+
+def cache_empty(name):
+    p = CACHE / f"{name}.jsonl"
+    return not p.exists() or p.stat().st_size < 10
