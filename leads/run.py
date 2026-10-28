@@ -23,7 +23,7 @@ TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", 
                   "kenya", "qatar"]
 NEW_MODULES = {"ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
                "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "nigeria", "kenya", "ecuador", "france", "spain", "tanzania",
-               "ghana", "zambia"}
+               "ghana", "zambia", "latam_awards", "wikidata_companies", "web_contacts"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
         "articles", "prepared", "preserved", "fresh", "chilled", "frozen", "similar", "suitable", "kind", "used"}
 

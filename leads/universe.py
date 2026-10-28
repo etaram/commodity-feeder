@@ -6,7 +6,7 @@ import json
 import re
 from collections import defaultdict
 
-from .common import AWARDS, PRIVATE, log, today
+from .common import AWARDS, LEADS, PRIVATE, log, today
 from .regions import iso3, region
 from .sectors import SECTORS
 
@@ -88,16 +88,37 @@ def build():
             for fld in ("email", "phone", "website", "address", "legal_id"):
                 if c.get(fld) and not x[fld]:
                     x[fld] = c[fld]
+    # tier B: notable producers and traders (Wikidata), merged with award winners when the name matches
+    notable = {}
+    for f in (LEADS / "companies" / "wikidata").glob("[A-Z][A-Z][A-Z].json"):
+        d = json.loads(f.read_text())
+        for c in d.get("companies", []):
+            notable[(norm(c["name"]), d["country"])] = c
+    n_b = 0
+    for k, c in notable.items():
+        x = sup.get(k)
+        if x is None:
+            x = sup[k]; x["names"][c["name"]] += 1; x["country"][k[1]] += 1; x["tier_b"] = True; n_b += 1
+            if c.get("sector"):
+                x["sectors"][c["sector"]] += 1
+                x["goods"] += 1 if c["sector"] in GOODS else 0
+            x["sources"].add("Wikidata")
+        x["website"] = x["website"] or c.get("website", "")
+        x["industries"] = c.get("industries", ""); x["employees"] = c.get("employees", "")
+        x["trader"] = c.get("trader", False); x["notable"] = True
     out = []
     for (k, wc), x in sup.items():
         name = max(x["names"].items(), key=lambda y: y[1])[0]
         secs = sorted(x["sectors"].items(), key=lambda y: -y[1])
         out.append({
-            "supplier": name[:120], "country": wc, "region": region(wc) if wc else "", "tier": "A",
+            "supplier": name[:120], "country": wc, "region": region(wc) if wc else "",
+            "tier": "B" if x.get("tier_b") else "A", "notable": "yes" if x.get("notable") else "",
+            "trader": "yes" if x.get("trader") else "", "industries": x.get("industries", ""),
+            "employees": x.get("employees", ""),
             "wins_24m": x["wins"], "won_usd_est": round(x["usd"]),
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
-            "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else "works/services",
+            "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
             "main_cpv": max(x["cpv"].items(), key=lambda y: y[1])[0] if x["cpv"] else "",
             "buyer_countries": " ".join(sorted(c for c in x["buyer_c"] if c))[:80], "buyers": len(x["buyers"]),
             "exports": "yes" if any(c and wc and c != wc for c in x["buyer_c"]) else "",
@@ -105,14 +126,16 @@ def build():
             "email": x["email"], "phone": x["phone"], "website": x["website"], "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
         })
-    out.sort(key=lambda r: (-r["won_usd_est"], -r["wins_24m"]))
+    out.sort(key=lambda r: (r["tier"], -r["won_usd_est"], -r["wins_24m"]))
     PRIVATE.mkdir(parents=True, exist_ok=True)
     cols = list(out[0].keys()) if out else ["supplier"]
     with open(PRIVATE / "universe.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(out)
     stats = {"awards": n_aw, "suppliers": len(out), "with_email": sum(1 for r in out if r["email"]),
              "with_phone": sum(1 for r in out if r["phone"]), "exporters": sum(1 for r in out if r["exports"]),
-             "goods": sum(1 for r in out if r["type"] == "goods supplier"), "contacts_matched": n_ct}
+             "goods": sum(1 for r in out if r["type"] == "goods supplier"), "contacts_matched": n_ct,
+             "tier_A": sum(1 for r in out if r["tier"] == "A"), "tier_B_notable": n_b,
+             "with_website": sum(1 for r in out if r["website"])}
     log.info("universe %s", stats)
     (PRIVATE / "universe_stats.json").write_text(json.dumps(stats))
     return out, stats
