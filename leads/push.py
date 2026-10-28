@@ -93,9 +93,14 @@ def leads_tables():
         rows += r if i == 0 else r[1:]
     out.append(("Tenders", [x for x in rows if any(x)]))
     for tab, name in [("Opportunity Pool", "opportunities"), ("Repeat Buyers", "buyers"), ("Awards", "awards"),
-                      ("Competitors", "competitors"), ("Accounts", "accounts"), ("Importers", "importers")]:
+                      ("Competitors", "competitors"), ("Accounts", "accounts"), ("Importers", "importers"),
+                      ("Sectors", "sectors"), ("Countries", "countries"), ("Sources", "status"),
+                      ("Market Signals", "markets"), ("Suppliers", "suppliers"), ("Groups", "groups")]:
         full = LEADS / f"{name}_all.csv"
         out.append((tab, read_csv(full if full.exists() else LEADS / f"{name}.csv")))
+    dg = LEADS / "digest.txt"
+    if dg.exists():
+        out.append(("Digest", [["daily digest"]] + [[line] for line in dg.read_text(encoding="utf-8").splitlines()]))
     return out
 
 
