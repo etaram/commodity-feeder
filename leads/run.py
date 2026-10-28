@@ -401,36 +401,35 @@ def merge_opportunities(tenders, buyers, markets):
 
 
 def write_digest(tenders, buyers):
-    """Plain-text daily summary (Hebrew headings) used by the scheduled e-mail."""
+    """Plain-text daily summary (Hebrew headings) used by the scheduled e-mail: the brain's best opportunities first."""
     t = today()
-    new = [r for r in tenders if r["new"] and r["score"] >= 50][:15]
+    def line(r):
+        v = f"{r['est_value_usd']:,} USD" if r["est_value_usd"] != "" else "ללא היקף"
+        ev = f" | EV {r['ev_usd']:,}" if r.get("ev_usd") not in ("", None) else ""
+        title = r.get("title_en") or r["title"]
+        return (f"- [{r.get('decision', '')}{ev}] {r['sector']} | {r['country']} | {r['buyer'][:60]} | {title[:120]} | "
+                f"{v} | הגשה עד {r['deadline'] or 'לא צוין'} | {r['link']}")
+    pursue = [r for r in tenders if r.get("decision") == "Pursue"][:15]
+    intl = [r for r in tenders if (r.get("access") or "").startswith("International") and r["new"]][:10]
     isr = [r for r in tenders if r["country"] == "ISR"][:10]
     soon = [b for b in buyers if b["next_expected"] and str(t) <= b["next_expected"] <= str(t + dt.timedelta(days=45))]
     soon = sorted(soon, key=lambda b: -b["total_usd"])[:10]
-    L = [f"Leads Engine - {t:%d/%m/%Y}", "",
-         f"מכרזים פתוחים: {len(tenders)} | חדשים: {sum(1 for r in tenders if r['new'])} | "
-         f"נסגרים תוך 14 יום: {sum(1 for r in tenders if r['days_left'] != '' and 0 <= r['days_left'] <= 14)}", ""]
-    def line(r):
-        v = f"{r['est_value_usd']:,} USD" if r["est_value_usd"] != "" else "ללא היקף"
-        return (f"- [{r['score']}] {r['sector']} | {r['country']} | {r['buyer'][:60]} | {r['title'][:120]} | "
-                f"{v} | הגשה עד {r['deadline'] or 'לא צוין'} | {r['link']}")
-    L.append("מכרזים חדשים עם ציון 50 ומעלה:")
-    L += [line(r) for r in new] or ["- אין חדשים"]
-    L += ["", "ישראל (מכרזים והודעות פטור פתוחות):"]
+    L = [f"Opportunity Engine - {t:%d/%m/%Y}", "",
+         f"מכרזים פתוחים: {len(tenders):,} | חדשים: {sum(1 for r in tenders if r['new']):,} | "
+         f"לרדוף (Pursue): {sum(1 for r in tenders if r.get('decision') == 'Pursue')} | "
+         f"מדינות: {len({r['country'] for r in tenders})}", ""]
+    L.append("ההזדמנויות המובילות לפי המוח (ערך צפוי):")
+    L += [line(r) for r in pursue] or ["- אין"]
+    L += ["", "חדשים מארגונים בינלאומיים ובנקי פיתוח:"]
+    L += [line(r) for r in intl] or ["- אין"]
+    L += ["", "ישראל:"]
     L += [line(r) for r in isr] or ["- אין"]
-    L += ["", "קונים חוזרים שצפויים לצאת למכרז ב-45 הימים הקרובים (לפי היסטוריית TED):"]
+    L += ["", "קונים חוזרים שצפויים לצאת למכרז ב-45 הימים הקרובים:"]
     L += [f"- {b['buyer'][:70]} | {b['country']} | {b['group']} | {b['awards_12m']} זכיות ב-12 חודשים, "
           f"{b['total_usd']:,} USD | צפוי בסביבות {b['next_expected']} | ספקים נוכחיים: {b['current_suppliers'][:80]}"
           for b in soon] or ["- אין"]
     L += ["", "הטבלה המלאה: https://docs.google.com/spreadsheets/d/1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y/edit"]
     (LEADS / "digest.txt").write_text("\n".join(L), encoding="utf-8")
-
-
-SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "country", "region", "buyer", "title_en",
-              "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
-              "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
-              "buyer_median_award_usd", "incumbent", "why"]
-CHUNK, CHUNKS = 2500, 16
 
 
 def write_sheet_chunks(tenders):
@@ -562,12 +561,12 @@ def merge():
         log.warning("brain: %s", e)
     markets = merge_markets(bm)
     merge_opportunities(tenders, buyers or [], markets or [])
-    write_digest(tenders, buyers or [])
     cols = ["score", "new", "deadline", "days_left", "stage", "sector", "commodity", "source", "country", "region",
             "buyer", "title_en", "summary_en", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
             "classification", "contact", "benchmark", "link", "lang", "first_seen", "id", "decision", "ev_usd",
             "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent",
             "margin_pct", "why"]
+    write_digest(tenders, buyers or [])
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
     write_sector_summary(tenders)
