@@ -1,5 +1,6 @@
 """Dominican Republic: DGCP open data API (OCDS releases), processes published in the last days."""
 import datetime as dt
+import time
 
 from .common import CACHE, cache_empty, log, polite, rolling, session, today
 from .ocds import tender_row
@@ -16,8 +17,10 @@ def fetch():
     items = ((j.get("payload") or {}).get("content")) or []
     known = set((CACHE / "dominican.jsonl").read_text().split('"id": "')[1:]) if (CACHE / "dominican.jsonl").exists() else set()
     known = {k.split('"', 1)[0] for k in known}
-    new, n = [], 0
+    new, n, t0 = [], 0, time.time()
     for it in items:
+        if time.time() - t0 > 360:
+            break
         oc = it.get("ocid", "")
         if f"DO-{oc}" in known or "-CD-" in oc:  # CD = compras por debajo del umbral / direct
             continue

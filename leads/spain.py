@@ -3,6 +3,7 @@ regions and local entities. Open ('PUB') notices are kept; awards ('ADJ', 'RES')
 import datetime as dt
 import html
 import re
+import time
 
 from .common import cache_empty, clean, log, rolling, session, today
 from .sectors import from_cpv, classify
@@ -20,8 +21,8 @@ def _g(x, tag):
 def fetch():
     s, t = session(), today()
     cut = str(t - dt.timedelta(days=10 if cache_empty("spain") else 2))
-    url, pages, new, awards = START, 0, [], 0
-    while url and pages < 120:
+    url, pages, new, awards, t0 = START, 0, [], 0, time.time()
+    while url and pages < 120 and time.time() - t0 < 540:
         r = s.get(url, timeout=120); pages += 1
         if r.status_code != 200:
             log.warning("PLACSP %s", r.status_code); break
