@@ -7,10 +7,10 @@ from .common import cache_empty, clean, log, polite, rolling, session, today
 
 URL = "https://tenders.etimad.sa/Tender/AllSupplierTendersForVisitorAsync"
 AR = [
-    ("DEFENCE", r"عسكري|أسلحة|ذخيرة|دفاع|أمني|الأمن"), ("HEALTH", r"طبي|طبية|أدوية|صحي|مستشفى|مختبرات طبية"),
+    ("DEFENCE", r"عسكري|أسلحة|ذخيرة|دفاع|أمني|الأمن"), ("HEALTH", r"طبي|طبية|أدوية|صحي|الصحة|مستشفى|مختبرات طبية"),
     ("WATER", r"مياه|صرف صحي|تحلية|سدود"), ("POWER", r"كهرباء|كهربائي|طاقة شمسية|محطات توليد|إنارة"),
     ("INFRA", r"طرق|جسور|أنفاق|سكك|مطار|موانئ"), ("ICT", r"تقنية المعلومات|حاسب|اتصالات|برمجيات|شبكات|أنظمة"),
-    ("TRANSPORT_EQ", r"سيارات|مركبات|حافلات|طائرات"), ("MACHINERY", r"معدات|آلات|مضخات"),
+    ("TRANSPORT_EQ", r"سيارات|مركبات|حافلات|طائرات"), ("MACHINERY", r"معدات|آلات|مضخات|جهاز|أجهزة|مكيف"),
     ("ENERGY", r"وقود|نفط|ديزل|غاز"), ("CHEMICALS", r"كيميائ"), ("TEXTILES", r"ملابس|أقمشة|زي"),
     ("AGRI_FOOD", r"أغذية|مواد غذائية|زراع|أعلاف|لحوم"), ("LAB", r"مختبر|أجهزة قياس"),
     ("CONSUMER", r"أثاث|قرطاسية|مفروشات|أجهزة منزلية"), ("ENV_WASTE", r"نظافة|نفايات|مخلفات|بيئ"),
@@ -63,7 +63,7 @@ def fetch():
             name = clean(n.get("tenderName"))
             new.append({
                 "id": f"ETIMAD-{n.get('tenderId')}", "source": "Etimad (Saudi Arabia)", "group": "",
-                "sector": _sector(act, name), "nature": "", "cpv": "", "classification": f"activity {n.get('tenderActivityId')}",
+                "sector": _sector(act, name, n.get("agencyName") or ""), "nature": "", "cpv": "", "classification": f"activity {n.get('tenderActivityId')}",
                 "country": "SAU", "buyer": clean(f"{n.get('agencyName') or ''} - {n.get('branchName') or ''}", 120),
                 "title": clean(f"{name} | {act}", 300), "notice_type": clean(n.get("tenderTypeName")), "stage": "tender",
                 "access": "National (local registration; GCC/foreign via local partner)", "published": str(pub or ""),
