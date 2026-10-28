@@ -1,10 +1,18 @@
-source,last_run_utc,rows,note
-ted,2026-10-27T23:51,887,OK
-fts,2026-10-27T23:51,4,OK
-sam,2026-10-27T23:52,77,OK
-canadabuys,2026-10-27T23:52,24,OK
-za,2026-10-27T23:52,0,EMPTY
-worldbank,2026-10-27T23:54,4,OK
-ebrd,2026-10-27T23:52,0,EMPTY
-mrgov,2026-10-27T23:58,6,OK
-importyeti,2026-10-28T00:00,279,"279 HS headings cached; this run 22, due 207"
+source,last_run_utc,rows,note,detail
+ted,2026-10-28T04:02,6043,OK,fetched=7750; days=21; cache=6043
+fts,2026-10-28T04:02,152,OK,pages=2
+sam,2026-10-27T23:52,77,OK," | last error: [-1:])), 120),                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TypeError: sequence item 1: expected str instance, NoneType found "
+canadabuys,2026-10-28T04:02,800,OK,
+za,2026-10-28T04:02,200,OK,
+worldbank,2026-10-28T04:14,631,OK,new=631; cache=631; days=60
+ebrd,2026-10-28T04:02,41,OK,
+mrgov,2026-10-28T04:16,209,OK,
+ungm,2026-10-28T04:03,368,OK,new=368; total_active=1634
+undp,2026-10-28T04:03,19,OK,new=26; cache=19
+aiib,2026-10-28T04:03,173,OK,new=174
+isdb,2026-10-28T04:03,34,OK,new=35
+etimad,2026-10-28T04:04,203,OK,new=203; pages=21
+prozorro,2026-10-28T04:14,316,OK,candidates=7105; fetched=2500
+pncp,2026-10-28T04:14,142,OK,new=142
+secop,2026-10-28T04:14,549,OK,new=584
+importyeti,2026-10-28T04:17,300,OK,"300 HS headings cached; this run 21, due 185"

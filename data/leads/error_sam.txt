@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 477, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 62, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/sam.py", line 73, in fetch
+    "buyer": clean(" / ".join(x.get("name", "") for x in (org[:1] + org[-1:])), 120),
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: sequence item 1: expected str instance, NoneType found
