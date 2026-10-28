@@ -1,6 +1,0 @@
-wb_api1 https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00005&resourceId=RS00005&top=2&type=json
-wb_api2 https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00005&top=2&type=json
-wb_res https://datacatalogapi.worldbank.org/ddhxext/DatasetView?dataset_unique_id=0037802
-wb_meta2 https://datacatalogapi.worldbank.org/dexapps/fone/api/resources?assetId=DS00005
-wb_page https://financesone.worldbank.org/contract-awards-in-investment-project-financing/DS00005
-usas POST https://api.usaspending.gov/api/v2/search/spending_by_award/ {"filters":{"award_type_codes":["A","B","C","D"],"time_period":[{"start_date":"2026-01-01","end_date":"2026-10-01"}],"recipient_scope":"foreign"},"fields":["Award ID","Recipient Name","Award Amount","recipient_id","Recipient Location","NAICS"],"limit":3,"page":1}

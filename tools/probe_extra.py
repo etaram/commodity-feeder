@@ -1,25 +1,25 @@
-"""Probe sites with incomplete TLS chains using AIA chasing (fetch the missing intermediate, keep verification on)."""
-import pathlib, ssl, traceback
-import requests
-out = pathlib.Path("data/probe"); out.mkdir(parents=True, exist_ok=True)
-URLS = {
-    "x_tr_main": "https://www.ilan.gov.tr/main-es2015.cbf38031e623f595be7a.js",
-}
-try:
-    from aia import AIASession
-    aia = AIASession()
-except Exception as e:
-    aia = None; print("aia missing", e)
-for name, url in URLS.items():
+"""Scratch probe: OCP Data Registry - list publications and download sizes (results in data/probe/ocdr.txt)."""
+import gzip, io, json, pathlib, re, requests
+out = []
+s = requests.Session(); s.headers["User-Agent"] = "Mozilla/5.0 commodity-feeder probe"
+r = s.get("https://data.open-contracting.org/en/", timeout=60)
+out.append(f"home {r.status_code} {len(r.text)}")
+pubs = dict.fromkeys(re.findall(r'/en/publication/(\d+)"[^>]*>\s*([^<]{3,160})', r.text))
+out.append(f"pubs {len(pubs)}")
+for pid, title in list(pubs)[:200]:
+    out.append(f"{pid}\t{title.strip()}")
+for pid in ["120"]:
+    p = s.get(f"https://data.open-contracting.org/en/publication/{pid}", timeout=60)
+    out.append(f"page {pid} {p.status_code}")
+    out.append(" | ".join(sorted(set(re.findall(r"name=([\w.]+)", p.text)))))
+    h = s.get(f"https://data.open-contracting.org/en/publication/{pid}/download?name=2023.jsonl.gz", stream=True, timeout=60,
+              allow_redirects=True)
+    out.append(f"dl {h.status_code} {h.url[:200]} len={h.headers.get('content-length')} type={h.headers.get('content-type')}")
+    raw = h.raw.read(200000)
     try:
-        import tempfile, os
-        cadata = aia.cadata_from_url(url)
-        f = tempfile.NamedTemporaryFile("w", suffix=".pem", delete=False); f.write(cadata); f.close()
-        import certifi
-        bundle = tempfile.NamedTemporaryFile("w", suffix=".pem", delete=False)
-        bundle.write(open(certifi.where()).read() + "\n" + cadata); bundle.close()
-        r = requests.get(url, timeout=60, verify=bundle.name, headers={"User-Agent": "Mozilla/5.0"})
-        (out / f"{name}.txt").write_bytes(f"STATUS: {r.status_code}\nTYPE: {r.headers.get('content-type')}\n\n".encode() + r.content[:1_500_000])
-        print(name, r.status_code, len(r.content))
+        txt = gzip.GzipFile(fileobj=io.BytesIO(raw)).read(3000).decode("utf-8", "replace")
     except Exception as e:
-        (out / f"{name}.txt").write_text(f"ERROR: {e}\n{traceback.format_exc()[-800:]}"); print(name, "ERR", e)
+        txt = f"gz err {e}"
+    out.append(txt[:3000])
+pathlib.Path("data/probe/ocdr.txt").write_text("\n".join(out))
+print("\n".join(out[:20]))
