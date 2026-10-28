@@ -158,16 +158,6 @@ jobs:
         run: set -o pipefail; python -m leads.run --source qatar 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 6
         continue-on-error: true
-      - name: latam_awards
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',latam_awards,') }}
-        run: set -o pipefail; python -m leads.run --source latam_awards 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 20
-        continue-on-error: true
-      - name: wikidata_companies
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',wikidata_companies,') }}
-        run: set -o pipefail; python -m leads.run --source wikidata_companies 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 16
-        continue-on-error: true
       - name: awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',awards,') }}
         run: set -o pipefail; python -m leads.run --source awards 2>&1 | tee -a data/leads/run.log
@@ -203,31 +193,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
         continue-on-error: true
-      - name: prozorro_awards
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',prozorro_awards,') }}
-        run: set -o pipefail; python -m leads.run --source prozorro_awards 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 16
-        continue-on-error: true
-      - name: ext_awards
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ext_awards,') }}
-        run: set -o pipefail; python -m leads.run --source ext_awards 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 30
-        continue-on-error: true
-      - name: web_contacts
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',web_contacts,') }}
-        run: set -o pipefail; python -m leads.run --source web_contacts 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 15
-        continue-on-error: true
-      - name: universe
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',universe,') }}
-        run: set -o pipefail; python -m leads.universe 2>&1 | tee -a data/leads/run.log
-        continue-on-error: true
       - name: push
         if: ${{ env.GOOGLE_SERVICE_ACCOUNT_JSON != '' && (inputs.only == '' || contains(format(',{0},', inputs.only), ',push,')) }}
         run: |
           set -o pipefail
           python -m leads.push check 2>&1 | tee -a data/leads/run.log
-          python -m leads.push universe 2>&1 | tee -a data/leads/run.log
           python -m leads.push leads 2>&1 | tee -a data/leads/run.log
         continue-on-error: true
       - name: commit
