@@ -1,0 +1,988 @@
+STATUS: 200
+NOTE: https://www.ungm.org/Scripts/UNGM.js
+TYPE: application/javascript
+
+﻿window.UNGM = {
+    autocompletes: [],
+    initialised: false,
+    isAuthenticated: false,
+    isVendor: false,
+    ungmNumber: null,
+    isRtl: false,
+    mobileTabWidth: 768,
+    siteRoot: null, // this should be set by a razor view via config
+    clipBoardToolBarItems: ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo', 'RemoveFormat', '-', 'HorizontalRule'],
+    styleToolBarItems: ['Format', 'Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
+    sourceToolBarItems: ['-', 'Source'],
+    linkToolBarItems: ['-', 'Link', 'Unlink'],
+    tableToolBarItems: ['-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Table'],
+    standardToolbar: null,
+    standardToolbarWithSource: null,
+    standardToolbarWithLinks: null,
+    standardToolbarWithSourceLink: null,
+    standardToolbarWithSourceLinkTable: null,
+    init: function () {
+        $.ajaxSetup({ cache: false }); // Disable caching of AJAX responses
+        $(document).ajaxError(UNGM.ajaxErrorHandler);
+        $(document).ajaxSend(UNGM.ajaxSendHandler);
+
+        UNGM.highlightMenuItem();
+        UNGM.highlightTreeMenuItem();
+
+        UNGM.initDatePickers();
+        UNGM.initTabs();
+        UNGM.initFilters();
+        UNGM.Component.FlyoutMenu();
+        UNGM.initCollapsables();
+        UNGM.initTextEditorToolBarItems();
+
+        // Update the email count after a while to avoid the query to block other queries more important
+        setTimeout(UNGM.updateInboxCount, 100);
+        setTimeout(UNGM.updateUngmNumber, 100);
+
+        UNGM.getUserLanguage();
+
+        $(".language-dropdown").click(UNGM.languageSelectClicked);
+        $("#nav-icon-top-bar").bind("click", UNGM.openOrCloseNavigation);
+        $("#btnMyNote").bind("click", UNGM.UserNoteClick);
+        $("#cmdEndImpersonation, #cmdEndReadOnlyImpersonation").bind("click", UNGM.EndImpersonation);
+        $(".left-menu-expand-button, .left-menu-collapse-button").off("click").on("click", UNGM.toggleLeftMenu);
+        $(".track-document-download").off("click").on("click", function (e) {
+            UNGM.gaEvent("DocumentDownload", "download", $(e.currentTarget).data("document-name"));
+        });
+
+        $(".logoHolder").bind("click", function () {
+            window.location.href = UNGM.siteRoot;
+        });
+
+        $(".numericOnly").on("keydown", UNGM.ensureNumeric); //move any filter advanced buttons down to after the basic div
+
+        $(".filterExpandHolder").each(function (index, selector) {
+            $(selector).insertAfter($(selector).siblings(".filterBasic"));
+        });
+
+
+        // bind to the dialog open and close event to prevent bg scrolling
+        $(document).bind("dialogopen open", ".ui-dialog", function (event, ui) {
+            $('body').css('overflow', 'hidden');
+
+            try {
+                // Include validation on hidden fields (for invalid data on non-active tab)
+                $.validator.setDefaults({ ignore: '' });
+                //Parse the ajax-loaded content for stuff to validate
+                window.UNGM.Validation.init();
+                $.validator.unobtrusive.parse($(".ui-dialog"));
+            }
+            catch (e) { }
+        });
+        $(document).on("dialogclose close", ".ui-dialog", function (event, ui) {
+            // Verify that there are no dialogs opened
+            if ($(".ui-dialog:visible").length == 0) {
+                $('body').css('overflow', 'scroll');
+            }
+        });
+
+        UNGM.initialised = true;
+        // This should mark all required fields in forms with a star *
+        UNGM.markRequiredFields();
+
+        $("#toggleAccessibleThrobber").bind("click", UNGM.toggleAccessibleThrobber);
+    },
+    toggleLeftMenu: function () {
+        $("#left").toggleClass("left-menu-collapsed");
+        $("#left").children(".left-menu-content").fadeToggle(250, 'easeOutBounce');
+        $("#centre").toggleClass("centre-expanded");
+    },
+    scrollToElement: function ($element) {
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $element.offset().top - $(".top-bar").height() - 10
+        }, 2000);
+    },
+    initTextEditorToolBarItems: function () {
+        UNGM.standardToolbar = [UNGM.clipBoardToolBarItems, UNGM.styleToolBarItems];
+        UNGM.standardToolbarWithSource = [UNGM.clipBoardToolBarItems.concat(UNGM.sourceToolBarItems), UNGM.styleToolBarItems];
+        UNGM.standardToolbarWithLinks = [UNGM.clipBoardToolBarItems.concat(UNGM.linkToolBarItems), UNGM.styleToolBarItems];
+        UNGM.standardToolbarWithSourceLink = [UNGM.clipBoardToolBarItems.concat(UNGM.sourceToolBarItems).concat(UNGM.linkToolBarItems), UNGM.styleToolBarItems];
+        UNGM.standardToolbarWithSourceLinkTable = [UNGM.clipBoardToolBarItems.concat(UNGM.sourceToolBarItems).concat(UNGM.linkToolBarItems), UNGM.styleToolBarItems.concat(UNGM.tableToolBarItems)];
+    },
+    getDatepickerVal: function (selector) {
+        var date = $(selector).datepicker("getDate");
+        return $.datepicker.formatDate('yy-mm-dd', date);
+    },
+    parseLocalDateToDate: function (localDate) {
+        var format = UNGM.currentuserCookieLanguage === 'zh' ? 'yy-mm-dd' : UNGM.currentuserCookieLanguage === 'ru' ? 'dd.mm.yy' : 'dd-M-yy';
+        return $.datepicker.parseDate(format, localDate);
+    },
+    formatLocalDate: function (date) {
+        var format = UNGM.currentuserCookieLanguage === 'zh' ? 'yy-mm-dd' : UNGM.currentuserCookieLanguage === 'ru' ? 'dd.mm.yy' : 'dd-M-yy';
+        return $.datepicker.formatDate(format, date);
+    },
+    ensureNumeric: function (evt) {
+
+        var character = String.fromCharCode(evt.which || evt.keyCode);
+        var matches = character.match(/^[A-Z]+$/);
+
+        if (matches && matches.length > 0 && !evt.shiftKey && !evt.ctrlKey && !evt.altKey) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            evt.cancel = true;
+            return false;
+        }
+    },
+    highlightMenuItem: function () {
+        $("#left li a:not(.nav-content)").each(function () {
+            var linkRef = $(this).attr("href");
+            linkRef = linkRef.replace("/", "");
+            if (UNGM.siteRoot + linkRef == window.location.href) {
+                if ($(this).is("#my-tenders-link")) {
+                    UNGM.loadLinksToEprocurementAppsForMyTenders();
+                }
+                $(this).addClass("current");
+                if (UNGM.browsingWithInternetExplorer7()) {
+                    // do the css stuff manually for the benefit of IE7
+                    if ($(this).parent("li").children("ul.navLevel3").length > 0) {
+                        // the selected item has a navlevel3 subdir
+                        $(this).parent("li").children("ul.navLevel3").show();
+                    } else if ($(this).parents("ul.navLevel3").length > 0) {
+                        // the selected item is in a navlevel4 subdir
+                        $(this).parents("ul.navLevel3").show();
+                        $(this).parents("ul.navLevel4").show();
+                        $(this).parent("li").children("ul.navLevel4").show();
+                    }
+                }
+                // end of IE7 polyfill
+                var l3parent = $(this).parents("ul.navLevel3:first");
+                if (l3parent.length > 0) {
+                    l3parent.prev().addClass("current");
+                }
+
+                var l4parent = $(this).parents("ul.navLevel4:first");
+                if (l4parent.length > 0) {
+                    l4parent.prev().addClass("current");
+                }
+            }
+        });
+    },
+    highlightTreeMenuItem: function () {
+        $("#left ul li.nav > a.nav-content").each(function () {
+            var element = $(this);
+            var link = UNGM.siteRoot + element.attr("href").replace("/", "");
+            if (link == window.location.href) {
+                element.parents(".nav").addClass("current");
+            }
+        });
+    },
+    loadLinksToEprocurementAppsForMyTenders: function () {
+        UNGM.Throbber.Push();
+        $.get("/Vendor/Menu/LinksToEprocurementAppsForMyTenders")
+            .done(
+                function (data) {
+                    $("#my-tenders-link").next("ul").html(data);
+                    UNGM.Throbber.Pop();
+                });
+    },
+    EndImpersonation: function () {
+        UNGM.throbOver($('body'));
+        $.ajax({
+            url: UNGM.siteRoot + 'Admin/Users/EndImpersonation',
+            type: 'GET',
+            success: UNGM.onImpersonationEnded,
+            complete: UNGM.hideThrobber
+        });
+    },
+    onImpersonationEnded: function () {
+        var ret = sessionStorage.getItem('imp:return') || '/Admin/Users';
+        sessionStorage.removeItem('imp:return');
+        window.location.href = UNGM.siteRoot + ret;
+    },
+    UserNoteClick: function () {
+        UNGM.throbOver($("#wholePage"));
+        $.ajax({
+            url: UNGM.siteRoot + 'UNUser/MyNote',
+            type: 'GET',
+            async: false,
+            success: UNGM.onNoteDialogLoaded
+        });
+    },
+    onNoteDialogLoaded: function (data) {
+        $("#myNoteContent").html(data);
+        $("#myNoteContent").dialog({
+            open: function () {
+                $(this).css("maxHeight", 600);
+            },
+            modal: true,
+            width: '50%',
+            hide: { effect: 'fade', duration: 100 },
+            show: { effect: 'fade', duration: 100 },
+            close: function () {
+                UNGM.UserNotes.ckEditorLoaded = false;
+                // destroy the edit dialog. Not sure why I have to do this, but if I do not, it's duplicated if I reopen the notes functionality
+                if ($("#EditNote").hasClass('ui-dialog-content')) {
+                    $("#EditNote").dialog("destroy").remove();
+                }
+            }
+        });
+        UNGM.hideThrobber();
+    },
+    antiForgeryHeaders: function () {
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        return token ? { RequestVerificationToken: token } : {};
+    },
+    ajaxErrorHandler: function (event, xhr, options, exc) {
+        UNGM.hideThrobber();
+        // xhr status is reset to zero on page unload, so this should stop the error message if the user has just navigated away from the page during an ajax request.
+        // unfortunately, Chrome also resets the xhr status for a timeout, so also have to check the statusText.
+        if (xhr.status != 0 || xhr.statusText == "timeout") {
+
+            var error = {
+                ThrownError: exc,
+                Status: xhr.status,
+                StatusText: xhr.statusText,
+                RequestedPage: options.url
+            };
+
+            $.confirm(
+                UNGM.ErrorDialogTitle,
+                UNGM.ErrorDialogMessage,
+                UNGM.ErrorDialogBtnSendFeedback,
+                UNGM.ErrorDialogBtnCancel,
+                function () {
+                }, //"yes" callback
+                400 // the minimum width of the model dialog
+            );
+        }
+    },
+    ajaxSendHandler: function (event, xhr, settings) {
+        try {
+            ga.push(['_trackPageview', settings.url]);
+        }
+        catch (ex) { }
+    },
+    throbOver: function (elem) {
+        if (localStorage.getItem("accessibleThrobber") !== undefined && localStorage.getItem("accessibleThrobber")) {
+            $(".throbber__inner").hide();
+            $(".throbber__inner__alt").show();
+        }
+        // Per element... which means you have to get the right element 100 times
+        /*var height = $(elem).outerHeight();
+        var width = $(elem).outerWidth();
+        var throbDiv = $("#mainThrobber");
+        throbDiv.css("height", height + "px").css("width", width + "px");
+        var position = $(elem).offset();
+        throbDiv.css(position);
+        throbDiv.show();*/
+
+        // Or brute force... Whole page to make sure (note: CSS changes also required)
+        $("#mainThrobber").fadeIn('fast');
+    },
+    hideThrobber: function () {
+        $("#mainThrobber").fadeOut('fast');
+    },
+    toggleAccessibleThrobber: function () {
+        if (localStorage.getItem("accessibleThrobber") !== undefined && localStorage.getItem("accessibleThrobber")) {
+            localStorage.removeItem("accessibleThrobber");
+            $(".throbber__inner").show();
+            $(".throbber__inner__alt").hide();
+
+        } else {
+            localStorage.setItem("accessibleThrobber", "true");
+            $(".throbber__inner").hide();
+            $(".throbber__inner__alt").show();
+        }
+    },
+    showPleaseWaitMessage: function () {
+        $(".throbber__inner__pleasewait").fadeIn();
+    },
+    hidePleaseWaitMessage: function () {
+        $(".throbber__inner__pleasewait").hide();
+    },
+    initDatePickers: function () {
+        if ($.datepicker) {
+            var dateFormat = UNGM.currentuserCookieLanguage === 'zh' ? 'yy-mm-dd' : UNGM.currentuserCookieLanguage === 'ru' ? 'dd.mm.yy' : 'dd-M-yy';
+            $.datepicker.setDefaults($.datepicker.regional[$('html').attr('lang')]);
+            $.datepicker.setDefaults({ dateFormat: dateFormat });
+            $(".dateField").datepicker({
+                onSelect: function () {
+                    // Ensure the change event is fired on the underlying textbox
+                    $(this).change();
+                },
+                changeYear: true,
+                changeMonth: true
+            });
+        }
+    },
+    initDatePickersIn: function (container) {
+        container.find(".dateField").datepicker({
+            onSelect: function () {
+                // Ensure the change event is fired on the underlying textbox
+                $(this).change();
+            },
+            changeYear: true,
+            changeMonth: true
+        });
+    },
+    initTabs: function () {
+        // if we're on a mobile device, change the ordering, so it goes tab - content - tab - content- etc, etc
+        if ($(window).width() < UNGM.mobileTabWidth) {
+            var numTabs = $(".tabHeader").length;
+            for (var i = numTabs; i > 0; i--) {
+                $(".tabBodies .tab:nth-child(" + i + ")").insertAfter(".tabHeaders .tabHeader:nth-child(" + i + ")");
+            }
+        }
+
+        $(".tabHeader:not(.tabDisabled)").off("click").on("click", UNGM.tabHeaderClicked);
+        $(".tabHeader:not(.tabDisabled)").off("keypress").on("keypress", UNGM.tabHeaderClicked);
+
+        // Identify the tab to select by default
+        var parameter = "#tab=";
+        if (window.location.href.indexOf(parameter) !== -1) {
+            // Index of parameter tab
+            var index1 = window.location.href.indexOf(parameter) + parameter.length;
+
+            // Index of next parameter, if any
+            var index2 = window.location.href.indexOf("&", index1);
+            if (index2 === -1) {
+                // There are no more parameters, get the end of the URL
+                index2 = window.location.href.length;
+            }
+            var tabId = window.location.href.substring(index1, index2);
+
+            if (tabId.length) {
+                var tabHeader;
+                if (isNaN(tabId)) {
+                    // The tab to select is an ID selector
+                    tabHeader = $(".tabs .tabHeader#" + tabId);
+                } else {
+                    // The tab to select is the index of tabs
+                    tabId = parseInt(tabId);
+                    tabHeader = $(".tabs .tabHeader:nth-child(" + tabId + ")");
+                }
+
+                if (tabHeader.length) {
+                    tabHeader.click();
+                    return true;
+                }
+            }
+        }
+
+        $(".tabs").find(".tabHeader:first").click();
+    },
+    initTabsIn: function (container) {
+        // if we're on a mobile device, change the ordering, so it goes tab - content - tab - content- etc, etc
+        if ($(window).width() < UNGM.mobileTabWidth) {
+            var numTabs = container.find(".tabHeader").length;
+            for (var i = numTabs; i > 0; i--) {
+                container.find(".tabBodies .tab:nth-child(" + i + ")").insertAfter(container.find(".tabHeaders .tabHeader:nth-child(" + i + ")"));
+            }
+        }
+        container.off("click", ".tabHeader:not(.tabDisabled)", UNGM.tabHeaderClicked);
+        container.on("click", ".tabHeader:not(.tabDisabled)", UNGM.tabHeaderClicked);
+        container.on("keypress", ".tabHeader:not(.tabDisabled)", UNGM.tabHeaderClicked);
+        container.find(".tabHeader:first").click();
+    },
+    tabHeaderClicked: function (evt) {
+        var sender = $(evt.currentTarget);
+        var parent = sender.closest(".tabs");
+        var tabIndex = parent.find(".tabHeader").index(sender);
+
+        var isMobileDevice = $(window).width() < UNGM.mobileTabWidth;
+        //if we're on a mobile device, behave like an accordion
+        if (isMobileDevice) {
+            if (sender.hasClass("activeTab")) {
+                sender.removeClass("activeTab");
+                parent.find(".tab").eq(tabIndex).slideUp(400);
+            }
+            else {
+                sender.addClass("activeTab");
+                parent.find(".tab").eq(tabIndex).slideDown(400);
+            }
+        }
+        else {
+            var sender = $(evt.currentTarget);
+            var parent = sender.closest(".tabs");
+            parent.children(".tabHeaders").children(".activeTab").removeClass("activeTab");
+            sender.addClass("activeTab");
+            var tabIndex = parent.find(".tabHeader").index(sender);
+            parent.children(".tabBodies").children(".tab").hide().eq(tabIndex).fadeIn('fast');
+        }
+        var jsName = parent.find(".tab").eq(tabIndex).find("#jsName").val();
+        if (typeof jsName !== "undefined") {
+            window["UNGM"][jsName]["init"]();
+        }
+
+        // Add GA on tab clicked
+        var eventLabel = sender.data("galabel");
+        var eventCategory = sender.parents(".tabs").data("gacategory");
+        UNGM.gaEvent(eventCategory, "Tab click", eventLabel);
+
+        // Second part: load content
+        var tabElement;
+        if (isMobileDevice) {
+            tabElement = parent.find(".tab").eq(tabIndex);
+        } else {
+            tabElement = parent.children(".tabBodies").children(".tab").eq(tabIndex);
+        }
+
+        var url = tabElement.data("url");
+        if (url === null || url === undefined || !url.length) {
+            return true;
+        }
+
+        var reloadContent = tabElement.data("reload") === undefined || tabElement.data("reload") === true;
+        if (!reloadContent) {
+            return true;
+        }
+        tabElement.data("reload", false);
+        UNGM.reloadTab(tabElement);
+    },
+    reloadTab: function (selector) {
+        var tab = $(selector);
+        UNGM.Throbber.Push();
+        $.ajax({
+            url: UNGM.siteRoot + tab.data('url'),
+            type: 'GET',
+            success: function (data) {
+                tab.html(data);
+                if (tab.find(".tabs").length) {
+                    UNGM.initTabsIn(tab);
+                }
+                if (tab.find("form").length) {
+                    UNGM.Validation.initForElement(tab.find("form"));
+                    UNGM.markRequiredFields();
+                }
+                if (UNGM.tabContentReceivedCallback) {
+                    UNGM.tabContentReceivedCallback(tab);
+                }
+            },
+            complete: UNGM.Throbber.Pop
+        });
+    },
+    gaEvent: function (eventCategory, eventName, eventLabel) {
+        try {
+            if (eventName !== undefined && eventName !== null && eventLabel !== undefined && eventLabel !== null && eventCategory !== undefined && eventCategory !== null) {
+                gtag("event", eventName, {
+                    'event_category': eventCategory,
+                    'event_label': eventLabel
+                });
+            }
+        }
+        catch (ex) { }
+    },
+    getCookie: function (name) {
+        var i, x, y, ARRcookies = document.cookie.split(";");
+        for (i = 0; i < ARRcookies.length; i++) {
+            x = ARRcookies[i].substr(0, ARRcookies[i].indexOf("="));
+            y = ARRcookies[i].substr(ARRcookies[i].indexOf("=") + 1);
+            x = x.replace(/^\s+|\s+$/g, "");
+            if (x == name) {
+                return unescape(y);
+            }
+        }
+    },
+    cookiesEnabled: function () {
+        document.cookie = "cookietest=1";
+        var enabled = document.cookie.indexOf("cookietest=") != -1;
+        document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
+
+        return enabled;
+    },
+    setUserLanguage: function (preferredLanguage) {
+        if (preferredLanguage !== UNGM.currentuserCookieLanguage) {
+            var postObject = {
+                PreferredLanguage: preferredLanguage
+            };
+
+            $.ajax({
+                url: "/Account/UserSettings/PreferredLanguage",
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(postObject),
+                complete: function () {
+                    window.location.reload();
+                }
+            });
+        }
+    },
+    getUserLanguage: function () {
+        // Read cookie and set language
+        if (UNGM.currentuserCookieLanguage != '' && UNGM.currentuserCookieLanguage != UNGM.defaultLanguage) {
+            UNGM.setUserLanguage(UNGM.currentuserCookieLanguage);
+        } else if (UNGM.currentuserCookieLanguage === '') {
+            // If there isn't any cookie, set language according to the accept-language of the browser
+            // but only if the browser accepts cookies
+            if (!UNGM.cookiesEnabled()) {
+                alert('You must activate cookies to use www.ungm.org properly.');
+                return;
+            }
+
+            $.ajax({
+                url: UNGM.siteRoot + 'Account/UserSettings/LanguageSuggestion',
+                type: 'GET',
+                success: UNGM.onGotLanguageSuggestion
+            });
+        }
+    },
+    onGotLanguageSuggestion: function (response) {
+        if (response === "" || response === undefined) {
+            return false;
+        }
+
+        $("<div>").attr("id", "languageSuggestionModal").html(response).dialog({
+            modal: true,
+            title: 'Language preferences',
+            width: '66%',
+            height: 200,
+            hide: { effect: 'fade', duration: 100 },
+            show: { effect: 'fade', duration: 100 },
+            open: function () {
+                $(".btnAcceptLanguageSuggestion").bind("click", UNGM.acceptLanguageSuggestionClicked);
+                $(".btnCancelLanguageSuggestion").bind("click", UNGM.cancelLanguageSuggestionClicked);
+                $("#englishMessage").bind("click", UNGM.englishMessageClicked);
+            }
+        });
+    },
+    acceptLanguageSuggestionClicked: function (evt) {
+        UNGM.throbOver($('body'));
+        var sender = $(evt.currentTarget);
+        var preferredLanguage = sender.attr("userLanguage");
+        UNGM.setUserLanguage(preferredLanguage);
+        $("#languageSuggestionModal").dialog("close");
+    },
+    cancelLanguageSuggestionClicked: function () {
+        $("#languageSuggestionModal").dialog("close");
+    },
+    englishMessageClicked: function () {
+        $(".suggestionMsg, .enMsg").toggle();
+        $(".englishMessage").hide();
+    },
+    languageSelectClicked: function (evt) {
+        var sender = $(evt.target);
+        var preferredLanguage = sender.data("language");
+
+        if (preferredLanguage) {
+            UNGM.throbOver($('body'));
+            // Change dropdown list of user settings if it's visible
+            if ($("#PreferredLanguage").length) {
+                $("#PreferredLanguage").val(preferredLanguage);
+            }
+
+            UNGM.setUserLanguage(preferredLanguage);
+        }
+    },
+    initFilters: function () {
+        $(".expandFilter").off("click").on("click", UNGM.toggleAdvancedFilter);
+        $(".expandAllFilter").off("click").on("click", UNGM.toggleAllFilter);
+    },
+    toggleAdvancedFilter: function (evt) {
+        var sender = $(evt.currentTarget);
+        var filter = sender.parents(".filter:first").find(".filterAdvanced");
+        if (filter.is(":visible")) {
+            filter.hide('fast');
+            sender.attr("value", sender.data("invisibletext"));
+        }
+        else {
+            filter.show('fast');
+            sender.attr("value", sender.data("visibletext"));
+        }
+    },
+    toggleAllFilter: function (evt) {
+        var sender = $(evt.currentTarget);
+        var filter = sender.parents(".filter:first").find(".filterAll");
+        if (filter.is(":visible")) {
+            filter.hide('fast');
+            sender.attr("value", sender.data("invisibletext"));
+        }
+        else {
+            filter.show('fast');
+            sender.attr("value", sender.data("visibletext"));
+        }
+    },
+    openMenu: function () {
+        if (UNGM.isRtl) {
+            $("#top").animate({
+                right: "250px"
+            }, { duration: 300, queue: false });
+            $("#main").animate({
+                right: "250px"
+            }, { duration: 300, queue: false });
+        } else {
+            $("#top").animate({
+                left: "250px"
+            }, { duration: 300, queue: false });
+            $("#main").animate({
+                left: "250px"
+            }, { duration: 300, queue: false });
+        }
+    },
+    closeMenu: function () {
+        if (UNGM.isRtl) {
+            $("#top").animate({
+                right: "0px"
+            }, { duration: 180, queue: false });
+            $("#main").animate({
+                right: "0px"
+            }, { duration: 180, queue: false });
+        } else {
+            $("#top").animate({
+                left: "0px"
+            }, { duration: 180, queue: false });
+            $("#main").animate({
+                left: "0px"
+            }, { duration: 180, queue: false });
+        }
+    },
+    openOrCloseNavigation: function (e) {
+        e.preventDefault();
+        var leftval = $("#main").css('left');
+
+        if (leftval == "0px") {
+            UNGM.openMenu();
+        }
+        else {
+            UNGM.closeMenu();
+        }
+    },
+    updateInboxCount: function () {
+        if (UNGM.isAuthenticated === false) {
+            return;
+        }
+
+        $.ajax({
+            url: "/Account/Inbox/Count",
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (count) {
+                if (count && count > 0) {
+                    $("#inbox-count").css('visibility', 'visible').html(count);
+                }
+                else {
+                    $("#inbox-count").css('visibility', 'hidden');
+                }
+            }
+        });
+    },
+    updateUngmNumber: function () {
+        if (UNGM.isVendor === false) {
+            return;
+        }
+
+        if (UNGM.ungmNumber === null) {
+            $.ajax({
+                url: '/Account/Account/MyUngmNumber',
+                cache: true,
+                success: function (ungmNumber) {
+                    UNGM.ungmNumber = ungmNumber;
+                    $("#ungm-number-top-bar").html(UNGM.ungmNumber);
+                }
+            });
+        }
+    },
+    getQueryStringParam: function (name) {
+        var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    },
+    markRequiredFields: function () {
+        $("form input[type='datetime'], input[type='text'], input[type='password'], select, textarea").each(function () {
+            if ($(this).data("val-required")) {
+                try {
+                    var label = $(this).siblings("label");
+                    if (label.html().indexOf("*") < 0) {
+                        label.html(label.html() + "<span aria-hidden=\"true\">&nbsp*</span>");
+                        $(this).attr("aria-required", true);
+                    }
+                }
+                catch (ex) { }
+            }
+            else if ($(this).data("val-requiredif")) {
+                try {
+                    var dependentPropertyName = $(this).data("val-requiredif-propertyname");
+                    var desiredValue = $(this).data("val-requiredif-desiredvalue");
+                    var dependentProperty = $("[name=" + dependentPropertyName + "]");
+
+                    var label = $(this).siblings("label");
+                    if (dependentProperty.val() == desiredValue) {
+                        if (label.html().indexOf("*") < 0) {
+                            label.html(label.html() + "<span aria-hidden=\"true\">&nbsp*</span>");
+                            $(this).attr("aria-required", true);
+                        }
+                    }
+                }
+                catch (ex) { }
+            }
+        });
+
+        $("form input.DocumentId").each(function () {
+            if ($(this).data("val-required")) {
+                var name = $(this).attr("name");
+                var label = $("label[for=" + name + "]");
+                if (label.html().indexOf("*") < 0) {
+                    label.html(label.html() + "<span aria-hidden=\"true\">&nbsp*</span>");
+                    $(this).attr("aria-required", true);
+                }
+            }
+        });
+
+        $('.radio-button-list .radio-button-list-item input[type="radio"][data-val-required]').each(function () {
+            var input = $(this);
+            var label = input.closest('.radio-button-list').prev('label');
+            if (label.html() && (label.html().indexOf('*') === -1)) {
+                label.html(label.html() + '<span aria-hidden=\"true\">&nbsp*</span>');
+                input.attr("aria-required", true);
+            }
+        });
+    },
+    markAsRequiredFields: function (elements) {
+        $(elements).each(function () {
+            try {
+                var label = $(this).siblings("label");
+                if (label.html().indexOf("*") < 0) {
+                    label.html(label.html() + "<span aria-hidden=\"true\">&nbsp*</span>");
+                    $(this).attr("aria-required", true);
+                }
+            }
+            catch (ex) { }
+        });
+    },
+    serializeIncludingDisabled: function (element) {
+        // Find disabled inputs, and remove the "disabled" attribute
+        var disabled = element.find(':input:disabled').removeAttr('disabled');
+
+        // serialize the form
+        var serialized = element.serialize();
+
+        // re-disabled the set of inputs that you previously enabled
+        disabled.attr('disabled', 'disabled');
+
+        return serialized;
+    },
+    ieHackTableHeader: function () {
+        // IE7 hack to convert display:table to a table
+        if (UNGM.browsingWithInternetExplorer7()) {
+            $(".tableCell").wrap("<td style='padding:0px;' />");
+            $(".tableRow").wrap("<tr />");
+            $(".tableHead").wrap("<thead />");
+            $(".tableBody").wrap("<tbody />");
+            $(".table").wrapInner("<table style='width:100%' />");
+            $(".tableCell.header").css("width", "100%");
+            $(".tableCell.header").css("padding-left", "0px");
+            $(".tableCell.header").css("padding-right", "0px");
+        }
+    },
+    ieHackTableCells: function () {
+        // IE7 hack to convert display:table to a table
+        if (UNGM.browsingWithInternetExplorer7()) {
+            $(".tableCell:not(.header):not(.done)").wrap("<td style='padding:0px; margin:0px;' />").addClass("done");
+            $(".tableRow:not(.done)").wrap("<tr style='padding:0px; margin:0px; border:0px' />").addClass("done");
+            $(".tableCell:not(.header)").css("border", "0px");
+        }
+    },
+    initCollapsables: function () {
+        $("fieldset legend.expandable").off("click").on("click", function (evt) {
+            var sender = $(evt.currentTarget);
+            var parent = sender.parent();
+            if (parent.hasClass('collapsed')) {
+                parent.removeClass('collapsed');
+                sender.addClass('expanded');
+            }
+            else {
+                parent.addClass('collapsed');
+                sender.removeClass('expanded');
+            }
+        });
+    },
+    onRemoveSuggestAssistedRegistrationClicked: function (evt) {
+        var sender = $(evt.currentTarget);
+        var parent = sender.closest("#lnkAssistedRegistration");
+        parent.remove();
+    },
+    initJQueryUIDialogWithCKEDITOR: function () {
+        //
+        // There is an issue with jquery ui working with ckeditor.
+        // This part of code is needed as a workaround.
+        //
+        // For more information: see http://bugs.jqueryui.com/ticket/9087#comment:30
+        //
+        $.widget("ui.dialog", $.ui.dialog, {
+            /*! jQuery UI - v1.10.2 - 2013-12-12
+             *  http://bugs.jqueryui.com/ticket/9087#comment:27 - bugfix
+             *  http://bugs.jqueryui.com/ticket/4727#comment:23 - bugfix
+             *  allowInteraction fix to accommodate windowed editors
+             */
+            _allowInteraction: function (event) {
+                if (this._super(event)) {
+                    return true;
+                }
+                // address interaction issues with general iframes with the dialog
+                if (event.target.ownerDocument != this.document[0]) {
+                    return true;
+                }
+                // address interaction issues with dialog window
+                if ($(event.target).closest(".cke_dialog").length) {
+                    return true;
+                }
+                // address interaction issues with iframe based drop downs in IE
+                if ($(event.target).closest(".cke").length) {
+                    return true;
+                }
+            },
+            /*! jQuery UI - v1.10.2 - 2013-10-28
+             *  http://dev.ckeditor.com/ticket/10269 - bugfix
+             *  moveToTop fix to accommodate windowed editors
+             */
+            _moveToTop: function (event, silent) {
+                if (!event || !this.options.modal) {
+                    this._super(event, silent);
+                }
+            }
+        });
+    },
+    browsingWithInternetExplorer7: function () {
+        var BrowserDetect = {
+            init: function () {
+                this.browser = this.searchString(this.dataBrowser) || "Other";
+                this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "Unknown";
+            },
+            searchString: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var dataString = data[i].string;
+                    this.versionSearchString = data[i].subString;
+
+                    if (dataString.indexOf(data[i].subString) !== -1) {
+                        return data[i].identity;
+                    }
+                }
+            },
+            searchVersion: function (dataString) {
+                var index = dataString.indexOf(this.versionSearchString);
+                if (index === -1) {
+                    return;
+                }
+
+                var rv = dataString.indexOf("rv:");
+                if (this.versionSearchString === "Trident" && rv !== -1) {
+                    return parseFloat(dataString.substring(rv + 3));
+                } else {
+                    return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
+                }
+            },
+            dataBrowser: [
+                { string: navigator.userAgent, subString: "Edge", identity: "MS Edge" },
+                { string: navigator.userAgent, subString: "MSIE", identity: "Explorer" },
+                { string: navigator.userAgent, subString: "Trident", identity: "Explorer" },
+                { string: navigator.userAgent, subString: "Firefox", identity: "Firefox" },
+                { string: navigator.userAgent, subString: "Opera", identity: "Opera" },
+                { string: navigator.userAgent, subString: "OPR", identity: "Opera" },
+                { string: navigator.userAgent, subString: "Chrome", identity: "Chrome" },
+                { string: navigator.userAgent, subString: "Safari", identity: "Safari" }
+            ]
+        };
+        BrowserDetect.init();
+        return BrowserDetect.browser == "Explorer" && BrowserDetect.version == 7;
+    },
+    markTabComplete: function (elementSelector, complete) {
+        var element = $(elementSelector);
+        if (element.length === 0) {
+            return false;
+        }
+        element.removeClass("tabComplete tabIncomplete");
+        complete ? element.addClass("tabComplete") : element.addClass("tabIncomplete");
+        return true;
+    },
+    appendErrorTo: function (element, response) {
+        if (element.length) {
+            element.append("<div class='error'>" + response.Message + "</div>");
+        }
+    },
+    removeError: function () {
+        $("div.error").remove();
+    }
+};
+
+$.extend({
+    confirm: function (title, message, yesText, noText, yesCallback, width) {
+        var btns = new Array();
+
+        if (yesText.length != 0) {
+            btns.push({
+                text: yesText,
+                id: "btnDialogOK",
+                click: function () {
+                    yesCallback();
+                    $(this).dialog('close');
+                }
+            });
+        }
+        if (noText.length != 0) {
+            btns.push({
+                text: noText,
+                id: "btnDialogNo",
+                click: function () {
+                    $(this).dialog('close');
+                }
+            });
+        }
+        if (width == 0 || width == undefined) {
+            width = 500;
+        }
+        $("<div id='errorPopup'></div>").dialog({
+            buttons: btns,
+            minWidth: width,
+            minHeight: 160,
+            close: function (event, ui) { $(this).remove(); },
+            resizable: false,
+            title: title,
+            modal: true
+        }).html(message).parent().addClass("alert");
+    }
+});
+
+$.extend({
+    confirmWithNoCallback: function (title, message, yesText, noText, yesCallback, noCallback, width) {
+        var btns = new Array();
+
+        if (yesText.length != 0) {
+            btns.push({
+                text: yesText,
+                id: "btnDialogOK",
+                click: function () {
+                    yesCallback();
+                    $(this).dialog('close');
+                }
+            });
+        }
+        if (noText.length != 0) {
+            btns.push({
+                text: noText,
+                id: "btnDialogNo",
+                click: function () {
+                    noCallback();
+                    $(this).dialog('close');
+                }
+            });
+        }
+        if (width == 0 || width == undefined) {
+            width = 500;
+        }
+        $("<div id='errorPopup'></div>").dialog({
+            buttons: btns,
+            minWidth: width,
+            minHeight: 160,
+            close: function (event, ui) { $(this).remove(); },
+            resizable: false,
+            title: title,
+            modal: true
+        }).html(message).parent().addClass("alert");
+    }
+});
+
+$(document).ready(function () {
+    if (!UNGM.initialised) {
+        UNGM.init();
+    }
+    if (jQuery && jQuery.validator) {
+        jQuery.validator.setDefaults({
+            ignore: ""
+        }); // In the library the default for this is :hidden. We still want to validate hidden inputs for, e.g., the country selector so don't ignore anything.
+    }
+});
+
