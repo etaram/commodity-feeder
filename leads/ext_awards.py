@@ -18,7 +18,7 @@ USAS = "https://api.usaspending.gov/api/v2/search/spending_by_award/"
 WB_KEEP = {"Goods", "Works", "Non-consulting Services", "Non-Consulting Services"}
 
 
-VERSION = {"usaspending": "2"}  # bump to force a refresh after the segment list changes
+VERSION = {"usaspending": "3"}  # bump to force a refresh after the segment list changes
 
 
 def _fresh(name, days=7):
@@ -122,11 +122,9 @@ def usaspending(s, budget_end):
     period = [{"start_date": str(t - dt.timedelta(days=730)), "end_date": str(t)}]
     base = {"award_type_codes": ["A", "B", "C", "D"], "time_period": period}
     segs = [("foreign", dict(base, recipient_scope="foreign", award_amounts=[{"lower_bound": 25000}]), 100)]
-    for code in ["11", "21", "311", "312", "313", "314", "315", "316", "321", "322", "324", "325", "326", "327",
-                 "331", "332", "333", "334", "335", "336", "337", "339", "423", "424", "425",
-                 "481", "483", "484", "486", "488", "492", "493"]:
+    for code in ["11", "21", "31", "32", "33", "42", "48", "49"]:
         segs.append((code, dict(base, recipient_scope="domestic", naics_codes={"require": [code]},
-                                award_amounts=[{"lower_bound": 250000}]), 40))
+                                award_amounts=[{"lower_bound": 250000}]), 80 if code in ("31", "32", "33", "42") else 40))
     rows = []
     for name, flt, pages in segs:
         got = _usas_segment(s, flt, budget_end, pages)
