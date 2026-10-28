@@ -1,0 +1,2 @@
+URL: https://nocopo.bpp.gov.ng/ocdsjson.ashx?ocid=all
+ERROR: HTTPSConnectionPool(host='nocopo.bpp.gov.ng', port=443): Max retries exceeded with url: /ocdsjson.ashx?ocid=all (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1000)')))

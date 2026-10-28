@@ -1,0 +1,2 @@
+URL: https://v3.opentender.net/api/tender/?format=json
+ERROR: HTTPSConnectionPool(host='v3.opentender.net', port=443): Max retries exceeded with url: /api/tender/?format=json (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x7f6bc03ccb90>: Failed to resolve 'v3.opentender.net' ([Errno -2] Name or service not known)"))

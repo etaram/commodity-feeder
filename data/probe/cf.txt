@@ -1,0 +1,2313 @@
+URL: https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-26&size=5&stages=tender
+STATUS: 200
+TYPE: application/json
+
+{
+    "uri": "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-26&size=5&stages=tender&publishedTo=2026-10-28T04:06:47Z&limit=100",
+    "version": "1.1",
+    "extensions": [
+        "https://standard.open-contracting.org/profiles/eu/master/en/extension.json",
+        "https://raw.githubusercontent.com/portaledcahn/ocds_tenderDatePublished_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/master/extension.json",
+        "https://raw.githubusercontent.com/Crown-Commercial-Service/ocds_awards_datePublished_extension/main/extension.json",
+        "https://raw.githubusercontent.com/Crown-Commercial-Service/ocds_partyDetails_vcse_extension/main/extension.json",
+        "https://raw.githubusercontent.com/Crown-Commercial-Service/ocds_tender_suitability_extension/main/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_pagination_extension/master/extension.json"
+    ],
+    "publishedDate": "2026-10-27T16:42:09Z",
+    "publisher": {
+        "name": "Cabinet Office",
+        "scheme": "GB-GOR",
+        "uid": "D2",
+        "uri": "https://www.gov.uk/government/organisations/cabinet-office"
+    },
+    "license": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "publicationPolicy": "https://www.gov.uk/government/publications/open-contracting",
+    "releases": [
+        {
+            "ocid": "ocds-b5fd17-2720b201-7537-449c-8f74-fe59d45558f7",
+            "id": "eaed1d16-d131-44e7-b910-a4da65b6878c-919379",
+            "language": "en",
+            "date": "2026-10-27T16:42:09Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "5b912177-c2a6-4a58-9e3c-2815acb41b90",
+                "title": "CA18608 - Switch Architecture Refresh",
+                "description": "You are invited to submit a Tender for the provision of a Network Switch Refresh for Birmingham Metropolitan College.\r\n\r\nThe contract relates solely to the supply, support, implementation and maintenance of the switch infrastructure equipment and services detailed within this Invitation to Tender and associated pricing schedule.\r\nThe proposed solution must be based solely upon the HPE Aruba equipment specified within this Tender documentation. Alternative manufacturers, substitute products, equivalent solutions, refurbished equipment, reconditioned equipment, or equipment from any other vendor will not be considered under any circumstances.\r\n\r\n\r\nIncludes Lots: \r\nLot 1: Switch Hardware\r\nLot 2: Support Arrangements\r\n\r\nTo access this competition: \r\n\r\nRegistered:\r\nLogin to https://suppliers.multiquote.com and view the opportunity CA18608.\r\n\r\nNot registered:\r\nVisit https://suppliers.multiquote.com then register and quote CA18608 as the reason for registration. \r\n\r\n Any queries please contact MultiQuote on 020 3920 8054.",
+                "datePublished": "2026-10-27T16:42:09Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "32400000",
+                    "description": "Networks"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "postalCode": "B4 7PS"
+                            },
+                            {
+                                "countryName": "British Oversea Territories"
+                            },
+                            {
+                                "countryName": "Channel Islands"
+                            },
+                            {
+                                "countryName": "Europe"
+                            },
+                            {
+                                "countryName": "Isle of Man"
+                            },
+                            {
+                                "countryName": "Rest of the World"
+                            },
+                            {
+                                "countryName": "United Kingdom"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 745562,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure",
+                "tenderPeriod": {
+                    "endDate": "2026-11-23T12:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-12-31T00:00:00Z",
+                    "endDate": "2027-02-26T23:59:59Z"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "goods",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/eaed1d16-d131-44e7-b910-a4da65b6878c",
+                        "datePublished": "2026-10-27T16:42:09Z",
+                        "format": "text/html",
+                        "language": "en"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-CFS-213124",
+                    "name": "BMet College",
+                    "identifier": {
+                        "legalName": "BMet College"
+                    },
+                    "address": {
+                        "streetAddress": "Matthew Boulton Campus, Jennens Road",
+                        "locality": "Birmingham",
+                        "postalCode": "B4 7PS",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Dale Evans",
+                        "email": "support@multiquote.com",
+                        "telephone": "0151 482 9230"
+                    },
+                    "details": {
+                        "url": "https://suppliers.multiquote.com"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-CFS-213124",
+                "name": "BMet College"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-00c3ba2f-f8f1-4489-a81f-d9fe440e8504",
+            "id": "82e41f78-1f07-46c5-93c2-750d31f0a2ef-919365",
+            "language": "en",
+            "date": "2026-10-27T11:55:58Z",
+            "tag": [
+                "tenderAmendment"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "PFRU2-2025-816",
+                "title": "Procurement of Medical Rehabilitation Equipment",
+                "description": "Partnership Fund for a Resilient Ukraine Phase 2 (PFRU-2) is a multi-year, multi-donor-funded programme managed by the UK's Foreign, Commonwealth and Development Office.\r\nAs part of its project activities, PFRU-2 is seeking an organization to supply the Medical Rehabilitation Equipment.\r\n\r\nPlease note the following important tender provisions:\r\n•\tthe deadline for submitting proposals is November 04, 2026, at 15:00 Kyiv time;\r\n•\tall questions regarding the tender conditions must be submitted no later than October 26, 2026, at 18:00 Kyiv time;\r\n•\tPrice proposals must be submitted either in Ukrainian or English;\r\n•\tAll tender-related communication must be conducted exclusively in writing via email at pfruprocurement@chemonics.com;\r\n•\tThe PFRU-2 project is exempt from taxes, fees, and VAT in the partner country. Therefore, PFRU-2 will make payments for services excluding VAT;\r\n•\tEmail for submitting proposals: pfruprocurement@chemonics.com;\r\n•\tWhen sending proposals or inquiries via email, it is mandatory to include the tender number PFRU2-2025-816 in the email subject line.\r\n\r\nProposal Submission Instructions:\r\n\r\nITT_PFRU2-2025-816 - review the tender conditions;\r\nVolume 3_Terms of Reference - complete the document, sign the original scan/convert to PDF and sign electronically and submit the completed Excel file and the signed document as part of the proposal.\r\nAnnex 1 - complete either the English or Ukrainian version, sign the original and scan/convert to PDF and sign electronically and include it in the proposal submission.\r\n\r\nRegistration documents that follow the laws of your country must be part of the proposal.",
+                "datePublished": "2026-10-16T02:35:48+01:00",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "33150000",
+                    "description": "Radiotherapy, mechanotherapy, electrotherapy and physical therapy devices"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "countryName": "Ukraine"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 1,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (above threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-11-04T15:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-12-03T19:00:00Z",
+                    "endDate": "2027-12-04T18:59:59Z"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "goods",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/82e41f78-1f07-46c5-93c2-750d31f0a2ef",
+                        "datePublished": "2026-10-16T02:35:48+01:00",
+                        "dateModified": "2026-10-27T11:55:58Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "eligibilityCriteria",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/b5e04720-1570-48ae-8b34-957520ca6300",
+                        "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    },
+                    {
+                        "id": "3",
+                        "documentType": "tenderNotice",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/32ddf0a7-d034-4be1-a446-d1bf32a20a75",
+                        "format": "application/pdf"
+                    },
+                    {
+                        "id": "4",
+                        "documentType": "procurementPlan",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/d657266b-3ef1-437c-bf71-b6fe6d3df498",
+                        "format": "application/zip"
+                    },
+                    {
+                        "id": "5",
+                        "documentType": "biddingDocuments",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/d216eda8-3f56-4886-bcee-7f86f7ed4bd2",
+                        "format": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    },
+                    {
+                        "id": "6",
+                        "documentType": "clarifications",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/9c15fa4f-91ea-40ca-a5da-e81999f233bd",
+                        "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    }
+                ]
+            },
+            "relatedProcesses": [
+                {
+                    "id": "1",
+                    "relationship": [
+                        "parent"
+                    ]
+                }
+            ],
+            "parties": [
+                {
+                    "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/kg2DT6UE",
+                    "name": "Chemonics International, Inc.",
+                    "identifier": {
+                        "legalName": "Chemonics International, Inc.",
+                        "scheme": "GB-SRS",
+                        "id": "sid4gov.cabinetoffice.gov.uk/kg2DT6UE"
+                    },
+                    "address": {
+                        "streetAddress": "Ukraine",
+                        "locality": "Kyiv",
+                        "postalCode": "EC1M 5QL",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Anna Bachynska",
+                        "email": "pfruprocurement@chemonics.com"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/kg2DT6UE",
+                "name": "Chemonics International, Inc."
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-8594b734-d603-40c3-aad6-548b64b1f1da",
+            "id": "6e156deb-0b84-46e2-bae5-427ee3e1cf0c-919325",
+            "language": "en",
+            "date": "2026-10-27T13:04:24Z",
+            "tag": [
+                "tenderAmendment"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "BRAVE-IS-002",
+                "title": "Institutional Strengthening and Capability Development Plan for Disaster Risk Management in Khyber Pakhtunkhwa",
+                "description": "DAI Global UK is seeking a firm to prepare an Institutional Strengthening and Capability Development Plan for Disaster Risk Management (DRM) in Khyber Pakhtunkhwa (KP), Pakistan. The assignment is delivered under Building Resilience and Addressing Vulnerability to Emergencies - Institutional Strengthening (BRAVE-IS), a multi-year (2026-2029) technical assistance programme funded by the UK Foreign, Commonwealth & Development Office (FCDO). The contracting organisation is DAI Pakistan Pvt. Ltd.\r\n\r\nThe firm will work with the Relief, Rehabilitation and Settlement Department, Government of KP, and its attached agencies: the Provincial Disaster Management Authority (PDMA), Rescue 1122 and the Civil Defence Directorate. The work is in four stages:\r\n- Stage 1, Inception (weeks 1-2)\r\n- Stage 2, Diagnostic and validation (weeks 3-6): institutional, financial, HR and digital systems assessment\r\n- Stage 3, Recommendations and plans (weeks 7-12): a five-year Institutional Strengthening Plan for each of PDMA, Rescue 1122 and Civil Defence\r\n- Stage 4, Early implementation support (weeks 13-36): implementation-ready products, commissioned at BRAVE-IS's discretion on completion of Stage 3\r\n\r\nThe contract is fixed price, with payment linked to acceptance of agreed deliverables. Personnel will be based in Peshawar, with field visits to selected districts of KP. The firm must propose four Key Persons: a Team Lead (institutional strengthening), a Public Financial Management Expert, a Digital Systems and ERP Expert, and a DRM Expert. HR management and GIS expertise are also required.\r\n\r\nHow to apply\r\nThe full Request for Proposals (RFP) is attached to this notice. Submit one email to brave-is@dai.com with the subject \"BRAVE-IS-002 - Proposal - [Firm name]\", attaching two PDFs: (i) the technical submission, with CVs as an annex, and (ii) the financial proposal, with separate budgets for Stages 1-3 and Stage 4.\r\n\r\nClarification questions must be sent to brave-is@dai.com by 26 October 2026, with the subject \"BRAVE-IS-002 - Clarification Question - [Firm name]\". Responses will be shared with all bidders without identifying who asked.\r\n\r\nProposals are due by 17:00 Pakistan Standard Time (12:00 UK time) on 4 November 2026 and must remain valid for 90 days. Late submissions will not be considered. Issue of this RFP does not commit DAI to award a contract.",
+                "datePublished": "2026-10-20T11:43:29+01:00",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "79400000",
+                    "description": "Business and management consultancy and related services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "countryName": "Pakistan"
+                            }
+                        ]
+                    }
+                ],
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (below threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-11-04T12:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-12-01T00:00:00Z",
+                    "endDate": "2027-03-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": true
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/6e156deb-0b84-46e2-bae5-427ee3e1cf0c",
+                        "datePublished": "2026-10-20T11:43:29+01:00",
+                        "dateModified": "2026-10-27T13:04:24Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "3",
+                        "documentType": "evaluationCriteria",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/35b81d92-dd2a-4b17-8a7b-5ba36a3ad633",
+                        "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    },
+                    {
+                        "id": "5",
+                        "documentType": "clarifications",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/231132cd-c8ce-416e-9947-65719f69d461",
+                        "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    }
+                ]
+            },
+            "relatedProcesses": [
+                {
+                    "id": "1",
+                    "relationship": [
+                        "parent"
+                    ]
+                }
+            ],
+            "parties": [
+                {
+                    "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/e23DHg7c",
+                    "name": "DAI GLOBAL UK LTD",
+                    "identifier": {
+                        "legalName": "DAI GLOBAL UK LTD",
+                        "scheme": "GB-SRS",
+                        "id": "sid4gov.cabinetoffice.gov.uk/e23DHg7c"
+                    },
+                    "address": {
+                        "streetAddress": "4 Fulwood Place",
+                        "locality": "London",
+                        "postalCode": "WC1V 6HG",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "email": "brave-is@dai.com",
+                        "telephone": "07979822086"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/e23DHg7c",
+                "name": "DAI GLOBAL UK LTD"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-2ccb3f8b-6fc6-4004-acc9-6fa5027b46c6",
+            "id": "15b9ff68-2745-41d1-8b7c-fab59581460d-919283",
+            "language": "en",
+            "date": "2026-10-27T11:03:04Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "OTCCarnival2027",
+                "title": "Oakengates Carnival and Parade - Organisation and Delivery",
+                "description": "Oakengates Town Council is looking to appoint a qualified and experienced event management company to organise and deliver a carnival and parade in Oakengates, Telford in the Summer of 2027 (date to be agreed). \r\n\r\nUnder the direction of the Council, the successful bidder will be responsible, for the following:\r\n•\tEvent Planning and Coordination: develop a comprehensive plan for the carnival, including timelines, logistics, and contingency plans.\r\n•\tEntertainment and Activities: arrange for a diverse range of entertainment options, including live performances, games, and interactive activities.\r\n•\tVendor Management: coordinate with food and merchandise vendors to ensure a wide variety of offerings.\r\n•\tMarketing and Promotion: develop and execute a marketing strategy to promote the event and attract attendees.\r\n•\tHealth and Safety: ensure all health and safety regulations are met, including crowd control, first aid, and emergency procedures.\r\n•\tIncome Generation - identify potential income generating opportunities to support the cost of the event.\r\n•\tPost-Event Evaluation: provide a detailed report on the event's success, including attendance figures, feedback and recommendations for future events.\r\n \r\nInterested companies are required to submit the following:\r\n•\tCompany Profile: a brief overview of the company, including relevant experience and qualifications.\r\n•\tProposed Plan: a detailed proposal outlining the approach to organising and delivering the carnival and parade.\r\n•\tBudget: a comprehensive budget breakdown, including all anticipated costs.\r\n•\tInsurance:  evidence of public liability\r\n•\tReferences: contact information for at least two previous clients who can attest to the company's capabilities.\r\n\r\nLate submissions will not be considered and Oakengates Town Council reserves the right to accept or reject any or all bids.\r\nAll costs incurred in the preparation of the bid are the responsibility of the bidding company.\r\nProspective contractors must not contact Councillors or staff to encourage or support their tender outside the prescribed process. \r\n\r\nWritten tenders must be received by Oakengates Town Council in a sealed envelope marked 'Oakengates Town Council - Carnival Tender' and addressed to the Town Clerk, by 5pm on Tuesday 24 November 2026 and should be sent to:\r\n\r\nOakengates Town Council\r\nThe Wakes, Theatre Square\r\nTelford, TF2 6EP\r\n\r\nIf you require any further information, please contact Oakengates Town Council by:\r\nEmail: townclerk@oakengates-tc.gov.uk, or\r\ntelephone:  01952 567500",
+                "datePublished": "2026-10-27T11:03:04Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "79953000",
+                    "description": "Festival organisation services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "postalCode": "TF2 6EP"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 1,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (below threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-11-24T17:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-12-07T00:00:00Z",
+                    "endDate": "2027-09-30T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/15b9ff68-2745-41d1-8b7c-fab59581460d",
+                        "datePublished": "2026-10-27T11:03:04Z",
+                        "format": "text/html",
+                        "language": "en"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/sAeq7ZKF",
+                    "name": "Oakengates Town Council",
+                    "identifier": {
+                        "legalName": "Oakengates Town Council",
+                        "scheme": "GB-SRS",
+                        "id": "supplierregistration.cabinetoffice.gov.uk/sAeq7ZKF"
+                    },
+                    "address": {
+                        "streetAddress": "Oakengates Town Council, The Wakes, Theatre Square",
+                        "locality": "Telford",
+                        "postalCode": "TF26EP",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Anita Cund",
+                        "email": "townclerk@oakengates-tc.gov.uk",
+                        "telephone": "01952567500"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/sAeq7ZKF",
+                "name": "Oakengates Town Council"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-5c690050-dda9-4b35-b235-aeb0e7d18f83",
+            "id": "23ecfe73-7a02-4ec9-ac8f-d15ba715df32-919259",
+            "language": "en",
+            "date": "2026-10-27T09:10:52Z",
+            "tag": [
+                "tenderAmendment"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "GM2",
+                "title": "Ground maintenance Stoke Golding Parish Council",
+                "description": "Ground maintenance contract for Parish Council . Work to include mowing of open spaces , grave yards and recreational grounds. Minor tree work , weed killing, hedge work , planting of trees , maintaining wild flower areas , football pitch line marking .\r\nSEALED BIDS REQUIRED BY POST",
+                "datePublished": "2026-10-26T11:26:58Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "50000000",
+                    "description": "Repair and maintenance services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "postalCode": "CV13 6HD"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 30000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (above threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-12-31T23:59:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2027-04-01T00:00:00+01:00",
+                    "endDate": "2030-03-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/23ecfe73-7a02-4ec9-ac8f-d15ba715df32",
+                        "datePublished": "2026-10-26T11:26:58Z",
+                        "dateModified": "2026-10-27T09:10:52Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "contractSummary",
+                        "description": "tender requirements",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/6a9cc39a-0e29-497b-b371-2d788dd2ea8e",
+                        "format": "application/pdf"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/FHSy63J7",
+                    "name": "Stoke Golding parish council",
+                    "identifier": {
+                        "legalName": "Stoke Golding parish council",
+                        "scheme": "GB-SRS",
+                        "id": "supplierregistration.cabinetoffice.gov.uk/FHSy63J7"
+                    },
+                    "address": {
+                        "streetAddress": "Old Forge, Blacksmiths Yard",
+                        "locality": "Stoke Golding",
+                        "postalCode": "CV13 6HD",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Sarah Beale",
+                        "email": "clerk@stokegoldingparishcouncil.gov.uk",
+                        "telephone": "07398448436"
+                    },
+                    "details": {
+                        "url": "http://www.stokegoldingparishcouncil.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/FHSy63J7",
+                "name": "Stoke Golding parish council"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-5c690050-dda9-4b35-b235-aeb0e7d18f83",
+            "id": "23ecfe73-7a02-4ec9-ac8f-d15ba715df32-919253",
+            "language": "en",
+            "date": "2026-10-27T08:59:43Z",
+            "tag": [
+                "tenderAmendment"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "GM2",
+                "title": "Ground maintenance Stoke Golding Parish Council",
+                "description": "Ground maintenance contract for Parish Council . Work to include mowing of open spaces , grave yards and recreational grounds. Minor tree work , weed killing, hedge work , planting of trees , maintaining wild flower areas , football pitch line marking .\r\nSEALED BIDS REQUIRED BY POST",
+                "datePublished": "2026-10-26T11:26:58Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "50000000",
+                    "description": "Repair and maintenance services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "postalCode": "CV13 6HD"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 30000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (above threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-12-31T23:59:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2027-04-01T00:00:00+01:00",
+                    "endDate": "2030-03-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/23ecfe73-7a02-4ec9-ac8f-d15ba715df32",
+                        "datePublished": "2026-10-26T11:26:58Z",
+                        "dateModified": "2026-10-27T08:59:43Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "contractSummary",
+                        "description": "tender requirements",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/6a9cc39a-0e29-497b-b371-2d788dd2ea8e",
+                        "format": "application/pdf"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/FHSy63J7",
+                    "name": "Stoke Golding parish council",
+                    "identifier": {
+                        "legalName": "Stoke Golding parish council",
+                        "scheme": "GB-SRS",
+                        "id": "supplierregistration.cabinetoffice.gov.uk/FHSy63J7"
+                    },
+                    "address": {
+                        "streetAddress": "Old Forge, Blacksmiths Yard",
+                        "locality": "Stoke Golding",
+                        "postalCode": "CV13 6HD",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Sarah Beale",
+                        "email": "clerk@stokegoldingparishcouncil.gov.uk",
+                        "telephone": "07398448436"
+                    },
+                    "details": {
+                        "url": "http://www.stokegoldingparishcouncil.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/FHSy63J7",
+                "name": "Stoke Golding parish council"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-98cdc369-2412-4def-aa0e-f2441ba734f9",
+            "id": "57c4a64b-a531-4aa1-8306-d11a8d1f9a35-919236",
+            "language": "en",
+            "date": "2026-10-27T08:18:34Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "BIP1078758580",
+                "title": "NAO Case Management Solution for Financial Audits",
+                "description": "Modification Notice\r\n      Original description: The NAO sought to transform how it undertakes financial audits by procuring a flexible case management technology solution capable of supporting dynamic workflows, robust content management, effective collaboration, data‐led audit capability, and seamless integration with existing NAO systems. To achieve this, NAO launched a Competitive Dialogue procurement exercise in 2020, resulting in the contract award in 2022.\r\n      Description of the modifications\r\n      The contract was amended to revise operational support arrangements £1,136,000 for Apex, including service levels, fixed support charges and capped consumption-based services. Certain performance measures and obligations were removed or reassigned. Provisions relating to Microsoft responsibility, automated testing and supplier liability were also amended or clarified. The overall nature of the contract remains unchanged\r\n      Description of the circumstances which rendered the modification necessary and explanation of the unforeseen nature of these circumstances:\r\n      The need for modification arose from circumstances identified after contract award and experience gained through implementation and operation of Apex, which created risks to sustainable support and service continuity. The changes were necessary to mitigate the risk of service disruption and secure a viable long-term support model for this business-critical system. The overall nature of the contract remains unchanged.",
+                "datePublished": "2026-10-27T08:18:34Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "72000000",
+                    "description": "IT services: consulting, software development, Internet and support"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "countryName": "United Kingdom"
+                            },
+                            {
+                                "countryName": "Isle of Man"
+                            },
+                            {
+                                "countryName": "Guernsey"
+                            },
+                            {
+                                "countryName": "Jersey"
+                            },
+                            {
+                                "countryName": "Anguilla"
+                            },
+                            {
+                                "countryName": "Bermuda"
+                            },
+                            {
+                                "countryName": "British Antarctic Territory"
+                            },
+                            {
+                                "countryName": "British Indian Ocean Territory"
+                            },
+                            {
+                                "countryName": "British Virgin Islands"
+                            },
+                            {
+                                "countryName": "Cayman Islands"
+                            },
+                            {
+                                "countryName": "Falkland Islands"
+                            },
+                            {
+                                "countryName": "Gibraltar"
+                            },
+                            {
+                                "countryName": "Montserrat"
+                            },
+                            {
+                                "countryName": "Pitcairn, Henderson, Ducie and Oeno Islands"
+                            },
+                            {
+                                "countryName": "Saint Helena, Ascension and Tristan da Cunha"
+                            },
+                            {
+                                "countryName": "South Georgia and South Sandwich Islands"
+                            },
+                            {
+                                "countryName": "Turks and Caicos Islands"
+                            },
+                            {
+                                "countryName": "Albania"
+                            },
+                            {
+                                "countryName": "Austria"
+                            },
+                            {
+                                "countryName": "Belgium"
+                            },
+                            {
+                                "countryName": "Bulgaria"
+                            },
+                            {
+                                "countryName": "Croatia"
+                            },
+                            {
+                                "countryName": "Cyprus"
+                            },
+                            {
+                                "countryName": "Czechia"
+                            },
+                            {
+                                "countryName": "Denmark"
+                            },
+                            {
+                                "countryName": "Estonia"
+                            },
+                            {
+                                "countryName": "Finland"
+                            },
+                            {
+                                "countryName": "France"
+                            },
+                            {
+                                "countryName": "Germany"
+                            },
+                            {
+                                "countryName": "Greece"
+                            },
+                            {
+                                "countryName": "Hungary"
+                            },
+                            {
+                                "countryName": "Iceland"
+                            },
+                            {
+                                "countryName": "Ireland"
+                            },
+                            {
+                                "countryName": "Italy"
+                            },
+                            {
+                                "countryName": "Latvia"
+                            },
+                            {
+                                "countryName": "Liechtenstein"
+                            },
+                            {
+                                "countryName": "Lithuania"
+                            },
+                            {
+                                "countryName": "Luxembourg"
+                            },
+                            {
+                                "countryName": "Malta"
+                            },
+                            {
+                                "countryName": "Montenegro"
+                            },
+                            {
+                                "countryName": "Netherlands"
+                            },
+                            {
+                                "countryName": "North Macedonia"
+                            },
+                            {
+                                "countryName": "Norway"
+                            },
+                            {
+                                "countryName": "Poland"
+                            },
+                            {
+                                "countryName": "Portugal"
+                            },
+                            {
+                                "countryName": "Romania"
+                            },
+                            {
+                                "countryName": "Serbia"
+                            },
+                            {
+                                "countryName": "Slovakia"
+                            },
+                            {
+                                "countryName": "Slovenia"
+                            },
+                            {
+                                "countryName": "Spain"
+                            },
+                            {
+                                "countryName": "Sweden"
+                            },
+                            {
+                                "countryName": "Switzerland"
+                            },
+                            {
+                                "countryName": "Turkey"
+                            },
+                            {
+                                "countryName": "Afghanistan"
+                            },
+                            {
+                                "countryName": "Algeria"
+                            },
+                            {
+                                "countryName": "American Samoa"
+                            },
+                            {
+                                "countryName": "Andorra"
+                            },
+                            {
+                                "countryName": "Angola"
+                            },
+                            {
+                                "countryName": "Antarctica"
+                            },
+                            {
+                                "countryName": "Antigua and Barbuda"
+                            },
+                            {
+                                "countryName": "Argentina"
+                            },
+                            {
+                                "countryName": "Armenia"
+                            },
+                            {
+                                "countryName": "Aruba"
+                            },
+                            {
+                                "countryName": "Australia"
+                            },
+                            {
+                                "countryName": "Azerbaijan"
+                            },
+                            {
+                                "countryName": "Bahrain"
+                            },
+                            {
+                                "countryName": "Bangladesh"
+                            },
+                            {
+                                "countryName": "Barbados"
+                            },
+                            {
+                                "countryName": "Belarus"
+                            },
+                            {
+                                "countryName": "Belize"
+                            },
+                            {
+                                "countryName": "Benin"
+                            },
+                            {
+                                "countryName": "Bhutan"
+                            },
+                            {
+                                "countryName": "Bolivia"
+                            },
+                            {
+                                "countryName": "Bonaire, Sint Eustatius and Saba"
+                            },
+                            {
+                                "countryName": "Bosnia and Herzegovina"
+                            },
+                            {
+                                "countryName": "Botswana"
+                            },
+                            {
+                                "countryName": "Bouvet Island"
+                            },
+                            {
+                                "countryName": "Brazil"
+                            },
+                            {
+                                "countryName": "Brunei"
+                            },
+                            {
+                                "countryName": "Burkina Faso"
+                            },
+                            {
+                                "countryName": "Burundi"
+                            },
+                            {
+                                "countryName": "Cambodia"
+                            },
+                            {
+                                "countryName": "Cameroon"
+                            },
+                            {
+                                "countryName": "Canada"
+                            },
+                            {
+                                "countryName": "Cape Verde"
+                            },
+                            {
+                                "countryName": "Central African Republic"
+                            },
+                            {
+                                "countryName": "Chad"
+                            },
+                            {
+                                "countryName": "Chile"
+                            },
+                            {
+                                "countryName": "China"
+                            },
+                            {
+                                "countryName": "Christmas Island"
+                            },
+                            {
+                                "countryName": "Clipperton"
+                            },
+                            {
+                                "countryName": "Cocos (Keeling) Islands"
+                            },
+                            {
+                                "countryName": "Colombia"
+                            },
+                            {
+                                "countryName": "Comoros"
+                            },
+                            {
+                                "countryName": "Congo"
+                            },
+                            {
+                                "countryName": "Congo (Democratic Republic)"
+                            },
+                            {
+                                "countryName": "Cook Islands"
+                            },
+                            {
+                                "countryName": "Costa Rica"
+                            },
+                            {
+                                "countryName": "Cuba"
+                            },
+                            {
+                                "countryName": "Curaçao"
+                            },
+                            {
+                                "countryName": "Djibouti"
+                            },
+                            {
+                                "countryName": "Dominica"
+                            },
+                            {
+                                "countryName": "Dominican Republic"
+                            },
+                            {
+                                "countryName": "East Timor"
+                            },
+                            {
+                                "countryName": "Ecuador"
+                            },
+                            {
+                                "countryName": "Egypt"
+                            },
+                            {
+                                "countryName": "El Salvador"
+                            },
+                            {
+                                "countryName": "Equatorial Guinea"
+                            },
+                            {
+                                "countryName": "Eritrea"
+                            },
+                            {
+                                "countryName": "Eswatini"
+                            },
+                            {
+                                "countryName": "Ethiopia"
+                            },
+                            {
+                                "countryName": "Faroe Islands"
+                            },
+                            {
+                                "countryName": "Fiji"
+                            },
+                            {
+                                "countryName": "French Polynesia"
+                            },
+                            {
+                                "countryName": "French Southern Territories"
+                            },
+                            {
+                                "countryName": "Gabon"
+                            },
+                            {
+                                "countryName": "Georgia"
+                            },
+                            {
+                                "countryName": "Ghana"
+                            },
+                            {
+                                "countryName": "Greenland"
+                            },
+                            {
+                                "countryName": "Grenada"
+                            },
+                            {
+                                "countryName": "Guam"
+                            },
+                            {
+                                "countryName": "Guatemala"
+                            },
+                            {
+                                "countryName": "Guinea"
+                            },
+                            {
+                                "countryName": "Guinea-Bissau"
+                            },
+                            {
+                                "countryName": "Guyana"
+                            },
+                            {
+                                "countryName": "Haiti"
+                            },
+                            {
+                                "countryName": "Heard Island and McDonald Islands"
+                            },
+                            {
+                                "countryName": "Honduras"
+                            },
+                            {
+                                "countryName": "Hong Kong"
+                            },
+                            {
+                                "countryName": "India"
+                            },
+                            {
+                                "countryName": "Indonesia"
+                            },
+                            {
+                                "countryName": "Iran"
+                            },
+                            {
+                                "countryName": "Iraq"
+                            },
+                            {
+                                "countryName": "Israel"
+                            },
+                            {
+                                "countryName": "Ivory Coast"
+                            },
+                            {
+                                "countryName": "Jamaica"
+                            },
+                            {
+                                "countryName": "Japan"
+                            },
+                            {
+                                "countryName": "Jordan"
+                            },
+                            {
+                                "countryName": "Kazakhstan"
+                            },
+                            {
+                                "countryName": "Kenya"
+                            },
+                            {
+                                "countryName": "Kiribati"
+                            },
+                            {
+                                "countryName": "Kosovo"
+                            },
+                            {
+                                "countryName": "Kuwait"
+                            },
+                            {
+                                "countryName": "Kyrgyzstan"
+                            },
+                            {
+                                "countryName": "Laos"
+                            },
+                            {
+                                "countryName": "Lebanon"
+                            },
+                            {
+                                "countryName": "Lesotho"
+                            },
+                            {
+                                "countryName": "Liberia"
+                            },
+                            {
+                                "countryName": "Libya"
+                            },
+                            {
+                                "countryName": "Macao"
+                            },
+                            {
+                                "countryName": "Madagascar"
+                            },
+                            {
+                                "countryName": "Malawi"
+                            },
+                            {
+                                "countryName": "Malaysia"
+                            },
+                            {
+                                "countryName": "Maldives"
+                            },
+                            {
+                                "countryName": "Mali"
+                            },
+                            {
+                                "countryName": "Marshall Islands"
+                            },
+                            {
+                                "countryName": "Mauritania"
+                            },
+                            {
+                                "countryName": "Mauritius"
+                            },
+                            {
+                                "countryName": "Mexico"
+                            },
+                            {
+                                "countryName": "Micronesia"
+                            },
+                            {
+                                "countryName": "Moldova"
+                            },
+                            {
+                                "countryName": "Monaco"
+                            },
+                            {
+                                "countryName": "Mongolia"
+                            },
+                            {
+                                "countryName": "Morocco"
+                            },
+                            {
+                                "countryName": "Mozambique"
+                            },
+                            {
+                                "countryName": "Myanmar (Burma)"
+                            },
+                            {
+                                "countryName": "Namibia"
+                            },
+                            {
+                                "countryName": "Nauru"
+                            },
+                            {
+                                "countryName": "Nepal"
+                            },
+                            {
+                                "countryName": "New Caledonia"
+                            },
+                            {
+                                "countryName": "New Zealand"
+                            },
+                            {
+                                "countryName": "Nicaragua"
+                            },
+                            {
+                                "countryName": "Niger"
+                            },
+                            {
+                                "countryName": "Nigeria"
+                            },
+                            {
+                                "countryName": "Niue"
+                            },
+                            {
+                                "countryName": "Norfolk Island"
+                            },
+                            {
+                                "countryName": "North Korea"
+                            },
+                            {
+                                "countryName": "Northern Mariana Islands"
+                            },
+                            {
+                                "countryName": "Occupied Palestinian Territories"
+                            },
+                            {
+                                "countryName": "Oman"
+                            },
+                            {
+                                "countryName": "Pakistan"
+                            },
+                            {
+                                "countryName": "Palau"
+                            },
+                            {
+                                "countryName": "Panama"
+                            },
+                            {
+                                "countryName": "Papua New Guinea"
+                            },
+                            {
+                                "countryName": "Paraguay"
+                            },
+                            {
+                                "countryName": "Peru"
+                            },
+                            {
+                                "countryName": "Philippines"
+                            },
+                            {
+                                "countryName": "Puerto Rico"
+                            },
+                            {
+                                "countryName": "Qatar"
+                            },
+                            {
+                                "countryName": "Russia"
+                            },
+                            {
+                                "countryName": "Rwanda"
+                            },
+                            {
+                                "countryName": "Saint Barthélemy"
+                            },
+                            {
+                                "countryName": "Saint Pierre and Miquelon"
+                            },
+                            {
+                                "countryName": "Samoa"
+                            },
+                            {
+                                "countryName": "San Marino"
+                            },
+                            {
+                                "countryName": "Sao Tome and Principe"
+                            },
+                            {
+                                "countryName": "Saudi Arabia"
+                            },
+                            {
+                                "countryName": "Senegal"
+                            },
+                            {
+                                "countryName": "Seychelles"
+                            },
+                            {
+                                "countryName": "Sierra Leone"
+                            },
+                            {
+                                "countryName": "Singapore"
+                            },
+                            {
+                                "countryName": "Sint Maarten (Dutch part)"
+                            },
+                            {
+                                "countryName": "Solomon Islands"
+                            },
+                            {
+                                "countryName": "Somalia"
+                            },
+                            {
+                                "countryName": "South Africa"
+                            },
+                            {
+                                "countryName": "South Korea"
+                            },
+                            {
+                                "countryName": "South Sudan"
+                            },
+                            {
+                                "countryName": "Sri Lanka"
+                            },
+                            {
+                                "countryName": "St Kitts and Nevis"
+                            },
+                            {
+                                "countryName": "St Lucia"
+                            },
+                            {
+                                "countryName": "St Vincent"
+                            },
+                            {
+                                "countryName": "Sudan"
+                            },
+                            {
+                                "countryName": "Suriname"
+                            },
+                            {
+                                "countryName": "Svalbard and Jan Mayen"
+                            },
+                            {
+                                "countryName": "Syria"
+                            },
+                            {
+                                "countryName": "Taiwan"
+                            },
+                            {
+                                "countryName": "Tajikistan"
+                            },
+                            {
+                                "countryName": "Tanzania"
+                            },
+                            {
+                                "countryName": "Thailand"
+                            },
+                            {
+                                "countryName": "The Bahamas"
+                            },
+                            {
+                                "countryName": "The Gambia"
+                            },
+                            {
+                                "countryName": "Togo"
+                            },
+                            {
+                                "countryName": "Tokelau"
+                            },
+                            {
+                                "countryName": "Tonga"
+                            },
+                            {
+                                "countryName": "Trinidad and Tobago"
+                            },
+                            {
+                                "countryName": "Tunisia"
+                            },
+                            {
+                                "countryName": "Turkmenistan"
+                            },
+                            {
+                                "countryName": "Tuvalu"
+                            },
+                            {
+                                "countryName": "Uganda"
+                            },
+                            {
+                                "countryName": "Ukraine"
+                            },
+                            {
+                                "countryName": "United Arab Emirates"
+                            },
+                            {
+                                "countryName": "United States"
+                            },
+                            {
+                                "countryName": "United States Minor Outlying Islands"
+                            },
+                            {
+                                "countryName": "United States Virgin Islands"
+                            },
+                            {
+                                "countryName": "Uruguay"
+                            },
+                            {
+                                "countryName": "Uzbekistan"
+                            },
+                            {
+                                "countryName": "Vanuatu"
+                            },
+                            {
+                                "countryName": "Vatican City"
+                            },
+                            {
+                                "countryName": "Venezuela"
+                            },
+                            {
+                                "countryName": "Vietnam"
+                            },
+                            {
+                                "countryName": "Wallis and Futuna"
+                            },
+                            {
+                                "countryName": "Western Sahara"
+                            },
+                            {
+                                "countryName": "Yemen"
+                            },
+                            {
+                                "countryName": "Zambia"
+                            },
+                            {
+                                "countryName": "Zimbabwe"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 7680834.75,
+                    "currency": "GBP"
+                },
+                "procurementMethodDetails": "Other - Not Disclosed",
+                "tenderPeriod": {
+                    "endDate": "2021-02-11T00:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2022-03-15T00:00:00Z",
+                    "endDate": "2034-02-28T23:59:59Z"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": true
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/57c4a64b-a531-4aa1-8306-d11a8d1f9a35",
+                        "datePublished": "2026-10-27T08:18:34Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "tenderNotice",
+                        "description": "Please follow this link to view the notice.",
+                        "url": "https://www.delta-esourcing.com/delta/respondToList.html?noticeId=1078758580"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/8u5J6V4e",
+                    "name": "BIP SOLUTIONS LIMITED",
+                    "identifier": {
+                        "legalName": "BIP SOLUTIONS LIMITED",
+                        "scheme": "GB-SRS",
+                        "id": "sid4gov.cabinetoffice.gov.uk/8u5J6V4e"
+                    },
+                    "address": {
+                        "streetAddress": "157-197 Buckingham Palace Road",
+                        "locality": "Victoria",
+                        "postalCode": "SW1W 9SP",
+                        "countryName": "UK"
+                    },
+                    "contactPoint": {
+                        "email": "NAO.Procurement@nao.org.uk",
+                        "telephone": "+442077987000"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/8u5J6V4e",
+                "name": "BIP SOLUTIONS LIMITED"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-122703f5-4529-4011-8203-e0675d3099e4",
+            "id": "c959d8f9-c3be-4709-aa75-b599d5778a78-919232",
+            "language": "en",
+            "date": "2026-10-26T17:45:08Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "MT238412",
+                "title": "CCHA Fire Door Replacement Project 26/27",
+                "description": "Castles and Coasts Housing Association (CCHA) wishes to procure the services of a competent\r\ncontractor to undertake the renewal of 350nr. fire doors across twenty-four of their general\r\nneeds housing blocks as part of their planned compliance programme.\r\nAll of the schemes are located in the Cumbria region, covering Cockermouth, Crosby Villa,\r\nFlimby, Keswick, Maryport, Papcastle, Wigton & Workington",
+                "datePublished": "2026-10-26T17:45:08Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "44221220",
+                    "description": "Fire doors"
+                },
+                "additionalClassifications": [
+                    {
+                        "scheme": "CPV",
+                        "id": "45421000",
+                        "description": "Joinery work"
+                    },
+                    {
+                        "scheme": "CPV",
+                        "id": "45420000",
+                        "description": "Joinery and carpentry installation work"
+                    },
+                    {
+                        "scheme": "CPV",
+                        "id": "44221200",
+                        "description": "Doors"
+                    },
+                    {
+                        "scheme": "CPV",
+                        "id": "44221000",
+                        "description": "Windows, doors and related items"
+                    }
+                ],
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "region": "North West",
+                                "countryName": "United Kingdom"
+                            }
+                        ]
+                    }
+                ],
+                "minValue": {
+                    "amount": 300000,
+                    "currency": "GBP"
+                },
+                "value": {
+                    "amount": 900000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (below threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-11-20T17:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2027-02-08T00:00:00Z",
+                    "endDate": "2027-06-11T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "works",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/c959d8f9-c3be-4709-aa75-b599d5778a78",
+                        "datePublished": "2026-10-26T17:45:08Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "tenderNotice",
+                        "description": "NOTE: To register your interest in this notice and obtain any additional information please visit the myTenders Web Site at the link provided.",
+                        "url": "https://www.mytenders.co.uk/search/show/search_view.aspx?ID=OCT172025"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-CFS-338334",
+                    "name": "Castles and Coasts Housing Association",
+                    "identifier": {
+                        "legalName": "Castles and Coasts Housing Association"
+                    },
+                    "address": {
+                        "streetAddress": "5 Paternoster Row",
+                        "locality": "Carlisle",
+                        "postalCode": "CA3 8TT",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Chris Clarke",
+                        "email": "Chris.Clarke@castlesandcoasts.com",
+                        "telephone": "+44 7884737195"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-CFS-338334",
+                "name": "Castles and Coasts Housing Association"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-78ed4213-9d0a-4592-888a-9fb536485976",
+            "id": "3244a195-4d3f-4923-b52f-8858e90ad9d1-919214",
+            "language": "en",
+            "date": "2026-10-26T16:00:04Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "C4N121802017",
+                "title": "DNWP0027- Lot 1B / WAGR B55 Demolition - Sellafield - A2R JV",
+                "description": "The B55 and B55.2 demolition project at Sellafield involves the controlled demolition and dismantling of the B55 Office Complex and B55.2 Turbine Hall, located within the WAGR complex, down to existing ground-floor slab level. The scope includes soft stripping, asbestos remediation, high-reach mechanical demolition of the structural frame, cladding and reinforced-concrete floors, together with segregation and processing of demolition arisings, backfilling of voids and final site clearance.\r\n    \r\n    A key constraint is Substation 65, which is located within the B55/B55.2 structure and must remain operational and be protected from demolition impacts, dust and water ingress throughout the works. Retained basements and associated structures also require protection, while uncertainties associated with ageing structures, buried services, below-ground voids and incomplete historical information must be managed through robust surveys, demolition engineering and risk-informed planning.\r\n    \r\n     Overall, the project is intended to provide a safe, demolition-led solution that reduces workforce exposure, removes redundant infrastructure and supports accelerated hazard reduction across the wider WAGR decommissioning programme.\r\n\r\nAdditional information: https://www.linkedin.com/company/a2r-altrad-atkinsrealis-remediation\r\n        \r\n        https://www.gov.uk/government/news/sellafield-ltd-awards-high-hazard-risk-reduction-framework-contract",
+                "datePublished": "2026-10-26T16:00:04Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "45251111",
+                    "description": "Construction work for nuclear reactors"
+                },
+                "additionalClassifications": [
+                    {
+                        "scheme": "CPV",
+                        "id": "98113100",
+                        "description": "Nuclear safety services"
+                    },
+                    {
+                        "scheme": "CPV",
+                        "id": "42151000",
+                        "description": "Nuclear reactors"
+                    }
+                ],
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "countryName": "British Oversea Territories"
+                            },
+                            {
+                                "countryName": "Channel Islands"
+                            },
+                            {
+                                "countryName": "Europe"
+                            },
+                            {
+                                "countryName": "Isle of Man"
+                            },
+                            {
+                                "countryName": "Rest of the World"
+                            },
+                            {
+                                "countryName": "United Kingdom"
+                            }
+                        ]
+                    }
+                ],
+                "minValue": {
+                    "amount": 2500000,
+                    "currency": "GBP"
+                },
+                "value": {
+                    "amount": 5000000,
+                    "currency": "GBP"
+                },
+                "procurementMethodDetails": "",
+                "tenderPeriod": {
+                    "endDate": "2026-11-10T17:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2027-04-01T00:00:00+01:00",
+                    "endDate": "2027-12-31T23:59:59Z"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "works",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/3244a195-4d3f-4923-b52f-8858e90ad9d1",
+                        "datePublished": "2026-10-26T16:00:04Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "tenderNotice",
+                        "description": "Please follow this link to view the notice.",
+                        "url": "https://www.competefor.co.uk/business/viewOpportunityDetailsSupplier.html?id=121802067"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-CFS-337920",
+                    "name": "Altrad AtkinsRealis Joint Venture (A2R JV)",
+                    "identifier": {
+                        "legalName": "Altrad AtkinsRealis Joint Venture (A2R JV)"
+                    },
+                    "address": {
+                        "streetAddress": "1st Floor, Galemire Court, Crow Park Way, Westlakes Science & Technology Park",
+                        "locality": "Moor Row",
+                        "postalCode": "CA24 3HY",
+                        "countryName": "UK"
+                    },
+                    "contactPoint": {
+                        "name": "Laura Walsh",
+                        "email": "laura.walsh@atkinsrealis.com",
+                        "telephone": "07824545181"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-CFS-337920",
+                "name": "Altrad AtkinsRealis Joint Venture (A2R JV)"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-00b9fce5-256f-4002-b81f-f08dc0ad78c6",
+            "id": "0147a65a-f6f9-49aa-9a5d-e3b0faf90024-919192",
+            "language": "en",
+            "date": "2026-10-26T14:50:03Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "BIP1078477907",
+                "title": "Colt - Naas ( Gcloud 14)",
+                "description": "Network as a service ( Network Connectivity)",
+                "datePublished": "2026-10-26T14:50:03Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "72700000",
+                    "description": "Computer network services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "region": "London",
+                                "countryName": "United Kingdom"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 452300,
+                    "currency": "GBP"
+                },
+                "procurementMethodDetails": "",
+                "tenderPeriod": {
+                    "endDate": "2026-09-30T00:00:00+01:00"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-10-01T00:00:00+01:00",
+                    "endDate": "2029-09-30T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/0147a65a-f6f9-49aa-9a5d-e3b0faf90024",
+                        "datePublished": "2026-10-26T14:50:03Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "tenderNotice",
+                        "description": "Please follow this link to view the notice.",
+                        "url": "https://www.delta-esourcing.com/delta/respondToList.html?noticeId=1078477907"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-CFS-276192",
+                    "name": "London Borough of Barnet",
+                    "identifier": {
+                        "legalName": "London Borough of Barnet"
+                    },
+                    "address": {
+                        "streetAddress": "2 Bristol Avenue",
+                        "locality": "London",
+                        "postalCode": "NW9 4EW",
+                        "countryName": "UK"
+                    },
+                    "contactPoint": {
+                        "email": "scrprogramme@barnet.gov.uk",
+                        "telephone": "+447956307511"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-CFS-276192",
+                "name": "London Borough of Barnet"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-8594b734-d603-40c3-aad6-548b64b1f1da",
+            "id": "6e156deb-0b84-46e2-bae5-427ee3e1cf0c-919157",
+            "language": "en",
+            "date": "2026-10-26T12:46:14Z",
+            "tag": [
+                "tenderAmendment"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "BRAVE-IS-002",
+                "title": "Institutional Strengthening and Capability Development Plan for Disaster Risk Management in Khyber Pakhtunkhwa",
+                "description": "DAI Global UK is seeking a firm to prepare an Institutional Strengthening and Capability Development Plan for Disaster Risk Management (DRM) in Khyber Pakhtunkhwa (KP), Pakistan. The assignment is delivered under Building Resilience and Addressing Vulnerability to Emergencies - Institutional Strengthening (BRAVE-IS), a multi-year (2026-2029) technical assistance programme funded by the UK Foreign, Commonwealth & Development Office (FCDO). The contracting organisation is DAI Pakistan Pvt. Ltd.\r\n\r\nThe firm will work with the Relief, Rehabilitation and Settlement Department, Government of KP, and its attached agencies: the Provincial Disaster Management Authority (PDMA), Rescue 1122 and the Civil Defence Directorate. The work is in four stages:\r\n- Stage 1, Inception (weeks 1-2)\r\n- Stage 2, Diagnostic and validation (weeks 3-6): institutional, financial, HR and digital systems assessment\r\n- Stage 3, Recommendations and plans (weeks 7-12): a five-year Institutional Strengthening Plan for each of PDMA, Rescue 1122 and Civil Defence\r\n- Stage 4, Early implementation support (weeks 13-36): implementation-ready products, commissioned at BRAVE-IS's discretion on completion of Stage 3\r\n\r\nThe contract is fixed price, with payment linked to acceptance of agreed deliverables. Personnel will be based in Peshawar, with field visits to selected districts of KP. The firm must propose four Key Persons: a Team Lead (institutional strengthening), a Public Financial Management Expert, a Digital Systems and ERP Expert, and a DRM Expert. HR management and GIS expertise are also required.\r\n\r\nHow to apply\r\nThe full Request for Proposals (RFP) is attached to this notice. Submit one email to brave-is@dai.com with the subject \"BRAVE-IS-002 - Proposal - [Firm name]\", attaching two PDFs: (i) the technical submission, with CVs as an annex, and (ii) the financial proposal, with separate budgets for Stages 1-3 and Stage 4.\r\n\r\nClarification questions must be sent to brave-is@dai.com by 26 October 2026, with the subject \"BRAVE-IS-002 - Clarification Question - [Firm name]\". Responses will be shared with all bidders without identifying who asked.\r\n\r\nProposals are due by 17:00 Pakistan Standard Time (12:00 UK time) on 4 November 2026 and must remain valid for 90 days. Late submissions will not be considered. Issue of this RFP does not commit DAI to award a contract.",
+                "datePublished": "2026-10-20T11:43:29+01:00",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "79400000",
+                    "description": "Business and management consultancy and related services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "countryName": "Pakistan"
+                            }
+                        ]
+                    }
+                ],
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (below threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-11-04T12:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-12-01T00:00:00Z",
+                    "endDate": "2027-03-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": true
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/6e156deb-0b84-46e2-bae5-427ee3e1cf0c",
+                        "datePublished": "2026-10-20T11:43:29+01:00",
+                        "dateModified": "2026-10-26T12:46:14Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "3",
+                        "documentType": "evaluationCriteria",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/35b81d92-dd2a-4b17-8a7b-5ba36a3ad633",
+                        "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    },
+                    {
+                        "id": "4",
+                        "documentType": "clarifications",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/00e88329-fa2e-4e89-838d-51756b9e9a29",
+                        "format": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    }
+                ]
+            },
+            "relatedProcesses": [
+                {
+                    "id": "1",
+                    "relationship": [
+                        "parent"
+                    ]
+                }
+            ],
+            "parties": [
+                {
+                    "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/e23DHg7c",
+                    "name": "DAI GLOBAL UK LTD",
+                    "identifier": {
+                        "legalName": "DAI GLOBAL UK LTD",
+                        "scheme": "GB-SRS",
+                        "id": "sid4gov.cabinetoffice.gov.uk/e23DHg7c"
+                    },
+                    "address": {
+                        "streetAddress": "4 Fulwood Place",
+                        "locality": "London",
+                        "postalCode": "WC1V 6HG",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "email": "brave-is@dai.com",
+                        "telephone": "07979822086"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/e23DHg7c",
+                "name": "DAI GLOBAL UK LTD"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-5c690050-dda9-4b35-b235-aeb0e7d18f83",
+            "id": "23ecfe73-7a02-4ec9-ac8f-d15ba715df32-919134",
+            "language": "en",
+            "date": "2026-10-26T11:26:58Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "GM2",
+                "title": "Ground maintenance Stoke Golding Parish Council",
+                "description": "Ground maintenance contract for Parish Council . Work to include mowing of open spaces , grave yards and recreational grounds. Minor tree work , weed killing, hedge work , planting of trees , maintaining wild flower areas , football pitch line marking .",
+                "datePublished": "2026-10-26T11:26:58Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "50000000",
+                    "description": "Repair and maintenance services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "postalCode": "CV13 6HD"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 30000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (above threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-12-31T23:59:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2027-04-01T00:00:00+01:00",
+                    "endDate": "2030-03-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/23ecfe73-7a02-4ec9-ac8f-d15ba715df32",
+                        "datePublished": "2026-10-26T11:26:58Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "contractSummary",
+                        "description": "tender requirements",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/Attachment/6a9cc39a-0e29-497b-b371-2d788dd2ea8e",
+                        "format": "application/pdf"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/FHSy63J7",
+                    "name": "Stoke Golding parish council",
+                    "identifier": {
+                        "legalName": "Stoke Golding parish council",
+                        "scheme": "GB-SRS",
+                        "id": "supplierregistration.cabinetoffice.gov.uk/FHSy63J7"
+                    },
+                    "address": {
+                        "streetAddress": "Old Forge, Blacksmiths Yard",
+                        "locality": "Stoke Golding",
+                        "postalCode": "CV13 6HD",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Sarah Beale",
+                        "email": "clerk@stokegoldingparishcouncil.gov.uk",
+                        "telephone": "07398448436"
+                    },
+                    "details": {
+                        "url": "http://www.stokegoldingparishcouncil.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-supplierregistration.cabinetoffice.gov.uk/FHSy63J7",
+                "name": "Stoke Golding parish council"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-a19cfc84-da33-4d1f-9430-65f4affc931e",
+            "id": "a64c3ffe-9b90-4d78-ba49-01674d5c46ed-919125",
+            "language": "en",
+            "date": "2026-10-26T10:35:49Z",
+            "tag": [
+                "tenderAmendment"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "Project Tullie Phase 3: Digital Installation Design - Request for Quotation",
+                "title": "Project Tullie Phase 3: Digital Installation Design - Request for Quotation",
+                "description": "Tullie House Museum and Art Gallery Trust (the Trust) in Carlisle (brand name: Tullie) is seeking an experienced Digital Installation Designer to plan and deliver an immersive digital space within a new 'Active Gallery', as part of Project Tullie Phase 3: Breaking Down Barriers.\r\n\r\nWe're looking for an individual or organisation to deliver a 360-degree 'Immersive Art' experience. Six paintings from Tullie's fine art collection should each be brought to life through digital projection and interpretation, which may incorporate animation, cinemagraphs, soundscapes, and interactive elements. The services must include expertise both in software and hardware design and the appointed professional must be able to take the concept through to full delivery within the timeframes stated.\r\n\r\nDetails can be found at: https://tullie.org.uk/project-tullie-phase-3-fine-art-digital-installation-design-rfq/",
+                "datePublished": "2026-09-22T12:50:01+01:00",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "92521100",
+                    "description": "Museum-exhibition services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "postalCode": "CA3 8TP"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 14000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "limited",
+                "procurementMethodDetails": "Competitive quotation (below threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-10-26T10:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-11-16T00:00:00Z",
+                    "endDate": "2027-05-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": false
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/a64c3ffe-9b90-4d78-ba49-01674d5c46ed",
+                        "datePublished": "2026-09-22T12:50:01+01:00",
+                        "dateModified": "2026-10-26T10:35:49Z",
+                        "format": "text/html",
+                        "language": "en"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/uMDf58Ft",
+                    "name": "TULLIE HOUSE MUSEUM AND ART GALLERY TRUST",
+                    "identifier": {
+                        "legalName": "TULLIE HOUSE MUSEUM AND ART GALLERY TRUST",
+                        "scheme": "GB-SRS",
+                        "id": "sid4gov.cabinetoffice.gov.uk/uMDf58Ft"
+                    },
+                    "address": {
+                        "streetAddress": "Museum & Art Gallery Tullie House,Tullie House, Castle Street",
+                        "locality": "CARLISLE",
+                        "postalCode": "CA38TP",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "name": "Corinne Irving",
+                        "email": "corinne.irving@tulliehouse.org",
+                        "telephone": "01228618789"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-SRS-sid4gov.cabinetoffice.gov.uk/uMDf58Ft",
+                "name": "TULLIE HOUSE MUSEUM AND ART GALLERY TRUST"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-f9968df7-7c6d-410d-b9ba-40e9c1614ef6",
+            "id": "53772794-9c41-4a2e-9629-fc5a8e7af552-919085",
+            "language": "en",
+            "date": "2026-10-26T09:24:01Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "LPOOL001-DN833460-26324977",
+                "title": "Management Agent for Council Houses",
+                "description": "Liverpool City Council requires a supplier of a full housing management service for six (6) Council owned properties which are currently tenanted. Full details of the requirement can be found at Appendix A - Specification of the ITT documents.  \r\n\r\nThis procurement is being conducted under the Light Touch Regime (LTR) for social, health, education, and other specified services. The contracting authority is exercising the flexibilities provided under Section 9 of the Procurement Act 2023. The services to be provided fall within the scope of Schedule 1 of the Procurement Regulations 2024, as indicated by the following CPV codes: \r\n\r\n75123000\tAdministrative housing services\r\n\r\n\r\nAdditional information: \r\nOpportunity can be accessed at https://procontract.due-north.com/\r\n\r\nReference DN833460",
+                "datePublished": "2026-10-26T09:24:01Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "75123000",
+                    "description": "Administrative housing services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "region": "North West",
+                                "countryName": "United Kingdom"
+                            }
+                        ]
+                    }
+                ],
+                "value": {
+                    "amount": 120000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure (below threshold)",
+                "tenderPeriod": {
+                    "endDate": "2026-11-18T12:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2027-01-18T00:00:00Z",
+                    "endDate": "2030-01-17T23:59:59Z"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": true
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/53772794-9c41-4a2e-9629-fc5a8e7af552",
+                        "datePublished": "2026-10-26T09:24:01Z",
+                        "format": "text/html",
+                        "language": "en"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-CFS-339474",
+                    "name": "Liverpool City Council",
+                    "identifier": {
+                        "legalName": "Liverpool City Council"
+                    },
+                    "address": {
+                        "streetAddress": "Cunard Building",
+                        "locality": "Liverpool",
+                        "postalCode": "L3 1DS",
+                        "countryName": "England"
+                    },
+                    "contactPoint": {
+                        "email": "CommercialProcurement@liverpool.gov.uk"
+                    },
+                    "details": {
+                        "url": "http://www.liverpool.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-CFS-339474",
+                "name": "Liverpool City Council"
+            }
+        },
+        {
+            "ocid": "ocds-b5fd17-6601fef2-5ab6-45ae-8ef0-ea2955a17f63",
+            "id": "058a0226-cc5f-4de9-9773-4346e3fbd532-919078",
+            "language": "en",
+            "date": "2026-10-26T08:50:02Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "BIP1077787569",
+                "title": "GB-Middlesbrough: Borderlands Phase 2 Evaluation",
+                "description": "Borderlands is seeking to appoint an experienced independent evaluator or team of evaluators to support the evaluation of its programme in the period 2026 - 2029.\r\n      \r\n      We are looking for an evaluator or team of evaluators who can work collaboratively with our team, consortium partners and Community Steering Group to understand the impact of our work, strengthen our approach to monitoring and evaluation, and generate meaningful learning that informs programme development.\r\n      \r\n      The evaluation should combine robust quantitative data with rich qualitative evidence, helping us understand not only what we deliver and who we reach, but also the difference our work makes to individuals, communities, artists and the wider creative ecology.\r\n\r\nAdditional information: The contracting authority considers that this contract may be suitable for economic operators that are small or medium enterprises (SMEs). However, any selection of tenderers will be based solely on the criteria set out for the procurement.",
+                "datePublished": "2026-10-26T08:50:02Z",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "79419000",
+                    "description": "Evaluation consultancy services"
+                },
+                "items": [
+                    {
+                        "id": "1",
+                        "deliveryAddresses": [
+                            {
+                                "region": "North East",
+                                "countryName": "United Kingdom"
+                            }
+                        ]
+                    }
+                ],
+                "minValue": {
+                    "amount": 10000,
+                    "currency": "GBP"
+                },
+                "value": {
+                    "amount": 25000,
+                    "currency": "GBP"
+                },
+                "procurementMethod": "open",
+                "procurementMethodDetails": "Open procedure",
+                "tenderPeriod": {
+                    "endDate": "2026-11-16T17:00:00Z"
+                },
+                "contractPeriod": {
+                    "startDate": "2026-12-14T00:00:00Z",
+                    "endDate": "2029-05-31T23:59:59+01:00"
+                },
+                "suitability": {
+                    "sme": true,
+                    "vcse": true
+                },
+                "mainProcurementCategory": "services",
+                "documents": [
+                    {
+                        "id": "1",
+                        "documentType": "tenderNotice",
+                        "description": "Opportunity notice on Contracts Finder",
+                        "url": "https://www.contractsfinder.service.gov.uk/Notice/058a0226-cc5f-4de9-9773-4346e3fbd532",
+                        "datePublished": "2026-10-26T08:50:02Z",
+                        "format": "text/html",
+                        "language": "en"
+                    },
+                    {
+                        "id": "2",
+                        "documentType": "tenderNotice",
+                        "description": "Please follow this link to view the notice.",
+                        "url": "https://www.delta-esourcing.com/tenders/UK-GB-Middlesbrough:-Borderlands-Phase-2-Evaluation/JDB38SJXBS"
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "id": "GB-CFS-270299",
+                    "name": "Teesside University",
+                    "identifier": {
+                        "legalName": "Teesside University"
+                    },
+                    "address": {
+                        "streetAddress": "Teesside University, Southfield Road",
+                        "locality": "Middlesbrough",
+                        "postalCode": "TS1 3BX",
+                        "countryName": "UK"
+                    },
+                    "contactPoint": {
+                        "name": "Procurement",
+                        "email": "tenders@tees.ac.uk",
+                        "telephone": "01642218121"
+                    },
+                    "roles": [
+                        "buyer"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-CFS-270299",
+                "name": "Teesside University"
+            }
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+URL: https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases/all?limit=5&start_date=2026-10-20&end_date=2026-10-28
+STATUS: 200
+TYPE: application/json
+
+{"code":200,"hasError":false,"payload":{"content":[{"ocid":"ocds-6550wx-EDEESTE-CCC-LPN-2026-0016","url":"https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases?ocid=ocds-6550wx-EDEESTE-CCC-LPN-2026-0016"},{"ocid":"ocds-6550wx-GCPS-DAF-CD-2026-0269","url":"https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases?ocid=ocds-6550wx-GCPS-DAF-CD-2026-0269"},{"ocid":"ocds-6550wx-HMDRCA-DAF-CD-2026-0083","url":"https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases?ocid=ocds-6550wx-HMDRCA-DAF-CD-2026-0083"},{"ocid":"ocds-6550wx-Inst. Nac. de Cancer-DAF-CD-2026-0186","url":"https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases?ocid=ocds-6550wx-Inst. Nac. de Cancer-DAF-CD-2026-0186"},{"ocid":"ocds-6550wx-CAMARA CUENTAS-DAF-CD-2026-0108","url":"https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases?ocid=ocds-6550wx-CAMARA CUENTAS-DAF-CD-2026-0108"}]},"page":1,"limit":5,"totalResults":2496,"pages":500}

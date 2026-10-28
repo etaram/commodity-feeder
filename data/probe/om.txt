@@ -1,0 +1,4154 @@
+URL: https://etendering.tenderboard.gov.om/product/publicDash?viewFlag=NewTenders
+STATUS: 200
+TYPE: text/html;charset=UTF-8
+
+<!doctype html>
+
+
+
+
+<HTML DIR="RTL"  lang="ar">
+<link rel="stylesheet" type="text/css" href="/product/css/OMANRTL.css">
+
+
+<HEAD> 
+
+<meta https-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<title>الصفحة الرئيسية</title>
+
+    <link rel="stylesheet" type="text/css" href="/product/css/styleRTL.css">
+
+
+
+<link rel="stylesheet" href="/product/css/dashboard/grid.css">
+<link rel="stylesheet" href="/product/css/dashboard/jquery-ui.css">
+<link rel="stylesheet" href="/product/css/dashboard/tables.css">
+<link rel="stylesheet" href="/product/css/dashboard/ad.css">
+
+  <!---jQuery Files-->
+ <script src="/product/js/dashboard/jquery-1.7.1.min.js"></script>
+ <script src="/product/js/dashboard/jquery-ui-1.8.17.min.js"></script>
+ <script src="/product/js/dashboard/global.js"></script>
+ <script src="/product/js/dashboard/jquery.dataTables.min.js"></script>
+  <!---Fonts-->
+ <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+ 
+<link rel="stylesheet" href="/product/template.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/product/css/tabsArabic.css" >
+<script language="JavaScript" src="/product/js/date-pickerNewAlternate.js"></script>
+<script language="JavaScript" src="/product/js/Validate.js"></script>
+<script language="javascript" src="/product/js/FormValidate.js"></script>
+
+<script type="text/javascript">
+var isSecurityDisableAtPublicDash='';
+var isUserId='null';
+if(isUserId!='' && isUserId!='null' && trim(isUserId)!='')
+    isSecurityDisableAtPublicDash="0";
+
+var strContext='/product';
+var strLnkUrl = 'publicDash?viewFlag=NewTenders';
+var strAlert = 'الرجاء أدخال قيمه رقميه';
+var strInvalidPage = 'رقم الصفحه غير صالح';
+var strOf = 'من';
+
+    function ShowNewTenders(n){
+        document.bDashboard.newTenderPubpageNo.value=n;
+        document.bDashboard.callvalue.value="";
+        document.bDashboard.action="/product/publicDash?viewFlag=NewTenders";
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+    }
+
+  
+    
+    function showParticipated(tenderNo){
+        // alert("In showParticipated() tenderNo ->"+tenderNo);
+    var path;
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            path="/product/publicDash?viewFlag=showParticipatedVendors&tenderNo="+tenderNo+"&PublicUrl=1";
+            path=createUrlWithoutSecurity(document.forms[0],path);
+        }
+        else{
+            path="/product/publicDash?viewFlag=showParticipatedVendors&tenderNo="+tenderNo+"&PublicUrl=1";
+            path=getPublicFinalURL(document.forms[0],path);
+        }
+        var winctrl="status=0,scrollbars=1,resizable=yes,top=110,left=120,width=1100,height=500";
+        window.open(path,'ParticipatedCompany',winctrl);
+        
+    }
+    
+  
+    
+    function getNit(tenNo){
+        //document.bDashboard.mode.value="public";
+        //document.bDashboard.tenderNo.value=tenNo; 
+        var url ;
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            url =" /product/nitParameterView?mode=public&tenderNo="+tenNo+"&PublicUrl=1";
+            
+            	url = getFinalURL(document.forms[0],url);
+        	
+            
+        }
+        else{
+        url =" /product/nitParameterView?mode=public&tenderNo="+tenNo+"&PublicUrl=1";
+        
+        	url = getFinalURL(document.forms[0],url);
+    	
+        
+        }
+        var winctrl="status=0,scrollbars=1,resizable=yes,top=110,left=120,width=1100,height=500";
+        
+        	window.open(url,'ViewNIT',winctrl);
+        
+    }
+    
+    
+    function homePage(){
+        document.bDashboard.action="/product/publicDash?viewFlag=null";
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+    }
+    
+    function backToDashBoard(){
+        document.bDashboard.action="/product/publicDash";
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+    }
+
+    function backToDashBoardReplica(){      
+        document.bDashboard.action="/product/publicDashReplica?viewFlag=newDash";
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+    }
+    var keyflag = 0;
+    function checkInvalid()
+    {
+        if(keyflag == 1){
+            keyflag = 0;
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    function setValue(){
+        document.forms[0].pnoVal.focus();
+        document.forms[0].pnoVal.select();
+        document.forms[0].prevPageNo.value=document.forms[0].pnoVal.value;
+    }
+    function ShowPage(pageNo){
+         //alert("call To ShowPage()"+pageNo);
+        
+        if(pageNo==0){
+            newPageNo=document.forms[0].pnoVal.value;
+            var flag = CheckNumericDigit(newPageNo);
+            if(flag == 0){
+                alert('الرجاء أدخال قيمه رقميه');
+              document.forms[0].pnoVal.value = document.forms[0].prevPageNo.value;
+              if(window.event.keyCode == 13){
+                    keyflag = 1;
+              }
+              return;
+            }
+            var index = newPageNo.indexOf(" ");
+            //alert(' index '+index)
+            if(index != -1)
+                newPageNo = newPageNo.substring(0,index);
+            //alert(newPageNo+' '+newPageNo.length);
+            if(parseInt(newPageNo)>parseInt(document.forms[0].hidMax.value) || parseInt(newPageNo)< 1 ){
+                alert('رقم الصفحه غير صالح '+newPageNo +' من '+document.forms[0].hidMax.value);
+                document.forms[0].pnoVal.value = document.forms[0].prevPageNo.value;
+                document.forms[0].pnoVal.focus();
+                document.forms[0].pnoVal.select();
+                if(window.event.keyCode == 13){
+                    keyflag = 1;
+                }
+                return;
+            }
+            
+            document.bDashboard.pageNo.value=newPageNo;
+            
+        }
+        else{
+            
+            document.bDashboard.pageNo.value=pageNo;
+            
+        }   
+        //document.WF_MAIN_FORM.method="post";      
+        var divCode='N';
+        if(divCode=='Y'){
+            document.bDashboard.action="/product/publicDashReplica?viewFlag=NewTenders";
+        }
+        else{
+            document.bDashboard.action="/product/publicDash?viewFlag=NewTenders";
+        }
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+        
+    }
+    function ShowPageNIU(n){
+        //alert("call To ShowPage()");
+        var divCode='N';
+        document.bDashboard.CurrentPagePublicNewTender.value=n;
+        document.bDashboard.searchPageNo.value=n;
+        document.bDashboard.method="post";
+        //alert(divCode);
+        if(divCode=='Y'){
+            document.bDashboard.action="/product/publicDashReplica?viewFlag=NewTenders";
+        }
+        else{
+            document.bDashboard.action="/product/publicDash?viewFlag=NewTenders";
+        }
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+    }
+function ViewAllCorrigendum(tenNo){
+    var url;
+    if(isSecurityDisableAtPublicDash=='1')
+    {
+        url = "/product/ViewAllCorrigendum?pubFlag=Yes&tenderTxnNo="+tenNo+"&PublicUrl=1";
+        
+			url = createUrlWithoutSecurity(document.forms[0],url);
+		
+    }
+    else{
+        url = "/product/ViewAllCorrigendum?pubFlag=Yes&tenderTxnNo="+tenNo+"&PublicUrl=1";
+    	
+    		url = getFinalURL(document.forms[0],url);
+    	
+    }
+    
+    
+    	window.open(url,'ViewCorrig','toolbar=no,location=no,directories=no,status=no,scrollbars=yes,resizable=no,copyhistory=no,width=700,height=500,left=150,top=100');
+	
+}
+
+function showTndDesc(obj,num){
+    var msg=document.getElementById(obj+num).value;
+    // alert("In showTndDesc ->"+msg);
+    Tip(msg,WIDTH ,'-240',TITLE,'وصف المناقصة');
+}
+function getProcSubCategory()
+{
+    var selProcCode = "";
+    var length = document.getElementById("procCategory").options.length;
+    for(var i=0;length!=null && i<length;i++)
+    {
+        if(document.getElementById("procCategory").options[i].selected)
+        {
+            document.getElementById("procSubCategory").options.length = "1";
+            var value = document.getElementById("procCategory").options[i].value;
+            if(value=="" || value=="undefined" || value=="null")
+                return false;
+            else
+            {
+                selProcCode = document.getElementById("procCategory").options[i].value;
+                break;
+            }
+        }
+    }
+    if(selProcCode!=null && selProcCode!="")
+    {
+        var url;
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            url="/product/publicDash?addRandomNo=yes&CTRL_STRDIRECTION="+"RTL";
+            url = createUrlWithoutSecurity(document.forms[0],url);
+        }
+        else{
+            url="/product/publicDash?addRandomNo=yes&CTRL_STRDIRECTION="+"RTL"; 
+            url = getPublicFinalURL(document.forms[0],url);
+        }
+        if(window.ActiveXObject) 
+            httpRequest = new ActiveXObject("Microsoft.XMLHTTP"); 
+        else if(window.XMLHttpRequest) 
+            httpRequest = new XMLHttpRequest(); 
+        httpRequest.open("POST", url, true);
+        httpRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        httpRequest.onreadystatechange = function() { processRequestDesc(); 
+         } ;
+        var queryStr = "ajaxCall=getProcSubCateg&procCode="+selProcCode;
+        httpRequest.send(queryStr);
+    }
+}
+
+function processRequestDesc() 
+{ 
+    if (httpRequest.readyState == 4) 
+    { 
+        if(httpRequest.status == 200) 
+            updateHTMLDesc(httpRequest.responseXML);
+        else
+            alert("خطأ في تحميل الصفحة "+ httpRequest.status +":"+ httpRequest.statusText);
+    }
+}
+
+function updateHTMLDesc(responseXML) 
+{ 
+   var employees="";
+   var update="";
+   employees = responseXML.getElementsByTagName("employees")[0];
+   var loop=0;
+   for(loop=0;loop<employees.childNodes.length-1;loop++) 
+   {
+        var employee = employees.childNodes[loop];
+        var firstNameId = employee.getElementsByTagName("firstNameId")[0].childNodes[0].nodeValue;
+        var firstName = employee.getElementsByTagName("firstName")[0].childNodes[0].nodeValue;
+        with(document.getElementById("procSubCategory"))
+            options[options.length] = new Option(firstName,firstNameId);
+   }
+   if(employees.getElementsByTagName("NewRandomNo")[0]!=null)
+    {
+       var newRandNo = employees.getElementsByTagName("NewRandomNo")[0].childNodes[0].nodeValue;
+       setRandomNo(newRandNo);
+    }
+}
+
+ /*  --This fuction is introduce by anurag--validate special character except'/' and '-' regarding CR OM-645--- */
+function blockSpecialChar(e){
+        var k;
+        document.all ? k = e.keyCode : k = e.which;
+        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57) ||(k == 47 || k == 45));
+        }
+        
+
+function formSubmit()
+{
+	
+
+	
+	document.getElementById("viewFlag").value="NewTenders";
+    var divCode = "";
+    var procCode = "";
+    var procSubCode = "";
+    var tenderNo ="";
+    var showtenderGrade = "";
+    var tendersAndRfqProcurement = "";
+    var strTenderType="";
+    
+    if(document.getElementById("tenderNumber")!=null)
+    	tenderNo = document.getElementById("tenderNumber").value;
+    if(document.getElementById("tenderGrade")!=null)
+    	showtenderGrade = document.getElementById("tenderGrade").value;
+    //alert("showtenderGrade==>>>"+showtenderGrade);
+    if(document.getElementById("TendersAndRfqProcurement")!=null)
+    	tendersAndRfqProcurement = document.getElementById("TendersAndRfqProcurement").value;
+  
+    if(document.getElementById("division")!=null)
+         divCode = document.getElementById("division").value;
+    if(document.getElementById("procCategory")!=null)
+        procCode = document.getElementById("procCategory").value;
+    if(document.getElementById("procSubCategory")!=null)
+        procSubCode = document.getElementById("procSubCategory").value;
+    if(document.getElementById("strtenderType")!=null)
+    	strTenderType = document.getElementById("strtenderType").value;
+    var submissionFromDate = document.getElementById("submissionFromDate").value;
+    var submissionToDate = document.getElementById("submissionToDate").value;
+//     if(divCode=="" && procCode=="" && tendersAndRfqProcurement == "" && procSubCode=="" && submissionFromDate=="" && submissionToDate=="" && tenderNo=="" && showtenderGrade=="" && strTenderType=="")
+//     {
+
+//         return false;
+//     }
+//     else 
+    if(submissionFromDate!="" && submissionToDate=="")
+    { 
+        alert("الرجاء أختيار تاريخ عرض العطاء من والى");
+        return false;
+    }else if(submissionFromDate=="" && submissionToDate!="")
+    {
+        alert("الرجاء أختيار تاريخ عرض العطاء من والى");
+        return false;
+    }
+//     else if(tenderNo=="" && tenderNo!="")
+//     {
+
+//         return false;
+//     }
+//     else if(showtenderGrade=="" && showtenderGrade!="")
+//     {
+
+//         return false;
+//     }
+    document.forms[0].tabFlag.value="1";
+    document.bDashboard.method="post";
+        document.bDashboard.action="/product/publicDashReplica?viewFlag=NewTenders";
+        if(isSecurityDisableAtPublicDash=='1')
+        {
+            document.forms[0].submit();
+        }
+        else{
+            submitPage(document.forms[0]);
+        }
+}
+
+function getReset()
+{
+	bDashboard.reset();
+	document.getElementById("tenderNumber").value="";
+	document.getElementById("submissionFromDate").value="";
+	document.getElementById("submissionToDate").value="";
+	document.getElementById("viewFlag").value="NewTenders";
+    document.bDashboard.action="/product/publicDash?viewFlag=NewTenders";
+    submitPage(document.forms[0]) ;
+}
+
+
+$(document).ready(function(){
+	$('#tenderNumber').keypress(function(event){
+	    if(event.keyCode == 13){
+	    	formSubmit();
+	    }
+	});
+
+	$('#division,#TendersAndRfqProcurement,#procCategory,#procSubCategory,#tenderGrade,#strtenderType').change(function(e){
+		$('#tenderNumber').focus();
+	});
+	
+	
+});
+
+function OnclickSubmitDate(){
+	$('#tenderNumber').focus();
+}
+
+</script>
+
+<style>
+label{
+  font-weight: normal !important;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+</style> 
+
+</HEAD>
+<body onmousedown="isKeyPressed(event)" onKeyDown="onKeyDown(event);">
+<form name="bDashboard" method="post" action="buyerDash" onsubmit="return checkInvalid();">
+
+
+
+<script>
+	var ctxPath="/product";
+	var processMsg='Processing Request, Please Wait. DO NOT CLICK REFRESH OR BACK';
+	var popupMsg='New Window is opened.Close the new window to continue working on this page.';
+	var ALERT_TITLE ='ESNAD';
+	var ALERT_BUTTON_TEXT ='Ok';;
+	
+</script>
+
+
+
+<input type="hidden" id="securityFlag" name="securityFlag" value="1">
+<input type="text" style="display:none" style="width:430px" id="randomno"  name="randomno" value="fixedrandomno">
+<input type="hidden" id="encparam" name="encparam">
+<input type="hidden" id="hashval" name="hashval">
+
+
+
+<script language="javascript" >
+/* A JavaScript implementation of the Secure Hash Standard
+ * Version 0.3 Copyright Angel Marin 2003-2004 - http://anmar.eu.org/
+ * Distributed under the BSD License
+ * Some bits taken from Paul Johnston's SHA-1 implementation
+ */
+var chrsz   = 8;  /* bits per input character. 8 - ASCII; 16 - Unicode      */
+var hexcase = 0;/* hex output format. 0 - lowercase; 1 - uppercase        */
+
+function safe_add (x, y) {
+  var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+  var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+  return (msw << 16) | (lsw & 0xFFFF);
+}
+
+function S (X, n) {return ( X >>> n ) | (X << (32 - n));}
+
+function R (X, n) {return ( X >>> n );}
+
+function Ch(x, y, z) {return ((x & y) ^ ((~x) & z));}
+
+function Maj(x, y, z) {return ((x & y) ^ (x & z) ^ (y & z));}
+
+function Sigma0256(x) {return (S(x, 2) ^ S(x, 13) ^ S(x, 22));}
+
+function Sigma1256(x) {return (S(x, 6) ^ S(x, 11) ^ S(x, 25));}
+
+function Gamma0256(x) {return (S(x, 7) ^ S(x, 18) ^ R(x, 3));}
+
+function Gamma1256(x) {return (S(x, 17) ^ S(x, 19) ^ R(x, 10));}
+
+function Sigma0512(x) {return (S(x, 28) ^ S(x, 34) ^ S(x, 39));}
+
+function Sigma1512(x) {return (S(x, 14) ^ S(x, 18) ^ S(x, 41));}
+
+function Gamma0512(x) {return (S(x, 1) ^ S(x, 8) ^ R(x, 7));}
+
+function Gamma1512(x) {return (S(x, 19) ^ S(x, 61) ^ R(x, 6));}
+
+function core_sha256 (m, l) {
+    var K = new Array(0x428A2F98,0x71374491,0xB5C0FBCF,0xE9B5DBA5,0x3956C25B,0x59F111F1,0x923F82A4,0xAB1C5ED5,0xD807AA98,0x12835B01,0x243185BE,0x550C7DC3,0x72BE5D74,0x80DEB1FE,0x9BDC06A7,0xC19BF174,0xE49B69C1,0xEFBE4786,0xFC19DC6,0x240CA1CC,0x2DE92C6F,0x4A7484AA,0x5CB0A9DC,0x76F988DA,0x983E5152,0xA831C66D,0xB00327C8,0xBF597FC7,0xC6E00BF3,0xD5A79147,0x6CA6351,0x14292967,0x27B70A85,0x2E1B2138,0x4D2C6DFC,0x53380D13,0x650A7354,0x766A0ABB,0x81C2C92E,0x92722C85,0xA2BFE8A1,0xA81A664B,0xC24B8B70,0xC76C51A3,0xD192E819,0xD6990624,0xF40E3585,0x106AA070,0x19A4C116,0x1E376C08,0x2748774C,0x34B0BCB5,0x391C0CB3,0x4ED8AA4A,0x5B9CCA4F,0x682E6FF3,0x748F82EE,0x78A5636F,0x84C87814,0x8CC70208,0x90BEFFFA,0xA4506CEB,0xBEF9A3F7,0xC67178F2);
+    var HASH = new Array(0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, 0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19);
+    var W = new Array(64);
+    var a, b, c, d, e, f, g, h, i, j;
+    var T1, T2;
+
+    /* append padding */
+    m[l >> 5] |= 0x80 << (24 - l % 32);
+    m[((l + 64 >> 9) << 4) + 15] = l;
+
+    for ( var i = 0; i<m.length; i+=16 ) {
+        a = HASH[0];
+        b = HASH[1];
+        c = HASH[2];
+        d = HASH[3];
+        e = HASH[4];
+        f = HASH[5];
+        g = HASH[6];
+        h = HASH[7];
+
+        for ( var j = 0; j<64; j++) {
+            if (j < 16) W[j] = m[j + i];
+            else W[j] = safe_add(safe_add(safe_add(Gamma1256(W[j - 2]), W[j - 7]), Gamma0256(W[j - 15])), W[j - 16]);
+
+            T1 = safe_add(safe_add(safe_add(safe_add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), W[j]);
+            T2 = safe_add(Sigma0256(a), Maj(a, b, c));
+
+            h = g;
+            g = f;
+            f = e;
+            e = safe_add(d, T1);
+            d = c;
+            c = b;
+            b = a;
+            a = safe_add(T1, T2);
+        }
+        
+        HASH[0] = safe_add(a, HASH[0]);
+        HASH[1] = safe_add(b, HASH[1]);
+        HASH[2] = safe_add(c, HASH[2]);
+        HASH[3] = safe_add(d, HASH[3]);
+        HASH[4] = safe_add(e, HASH[4]);
+        HASH[5] = safe_add(f, HASH[5]);
+        HASH[6] = safe_add(g, HASH[6]);
+        HASH[7] = safe_add(h, HASH[7]);
+    }
+    return HASH;
+}
+
+function core_sha512 (m, l) {
+    var K = new Array(0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc, 0x3956c25bf348b538, 0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118, 0xd807aa98a3030242, 0x12835b0145706fbe, 0x243185be4ee4b28c, 0x550c7dc3d5ffb4e2, 0x72be5d74f27b896f, 0x80deb1fe3b1696b1, 0x9bdc06a725c71235, 0xc19bf174cf692694, 0xe49b69c19ef14ad2, 0xefbe4786384f25e3, 0x0fc19dc68b8cd5b5, 0x240ca1cc77ac9c65, 0x2de92c6f592b0275, 0x4a7484aa6ea6e483, 0x5cb0a9dcbd41fbd4, 0x76f988da831153b5, 0x983e5152ee66dfab, 0xa831c66d2db43210, 0xb00327c898fb213f, 0xbf597fc7beef0ee4, 0xc6e00bf33da88fc2, 0xd5a79147930aa725, 0x06ca6351e003826f, 0x142929670a0e6e70, 0x27b70a8546d22ffc, 0x2e1b21385c26c926, 0x4d2c6dfc5ac42aed, 0x53380d139d95b3df, 0x650a73548baf63de, 0x766a0abb3c77b2a8, 0x81c2c92e47edaee6, 0x92722c851482353b, 0xa2bfe8a14cf10364, 0xa81a664bbc423001, 0xc24b8b70d0f89791, 0xc76c51a30654be30, 0xd192e819d6ef5218, 0xd69906245565a910, 0xf40e35855771202a, 0x106aa07032bbd1b8, 0x19a4c116b8d2d0c8, 0x1e376c085141ab53, 0x2748774cdf8eeb99, 0x34b0bcb5e19b48a8, 0x391c0cb3c5c95a63, 0x4ed8aa4ae3418acb, 0x5b9cca4f7763e373, 0x682e6ff3d6b2b8a3, 0x748f82ee5defb2fc, 0x78a5636f43172f60, 0x84c87814a1f0ab72, 0x8cc702081a6439ec, 0x90befffa23631e28, 0xa4506cebde82bde9, 0xbef9a3f7b2c67915, 0xc67178f2e372532b, 0xca273eceea26619c, 0xd186b8c721c0c207, 0xeada7dd6cde0eb1e, 0xf57d4f7fee6ed178, 0x06f067aa72176fba, 0x0a637dc5a2c898a6, 0x113f9804bef90dae, 0x1b710b35131c471b, 0x28db77f523047d84, 0x32caab7b40c72493, 0x3c9ebe0a15c9bebc, 0x431d67c49c100d4c, 0x4cc5d4becb3e42b6, 0x597f299cfc657e2a, 0x5fcb6fab3ad6faec, 0x6c44198c4a475817);
+    var HASH = new Array(0x6a09e667f3bcc908, 0xbb67ae8584caa73b, 0x3c6ef372fe94f82b, 0xa54ff53a5f1d36f1, 0x510e527fade682d1, 0x9b05688c2b3e6c1f, 0x1f83d9abfb41bd6b, 0x5be0cd19137e2179);
+    var W = new Array(80);
+    var a, b, c, d, e, f, g, h, i, j;
+    var T1, T2;
+
+}
+
+function str2binb (str) {
+  var bin = Array();
+  var mask = (1 << chrsz) - 1;
+  for(var i = 0; str != null && str != 'undefined' && i < str.length * chrsz; i += chrsz)
+    bin[i>>5] |= (str.charCodeAt(i / chrsz) & mask) << (24 - i%32);
+  return bin;
+}
+
+function binb2str (bin) {
+  var str = "";
+  var mask = (1 << chrsz) - 1;
+  for(var i = 0; i < bin.length * 32; i += chrsz)
+    str += String.fromCharCode((bin[i>>5] >>> (24 - i%32)) & mask);
+  return str;
+}
+
+function binb2hex (binarray) {
+  var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
+  var str = "";
+  for(var i = 0; i < binarray.length * 4; i++)
+  {
+    str += hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8+4)) & 0xF) +
+           hex_tab.charAt((binarray[i>>2] >> ((3 - i%4)*8  )) & 0xF);
+  }
+  return str;
+}
+
+function binb2b64 (binarray) {
+  var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  var str = "";
+  for(var i = 0; i < binarray.length * 4; i += 3)
+  {
+    var triplet = (((binarray[i   >> 2] >> 8 * (3 -  i   %4)) & 0xFF) << 16)
+                | (((binarray[i+1 >> 2] >> 8 * (3 - (i+1)%4)) & 0xFF) << 8 )
+                |  ((binarray[i+2 >> 2] >> 8 * (3 - (i+2)%4)) & 0xFF);
+    for(var j = 0; j < 4; j++)
+    {
+      if(i * 8 + j * 6 > binarray.length * 32) str += b64pad;
+      else str += tab.charAt((triplet >> 6*(3-j)) & 0x3F);
+    }
+  }
+  return str;
+}
+
+function Utf8Encode(string) {
+	   string = string.replace(/\r\n/g,"\n");
+	   var utftext = "";
+
+	   for (var n = 0; n < string.length; n++) {
+
+	     var c = string.charCodeAt(n);
+
+	     if (c < 128) {
+	       utftext += String.fromCharCode(c);
+	     }
+	     else if((c > 127) && (c < 2048)) {
+	       utftext += String.fromCharCode((c >> 6) | 192);
+	       utftext += String.fromCharCode((c & 63) | 128);
+	     }
+	     else {
+	       utftext += String.fromCharCode((c >> 12) | 224);
+	       utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+	       utftext += String.fromCharCode((c & 63) | 128);
+	     }
+
+	   }
+
+	   return utftext;
+	 }
+
+function hex_sha256(s){
+	
+	 s = Utf8Encode(s);
+	// alert("andsnd Form Validaqte"+s);
+	return binb2hex(core_sha256(str2binb(s),s.length * chrsz));
+	}
+function b64_sha256(s){return binb2b64(core_sha256(str2binb(s),s.length * chrsz));}
+function str_sha256(s){return binb2str(core_sha256(str2binb(s),s.length * chrsz));}
+
+</script>
+
+
+<script>
+var enableServerSideEncDec = 1;//mentis id 0021036
+//alert('in jsp '+enableServerSideEncDec);
+$(document).ready(function() {
+	var hex='null';
+	$('.box-head, #colorSelector-box-head').css('backgroundColor', '#' + hex);	
+			
+});
+
+</script>
+
+
+
+<input type="hidden" id="CurrentPagePublicNewTender" name="CurrentPagePublicNewTender" value="">
+<input type="hidden" id="CTRL_STRDIRECTION" name="CTRL_STRDIRECTION" value="RTL">
+<input type="hidden" id="searchPageNo" name="searchPageNo">
+<input type="hidden" id="callvalue" name="callvalue">
+<input type="hidden" id="callValue" name="callValue">
+<input type="hidden" id="pageNo" name="pageNo">
+<input type="hidden" id="prevPageNo" name="prevPageNo">
+<input type="hidden" id="paraVal" name="paraVal">
+<input type="hidden" id="mode" name="mode">
+<input type="hidden" id="tenderNo" name="tenderNo">
+<input type="hidden" id="newTenderPubpageNo" name="newTenderPubpageNo" value="1">
+<input type="hidden" id="allCorrigs" name="allCorrigs" value="null">
+<input type="hidden" id="PublicUrl" name="PublicUrl" value="1">
+<input type="hidden" id="tabFlag" name="tabFlag" value="null">
+<input type="hidden" id="viewFlag" name="viewFlag" value="NewTenders">
+
+
+
+ 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.rtl.min.css" integrity="sha384-gXt9imSW0VcJVHezoNQsP+TNrjYXoGcrqBZJpry9zJt8PCQjobwmhMGaDHTASo9N" crossorigin="anonymous">
+
+
+
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+<link href="/product/css/dashboard/rtlstyle.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="/product/js/dashboard/cookie.min.js"></script>
+<!-- Bootstrap js cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+ <script src="/product/js/dashboard/jquery-1.7.1.min.js"></script>
+ <script language="javascript" src="/product/js/ScreenReader.js?v1.3"></script>
+<meta https-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<style>
+
+
+.new-strip {
+   background: transparent !important;
+   border-bottom: none !important;
+}
+
+#convertButton
+{
+   color: #ffffff !important;
+   font-weight: normal !important;
+}
+
+
+.data_scroll {
+    position: relative;
+    background: #EAF4FF !important;
+    border-radius: 8px;
+    font-size: 11px;
+    padding: 2px 0px;
+}
+
+#scroll-container {
+  color: #b21f2d !important;
+  margin-top: 0px;
+}
+
+#scroll-text {
+  padding-top: 6px;
+  padding-bottom: 7px;
+}
+
+
+</style>
+
+</head>
+ <input type="hidden" name="callValue" value="">
+ <input type="hidden" name="callValueM" id="callValueM" value="">
+
+ <!-- Navbar Start -->
+ 
+
+ <header  class="fixed-top">
+   <!-- New Strip Start -->
+
+
+<nav class="navbar navbar-inverse navbar-expand-lg new_header navbar-fixed-top" id="fixedTopHeader">
+
+    <!-- LEFT -->
+    <div class="left">
+        <img id="minCompLogo" alt="logo" class="img-responsive skipDataSpeechHeader"  style="width: 256px;height: 53px;" src="/product/images/dashboard/NewHomeImg/logo.svg">
+    </div>
+    <!-- CENTER -->
+    <div class="center">
+
+        <div class="icon-box">
+                <a href="#" class="icon skipDataSpeechHeader" onclick="homePage();">
+              		<img src="/product/images/dashboard/NewHomeImg/dashboard.svg" alt='DASHBOARD' title='DASHBOARD' class="img-responsive skipDataSpeechHeader" style="width: 28px;">
+              	</a>
+                <span>Home</span>
+        </div>
+        
+        <div class="icon-box">
+            <a href="#"  onclick="showSiteMap();" class="icon skipDataSpeechHeader">
+              	<img src="/product/images/dashboard/NewHomeImg/site-map.svg" alt="site-map" title="site-map" class="img-responsive skipDataSpeechHeader" style="width: 28px;">
+              </a>
+            <span>Site-Map</span>
+        </div>
+        <div class="icon-box">
+            <a href="#"  onclick="viewCommonContent('ContactUs');" class="icon skipDataSpeechHeader">
+              	<img src="/product/images/dashboard/NewHomeImg/contact-us.svg" alt="contact-us" title="contact-us" class="img-responsive skipDataSpeechHeader" style="width: 28px;">
+              </a>
+            <span>Contact-Us</span>
+        </div>
+        <div class="icon-box">
+            <a href="#"  onclick="listOfFAQ();" class="icon skipDataSpeechHeader">
+              	<img src="/product/images/dashboard/NewHomeImg/faq.svg" alt="contact-us" title="faq" class="img-responsive skipDataSpeechHeader" style="width: 28px;">
+              </a>
+            <span>FAQ</span>
+        </div>
+
+        <div class="icon-box">
+                <a href="#" class="icon" onclick="switchLangauge('LTR');">
+              		
+                        	 <img src="/product/images/dashboard/NewHomeImg/language1.svg" alt='English' title='English' class="img-responsive" style="width: 28px;margin-left: -20px;margin-right: -20px;">
+                    
+              	</a>
+            <span>
+            
+            	ENGLISH</span>
+            
+            
+        </div>
+
+    </div>
+    
+    <!-- RIGHT -->
+   <div class="right" style="width: 33%;">
+   
+      <div class="new-strip d-flex justify-content-end align-items-center w-100">
+			<div class="d-flex justify-content-around align-items-center w-100 px-2">
+			
+			<span><a href="#" id="btn-increase" title="text increase" class="skipDataSpeechHeader">A<sup>+</sup></a></span>
+			<span><a href="#" id="btn-orig" title="Standard normal" class="skipDataSpeechHeader">A</a></span>
+			<span><a href="#" id="btn-decrease" title="text decrease" class="skipDataSpeechHeader">A<sup>-</sup></a></span>
+			<span style="cursor: pointer;"><a class="new-strip_content skipDataSpeechHeader" id="convertButton" onclick="goToConvertTextToSpeech()" tabindex="0">قارئ الشاشة</a></span>
+			<span style="cursor: pointer;">
+			    <img src="/product/images/sun_lightnew.svg" alt="Theme change" class="img-responsive skipDataSpeechHeader" id="theme_change_id" title="Theme_change" tabindex="0">
+		    </span>
+			</div>
+	  </div>
+   
+   
+   </div>
+
+    <!-- FLAG -->
+    <div class="flag" style="width: 6%;">
+	    <a href="#">
+	       <img src="/product/images/dashboard/NewHomeImg/right-logo.png" alt="right-logo" class="img-responsive" style="width: 56px;">
+	    </a>
+	</div>
+    
+</nav>    
+<!-- New Strip End -->
+      <nav class="navbar navbar-expand-lg " style="display:none;">
+        <div class="container-fluid">
+        	<a class="navbar-brand skipDataSpeechHeader" href="#" title="null">
+        		<img src="/product/images/dashboard/NewHomeImg/logo.svg" alt="" class="img-fluid skipDataSpeechHeader"></a>
+        	</a>
+        	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            	<!-- <span class="navbar-toggler-icon"></span> -->
+            	   <i class="fa fa-bars text-light"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+            	<ul class="navbar-nav ms-auto">
+            		  <li class="nav-item mt-3" title="Home" tabindex="-1">
+		                <a class="nav-link skipDataSpeechHeader" title="home" aria-current="page" href="#" onclick="homePage()" onmouseout="document.images.home.src='/product/images/dashboard/NewHomeImg/home.svg';">
+		                	<img src="/product/images/dashboard/NewHomeImg/home.svg"  tabindex="-1" alt="home" title="Home" class="img-fluid skipDataSpeechHeader" name="home">
+		                </a>
+		              </li>
+		              <li class="nav-item mt-3" title="Site-Map" tabindex="-1">
+		                <a class="nav-link skipDataSpeechHeader"  aria-current="page" title="site-map" href="#" onclick="showSiteMap()"  onmouseout="document.images.sitemap.src='/product/images/dashboard/NewHomeImg/site-map.svg';">
+		                	<img src="/product/images/dashboard/NewHomeImg/site-map.svg" tabindex="-1" alt="site-map" title="Site-Map" class="img-fluid skipDataSpeechHeader" name="sitemap">
+		                </a>
+		              </li>
+		              <li class="nav-item mt-3" title="Contact Us" tabindex="-1">
+		                <a class="nav-link skipDataSpeechHeader" aria-current="page" title="contact-us" href="#" onclick="viewCommonContent('ContactUs')"  onmouseout="document.images.contactus.src='/product/images/dashboard/NewHomeImg/contact-us.svg';">
+		                	<img src="/product/images/dashboard/NewHomeImg/contact-us.svg" tabindex="-1" alt="contact-us" title="Contact Us" class="img-fluid skipDataSpeechHeader" name="contactus">
+		                </a>
+		              </li>
+		              <li class="nav-item mt-3" title="FAQ" tabindex="-1">
+		                <a class="nav-link skipDataSpeechHeader" aria-current="page" title="FAQ" href="#" onclick="listOfFAQ()"  onmouseout="document.images.faq.src='/product/images/dashboard/NewHomeImg/faq.svg';">
+		                	<img src="/product/images/dashboard/NewHomeImg/faq.svg" tabindex="-1" alt="faq" title="FAQ" class="img-fluid skipDataSpeechHeader" name="faq">
+		                </a>
+		              </li>
+		              <li class="nav-item mt-3" tabindex="-1">
+		                <a name="arb" id="arb" class="nav-link skipDataSpeechHeader" title="Arabic" aria-current="page" href="#" style='display:none' onclick="switchLangauge('RTL')"  onmouseout="document.images.arabic.src='/product/images/dashboard/NewHomeImg/Homelanguage2.svg';">
+		                	<img src="/product/images/dashboard/NewHomeImg/Homelanguage2.svg" tabindex="-1" alt="language" title="Arabic" class="img-fluid skipDataSpeechHeader" name="arabic">
+		                </a>
+		                <a name="eng" id="eng" class="nav-link" aria-current="page" title="English" href="#"  onclick="switchLangauge('LTR')"  onmouseout="document.images.english.src='/product/images/dashboard/NewHomeImg/Homelanguage1.svg';">
+		                	<img src="/product/images/dashboard/NewHomeImg/Homelanguage1.svg" tabindex="-1" alt="language" title="English" class="img-fluid skipDataSpeechHeader" name="english">
+		                </a>
+		              </li>
+		              <li class="nav-item mt-3 d-none">
+		                <a class="nav-link skipDataSpeechHeader" aria-current="page" href="#"><img src="/product/images/dashboard/NewHomeImg/language2.svg" alt="language" class="img-fluid skipDataSpeechHeader"></a>
+		              </li>
+		              <li class="nav-item"  tabindex="-1">
+		                <a class="nav-link skipDataSpeechHeader" aria-current="page" title="null" href="#">
+		                	<img src="/product/images/dashboard/NewHomeImg/right-logo.png" alt="" title="" class="img-fluid skipDataSpeechHeader" name="esnadlogo">
+		                </a>
+		              </li>
+		               <li class="nav-item d-none"  tabindex="-1">
+		                <a name="esnad-logo" class="nav-link skipDataSpeechHeader" aria-current="page" title="null">
+		                <img src="/product/images/dashboard/NewHomeImg/right-logo.png" 
+		                	alt="null"
+		                	class="img-fluid rightlogo skipDataSpeechHeader">
+		                </a>
+		              </li>
+            	</ul>
+            	
+            </div>
+        </div>
+      </nav>
+    
+  <!-- </header> -->
+ 
+  
+  <!-- Navbar End -->
+  
+        <section class="mb-3">
+        	<!-- Moving Strip Start -->
+        	<div id="scroll-container">
+			    <div id="scroll-text" class="skipDataSpeechHeader">
+			    	تنبيه لمستخدمي النظام من الجهات الحكومية: نودّ لفت انتباهكم إلى أن الملف التعريفي للشركات يتضمن الخبرات العملية المعتمدة، والتي يمكن الاستفادة منها خلال مرحلة تقييم العطاءات؛ بما يسهم في رفع كفاءة التقييم وتسريع إجراءاته.
+			    </div>
+		    </div>
+    		<!-- Moving Strip End --> 		
+        </section>      
+
+
+</header>
+
+
+  
+
+           
+
+<script type="text/javascript">
+function switchLangauge(language)
+{ 
+ // alert(language);
+ Cookies.set('etndLngCo',language);
+		 var pathname ='';
+	
+         
+      	if (pathname==''){
+         pathname = window.location.pathname;
+        var queries = {};
+          $.each(document.location.search.substr(1).split('?'),function(c,q){ 
+              if(q != null && q != ''){
+            	  if(language=='RTL'){
+                 pathname = pathname+"?"+q.replace('LTR', 'RTL')+"&switchLangFlag=1";
+            	  }
+            	  else
+            		  {
+            		  pathname = pathname+"?"+q.replace('RTL', 'LTR')+"&switchLangFlag=1";
+            		  
+            		  }
+             //alert("pathname..."+pathname);
+              }
+          });
+      	} 
+        // mentis id : 0020810 start
+          if(pathname != null && pathname != '/product/loginUserN'){
+              
+                document.forms[0].action=pathname;
+                
+        }
+          else{
+      
+            if(document.forms[0].elements["WF_TxnType"] != null && document.forms[0].elements["WF_TxnType"] != 'undefined' && document.forms[0].elements["WF_TxnType"].value.length!=0){
+                var isSupRegDet = document.forms[0].elements["WF_TxnType"].value;
+                document.forms[0].action="/product/jsp/Registration/regDetails.jsp";
+            }
+            else {
+            	document.forms[0].action=pathname;
+           }
+        }
+          
+          
+         // mentis id : 0020810 end
+        // mentis id: 0021034 point 5 start
+        if(document.forms[0].CTRL_STRDIRECTION.length != null  && document.forms[0].CTRL_STRDIRECTION.length != 'undefined'){
+        	var dirLen = document.forms[0].CTRL_STRDIRECTION.length;
+        	for(var k=0;k<dirLen;k++){
+        		document.forms[0].CTRL_STRDIRECTION[k].value=language;
+        	}
+        	
+        }else{
+        	document.forms[0].CTRL_STRDIRECTION.value=language;
+        }
+        document.forms[0].target="";
+        //alert("path"+pathname);
+     // mentis id: 0021034 point 5 end
+       document.forms[0].method="post";
+        //alert(document.forms[0].CTRL_STRDIRECTION.value);
+        submitPage(document.forms[0]);
+        
+}
+function listOfFAQ(){
+//     document.forms[0].callValue.value = "view";
+	var strBanDir;
+	strBanDir ='RTL';
+if(strBanDir == 'null'){
+		strBanDir = document.getElementById('CTRL_STRDIRECTION').value;
+	}
+	
+    document.forms[0].action = "/product/DefineFAQ?callValue=view&CTRL_STRDIRECTION=" + strBanDir;
+//     submitPage(document.forms[0]);
+    var mySiteUrl = document.forms[0].action;
+    //alert(myUrl);
+    window.location.href = mySiteUrl;
+}
+function viewCommonContent(parameter){
+//     document.forms[0].callValue.value = "pubDashLinkContent";
+	var strBanDir;
+	strBanDir ='RTL';
+	
+	
+ if(strBanDir == 'null'){
+		strBanDir = document.getElementById('CTRL_STRDIRECTION').value;
+	}	    
+    document.forms[0].action = "/product/DefineFAQ?callValue=pubDashLinkContent&CTRL_STRDIRECTION="+strBanDir+"&parameter="+parameter;    
+    var mySiteUrl = document.forms[0].action;
+    //alert(myUrl);
+    window.location.href = mySiteUrl;
+//     submitPage(document.forms[0]);
+}
+function showSiteMap(){
+	var strBanDir;
+	strBanDir ='RTL';
+	if(strBanDir == 'null'){
+		strBanDir = document.getElementById('CTRL_STRDIRECTION').value;
+	}
+	
+	document.forms[0].action="/product/publicDash?viewFlag=ViewSiteMap&pageView=P&CTRL_STRDIRECTION="+strBanDir;
+   // submitPage(document.forms[0]);
+    var mySiteUrl = document.forms[0].action;
+    //alert(myUrl);
+    window.location.href = mySiteUrl;
+   //submitPage('bDashboard');
+}
+</script>
+
+<script>
+	
+$('.navbar-toggler').click(function() {
+	  $(this).find('i').toggleClass('fa fa-bars text-light fa fa-close text-light')
+});
+
+function showDefaultChart(){
+	 document.forms[0].method="post";
+	 document.forms[0].callValueM.value="mbChart";
+	 document.forms[0].callValue.value="";
+	 if(document.forms[0].viewFlag != undefined){
+		 document.forms[0].viewFlag.value = ""; 
+	 }
+	 
+	 document.forms[0].action="/product/publicDash";
+	 submitPage(document.forms[0]) ;
+	 //removeCustomAlert();	
+}
+var showdefaultBoxTimout = null;
+function showdefaultBox(){
+	if(showdefaultBoxTimout != null){
+		clearTimeout(showdefaultBoxTimout);
+	}
+	$('#boxes').modal('show');
+	 //After 30 Seconds popup hide automatically
+	showdefaultBoxTimout = setTimeout(function(){ 
+         $('#boxes').modal('hide');
+    }, 60000);
+}
+$('#boxes').modal('hide');
+
+
+$(document).ready(function() {
+    var popupflag='1';
+ 	 var browsername=$.browser.name;
+//  	 alert('Browser Name-->'+browsername);
+ 	// if(browsername==='chrome' && popupflag==='1'){
+			 if(popupflag==='1'){
+ 		 var id = '#dialog';
+
+          //Get the screen height and width
+          var maskHeight = $(document).height();
+          var maskWidth = $(window).width();
+
+          //Set heigth and width to mask to fill up the whole screen
+          $('#mask').css({'width':maskWidth,'height':maskHeight});
+
+          //transition effect
+          $('#mask').fadeIn(500);
+          $('#mask').fadeTo("slow",0.9);
+
+          //Get the window height and width
+          var winH = $(window).height();
+          var winW = $(window).width();
+
+          //Set the popup window to center
+          $(id).css('top',  winH/2-$(id).height()/2);
+          $(id).css('left', winW/2-$(id).width()/2);
+
+          //transition effect
+          $(id).fadeIn(2000);
+
+          //if close button is clicked
+          $('.window .close').click(function (e) {
+              //Cancel the link behavior
+              e.preventDefault();
+
+              $('#mask').hide();
+              $('.window').hide();
+          });
+
+          //if mask is clicked
+          $('#mask').click(function () {
+              $(this).hide();
+              $('.window').hide();
+          });
+          
+ 	 }
+ 	    
+    
+     
+ });
+</script>
+<script>
+ var isScreenReaderStarted = '0';
+ //Apply theme on page load
+    
+  window.onload = function() {
+    const isDarkTheme = localStorage.getItem("isDarkTheme");
+    if (isDarkTheme === "1") {
+      document.body.classList.add("dark_theme");
+      theme_change_id.src = "/product/images/moon.svg";    
+    } else {
+      document.body.classList.remove("dark_theme");
+      theme_change_id.src = "/product/images/sun_lightnew.svg";
+    }
+  };
+
+  // Toggle theme on icon click
+  
+  var icon = document.getElementById("theme_change_id")
+  icon.onclick= function (){
+  document.body.classList.toggle("dark_theme");
+    if(document.body.classList.contains("dark_theme")){
+    	theme_change_id.src ="/product/images/moon.svg";       
+    	isDarkTheme = '1';
+    }
+    else{
+    	isDarkTheme = '0';
+    	theme_change_id.src ="/product/images/NewImages/sun_lightnew.svg";       	        	
+    }
+        
+   // Save to localStorage
+        localStorage.setItem("isDarkTheme", isDarkTheme); 
+   		if(isScreenReaderStarted == '1'){
+   			stopConvertTextToSpeech();
+   			convertTextToSpeech();
+   		}
+        
+    }
+  
+    
+  </script>
+<!-- <script>
+	
+$('.navbar-toggler').click(function() {
+	  $(this).find('i').toggleClass('fa fa-bars text-light fa fa-close text-light');
+});
+	
+</script> -->
+<script type="text/javascript">
+function goToConvertTextToSpeech(){
+	
+	  isScreenReaderStarted = '1';
+	  var isRtl = '1'; 
+	  if(isRtl == '1'){
+		 var flag = confirm('null');
+		 if(flag){
+			convertTextToSpeech(); 
+		 }else {
+			convertTextToSpeech();
+		 }
+		 
+	  } else {
+		  convertTextToSpeech();
+	  }
+	  
+}
+function addTabIndexToTD(){
+	const tdEls = document.querySelectorAll('td, h2'); 
+	  for (let i = 0; i < tdEls.length; i++) {
+		  if(tdEls[i].getAttribute("tabindex") !== '-1'){
+			  tdEls[i].setAttribute("tabindex", "0");
+		  }
+		  
+	  }	
+	  addTitleToTableTd();
+}
+setTimeout("addTabIndexToTD()", 2000);
+</script>
+
+<script>
+function addForReader(){
+	document.body.setAttribute('tabindex', '-1');
+	const liEments = document.querySelectorAll('li');
+	liEments.forEach(el => {
+		
+		if (el.children.length == 0 || el.tagName =='LI' ){
+			el.setAttribute('data-speech', '');
+			if (el.getAttribute('tabindex') !== '-1') {
+				el.setAttribute('tabindex', '0');
+			}
+		}
+	});
+	
+}
+addForReader();
+</script>
+
+<script>                    
+function openDatePicker(event, id) {
+	
+	if (event.key === 'Enter') {
+        const dateInput = document.getElementById(id);
+        // Try to use the showPicker() method if available
+        if (typeof dateInput.showPicker === 'function') {
+          dateInput.showPicker();
+        } else {
+          // Fallback: focus the input to possibly trigger the native picker
+          dateInput.focus();
+        }     
+     }
+}
+</script>
+
+<script>
+function formatAndSetDatetime(obj, target_id) {
+    const input = document.getElementById(target_id);
+	if (!obj.value) {input.value = ''; return;};
+    const date = new Date(obj.value);
+    const pad = (num) => num.toString().padStart(2, '0');
+    const day = pad(date.getDate());
+    const month = pad(date.getMonth() + 1);
+    const year = date.getFullYear();
+    let hours = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const strHours = pad(hours);
+    input.value = day+'-'+month+'-'+year+' '+strHours+':'+minutes;
+}
+var zIndex = 2147483640+1;
+function openFullscreenModal(url, winName) {
+	createCustomLoader();
+	document.getElementById("fullscreenModalIframe").src = url+"&mobilePopup=1&winName="+winName+"&zIndex="+zIndex+1;
+   	document.getElementById("fullscreenModal").style.display = "block";
+   
+   	document.getElementById("fullscreenModal").style.width="100vw";
+   	document.getElementById("fullscreenModal").style.height="100vh";
+   	document.getElementById("fullscreenModal").style.position="fixed";
+   	document.getElementById("fullscreenModal").style.zIndex=zIndex+1;
+   
+   	document.getElementById("fullscreenModalIframe").style.width="100%";
+   	document.getElementById("fullscreenModalIframe").style.height="100%";
+   	//removeCustomAlert();
+}
+
+function closeFullscreenModal() {
+	closeCustomLoader();
+   if('null' == '1'){
+	   window.parent.document.getElementById("fullscreenModal").style.display = "none";
+	   window.parent.document.getElementById("fullscreenModalIframe").src = "";
+	   //console.log("1111111111111111111111");
+	   window.parent.closeCustomLoader();
+   } else if (window.self !== window.top) {
+       try {
+    	   //console.log("1111111111111111111111_2");
+    	   // Loop through all iframes in the parent
+           const iframes = window.parent.document.getElementsByTagName('iframe');
+           for (let iframe of iframes) {
+               if (iframe.contentWindow === window && iframe.id === "fullscreenModalIframe") {
+            	   window.parent.document.getElementById("fullscreenModal").style.display = "none";
+            	   window.parent.document.getElementById("fullscreenModalIframe").src = "";
+                   return true;
+               }
+           }
+       } catch (e) {
+           console.warn("Access denied to parent document. Possibly cross-origin.");
+       }
+   } else {
+	   var lblBack = 'Back';
+	   var lblClose = 'Close';
+	   const backButton = document.querySelector('input[type="button"][value="'+lblBack+'"]');
+	   const closeButton = document.querySelector('input[type="button"][value="'+lblClose+'"]');
+	   if(backButton){
+		   //console.log("111111111111_B");
+		   backButton.click();
+		  
+	   } else if(closeButton){
+		   //console.log("111111111111_C");
+		   closeButton.click();
+		   
+	   } else{
+		   
+		   //console.log("home_btnMbl");
+		   document.getElementById("home_btnMbl").click();
+		   
+	   }
+	   //console.log("2222222222222222");
+   }
+} 
+
+var pressEnterToExpand = 'اضغط أدخال للتوسعة';
+lblEnterToExpand = pressEnterToExpand;
+var txtLink = 'رابط';
+lblLink = txtLink;
+
+  </script>
+<main>
+<h1 class="sr-only">New Tenders</h1>
+<br>
+
+
+        
+    <html>
+
+<head>
+
+
+<script>
+function ViewNewTenders(){
+	document.getElementById("viewFlag").value="NewTenders";
+	document.forms[0].action="/product/publicDash";
+    submitPage(document.forms[0]) ;
+}
+function ViewInProcessTenders(){
+	document.getElementById("viewFlag").value="InProcessTenders";
+    document.forms[0].action="/product/publicDash";
+    submitPage(document.forms[0]) ;
+}
+
+function getCompletedTenders(){
+    document.forms[0].action = '/product/CompletedTendersForPublic';
+    submitPage(document.forms[0]);
+}
+function getCanceledTenders(){
+    document.forms[0].action = "/product/CanceledTendersForPublic";
+    submitPage(document.forms[0]);
+}
+
+function getRegVendors(){	
+	document.getElementById("viewFlag").value="RegVendorPublic";
+	document.forms[0].action = '/product/ReportAction';
+    submitPage(document.forms[0]);
+}
+
+function ViewSubContractTenders(){
+	document.getElementById("viewFlag").value="SubContractTenders";
+	document.getElementById("statusFlag").value="NewTenders";
+	document.forms[0].action="/product/publicDash";
+    submitPage(document.forms[0]) ;
+}
+
+</script>
+</head>
+<body>
+<input type="hidden" name="viewFlag" id="viewFlag" >
+<input type="hidden" name="statusFlag" id="statusFlag" >
+	<div class="container-fluid" style="margin-top: 80px;">
+		<div class="tender_statusPublic">
+		<ul>
+			<li onclick="ViewNewTenders()" class="active"><a href="#">المطروحة</a></li>
+			<li onclick="ViewInProcessTenders()" class=""><a href="#">المفتوحة</a></li>
+			<li onclick="getCompletedTenders()" class=""><a href="#">المسندة</a></li>
+			<li onclick="getCanceledTenders()" class=""><a href="#">الملغية</a></li>
+			<li onclick="getRegVendors()" class=""><a href="#">الشركات المسجلة</a></li>
+			<li onclick="ViewSubContractTenders()" class=""><a href="#">عقود المناقصات الفرعية</a></li>
+		</ul>
+		</div>
+	</div>
+</body>
+</html>
+    
+<div class="container-fluid margin_mbl">
+
+     <div class="box-head" style="max-height: 35px; display: flex;justify-content: space-between;margin-bottom: 8px;"><h2>
+         المناقصات المطروحة :  البحث عن طريق : 
+      </h2>
+          <a href="#" class="ChevronArrow"><img src="/product/images/ChevronArrow.svg"  alt="Expand accordion"></a>
+      </div>  
+          
+             
+<!--    Search By Start -->
+
+
+   
+    <div class="box-content no-pad">
+ <table class="display" id="">
+      
+    <tbody><tr class="odd gradeA">
+    
+    
+    <td tabindex="-1">
+        <select id="division"  style="font-size: 12px; width:214px;" name="division"  aria-label="Division">
+                <option value="">اختر الوزارة / الجهة</option>
+
+            <option  value="CCCRC">  مركز السلطان قابوس المتكامل لعلاج وبحوث أمراض السرطان</option>
+    
+            <option  value="OPAZ"> الهيئة العامة للمناطق الإقتصادية الخاصة والمناطق الحرة</option>
+    
+            <option  value="MAFWR"> وزارة الثروة الزراعية والسمكية وموارد المياه</option>
+    
+            <option  value="AES">أبراج لخدمات الطاقة  ش م ع م</option>
+    
+            <option  value="ASYAD">أسياد</option>
+    
+            <option  value="ODC">أسياد للحوض الجاف ش.م.م</option>
+    
+            <option  value="RAM">الأكاديمية السلطانية للإدارة</option>
+    
+            <option  value="GSTB(I)">الأمانة العامة لمجلس المناقصات الداخلية</option>
+    
+            <option  value="GSC">الأمانة العامة لمجلس الوزراء</option>
+    
+            <option  value="OPP">الادعاء العام</option>
+    
+            <option  value="CBO">البنك المركزي العماني</option>
+    
+            <option  value="BEAH">الشركة العمانية القابضة لخدمات البيئة (ش.م.ع.م)</option>
+    
+            <option  value="OMRAN">الشركة العمانية لإدارة التنمية السياحية</option>
+    
+            <option  value="OBB">الشركة العمانية للنطاق العريض ش م ع م</option>
+    
+            <option  value="TUMOOR">الشركه العمانية لإنتاج وتعبئة التمور (ش.م.ع.م)</option>
+    
+            <option  value="PEIE">المؤسسة العامة للمناطق الصناعية</option>
+    
+            <option  value="NM">المتحف الوطني</option>
+    
+            <option  value="CAAJ">المجلس الأعلى للقضاء</option>
+    
+            <option  value="OMSB">المجلس العماني للإختصاصات الطبية</option>
+    
+            <option  value="GBCD">المدينة الزرقاء الكبرى للتطوير ش.م.ع.م</option>
+    
+            <option  value="NCSI">المركز الوطني للإحصاء والمعلومات</option>
+    
+            <option  value="HJI">المعهد العالي للقضاء</option>
+    
+            <option  value="ANP">النماء للدواجن</option>
+    
+            <option  value="CMA">الهيئة العامة لسوق المال</option>
+    
+            <option  value="DIAM">الهيئة العامة للمياه</option>
+    
+            <option  value="OAAAQA">الهيئة العمانية للاعتماد الأكاديمي وضمان جودة التعليم</option>
+    
+            <option  value="OP">بريد عمان</option>
+    
+            <option  value="MM">بلدية مسقط</option>
+    
+            <option  value="DM">بلديه ظفار</option>
+    
+            <option  value="FDO">تنمية أسماك عمان ش.م.ع.م</option>
+    
+            <option  value="UTAS">جامعة التقنية والعلوم التطبيقية</option>
+    
+            <option  value="SQU">جامعة السلطان قابوس</option>
+    
+            <option  value="OIA">جهاز الاستثمار العُماني</option>
+    
+            <option  value="TA">جهاز الضرائب</option>
+    
+            <option  value="HRL">حفيت للقطارات ش ش و</option>
+    
+            <option  value="HAYA">حيا للمياه</option>
+    
+            <option  value="SSS">خدمات الأمن والسلامة</option>
+    
+            <option  value="SINYAR">سنيار</option>
+    
+            <option  value="ASC">شركة أسياد للنقل البحري ش م ع ع</option>
+    
+            <option  value="OCC">شركة اسمنت عمان ش.م.ع.ع</option>
+    
+            <option  value="ABMC">شركة البشائر للحوم ش م ع م</option>
+    
+            <option  value="IGC">شركة الغاز المتكاملة</option>
+    
+            <option  value="MSLT">شركة النقل الوطنية العمانية ش.م.ع.م ( مواصلات)</option>
+    
+            <option  value="NODC">شركة تنمية نخيل عمان</option>
+    
+            <option  value="SSDC">شركة صلالة لخدمات الصرف الصحي</option>
+    
+            <option  value="SFZCO">شركة صلالة للمنطقة الحرة ش.م.ع.م</option>
+    
+            <option  value="RAECO">شركة كهرباء المناطق الريفية ش.م.ع.م</option>
+    
+            <option  value="Majan">شركة كهرباء مجان</option>
+    
+            <option  value="MDC">شركة مزون للألبان ش م ع م</option>
+    
+            <option  value="ASAAS">شركة مسقط الوطنية للتطوير و الأستثمار ش.م.ع.م</option>
+    
+            <option  value="TATWEER">شركه عمان لتطوير المنطقة الصناعية الخاصة بالدقم</option>
+    
+            <option  value="AFDF">صندوق التنمية الزراعية والسمكية</option>
+    
+            <option  value="SPF">صندوق الحماية الاجتماعية	</option>
+    
+            <option  value="SMESC">عقود فرعية</option>
+    
+            <option  value="CSS">كلية العلوم الشرعية</option>
+    
+            <option  value="OCHS">كلية عمان للعلوم الصحية</option>
+    
+            <option  value="MS">مجلس الشورى</option>
+    
+            <option  value="ITHCA">مجموعة إذكاء</option>
+    
+            <option  value="MD">محافظة ظفار</option>
+    
+            <option  value="GOM">محافظة مسقط</option>
+    
+            <option  value="AJC">محكمه القضاء الاداري</option>
+    
+            <option  value="MALAA">مركز عمان للمعلومات الائتمانية والمالية</option>
+    
+            <option  value="OAPGRC">مركز عمان للموارد الوراثية الحيوانية والنباتية</option>
+    
+            <option  value="OCEC">مركز عُمان للمؤتمرات والمعارض</option>
+    
+            <option  value="SQUH">مستشفى جامعة السلطان قابوس</option>
+    
+            <option  value="UOO">مشروع جامعة عمان</option>
+    
+            <option  value="BGO">مكتب محافظ البريمي</option>
+    
+            <option  value="DGO">مكتب محافظ الداخلية</option>
+    
+            <option  value="DHGO">مكتب محافظ الظاهرة</option>
+    
+            <option  value="WGO">مكتب محافظ الوسطى</option>
+    
+            <option  value="SBGO">مكتب محافظ جنوب الباطنة</option>
+    
+            <option  value="SSGO">مكتب محافظ جنوب الشرقيه</option>
+    
+            <option  value="NBGO">مكتب محافظ شمال الباطنة</option>
+    
+            <option  value="NSGO">مكتب محافظ شمال الشرقية</option>
+    
+            <option  value="OMSGMG">مكتب وزير الدولة ومحافظ مسندم</option>
+    
+            <option  value="RIA">هيئة البحث العلمي و الإبتكار</option>
+    
+            <option  value="EA">هيئة البيئة</option>
+    
+            <option  value="CAA">هيئة الطيران المدني </option>
+    
+            <option  value="PTLC">هيئة المشاريع والمناقصات والمحتوى المحلي</option>
+    
+            <option  value="PTLC(I)">هيئة المشاريع والمناقصات والمحتوى المحلي الداخلية</option>
+    
+            <option  value="TRA">هيئة تنظيم الإتصالات</option>
+    
+            <option  value="APSR">هيئة تنظيم الخدمات العامة</option>
+    
+            <option  value="SMES">هيئة تنمية المؤسسات الصغيرة والمتوسطة</option>
+    
+            <option  value="CPA">هيئة حماية المستهلك</option>
+    
+            <option  value="NRAA">هيئــة الوثائـــق والمحفوظـــات الوطنيــة</option>
+    
+            <option  value="OV">وحدة متابعة تنفيذ رؤية عمان ٢٠٤٠</option>
+    
+            <option  value="MARA">وزارة الأوقاف والشؤون الدينية</option>
+    
+            <option  value="MHUP">وزارة الإسكان والتخطيط العمراني</option>
+    
+            <option  value="MOI">وزارة الإعلام</option>
+    
+            <option  value="ME">وزارة الاقتصاد</option>
+    
+            <option  value="MOCI">وزارة التجارة والصناعة</option>
+    
+            <option  value="MHT">وزارة التراث والسياحة</option>
+    
+            <option  value="MOE">وزارة التعليم</option>
+    
+            <option  value="MHERI">وزارة التعليم العالي و البحث العلمي و الابتكار</option>
+    
+            <option  value="MOSD">وزارة التنمية الاجتماعية</option>
+    
+            <option  value="MCSY">وزارة الثقافة والرياضة والشباب</option>
+    
+            <option  value="FM">وزارة الخارجية</option>
+    
+            <option  value="MOINT">وزارة الداخلية</option>
+    
+            <option  value="MOH">وزارة الصحة</option>
+    
+            <option  value="MEM">وزارة الطاقة و المعادن</option>
+    
+            <option  value="MJLA">وزارة العدل والشؤون القانونية</option>
+    
+            <option  value="MOMP">وزارة القوى العاملة</option>
+    
+            <option  value="MOF">وزارة المالية</option>
+    
+            <option  value="MTCIT">وزارة النقل والاتصالات وتقنية المعلومات</option>
+    
+                    </select>
+    </td>
+
+    
+    <!-- ====MOHIT ====== -->
+
+<td  tabindex="-1">
+
+
+<select id="TendersAndRfqProcurement"  style="font-size: 12px; width:233px;" name="TendersAndRfqProcurement" aria-label="Tenders and RFQ Procurement">
+
+
+                   
+                     <option value="">المناقصات و أوامر الشراء / المشتريات</option>
+                <option value="RFQ">أوامر الشراء / المشتريات</option>
+            <option value="NON_DG">المناقصات والبائعين</option>
+
+                    
+                    </select> 
+
+</td>
+    
+    <td class=""  tabindex="-1">
+      
+  
+          <select id="procCategory"  aria-label="proc Category" style="font-size: 12px; width:239px;"  name="procCategory" onchange='javascript:getProcSubCategory()'  style="margin-left:15px;margin-right:15px">
+                <option value="">نوعية الأعمال</option>
+        
+                <option value="C2">أعمال الإستشارات - القديم</option>
+    
+                <option value="T1">أعمال التدريب - القديم</option>
+    
+                <option value="Z8">التوريدات</option>
+    
+                <option value="I1">التوريدات والخدمات - القديم</option>
+    
+                <option value="Z6">الخدمات</option>
+    
+                <option value="Z1">المقاولات العمرانيه والصيانة</option>
+    
+                <option value="Z5">المكاتب الإستــشــارية</option>
+    
+                <option value="Z7">خدمات تقنية المعلومات</option>
+    
+                <option value="C1">مقاولات - القديم</option>
+    
+                <option value="G">مقاولات - القديم</option>
+    
+                <option value="Z4">مقاولات الكهروميكانيكية والإتصالات والصيانة</option>
+    
+                <option value="Z2">مقاولات المواني والطرق والجسور والسكك الحديدية  والسدود والصيانة</option>
+    
+                <option value="Z3">مقاولات شبكات خطوط الانابيب وحفر الأبار</option>
+    
+        
+
+            </select>
+    </td>
+    
+    
+    <td class=""  tabindex="-1">
+      
+        <select id="procSubCategory"   name="procSubCategory" class="ProcSubCategory"  aria-label="proc SubCategory">
+             : 
+        
+            <option value="" >الفئة الفرعية لنوعية الأعمال</option>
+            </select>
+    
+    
+        </td>
+      <!--  ----anurag----OM-645  -->
+        <td colspan="4" class=""  tabindex="-1">
+      
+        <select id="tenderGrade" style="font-size: 12px; width:95%;"  name="tenderGrade" aria-label="tender Grade">
+           
+        
+            <option value="" >اختر درجة المناقصة</option>
+                
+                <option  value="1">الممتازة</option>
+    
+                <option  value="2">الأولى</option>
+    
+                <option  value="3">الثانية</option>
+    
+                <option  value="4">الثالثة</option>
+    
+                <option  value="5">الرابعة</option>
+    
+            </select>
+    
+    
+     
+    
+    
+        
+    </td> 
+    </tr>
+     
+    <tr class="even gradeA">
+    <td  tabindex="-1">
+       <select name="strtenderType" id="strtenderType" style="font-size: 12px; width:214px;"  aria-label="strtender Type">
+       <option value="">نوع المناقصه</option>
+       
+            <option  value="1">عامة</option>
+       
+            <option  value="2">عالمية</option>
+       
+            <option  value="4">ممارسة /الإسناد المباشر  </option>
+       
+            <option  value="5">مفتوحة مع NDA</option>
+       
+            <option  value="6">مؤسسات صغيرة و المتوسطة</option>
+       
+            <option  value="7">صاحب عمل حر</option>
+       
+            <option  value="8">صاحب عقار</option>
+       
+            <option  value="9">عقود المركبات</option>
+                    
+      </select>
+    </td>
+    <td class="tbl_td ">
+        تاريخ تسليم العطاء :&nbsp;&nbsp;
+        </td>
+        <td class="tbl_td "  tabindex="-1">
+        
+        <label for="submissionFromDate" style="padding-left:15px;padding-right:15px;">من</label>
+        
+        
+        
+        <input type="text" readonly="readonly" id="submissionFromDate"  tabindex="-1" name="submissionFromDate" style="width:100px"  class="" value=''> 
+        <a href="#" title="تاريخ تسليم العطاء من"><img src="/product/images/NewImages/calendar_new.svg" onClick="javascript:OnclickSubmitDate();show_calendarAT('bDashboard.submissionFromDate','7-2-2009-hol1#4-1-2009-hol3#8-3-2009-hol4#9-4-2009-hol5#31-11-2008-hol6#3-0-2009-hol11#18-10-2009-Amitesh....Test...'); " width="15" height="15" border="0" align="top"  alt="calendar"></a>&nbsp;&nbsp;
+          
+   
+    </td>
+    
+          
+    <td class="tbl_td "  tabindex="-1">
+        <label  for="submissionToDate" style=" padding-left:15px;padding-right:15px;">الى</label>
+         
+          
+            
+            <input type="text" readonly="true" id="submissionToDate" tabindex="-1" name="submissionToDate" style="width:100px" class="" value=''> 
+            <a href="#" title="تاريخ تسليم العطاء الى"><img src="/product/images/NewImages/calendar_new.svg" onClick="javascript:OnclickSubmitDate(); show_calendarAT('bDashboard.submissionToDate','7-2-2009-hol1#4-1-2009-hol3#8-3-2009-hol4#9-4-2009-hol5#31-11-2008-hol6#3-0-2009-hol11#18-10-2009-Amitesh....Test...');" width="15" height="15" border="0" align="top"   alt="calendar" ></a>&nbsp;&nbsp;
+   
+    </td>
+   <td class="tbl_td" tabindex="-1">
+   
+  <label for="tenderNumber" style="/* padding-left:15px; */padding-right:15px">رقم المناقصه/عنوان المناقصه:</label>
+     
+            <input type="text"  id="tenderNumber" name="tenderNumber" style="width:80% !important;" value="" 
+            	onkeypress="return blockSpecialChar(event)" 
+            	title = "أدخل رقم المناقصه/عنوان المناقصه:"
+            	placeholder="رقم المناقصه/عنوان المناقصه"/>&nbsp;&nbsp;
+ </td> 
+ </tr>
+ 
+ </tbody>
+</table>
+</div>
+<!-- Himanshu  -->
+
+<div align="center" style=" margin: 10px;" class="Btn_Btn">
+    <input type="button" name="btn_search" placeholder="بحث" value="بحث" onclick="formSubmit()" class="Primary-btn">&nbsp;
+    <input type="button" name="btn_search" id="btn_search" placeholder="إعادة تعيين"  value="إعادة تعيين" onclick="getReset()" class="Secondary-btn">
+</div>
+
+<!--  Search By End -->
+       <!--  <div class="box-head"><h2></h2></div> -->
+       
+        <div class="box-content no-pad">
+          <table class="display" id="">
+            <thead>
+            <tr>
+                <th width="5%">رقم التسلسل</th>    <!-- Label Hardcoding removed by M   on 22-02-08 -->
+                <th width="14%">رقم المناقصة</th><!-- Label Hardcoding removed by M   on 22-02-08 -->
+                <th width="19%" STYLE="word-wrap:break-word;">إسم المناقصة</th>
+                <th width="17%">الجهة/الوحدة الحكومية</th>
+                
+                    <th width="22%">[  الدرجة]فئة المشتريات</th>
+                
+                <th  width="13%">نوع المناقصه[نوع الشركة]</th>
+                <th width="10%">التاريخ</th>
+                <th width="10%">رسوم المناقصة</th>
+                <th width="10%">الضمان البنكي<br>(%/value)</th> 
+                <th width="10%">إجْراء &nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">1.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','1')" >2026/1097/ج ت ع ت/ك ت ع م ع -340- اعادة طرح - 2</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc1"  name="tendDesc1" value="توفير احتياجات فعالية يوم الجودة العالمي بجامعة التقنية والعلوم بمسقط ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توفير احتياجات فعالية يوم الجودة العالمي بجامعة التقنية والعلوم بمسقط ')" onmouseout="UnTip()">توفير احتياجات فعالية يوم ال.....</td>
+                    <td >جامعة التقنية والعلوم التطبيقية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:31-10-2026-Bid Closing Date:31-10-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100619')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">2.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','2')" >2026/4476/و ص/م ع خ ص د م-215</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc2"  name="tendDesc2" value="توريد وتركيب جهاز عرض المخططات لفحص النظر لمستشفى سمائل ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب جهاز عرض المخططات لفحص النظر لمستشفى سمائل ')" onmouseout="UnTip()">توريد وتركيب جهاز عرض المخطط.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:12-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100570')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">3.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','3')" >2026/4477/و ص/م ع خ ص د م-216</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc3"  name="tendDesc3" value="توريد وتركيب جهاز قياس انحناء القرنية لمستشفى سمائل ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب جهاز قياس انحناء القرنية لمستشفى سمائل ')" onmouseout="UnTip()">توريد وتركيب جهاز قياس انحنا.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:12-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100567')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">4.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','4')" >2026/4481/و ص/م ع خ ص ج ب م-176</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc4"  name="tendDesc4" value="توريد وتركيب وفحص وتشغيل مكيف لعيادة الاسنان لمركز العوابي الصحي">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب وفحص وتشغيل مكيف لعيادة الاسنان لمركز العوابي الصحي')" onmouseout="UnTip()">توريد وتركيب وفحص وتشغيل مكي.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:04-11-2026-Bid Closing Date:11-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100558')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100558')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">5.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','5')" >2026/61/م ش/د ش م-61</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc5"  name="tendDesc5" value="توريد عدد 26 مقصًا يدويًا من ماركة ديلي موديل 6010 بطول 210 مم بشفرات من الفولاذ المقاوم للصدأ ومقابض سوداء وعدد 36 براية أقلام يدوية من ماركة أوميغا سوبريم موديل 1763 مع حاوية لتجميع البرادة">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد مقصات يدوية وبرايات أقلام')" onmouseout="UnTip()">توريد مقصات يدوية وبرايات أق.....</td>
+                    <td >مجلس الشورى</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:02-11-2026-Bid Closing Date:03-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100600')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">6.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','6')" >2026/4488/و ص/ م ر -436</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc6"  name="tendDesc6" value="توريد أدوية مضادة للأورام  للمستشفى السلطاني">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد أدوية (مضادة للاورام) للمستشفى السلطاني ')" onmouseout="UnTip()">توريد أدوية (مضادة للاورام) .....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:12-11-2026-Bid Closing Date:29-11-2026 </td>
+ 					<td>
+
+25</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100144')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100144')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">7.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','7')" >2026/60/م ش/د ش م-60</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc7"  name="tendDesc7" value="قطاعه ورق اطلس سي سي 1240">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('قطاعه ورق اطلس سي سي 1240')" onmouseout="UnTip()">قطاعه ورق اطلس سي سي 1240</td>
+                    <td >مجلس الشورى</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:02-11-2026-Bid Closing Date:03-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100588')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">8.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','8')" >2026/134/و ن ت ت م/ق م ش-111</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc8"  name="tendDesc8" value="طلب توفير طابعة بطاقات حسب المرفق">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('طلب توفير طابعة بطاقات حسب المرفق')" onmouseout="UnTip()">طلب توفير طابعة بطاقات حسب ا.....</td>
+                    <td >وزارة النقل والاتصالات وتقنية المعلومات</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:03-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100621')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">9.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','9')" >2026/4487/و ص/م ن ز و م-204</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc9"  name="tendDesc9" value="إصلاح جهاز التليسكوب في غرفة العمليات بمستشفى نزوى">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('إصلاح جهاز التليسكوب في غرفة العمليات بمستشفى نزوى')" onmouseout="UnTip()">إصلاح جهاز التليسكوب في غرفة.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100390')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">10.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','10')" >2026/847/و ت ت/ م ر -166</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc10"  name="tendDesc10" value="أعمال صيانة وترميم وتاهيل مدرسة الزهراء للتعليم الأساسي بمحافظة مسقط">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('أعمال صيانة وترميم وتاهيل مدرسة الزهراء للتعليم الأساسي بمحافظة مسقط')" onmouseout="UnTip()">أعمال صيانة وترميم وتاهيل مد.....</td>
+                    <td >وزارة التعليم</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('المقاولات العمرانيه والصيانة [الثانية,الثالثة]')" onmouseout="UnTip()">
+                       المقاولات العمرانيه والصيانة [الثانية,الثالثة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:08-11-2026-Bid Closing Date:17-11-2026 </td>
+ 					<td>
+
+25</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100393')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">11.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','11')" >2026/4486/و ص/م ن ز و م-203</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc11"  name="tendDesc11" value="إصلاح جهاز التليسكوب في غرفة العمليات بمستشفى نزوى">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('إصلاح جهاز التليسكوب في غرفة العمليات بمستشفى نزوى')" onmouseout="UnTip()">إصلاح جهاز التليسكوب في غرفة.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100396')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">12.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','12')" >2026/850/و ت ت/ق م-443</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc12"  name="tendDesc12" value="مناقصة مكافحة القوارض بدائرة المخازن بغلا التابعة لوزارة التعليم">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('مناقصة مكافحة القوارض بدائرة المخازن بغلا التابعة لوزارة التعليم')" onmouseout="UnTip()">مناقصة مكافحة القوارض بدائرة.....</td>
+                    <td >وزارة التعليم</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:05-11-2026-Bid Closing Date:05-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100556')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">13.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','13')" >2026/851/و ت ت/ق م-444</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc13"  name="tendDesc13" value="مناقصة طباعة وتوريد مطبوعات لفعالية اليونسكو بدائرة التعليم">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('مناقصة طباعة وتوريد مطبوعات لفعالية اليونسكو بدائرة التعليم')" onmouseout="UnTip()">مناقصة طباعة وتوريد مطبوعات .....</td>
+                    <td >وزارة التعليم</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:08-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100571')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">14.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','14')" >2026/852/و ت ت/ق م-445</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc14"  name="tendDesc14" value="مناقصة ترجمة فورية للغتين العربية والانجليزية  لفعالية اليونسكو بدائرة التعليم">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('مناقصة ترجمة فورية للغتين العربية والانجليزية  لفعالية اليونسكو بدائرة التعليم')" onmouseout="UnTip()">مناقصة ترجمة فورية للغتين ال.....</td>
+                    <td >وزارة التعليم</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:08-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100580')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">15.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','15')" >2026/1168/ج ت ع ت/ك ت ش م ع-148</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc15"  name="tendDesc15" value="توريد ادوات قرطاسية">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد ادوات قرطاسية')" onmouseout="UnTip()">توريد ادوات قرطاسية</td>
+                    <td >جامعة التقنية والعلوم التطبيقية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:01-11-2026-Bid Closing Date:02-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100611')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">16.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','16')" >2026/853/و ت ت/ق م-446</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc16"  name="tendDesc16" value="مناقصة توريد هاتف محمول ايفون 17">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('مناقصة توريد هاتف محمول ايفون 17')" onmouseout="UnTip()">مناقصة توريد هاتف محمول ايفو.....</td>
+                    <td >وزارة التعليم</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:29-10-2026-Bid Closing Date:29-10-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100620')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100620')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">17.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','17')" >2026/4485/و ص/م ن ز و م-202</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc17"  name="tendDesc17" value="توريد وتركيب جهاز التليسكوب غرفة العمليات بمستشفى نزوى">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب جهاز التليسكوب غرفة العمليات بمستشفى نزوى')" onmouseout="UnTip()">توريد وتركيب جهاز التليسكوب .....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100420')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">18.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','18')" >2026/1166/ج ت ع ت/ك ت م م ع-95</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc18"  name="tendDesc18" value="شراء وتركيب آلة طباعة بلوتر ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('شراء وتركيب آلة طباعة بلوتر ')" onmouseout="UnTip()">شراء وتركيب آلة طباعة بلوتر </td>
+                    <td >جامعة التقنية والعلوم التطبيقية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:01-11-2026-Bid Closing Date:02-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100601')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">19.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','19')" >2026/4484/و ص/م ن ز و م-201</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc19"  name="tendDesc19" value="توريد وتركيب وبرمجة نظام انذار أمني للمخزن الطبي لمستشفى نزوى">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب وبرمجة نظام انذار أمني للمخزن الطبي لمستشفى نزوى')" onmouseout="UnTip()">توريد وتركيب وبرمجة نظام انذ.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:05-11-2026-Bid Closing Date:26-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100615')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">20.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','20')" >2026/2541/و ص/م ع خ ص ش ب م -138- اعادة طرح - 1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc20"  name="tendDesc20" value="توريد طابعة ملصقات  للمديرية العامة للخدمات الصحية بمحافظة شمال الباطنة">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد طابعة ملصقات للمديرية العامة للخدمات الصحية بمحافظة شمال الباطنة')" onmouseout="UnTip()">توريد طابعة ملصقات للمديرية .....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('95520')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">21.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','21')" >2026/572/و ت أ/د م-203</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc21"  name="tendDesc21" value="تصمصيم وإنتاج موشن جرافيك للدراسة العلمية الأولى ضمن مبادرة الرصيد البحثي بعام 2026م">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('تصمصيم وإنتاج موشن جرافيك للدراسة العلمية الأولى ضمن مبادرة الرصيد البحثي بعام 2026م')" onmouseout="UnTip()">تصمصيم وإنتاج موشن جرافيك لل.....</td>
+                    <td >وزارة التنمية الاجتماعية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:04-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100610')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">22.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','22')" >2026/230/ه ب/ق م-168</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc22"  name="tendDesc22" value="توفير جهاز لوحي">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توفير جهاز لوحي')" onmouseout="UnTip()">توفير جهاز لوحي</td>
+                    <td >هيئة البيئة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:29-10-2026-Bid Closing Date:03-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100603')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">23.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','23')" >2026/56/و ا/د م-52</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc23"  name="tendDesc23" value="انتاج فيديو موشن وتصوير عدد 6 فيديو شخصي لمكتب التنافسية">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('انتاج فيديو موشن وتصوير عدد 6 فيديو شخصي لمكتب التنافسية')" onmouseout="UnTip()">انتاج فيديو موشن وتصوير عدد .....</td>
+                    <td >وزارة الاقتصاد</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       الخدمات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:01-11-2026-Bid Closing Date:01-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100604')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">24.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','24')" >2026/331/و ع/د ش ا م ظ-1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc24"  name="tendDesc24" value="توريد عدد 3 حاسب ألي مكتبي">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد عدد 3 حاسب ألي مكتبي')" onmouseout="UnTip()">توريد عدد 3 حاسب ألي مكتبي</td>
+                    <td >وزارة الإعلام</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:08-11-2026-Bid Closing Date:15-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100612')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100612')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">25.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','25')" >2026/4483/و ص/م إ ر م-341</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc25"  name="tendDesc25" value="توريد طاولات مكاتب">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد طاولات مكاتب')" onmouseout="UnTip()">توريد طاولات مكاتب</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:05-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100517')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100517')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">26.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','26')" >2026/724/و ز ث س م/إ ز م م م-14</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc26"  name="tendDesc26" value="تأهيل وتحسين فلج المبغي ببلدة صياء في ولاية قريات بمحافظة مسقط
+
+">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('تأهيل وتحسين فلج المبغي ببلدة صياء في ولاية قريات بمحافظة مسقط')" onmouseout="UnTip()">تأهيل وتحسين فلج المبغي ببلد.....</td>
+                    <td >وزارة الثروة الزراعية والسمكية وموارد المياه</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('مقاولات شبكات خطوط الانابيب وحفر الأبار [الرابعة]')" onmouseout="UnTip()">
+                       مقاولات شبكات خطوط الانابيب وحفر الأبار [الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:24-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100252')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">27.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','27')" >2026/110/و ت ص/ م ر -48</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc27"  name="tendDesc27" value="توريد معدات التصوير الفوتوغرافي والفيديو">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد معدات التصوير الفوتوغرافي والفيديو')" onmouseout="UnTip()">توريد معدات التصوير الفوتوغر.....</td>
+                    <td >وزارة التجارة والصناعة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:24-11-2026 </td>
+ 					<td>
+
+25</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100596')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100596')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">28.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','28')" >2026/571/و ت أ/د م-202</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc28"  name="tendDesc28" value="توفير وتوريد هدايا احتفالية بمناسبة &quot;أسبوع الجودة&quot;">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توفير وتوريد هدايا احتفالية بمناسبة &quot;أسبوع الجودة&quot;')" onmouseout="UnTip()">توفير وتوريد هدايا احتفالية .....</td>
+                    <td >وزارة التنمية الاجتماعية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:31-10-2026-Bid Closing Date:01-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100602')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">29.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','29')" >2026/1165/ج ت ع ت/ك ت ن م ع-129</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc29"  name="tendDesc29" value="توريد دبابيس">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد دبابيس ')" onmouseout="UnTip()">توريد دبابيس </td>
+                    <td >جامعة التقنية والعلوم التطبيقية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:03-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100584')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100584')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">30.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','30')" >2026/4482/و ص/م ص و م-100</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc30"  name="tendDesc30" value="توريد وتركيب واختبار وتشغيل قارئ بطاقات ، مع قفل مغناطيسي، ونظام يعمل باستخدام رمز شخصي وبطاقة تعريف، بالإضافة إلى أزرار ضغط عند مداخل ومخارج الأبواب (باب مفرد) في قسم المناظير بمستشفى صور.">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب واختبار وتشغيل قارئ بطاقات ، مع قفل مغناطيسي، ونظام يعمل باستخدام رمز شخصي وبطاقة تعريف، بالإضافة إلى أزرار ضغط عند مداخل ومخارج الأبواب (باب مفرد) في قسم المناظير بمستشفى صور.')" onmouseout="UnTip()">توريد وتركيب واختبار وتشغيل .....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:11-11-2026-Bid Closing Date:12-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100464')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100464')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">31.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','31')" >2026/4480/و ص/م ع خ ص د م-219</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc31"  name="tendDesc31" value="توريد وتركيب مشغّل باب منزلق أوتوماتيكي بمركز غابة الصحي">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب مشغّل باب منزلق أوتوماتيكي بمركز غابة الصحي')" onmouseout="UnTip()">توريد وتركيب مشغّل باب منزلق.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>ممارسة /الإسناد المباشر  
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:29-10-2026-Bid Closing Date:02-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100590')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">32.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','32')" >2026/4479/و ص/م ع خ ص د م-218</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc32"  name="tendDesc32" value="توريد وتركيب مشغّل باب منزلق أوتوماتيكي بمركز جبل الكور الصحي">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب مشغّل باب منزلق أوتوماتيكي بمركز جبل الكور الصحي')" onmouseout="UnTip()">توريد وتركيب مشغّل باب منزلق.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>ممارسة /الإسناد المباشر  
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:29-10-2026-Bid Closing Date:02-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100587')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">33.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','33')" >2026/3956/و ص/م ع خ ص ش ب م -207- اعادة طرح - 1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc33"  name="tendDesc33" value="توريد وتركيب مجموعة رأس محقنة ثلاثية الاتجاهات لكرسي الاسنان للمديرية العامة للخدمات الصحية بمحافظة شمال الباطنة">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب مجموعة رأس محقنة ثلاثية الاتجاهات لكرسي الاسنان للمديرية العامة للخدمات الصحية بمحافظة شمال الباطنة')" onmouseout="UnTip()">توريد وتركيب مجموعة رأس محقن.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100128')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">34.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','34')" >2026/4473/و ص/م ا ن م-60</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc34"  name="tendDesc34" value="توريد قطع الغيار لتكييف و التبريد">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد قطع الغيار لتكييف و التبريد')" onmouseout="UnTip()">توريد قطع الغيار لتكييف و ال.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:18-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('96907')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('96907')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">35.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','35')" >2026/1727/و ص/م ص م -150- اعادة طرح - 1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc35"  name="tendDesc35" value="أجهزه لشفط البلغم">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('أجهزه لشفط البلغم')" onmouseout="UnTip()">أجهزه لشفط البلغم</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100565')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">36.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','36')" >2026/4475/و ص/م ص م-476</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc36"  name="tendDesc36" value="خيط جراحي معقم مقاس 5">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('خيط جراحي معقم مقاس 5')" onmouseout="UnTip()">خيط جراحي معقم مقاس 5</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:29-10-2026-Bid Closing Date:01-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100577')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">37.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','37')" >2026/150/و ت س/د ش م-123</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc37"  name="tendDesc37" value="توفير حصى مسطح عشوائي لقلعة نخل ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توفير حصى مسطح عشوائي لقلعة نخل ')" onmouseout="UnTip()">توفير حصى مسطح عشوائي لقلعة .....</td>
+                    <td >وزارة التراث والسياحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:01-11-2026-Bid Closing Date:05-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100561')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">38.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','38')" >2026/4011/و ص/م ع خ ص ش ب م -211- اعادة طرح - 1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc38"  name="tendDesc38" value="توريد  ملحقات لجهاز الاسنان  للمديرية العامة للخدمات الصحية بمحافظة شمال الباطنة">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد ملحقات لجهاز الاسنان للمديرية العامة للخدمات الصحية بمحافظة شمال الباطنة')" onmouseout="UnTip()">توريد ملحقات لجهاز الاسنان ل.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100061')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">39.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','39')" >2026/4478/و ص/م ع خ ص د م-217</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc39"  name="tendDesc39" value="توريد وتركيب جهاز الحقن الوريدي المسكن للألم لمستشفيات بهلاء وإزكي">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد وتركيب جهاز الحقن الوريدي المسكن للألم لمستشفيات بهلاء وإزكي')" onmouseout="UnTip()">توريد وتركيب جهاز الحقن الور.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:15-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100434')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">40.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','40')" >2026/1164/ج ت ع ت/ك ت ن م ع-128</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc40"  name="tendDesc40" value="توريد حبر لوحدة متطلبات الجامعه">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد حبر لوحدة متطلبات الجامعه')" onmouseout="UnTip()">توريد حبر لوحدة متطلبات الجا.....</td>
+                    <td >جامعة التقنية والعلوم التطبيقية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:15-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100546')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100546')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">41.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','41')" >2026/4462/و ص/م ص م-472</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc41"  name="tendDesc41" value="توريد قطع غيار للثلاجات الطبية ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد قطع غيار للثلاجات الطبية ')" onmouseout="UnTip()">توريد قطع غيار للثلاجات الطب.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100451')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">42.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','42')" >2026/3604/و ص/م ع خ ص ش ب م -193- اعادة طرح - 1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc42"  name="tendDesc42" value="توريد كراسي إنتظار لمجمع السويق الصحي ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد كراسي إنتظار لمجمع السويق الصحي ')" onmouseout="UnTip()">توريد كراسي إنتظار لمجمع الس.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:10-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('98932')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">43.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','43')" >2026/570/و ت أ/م ت ا م د-42</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc43"  name="tendDesc43" value="تعزيز مخزن المديرية العامة للتنمية الإجتماعية بالداخلية بالمواد القرطاسية ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('تعزيز مخزن المديرية العامة للتنمية الإجتماعية بالداخلية بالمواد القرطاسية ')" onmouseout="UnTip()">تعزيز مخزن المديرية العامة ل.....</td>
+                    <td >وزارة التنمية الاجتماعية</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:02-11-2026-Bid Closing Date:03-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100568')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">44.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','44')" >2026/4474/و ص/م ع ب ر م-154</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc44"  name="tendDesc44" value="توريد مستلزمات إستهلاكية كهربائية و إلكترونية بمستشفى عبري مح">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد مستلزمات إستهلاكية كهربائية و إلكترونية بمستشفى عبري مح')" onmouseout="UnTip()">توريد مستلزمات إستهلاكية كهر.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:22-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100378')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100378')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">45.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','45')" >2026/4472/و ص/م ع ب ر م-153</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc45"  name="tendDesc45" value="توريد قطع غيار التكييف  بمستشفى عبري ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد قطع غيار التكييف  بمستشفى عبري ')" onmouseout="UnTip()">توريد قطع غيار التكييف  بمست.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:11-11-2026-Bid Closing Date:18-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100183')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100183')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">46.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','46')" >2026/4464/و ص/م ص م-474</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc46"  name="tendDesc46" value="توريد و تركيب انابيب خطوط ماء الحار">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد و تركيب انابيب خطوط ماء الحار')" onmouseout="UnTip()">توريد و تركيب انابيب خطوط ما.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('مقاولات شبكات خطوط الانابيب وحفر الأبار [الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       مقاولات شبكات خطوط الانابيب وحفر الأبار [الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100522')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">47.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','47')" >2026/4463/و ص/م ص م-473</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc47"  name="tendDesc47" value="توريد قطع غيار لخط البخار">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد قطع غيار لخط البخار')" onmouseout="UnTip()">توريد قطع غيار لخط البخار</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:03-11-2026-Bid Closing Date:08-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100458')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100458')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">48.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','48')" >2026/4471/و ص/م ع ب ر م-152</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc48"  name="tendDesc48" value="ثلاجة طبية">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('ثلاجة طبية')" onmouseout="UnTip()">ثلاجة طبية</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:19-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100471')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100471')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='oddo gradeA'>
+                    <td align="center" class=" tbl_td">49.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','49')" >2026/3974/و ص/م ع ب ر م -127- اعادة طرح - 1</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc49"  name="tendDesc49" value="توريد مواد  كيميائية خاصة بمحطة تنقية المياه  بمستشفى عبري ">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('توريد مواد  كيميائية خاصة بمحطة تنقية المياه  بمستشفى عبري ')" onmouseout="UnTip()">توريد مواد  كيميائية خاصة بم.....</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الممتازة,الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>عامة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:10-11-2026-Bid Closing Date:17-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100534')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100534')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+                <tr class='even gradeA'>
+                    <td align="center" class=" tbl_td">50.</td>
+                    <td class=" tbl_td" nowrap onmouseout="UnTip()">
+                   		<span onmouseover="showTndDesc('tendDesc','50')" >2026/4470/و ص/م ع ب ر م-151</span>
+                   		
+                        
+                        </td>
+                           
+                            <input type="hidden" id="tendDesc50"  name="tendDesc50" value="ثلاجة طبية">
+                    <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('ثلاجة طبية')" onmouseout="UnTip()">ثلاجة طبية</td>
+                    <td >وزارة الصحة</td>
+                    
+                    
+                        <td class=" tbl_td" style=" width:30px;"  onmouseover="Tip('التوريدات [الأولى,الثانية,الثالثة,الرابعة]')" onmouseout="UnTip()">
+                       التوريدات [الأولى,الثانية,الثالثة,الرابعة]</td> 
+                    
+                    
+                    
+                    <td>مؤسسات صغيرة و المتوسطة
+                    &nbsp;[
+				   Local]</td>
+                    
+                    </td>
+                    <!-- added for Jira Id:OM_18-3992 begins -->
+ 
+                   
+                   <td> Sales EndDate:09-11-2026-Bid Closing Date:18-11-2026 </td>
+ 					<td>
+
+N/A</td>                  
+                   <td>N/A</td>
+                    
+                    <!-- modification ends regarding Jira Id:OM_18-3392 -->
+                    
+                 <td align="center" class="table_icon">
+                 
+                     
+                  <a href="#" onclick="javascript:getNit('100465')" style="margin-right:5px;" title="عرض إشعار دعوة العطاء">
+                  <img title="عرض إشعار دعوة العطاء " border="0" src="/product/images/NewImages/view_preview.svg"></a>
+             
+                    <a href="#" style="text-decoration:none;" onclick="showParticipated('100465')" title='تفاصيل شراء المستند'>
+                         <img border="0" title='تفاصيل شراء المستند' src="/product/images/NewImages/verify_doc.svg">
+                      </a>
+                 
+                  
+                 </td>
+                 
+               </tr>
+       
+         <tr class="rownohover">
+          <td  colspan="10" align="center">
+               <table cellpadding='1' cellspacing=0 border=0 align='center' class='Pagination_table'> <tbody class='Pagination_tbody'> <tr class='TD_Button_Panel' align='center' style='font-weight:bold'><td class='Pagination_td'> <A href='#banner' class='pageLinks Pagination_button' style='pointer-events: none'>&laquo;الأولى </A></td> <td class='Pagination_td'>  <A href='#banner' class='pageLinks Pagination_button' style='pointer-events: none'><b> &laquo;السابقة</A></td>  <td class='Pagination_td Pagination_Data'>&nbsp;الصفحة&nbsp;</td> <td><input type='text' size='4'  name='pnoVal' value='1' onClick='javascript:setValue()'  onKeyDown='javascript:if(window.event.keyCode == 13) ShowPage(0)' onChange='javascript:ShowPage(0)'></td> <td class='Pagination_td Pagination_Data'>&nbsp;من</td> <td class='Pagination_td Pagination_Data'> 45&nbsp;</td><input type='hidden' name='hidMax' value='45'> &nbsp;&nbsp; <td class='Pagination_td'><A href='#banner' class='pageLinks Pagination_button1'  onclick='javascript:ShowPage(2)'>التالية&raquo;</A></td> <td class='Pagination_td'><A href='#banner' class='pageLinks Pagination_button1' onclick='javascript:ShowPage(45)'>الأخيرة&raquo;</A></td> </tr> </tbody> </table> 
+         </td>
+        </tr>
+     
+     
+         <!--tr class="td_button_panel"><td colspan="6" align="center"><input type="button" name="btnBack" value="عودة"  class="button_all"   onclick="javascript:backToDashBoard()"></td></tr-->
+  
+ <!--  <tr rowspan="30"><td colspan="7">&nbsp;</td></tr>
+  <tr rowspan="30"><td colspan="7">&nbsp;</td></tr> -->
+  </tbody>
+ </table></div>
+ 
+    
+  
+  <input type="button" name="Back1" style="display:none;"  value="Back" onclick="homePage()"/>&nbsp;  
+</div>
+</main>
+    <br>
+
+
+</form>
+<script type="text/javascript" src="/product/js/wz_tooltip.js" language="javascript" /></script>
+<script>
+    if(document.getElementById("clock")!=null)
+    getTime1();
+    
+   
+   
+   
+
+</script>
+
+<script src="/product/js/font-scaler.js"></script>
+</body>
+</html>

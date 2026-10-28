@@ -1,0 +1,2 @@
+URL: https://public.mtender.gov.md/tenders/?offset=2026-10-20T00:00:00Z
+ERROR: HTTPSConnectionPool(host='public.mtender.gov.md', port=443): Max retries exceeded with url: /tenders/?offset=2026-10-20T00:00:00Z (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)')))
