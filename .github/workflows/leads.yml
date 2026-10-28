@@ -203,6 +203,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
         continue-on-error: true
+      - name: prozorro_awards
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',prozorro_awards,') }}
+        run: set -o pipefail; python -m leads.run --source prozorro_awards 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 16
+        continue-on-error: true
       - name: ext_awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ext_awards,') }}
         run: set -o pipefail; python -m leads.run --source ext_awards 2>&1 | tee -a data/leads/run.log
