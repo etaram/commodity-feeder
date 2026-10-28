@@ -215,6 +215,9 @@ def _norm_buyer(b):
     return re.sub(r"\s+", " ", re.sub(r"[^\w ]", " ", b.lower())).strip()
 
 
+AWARD_ROWS = []
+
+
 def merge_awards():
     """All award notices (TED all sectors + national OCDS sources + AIIB): recent awards, repeat buyers and the
     competitor table, keyed by sector."""
@@ -284,6 +287,8 @@ def merge_awards():
         })
     buyers.sort(key=lambda b: (-b["total_usd"], -b["awards_12m"]))
     write("buyers.csv", buyers[:5000])
+    global AWARD_ROWS
+    AWARD_ROWS = rows
     comp = defaultdict(lambda: {"wins": 0, "usd": 0, "buyers": set(), "countries": set(), "wc": ""})
     for r in rows:
         share = (r["usd"] or 0) / max(1, len(r["winners"]))
@@ -422,7 +427,9 @@ def write_digest(tenders, buyers):
 
 
 SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "country", "region", "buyer", "title_en",
-              "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id"]
+              "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
+              "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
+              "buyer_median_award_usd", "incumbent", "why"]
 CHUNK, CHUNKS = 2500, 16
 
 
@@ -436,6 +443,7 @@ def write_sheet_chunks(tenders):
         x["title_original"] = r.get("title", "")[:140] if r.get("lang") else ""
         x["buyer"] = (r.get("buyer") or "")[:90]
         x["contact"] = (r.get("contact") or "")[:80]
+        x["why"] = (r.get("why") or "")[:160]; x["incumbent"] = (r.get("incumbent") or "")[:80]
         rows.append(x)
     for i in range(CHUNKS):
         write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
@@ -538,12 +546,28 @@ def merge():
     enp = LEADS / "enrich.json"
     imp, sup, n = merge_importyeti(bm, json.loads(enp.read_text()) if enp.exists() else {})
     buyers = merge_awards()
+    try:
+        from . import brain
+        st = brain.enrich(tenders, AWARD_ROWS)
+        comp = []
+        for (c, sec), (fw, n) in st.foreign.items():
+            if sec == "*" or n < 5:
+                continue
+            b = st.bids_cs.get((c, sec)) or []
+            comp.append({"country": c, "sector": sec, "awards_12m": n, "foreign_wins": fw,
+                         "foreign_win_rate": round(fw / n, 3), "median_bids": median(b) if b else ""})
+        write("competition.csv", sorted(comp, key=lambda x: -x["awards_12m"]))
+        tenders.sort(key=lambda x: ({"Pursue": 0, "Watch": 1, "Ignore": 2}[x["decision"]], -(x["ev_usd"] or 0), -x["score"]))
+    except Exception as e:  # noqa: BLE001
+        log.warning("brain: %s", e)
     markets = merge_markets(bm)
     merge_opportunities(tenders, buyers or [], markets or [])
     write_digest(tenders, buyers or [])
     cols = ["score", "new", "deadline", "days_left", "stage", "sector", "commodity", "source", "country", "region",
             "buyer", "title_en", "summary_en", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
-            "classification", "contact", "benchmark", "link", "lang", "first_seen", "id"]
+            "classification", "contact", "benchmark", "link", "lang", "first_seen", "id", "decision", "ev_usd",
+            "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent",
+            "margin_pct", "why"]
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
     write_sector_summary(tenders)
