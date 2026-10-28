@@ -1,6 +1,3 @@
-tr1 CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication?max=5
-tr2 CFFI https://webgate.ec.europa.eu/tracesnt/rest/directory/listing/establishment/publication?max=5
-tr3 CFFI https://webgate.ec.europa.eu/tracesnt/api/directory/listing/establishment/publication?max=5
-tr4 CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/search?max=5
-tr5 CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/EC?max=5
-tr6 CFFI https://webgate.ec.europa.eu/tracesnt/assets/js/min/common.8-2-14-20261210-113641000.min.js
+wd POST https://query.wikidata.org/sparql?format=json {"query":"x"}
+wd_get https://query.wikidata.org/sparql?format=json&query=SELECT%20(COUNT(*)%20AS%20%3Fn)%20WHERE%20%7B%3Fc%20wdt%3AP31%2Fwdt%3AP279*%20wd%3AQ4830453%3B%20wdt%3AP452%20%3Fi%3B%20wdt%3AP17%20wd%3AQ1033.%7D
+secop_big https://www.datos.gov.co/resource/jbjy-vk9h.json?$select=count(*)&$where=valor_del_contrato%20%3E%20500000000%20AND%20tipodocproveedor%3D'NIT'%20AND%20fecha_de_firma%20%3E%20'2025-10-28'
