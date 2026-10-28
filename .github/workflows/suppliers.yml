@@ -67,7 +67,7 @@ jobs:
       - name: web_contacts
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',web_contacts,') }}
         run: set -o pipefail; python -m leads.run --source web_contacts 2>&1 | tee -a data/leads/run_suppliers.log
-        timeout-minutes: 15
+        timeout-minutes: 30
         continue-on-error: true
       - name: universe
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',universe,') }}

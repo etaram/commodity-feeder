@@ -44,11 +44,40 @@ def _group(title):
     return _GCACHE[k]
 
 
+def _item(title):
+    parts = (title or "").split(" – ")
+    if len(parts) >= 3:  # TED: "Country – CPV category – title" -> the English category
+        title = parts[1]
+    t = re.sub(r"\s+", " ", re.sub(r"^(supply|supplies|provision|procurement|purchase|acquisition|adquisici[oó]n|"
+                                   r"suministro|fornecimento|aquisi[cç][aã]o|fourniture|achat|lieferung) (of|de|du|des|"
+                                   r"von)?\s*", "", (title or "").strip(), flags=re.I)).strip(" .,-:;")
+    return t[:70] if len(t) >= 4 else ""
+
+
+def _web_profiles():
+    out = {}
+    p = PRIVATE / "web_profiles.jsonl"
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            try:
+                d = json.loads(line)
+            except ValueError:
+                continue
+            out[d.get("key")] = d
+    return out
+
+
+FREE_MAIL = re.compile(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|ukr|i\.ua|meta\.ua|bigmir|"
+                       r"web\.de|orange|free|laposte|wanadoo|libero|terra|uol|bol|ig|rediffmail|qq|163|126|sina|naver|"
+                       r"hanmail|proton|zoho|seznam|wp\.pl|o2|interia|abv|btinternet|sky|comcast|verizon|att|"
+                       r"sbcglobal|prodigy|telkomsa|mweb|iafrica|vodamail)\b", re.I)
+
+
 def quality(r):
     """0-100: how strong a supplier looks from public evidence (value won, repeat wins, distinct buyers, exports,
     international lenders / foreign governments as buyers, notability)."""
     import math
-    q = min(35, 5 * math.log10(1 + r["won_usd_est"]) - 10) if r["won_usd_est"] else 0
+    q = min(35, 5 * math.log10(1 + max(0, r["won_usd_est"])) - 10) if r["won_usd_est"] else 0
     q += min(20, 6 * math.log2(1 + r["wins"])) + min(15, 4 * math.log2(1 + r["buyers"]))
     q += 10 if r["exports"] else 0
     q += 8 if any(x in r["sources"] for x in ("World Bank", "USAspending", "UNGM", "UNDP", "AIIB", "EBRD")) else 0
@@ -77,7 +106,7 @@ def build():
                                "sectors": defaultdict(int), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
                                "last": "", "first": "9999", "sources": set(), "example": "", "ex_usd": 0,
                                "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0,
-                               "groups": defaultdict(int)})
+                               "groups": defaultdict(int), "items": {}})
     n_aw = 0
     for f, a in _awards():
         if True:
@@ -87,7 +116,7 @@ def build():
             wcs = [x.strip() for x in (a.get("winner_country") or "").split(",") if x.strip()]
             v, c = a.get("value"), a.get("currency")
             usd = v * rates.get(c, 0) if isinstance(v, (int, float)) and c in rates else 0
-            usd = usd if usd < 2e9 else 0
+            usd = usd if 0 < usd < 2e9 else 0
             share = usd / max(1, len(a["winners"]))
             for i, w in enumerate(a["winners"]):
                 k = norm(w)
@@ -103,6 +132,9 @@ def build():
                 g = a.get("group") or _group(a.get("title") or "")
                 if g:
                     x["groups"][g] += 1
+                it = _item(a.get("title") or "")
+                if it and (it in x["items"] or len(x["items"]) < 8):
+                    x["items"][it] = x["items"].get(it, 0) + 1
                 for cp in (a.get("cpv") or "").split()[:1]:
                     x["cpv"][cp[:8]] += 1
                 x["buyer_c"].add((a.get("country") or "").split(",")[0]); x["buyers"].add(norm(a.get("buyer")))
@@ -148,10 +180,24 @@ def build():
             x["sources"].add("Wikidata")
         x["website"] = x["website"] or c.get("website", "")
         x["industries"] = c.get("industries", ""); x["employees"] = c.get("employees", "")
+        x["products"] = c.get("products", "")
         x["trader"] = c.get("trader", False); x["notable"] = True
+    web = _web_profiles()
     out = []
     for (k, wc), x in sup.items():
         name = max(x["names"].items(), key=lambda y: y[1])[0]
+        wp = web.get(f"{name[:120]}|{wc}") or {}
+        site_src = "registry/notice" if x["website"] else ""
+        if not x["website"] and wp.get("website"):
+            x["website"] = wp["website"]; site_src = "found (name verified)" if wp.get("discovered") else "e-mail domain"
+        elif not x["website"] and x["email"] and "@" in x["email"] and not FREE_MAIL.search(x["email"]):
+            x["website"] = "http://" + x["email"].split(";")[0].strip().split("@")[1] + "/"; site_src = "e-mail domain"
+        if not x["email"] and wp.get("email"):
+            x["email"] = wp["email"]
+        if not x["phone"] and wp.get("phone"):
+            x["phone"] = wp["phone"]
+        about = x.get("products") or wp.get("about") or ""
+        items = "; ".join(i for i, _ in sorted(x["items"].items(), key=lambda y: -y[1])[:3])
         secs = sorted(x["sectors"].items(), key=lambda y: -y[1])
         out.append({
             "supplier": name[:120], "country": wc, "region": region(wc) if wc else "",
@@ -162,13 +208,14 @@ def build():
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
             "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
+            "products": about[:300], "web_title": (wp.get("title") or "")[:120], "supplied": items[:240],
             "commodities": "; ".join(BY_ID[g]["name"] for g, _ in sorted(x["groups"].items(), key=lambda y: -y[1])[:3]
                                      if g in BY_ID),
             "main_cpv": max(x["cpv"].items(), key=lambda y: y[1])[0] if x["cpv"] else "",
             "buyer_countries": " ".join(sorted(c for c in x["buyer_c"] if c))[:80], "buyers": len(x["buyers"]),
             "exports": "yes" if any(c and wc and c != wc for c in x["buyer_c"]) else "",
             "first_win": x["first"] if x["first"] != "9999" else "", "last_win": x["last"],
-            "email": x["email"], "phone": x["phone"], "website": x["website"], "address": x["address"],
+            "email": x["email"], "phone": x["phone"], "website": x["website"], "website_source": site_src, "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
         })
     for r in out:

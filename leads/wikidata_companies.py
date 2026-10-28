@@ -68,6 +68,13 @@ def _country(s, qid):
         x["industries"].add(b.get("indLabel", {}).get("value", ""))
         x["website"] = x["website"] or b.get("web", {}).get("value", "")
         x["employees"] = x["employees"] or b.get("emp", {}).get("value", "")
+    prods = {}
+    pq = f"""SELECT ?c ?pLabel WHERE {{ ?c wdt:P17 wd:{qid}; wdt:P452 ?ind; wdt:P1056 ?p.
+      SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en,fr,es,pt,de". }} }} LIMIT 40000"""
+    for b in _q(s, pq) or []:
+        lab = b.get("pLabel", {}).get("value", "")
+        if lab and not re.fullmatch(r"Q\d+", lab):
+            prods.setdefault(b["c"]["value"].rsplit("/", 1)[-1], []).append(lab)
     res = []
     for x in out.values():
         inds = "; ".join(sorted(i for i in x["industries"] if i and not re.fullmatch(r"Q\d+", i)))
@@ -76,7 +83,8 @@ def _country(s, qid):
         if sec not in KEEP and not trader:
             continue
         res.append({"qid": x["qid"], "name": x["name"], "industries": inds[:200], "sector": sec,
-                    "trader": trader, "website": x["website"], "employees": x["employees"]})
+                    "trader": trader, "website": x["website"], "employees": x["employees"],
+                    "products": "; ".join(dict.fromkeys(prods.get(x["qid"], [])))[:200]})
     return res
 
 
@@ -88,15 +96,15 @@ def fetch():
     order = PRIORITY + sorted(c for c in qids if c not in PRIORITY)
     done, total, t0 = 0, 0, time.time()
     for iso in order:
-        if iso not in qids or time.time() - t0 > 780 or done >= 30:
+        if iso not in qids or time.time() - t0 > 780 or done >= 60:
             continue
         p = DIR / f"{iso}.json"
-        if p.exists() and json.loads(p.read_text()).get("updated", "") >= cut:
+        if p.exists() and json.loads(p.read_text()).get("v") == 2 and json.loads(p.read_text()).get("updated", "") >= cut:
             continue
         rows = _country(s, qids[iso])
         if rows is None:
             continue
-        p.write_text(json.dumps({"updated": str(t), "country": iso, "companies": rows}, ensure_ascii=False))
+        p.write_text(json.dumps({"v": 2, "updated": str(t), "country": iso, "companies": rows}, ensure_ascii=False))
         done += 1; total += len(rows)
         time.sleep(2)
     have = len(list(DIR.glob("[A-Z][A-Z][A-Z].json")))
