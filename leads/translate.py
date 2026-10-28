@@ -64,35 +64,49 @@ def detect(text, hint=""):
 _models = {}
 
 
-def _translator(lang):
+def _model(lang):
+    """(ctranslate2.Translator, sentencepiece processor) for lang->en from the Argos package, or None.
+    Titles are single short sentences, so they are translated in large batches without sentence splitting."""
     if lang in _models:
         return _models[lang]
-    tr = None
+    m = None
     try:
-        import argostranslate.utils as au
-        au.logger.setLevel(logging.WARNING)
+        import ctranslate2
+        import sentencepiece
         import argostranslate.package as pk
-        import argostranslate.translate as at
-        installed = {(p.from_code, p.to_code) for p in pk.get_installed_packages()}
-        if (lang, "en") not in installed:
-            if not getattr(_translator, "index", None):
-                pk.update_package_index(); _translator.index = pk.get_available_packages()
-            pkg = next((p for p in _translator.index if p.from_code == lang and p.to_code == "en"), None)
-            if pkg:
-                pk.install_from_path(pkg.download())
-        langs = {lang_.code: lang_ for lang_ in at.get_installed_languages()}
-        if lang in langs and "en" in langs:
-            tr = langs[lang].get_translation(langs["en"])
+        pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == "en"), None)
+        if not pkg:
+            if not getattr(_model, "index", None):
+                pk.update_package_index(); _model.index = pk.get_available_packages()
+            avail = next((p for p in _model.index if p.from_code == lang and p.to_code == "en"), None)
+            if avail:
+                pk.install_from_path(avail.download())
+                pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == "en"), None)
+        if pkg:
+            path = pkg.package_path
+            sp = sentencepiece.SentencePieceProcessor(model_file=str(path / "sentencepiece.model"))
+            tr = ctranslate2.Translator(str(path / "model"), device="cpu", inter_threads=2, intra_threads=2)
+            m = (tr, sp)
     except Exception as e:  # noqa: BLE001
-        log.warning("argos %s: %s", lang, e)
-    _models[lang] = tr
-    return tr
+        log.warning("translator %s: %s", lang, e)
+    _models[lang] = m
+    return m
+
+
+def _translate_batch(lang, texts):
+    m = _model(lang)
+    if not m:
+        return [""] * len(texts)
+    tr, sp = m
+    toks = sp.encode([t[:400] for t in texts], out_type=str)
+    res = tr.translate_batch(toks, beam_size=2, max_batch_size=64, max_decoding_length=160)
+    return [sp.decode(r.hypotheses[0]).replace("\u2581", " ").strip() for r in res]
 
 
 def translate_rows(rows, field="title", budget_sec=1500):
-    """Adds title_en to each row (in place). Rows are processed in the given order (highest score first) until the
-    time budget runs out; untranslated rows keep the original text."""
-    cache = load(); t0 = time.time(); done = skipped = 0
+    """Adds title_en to each row (in place), highest score first, until the time budget runs out."""
+    cache = load(); t0 = time.time(); done = 0
+    pending = {}
     for r in rows:
         text = (r.get(field) or "").strip()
         if not text:
@@ -104,18 +118,23 @@ def translate_rows(rows, field="title", budget_sec=1500):
         k = _key(text)
         if k in cache:
             r["title_en"] = cache[k]; continue
-        if time.time() - t0 > budget_sec:
-            r["title_en"] = ""; skipped += 1; continue
-        tr = _translator(lang)
-        if not tr:
-            r["title_en"] = ""; skipped += 1; continue
-        try:
-            en = tr.translate(text[:400])
-        except Exception:  # noqa: BLE001
-            en = ""
-        cache[k] = en; r["title_en"] = en; done += 1
+        r["title_en"] = ""
+        pending.setdefault(lang, []).append((k, text, r))
+    for lang, items in sorted(pending.items(), key=lambda x: -len(x[1])):
+        for i in range(0, len(items), 256):
+            if time.time() - t0 > budget_sec:
+                break
+            chunk = items[i:i + 256]
+            try:
+                outs = _translate_batch(lang, [x[1] for x in chunk])
+            except Exception as e:  # noqa: BLE001
+                log.warning("translate %s: %s", lang, e); break
+            for (k, _, r), en in zip(chunk, outs):
+                if en:
+                    cache[k] = en; r["title_en"] = en; done += 1
     save(cache)
-    log.info("translations: %d new, %d pending (budget), cache %d", done, skipped, len(cache))
+    left = sum(1 for items in pending.values() for x in items if not x[2]["title_en"])
+    log.info("translations: %d new, %d pending, cache %d, %.0fs", done, left, len(cache), time.time() - t0)
 
 
 def summary(r, sector_name):

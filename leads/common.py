@@ -140,15 +140,26 @@ _BUNDLES = {}
 
 def chain_session(url):
     """requests session that verifies TLS for hosts that omit their intermediate certificate: the missing
-    intermediate is fetched via the certificate's AIA URL and added to the trust bundle (verification stays on)."""
+    intermediate is fetched via the certificate's AIA URL (cached on disk) and added to the trust bundle.
+    Verification stays on."""
+    import tempfile
+    import time as _t
     from urllib.parse import urlsplit
+    import certifi
     host = urlsplit(url).netloc
     s = session()
     if host not in _BUNDLES:
-        import tempfile
-        import certifi
-        from aia import AIASession
-        cadata = AIASession().cadata_from_url(url)
+        pem = CACHE / "certs" / f"{host}.pem"
+        cadata = pem.read_text() if pem.exists() else ""
+        for attempt in range(3):
+            if cadata:
+                break
+            try:
+                from aia import AIASession
+                cadata = AIASession().cadata_from_url(url)
+                pem.parent.mkdir(parents=True, exist_ok=True); pem.write_text(cadata)
+            except Exception as e:  # noqa: BLE001
+                log.warning("AIA %s attempt %d: %s", host, attempt + 1, e); _t.sleep(5)
         f = tempfile.NamedTemporaryFile("w", suffix=".pem", delete=False)
         f.write(open(certifi.where()).read() + "\n" + cadata); f.close()
         _BUNDLES[host] = f.name
