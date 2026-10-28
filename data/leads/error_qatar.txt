@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 576, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/qatar.py", line 20, in fetch
+    s, t, new = chain_session(BASE), today(), []
+                ^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/common.py", line 151, in chain_session
+    cadata = AIASession().cadata_from_url(url)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 230, in cadata_from_url
+    return self.cadata_from_host(split_result.netloc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 221, in cadata_from_host
+    der_certs = list(self.aia_chase(host))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 146, in aia_chase
+    der_cert = self.get_host_cert(host)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 117, in get_host_cert
+    with self._context.wrap_socket(sock, server_hostname=host) as ss:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 1054, in _create
+    self.do_handshake()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 1332, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLZeroReturnError: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
