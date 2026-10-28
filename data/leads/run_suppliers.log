@@ -1,96 +1,14 @@
-Wed Oct 28 12:05:11 UTC 2026
-INFO LatAm awards: Brazil 960 (4 days), Colombia 23460
-INFO latam_awards: 0 rows
-INFO Prozorro awards: 26751 candidates, 1096 read, 1098 awards
-INFO prozorro_awards: 0 rows
-INFO OCDR 110 ECU 2026: 121705 releases, 114148 awards, 114148 contacts
-INFO OCDR 85 GHA 2026: 169 releases, 203 awards, 203 contacts
-INFO OCDR 142 GTM 2026: 342057 releases, 281079 awards, 281079 contacts
-INFO OCDR 122 HND 2026: 46050 releases, 16357 awards, 16600 contacts
-INFO OCDR 123 HND 2026: 43975 releases, 43089 awards, 44757 contacts
-INFO OCDR 147 KEN 2026: 23098 releases, 3980 awards, 3973 contacts
-INFO OCDR 156 LBR 2026: 1227 releases, 292 awards, 292 contacts
-INFO OCDR 64 NGA 2026: 281 releases, 68 awards, 54 contacts
-INFO OCDR 118 NGA 2026: 3 releases, 3 awards, 3 contacts
-INFO OCDR 63 PRY 2026: 5382 releases, 28667 awards, 28710 contacts
-INFO OCDR 135 PER 2026: 60570 releases, 45430 awards, 45430 contacts
-INFO OCDR {'files': 11, 'awards': 533316, 'contacts': 535249, 'pending': 168}
-INFO ocdr: 0 rows
-INFO USAspending foreign: 10000
-INFO USAspending 11: 2737
-INFO USAspending 21: 317
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 311: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 312: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 313: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 314: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 315: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 316: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 321: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 322: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 324: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 325: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 326: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 327: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 331: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 332: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 333: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 334: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 335: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 336: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 337: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 339: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 423: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 424: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 425: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 481: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 483: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 484: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 486: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 488: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 492: 0
-WARNING USAspending 400 {"detail":"naics code filtering only supported for codes with lengths of 2, 4, and 6"}
-INFO USAspending 493: 0
-INFO external awards {'usaspending': 13054}
-INFO ext_awards: 0 rows
-WARNING wikidata 502
+Wed Oct 28 17:32:18 UTC 2026
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
-INFO wikidata companies: 12 countries refreshed (559 companies), 12 countries cached
-INFO wikidata_companies: 0 rows
-INFO web profiles: 1620 read, 120 websites discovered of 700 tried
-INFO web_contacts: 0 rows
-INFO:leads:universe {'awards': 781174, 'suppliers': 196531, 'with_email': 53883, 'with_phone': 54410, 'exporters': 11052, 'goods': 56862, 'contacts_matched': 117816, 'tier_A': 195978, 'tier_B_notable': 553, 'with_website': 31981, 'quality_40_plus': 42187, 'with_any_contact': 87512, 'region: Latin America': 92389, 'region: Europe': 53055, 'region: Sub-Saharan Africa': 25651, 'region: South Asia': 7083, 'region: unknown': 4804, 'region: Southeast Asia': 3707, 'region: Middle East & North Africa': 2759, 'region: East Asia': 2436, 'region: CIS & Central Asia': 2161, 'region: North America': 1492, 'region: Other': 499, 'region: Oceania': 265, 'region: Israel': 230}
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+INFO commodity producers: 107 commodities resolved, 1752 companies
+INFO commodity_producers: 0 rows
+INFO:leads:universe {'awards': 784944, 'suppliers': 200974, 'with_email': 55671, 'with_phone': 56154, 'exporters': 11160, 'goods': 59067, 'contacts_matched': 122174, 'tier_A': 198557, 'tier_B_notable': 665, 'with_website': 34082, 'quality_40_plus': 42907, 'with_any_contact': 90554, 'region: Latin America': 92466, 'region: Europe': 56362, 'region: Sub-Saharan Africa': 25734, 'region: South Asia': 7100, 'region: unknown': 4804, 'region: Southeast Asia': 4355, 'region: Middle East & North Africa': 2845, 'region: East Asia': 2472, 'region: CIS & Central Asia': 2211, 'region: North America': 1579, 'region: Other': 508, 'region: Oceania': 307, 'region: Israel': 231}
 wrote 150001 rows to Supplier Universe
