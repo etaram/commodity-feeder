@@ -310,7 +310,7 @@ def merge_opportunities(tenders, buyers, markets):
         })
     for m in markets:
         p, imp = m["premium_vs_benchmark_pct"], m["imports_usd"]
-        if p == "" or p < 10 or imp < 20_000_000:
+        if p == "" or p < 4 or imp < 20_000_000:
             continue
         out.append({
             "opp_id": f"A:{m['hs6'].replace('HS ', '')}|{m['country'][:30]}", "type": "Arbitrage", "group": m["group"],
