@@ -1,82 +1,80 @@
-"""TED contract award notices (supplies) for the commodity groups: who won, for how much, how many bids.
-Cached by month in data/leads/awards/YYYY-MM.json; the current and previous month are refreshed every run,
-older months are back-filled a few at a time up to 12 months."""
-import calendar
+"""TED contract award notices, all sectors: who won, for how much, how many bids. Stored per publication day in
+data/leads/awards/ted/YYYY-MM-DD.json; each run fetches the last 3 days and back-fills missing days (up to 12 months)."""
 import datetime as dt
-import json
 
-from .common import LEADS, clean, log, session, today
-from .taxonomy import GROUPS, match_cpv
+from .common import award_days, clean, log, save_awards, session, today
+from .sectors import from_cpv
+from .taxonomy import match_cpv
 from .ted import URL, _date, _first
 
-CACHE = LEADS / "awards"
 FIELDS = ["publication-number", "notice-title", "buyer-name", "buyer-country", "classification-cpv", "publication-date",
           "winner-name", "winner-country", "winner-size", "total-value", "total-value-cur",
           "received-submissions-type-val", "organisation-email-buyer", "contract-nature"]
-BACKFILL_PER_RUN = 3
+BACKFILL_DAYS_PER_RUN = 20
+MIN_EUR = 50_000
 
 
-def _month_list(n=12):
-    t = today().replace(day=1); out = []
-    for _ in range(n):
-        out.append(t); t = (t - dt.timedelta(days=1)).replace(day=1)
-    return out
+def _num(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return ""
 
 
-def _fetch_month(s, m, cpvs):
-    last = m.replace(day=calendar.monthrange(m.year, m.month)[1])
-    q = (f"classification-cpv IN ({' '.join(cpvs)}) AND notice-type IN (can-standard) AND contract-nature IN (supplies) "
-         f"AND PD>={m:%Y%m%d} AND PD<={last:%Y%m%d}")
-    rows, page = [], 1
-    while page <= 60:
-        r = s.post(URL, json={"query": q, "fields": FIELDS, "limit": 250, "page": page}, timeout=120)
+def _fetch_day(s, day):
+    q = f"notice-type IN (can-standard can-social) AND PD={day:%Y%m%d}"
+    rows, token, pages = [], None, 0
+    while pages < 60:
+        body = {"query": q, "fields": FIELDS, "limit": 250, "paginationMode": "ITERATION"}
+        if token:
+            body["iterationNextToken"] = token
+        r = s.post(URL, json=body, timeout=120)
         if r.status_code != 200:
-            log.warning("TED awards %s: %s %s", m, r.status_code, r.text[:200]); return None
-        batch = r.json().get("notices", [])
+            log.warning("TED awards %s: %s %s", day, r.status_code, r.text[:200]); return None
+        j = r.json(); batch = j.get("notices", []); pages += 1
         for n in batch:
             cpv = list(dict.fromkeys(n.get("classification-cpv") or []))
-            gid, depth = match_cpv(cpv[:1])
-            if not gid:
+            val, cur = _num(n.get("total-value")), _first(n.get("total-value-cur"))
+            if val != "" and cur == "EUR" and val < MIN_EUR:
                 continue
+            gid, _ = match_cpv(cpv[:1])
             wn = n.get("winner-name") or {}
             names = list(dict.fromkeys(wn.get(next(iter(wn), ""), []) if isinstance(wn, dict) else wn))
             bids = [int(x) for x in (n.get("received-submissions-type-val") or []) if str(x).isdigit()]
-            val = n.get("total-value")
+            pn = n.get("publication-number")
             rows.append({
-                "pn": n.get("publication-number"), "group": gid, "depth": depth,
-                "title": clean(_first(n.get("notice-title")), 250), "buyer": clean(_first(n.get("buyer-name")), 120),
+                "id": f"TED-{pn}", "source": "TED", "group": gid or "", "sector": from_cpv(cpv[:1]) or "",
+                "title": clean(_first(n.get("notice-title")), 200), "buyer": clean(_first(n.get("buyer-name")), 120),
                 "country": ",".join(dict.fromkeys(n.get("buyer-country") or [])), "cpv": " ".join(cpv[:4]),
-                "published": str(_date(n.get("publication-date")) or ""),
+                "published": str(_date(n.get("publication-date")) or day),
                 "winners": [clean(x, 100) for x in names[:6]],
                 "winner_country": ",".join(dict.fromkeys(n.get("winner-country") or []))[:40],
                 "winner_size": ",".join(dict.fromkeys(n.get("winner-size") or [])),
-                "value": float(val) if isinstance(val, (int, float)) or str(val or "").replace(".", "", 1).isdigit() else "",
-                "currency": _first(n.get("total-value-cur")), "bids": max(bids) if bids else "",
+                "value": val, "currency": cur, "bids": max(bids) if bids else "",
                 "email": _first(n.get("organisation-email-buyer")),
+                "link": f"https://ted.europa.eu/en/notice/-/detail/{pn}",
             })
-        if len(batch) < 250:
+        token = j.get("iterationNextToken")
+        if not token or not batch:
             break
-        page += 1
     return rows
 
 
 def fetch():
-    CACHE.mkdir(parents=True, exist_ok=True)
-    cpvs = sorted({c for g in GROUPS for c in g["cpv"]})
-    s = session(); done, back = 0, 0
-    for i, m in enumerate(_month_list()):
-        f = CACHE / f"{m:%Y-%m}.json"
-        if i >= 2 and f.exists():
+    s, t = session(), today()
+    have = award_days("ted")
+    recent = [t - dt.timedelta(days=k) for k in range(0, 3)]
+    missing = [t - dt.timedelta(days=k) for k in range(3, 366) if str(t - dt.timedelta(days=k)) not in have]
+    todo = recent + missing[:BACKFILL_DAYS_PER_RUN]
+    total = 0
+    for day in todo:
+        rows = _fetch_day(s, day)
+        if rows is None:
             continue
-        if i >= 2:
-            if back >= BACKFILL_PER_RUN:
-                continue
-            back += 1
-        rows = _fetch_month(s, m, cpvs)
-        if rows is not None:
-            f.write_text(json.dumps(rows, ensure_ascii=False)); done += 1
-            log.info("awards %s: %d", m, len(rows))
-    for f in CACHE.glob("*.json"):  # keep 12 months
-        if f.stem < f"{_month_list()[-1]:%Y-%m}":
-            f.unlink()
-    return [], {"months_refreshed": done}
+        if not rows and day.weekday() < 5:
+            rows = []
+        save_awards("ted", rows or [{"id": f"empty-{day}", "published": str(day), "empty": True}])
+        total += len(rows)
+    log.info("TED awards: %d days fetched, %d notices, %d days still to back-fill", len(todo), total,
+             max(0, len(missing) - BACKFILL_DAYS_PER_RUN))
+    return [], {"days": len(todo), "notices": total}

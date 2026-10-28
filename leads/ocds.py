@@ -47,3 +47,38 @@ def tender_row(rel, *, source, prefix, country, lang="", access="National", link
         "link": link or ((tn.get("documents") or [{}])[0].get("url", "") if tn.get("documents") else ""),
         "contact": clean(f"{cp.get('email', '')} {cp.get('telephone', '')}", 120), "lang": lang,
     }
+
+
+def award_rows(rel, *, source, prefix, country):
+    """Award rows (one per award with a named supplier) from an OCDS release."""
+    out = []
+    tn = rel.get("tender") or {}
+    cpv = codes(tn, "CPV")
+    title = clean(tn.get("title") or "")
+    sector, _ = classify(title, cpv=cpv or None)
+    gid, _ = match_cpv(cpv[:1]) if cpv else (None, -1)
+    buyer = (rel.get("buyer") or {}).get("name") or ""
+    parties = {p.get("id"): p for p in rel.get("parties") or []}
+    bids = tn.get("numberOfTenderers", "")
+    for i, a in enumerate(rel.get("awards") or []):
+        sups = a.get("suppliers") or []
+        names = [clean(s.get("name") or (parties.get(s.get("id")) or {}).get("name"), 100) for s in sups]
+        names = [n for n in names if n]
+        if not names:
+            continue
+        wc = []
+        for s in sups:
+            p = parties.get(s.get("id")) or {}
+            c = ((p.get("address") or {}).get("countryName") or "")
+            if c:
+                wc.append(c)
+        val = a.get("value") or {}
+        out.append({
+            "id": f"{prefix}-{rel.get('ocid', '')}-{a.get('id', i)}", "source": source, "group": gid or "",
+            "sector": sector, "title": (clean(a.get("title")) or title)[:200], "buyer": clean(buyer, 120),
+            "country": country, "cpv": " ".join(cpv[:4]), "published": (a.get("date") or rel.get("date") or "")[:10],
+            "winners": names[:6], "winner_country": ",".join(dict.fromkeys(wc))[:40], "winner_size": "",
+            "value": val.get("amount") if val.get("amount") not in (None, 0) else "", "currency": val.get("currency", ""),
+            "bids": bids if isinstance(bids, int) else "", "email": "", "link": "",
+        })
+    return out

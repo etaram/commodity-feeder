@@ -2,8 +2,8 @@
 Find a Tender."""
 import datetime as dt
 
-from .common import cache_empty, log, polite, rolling, session, today
-from .ocds import tender_row
+from .common import save_awards, cache_empty, log, polite, rolling, session, today
+from .ocds import award_rows, tender_row
 
 URL = "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search"
 
@@ -26,6 +26,18 @@ def fetch():
                 new.append(row)
         url = (j.get("links") or {}).get("next")
         polite(0.4)
+    aw, aurl, n = [], URL, 0
+    ap = {"stages": "award", "publishedFrom": (t - dt.timedelta(days=days)).strftime("%Y-%m-%d"), "size": 100}
+    while aurl and n < 60:
+        r = s.get(aurl, params=ap, timeout=90); ap = None; n += 1
+        if r.status_code != 200:
+            break
+        j = r.json()
+        for rel in j.get("releases", []):
+            aw += award_rows(rel, source="UK Contracts Finder", prefix="CFA", country="GBR")
+        aurl = (j.get("links") or {}).get("next")
+        polite(0.4)
+    save_awards("cfa", [a for a in aw if a["published"]])
     rows, _ = rolling("contractsfinder", new)
     log.info("Contracts Finder new %d, open %d", len(new), len(rows))
     return rows, {"new": len(new)}

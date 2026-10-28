@@ -2,7 +2,8 @@
 Rolling cache: each run reads notices updated in the last few days."""
 import datetime as dt
 
-from .common import cache_empty, clean, log, polite, rolling, session, today
+from .common import save_awards, cache_empty, clean, log, polite, rolling, session, today
+from .ocds import award_rows
 from .sectors import from_cpv
 from .taxonomy import match_cpv
 
@@ -50,6 +51,18 @@ def fetch(max_pages=150):
             })
         url = (j.get("links") or {}).get("next")
         polite(0.4)
+    aw, aurl, n = [], URL, 0
+    ap = {"stages": "award", "updatedFrom": (t - dt.timedelta(days=days)).strftime("%Y-%m-%dT00:00:00"), "limit": 100}
+    while aurl and n < 60:
+        r = s.get(aurl, params=ap, timeout=90); ap = None; n += 1
+        if r.status_code != 200:
+            break
+        j = r.json()
+        for rel in j.get("releases", []):
+            aw += award_rows(rel, source="UK FTS", prefix="FTSA", country="GBR")
+        aurl = (j.get("links") or {}).get("next")
+        polite(0.4)
+    save_awards("ftsa", [a for a in aw if a["published"]])
     rows, _ = rolling("fts", new)
     log.info("FTS new %d, open %d (pages %d)", len(new), len(rows), pages)
     return rows, {"pages": pages}

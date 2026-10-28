@@ -103,3 +103,33 @@ def rolling(name, new_rows, max_age_days=120):
 def cache_empty(name):
     p = CACHE / f"{name}.jsonl"
     return not p.exists() or p.stat().st_size < 10
+
+
+AWARDS = LEADS / "awards"
+
+
+def save_awards(source, rows, keep_days=370):
+    """Award notices are stored once per publication day (awards/<source>/YYYY-MM-DD.json) so history files are
+    written once and rarely touched again. Rows with the same id are merged."""
+    d = AWARDS / source
+    d.mkdir(parents=True, exist_ok=True)
+    by_day = {}
+    for r in rows:
+        day = (r.get("published") or str(today()))[:10]
+        by_day.setdefault(day, []).append(r)
+    for day, lst in by_day.items():
+        p = d / f"{day}.json"
+        cur = {x["id"]: x for x in json.loads(p.read_text())} if p.exists() else {}
+        for x in lst:
+            cur[x["id"]] = x
+        p.write_text(json.dumps(list(cur.values()), ensure_ascii=False, separators=(",", ":")))
+    cut = str(today() - dt.timedelta(days=keep_days))
+    for p in d.glob("*.json"):
+        if p.stem < cut:
+            p.unlink()
+    return len(rows)
+
+
+def award_days(source):
+    d = AWARDS / source
+    return {p.stem for p in d.glob("*.json")} if d.exists() else set()

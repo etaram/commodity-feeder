@@ -215,26 +215,44 @@ def _norm_buyer(b):
 
 
 def merge_awards():
+    """All award notices (TED all sectors + national OCDS sources + AIIB): recent awards, repeat buyers and the
+    competitor table, keyed by sector."""
+    from .sectors import SECTORS, from_cpv
     rates, t = _rates(), today()
-    rows = []
-    for f in sorted((LEADS / "awards").glob("*.json")):
+    rows, seen = [], set()
+    files = sorted((LEADS / "awards").glob("*.json")) + sorted((LEADS / "awards").glob("*/*.json"))
+    for f in files:
         for r in json.loads(f.read_text()):
-            gid, _ = match_cpv(r["cpv"].split()[:1])
-            if gid:
-                r["group"] = gid; rows.append(r)
+            if r.get("empty") or not r.get("winners"):
+                continue
+            rid = r.get("id") or f"TED-{r.get('pn')}"
+            if rid in seen:
+                continue
+            seen.add(rid); r["id"] = rid
+            r.setdefault("source", "TED")
+            r["link"] = r.get("link") or (f"https://ted.europa.eu/en/notice/-/detail/{r['pn']}" if r.get("pn") else "")
+            sec = r.get("sector") or from_cpv((r.get("cpv") or "").split()[:1]) or ""
+            r["sector_name"] = SECTORS.get(sec, "Other")
+            gid = r.get("group") or match_cpv((r.get("cpv") or "").split()[:1])[0] or ""
+            r["group"] = gid
+            r["pn"] = r.get("pn") or ""
+            r["email"] = r.get("email", ""); r["bids"] = r.get("bids", "")
+            r["winner_country"] = r.get("winner_country", ""); r["winner_size"] = r.get("winner_size", "")
+            rows.append(r)
     for r in rows:
         v, c = r.get("value"), r.get("currency")
         r["usd"] = round(v * rates[c]) if isinstance(v, (int, float)) and c in rates else ""
         if r["usd"] != "" and r["usd"] > 2_000_000_000:  # framework ceilings and data-entry errors
             r["usd"] = ""
-        r["gname"] = BY_ID.get(r["group"], {}).get("name", r["group"])
+        r["gname"] = r["sector_name"]
     cut = str(t - dt.timedelta(days=180))
-    recent = sorted((r for r in rows if r["published"] >= cut), key=lambda r: -(r["usd"] or 0))[:2000]
+    recent = sorted((r for r in rows if r["published"] >= cut), key=lambda r: -(r["usd"] or 0))[:3000]
     write("awards.csv", [{
         "published": r["published"], "group": r["gname"], "country": r["country"], "buyer": r["buyer"],
         "title": r["title"][:200], "winners": "; ".join(r["winners"])[:200], "winner_country": r["winner_country"],
         "winner_size": r["winner_size"], "value_usd": r["usd"], "value": r["value"], "currency": r["currency"],
-        "bids": r["bids"], "buyer_email": r["email"], "link": f"https://ted.europa.eu/en/notice/-/detail/{r['pn']}",
+        "bids": r["bids"], "buyer_email": r["email"], "link": r["link"], "source": r["source"],
+        "commodity": BY_ID.get(r["group"], {}).get("name", ""),
     } for r in recent])
     by = defaultdict(list)
     for r in rows:
@@ -258,13 +276,13 @@ def merge_awards():
             "total_usd": round(sum(r["usd"] or 0 for r in lst)), "award_months": " ".join(months),
             "last_award": lst[-1]["published"], "next_expected": str(nxt),
             "current_suppliers": "; ".join(w for w, _ in sorted(wins.items(), key=lambda x: -x[1])[:3])[:200],
-            "avg_bids": round(sum(r["bids"] for r in lst if r["bids"] != "") / max(1, sum(1 for r in lst if r["bids"] != "")), 1),
+            "avg_bids": round(sum(r["bids"] for r in lst if isinstance(r["bids"], int)) / max(1, sum(1 for r in lst if isinstance(r["bids"], int))), 1),
             "buyer_email": next((r["email"] for r in reversed(lst) if r["email"]), ""),
-            "last_notice": f"https://ted.europa.eu/en/notice/-/detail/{lst[-1]['pn']}",
+            "last_notice": lst[-1]["link"],
             "median_award_usd": round(median([r["usd"] for r in lst if r["usd"]])) if any(r["usd"] for r in lst) else "",
         })
     buyers.sort(key=lambda b: (-b["total_usd"], -b["awards_12m"]))
-    write("buyers.csv", buyers[:3000])
+    write("buyers.csv", buyers[:5000])
     comp = defaultdict(lambda: {"wins": 0, "usd": 0, "buyers": set(), "countries": set(), "wc": ""})
     for r in rows:
         share = (r["usd"] or 0) / max(1, len(r["winners"]))
@@ -276,7 +294,7 @@ def merge_awards():
             "buyers": len(c["buyers"]), "buyer_countries": " ".join(sorted(c["countries"]))[:80]}
            for (w, g), c in comp.items()]
     out.sort(key=lambda x: (-x["won_usd_est"], -x["wins_12m"]))
-    write("competitors.csv", out[:2500])
+    write("competitors.csv", out[:5000])
     log.info("awards %d (12m), recent %d, buyers %d, competitors %d", len(rows), len(recent), len(buyers), len(out))
     return buyers
 

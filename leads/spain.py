@@ -5,7 +5,7 @@ import html
 import re
 import time
 
-from .common import cache_empty, clean, log, rolling, session, today
+from .common import cache_empty, clean, log, rolling, save_awards, session, today
 from .sectors import from_cpv, classify
 from .taxonomy import match_cpv
 
@@ -21,7 +21,7 @@ def _g(x, tag):
 def fetch():
     s, t = session(), today()
     cut = str(t - dt.timedelta(days=10 if cache_empty("spain") else 2))
-    url, pages, new, awards, t0 = START, 0, [], 0, time.time()
+    url, pages, new, awards, t0, aw = START, 0, [], 0, time.time(), []
     while url and pages < 120 and time.time() - t0 < 540:
         r = s.get(url, timeout=120); pages += 1
         if r.status_code != 200:
@@ -33,7 +33,24 @@ def fetch():
             upd = _g(x, "updated")[:10]; oldest = min(oldest, upd or oldest)
             st = _g(x, "cbc-place-ext:ContractFolderStatusCode")
             if st in ("ADJ", "RES"):
-                awards += 1; continue
+                awards += 1
+                for res in re.findall(r"<cac:TenderResult>(.*?)</cac:TenderResult>", x, re.S):
+                    win = re.findall(r"<cac:WinningParty>.*?<cbc:Name>(.*?)</cbc:Name>", res, re.S)
+                    if not win:
+                        continue
+                    amt = _g(res, "cbc:TaxExclusiveAmount") or _g(res, "cbc:PayableAmount")
+                    cpv = re.findall(r"<cbc:ItemClassificationCode[^>]*>(\d{8})</cbc:ItemClassificationCode>", x)
+                    b = re.search(r"<cac:PartyName>\s*<cbc:Name>(.*?)</cbc:Name>", x, re.S)
+                    nb = _g(res, "cbc:ReceivedTenderQuantity")
+                    aw.append({"id": "ESA-" + _g(x, "id").rsplit("/", 1)[-1] + "-" + str(len(aw)), "source": "Spain",
+                               "group": (match_cpv(cpv[:1])[0] or ""), "sector": from_cpv(cpv[:1]) or "",
+                               "title": clean(_g(x, "title"), 200), "buyer": clean(html.unescape(b.group(1)) if b else "", 120),
+                               "country": "ESP", "cpv": " ".join(cpv[:4]), "published": _g(res, "cbc:AwardDate")[:10] or upd,
+                               "winners": [clean(html.unescape(w), 100) for w in win[:6]], "winner_country": "ESP",
+                               "winner_size": "SME" if "SMEAwardedIndicator>true" in res else "",
+                               "value": float(amt) if re.match(r"^[\d.]+$", amt or "") else "", "currency": "EUR",
+                               "bids": int(nb) if nb.isdigit() else "", "email": "", "link": ""})
+                continue
             if st not in ("PUB", "PRE"):
                 continue
             end = _g(x, "cbc:EndDate")[:10]
@@ -60,6 +77,7 @@ def fetch():
             break
         nxt = re.search(r'<link href="([^"]+)" rel="next"', txt)
         url = nxt.group(1) if nxt else None
+    save_awards("spain", aw)
     rows, _ = rolling("spain", new)
     log.info("PLACSP pages %d, new %d, open %d, award entries %d", pages, len(new), len(rows), awards)
     return rows, {"new": len(new), "pages": pages, "awards_seen": awards}

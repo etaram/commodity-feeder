@@ -4,7 +4,7 @@ import datetime as dt
 import hashlib
 import re
 
-from .common import cffi_get, clean, log, rolling, today
+from .common import cffi_get, clean, log, rolling, save_awards, today
 from .regions import iso3
 from .sectors import classify
 
@@ -62,6 +62,15 @@ def fetch():
                 continue
             new.append(dict(base, id=f"AIIB-P-{key}", stage="planned", access="International (AIIB rules)",
                             deadline=""))
+    conv = []
+    for a in awards:
+        m = re.match(r"([A-Z]{3})\s*([\d,.]+)", a.get("price") or "")
+        conv.append({"id": a["id"], "source": "AIIB", "group": "", "sector": a["sector"], "title": a["title"][:200],
+                     "buyer": a["buyer"], "country": a["country"], "cpv": "", "published": a["published"],
+                     "winners": [clean(w, 100) for w in re.split(r";|\n", a.get("winner") or "") if clean(w)][:6],
+                     "winner_country": "", "winner_size": "", "value": float(m.group(2).replace(",", "")) if m else "",
+                     "currency": m.group(1) if m else "", "bids": "", "email": "", "link": a["link"]})
+    save_awards("aiib", [c for c in conv if c["winners"] and c["published"]])
     rows, _ = rolling("aiib", new, max_age_days=365)
     log.info("AIIB new %d, kept %d, awards %d", len(new), len(rows), len(awards))
-    return rows, {"new": len(new), "awards": awards[:400]}
+    return rows, {"new": len(new), "awards": len(awards)}
