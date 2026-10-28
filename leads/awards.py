@@ -13,7 +13,7 @@ FIELDS = ["publication-number", "notice-title", "buyer-name", "buyer-country", "
           "organisation-name-tenderer", "organisation-email-tenderer", "organisation-tel-tenderer",
           "organisation-city-tenderer", "organisation-identifier-tenderer", "organisation-internet-address-tenderer",
           "organisation-country-tenderer"]
-BACKFILL_DAYS_PER_RUN = 20
+BACKFILL_DAYS_PER_RUN = 45
 MIN_EUR = 50_000
 
 

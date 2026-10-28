@@ -111,7 +111,7 @@ jobs:
       - name: germany
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',germany,') }}
         run: set -o pipefail; python -m leads.run --source germany 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 15
+        timeout-minutes: 25
         continue-on-error: true
       - name: contractsfinder
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',contractsfinder,') }}
@@ -161,7 +161,7 @@ jobs:
       - name: awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',awards,') }}
         run: set -o pipefail; python -m leads.run --source awards 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 15
+        timeout-minutes: 30
         continue-on-error: true
       - name: worldbank
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',worldbank,') }}
