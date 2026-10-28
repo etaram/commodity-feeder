@@ -24,7 +24,12 @@ jobs:
           now=$(date -u +%s)
           for spec in "feed.yml:14" "leads.yml:6" "suppliers.yml:14"; do
             wf=${spec%%:*}; max_h=${spec##*:}
-            busy=$(gh api "repos/$REPO/actions/workflows/$wf/runs?per_page=5" --jq '[.workflow_runs[]|select(.status!="completed")]|length')
+            group="$wf"; [ "$wf" != "feed.yml" ] && group="leads.yml suppliers.yml"   # these two share one queue
+            busy=0
+            for g in $group; do
+              n=$(gh api "repos/$REPO/actions/workflows/$g/runs?per_page=5" --jq '[.workflow_runs[]|select(.status!="completed")]|length')
+              busy=$((busy + n))
+            done
             last=$(gh api "repos/$REPO/actions/workflows/$wf/runs?status=success&per_page=1" --jq '.workflow_runs[0].updated_at // "1970-01-01T00:00:00Z"')
             age_h=$(( (now - $(date -u -d "$last" +%s)) / 3600 ))
             echo "$wf last success $last (${age_h}h ago), active runs: $busy"
