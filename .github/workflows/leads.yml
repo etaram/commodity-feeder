@@ -17,6 +17,8 @@ jobs:
   leads:
     runs-on: ubuntu-latest
     timeout-minutes: 100
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,7 +31,12 @@ jobs:
             ~/.local/cache/argos-translate
             ~/.cache/pip
           key: argos-v1
-      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi
+      - uses: actions/cache@v4
+        with:
+          path: data/private
+          key: private-${{ github.run_id }}
+          restore-keys: private-
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: ted
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ted,') }}
@@ -185,6 +192,17 @@ jobs:
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',merge,') }}
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
+        continue-on-error: true
+      - name: universe
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',universe,') }}
+        run: set -o pipefail; python -m leads.universe 2>&1 | tee -a data/leads/run.log
+        continue-on-error: true
+      - name: push
+        if: ${{ env.GOOGLE_SERVICE_ACCOUNT_JSON != '' && (inputs.only == '' || contains(format(',{0},', inputs.only), ',push,')) }}
+        run: |
+          set -o pipefail
+          python -m leads.push check 2>&1 | tee -a data/leads/run.log
+          python -m leads.push universe 2>&1 | tee -a data/leads/run.log
         continue-on-error: true
       - name: commit
         run: |

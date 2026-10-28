@@ -85,6 +85,13 @@ def main():
     if a[:1] == ["check"]:
         for sid in (LEADS_SHEET, UNIVERSE_SHEET):
             print("OK", sid, sh.meta(sid)["properties"]["title"])
+    elif a[:1] == ["universe"]:
+        from .common import PRIVATE
+        rows = read_csv(PRIVATE / "universe.csv")
+        print("wrote", sh.replace_tab(UNIVERSE_SHEET, "Suppliers", rows), "rows to Supplier Universe")
+        st = json.loads((PRIVATE / "universe_stats.json").read_text())
+        sh.replace_tab(UNIVERSE_SHEET, "Stats", [["metric", "value"]] + [[k, v] for k, v in st.items()] +
+                       [["updated_utc", time.strftime("%Y-%m-%d %H:%M")]])
     elif a[:1] == ["tab"]:
         n = sh.replace_tab(a[1], a[2], read_csv(a[3]))
         print("wrote", n, "rows to", a[2])

@@ -71,11 +71,15 @@ def build():
     # contacts captured from notices (private cache)
     n_ct = 0
     for f in PRIVATE.glob("contacts_*.jsonl"):
+        uniq = {}
         for line in f.read_text(encoding="utf-8").splitlines():
             try:
                 c = json.loads(line)
             except ValueError:
                 continue
+            uniq[(c.get("name"), c.get("email"), c.get("phone"), c.get("legal_id"))] = c
+        f.write_text("".join(json.dumps(c, ensure_ascii=False) + "\n" for c in uniq.values()), encoding="utf-8")
+        for c in uniq.values():
             k = (norm(c.get("name")), iso3(c.get("country") or "") or "")
             x = sup.get(k) or next((sup[kk] for kk in ((k[0], ""),) if kk in sup), None)
             if not x:
