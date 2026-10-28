@@ -1,3 +1,8 @@
-wd POST https://query.wikidata.org/sparql?format=json {"query":"x"}
-wd_get https://query.wikidata.org/sparql?format=json&query=SELECT%20(COUNT(*)%20AS%20%3Fn)%20WHERE%20%7B%3Fc%20wdt%3AP31%2Fwdt%3AP279*%20wd%3AQ4830453%3B%20wdt%3AP452%20%3Fi%3B%20wdt%3AP17%20wd%3AQ1033.%7D
-secop_big https://www.datos.gov.co/resource/jbjy-vk9h.json?$select=count(*)&$where=valor_del_contrato%20%3E%20500000000%20AND%20tipodocproveedor%3D'NIT'%20AND%20fecha_de_firma%20%3E%20'2025-10-28'
+wb_socrata https://finances.worldbank.org/resource/kdui-wcs3.json?$limit=3
+wb_fone https://datacatalogapi.worldbank.org/dexapps/fone/api/metadata?assetId=DS00005
+wb_search https://search.worldbank.org/api/v2/contractdata?format=json&rows=2
+usas POST https://api.usaspending.gov/api/v2/search/spending_by_award/ {"filters":{"award_type_codes":["A","B","C","D"],"time_period":[{"start_date":"2026-01-01","end_date":"2026-10-01"}],"recipient_locations":[{"country":"FOREIGN"}]},"fields":["Award ID","Recipient Name","Award Amount","recipient_id","Place of Performance Country Code","NAICS"],"limit":3,"page":1}
+ungm_ca POST https://www.ungm.org/Public/ContractAward/Search {"PageIndex":0,"PageSize":15,"Title":"","Description":"","Reference":"","Supplier":"","Agencies":[],"UNSPSCs":[],"Countries":[],"SortField":"AwardDate","SortAscending":false}
+msc https://cert.msc.org/supplierdirectory/VController.aspx?Path=be2e0a3f-e85d-4e10-8f6e-b1f5d6f2a3f3
+oid https://organic.ams.usda.gov/integrity/Reports/DataHistory.aspx
+afdb_awards https://www.afdb.org/en/projects-and-operations/procurement/resources-for-businesses/contract-awards
