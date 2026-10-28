@@ -1,31 +1,28 @@
 source,last_run_utc,rows,note,detail
-ted,2026-10-28T06:26,11797,OK,fetched=5961; days=3; cache=11797
-fts,2026-10-28T06:26,152,OK,pages=1
-sam,2026-10-28T06:27,5282,OK,new=1741
-canadabuys,2026-10-28T06:27,800,OK,
-za,2026-10-28T06:27,210,OK,
-worldbank,2026-10-28T07:05,631,OK,new=230; cache=631; days=10
-ebrd,2026-10-28T06:27,41,OK,
-mrgov,2026-10-28T07:07,203,OK,
-ungm,2026-10-28T06:28,424,OK,new=425; total_active=1648; pages=33
-undp,2026-10-28T06:29,19,OK,new=26; cache=19
-aiib,2026-10-28T06:29,173,OK,new=174; awards=275
-isdb,2026-10-28T06:29,34,OK,new=35
-etimad,2026-10-28T06:29,205,OK,new=132; pages=14
-prozorro,2026-10-28T06:33,327,OK,candidates=2601; fetched=65
-pncp,2026-10-28T06:34,458,OK,new=292
-secop,2026-10-28T06:34,549,OK,new=0
-germany,2026-10-28T06:34,7055,OK,new=649; awards_seen=369; awards_saved=55
-contractsfinder,2026-10-28T06:34,80,OK,new=12
-paraguay,2026-10-28T06:41,428,OK,new=22
-dominican,2026-10-28T06:41,351,OK,new=0; listed=728
-austender,2026-10-28T06:41,120,OK,new=120
-oman,2026-10-28T06:41,65,OK,new=50
-france,2026-10-28T06:42,5422,OK,new=847
-spain,2026-10-28T06:52,483,OK,new=483; pages=5; awards_seen=956
-kenya,2026-10-28T06:54,147,OK,new=150
-tanzania,2026-10-28T07:00,0,EMPTY,new=0
-ghana,2026-10-28T07:00,0,EMPTY,new=0
-zambia,2026-10-28T07:02,0,EMPTY,new=0
-qatar,,0,no data,
-importyeti,2026-10-28T05:11,1,OK,"1 HS headings cached; this run 23, due 164"
+ted,2026-10-28T15:15,11797,OK,fetched=5961; days=3; cache=11797
+fts,2026-10-28T15:15,159,OK,pages=1
+sam,2026-10-28T15:15,5852,OK,new=2327
+canadabuys,2026-10-28T15:15,838,OK,
+za,2026-10-28T15:15,297,OK,
+worldbank,2026-10-28T15:31,689,OK,new=292; cache=689; days=10
+ebrd,2026-10-28T15:16,42,OK,
+mrgov,2026-10-28T15:33,213,OK,
+ungm,2026-10-28T09:18,458,OK,"new=455; total_active=1667; pages=35 | last error: py"", line 432, in _strptime     raise ValueError(""time data %r does not match format %r"" % ValueError: time data '04-IND-2026' does not match format '%d-%b-%Y' "
+undp,2026-10-28T15:16,19,OK,new=26; cache=19
+aiib,2026-10-28T15:16,174,OK,new=175; awards=275
+isdb,2026-10-28T15:16,34,OK,new=35
+etimad,2026-10-28T15:17,264,OK,new=191; pages=19
+prozorro,2026-10-28T15:24,433,OK,candidates=2716; fetched=791
+pncp,2026-10-28T15:25,528,OK,new=348
+secop,2026-10-28T15:25,549,OK,new=0
+germany,2026-10-28T15:25,7055,OK,new=649; awards_seen=369; awards_saved=681
+contractsfinder,2026-10-28T15:25,85,OK,new=17
+paraguay,2026-10-28T09:36,433,OK,"new=5 | last error: onError(err, request=request) requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')) "
+dominican,2026-10-28T15:26,364,OK,new=13; listed=775
+austender,2026-10-28T15:26,120,OK,new=120
+oman,2026-10-28T15:26,106,OK,new=50
+france,2026-10-28T15:26,5500,OK,new=925
+spain,2026-10-28T06:52,483,OK,"new=483; pages=5; awards_seen=956 | last error: ost='contrataciondelsectorpublico.gob.es', port=443) at 0x7f7d588e5880>, 'Connection to contrataciondelsectorpublico.gob.es timed out. (connect timeout=120)')) "
+kenya,2026-10-28T15:28,558,OK,new=40
+qatar,2026-10-28T15:30,0,EMPTY,new=0
+importyeti,2026-10-28T15:34,1,OK,"1 HS headings cached; this run 23, due 100"
