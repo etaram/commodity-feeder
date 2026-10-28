@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 638, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ungm.py", line 58, in fetch
+    ci = next((i for i, c in enumerate(cells) if _d(c)), None)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ungm.py", line 58, in <genexpr>
+    ci = next((i for i, c in enumerate(cells) if _d(c)), None)
+                                                 ^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ungm.py", line 17, in _d
+    return dt.datetime.strptime(m.group(0), "%d-%b-%Y").date() if m else None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/_strptime.py", line 653, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/_strptime.py", line 432, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data '04-IND-2026' does not match format '%d-%b-%Y'

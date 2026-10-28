@@ -1,19 +1,571 @@
-Wed Oct 28 13:41:18 UTC 2026
+Wed Oct 28 15:15:03 UTC 2026
+INFO TED total matching notices: 5961
+INFO TED fetched 5961 notices (25 pages, 3 days) -> 5754 new rows, cache 11797 open (8150387 bytes)
+INFO ted: 11797 rows
+INFO FTS new 24, open 159 (pages 1)
+INFO fts: 159 rows
+INFO SAM new 2327, open 5852 (pages 31)
+INFO sam: 5852 rows
+INFO CanadaBuys rows 838
+INFO canadabuys: 838 rows
+WARNING ZA 500
+INFO ZA awards 0
+INFO ZA new 100, open 297 (pages 2)
+INFO za: 297 rows
+INFO EBRD rows 42
+INFO ebrd: 42 rows
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 648, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 638, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ungm.py", line 58, in fetch
+    ci = next((i for i, c in enumerate(cells) if _d(c)), None)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ungm.py", line 58, in <genexpr>
+    ci = next((i for i, c in enumerate(cells) if _d(c)), None)
+                                                 ^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ungm.py", line 17, in _d
+    return dt.datetime.strptime(m.group(0), "%d-%b-%Y").date() if m else None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/_strptime.py", line 653, in _strptime_datetime
+    tt, fraction, gmtoff_fraction = _strptime(data_string, format)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/_strptime.py", line 432, in _strptime
+    raise ValueError("time data %r does not match format %r" %
+ValueError: time data '04-IND-2026' does not match format '%d-%b-%Y'
+INFO UNDP new 26, open 19
+INFO undp: 19 rows
+INFO AIIB new 175, kept 174, awards 275
+INFO aiib: 174 rows
+INFO IsDB new 35, open 34
+INFO isdb: 34 rows
+INFO Etimad new 191, open 264 (pages 19)
+INFO etimad: 264 rows
+INFO Prozorro feed pages 45, candidates 2716, fetched 791, open kept 433
+INFO prozorro: 433 rows
+WARNING PNCP 429 mode 6 p6
+INFO PNCP new 348, open 528
+INFO pncp: 528 rows
+INFO SECOP new 0, open 549
+INFO secop: 549 rows
+INFO Germany new 649, open 7055, award releases seen 369
+INFO germany: 7055 rows
+INFO Contracts Finder new 17, open 85
+INFO contractsfinder: 85 rows
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 648, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 638, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/paraguay.py", line 19, in fetch
+    r = s.get(URL, params={"tender.status": "active", "items_per_page": 100, "page": page}, timeout=90)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+INFO Dominican listed 775, fetched 15, new 13, open 364
+INFO dominican: 364 rows
+INFO AusTender new 120, open 120
+INFO austender: 120 rows
+INFO Oman new 50, open 106
+INFO oman: 106 rows
+INFO BOAMP new 925, open 5500
+INFO france: 5500 rows
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 239, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 494, in _make_request
+    raise new_e
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 470, in _make_request
+    self._validate_conn(conn)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 1125, in _validate_conn
+    conn.connect()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 827, in connect
+    self.sock = sock = self._new_conn()
+                       ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 248, in _new_conn
+    raise ConnectTimeoutError(
+urllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='contrataciondelsectorpublico.gob.es', port=443) at 0x7f7d588e5880>, 'Connection to contrataciondelsectorpublico.gob.es timed out. (connect timeout=120)')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='contrataciondelsectorpublico.gob.es', port=443): Max retries exceeded with url: /sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom (Caused by ConnectTimeoutError(<HTTPSConnection(host='contrataciondelsectorpublico.gob.es', port=443) at 0x7f7d588e5880>, 'Connection to contrataciondelsectorpublico.gob.es timed out. (connect timeout=120)'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 648, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 638, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/spain.py", line 26, in fetch
+    r = s.get(url, timeout=120); pages += 1
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 717, in send
+    raise ConnectTimeout(e, request=request)
+requests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='contrataciondelsectorpublico.gob.es', port=443): Max retries exceeded with url: /sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom (Caused by ConnectTimeoutError(<HTTPSConnection(host='contrataciondelsectorpublico.gob.es', port=443) at 0x7f7d588e5880>, 'Connection to contrataciondelsectorpublico.gob.es timed out. (connect timeout=120)'))
+WARNING Kenya 429 page 5
+INFO Kenya new 40, open 558 (pages 5)
+INFO kenya: 558 rows
+WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/1 attempt 1: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (20). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/1 attempt 2: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (20). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/1 attempt 3: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+INFO Qatar new 0, open 0
+INFO qatar: 0 rows
+WARNING TED awards 2026-09-12: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-11: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-10: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-09: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-08: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-07: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-06: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-04: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-03: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-02: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-09-01: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-31: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-30: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-28: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-27: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-26: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-25: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-24: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-23: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-22: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-20: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-19: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-18: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-17: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-16: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-14: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-13: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-12: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-11: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-10: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-09: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-08: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-07: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-06: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-05: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-04: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+WARNING TED awards 2026-08-03: 429 <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.4</center>
+</body>
+</html>
+<!-- a padding to disable MSIE 
+INFO TED awards: 48 days fetched, 7819 notices, 278 days still to back-fill
+INFO awards: 0 rows
+INFO World Bank new 292, open cache 689
+INFO worldbank: 689 rows
+INFO mr.gov.il rows: 213
+INFO mrgov: 213 rows
+WARNING IY 0309: HTTP 404
+WARNING IY 2404: HTTP 404
+WARNING IY: stopping after repeated failures (rate limit)
+INFO ImportYeti headings scanned: 23 (due 100)
+INFO importyeti: 0 rows
+WARNING comtrade 070310 2025: 429
+WARNING comtrade 120740 2025: 429
+WARNING comtrade 090411 2025: 429
+WARNING comtrade 230400 2025: 429
+WARNING comtrade 240120 2025: 429
+WARNING comtrade 271019 2025: 429
+WARNING comtrade 270112 2025: 429
+WARNING comtrade 271320 2025: 429
+INFO market signals: 0 codes refreshed, 28 due
+INFO markets: 0 rows
+INFO enrich: looked up 157, cached 2954
 INFO initializing identifier
 WARNING translator es: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-es_en-1_9/sentencepiece.model": No such file or directory Error #2
 WARNING translator uk: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-uk_en-1_9/sentencepiece.model": No such file or directory Error #2
 WARNING translator cs: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-cs_en-1_9_6/sentencepiece.model": No such file or directory Error #2
 WARNING translator fi: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-fi_en-1_9/sentencepiece.model": No such file or directory Error #2
+INFO ('Get https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
+[0;93m2026-10-28 15:37:08.034132111 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 WARNING translator hu: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-hu_en-1_9/sentencepiece.model": No such file or directory Error #2
-WARNING translator ro: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-ro_en-1_9/sentencepiece.model": No such file or directory Error #2
 WARNING translator da: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-da_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator ro: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-ro_en-1_9/sentencepiece.model": No such file or directory Error #2
 WARNING translator lt: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-lt_en-1_9/sentencepiece.model": No such file or directory Error #2
+INFO ('Get https://argos-net.com/v1/translate-he_en-1_5.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-he_en-1_5.argosmodel',)
 WARNING translator id: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-id_en-1_9/sentencepiece.model": No such file or directory Error #2
-INFO translations: 0 new, 2071 pending, cache 19805, 10s
-INFO awards 81835 (12m), recent 3000, buyers 11232, competitors 73701
+INFO translations: 229 new, 2181 pending, cache 20031, 34s
+INFO awards 84020 (12m), recent 3000, buyers 11632, competitors 75646
 INFO market signals rows 972
-INFO opportunities.csv trimmed for the sheet: 3849 of 24077 rows
-INFO opportunities 24077
+INFO opportunities.csv trimmed for the sheet: 3847 of 25033 rows
+INFO opportunities 25033
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -31,7 +583,7 @@ NameError: name 'SHEET_COLS' is not defined. Did you mean: 'SHEET_FILES'?
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
 wrote 35354 rows x 28 cols to Tenders
-wrote 24078 rows x 19 cols to Opportunity Pool
+wrote 25034 rows x 19 cols to Opportunity Pool
 wrote 5001 rows x 13 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
 wrote 5001 rows x 7 cols to Competitors
