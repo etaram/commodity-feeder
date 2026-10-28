@@ -15,6 +15,7 @@ LEGAL = re.compile(r"\b(gmbh|ag|kg|sa|s\.a\.|sas|sarl|srl|s\.r\.l\.|spa|s\.p\.a\
                    r"sp\. z o\.o\.|s\.r\.o\.|kft|d\.o\.o\.|ooo|tov|co\.?|corp|corporation|company|group|holding)\b")
 GOODS = {"AGRI_FOOD", "ENERGY", "POWER", "MINING_METALS", "CHEMICALS", "TEXTILES", "CONSTR_MAT", "MACHINERY",
          "TRANSPORT_EQ", "DEFENCE", "HEALTH", "LAB", "ICT", "CONSUMER", "WATER"}
+WORKS = {"BUILDING", "INFRA", "WATER", "ENGINEERING"}
 NAME2ID = {v: k for k, v in SECTORS.items()}
 
 
@@ -111,6 +112,18 @@ def _research_rows():
     return [r for r in rows if r.get("supplier")]
 
 
+def epc_class(x):
+    """EPC / major works contractor: most of its public contracts are works, with a large volume or one large contract.
+    'international' when it won works for buyers outside its home country."""
+    if x.get("industries") and re.search(r"construction|engineering|epc|contract", str(x.get("industries")), re.I) and x.get("notable"):
+        return "EPC / contractor"
+    if x["works"] < max(1, x["wins"] / 2) or (x["works_usd"] < 20e6 and x["ex_usd"] < 10e6):
+        return ""
+    home = max(x["country"].items(), key=lambda y: y[1])[0] if x["country"] else ""
+    intl = any(c and home and c != home for c in x["buyer_c"])
+    return "International EPC" if intl else "EPC / major contractor"
+
+
 def quality(r):
     """0-100: how strong a supplier looks from public evidence (value won, repeat wins, distinct buyers, exports,
     international lenders / foreign governments as buyers, notability)."""
@@ -144,7 +157,8 @@ def build():
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
                                "sectors": defaultdict(int), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
                                "last": "", "first": "9999", "sources": set(), "example": "", "ex_usd": 0,
-                               "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0,
+                               "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0, "works": 0,
+                               "works_usd": 0.0,
                                "groups": defaultdict(int), "items": {}})
     n_aw = 0
     for f, a in _awards():
@@ -168,6 +182,8 @@ def build():
                 if sec:
                     x["sectors"][sec] += 1
                     x["goods"] += 1 if sec in GOODS else 0
+                if sec in WORKS or str(a.get("nature", "")).lower().startswith("works"):
+                    x["works"] += 1; x["works_usd"] += share
                 g = a.get("group") or _group(a.get("title") or "")
                 if g:
                     x["groups"][g] += 1
@@ -280,6 +296,7 @@ def build():
             "wins": x["wins"], "won_usd_est": round(x["usd"]),
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
+            "epc": epc_class(x),
             "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
             "logistics_role": logistics_role(f"{name} {x.get('industries', '')} {about} {items} {x.get('naics', '')}")
             if any(s_ in ("LOGISTICS", "PORTS") for s_, _ in secs[:1]) or "shipbuild" in name.lower() else "",
