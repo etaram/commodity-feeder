@@ -39,6 +39,8 @@ def fetch():
                 "IsSustainable": False, "IsActive": True, "NoticeDisplayType": None,
                 "NoticeSearchTotalLabelId": "noticeSearchTotal", "TypeOfCompetitions": []}
         r = s.post(BASE + "/Public/Notice/Search", json=body, headers=hdr, timeout=60)
+        if r.status_code == 429:
+            polite(20); r = s.post(BASE + "/Public/Notice/Search", json=body, headers=hdr, timeout=60)
         if r.status_code != 200:
             log.warning("UNGM %s page %d", r.status_code, page); break
         if total is None:
@@ -81,7 +83,7 @@ def fetch():
         if stop:
             break
         page += 1
-        polite(0.7)
+        polite(1.5)
     rows, _ = rolling("ungm", new, max_age_days=400)
     log.info("UNGM total active %s, new %d, cache %d (pages %d)", total, len(new), len(rows), page)
     return rows, {"new": len(new), "total_active": total, "pages": page}

@@ -13,6 +13,8 @@ import time
 from .common import CACHE
 
 log = logging.getLogger("leads")
+for _n in ("argostranslate", "argostranslate.utils", "stanza", "ctranslate2"):
+    logging.getLogger(_n).setLevel(logging.WARNING)
 P = CACHE / "translations.jsonl"
 SUPPORTED = {"ar", "de", "es", "fr", "pt", "uk", "ru", "he", "it", "pl", "nl", "ro", "cs", "tr", "id", "zh", "ja",
              "ko", "el", "hu", "sv", "da", "fi", "bg", "sk", "sl", "lt", "lv", "et", "ca", "ga", "hi", "fa", "az"}
@@ -67,6 +69,8 @@ def _translator(lang):
         return _models[lang]
     tr = None
     try:
+        import argostranslate.utils as au
+        au.logger.setLevel(logging.WARNING)
         import argostranslate.package as pk
         import argostranslate.translate as at
         installed = {(p.from_code, p.to_code) for p in pk.get_installed_packages()}

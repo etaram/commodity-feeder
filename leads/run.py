@@ -64,6 +64,7 @@ def run_source(name):
         raise SystemExit(f"unknown source {name}")
     rows, meta = m.fetch()
     save_partial(name, rows, meta)
+    (LEADS / f"error_{name}.txt").unlink(missing_ok=True)
     log.info("%s: %d rows", name, len(rows))
 
 

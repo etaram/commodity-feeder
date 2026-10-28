@@ -20,6 +20,10 @@ def fetch():
         while page <= 120:
             r = s.get(URL, params={"dataInicial": d0, "dataFinal": d1, "codigoModalidadeContratacao": mode,
                                    "pagina": page, "tamanhoPagina": 50}, timeout=90)
+            if r.status_code == 429:
+                polite(15)
+                r = s.get(URL, params={"dataInicial": d0, "dataFinal": d1, "codigoModalidadeContratacao": mode,
+                                       "pagina": page, "tamanhoPagina": 50}, timeout=90)
             if r.status_code == 204:
                 break
             if r.status_code != 200:
@@ -48,7 +52,7 @@ def fetch():
             if j.get("paginasRestantes", 0) <= 0:
                 break
             page += 1
-            polite(0.3)
+            polite(1.0)
     rows, _ = rolling("pncp", new, max_age_days=90)
     log.info("PNCP new %d, open %d", len(new), len(rows))
     return rows, {"new": len(new)}
