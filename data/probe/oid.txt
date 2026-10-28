@@ -1,0 +1,244 @@
+URL: https://organic.ams.usda.gov/integrity/Reports/DataHistory.aspx
+STATUS: 200
+TYPE: text/html; charset=utf-8
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>        
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Organic Integrity Database</title>
+    <base href="/integrity/" />
+
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+
+    <script>
+        //Blazor has case sensitive URLs when hosted in a Child Directory
+        // https://github.com/dotnet/aspnetcore/issues/6818
+        try {
+            var baseurl = window.location.origin; //example: https://www.scaler.com
+            if (baseurl !== 'undefined' && baseurl != null && !baseurl.includes("localhost")) {
+                var pathArray = window.location.pathname.split('/');
+                if (pathArray !== 'undefined') {                
+                    if (pathArray.length > 1 && (pathArray[1] !== null && pathArray[1].trim() !== '')) {
+                        var baseTag = document.getElementsByTagName('base');
+                        if (baseTag !== 'undefined' && baseTag.length > 0) {
+                            baseTag[0].setAttribute('href', '/' + pathArray[1] + '/');
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+            ;
+        }
+    </script>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="api/reports/resources/js/telerikReportViewer"></script>
+    <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor/css/kendo-theme-default/all.css" />
+    <script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js"></script>
+
+    <!--Blazor:{"sequence":1,"type":"server","descriptor":"CfDJ8NheA2qWn5xOq1EKV4uSBHsj52zQrddCIb\u002BZp0gsx/yK03cz3PBhpDw1XI5YCw7HcwIoTVZ9v1MOkKm8nmUQrkOZjzneZD\u002Br65xe3Qp9W1IMG16DM7HdgFDoIMFTWw2DHjFvVbcAOZ3k084QgAuC9qKcT9GJsDHBQwgTkMhOVv29bB6Z39IA2vGsWgUM8VNRI9qEsT3HrRjIfEDdHUTUJr1vknR\u002B9ZEE\u002BwhAu2p4uAiU7XgPbPUq0YoXYh2ohfTLKaI84jZ9jCeR5\u002BgwdQJp0Yhe6fwm1dffy7LeOkC5c9ecs06QHdr2elTAIZ4WctI7abZ1SpAM/sA3LG0XlH9pEKWz662ShbD7Zq9h7wBTOnqKV/sivytVjlmqecA6m6NhGF9qhCQ2CPXBSs\u002B8CZcgKswugCiLf3Y1YCDGHZvHgzhu"}-->
+    <link href="lib/blazor-ui/styles/bootstrap-main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="fsa-design-system/fsa-style.css" />
+    <link rel="stylesheet" href="css/IntegrityTheme.css" />
+    <link href="Images/certified_organic_logo.png" rel="shortcut icon" type="image/svg" />    
+
+    <script type="text/javascript">
+        var radioLabel = [];
+        function setTooltip(ele) {
+            radioLabel = ele.split(',');
+            setTimeout(setTitle, 1000);
+        }
+        function setTitle() {
+            if (radioLabel.length >= $('input[type="radio"]').length) {
+                $('input[type="radio"]').each(function (index) {
+                    $(this).prop("title", radioLabel[index]);
+                });
+            }
+        }
+        function setGridGroupHeaderPanelText(gridName) {
+
+            if ($("div.k-indicator-container").length > 0) {
+                var div = $("div.k-indicator-container")[0];
+                if (div != null) {
+                    if (gridName === "userProfile") {
+                        console.log(div.innerText);
+                        div.innerText = "Drag the Role column header and drop it here to group by role.";
+                        console.log(div.innerText);
+                        console.log('userProfileCalled');
+                    }
+                }
+            }
+
+        }
+        //window.onload = function () {
+
+        //    if (pubAuto == -1)
+        //        return;
+
+        //    setTimeout(function () {
+        //        var lnk = document.getElementById(lnkPublish);
+        //        if (lnk) lnk.click();
+        //    }, 50);
+        //};
+
+        window.triggerClick = (pubAuto) => {
+            //document.getElementById('lnkPublish').click();
+
+            //elt.click();
+            if (pubAuto == 1) {
+
+                setTimeout(function () {
+                    document.getElementById('lnkPublish').click();
+                }, 50);
+            }
+        }
+
+        function gotoElement(ele) {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: document.getElementById(ele).offsetTop
+            }, 50);
+        }
+        function closeWindow() {
+            window.close();
+        }
+        function downloadFromByteArray(byteArray, fileName, contentType) {
+
+            // Convert base64 string to numbers array.
+            const numArray = atob(byteArray).split('').map(c => c.charCodeAt(0));
+
+            // Convert numbers array to Uint8Array object.
+            const uint8Array = new Uint8Array(numArray);
+
+            // Wrap it by Blob object.
+            const blob = new Blob(uint8Array, { type: contentType });
+
+            // Create "object URL" that is linked to the Blob object.
+            const url = URL.createObjectURL(blob);
+
+            // Invoke download helper function that implemented in
+            // the earlier section of this article.
+            downloadFromUrl(url, fileName);
+
+            // At last, release unused resources.
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadFromUrl(url, fileName) {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = options.url;
+            anchorElement.download = options.fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+        window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+            const arrayBuffer = await contentStreamReference.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const url = URL.createObjectURL(blob);
+
+            triggerFileDownload(fileName, url);
+
+            URL.revokeObjectURL(url);
+        }
+
+        window.triggerFileDownload = (fileName, url) => {
+            const anchorElement = document.createElement('a');
+            anchorElement.href = url;
+            anchorElement.download = fileName ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+        }
+
+        function BlazorDownloadFile(filename, contentType, content) {
+            // Create the URL
+            const file = new File([content], filename, { type: contentType });
+
+            const exportUrl = URL.createObjectURL(file);
+
+            // Create the <a> element and click on it
+            const a = document.createElement("a");
+            document.body.appendChild(a);
+            a.href = exportUrl;
+            a.download = filename;
+            a.target = "_self";
+            a.ariaLabel = filename;
+            a.click();
+
+            // We don't need to keep the object URL, let's release the memory
+            // On older versions of Safari, it seems you need to comment this line...
+            URL.revokeObjectURL(exportUrl);
+        }
+        function closePickerPopup(pickerId) {
+            document.getElementById(pickerId).dispatchEvent(new Event("focus"));
+        }
+    </script>
+</head>
+<body>
+    
+<!--Blazor:{"sequence":0,"type":"server","descriptor":"CfDJ8NheA2qWn5xOq1EKV4uSBHswhGkUkA0aq5w1E5al4Y3SWMGua3i/4JI\u002BcQASZsBKCs\u002BlJlEdQje6XPazqXrr4BSnYVEbPn6HL14ZZCDjEWVA21jaT4Sbjlvas56tAwRYA4bwpdoeDt0eF1LeF7ZIqykp9KoGg9Cw5s8g3/wojqQbQwMkCnKZSmZZni/m9bPDANB7/alABrJZAieGX/mSPVoONu0Z7AngfHuzySs22453zPr\u002Bpk2va\u002Bs8Ln958T7IKFGhfPxyGvUnd3Y\u002BNbxEL/5njdcFSAgjtsn0YED/XLQsGvwO4AuIHFDTp423AXi\u002BAfDtiaiPNIMjqgnOzXjcBz\u002B39pomySOkABmWFFqBOoVX"}-->
+<script src="js/api.js" > </script>
+<script>
+
+  
+    window.WriteCookie = {
+
+        WriteCookie: function (name, value, days) {
+
+            var expires;
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toGMTString();
+            }
+            else {
+                expires = "";
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+    }
+    window.ReadCookie = {
+        ReadCookie: function (cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    }
+    $.ajaxSetup({
+        beforeSend: function (jqXHR, settings) {
+            if (settings.url === "api/reports/clients") {
+                settings.data = '"' + settings.data + '"';
+            }
+        }
+    });
+</script>
+
+    <div id="blazor-error-ui">
+        
+            An error has occurred. This application may no longer respond until reloaded.
+        
+        
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.server.js"></script>
+
+    <script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer></script>
+
+</body>
+</html>

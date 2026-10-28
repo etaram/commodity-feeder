@@ -1,0 +1,5 @@
+URL: https://api.usaspending.gov/api/v2/search/spending_by_award/
+STATUS: 422
+TYPE: application/json
+
+{"detail":"Invalid value in 'filters|recipient_locations|country': Country code must be exactly 3 characters"}

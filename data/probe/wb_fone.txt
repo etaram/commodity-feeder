@@ -1,0 +1,207 @@
+URL: https://datacatalogapi.worldbank.org/dexapps/fone/api/metadata?assetId=DS00005
+STATUS: 200
+TYPE: application/json
+
+{
+  "id": "DS00005",
+  "object_type": "DATASET",
+  "title": "Contract Awards in Investment Project Financing (Since FY 2020)",
+  "description": "<p>The data available here now includes all contract awards financed by The World Bank under Investment Project Financing (IPF) operations since FY2020. The data source is STEP (Systematic Tracking of Exchanges in Procurement), which is required to be used by Borrowers in all IPF operations subject to the World Bank?s Procurement Regulations. Data is entered by Borrowers. \"Supplier Country / Economy\" represents the place of supplier registration, which may or may not be the supplier's actual country / economy of origin. Information does not include awards to subcontractors, nor does it account for cofinancing.</p><p><br></p><p>Please note that for contracts awarded to joint-ventures of multiple companies, the total contract value was split equally amongst the members of the joint-venture.</p><p><br></p><p>The World Bank?s Procurement Group does not guarantee the data included on this site and accepts no responsibility whatsoever for any consequences of its use. The World Bank complies with all sanctions applicable to World Bank transactions.</p><p>Visit the World Bank Procurement website for more information:&nbsp;<a href=\"https://www.worldbank.org/en/projects-operations/products-and-services/procurement-projects-programs\" rel=\"noopener noreferrer\" target=\"_blank\">https://www.worldbank.org/en/projects-operations/products-and-services/procurement-projects-programs</a></p><p><br></p><p>If you would like to review the Prior reviewed project procurement contracts since FY2001, please refer to&nbsp;<a href=\"https://financesone.worldbank.org/contract-awards-in-investment-project-financing-(since-fy-2001-fy-2016)/DS01004\" rel=\"noopener noreferrer\" target=\"_blank\">https://financesone.worldbank.org/contract-awards-in-investment-project-financing-(since-fy-2001-fy-2016)/DS01004</a></p>",
+  "category": "Procurement",
+  "provenance": "official",
+  "data_as_of": "2026-10-28",
+  "view_count": 180982,
+  "download_count": 38931,
+  "data_provided_by": "World Bank Group",
+  "owner": "financesone@worldbank.org",
+  "date_created": "2012-05-03T12:03:01Z",
+  "last_updated": "2026-10-28T05:56:47Z",
+  "license": "Creative Commons Attribution 4.0 International",
+  "type": "Time Series",
+  "row_label": "WB Contract Number",
+  "source": "World Bank Group",
+  "periodicity": "Day",
+  "granularity": "Other",
+  "update_frequency": "Daily",
+  "economic_coverage": "World",
+  "range_column": "as_of_date, contract_signing_date",
+  "general_access_option": "Query tool,API,Mobile App,Bulk download",
+  "language": "English",
+  "update_schedule": "Daily updates when new records are available",
+  "data_last_updated": "2026-10-28T05:56:47Z",
+  "metadata_last_updated": "11/7/2025 5:56:45 AM",
+  "countries": [],
+  "tags": [
+    {
+      "id": null,
+      "name": "region level"
+    },
+    {
+      "id": null,
+      "name": "project level"
+    },
+    {
+      "id": null,
+      "name": "country level"
+    }
+  ],
+  "row_count": 296096,
+  "column_count": 21,
+  "first_release_date": "5/3/2012 12:03:01 PM",
+  "parent_id": null,
+  "data_classification_name": "Public",
+  "point_of_contact": "Finances One",
+  "institutions": [
+    "IBRD",
+    "IDA"
+  ],
+  "column_details": [
+    {
+      "column_name": "as_of_date",
+      "column_business_name": "As of Date",
+      "column_datatype": "DATE",
+      "column_description": "Represents the date when this snapshot was taken.",
+      "column_position": "1"
+    },
+    {
+      "column_name": "borrower_contract_reference_number",
+      "column_business_name": "Borrower Contract Reference Number",
+      "column_datatype": "STRING",
+      "column_description": "Contract reference number used by Borrower.",
+      "column_position": "13"
+    },
+    {
+      "column_name": "borrower_country",
+      "column_business_name": "Borrower Country / Economy",
+      "column_datatype": "STRING",
+      "column_description": "Country / Economy to which loan or credit has been issued. Loans to the IFC are included under the country / economy “World”.",
+      "column_position": "4"
+    },
+    {
+      "column_name": "borrower_country_code",
+      "column_business_name": "Borrower Country / Economy Code",
+      "column_datatype": "STRING",
+      "column_description": "Country / Economy Code according to the World Bank country / economy list. Might be different from the ISO country / economy code.",
+      "column_position": "5"
+    },
+    {
+      "column_name": "contract_description",
+      "column_business_name": "Contract Description",
+      "column_datatype": "STRING",
+      "column_description": "Contract description as it appears in the signed agreement.",
+      "column_position": "12"
+    },
+    {
+      "column_name": "contract_signing_date",
+      "column_business_name": "Contract Signing Date",
+      "column_datatype": "DATE",
+      "column_description": "Date when the contract was signed.",
+      "column_position": "14"
+    },
+    {
+      "column_name": "fiscal_year",
+      "column_business_name": "Fiscal Year",
+      "column_datatype": "NUMBER",
+      "column_description": "The fiscal year begins on July 1st of the previous year and runs through June 30th of the designated year.",
+      "column_position": "2"
+    },
+    {
+      "column_name": "contract_signed___calendar_year",
+      "column_business_name": "Contract signed - Calendar year",
+      "column_datatype": "NUMBER",
+      "column_description": "Calendar Year is derived from the Contract Signing Date.",
+      "column_position": "21"
+    },
+    {
+      "column_name": "procurement_category",
+      "column_business_name": "Procurement Category",
+      "column_datatype": "STRING",
+      "column_description": "Describes procurement category.",
+      "column_position": "9"
+    },
+    {
+      "column_name": "procurement_method",
+      "column_business_name": "Procurement Method",
+      "column_datatype": "STRING",
+      "column_description": "The method used for selecting a contractor, supplier or consultant.  The method used depends upon the Procurement Category. ",
+      "column_position": "10"
+    },
+    {
+      "column_name": "project_global_practice",
+      "column_business_name": "Project Global Practice",
+      "column_datatype": "STRING",
+      "column_description": "Indicates major sector for specific contract.",
+      "column_position": "8"
+    },
+    {
+      "column_name": "project_id",
+      "column_business_name": "Project ID",
+      "column_datatype": "STRING",
+      "column_description": "A Bank project is referenced by a project ID (Pxxxxxxx).  More than one loan, credit, or grant may be associated with one Project ID. ",
+      "column_position": "6"
+    },
+    {
+      "column_name": "project_name",
+      "column_business_name": "Project Name",
+      "column_datatype": "STRING",
+      "column_description": "Short descriptive project name.",
+      "column_position": "7"
+    },
+    {
+      "column_name": "region",
+      "column_business_name": "Region",
+      "column_datatype": "STRING",
+      "column_description": "Country lending is grouped into regions based on the current World Bank administrative (rather than geographic) region where project implementation takes place. The Other Region is used for loans to the IFC.",
+      "column_position": "3"
+    },
+    {
+      "column_name": "review_type",
+      "column_business_name": "Review type",
+      "column_datatype": "STRING",
+      "column_description": "The Bank reviews whether the Borrower’s procurement process complies with the legal agreement and the Procurement Regulations for Borrowers either prior to or post procurement.",
+      "column_position": "20"
+    },
+    {
+      "column_name": "supplier",
+      "column_business_name": "Supplier",
+      "column_datatype": "STRING",
+      "column_description": "The name of the contractor, supplier or consultant who submitted the winning bid or proposal. The name of the manufacturer, Joint Venture partners, sub-contractor, and/or sub-consultants may not appear.",
+      "column_position": "16"
+    },
+    {
+      "column_name": "supplier_contract_amount_usd",
+      "column_business_name": "Supplier Contract Amount (USD)",
+      "column_datatype": "NUMBER",
+      "column_description": "All contract values reflect committed (not disbursed) amounts, and are in US dollars, based on the US Treasury's rate of exchange at the time of the Bank's no objection to the contract award.\n ",
+      "column_position": "19"
+    },
+    {
+      "column_name": "supplier_country",
+      "column_business_name": "Supplier Country / Economy",
+      "column_datatype": "STRING",
+      "column_description": "The nationality of awarded firms is based on place of registration, which may or may not be the same as the country / economy of origin.   For the country / economy where the work is being performed, or the goods are being delivered, use Borrower Country / Economy.",
+      "column_position": "17"
+    },
+    {
+      "column_name": "supplier_country_code",
+      "column_business_name": "Supplier Country / Economy Code",
+      "column_datatype": "STRING",
+      "column_description": "Supplier Country / Economy Code according to the World Bank country / economy list. Might be different from the ISO country / economy code.The nationality of awarded firms is based on place of registration, which may or may not be the same as the country / economy of origin.",
+      "column_position": "18"
+    },
+    {
+      "column_name": "supplier_id",
+      "column_business_name": "Supplier ID",
+      "column_datatype": "STRING",
+      "column_description": "World Bank Supplier Identifiers.",
+      "column_position": "15"
+    },
+    {
+      "column_name": "wb_contract_number",
+      "column_business_name": "WB Contract Number",
+      "column_datatype": "STRING",
+      "column_description": "Internal World Bank Contract number.",
+      "column_position": "11"
+    }
+  ]
+}
