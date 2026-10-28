@@ -89,8 +89,14 @@ def _model(lang, to="en"):
             mb = next(iter(path.rglob("model.bin")), None)
             if not spf or not mb:
                 raise FileNotFoundError(f"package layout not recognised in {path}")
-            sp = sentencepiece.SentencePieceProcessor(model_file=str(spf))
-            tr = ctranslate2.Translator(str(mb.parent), device="cpu", inter_threads=2, intra_threads=2)
+            try:
+                sp = sentencepiece.SentencePieceProcessor(model_file=str(spf))
+                tr = ctranslate2.Translator(str(mb.parent), device="cpu", inter_threads=2, intra_threads=2)
+            except Exception:  # noqa: BLE001  newer packages use a BPE tokenizer: let Argos do the whole pipeline
+                import argostranslate.translate as at
+                m = ("argos", at.get_translation_from_codes(lang, to))
+                _models[(lang, to)] = m
+                return m
             m = (tr, sp)
     except Exception as e:  # noqa: BLE001
         log.warning("translator %s: %s", lang, e)
@@ -102,6 +108,8 @@ def _translate_batch(lang, texts, to="en"):
     m = _model(lang, to)
     if not m:
         return [""] * len(texts)
+    if m[0] == "argos":
+        return [m[1].translate(x[:400]) for x in texts]
     tr, sp = m
     toks = sp.encode([t[:400] for t in texts], out_type=str)
     res = tr.translate_batch(toks, beam_size=2, max_batch_size=64, max_decoding_length=160)
