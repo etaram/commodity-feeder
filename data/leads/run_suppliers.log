@@ -1,3 +1,119 @@
-Wed Oct 28 18:01:27 UTC 2026
-INFO:leads:universe {'awards': 784944, 'suppliers': 199244, 'with_email': 55671, 'with_phone': 56154, 'exporters': 11160, 'goods': 58298, 'contacts_matched': 122174, 'tier_A': 198557, 'tier_B_notable': 665, 'with_website': 33790, 'quality_40_plus': 42907, 'with_any_contact': 90262, 'region: Latin America': 92396, 'region: Europe': 55625, 'region: Sub-Saharan Africa': 25706, 'region: South Asia': 7085, 'region: unknown': 4804, 'region: Southeast Asia': 3710, 'region: Middle East & North Africa': 2825, 'region: East Asia': 2438, 'region: CIS & Central Asia': 2162, 'region: North America': 1499, 'region: Other': 499, 'region: Oceania': 265, 'region: Israel': 230}
+Wed Oct 28 20:01:37 UTC 2026
+INFO LatAm awards: Brazil 805 (4 days), Colombia 388
+INFO latam_awards: 0 rows
+INFO Prozorro awards: 36503 candidates, 1596 read, 1603 awards
+INFO prozorro_awards: 0 rows
+INFO OCDR 145 RWA 2026: 4144 releases, 5897 awards, 25261 contacts
+INFO OCDR 143 ZAF 2026: 3056 releases, 412 awards, 0 contacts
+INFO OCDR 152 TZA 2026: 62293 releases, 21123 awards, 21123 contacts
+INFO OCDR 130 UGA 2026: 14162 releases, 6992 awards, 0 contacts
+INFO OCDR 43 URY 2026: 23945 releases, 31573 awards, 31573 contacts
+INFO OCDR 3 ZMB 2026: 26157 releases, 5169 awards, 5169 contacts
+INFO OCDR 137 ARG 2025: 8089 releases, 12123 awards, 0 contacts
+INFO OCDR {'files': 7, 'awards': 83289, 'contacts': 83126, 'pending': 161}
+INFO ocdr: 0 rows
+INFO USAspending foreign: 10000
+INFO USAspending 11: 2737
+INFO USAspending 21: 317
+INFO USAspending 31: 8000
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/retry.py", line 510, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 540, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 638, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 1478, in getresponse
+    response.begin()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 343, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/http/client.py", line 312, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 655, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 645, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ext_awards.py", line 146, in fetch
+    rows = usaspending(s, t_end)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ext_awards.py", line 130, in usaspending
+    got = _usas_segment(s, flt, budget_end, pages)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/ext_awards.py", line 87, in _usas_segment
+    r = s.post(USAS, json=body, timeout=120)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 712, in post
+    return self.request("POST", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 711, in send
+    raise ConnectionError(err, request=request)
+requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+INFO commodity_producers: 0 rows
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 502
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+INFO wikidata companies: 4 countries refreshed (165 companies), 24 countries cached
+INFO wikidata_companies: 0 rows
+INFO web profiles: 1588 read, 88 websites discovered of 700 tried
+INFO web_contacts: 0 rows
+INFO:leads:universe {'awards': 869896, 'suppliers': 221186, 'with_email': 59756, 'with_phone': 62851, 'exporters': 11229, 'goods': 61425, 'contacts_matched': 144296, 'tier_A': 218610, 'tier_B_notable': 826, 'with_website': 36567, 'quality_40_plus': 44867, 'with_any_contact': 97314, 'region: Latin America': 98060, 'region: Europe': 57261, 'region: Sub-Saharan Africa': 39432, 'region: South Asia': 7108, 'region: unknown': 4806, 'region: Southeast Asia': 4355, 'region: Middle East & North Africa': 2848, 'region: East Asia': 2474, 'region: CIS & Central Asia': 2211, 'region: North America': 1584, 'region: Other': 508, 'region: Oceania': 308, 'region: Israel': 231}
 wrote 150001 rows to Supplier Universe
