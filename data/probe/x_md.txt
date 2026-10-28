@@ -1,0 +1,14 @@
+ERROR: Root not in trusted database
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/probe_extra.py", line 19, in <module>
+    cadata = aia.cadata_from_url(url)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/aia.py", line 230, in cadata_from_url
+    return self.cadata_from_host(split_result.netloc)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/aia.py", line 221, in cadata_from_host
+    der_certs = list(self.aia_chase(host))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/aia.py", line 163, in aia_chase
+    raise InvalidCAError("Root not in trusted database")
+aia.InvalidCAError: Root not in trusted database
