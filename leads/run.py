@@ -436,6 +436,13 @@ def write_digest(tenders, buyers):
     (LEADS / "digest.txt").write_text("\n".join(L), encoding="utf-8")
 
 
+SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "country", "region", "buyer", "title_en",
+              "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
+              "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
+              "buyer_median_award_usd", "incumbent", "why"]
+CHUNK, CHUNKS = 2500, 16
+
+
 def write_sheet_chunks(tenders):
     """The Google Sheet imports tenders in fixed-size chunks (IMPORTDATA has a per-file size limit); every chunk file
     always exists so the sheet formula never breaks. Highest score first."""

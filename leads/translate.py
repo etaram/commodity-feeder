@@ -84,8 +84,13 @@ def _model(lang, to="en"):
                 pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == to), None)
         if pkg:
             path = pkg.package_path
-            sp = sentencepiece.SentencePieceProcessor(model_file=str(path / "sentencepiece.model"))
-            tr = ctranslate2.Translator(str(path / "model"), device="cpu", inter_threads=2, intra_threads=2)
+            spf = next(iter(sorted(path.rglob("*.model"), key=lambda x: ("sentencepiece" not in x.name, len(str(x))))), None) \
+                or next(iter(path.rglob("*.spm")), None)
+            mb = next(iter(path.rglob("model.bin")), None)
+            if not spf or not mb:
+                raise FileNotFoundError(f"package layout not recognised in {path}")
+            sp = sentencepiece.SentencePieceProcessor(model_file=str(spf))
+            tr = ctranslate2.Translator(str(mb.parent), device="cpu", inter_threads=2, intra_threads=2)
             m = (tr, sp)
     except Exception as e:  # noqa: BLE001
         log.warning("translator %s: %s", lang, e)
