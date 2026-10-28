@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from .common import AWARDS, LEADS, PRIVATE, log, today
 from .regions import iso3, region
-from .sectors import SECTORS
+from .sectors import SECTORS, classify
 from .taxonomy import BY_ID, group_of_text
 
 LEGAL = re.compile(r"\b(gmbh|ag|kg|sa|s\.a\.|sas|sarl|srl|s\.r\.l\.|spa|s\.p\.a\.|bv|nv|ltd|limited|llc|inc|plc|oy|ab|as|a/s|"
@@ -95,6 +95,22 @@ FREE_MAIL = re.compile(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|
                        r"sbcglobal|prodigy|telkomsa|mweb|iafrica|vodamail)\b", re.I)
 
 
+def _research_rows():
+    """Suppliers the panel worker found and verified on the web (Supplier Universe tab 'Research Suppliers')."""
+    try:
+        from .push import UNIVERSE_SHEET, Sheets
+        v = Sheets()._req("GET", f"https://sheets.googleapis.com/v4/spreadsheets/{UNIVERSE_SHEET}/values/'Research Suppliers'!A1:L5000")
+    except BaseException as e:  # noqa: BLE001  (no credentials locally, or the tab is missing)
+        log.info("research suppliers not read: %s", str(e)[:120])
+        return []
+    vals = v.get("values") or []
+    if len(vals) < 2:
+        return []
+    h = [x.strip() for x in vals[0]]
+    rows = [dict(zip(h, r)) for r in vals[1:]]
+    return [r for r in rows if r.get("supplier")]
+
+
 def quality(r):
     """0-100: how strong a supplier looks from public evidence (value won, repeat wins, distinct buyers, exports,
     international lenders / foreign governments as buyers, notability)."""
@@ -104,6 +120,7 @@ def quality(r):
     q += 10 if r["exports"] else 0
     q += 8 if any(x in r["sources"] for x in ("World Bank", "USAspending", "UNGM", "UNDP", "AIIB", "EBRD")) else 0
     q += 12 if r["notable"] else 0
+    q += 15 if "Research" in r["sources"] else (8 if "Wikidata products" in r["sources"] else 0)
     q += 5 if (r["email"] or r["phone"] or r["website"]) else 0
     return round(max(0, min(100, q)))
 
@@ -206,6 +223,38 @@ def build():
         x["industries"] = c.get("industries", ""); x["employees"] = c.get("employees", "")
         x["products"] = c.get("products", "")
         x["trader"] = c.get("trader", False); x["notable"] = True
+    # commodity producers by product (Wikidata) and suppliers found by the panel's research worker
+    n_p = n_r = 0
+    pf = LEADS / "companies" / "products.json"
+    extra = []
+    if pf.exists():
+        for c in json.loads(pf.read_text()).get("companies", []):
+            extra.append(("Wikidata products", c["name"], c.get("country", ""), {
+                "products": ", ".join(c.get("products", [])), "website": c.get("website", ""),
+                "industries": "; ".join(c.get("industries", []))}))
+    for c in _research_rows():
+        extra.append(("Research", c["supplier"], c["country"], c))
+    for src, name, ctry, c in extra:
+        k = (norm(name), iso3(ctry) or "")
+        if len(k[0]) < 3:
+            continue
+        x = sup.get(k)
+        if x is None:
+            x = sup[k]; x["names"][name] += 1; x["country"][k[1]] += 1; x["tier_b"] = True
+            sec = classify(f"{c.get('products', '')} {c.get('industries', '')}")[0]
+            if sec:
+                x["sectors"][sec] += 1; x["goods"] += 1 if sec in GOODS else 0
+        n_p += src != "Research"; n_r += src == "Research"
+        x["sources"].add(src); x["notable"] = True
+        prods = ", ".join(p for p in [x.get("products", ""), c.get("products", "")] if p)
+        x["products"] = ", ".join(dict.fromkeys(p.strip() for p in prods.split(",") if p.strip()))[:300]
+        for f_ in ("website", "email", "phone", "address"):
+            if c.get(f_) and not x[f_]:
+                x[f_] = c[f_]
+        if c.get("industries") and not x.get("industries"):
+            x["industries"] = c["industries"]
+        if c.get("type") == "trader":
+            x["trader"] = True
     web = _web_profiles()
     out = []
     for (k, wc), x in sup.items():

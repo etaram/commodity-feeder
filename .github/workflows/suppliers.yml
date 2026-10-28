@@ -59,6 +59,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --source ext_awards 2>&1 | tee -a data/leads/run_suppliers.log
         timeout-minutes: 30
         continue-on-error: true
+      - name: commodity_producers
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',commodity_producers,') }}
+        run: set -o pipefail; python -m leads.run --source commodity_producers 2>&1 | tee -a data/leads/run_suppliers.log
+        timeout-minutes: 20
+        continue-on-error: true
       - name: wikidata_companies
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',wikidata_companies,') }}
         run: set -o pipefail; python -m leads.run --source wikidata_companies 2>&1 | tee -a data/leads/run_suppliers.log
