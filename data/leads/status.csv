@@ -1,28 +1,28 @@
 source,last_run_utc,rows,note,detail
-ted,2026-10-28T18:38,11797,OK,fetched=5961; days=3; cache=11797
-fts,2026-10-28T18:38,161,OK,pages=1
-sam,2026-10-28T18:38,6074,OK,new=2546
-canadabuys,2026-10-28T18:38,838,OK,
-za,2026-10-28T18:38,307,OK,
-worldbank,2026-10-28T19:14,689,OK,new=292; cache=689; days=10
-ebrd,2026-10-28T18:38,42,OK,
-mrgov,2026-10-28T19:15,203,OK,
+ted,2026-10-28T21:37,11797,OK,fetched=5961; days=3; cache=11797
+fts,2026-10-28T21:37,161,OK,pages=1
+sam,2026-10-28T21:37,6216,OK,new=2662
+canadabuys,2026-10-28T21:37,838,OK,
+za,2026-10-28T21:37,309,OK,
+worldbank,2026-10-28T22:08,689,OK,new=292; cache=689; days=10
+ebrd,2026-10-28T21:37,42,OK,
+mrgov,2026-10-28T22:09,203,OK,
 ungm,2026-10-28T09:18,458,OK,"new=455; total_active=1667; pages=35 | last error: py"", line 432, in _strptime     raise ValueError(""time data %r does not match format %r"" % ValueError: time data '04-IND-2026' does not match format '%d-%b-%Y' "
-undp,2026-10-28T18:39,19,OK,new=26; cache=19
-aiib,2026-10-28T18:39,174,OK,new=175; awards=275
-isdb,2026-10-28T18:39,34,OK,new=35
-etimad,2026-10-28T18:39,268,OK,new=195; pages=19
-prozorro,2026-10-28T18:41,451,OK,candidates=2708; fetched=169
-pncp,2026-10-28T18:46,1631,OK,new=1379
-secop,2026-10-28T18:46,549,OK,new=0
-germany,2026-10-28T18:46,7055,OK,new=649; awards_seen=369; awards_saved=774
-contractsfinder,2026-10-28T18:47,85,OK,new=17
-paraguay,2026-10-28T18:54,436,OK,new=3
-dominican,2026-10-28T18:54,364,OK,new=0; listed=775
-austender,2026-10-28T18:54,124,OK,new=122
-oman,2026-10-28T18:54,108,OK,new=50
-france,2026-10-28T18:54,5522,OK,new=947
-spain,2026-10-28T19:04,582,OK,new=582; pages=6; awards_seen=1232
-kenya,2026-10-28T19:04,558,OK,new=20
-qatar,2026-10-28T19:06,0,EMPTY,new=0
-importyeti,2026-10-28T19:17,1,OK,"1 HS headings cached; this run 23, due 77"
+undp,2026-10-28T21:38,19,OK,new=26; cache=19
+aiib,2026-10-28T21:38,174,OK,new=175; awards=275
+isdb,2026-10-28T21:38,34,OK,new=35
+etimad,2026-10-28T21:39,270,OK,new=197; pages=19
+prozorro,2026-10-28T21:39,455,OK,candidates=2708; fetched=75
+pncp,2026-10-28T21:41,1631,OK,new=276
+secop,2026-10-28T21:41,549,OK,new=0
+germany,2026-10-28T21:41,7055,OK,new=649; awards_seen=369; awards_saved=725
+contractsfinder,2026-10-28T21:41,85,OK,new=17
+paraguay,2026-10-28T21:48,439,OK,new=3
+dominican,2026-10-28T21:48,364,OK,new=0; listed=775
+austender,2026-10-28T21:48,124,OK,new=122
+oman,2026-10-28T21:48,108,OK,new=50
+france,2026-10-28T21:48,5522,OK,new=947
+spain,2026-10-28T21:58,1088,OK,new=541; pages=5; awards_seen=990
+kenya,2026-10-28T21:58,558,OK,new=10
+qatar,2026-10-28T22:01,0,EMPTY,new=0
+importyeti,2026-10-28T22:11,1,OK,"1 HS headings cached; this run 24, due 54"
