@@ -1,7 +1,171 @@
-home 200 20623
-pubs 0
-page 120 200
-1900.csv.tar.gz | 1900.jsonl.gz | 1900.xlsx | 2013.csv.tar.gz | 2013.jsonl.gz | 2013.xlsx | 2014.csv.tar.gz | 2014.jsonl.gz | 2014.xlsx | 2015.csv.tar.gz | 2015.jsonl.gz | 2015.xlsx | 2016.csv.tar.gz | 2016.jsonl.gz | 2016.xlsx | 2017.csv.tar.gz | 2017.jsonl.gz | 2017.xlsx | 2018.csv.tar.gz | 2018.jsonl.gz | 2018.xlsx | 2019.csv.tar.gz | 2019.jsonl.gz | 2019.xlsx | 2020.csv.tar.gz | 2020.jsonl.gz | 2020.xlsx | 2021.csv.tar.gz | 2021.jsonl.gz | 2021.xlsx | 2022.csv.tar.gz | 2022.jsonl.gz | 2022.xlsx | 2023.csv.tar.gz | 2023.jsonl.gz | 2023.xlsx | 2024.csv.tar.gz | 2024.jsonl.gz | 2024.xlsx | full.csv.tar.gz | full.jsonl.gz
-dl 200 https://fastly.data.open-contracting.org/downloads/panama_dgcp_records/1979/2023.jsonl.gz len=10346741 type=application/gzip
-{"id": "ocds-emvi6n-2022-1-10-0-02-LP-4496333234126_202403290207", "tag": ["tenderUpdate"], "bids": {"details": [{"id": "4879070", "date": "2024-01-22T10:32:43-05:00", "items": [{"id": "1", "unit": {"id": "SER", "name": "Servicio", "value": {"amount": 49265.13, "currency": "PAB"}, "scheme": "PAN_DGCP_UNIDADES"}, "quantity": 1, "description": "UMINISTRO E INSTALACION DE ALARMA CONTRA INCENDIO PARA LA POLICLINICA DE SAN JUAN DE DIOS DE NATA PROVINCIA DE COCLE", "classification": {"id": "46191505", "scheme": "UNSPSC", "description": "UMINISTRO E INSTALACION DE ALARMA CONTRA INCENDIO PARA LA POLICLINICA DE SAN JUAN DE DIOS DE NATA PROVINCIA DE COCLE"}}], "value": {"amount": 49265, "currency": "PAB"}, "status": "disqualified", "tenderers": [{"id": "1952550", "ruc": null, "name": "COMPANÍA DE SEGURIDAD ELECTRÓNICA, S.A. (SELEC S.A"}]}]}, "date": "2023-12-29T15:00:50-05:00", "ocid": "ocds-emvi6n-2022-1-10-0-02-LP-4496333234126", "buyer": {"id": "1845291", "name": "CAJA DE SEGURO SOCIAL"}, "parties": [{"id": "1845291", "name": "CAJA DE SEGURO SOCIAL", "roles": ["buyer"]}, {"id": "766108-1-483980", "name": "COMPANÍA DE SEGURIDAD ELECTRÓNICA, S.A. (SELEC S.A", "roles": ["tenderer"], "contactPoint": {"email": "mvergara@selecsapanama.com", "telephone": "221-6979       "}}], "language": "es", "initiationType": "tender"}
-{"id": "ocds-emvi6n-2023-0-07-02-02-CM-0405423234099_202403290159", "tag": ["award"], "bids": {"details": [{"id": "4879124", "date": "2024-01-15T00:09:35-05:00", "items": [{"id": "1", "unit": {"id": "EA", "name": "Unidad", "value": {"amount": 28436.11, "currency": "PAB"}, "scheme": "PAN_DGCP_UNIDADES"}, "quantity": 1, "description": "Suministro de Materiales y Mano de Obra para la Construccion de area techada I.P.T. El Cope", "classification": {"id": "81101513", "scheme": "UNSPSC", "description": "Suministro de Materiales y Mano de Obra para la Construccion de area techada I.P.T. El Cope"}}], "value": {"amount": 28436, "currency": "PAB"}, "status": "disqualified", "tenderers": [{"id": "2007736", "ruc": null, "name": "FREYCOR REMODELACIONES, S.A."}]}, {"id": "4879117", "date": "2024-01-14T20:40:00-05:00", "items": [{"id": "1", "unit": {"id": "EA", "name": "Unidad", "value": {"amount": 29999.15, "currency": "PAB"}, "scheme": "PAN_DGCP_UNIDADES"}, "quantity": 1, "description": "Suministro de Materiales y Mano de Obra para la construcción de área techada", "classification": {"id": "81101513", "scheme": "UNSPSC", "description": "Suministro de Materiales y Mano de Obra para la construcción de área techada"}}], "value": {"amount": 29999, "currency": "PAB"}, "status": "disqualified", "tenderers": [{"id": "1989966", "ruc": null, "name": "YEMARTI, S.A."}]}, {"id": "4877254", "date": "2023-12-30T10:03:07-05:00", "items": [{"id": "1", "unit": {"id": "EA", "name": "Unidad", "value": {"amount": 27400.0, "currency": "PAB"}, "scheme": "PAN_DGCP_UNIDADES"}, "quantity": 1, "description": "Gestión de construcción de edificios", "classification": {"id":
+== https://data.open-contracting.org/en/ 200 text/html; charset=utf-8 20623
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Data Registry | Open Contracting Partnership</title>
+    <meta name="description" content="Search for and access data
+
+== https://data.open-contracting.org/en/search/ 200 text/html; charset=utf-8 797990
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Search for and download OCDS data | OCP Data Registry</title>
+    <meta name="description" content="Find and filter O
+1 10 100 101 102 103 104 105 106 107 108 109 11 110 111 112 113 114 115 116 117 118 119 12 120 122 123 125 127 128 13 130 131 132 133 134 135 136 137 138 139 141 142 143 144 145 147 148 149 150 152 153 154 155 156 157 158 16 160 161 17 18 19 20 21 22 23 24 25 28 29 3 31 32 33 34 35 36 37 38 39 4 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 60 61 62 63 64 68 69 70 71 72 73 74 75 77 78 79 80 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+134	See details
+17	See details
+137	See details
+18	See details
+19	See details
+11	See details
+46	See details
+47	See details
+20	See details
+153	See details
+157	See details
+44	See details
+4	See details
+79	See details
+21	See details
+144	See details
+10	See details
+61	See details
+108	See details
+16	See details
+80	See details
+45	See details
+48	See details
+12	See details
+49	See details
+22	See details
+110	See details
+50	See details
+94	See details
+150	See details
+51	See details
+23	See details
+54	See details
+52	See details
+24	See details
+53	See details
+136	See details
+85	See details
+161	See details
+55	See details
+142	See details
+113	See details
+122	See details
+123	See details
+25	See details
+56	See details
+57	See details
+131	See details
+77	See details
+101	See details
+58	See details
+117	See details
+141	See details
+28	See details
+87	See details
+13	See details
+147	See details
+115	See details
+29	See details
+60	See details
+156	See details
+68	See details
+69	See details
+70	See details
+114	See details
+112	See details
+96	See details
+98	See details
+99	See details
+111	See details
+97	See details
+109	See details
+84	See details
+83	See details
+31	See details
+100	See details
+95	See details
+148	See details
+33	See details
+149	See details
+32	See details
+132	See details
+34	See details
+35	See details
+36	See details
+133	See details
+71	See details
+107	See details
+127	See details
+37	See details
+64	See details
+105	See details
+86	See details
+102	See details
+116	See details
+104	See details
+103	See details
+118	See details
+106	See details
+125	See details
+138	See details
+72	See details
+120	See details
+63	See details
+62	See details
+78	See details
+135	See details
+73	See details
+38	See details
+74	See details
+75	See details
+145	See details
+139	See details
+88	See details
+82	See details
+93	See details
+143	See details
+1	See details
+89	See details
+90	See details
+91	See details
+160	See details
+152	See details
+158	See details
+130	See details
+154	See details
+128	See details
+41	See details
+92	See details
+39	See details
+119	See details
+155	See details
+43	See details
+42	See details
+3	See details
+== https://data.open-contracting.org/api/publications 404 text/html; charset=utf-8 1117
+
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Not Found</title>
+</head>
+<body>
+  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>
+<script>(function(){function c(){var 
