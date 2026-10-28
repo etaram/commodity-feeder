@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-28T00:33:00",
+  "finished_utc": "2026-10-28T11:42:50",
   "fx_source": "ECB via Frankfurter 2026-10-27",
   "fx": {
     "EUR": 1.1150012265013491,
@@ -32,7 +32,7 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 7,
+      "sec": 8,
       "newest_date": "2026-10-27",
       "log": [
         "INFO westmetall: 6 prices"
@@ -40,27 +40,27 @@
     },
     "em_global": {
       "ok": true,
-      "prices": 21,
-      "sec": 35,
+      "prices": 22,
+      "sec": 40,
       "newest_date": "2026-10-28",
       "log": [
         "INFO em_global board: 640 rows",
-        "INFO em_global: 21 prices"
+        "INFO em_global: 22 prices"
       ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 3,
-      "newest_date": "2026-10-27",
+      "sec": 2,
+      "newest_date": "2026-10-28",
       "log": [
-        "INFO cn_spot: 52 prices (2026-10-27)"
+        "INFO cn_spot: 52 prices (2026-10-28)"
       ]
     },
     "eu_agri": {
       "ok": true,
       "prices": 64,
-      "sec": 10,
+      "sec": 46,
       "newest_date": "2026-10-31",
       "log": [
         "INFO eu_agri: 64 prices"
@@ -68,20 +68,20 @@
     },
     "dtn": {
       "ok": true,
-      "prices": 0,
+      "prices": 7,
       "sec": 1,
-      "newest_date": null,
+      "newest_date": "2026-10-23",
       "log": [
-        "WARNING dtn: no table found"
+        "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/10/28/fertilizer-prices-continue-climb-6"
       ]
     },
     "ssb": {
       "ok": true,
       "prices": 2,
       "sec": 1,
-      "newest_date": "2026-10-18",
+      "newest_date": "2026-10-25",
       "log": [
-        "INFO ssb_salmon: 2 prices (2026U42)"
+        "INFO ssb_salmon: 2 prices (2026U43)"
       ]
     },
     "scrapmonster": {
@@ -96,7 +96,7 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-10-27",
       "log": [
         "INFO smi: 5 prices (as of 2026-10-27)"
@@ -104,37 +104,23 @@
     },
     "usda": {
       "ok": true,
-      "prices": 0,
-      "sec": 200,
-      "newest_date": null,
+      "prices": 52,
+      "sec": 12,
+      "newest_date": "2026-10-27",
       "log": [
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_1604.p",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_1604.p",
-        "WARNING usda gdt failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/ams_1604.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resol",
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_3510.p",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_3510.p",
-        "WARNING usda by-products failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/ams_3510.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in na",
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_3668.p",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_3668.p",
-        "WARNING usda feedstuff failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/ams_3668.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name",
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_2461.p",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_2461.p",
-        "WARNING usda beef failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/ams_2461.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name reso",
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_2498.p",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_2498.p",
-        "WARNING usda pork failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/ams_2498.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name reso",
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_2843.p",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/ams_2843.p",
-        "WARNING usda eggs failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/ams_2843.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name reso",
-        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/fvwtrds.pd",
-        "WARNING Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name resolution)\")': /mnreports/fvwtrds.pd",
-        "WARNING usda fruit_veg failed: HTTPSConnectionPool(host='www.ams.usda.gov', port=443): Max retries exceeded with url: /mnreports/fvwtrds.pdf (Caused by NameResolutionError(\"HTTPSConnection(host='www.ams.usda.gov', port=443): Failed to resolve 'www.ams.usda.gov' ([Errno -3] Temporary failure in name "
+        "INFO usda gdt: 8 prices",
+        "INFO usda by-products: 3 prices",
+        "INFO usda feedstuff: 12 prices",
+        "INFO usda beef: 1 prices",
+        "INFO usda pork: 2 prices",
+        "INFO usda eggs: 1 prices",
+        "INFO usda fruit_veg: 25 prices"
       ]
     },
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 0,
+      "sec": 1,
       "newest_date": null,
       "log": [
         "WARNING census 2026-09: Expecting value: line 1 column 1 (char 0)",
@@ -149,7 +135,7 @@
     "comext": {
       "ok": true,
       "prices": 1918,
-      "sec": 56,
+      "sec": 60,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -159,7 +145,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 14,
+      "sec": 11,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 25 HS codes still missing",
@@ -169,28 +155,28 @@
     }
   },
   "rows_with_price": 1962,
-  "candidates": 2138,
-  "flagged": 266,
+  "candidates": 2198,
+  "flagged": 227,
   "by_source_selected": {
-    "yahoo": 32,
+    "yahoo": 31,
     "westmetall": 6,
-    "em_global": 3,
-    "cn_spot": 33,
-    "eu_agri": 54,
-    "dtn": 0,
+    "em_global": 4,
+    "cn_spot": 31,
+    "eu_agri": 50,
+    "dtn": 7,
     "ssb": 2,
     "scrapmonster": 31,
     "smi": 3,
-    "usda": 0,
+    "usda": 29,
     "census": 0,
-    "comext": 1765,
+    "comext": 1726,
     "comtrade": 3,
-    "derived": 30
+    "derived": 31
   },
   "by_tier": {
-    "T1 Exchange benchmark": 71,
-    "T2 Official market reporting": 56,
-    "T3 Industry assessment": 67,
-    "T4 Trade statistics (unit value)": 1768
+    "T1 Exchange benchmark": 80,
+    "T2 Official market reporting": 81,
+    "T3 Industry assessment": 72,
+    "T4 Trade statistics (unit value)": 1729
   }
 }
