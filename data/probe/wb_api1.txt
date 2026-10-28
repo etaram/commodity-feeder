@@ -1,0 +1,55 @@
+URL: https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00005&resourceId=RS00005&top=2&type=json
+STATUS: 200
+TYPE: application/json
+
+{
+  "count": 296096,
+  "data": [
+    {
+      "as_of_date": "28-Oct-2026",
+      "borrower_contract_reference_number": "UDP PPG-QCBS-2016-4-12",
+      "borrower_country": "Kyrgyz Republic",
+      "borrower_country_code": "KG",
+      "contract_description": "Technical Supervision of construction in pilot Schools and Kindergartens",
+      "contract_signing_date": "19-May-2022",
+      "fiscal_year": 2022,
+      "contract_signed___calendar_year": 2022,
+      "procurement_category": "Consultant Services",
+      "procurement_method": "Quality And Cost-Based Selection",
+      "project_global_practice": "Public Admin;Energy & Extractives;Transportation;Water/Sanit/Waste",
+      "project_id": "P151416",
+      "project_name": "Urban Development Project",
+      "region": "Europe and Central Asia",
+      "review_type": "Prior",
+      "supplier": "M/S. AIRES INGEGNERIA",
+      "supplier_contract_amount_usd": 161538.89,
+      "supplier_country": "Italy",
+      "supplier_country_code": "IT",
+      "supplier_id": "316882",
+      "wb_contract_number": "1543858"
+    },
+    {
+      "as_of_date": "28-Oct-2026",
+      "borrower_contract_reference_number": "UDP PPG-QCBS-2016-4-12",
+      "borrower_country": "Kyrgyz Republic",
+      "borrower_country_code": "KG",
+      "contract_description": "Technical Supervision of construction in pilot Schools and Kindergartens",
+      "contract_signing_date": "19-May-2022",
+      "fiscal_year": 2022,
+      "contract_signed___calendar_year": 2022,
+      "procurement_category": "Consultant Services",
+      "procurement_method": "Quality And Cost-Based Selection",
+      "project_global_practice": "Public Admin;Energy & Extractives;Transportation;Water/Sanit/Waste",
+      "project_id": "P151416",
+      "project_name": "Urban Development Project",
+      "region": "Europe and Central Asia",
+      "review_type": "Prior",
+      "supplier": "ALL INGEGNERIA",
+      "supplier_contract_amount_usd": 161538.89,
+      "supplier_country": "Italy",
+      "supplier_country_code": "IT",
+      "supplier_id": "325453",
+      "wb_contract_number": "1543858"
+    }
+  ]
+}

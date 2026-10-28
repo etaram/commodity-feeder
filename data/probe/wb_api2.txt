@@ -1,0 +1,5 @@
+URL: https://datacatalogapi.worldbank.org/dexapps/fone/api/apiservice?datasetId=DS00005&top=2&type=json
+STATUS: 400
+TYPE: application/problem+json; charset=utf-8
+
+{"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-b9a661a52f580564933cd01171fd2a19-8f01dc22049c1c74-00","errors":{"resourceId":["The resourceId field is required."]}}
