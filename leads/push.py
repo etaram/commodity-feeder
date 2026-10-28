@@ -127,7 +127,7 @@ def main():
         print("wrote", sh.replace_tab(UNIVERSE_SHEET, "Suppliers", rows, raw=True), "rows to Supplier Universe")
         st = json.loads((PRIVATE / "universe_stats.json").read_text())
         sh.replace_tab(UNIVERSE_SHEET, "Stats", [["metric", "value"]] + [[k, v] for k, v in st.items()] +
-                       [["updated_utc", time.strftime("%Y-%m-%d %H:%M")]])
+                       [["updated_utc", time.strftime("%Y-%m-%d %H:%M")]], raw=True)
     elif a[:1] == ["leads"]:
         for tab, rows in leads_tables():
             if len(rows) < 2:
