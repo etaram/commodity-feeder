@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: "20 */4 * * *"
   workflow_dispatch:
+    inputs:
+      only:
+        description: "comma-separated steps to run (empty = all)"
+        required: false
+        default: ""
 permissions:
   contents: write
 concurrency:
@@ -27,134 +32,167 @@ jobs:
       - run: pip install requests curl_cffi pycountry langid argostranslate
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: ted
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ted,') }}
         run: set -o pipefail; python -m leads.run --source ted 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 20
         continue-on-error: true
       - name: fts
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',fts,') }}
         run: set -o pipefail; python -m leads.run --source fts 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: sam
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',sam,') }}
         run: set -o pipefail; python -m leads.run --source sam 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: canadabuys
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',canadabuys,') }}
         run: set -o pipefail; python -m leads.run --source canadabuys 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 6
         continue-on-error: true
       - name: za
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',za,') }}
         run: set -o pipefail; python -m leads.run --source za 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: ebrd
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ebrd,') }}
         run: set -o pipefail; python -m leads.run --source ebrd 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 5
         continue-on-error: true
       - name: ungm
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ungm,') }}
         run: set -o pipefail; python -m leads.run --source ungm 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 12
         continue-on-error: true
       - name: undp
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',undp,') }}
         run: set -o pipefail; python -m leads.run --source undp 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: aiib
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',aiib,') }}
         run: set -o pipefail; python -m leads.run --source aiib 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: isdb
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',isdb,') }}
         run: set -o pipefail; python -m leads.run --source isdb 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: etimad
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',etimad,') }}
         run: set -o pipefail; python -m leads.run --source etimad 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: prozorro
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',prozorro,') }}
         run: set -o pipefail; python -m leads.run --source prozorro 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 20
         continue-on-error: true
       - name: pncp
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',pncp,') }}
         run: set -o pipefail; python -m leads.run --source pncp 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 12
         continue-on-error: true
       - name: secop
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',secop,') }}
         run: set -o pipefail; python -m leads.run --source secop 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 5
         continue-on-error: true
       - name: germany
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',germany,') }}
         run: set -o pipefail; python -m leads.run --source germany 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: contractsfinder
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',contractsfinder,') }}
         run: set -o pipefail; python -m leads.run --source contractsfinder 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: paraguay
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',paraguay,') }}
         run: set -o pipefail; python -m leads.run --source paraguay 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: dominican
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',dominican,') }}
         run: set -o pipefail; python -m leads.run --source dominican 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: austender
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',austender,') }}
         run: set -o pipefail; python -m leads.run --source austender 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: oman
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',oman,') }}
         run: set -o pipefail; python -m leads.run --source oman 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: france
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',france,') }}
         run: set -o pipefail; python -m leads.run --source france 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: spain
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',spain,') }}
         run: set -o pipefail; python -m leads.run --source spain 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: kenya
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',kenya,') }}
         run: set -o pipefail; python -m leads.run --source kenya 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: tanzania
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',tanzania,') }}
         run: set -o pipefail; python -m leads.run --source tanzania 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: ghana
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ghana,') }}
         run: set -o pipefail; python -m leads.run --source ghana 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: zambia
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',zambia,') }}
         run: set -o pipefail; python -m leads.run --source zambia 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: awards
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',awards,') }}
         run: set -o pipefail; python -m leads.run --source awards 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: worldbank
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',worldbank,') }}
         run: set -o pipefail; python -m leads.run --source worldbank 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: mrgov
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',mrgov,') }}
         run: set -o pipefail; python -m leads.run --source mrgov 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: importyeti
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',importyeti,') }}
         run: set -o pipefail; python -m leads.run --source importyeti 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: markets
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',markets,') }}
         run: set -o pipefail; python -m leads.run --source markets 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: enrich
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',enrich,') }}
         run: set -o pipefail; python -m leads.run --source enrich 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: merge
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',merge,') }}
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
         continue-on-error: true

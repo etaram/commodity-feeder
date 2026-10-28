@@ -402,6 +402,27 @@ def write_digest(tenders, buyers):
     (LEADS / "digest.txt").write_text("\n".join(L), encoding="utf-8")
 
 
+SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "country", "region", "buyer", "title_en",
+              "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id"]
+CHUNK, CHUNKS = 2500, 16
+
+
+def write_sheet_chunks(tenders):
+    """The Google Sheet imports tenders in fixed-size chunks (IMPORTDATA has a per-file size limit); every chunk file
+    always exists so the sheet formula never breaks. Highest score first."""
+    rows = []
+    for r in tenders:
+        x = {c: r.get(c, "") for c in SHEET_COLS}
+        x["title_en"] = (r.get("title_en") or r.get("title") or "")[:220]
+        x["title_original"] = r.get("title", "")[:140] if r.get("lang") else ""
+        x["buyer"] = (r.get("buyer") or "")[:90]
+        x["contact"] = (r.get("contact") or "")[:80]
+        rows.append(x)
+    for i in range(CHUNKS):
+        write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
+    write("tenders.csv", rows[:CHUNK], SHEET_COLS)
+
+
 def write_sector_summary(tenders):
     """Sector x region: open notices, notices with a value, total and median value (USD), new in 48h."""
     agg = defaultdict(lambda: {"open": 0, "valued": 0, "vals": [], "new": 0, "countries": set(), "sources": set()})
@@ -427,7 +448,7 @@ def write_sector_summary(tenders):
 
 
 def write(name, rows, cols=None):
-    LEADS.mkdir(parents=True, exist_ok=True)
+    (LEADS / name).parent.mkdir(parents=True, exist_ok=True)
     cols = cols or (list(rows[0].keys()) if rows else ["empty"])
     with open(LEADS / name, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f); w.writerow(cols)
@@ -460,7 +481,7 @@ def merge():
             "buyer", "title_en", "summary_en", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
             "classification", "contact", "benchmark", "link", "lang", "first_seen", "id"]
     write("tenders_all.csv", tenders, cols)
-    write("tenders.csv", tenders[:6000], cols)
+    write_sheet_chunks(tenders)
     write_sector_summary(tenders)
     write("importers.csv", imp)
     write("suppliers.csv", sup)
