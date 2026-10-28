@@ -2,6 +2,7 @@
 accepting bids, then reads each one for title, value, CPV and contacts. English names are used when provided."""
 import datetime as dt
 import json
+import time
 
 from .common import CACHE, cache_empty, clean, log, polite, rolling, session, today
 from .sectors import from_cpv
@@ -38,8 +39,10 @@ def fetch():
         url = (j.get("next_page") or {}).get("uri")
         polite(0.2)
     todo = [i for i in dict.fromkeys(ids) if i not in cached][:2500]
-    new = []
+    new, t0 = [], time.time()
     for i in todo:
+        if time.time() - t0 > 600:  # stay well inside the step timeout; the rest is picked up next run
+            break
         try:
             d = s.get(f"{API}/{i}", timeout=60).json().get("data") or {}
         except Exception as e:  # noqa: BLE001

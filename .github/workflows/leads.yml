@@ -89,6 +89,22 @@ jobs:
         run: python -m leads.run --source contractsfinder
         timeout-minutes: 8
         continue-on-error: true
+      - name: paraguay
+        run: python -m leads.run --source paraguay
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: dominican
+        run: python -m leads.run --source dominican
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: austender
+        run: python -m leads.run --source austender
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: oman
+        run: python -m leads.run --source oman
+        timeout-minutes: 4
+        continue-on-error: true
       - name: awards
         run: python -m leads.run --source awards
         timeout-minutes: 15

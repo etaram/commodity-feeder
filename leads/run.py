@@ -19,7 +19,7 @@ from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_row
 from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
-                  "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder"]
+                  "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman"]
 NEW_MODULES = {"ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder",
                "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "nigeria", "kenya", "ecuador"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
