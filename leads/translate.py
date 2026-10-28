@@ -64,24 +64,24 @@ def detect(text, hint=""):
 _models = {}
 
 
-def _model(lang):
-    """(ctranslate2.Translator, sentencepiece processor) for lang->en from the Argos package, or None.
+def _model(lang, to="en"):
+    """(ctranslate2.Translator, sentencepiece processor) for lang->to from the Argos package, or None.
     Titles are single short sentences, so they are translated in large batches without sentence splitting."""
-    if lang in _models:
-        return _models[lang]
+    if (lang, to) in _models:
+        return _models[(lang, to)]
     m = None
     try:
         import ctranslate2
         import sentencepiece
         import argostranslate.package as pk
-        pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == "en"), None)
+        pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == to), None)
         if not pkg:
             if not getattr(_model, "index", None):
                 pk.update_package_index(); _model.index = pk.get_available_packages()
-            avail = next((p for p in _model.index if p.from_code == lang and p.to_code == "en"), None)
+            avail = next((p for p in _model.index if p.from_code == lang and p.to_code == to), None)
             if avail:
                 pk.install_from_path(avail.download())
-                pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == "en"), None)
+                pkg = next((p for p in pk.get_installed_packages() if p.from_code == lang and p.to_code == to), None)
         if pkg:
             path = pkg.package_path
             sp = sentencepiece.SentencePieceProcessor(model_file=str(path / "sentencepiece.model"))
@@ -89,12 +89,12 @@ def _model(lang):
             m = (tr, sp)
     except Exception as e:  # noqa: BLE001
         log.warning("translator %s: %s", lang, e)
-    _models[lang] = m
+    _models[(lang, to)] = m
     return m
 
 
-def _translate_batch(lang, texts):
-    m = _model(lang)
+def _translate_batch(lang, texts, to="en"):
+    m = _model(lang, to)
     if not m:
         return [""] * len(texts)
     tr, sp = m
@@ -142,3 +142,48 @@ def summary(r, sector_name):
     dl = f"closes {r['deadline']}" if r.get("deadline") else ("planned / early notice" if r.get("stage") == "planned" else "no deadline stated")
     t = r.get("title_en") or r.get("title") or ""
     return f"{t[:220]} | Buyer: {r.get('buyer', '')[:80]} ({r.get('country', '')}) | {sector_name} | {v} | {dl}"
+
+
+PHE = CACHE / "translations_he.jsonl"
+HEB = re.compile(r"[\u0590-\u05FF]")
+
+
+def to_hebrew(rows, limit=6000, budget_sec=900):
+    """Hebrew titles for the top `limit` tenders (rows already ranked) and for every Hebrew-language notice.
+    English titles are translated offline (Argos en->he); results are cached by text. Returns {id: title_he}."""
+    cache = {}
+    if PHE.exists():
+        for line in PHE.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                d = json.loads(line); cache[d["k"]] = d["he"]
+    out, todo, t0 = {}, [], time.time()
+    for i, r in enumerate(rows):
+        orig = r.get("title") or ""
+        if HEB.search(orig):
+            out[r["id"]] = orig[:220]; continue
+        if i >= limit:
+            continue
+        en = re.sub(r"^[^–]{2,40} – [^–]{2,80} – ", "", (r.get("title_en") or orig).strip())[:300]  # drop "Country – CPV – "
+        if not en:
+            continue
+        k = _key(en)
+        if k in cache:
+            out[r["id"]] = cache[k]
+        else:
+            todo.append((r["id"], k, en))
+    done = 0
+    for i in range(0, len(todo), 256):
+        if time.time() - t0 > budget_sec:
+            break
+        chunk = todo[i:i + 256]
+        try:
+            res = _translate_batch("en", [x[2] for x in chunk], to="he")
+        except Exception as e:  # noqa: BLE001
+            log.warning("hebrew titles: %s", e); break
+        for (rid, k, _), he in zip(chunk, res):
+            if he:
+                cache[k] = he; out[rid] = he; done += 1
+    PHE.write_text("\n".join(json.dumps({"k": k, "he": v}, ensure_ascii=False) for k, v in sorted(cache.items())) + "\n",
+                   encoding="utf-8")
+    log.info("hebrew titles: %d new, %d total, %d pending, %.0fs", done, len(out), len(todo) - done, time.time() - t0)
+    return out

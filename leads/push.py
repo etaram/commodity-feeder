@@ -98,6 +98,9 @@ def leads_tables():
                       ("Market Signals", "markets"), ("Suppliers", "suppliers"), ("Groups", "groups")]:
         full = LEADS / f"{name}_all.csv"
         out.append((tab, read_csv(full if full.exists() else LEADS / f"{name}.csv")))
+    th = LEADS / "sheet" / "titles_he.csv"
+    if th.exists():
+        out.append(("Titles HE", read_csv(th)))
     dg = LEADS / "digest.txt"
     if dg.exists():
         out.append(("Digest", [["daily digest"]] + [[line] for line in dg.read_text(encoding="utf-8").splitlines()]))

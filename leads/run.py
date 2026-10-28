@@ -602,6 +602,12 @@ def merge():
     write_digest(tenders, buyers or [])
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
+    try:
+        from .translate import to_hebrew
+        he = to_hebrew(tenders)
+        write("sheet/titles_he.csv", [{"id": k, "title_he": v} for k, v in he.items()], ["id", "title_he"])
+    except Exception as e:  # noqa: BLE001
+        log.warning("hebrew titles skipped: %s", e)
     write_sector_summary(tenders)
     try:
         write_accounts(tenders, buyers or [])
