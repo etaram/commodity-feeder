@@ -3,10 +3,7 @@ import pathlib, ssl, traceback
 import requests
 out = pathlib.Path("data/probe"); out.mkdir(parents=True, exist_ok=True)
 URLS = {
-    "x_ge": "https://odapi.spa.ge/api/releases.json?page=1",
-    "x_md": "https://public.mtender.gov.md/tenders/?offset=2026-10-20T00:00:00Z",
-    "x_qa": "https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/1",
-    "x_tr": "https://www.ilan.gov.tr/ilan/kategori/9/ihale-duyurulari",
+    "x_tr_main": "https://www.ilan.gov.tr/main-es2015.cbf38031e623f595be7a.js",
 }
 try:
     from aia import AIASession
