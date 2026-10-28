@@ -20,7 +20,7 @@ from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
-                  "kenya", "tanzania", "ghana", "zambia", "qatar"]
+                  "kenya", "qatar"]
 NEW_MODULES = {"ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
                "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "nigeria", "kenya", "ecuador", "france", "spain", "tanzania",
                "ghana", "zambia"}
@@ -396,6 +396,10 @@ def merge_opportunities(tenders, buyers, markets):
             "evidence": f"{m['year']} imports {imp:,} USD, growth {m['growth_pct']}%, benchmark {m['benchmark_source']}",
             "contact": "",
         })
+    def _rank(o):
+        v = o.get("deal_value_usd") or 0
+        return (-(v if isinstance(v, (int, float)) else 0), o["type"])
+    out.sort(key=_rank)
     write("opportunities.csv", out)
     log.info("opportunities %d", len(out))
 
@@ -513,7 +517,36 @@ def write_sector_summary(tenders):
                                    for k, v in cs.items()), key=lambda x: -x["open_notices"]))
 
 
+SHEET_MAX_BYTES = 1_700_000  # Google Sheets IMPORTDATA fails on files above roughly 2 MB
+SHEET_FILES = {"awards.csv", "buyers.csv", "competitors.csv", "importers.csv", "suppliers.csv", "accounts.csv",
+               "opportunities.csv", "tenders.csv", "markets.csv", "status.csv", "sectors.csv", "countries.csv",
+               "groups.csv", "competition.csv"}
+
+
 def write(name, rows, cols=None):
+    """Writes a CSV. Files imported by the Google Sheet are kept under the IMPORTDATA size limit by dropping the
+    lowest-ranked rows (callers pass rows best-first); the complete set goes to <name>_all.csv when trimmed."""
+    if name in SHEET_FILES or name.startswith("sheet/"):
+        import io
+        cols = cols or (list(rows[0].keys()) if rows else ["empty"])
+        buf = io.StringIO(); w = csv.writer(buf); w.writerow(cols)
+        size, kept = len(buf.getvalue().encode("utf-8")), 0
+        for r in rows:
+            line = io.StringIO(); csv.writer(line).writerow([r.get(c, "") for c in cols])
+            b = len(line.getvalue().encode("utf-8"))
+            if size + b > SHEET_MAX_BYTES:
+                break
+            buf.write(line.getvalue()); size += b; kept += 1
+        if kept < len(rows):
+            _write_plain(name.replace(".csv", "_all.csv"), rows, cols)
+            log.info("%s trimmed for the sheet: %d of %d rows", name, kept, len(rows))
+        (LEADS / name).parent.mkdir(parents=True, exist_ok=True)
+        (LEADS / name).write_text(buf.getvalue(), encoding="utf-8")
+        return
+    _write_plain(name, rows, cols)
+
+
+def _write_plain(name, rows, cols=None):
     (LEADS / name).parent.mkdir(parents=True, exist_ok=True)
     cols = cols or (list(rows[0].keys()) if rows else ["empty"])
     with open(LEADS / name, "w", newline="", encoding="utf-8") as f:
