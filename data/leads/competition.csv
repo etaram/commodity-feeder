@@ -1,19 +1,31 @@
 country,sector,awards_12m,foreign_wins,foreign_win_rate,median_bids
+COL,"Consulting, business & financial services",8596,0,0.0,
+COL,Building construction works,2664,0,0.0,
+COL,Healthcare & pharmaceuticals,2228,0,0.0,
+COL,"Education, social & hospitality services",1936,0,0.0,
 POL,Healthcare & pharmaceuticals,1843,24,0.013,2.0
 ROU,Healthcare & pharmaceuticals,1511,1,0.001,5
 DEU,Building construction works,1496,15,0.01,5
 ROU,Agriculture & food,1487,0,0.0,4.0
+COL,Engineering & architecture services,1407,0,0.0,
+COL,Defence & security,959,0,0.0,
 ESP,Healthcare & pharmaceuticals,798,6,0.008,1.0
 POL,Agriculture & food,790,1,0.001,3.0
 DEU,Engineering & architecture services,747,7,0.009,4
+COL,ICT & telecom,722,0,0.0,
 POL,"Energy, fuels & utilities",679,2,0.003,2
 ESP,ICT & telecom,678,7,0.01,2
+COL,Transport & logistics services,670,0,0.0,
 CZE,ICT & telecom,668,8,0.012,2
+COL,Agriculture & food,668,0,0.0,
 POL,ICT & telecom,658,7,0.011,2.0
 CZE,Healthcare & pharmaceuticals,623,5,0.008,1
 CZE,Agriculture & food,583,1,0.002,2.0
+COL,"Environment, waste & cleaning",574,0,0.0,
+COL,Other,533,0,0.0,
 BGR,"Energy, fuels & utilities",486,0,0.0,1.0
 SVK,Agriculture & food,472,5,0.011,3.0
+COL,"Energy, fuels & utilities",471,0,0.0,
 DEU,ICT & telecom,470,20,0.043,2.0
 ROU,"Energy, fuels & utilities",465,1,0.002,2.0
 CZE,Chemicals & plastics,455,21,0.046,2
@@ -23,15 +35,18 @@ CZE,"Energy, fuels & utilities",395,2,0.005,2
 ESP,"Energy, fuels & utilities",392,0,0.0,2.0
 POL,"Environment, waste & cleaning",389,0,0.0,2
 LTU,Healthcare & pharmaceuticals,374,4,0.011,2.0
+COL,"Furniture, appliances & consumer goods",364,0,0.0,
 DEU,"Environment, waste & cleaning",360,1,0.003,5
 ESP,"Repair, maintenance & installation",355,2,0.006,2.0
 HRV,"Energy, fuels & utilities",352,0,0.0,2.0
 FRA,ICT & telecom,350,5,0.014,3
 ROU,Chemicals & plastics,345,1,0.003,2
+COL,Industrial & construction machinery,334,0,0.0,
 ESP,Agriculture & food,332,1,0.003,3.0
 ITA,Healthcare & pharmaceuticals,327,1,0.003,2
 POL,Chemicals & plastics,325,6,0.018,2.0
 FRA,"Consulting, business & financial services",324,4,0.012,4
+UKR,Construction materials & building systems,322,0,0.0,
 DEU,"Energy, fuels & utilities",321,3,0.009,3
 POL,"Vehicles, rolling stock, ships & aircraft",315,3,0.01,2.0
 FRA,"Energy, fuels & utilities",313,3,0.01,3
@@ -41,7 +56,9 @@ ESP,Engineering & architecture services,301,1,0.003,5.0
 DEU,"Vehicles, rolling stock, ships & aircraft",297,12,0.04,2.0
 HRV,Healthcare & pharmaceuticals,296,7,0.024,4.0
 ESP,"Consulting, business & financial services",295,7,0.024,3
+UKR,Agriculture & food,286,0,0.0,
 DEU,Power & electrical equipment,280,8,0.029,3.0
+COL,"Vehicles, rolling stock, ships & aircraft",270,0,0.0,
 ESP,"Education, social & hospitality services",269,1,0.004,2
 PRT,Healthcare & pharmaceuticals,261,7,0.027,1.0
 FRA,"Repair, maintenance & installation",255,0,0.0,3
@@ -50,13 +67,17 @@ DEU,"Consulting, business & financial services",254,10,0.039,3.0
 FRA,"Environment, waste & cleaning",246,0,0.0,3
 CHE,Building construction works,243,3,0.012,4
 POL,"Repair, maintenance & installation",235,3,0.013,2
+COL,"Repair, maintenance & installation",232,0,0.0,
 POL,"Consulting, business & financial services",229,3,0.013,2
 CZE,"Vehicles, rolling stock, ships & aircraft",221,11,0.05,2
+UKR,ICT & telecom,219,0,0.0,
 CZE,Engineering & architecture services,217,0,0.0,3
 CZE,Power & electrical equipment,216,9,0.042,3
 POL,Engineering & architecture services,214,6,0.028,3
+COL,Scientific & measuring instruments,210,0,0.0,
 SVK,Healthcare & pharmaceuticals,207,1,0.005,2
 LVA,"Energy, fuels & utilities",206,0,0.0,3.0
+COL,Power & electrical equipment,206,0,0.0,
 FRA,Construction materials & building systems,198,0,0.0,3
 CZE,"Furniture, appliances & consumer goods",192,9,0.047,2.0
 ITA,"Education, social & hospitality services",189,0,0.0,2
@@ -67,6 +88,9 @@ HRV,ICT & telecom,178,5,0.028,2.0
 POL,"Furniture, appliances & consumer goods",177,1,0.006,3
 FRA,"Furniture, appliances & consumer goods",176,2,0.011,4.0
 BGR,Healthcare & pharmaceuticals,175,0,0.0,3
+UKR,"Repair, maintenance & installation",175,0,0.0,
+UKR,Power & electrical equipment,174,0,0.0,
+UKR,"Furniture, appliances & consumer goods",173,0,0.0,
 LTU,Chemicals & plastics,172,3,0.017,3.0
 ESP,"Environment, waste & cleaning",172,1,0.006,3.0
 DEU,"Education, social & hospitality services",172,3,0.017,3.0
@@ -74,7 +98,9 @@ NLD,"Consulting, business & financial services",170,1,0.006,3.0
 ITA,"Consulting, business & financial services",169,4,0.024,3
 DEU,Transport & civil infrastructure works,168,1,0.006,4.0
 HUN,Agriculture & food,167,0,0.0,4
+BRA,Other,167,0,0.0,
 ESP,Construction materials & building systems,166,6,0.036,3
+BRA,Healthcare & pharmaceuticals,166,0,0.0,
 ESP,"Vehicles, rolling stock, ships & aircraft",163,5,0.031,2
 ESP,Building construction works,162,1,0.006,3.0
 ROU,"Repair, maintenance & installation",162,0,0.0,2.0
@@ -86,6 +112,7 @@ GRC,"Energy, fuels & utilities",156,0,0.0,2.0
 SVN,Agriculture & food,155,1,0.006,4
 POL,Construction materials & building systems,154,2,0.013,3
 ESP,Chemicals & plastics,152,4,0.026,2.0
+UKR,"Energy, fuels & utilities",152,0,0.0,
 LVA,Agriculture & food,149,4,0.027,3
 POL,Transport & logistics services,148,4,0.027,3
 ESP,Transport & logistics services,147,1,0.007,2
@@ -95,6 +122,7 @@ POL,"Education, social & hospitality services",145,2,0.014,2
 DEU,Agriculture & food,143,3,0.021,4.0
 FRA,"Vehicles, rolling stock, ships & aircraft",143,1,0.007,3.0
 ROU,Construction materials & building systems,140,1,0.007,3.0
+UKR,Healthcare & pharmaceuticals,140,0,0.0,1.5
 POL,Building construction works,140,0,0.0,4
 CZE,Transport & civil infrastructure works,138,1,0.007,3.0
 ESP,Power & electrical equipment,137,2,0.015,3
@@ -109,14 +137,17 @@ ROU,Water & wastewater,126,4,0.032,2.0
 FRA,Chemicals & plastics,124,1,0.008,3.0
 FRA,"Education, social & hospitality services",124,1,0.008,3
 AUT,Building construction works,122,6,0.049,4.0
+COL,Construction materials & building systems,121,0,0.0,
 DEU,Healthcare & pharmaceuticals,119,4,0.034,2
 BEL,ICT & telecom,119,15,0.126,3
 FIN,Healthcare & pharmaceuticals,119,17,0.143,2.0
 SWE,ICT & telecom,119,3,0.025,2
 ROU,"Furniture, appliances & consumer goods",118,0,0.0,5.0
+UKR,"Consulting, business & financial services",118,0,0.0,
 SWE,Agriculture & food,117,2,0.017,2
 ITA,Engineering & architecture services,117,0,0.0,6
 CZE,"Environment, waste & cleaning",116,0,0.0,3.0
+COL,"Textiles, apparel & leather",116,0,0.0,
 ESP,Transport & civil infrastructure works,112,0,0.0,2.5
 DEU,Water & wastewater,110,7,0.064,3.0
 GRC,Healthcare & pharmaceuticals,110,0,0.0,1
@@ -128,6 +159,7 @@ HUN,Chemicals & plastics,106,5,0.047,2.0
 LTU,ICT & telecom,105,10,0.095,2
 BGR,Building construction works,104,0,0.0,2.0
 PRT,ICT & telecom,102,7,0.069,2.0
+UKR,"Vehicles, rolling stock, ships & aircraft",102,0,0.0,1.0
 ITA,Transport & logistics services,101,0,0.0,2
 ROU,"Vehicles, rolling stock, ships & aircraft",100,0,0.0,2.0
 NLD,ICT & telecom,100,4,0.04,2.0
@@ -140,11 +172,13 @@ ROU,"Consulting, business & financial services",96,2,0.021,2.0
 ITA,"Energy, fuels & utilities",95,0,0.0,2
 EST,Agriculture & food,95,0,0.0,3.0
 ITA,"Repair, maintenance & installation",95,0,0.0,2
+BRA,Construction materials & building systems,95,0,0.0,
 DEU,"Repair, maintenance & installation",94,1,0.011,2.0
 ROU,Transport & logistics services,93,3,0.032,6
 ITA,"Vehicles, rolling stock, ships & aircraft",92,4,0.043,2.5
 SWE,Healthcare & pharmaceuticals,92,3,0.033,2
 LTU,"Vehicles, rolling stock, ships & aircraft",91,5,0.055,2
+BRA,Building construction works,89,0,0.0,
 CHE,Engineering & architecture services,89,1,0.011,4
 IRL,"Education, social & hospitality services",89,2,0.022,3
 FRA,Power & electrical equipment,88,4,0.045,4
@@ -153,6 +187,8 @@ ROU,"Mining, minerals & metals",87,1,0.011,3
 IRL,ICT & telecom,86,19,0.221,3.0
 ROU,Transport & civil infrastructure works,86,1,0.012,4.0
 DEU,"Furniture, appliances & consumer goods",85,5,0.059,3
+UKR,Engineering & architecture services,85,0,0.0,
+BRA,Agriculture & food,84,0,0.0,
 ITA,Agriculture & food,83,0,0.0,2
 SWE,"Consulting, business & financial services",82,5,0.061,3.5
 HRV,Chemicals & plastics,80,6,0.075,2.0
@@ -165,6 +201,7 @@ POL,Water & wastewater,76,2,0.026,3
 DNK,Healthcare & pharmaceuticals,76,8,0.105,2.0
 SVN,Healthcare & pharmaceuticals,76,5,0.066,2.0
 ROU,Scientific & measuring instruments,76,3,0.039,1.0
+UKR,Industrial & construction machinery,76,0,0.0,
 CZE,"Education, social & hospitality services",76,2,0.026,1.0
 BGR,Chemicals & plastics,75,0,0.0,2
 FIN,ICT & telecom,75,8,0.107,3
@@ -173,8 +210,10 @@ HRV,"Repair, maintenance & installation",74,2,0.027,1.0
 LTU,"Mining, minerals & metals",73,1,0.014,2
 CZE,Industrial & construction machinery,72,4,0.056,1.0
 HUN,ICT & telecom,71,2,0.028,3
+UKR,Chemicals & plastics,71,0,0.0,
 CHE,Power & electrical equipment,71,6,0.085,3
 FRA,Water & wastewater,70,1,0.014,4
+COL,Water & wastewater,70,0,0.0,
 SWE,Building construction works,70,0,0.0,4.0
 ITA,Building construction works,70,0,0.0,17.5
 ESP,"Mining, minerals & metals",69,1,0.014,4
@@ -192,10 +231,12 @@ ROU,Building construction works,66,1,0.015,4.0
 POL,Transport & civil infrastructure works,66,0,0.0,5.0
 FRA,Defence & security,64,0,0.0,3
 DEU,Transport & logistics services,64,0,0.0,3.0
+UKR,"Education, social & hospitality services",64,1,0.016,
 CZE,Defence & security,64,1,0.016,1.0
 CZE,"Textiles, apparel & leather",63,2,0.032,1
 LTU,Agriculture & food,62,0,0.0,3.0
 SVK,ICT & telecom,62,1,0.016,2.0
+BRA,Transport & civil infrastructure works,62,0,0.0,
 IRL,"Consulting, business & financial services",62,13,0.21,3
 HRV,Power & electrical equipment,62,0,0.0,2.0
 NLD,"Environment, waste & cleaning",61,1,0.016,3
@@ -216,6 +257,7 @@ ROU,Industrial & construction machinery,56,3,0.054,1.5
 FIN,"Consulting, business & financial services",56,4,0.071,4.0
 ESP,Water & wastewater,54,0,0.0,3.0
 CHE,ICT & telecom,54,6,0.111,4.0
+UKR,Water & wastewater,54,0,0.0,
 ESP,Industrial & construction machinery,53,1,0.019,2
 AUT,Engineering & architecture services,53,1,0.019,3.0
 IRL,Building construction works,53,5,0.094,4.0
@@ -229,6 +271,7 @@ PRT,"Vehicles, rolling stock, ships & aircraft",51,3,0.059,2.0
 HRV,Construction materials & building systems,50,0,0.0,2.0
 ROU,Defence & security,50,0,0.0,4.0
 SVK,Chemicals & plastics,49,2,0.041,2
+UKR,Building construction works,49,0,0.0,
 NLD,Engineering & architecture services,49,1,0.02,3
 LTU,"Energy, fuels & utilities",48,1,0.021,2.5
 CZE,Transport & logistics services,48,0,0.0,3.0
@@ -237,9 +280,12 @@ FRA,"Mining, minerals & metals",47,1,0.021,2
 ROU,Engineering & architecture services,47,1,0.021,4
 HUN,Water & wastewater,46,0,0.0,2.0
 EST,ICT & telecom,46,7,0.152,2.5
+UKR,"Textiles, apparel & leather",46,0,0.0,
 FIN,Building construction works,46,0,0.0,6.0
 FIN,Agriculture & food,45,0,0.0,3
 ITA,"Furniture, appliances & consumer goods",45,3,0.067,3
+BRA,ICT & telecom,45,0,0.0,
+COL,"Mining, minerals & metals",45,0,0.0,
 HRV,"Vehicles, rolling stock, ships & aircraft",45,0,0.0,2
 PRT,"Environment, waste & cleaning",45,1,0.022,2
 SVN,ICT & telecom,45,4,0.089,1
@@ -253,6 +299,7 @@ HRV,Engineering & architecture services,44,1,0.023,2.0
 BGR,Water & wastewater,43,0,0.0,2
 DNK,Agriculture & food,43,0,0.0,2
 AUT,"Vehicles, rolling stock, ships & aircraft",43,9,0.209,1
+BRA,Industrial & construction machinery,43,0,0.0,
 AUT,Healthcare & pharmaceuticals,43,4,0.093,1
 BEL,Engineering & architecture services,42,4,0.095,5.0
 NOR,Agriculture & food,41,0,0.0,2.5
@@ -262,6 +309,7 @@ SWE,"Energy, fuels & utilities",40,1,0.025,2.0
 BEL,Building construction works,40,2,0.05,4.0
 SWE,"Vehicles, rolling stock, ships & aircraft",40,1,0.025,2.0
 NLD,"Energy, fuels & utilities",39,0,0.0,3
+COL,Chemicals & plastics,39,0,0.0,
 NOR,"Consulting, business & financial services",39,2,0.051,4
 PRT,"Consulting, business & financial services",39,3,0.077,2
 DEU,"Mining, minerals & metals",38,3,0.079,3.0
@@ -271,6 +319,7 @@ LVA,"Consulting, business & financial services",38,2,0.053,3.0
 PRT,Engineering & architecture services,38,0,0.0,4.5
 SWE,"Education, social & hospitality services",38,2,0.053,2.0
 BGR,Construction materials & building systems,37,0,0.0,2
+BRA,Scientific & measuring instruments,37,0,0.0,
 HRV,"Consulting, business & financial services",37,2,0.054,1
 BGR,"Repair, maintenance & installation",36,0,0.0,1.0
 AUT,Power & electrical equipment,36,5,0.139,2.0
@@ -287,8 +336,12 @@ CHE,"Environment, waste & cleaning",35,0,0.0,4
 BEL,"Energy, fuels & utilities",34,2,0.059,3.0
 PRT,"Repair, maintenance & installation",34,0,0.0,1.0
 CYP,Healthcare & pharmaceuticals,34,2,0.059,1.0
+BRA,"Vehicles, rolling stock, ships & aircraft",34,0,0.0,
 BGR,Engineering & architecture services,34,0,0.0,2.0
 ITA,Water & wastewater,33,1,0.03,3
+BRA,"Education, social & hospitality services",33,0,0.0,
+BRA,"Repair, maintenance & installation",33,0,0.0,
+UKR,"Environment, waste & cleaning",33,0,0.0,
 NLD,"Furniture, appliances & consumer goods",32,0,0.0,4.0
 CHE,Agriculture & food,32,0,0.0,4.5
 BEL,"Repair, maintenance & installation",32,2,0.062,2.0
@@ -304,6 +357,7 @@ NLD,Building construction works,31,0,0.0,3
 ROU,"Education, social & hospitality services",31,0,0.0,2
 LVA,Power & electrical equipment,31,1,0.032,3
 FIN,Engineering & architecture services,31,0,0.0,5
+BRA,Engineering & architecture services,30,0,0.0,
 PRT,"Furniture, appliances & consumer goods",30,0,0.0,3.0
 SVN,"Repair, maintenance & installation",30,4,0.133,1.0
 DNK,Building construction works,29,0,0.0,5
@@ -315,6 +369,7 @@ BEL,Chemicals & plastics,28,2,0.071,3.0
 NLD,Industrial & construction machinery,28,1,0.036,4.5
 ITA,Scientific & measuring instruments,28,4,0.143,2.0
 GRC,"Environment, waste & cleaning",28,0,0.0,1.0
+UKR,"Mining, minerals & metals",28,0,0.0,
 FIN,Transport & logistics services,28,0,0.0,5.0
 BGR,"Consulting, business & financial services",28,1,0.036,1.0
 SWE,Scientific & measuring instruments,28,7,0.25,1.0
@@ -331,6 +386,7 @@ HRV,Transport & logistics services,27,0,0.0,2
 SWE,"Repair, maintenance & installation",27,0,0.0,3
 DNK,"Environment, waste & cleaning",27,2,0.074,3
 NLD,"Vehicles, rolling stock, ships & aircraft",27,5,0.185,2
+UKR,Scientific & measuring instruments,26,0,0.0,
 HUN,"Environment, waste & cleaning",26,0,0.0,2.0
 CHE,"Consulting, business & financial services",26,0,0.0,5.0
 ITA,Transport & civil infrastructure works,26,0,0.0,9.0
@@ -339,6 +395,7 @@ BEL,"Vehicles, rolling stock, ships & aircraft",25,7,0.28,3
 BEL,"Furniture, appliances & consumer goods",25,2,0.08,3
 IRL,"Vehicles, rolling stock, ships & aircraft",25,7,0.28,2
 SWE,Water & wastewater,25,2,0.08,3
+COL,Transport & civil infrastructure works,25,0,0.0,
 SWE,Transport & logistics services,25,1,0.04,2
 AUT,Construction materials & building systems,24,7,0.292,3.0
 CHE,Construction materials & building systems,24,0,0.0,2.0
@@ -381,6 +438,8 @@ BGR,Industrial & construction machinery,21,0,0.0,2
 ITA,Construction materials & building systems,21,0,0.0,3
 SVN,"Vehicles, rolling stock, ships & aircraft",21,1,0.048,1
 MLT,Healthcare & pharmaceuticals,21,0,0.0,2
+BRA,"Environment, waste & cleaning",21,0,0.0,
+BRA,Water & wastewater,21,0,0.0,
 EST,Scientific & measuring instruments,21,6,0.286,2
 NOR,"Education, social & hospitality services",21,0,0.0,3
 NLD,"Repair, maintenance & installation",21,1,0.048,3
@@ -420,6 +479,8 @@ CHE,"Vehicles, rolling stock, ships & aircraft",18,1,0.056,3.0
 LUX,ICT & telecom,18,5,0.278,2.0
 HUN,"Furniture, appliances & consumer goods",18,0,0.0,3.0
 DEU,"Textiles, apparel & leather",18,0,0.0,3.5
+BRA,"Textiles, apparel & leather",18,0,0.0,
+BRA,"Furniture, appliances & consumer goods",18,0,0.0,
 ITA,Industrial & construction machinery,18,2,0.111,3.0
 LVA,"Repair, maintenance & installation",18,2,0.111,1.0
 EST,"Consulting, business & financial services",18,0,0.0,3
@@ -455,6 +516,9 @@ SVN,Water & wastewater,15,2,0.133,3
 NLD,Water & wastewater,15,1,0.067,2
 FIN,Chemicals & plastics,15,0,0.0,2
 AUT,Water & wastewater,15,2,0.133,2
+BRA,"Consulting, business & financial services",15,0,0.0,
+BRA,"Mining, minerals & metals",15,0,0.0,
+UKR,Transport & logistics services,15,0,0.0,
 NOR,"Repair, maintenance & installation",15,0,0.0,3
 SVK,"Environment, waste & cleaning",15,1,0.067,2
 LVA,Transport & civil infrastructure works,15,0,0.0,4
@@ -482,6 +546,7 @@ FIN,Construction materials & building systems,13,0,0.0,2
 GRC,"Furniture, appliances & consumer goods",13,0,0.0,2
 DNK,"Repair, maintenance & installation",13,1,0.077,2
 DNK,"Education, social & hospitality services",13,1,0.077,2
+BRA,Defence & security,13,0,0.0,
 NLD,Transport & logistics services,13,0,0.0,3
 SWE,Defence & security,13,1,0.077,2
 PRT,Defence & security,13,1,0.077,3
@@ -519,6 +584,8 @@ LVA,Water & wastewater,10,0,0.0,3.0
 SVN,Construction materials & building systems,10,1,0.1,2.0
 LVA,Construction materials & building systems,10,1,0.1,3.5
 MLT,ICT & telecom,10,1,0.1,2.0
+UKR,Transport & civil infrastructure works,10,0,0.0,
+UKR,Defence & security,10,0,0.0,
 SVN,"Furniture, appliances & consumer goods",10,1,0.1,2.0
 HUN,Transport & civil infrastructure works,10,0,0.0,2.0
 PRT,Transport & civil infrastructure works,10,0,0.0,5.0
@@ -565,6 +632,8 @@ NOR,Industrial & construction machinery,7,0,0.0,3
 GRC,"Mining, minerals & metals",7,0,0.0,2
 SVK,"Consulting, business & financial services",7,1,0.143,1
 HUN,"Textiles, apparel & leather",7,0,0.0,3
+BRA,"Energy, fuels & utilities",7,0,0.0,
+BRA,Power & electrical equipment,7,0,0.0,
 GBR,"Consulting, business & financial services",7,6,0.857,2
 CYP,"Vehicles, rolling stock, ships & aircraft",7,0,0.0,2
 SVK,"Education, social & hospitality services",7,0,0.0,2
@@ -584,6 +653,7 @@ MLT,Building construction works,6,0,0.0,3.0
 FIN,"Textiles, apparel & leather",6,1,0.167,3.0
 LVA,Defence & security,6,0,0.0,2.5
 AUT,Defence & security,6,2,0.333,2.0
+BRA,Chemicals & plastics,6,0,0.0,
 GBR,"Vehicles, rolling stock, ships & aircraft",6,6,1.0,
 DNK,Industrial & construction machinery,6,0,0.0,2.5
 GRC,Engineering & architecture services,6,1,0.167,1.0
