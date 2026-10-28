@@ -1,20 +1,20 @@
-dr https://datosabiertos.dgcp.gob.do/api-dgcp/v1/ocds/releases/all?limit=5&start_date=2026-10-20&end_date=2026-10-28
-ec https://datosabiertos.compraspublicas.gob.ec/PLATAFORMA/api/search_ocds?year=2026&page=1
-ge https://odapi.spa.ge/api/releases.json?page=1
-ke CFFI https://tenders.go.ke/api/ocds/index?search=&perpage=10&sortby=&order=desc&page=1
-xk https://ocdskrpp.rks-gov.net/krppapi/tenderrelease?endDateFrom=2026-11-01&endDateEnd=2026-11-15
-md https://public.mtender.gov.md/tenders/?offset=2026-10-20T00:00:00Z
-ng https://nocopo.bpp.gov.ng/ocdsjson.ashx?ocid=all
-rw https://ocds.umucyo.gov.rw/opendata/api/v1/releases/all?sort_field=date&sort_direction=desc&offset=0&limit=5&date_from=2026-10-20&date_to=2026-10-28
-ug https://cdn.ppda.go.ug/api/open-data/v2/ocds/
-pe https://contratacionesabiertas.oece.gob.pe/api/v1/releases?format=json&order=desc
-am https://armeps.am/ocds/release?limit=5
-de https://www.oeffentlichevergabe.de/api/notice-exports?pubDay=2026-10-27&format=ocds.zip
-cf https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-26&size=5&stages=tender
-eu POST https://api.tech.ec.europa.eu/search-api/prod/rest/search?apiKey=SEDIA&text=***&pageSize=5&pageNumber=1 {"bool":{"must":[{"terms":{"type":["0","1","2","8"]}},{"terms":{"status":["31094501","31094502"]}}]}}
-qa CFFI https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/1
-om CFFI https://etendering.tenderboard.gov.om/product/publicDash?viewFlag=NewTenders
-au CFFI https://www.tenders.gov.au/atm
-mx CFFI https://comprasmx.buengobierno.gob.mx/sitiopublico/#/
-py https://www.contrataciones.gov.py/datos/api/v3/doc/search/processes?tender.status=active&items_per_page=5
-id https://v3.opentender.net/api/tender/?format=json
+fr_boamp https://boamp-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/boamp/records?limit=3&order_by=dateparution%20desc
+pl_bzp https://ezamowienia.gov.pl/mo-board/api/v1/notice?NoticeType=ContractNotice&PublicationDateFrom=2026-10-26&PageSize=3
+es_placsp https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom
+tz_nest https://nest.go.tz/gateway/nest-data-portal-api/api/releases?page=0&size=3
+ug_exp https://cdn.ppda.go.ug/api/open-data/v2/ocds/exports
+gh_list https://www.ghaneps.gov.gh/ocds/services/recordpackage/getrecordpackagelist
+zm_list https://www.zppa.org.zm/ocds/services/recordpackage/getrecordpackagelist
+mw_rec https://maneps.mw/rms/api/ocds/get-records?offset=0
+ro_seap POST https://e-licitatie.ro/api-pub/NoticeCommon/GetCNoticeList/ {"pageSize":5,"pageIndex":0,"sysNoticeTypeIds":[2],"sortProperties":[],"sysNoticeStateId":null}
+ph_philgeps CFFI https://notices.philgeps.gov.ph/GEPSNONPILOT/Tender/SplashOpportunitiesSearchUI.aspx?menuIndex=3&ClickFrom=OpenOpp&Result=3
+tr_ilan CFFI https://www.ilan.gov.tr/ilan/kategori/9/ihale-duyurulari
+eg_etenders CFFI https://etenders.gov.eg/Tender/OpenTenders
+ma_marches CFFI https://www.marchespublics.gov.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&AllCons
+bd_egp CFFI https://www.eprocure.gov.bd/resources/common/StdTenderSearch.jsp?h=t
+ar_comprar CFFI https://comprar.gob.ar/BuscarAvanzado.aspx
+mx_api https://api.datos.gob.mx/v2/contratacionesabiertas?page=1&pageSize=3
+ke_active CFFI https://tenders.go.ke/api/active-tenders?page=1
+jo_gtd CFFI https://jonepsapp.gtd.gov.jo/
+id_inaproc CFFI https://spse.inaproc.id/
+vn_msc CFFI https://muasamcong.mpi.gov.vn/
