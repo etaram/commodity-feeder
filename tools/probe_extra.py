@@ -44,6 +44,6 @@ def other():
         except Exception as e:
             print(name, e)
 
-for f in (ungm, other):
+for f in ():
     try: f()
     except Exception: traceback.print_exc()
