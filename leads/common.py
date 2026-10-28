@@ -106,6 +106,7 @@ def cache_empty(name):
 
 
 AWARDS = LEADS / "awards"
+PRIVATE = DATA / "private"  # git-ignored; persisted between CI runs with actions/cache
 
 
 def save_awards(source, rows, keep_days=370):
@@ -113,6 +114,17 @@ def save_awards(source, rows, keep_days=370):
     written once and rarely touched again. Rows with the same id are merged."""
     d = AWARDS / source
     d.mkdir(parents=True, exist_ok=True)
+    # Supplier contact details are kept out of the public repository (private cache, pushed to a private sheet).
+    contacts = []
+    for r in rows:
+        for c in r.pop("contacts", None) or []:
+            if c.get("name"):
+                c["source"] = source; c["seen"] = r.get("published", ""); contacts.append(c)
+    if contacts:
+        PRIVATE.mkdir(parents=True, exist_ok=True)
+        with open(PRIVATE / f"contacts_{source}.jsonl", "a", encoding="utf-8") as f:
+            for c in contacts:
+                f.write(json.dumps(c, ensure_ascii=False) + "\n")
     by_day = {}
     for r in rows:
         day = (r.get("published") or str(today()))[:10]

@@ -49,7 +49,11 @@ def fetch():
                                "winners": [clean(html.unescape(w), 100) for w in win[:6]], "winner_country": "ESP",
                                "winner_size": "SME" if "SMEAwardedIndicator>true" in res else "",
                                "value": float(amt) if re.match(r"^[\d.]+$", amt or "") else "", "currency": "EUR",
-                               "bids": int(nb) if nb.isdigit() else "", "email": "", "link": ""})
+                               "bids": int(nb) if nb.isdigit() else "", "email": "", "link": "",
+                               "contacts": [{"name": clean(html.unescape(w), 100), "country": "ESP",
+                                             "legal_id": "NIF:" + i if i else "", "email": "", "phone": "",
+                                             "website": "", "address": ""}
+                                            for w, i in zip(win, (re.findall(r'schemeName="NIF">([^<]+)<', res) + [""] * 6))]})
                 continue
             if st not in ("PUB", "PRE"):
                 continue

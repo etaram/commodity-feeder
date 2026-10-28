@@ -1,1 +1,2 @@
-# none
+ted_fields POST https://api.ted.europa.eu/v3/notices/search {"query":"notice-type IN (can-standard) AND PD=20261020","fields":["publication-number","winner-name","organisation-email-tenderer","organisation-tel-tenderer","organisation-internet-address-tenderer","organisation-city-tenderer","organisation-identifier-tenderer","winner-identifier","organisation-name-tenderer"],"limit":3}
+gleif https://api.gleif.org/api/v1/fuzzycompletions?field=entity.legalName&q=Eiffage%20Route

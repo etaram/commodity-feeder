@@ -66,12 +66,23 @@ def award_rows(rel, *, source, prefix, country):
         names = [n for n in names if n]
         if not names:
             continue
-        wc = []
+        wc, contacts = [], []
         for s in sups:
             p = parties.get(s.get("id")) or {}
-            c = ((p.get("address") or {}).get("countryName") or "")
+            addr = p.get("address") or s.get("address") or {}
+            c = addr.get("countryName") or ""
             if c:
                 wc.append(c)
+            cp = p.get("contactPoint") or s.get("contactPoint") or {}
+            ident = p.get("identifier") or s.get("identifier") or {}
+            contacts.append({
+                "name": clean(s.get("name") or p.get("name"), 120), "country": c,
+                "email": clean(cp.get("email"), 120), "phone": clean(cp.get("telephone"), 60),
+                "website": clean(cp.get("url") or p.get("url") or "", 120),
+                "address": clean(" ".join(x for x in [addr.get("streetAddress"), addr.get("postalCode"),
+                                                      addr.get("locality")] if x), 160),
+                "legal_id": clean(f"{ident.get('scheme', '')}:{ident.get('id', '')}" if ident.get("id") else "", 60),
+            })
         val = a.get("value") or {}
         out.append({
             "id": f"{prefix}-{rel.get('ocid', '')}-{a.get('id', i)}", "source": source, "group": gid or "",
@@ -80,5 +91,6 @@ def award_rows(rel, *, source, prefix, country):
             "winners": names[:6], "winner_country": ",".join(dict.fromkeys(wc))[:40], "winner_size": "",
             "value": val.get("amount") if val.get("amount") not in (None, 0) else "", "currency": val.get("currency", ""),
             "bids": bids if isinstance(bids, int) else "", "email": "", "link": "",
+            "contacts": contacts,
         })
     return out
