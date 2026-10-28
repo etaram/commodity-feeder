@@ -105,6 +105,30 @@ jobs:
         run: python -m leads.run --source oman
         timeout-minutes: 4
         continue-on-error: true
+      - name: france
+        run: python -m leads.run --source france
+        timeout-minutes: 8
+        continue-on-error: true
+      - name: spain
+        run: python -m leads.run --source spain
+        timeout-minutes: 15
+        continue-on-error: true
+      - name: kenya
+        run: python -m leads.run --source kenya
+        timeout-minutes: 8
+        continue-on-error: true
+      - name: tanzania
+        run: python -m leads.run --source tanzania
+        timeout-minutes: 8
+        continue-on-error: true
+      - name: ghana
+        run: python -m leads.run --source ghana
+        timeout-minutes: 8
+        continue-on-error: true
+      - name: zambia
+        run: python -m leads.run --source zambia
+        timeout-minutes: 8
+        continue-on-error: true
       - name: awards
         run: python -m leads.run --source awards
         timeout-minutes: 15
