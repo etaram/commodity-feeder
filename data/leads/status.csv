@@ -1,31 +1,31 @@
 source,last_run_utc,rows,note,detail
-ted,2026-10-28T04:27,11797,OK,fetched=5961; days=3; cache=11797
-fts,2026-10-28T04:27,152,OK,pages=1
-sam,2026-10-28T04:28,5279,OK,"new=5279 | last error: [-1:])), 120),                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TypeError: sequence item 1: expected str instance, NoneType found "
-canadabuys,2026-10-28T04:28,800,OK,
-za,2026-10-28T04:28,201,OK,
-worldbank,2026-10-28T05:08,631,OK,new=230; cache=631; days=10
-ebrd,2026-10-28T04:28,41,OK,
-mrgov,2026-10-28T05:10,209,OK,
-ungm,2026-10-28T04:29,370,OK,new=368; total_active=1636; pages=29
-undp,2026-10-28T04:29,19,OK,new=26; cache=19
-aiib,2026-10-28T04:29,173,OK,new=174
-isdb,2026-10-28T04:29,34,OK,new=35
-etimad,2026-10-28T04:30,203,OK,new=130; pages=14
-prozorro,2026-10-28T04:31,326,OK,candidates=2588; fetched=132
-pncp,2026-10-28T04:31,318,OK,new=176
-secop,2026-10-28T04:31,549,OK,new=0
-germany,2026-10-28T04:31,7055,OK,new=7444; awards_seen=3228
-contractsfinder,2026-10-28T04:31,80,OK,new=91
-paraguay,2026-10-28T04:46,406,OK,new=406
-dominican,2026-10-28T04:47,351,OK,new=351; listed=1000
-austender,2026-10-28T04:47,120,OK,new=120
-oman,2026-10-28T04:47,50,OK,new=50
-france,2026-10-28T04:48,5421,OK,new=5421
-spain,2026-10-28T05:54,770,OK,new=793; pages=8; awards_seen=1720
-kenya,2026-10-28T05:03,0,EMPTY,new=0
-tanzania,2026-10-28T05:06,0,EMPTY,new=0
-ghana,2026-10-28T05:06,0,EMPTY,new=0
-zambia,2026-10-28T05:08,0,EMPTY,new=0
+ted,2026-10-28T06:26,11797,OK,fetched=5961; days=3; cache=11797
+fts,2026-10-28T06:26,152,OK,pages=1
+sam,2026-10-28T06:27,5282,OK,new=1741
+canadabuys,2026-10-28T06:27,800,OK,
+za,2026-10-28T06:27,210,OK,
+worldbank,2026-10-28T07:05,631,OK,new=230; cache=631; days=10
+ebrd,2026-10-28T06:27,41,OK,
+mrgov,2026-10-28T07:07,203,OK,
+ungm,2026-10-28T06:28,424,OK,new=425; total_active=1648; pages=33
+undp,2026-10-28T06:29,19,OK,new=26; cache=19
+aiib,2026-10-28T06:29,173,OK,new=174; awards=275
+isdb,2026-10-28T06:29,34,OK,new=35
+etimad,2026-10-28T06:29,205,OK,new=132; pages=14
+prozorro,2026-10-28T06:33,327,OK,candidates=2601; fetched=65
+pncp,2026-10-28T06:34,458,OK,new=292
+secop,2026-10-28T06:34,549,OK,new=0
+germany,2026-10-28T06:34,7055,OK,new=649; awards_seen=369; awards_saved=55
+contractsfinder,2026-10-28T06:34,80,OK,new=12
+paraguay,2026-10-28T06:41,428,OK,new=22
+dominican,2026-10-28T06:41,351,OK,new=0; listed=728
+austender,2026-10-28T06:41,120,OK,new=120
+oman,2026-10-28T06:41,65,OK,new=50
+france,2026-10-28T06:42,5422,OK,new=847
+spain,2026-10-28T06:52,483,OK,new=483; pages=5; awards_seen=956
+kenya,2026-10-28T06:54,147,OK,new=150
+tanzania,2026-10-28T07:00,0,EMPTY,new=0
+ghana,2026-10-28T07:00,0,EMPTY,new=0
+zambia,2026-10-28T07:02,0,EMPTY,new=0
 qatar,,0,no data,
-importyeti,2026-10-28T05:11,323,OK,"323 HS headings cached; this run 23, due 164"
+importyeti,2026-10-28T07:08,1,OK,"1 HS headings cached; this run 23, due 141"

@@ -1,33 +1,34 @@
 country,region,open_notices,total_value_usd,sources
 DEU,Europe,9353,4734505116,TED (EU); oeffentlichevergabe (Germany)
-FRA,Europe,7033,5078826874,BOAMP (France); TED (EU); UNGM (UNESCO)
-USA,North America,5283,6741322,SAM.gov (USA); TED (EU); UNDP; UNGM (UNFPA)
+FRA,Europe,7035,5078826874,BOAMP (France); TED (EU); UNGM (UNESCO)
+USA,North America,5286,6741322,SAM.gov (USA); TED (EU); UNDP; UNGM (UNFPA)
 POL,Europe,1802,825121789,TED (EU)
-ESP,Europe,1527,6982507407,PLACSP (Spain); TED (EU); UNGM (UNICEF)
+ESP,Europe,1241,5126350636,PLACSP (Spain); TED (EU); UNGM (UNDP); UNGM (UNICEF)
 CAN,North America,802,3899926,CanadaBuys (Canada); TED (EU); UNGM (ICAO)
-COL,Latin America,556,4532536472,SECOP II (Colombia); UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UNDP)
+COL,Latin America,557,4532536472,SECOP II (Colombia); UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UNDP)
 CZE,Europe,526,4263989108,TED (EU)
 ITA,Europe,477,8679302949,TED (EU); UNGM (UN Secretariat)
+BRA,Latin America,472,637089109,AIIB; PNCP (Brazil); UNGM (PAHO); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS); World Bank
 SWE,Europe,468,4398121322,TED (EU)
-PRY,Latin America,409,1407541819,DNCP (Paraguay); UNDP; UNGM (UNDP); World Bank
+PRY,Latin America,431,1456453712,DNCP (Paraguay); UNDP; UNGM (UNDP); World Bank
 BEL,Europe,407,246734335,TED (EU)
 ROU,Europe,379,2332749534,TED (EU); World Bank
 DOM,Latin America,359,109389873,DGCP (Dominican Republic); UNGM (IOM); World Bank
-UKR,Europe,339,319435739,Prozorro (Ukraine); TED (EU); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNOPS); UNGM (WHO); World Bank
-BRA,Latin America,332,490223536,AIIB; PNCP (Brazil); UNGM (PAHO); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS); World Bank
+UKR,Europe,341,319614691,Prozorro (Ukraine); TED (EU); UNGM (IDLO); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNOPS); UNGM (WHO); World Bank
 NLD,Europe,327,1241398684,TED (EU)
 FIN,Europe,254,292068083,TED (EU)
 GBR,Europe,237,8870636694,Contracts Finder (UK); Find a Tender (UK); World Bank
 NOR,Europe,235,1803080114,TED (EU)
 PRT,Europe,211,1624644285,TED (EU)
-ISR,Israel,210,0,UNGM (UN Secretariat); mr.gov.il (Israel); mr.gov.il exemption notice (Israel)
-SAU,Middle East & North Africa,208,0,Etimad (Saudi Arabia); IsDB
-ZAF,Sub-Saharan Africa,201,0,eTenders (South Africa)
+SAU,Middle East & North Africa,210,0,Etimad (Saudi Arabia); IsDB
+ZAF,Sub-Saharan Africa,210,0,eTenders (South Africa)
+ISR,Israel,204,0,UNGM (UN Secretariat); mr.gov.il (Israel); mr.gov.il exemption notice (Israel)
 SVN,Europe,194,28860353,TED (EU)
-AUT,Europe,179,786804991,TED (EU); UNGM (CTBTO); UNGM (UNIDO)
+AUT,Europe,180,786804991,TED (EU); UNGM (CTBTO); UNGM (UNIDO)
 CHE,Europe,172,0,TED (EU); UNGM (IOM); UNGM (ITU); UNGM (WIPO)
 SVK,Europe,171,1340725106,TED (EU)
 HRV,Europe,169,435893413,TED (EU)
+KEN,Sub-Saharan Africa,163,0,AIIB; PPIP (Kenya); UNGM (ILO); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); World Bank
 GRC,Europe,149,1738227666,TED (EU)
 BGR,Europe,147,205042036,TED (EU)
 LVA,Europe,138,304712286,TED (EU)
@@ -38,60 +39,61 @@ HUN,Europe,109,13661234,TED (EU)
 IRL,Europe,89,1826613056,TED (EU)
 LUX,Europe,74,75511476,TED (EU)
 EST,Europe,72,689183418,TED (EU)
-MDG,Sub-Saharan Africa,56,0,AIIB; UNGM (FAO); UNGM (ILO); World Bank
-OMN,Middle East & North Africa,50,0,Tender Board (Oman)
+OMN,Middle East & North Africa,65,0,Tender Board (Oman)
+MDG,Sub-Saharan Africa,60,0,AIIB; UNGM (FAO); UNGM (ILO); World Bank
 TUR,Middle East & North Africa,49,0,AIIB; IsDB; TED (EU); UNGM (IOM); World Bank
-UZB,CIS & Central Asia,46,0,AIIB; UNGM (UNOPS); World Bank
-ETH,Sub-Saharan Africa,43,0,UNGM (FAO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNHCR); UNGM (UNIDO); UNGM (UNOPS); World Bank
-PAK,South Asia,38,0,AIIB; IsDB; UNGM (ILO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UNFPA); UNGM (UNICEF); UNGM (UNOPS); UNGM (WHO); World Bank
-IND,South Asia,37,0,AIIB; UNGM (FAO); UNGM (ILO); UNGM (UNICEF); UNGM (UNIDO); World Bank
+UZB,CIS & Central Asia,47,0,AIIB; UNGM (UNICEF); UNGM (UNOPS); World Bank
+ETH,Sub-Saharan Africa,46,0,UNGM (FAO); UNGM (ILO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNHCR); UNGM (UNIDO); UNGM (UNOPS); World Bank
+PAK,South Asia,42,0,AIIB; IsDB; UNGM (ILO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UNESCO); UNGM (UNFPA); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNOPS); UNGM (WHO); World B
+IND,South Asia,39,0,AIIB; UNGM (FAO); UNGM (ILO); UNGM (UN-Women); UNGM (UNICEF); UNGM (UNIDO); World Bank
 MKD,Europe,35,6100702,TED (EU); UNGM (UNDP); World Bank
 MLT,Europe,31,121703775,TED (EU)
 CYP,Europe,30,44286914,TED (EU)
 BGD,South Asia,30,0,AIIB; IsDB; UNGM (UN-Women); UNGM (UNDP); UNGM (UNHCR); World Bank
 Eastern and Southern Africa,Other,27,0,World Bank
+MDA,Europe,24,6011319,TED (EU); UNGM (UNDP); UNGM (UNFPA); UNGM (UNICEF); World Bank
 IDN,Southeast Asia,24,0,AIIB; UNDP; UNGM (ILO); UNGM (UNDP); World Bank
-MDA,Europe,23,6011319,TED (EU); UNGM (UNDP); UNGM (UNFPA); World Bank
-KHM,Southeast Asia,23,0,AIIB; UNGM (ILO); UNGM (UNIDO); World Bank
+KHM,Southeast Asia,24,0,AIIB; UNGM (ILO); UNGM (UNICEF); UNGM (UNIDO); World Bank
 NGA,Sub-Saharan Africa,23,0,IsDB; UNGM (IOM); UNGM (UNDP); UNGM (UNFPA); UNGM (UNICEF); World Bank
 "Congo, Democratic Republic of",Other,22,0,World Bank
 CIV,Sub-Saharan Africa,22,0,AIIB; UNGM (UNDP); World Bank
 Western and Central Africa,Other,21,0,World Bank
-MOZ,Sub-Saharan Africa,20,0,IsDB; UNGM (ITU); UNGM (UN-Women); UNGM (UNICEF); World Bank
+MOZ,Sub-Saharan Africa,21,0,IsDB; UNGM (ITU); UNGM (UN-Women); UNGM (UNICEF); UNGM (UNIDO); World Bank
 BDI,Sub-Saharan Africa,19,0,UNGM (UNDP); World Bank
 TUN,Middle East & North Africa,19,0,IsDB; UNDP; UNGM (IDLO); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS); UNGM (WHO)
 LBN,Middle East & North Africa,17,0,IsDB; UNGM (ILO); UNGM (UNRWA); UNGM (WHO); World Bank
+PHL,Southeast Asia,17,0,AIIB; UNGM (FAO); UNGM (ILO); UNGM (UN Secretariat); UNGM (UN-Women); UNGM (UNICEF); UNGM (UNIDO); UNGM (WHO); World Bank
 AGO,Sub-Saharan Africa,17,0,World Bank
 CHN,East Asia,16,2108952,AIIB; TED (EU); UNGM (UNICEF); World Bank
 UGA,Sub-Saharan Africa,16,0,IsDB; UNGM (ILO); UNGM (UNHCR); World Bank
+LKA,South Asia,16,0,AIIB; UNGM (ILO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNFPA); UNGM (UNOPS); World Bank
+AFG,South Asia,16,0,UNGM (FAO); UNGM (IOM); UNGM (UN-Women); UNGM (UNDP); UNGM (WHO)
 GEO,CIS & Central Asia,15,0,AIIB; World Bank
-KEN,Sub-Saharan Africa,14,0,AIIB; UNGM (ILO); UNGM (UNICEF); World Bank
-PHL,Southeast Asia,14,0,AIIB; UNGM (FAO); UNGM (ILO); UNGM (UN Secretariat); UNGM (UNICEF); UNGM (UNIDO); World Bank
 GHA,Sub-Saharan Africa,14,0,UNGM (ILO); UNGM (UNCDF); UNGM (UNIDO); World Bank
-LKA,South Asia,14,0,AIIB; UNGM (ILO); UNGM (UNDP); UNGM (UNFPA); UNGM (UNOPS); World Bank
-AFG,South Asia,14,0,UNGM (FAO); UNGM (IOM); UNGM (UN-Women); UNGM (UNDP); UNGM (WHO)
 ISL,Europe,13,2714118,TED (EU)
 TJK,CIS & Central Asia,13,0,AIIB; IsDB; UNGM (OSCE); World Bank
 AZE,CIS & Central Asia,13,0,AIIB; IsDB; World Bank
+TZA,Sub-Saharan Africa,12,0,UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); World Bank
 COD,Sub-Saharan Africa,12,0,UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UNCDF); UNGM (UNOPS)
-TZA,Sub-Saharan Africa,11,0,UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); World Bank
 NER,Sub-Saharan Africa,11,0,UNGM (ILO); UNGM (UNDP); World Bank
 SYR,Middle East & North Africa,11,0,UNGM (FAO); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNRWA); UNGM (WHO); World Bank
 FJI,Oceania,11,0,AIIB; UNGM (ILO); UNGM (UN-Women)
 SEN,Sub-Saharan Africa,10,1671397,TED (EU); UNGM (FAO); UNGM (ILO); World Bank
+SLE,Sub-Saharan Africa,10,0,UNGM (FAO); UNGM (ILO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNFPA); World Bank
 CAF,Sub-Saharan Africa,10,0,UNGM (UNDP); World Bank
 ARG,Latin America,10,0,UNDP; UNGM (UNOPS); World Bank
 RWA,Sub-Saharan Africa,10,0,AIIB; UNGM (UNDP); World Bank
+PSE,Middle East & North Africa,10,0,UNGM (FAO); UNGM (UNDP); UNGM (UNRWA)
 MWI,Sub-Saharan Africa,9,0,UNGM (UNDP); UNGM (UNICEF); World Bank
-SLE,Sub-Saharan Africa,9,0,UNGM (FAO); UNGM (ILO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNFPA); World Bank
 CMR,Sub-Saharan Africa,9,0,UNGM (ILO); UNGM (UN Secretariat); UNGM (UNDP); World Bank
+SLV,Latin America,9,0,AIIB; UNGM (UNDP); World Bank
 TCD,Sub-Saharan Africa,9,0,UNGM (IOM); UNGM (UNDP); World Bank
+Multiple destinations,Other,9,0,UNGM (ILO); UNGM (INTERPOL); UNGM (IOM); UNGM (UNHCR); UNGM (UNICEF); UNGM (WFP); UNGM (WHO)
 BWA,Sub-Saharan Africa,9,0,UNGM (ILO); World Bank
-PSE,Middle East & North Africa,9,0,UNGM (FAO); UNGM (UNDP); UNGM (UNRWA)
 HND,Latin America,8,9304108,TED (EU); UNGM (FAO); UNGM (IOM); UNGM (UNDP); World Bank
 MAR,Middle East & North Africa,8,0,UNGM (UNIDO); World Bank
 KGZ,CIS & Central Asia,8,0,AIIB; IsDB; UNGM (UN-Women); UNGM (UNDP)
-Multiple destinations,Other,8,0,UNGM (ILO); UNGM (INTERPOL); UNGM (IOM); UNGM (UNHCR); UNGM (UNICEF); UNGM (WHO)
+VNM,Southeast Asia,7,2228529,AIIB; TED (EU); UNGM (UN-Women); UNGM (UNICEF); World Bank
 Caribbean,Other,7,0,World Bank
 ZMB,Sub-Saharan Africa,7,0,UNGM (FAO); UNGM (ILO); UNGM (UNDP); UNGM (UNICEF); World Bank
 MEX,North America,7,0,UNGM (ILO); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); World Bank
@@ -99,22 +101,23 @@ Ukraine,Europe,7,0,EBRD
 BIH,Europe,7,0,UNGM (UNDP); World Bank
 PER,Latin America,7,0,UNGM (ILO); UNGM (UNFPA); UNGM (UNHCR); UNGM (UNOPS)
 JOR,Middle East & North Africa,7,0,UNGM (ILO); UNGM (UNRWA); UNGM (WHO); World Bank
-VNM,Southeast Asia,6,2228529,AIIB; TED (EU); UNGM (UN-Women); World Bank
 "Congo, Republic of",Other,6,0,World Bank
+YEM,Middle East & North Africa,6,0,UNGM (FAO); UNGM (IAEA); UNGM (UNICEF); UNGM (UNOPS)
 Central Asia,Other,6,0,World Bank
 EGY,Middle East & North Africa,6,0,UNGM (IOM); UNGM (UN-Women); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS)
+SOM,Sub-Saharan Africa,6,0,UNGM (FAO); UNGM (IOM)
 NPL,South Asia,5,0,AIIB; UNGM (UNDP); World Bank
 MRT,Sub-Saharan Africa,5,0,UNGM (UN Secretariat); UNGM (UNFPA); World Bank
 STP,Sub-Saharan Africa,5,0,World Bank
 FSM,Other,5,0,World Bank
 BTN,South Asia,5,0,World Bank
-SLV,Latin America,5,0,AIIB; World Bank
 Serbia,Europe,5,0,EBRD
 SDN,Sub-Saharan Africa,5,0,UNGM (IOM); UNGM (UNESCO); UNGM (UNHCR); UNGM (WHO)
 IRN,Middle East & North Africa,5,0,UNGM (FAO); UNGM (IOM); UNGM (UNDP)
 Kyrgyz Republic,CIS & Central Asia,5,0,EBRD
 COM,Sub-Saharan Africa,5,0,World Bank
 KAZ,CIS & Central Asia,5,0,AIIB; IsDB; UNDP; World Bank
+MNG,East Asia,5,0,UNGM (UNDP); UNGM (UNFPA); UNGM (WHO)
 CUB,Latin America,5,0,UNGM (FAO); UNGM (UNDP); UNGM (UNFPA); UNGM (UNICEF)
 ALB,Europe,4,4769066,TED (EU); World Bank
 BEN,Sub-Saharan Africa,4,0,UNGM (UNFPA); World Bank
@@ -124,74 +127,72 @@ MHL,Other,4,0,World Bank
 MDV,South Asia,4,0,AIIB; UNGM (UNDP); World Bank
 Moldova,Europe,4,0,EBRD
 GTM,Latin America,4,0,UNGM (ILO); UNGM (IOM)
-North Macedonia,Europe,4,0,EBRD
 CHL,Latin America,4,0,UNGM (ILO); UNGM (UNICEF); UNGM (WIPO)
 Tunisia,Middle East & North Africa,4,0,EBRD
 MLI,Sub-Saharan Africa,4,0,UNDP; UNGM (ILO); UNGM (UNICEF)
 IRQ,Middle East & North Africa,4,0,UNGM (ILO); UNGM (UNESCO); UNGM (UNICEF); World Bank
 BOL,Latin America,4,0,World Bank
 LAO,Southeast Asia,4,0,UNGM (FAO); World Bank
-SOM,Sub-Saharan Africa,4,0,UNGM (FAO); UNGM (IOM)
-YEM,Middle East & North Africa,4,0,UNGM (UNICEF); UNGM (UNOPS)
+North Macedonia,Europe,4,0,EBRD
 Southern Africa,Other,3,0,World Bank
 DJI,Sub-Saharan Africa,3,0,UNGM (WHO); World Bank
 "Gambia, The",Other,3,0,World Bank
 JAM,Latin America,3,0,UNGM (IOM); UNGM (UNDP); World Bank
-SRB,Europe,3,378293,TED (EU); World Bank
 PAN,Latin America,3,0,UNGM (ILO); UNGM (UNOPS)
 LBR,Sub-Saharan Africa,3,0,UNGM (UN-Women); UNGM (UNICEF); World Bank
 HTI,Latin America,3,0,UNGM (UNDP); UNGM (UNOPS)
+Open in a new window,Other,3,0,UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF)
 Turkey,Middle East & North Africa,3,0,EBRD
+SRB,Europe,3,378293,TED (EU); World Bank
 OECS Countries,Other,3,0,World Bank
+GMB,Sub-Saharan Africa,3,0,IsDB; UNGM (ITC)
 SSD,Sub-Saharan Africa,3,0,UNDP; UNGM (UNDP)
 GNB,Sub-Saharan Africa,3,0,UNGM (UNCDF); UNGM (UNICEF); World Bank
-MNG,East Asia,3,0,UNGM (UNDP); UNGM (UNFPA); UNGM (WHO)
+THA,Southeast Asia,3,0,AIIB; UNGM (UNDP)
 MMR,Southeast Asia,3,0,UNGM (ILO); UNGM (UNOPS)
 GIN,Sub-Saharan Africa,2,0,World Bank
 Southwest Indian Ocean,Other,2,0,World Bank
 Horn of Africa,Other,2,0,World Bank
 SYC,Sub-Saharan Africa,2,0,World Bank
 BLZ,Latin America,2,0,World Bank
-LIE,Europe,2,0,TED (EU)
 BFA,Sub-Saharan Africa,2,0,UNGM (FAO); UNGM (UNOPS)
-Open in a new window,Other,2,0,UNGM (UNDP); UNGM (UNICEF)
 Bosnia And Herzegovina,Europe,2,0,EBRD
 Tajikistan,CIS & Central Asia,2,0,EBRD
+ECU,Latin America,2,0,UNGM (UNIDO); World Bank
 TGO,Sub-Saharan Africa,2,0,World Bank
-GMB,Sub-Saharan Africa,2,0,IsDB; UNGM (ITC)
+WSM,Other,2,0,World Bank
+LIE,Europe,2,0,TED (EU)
 TON,Other,2,0,World Bank
 Pacific 1,Other,2,0,World Bank
 MYS,Southeast Asia,2,0,UNGM (ILO)
-WSM,Other,2,0,World Bank
-THA,Southeast Asia,2,0,AIIB
+ZWE,Sub-Saharan Africa,2,0,UNGM (FAO); UNGM (UNDP)
+DZA,Middle East & North Africa,2,0,UNGM (UNICEF)
 JPN,East Asia,2,0,UNGM (ILO)
 Western Balkans,Other,2,0,World Bank
 NAM,Sub-Saharan Africa,2,0,UNGM (UNDP)
 GRL,Other,1,27585314,TED (EU)
-"HUN,BEL",Other,1,1036266,TED (EU)
 SLB,Other,1,0,World Bank
 Morocco,Middle East & North Africa,1,0,EBRD
 Jordan,Middle East & North Africa,1,0,EBRD
-ARE,Middle East & North Africa,1,0,UNGM (UNHCR)
 "Serbia, Republic of",Other,1,0,UNGM (FAO)
 Kazakhstan,CIS & Central Asia,1,0,EBRD
 VEN,Latin America,1,0,UNGM (IOM)
 Georgia,CIS & Central Asia,1,0,EBRD
-ECU,Latin America,1,0,World Bank
 "Egypt, Arab Republic of",Other,1,0,World Bank
 "BEL,LUX,FRA,LVA,DEU,SWE,GRC,ROU,HUN,SVK,NLD,AUT,SVN,EST,CZE,ESP",Other,1,0,TED (EU)
 BHR,Middle East & North Africa,1,0,IsDB
 PNG,Oceania,1,0,AIIB
+MNE,Europe,1,0,World Bank
+"HUN,BEL",Other,1,1036266,TED (EU)
+ARE,Middle East & North Africa,1,0,UNGM (UNHCR)
 Lithuania,Europe,1,0,EBRD
 LSO,Sub-Saharan Africa,1,0,UNGM (IOM)
 Call for implementing partners,Other,1,0,UNGM (ILO)
 KIR,Other,1,0,UNGM (UNCDF)
-ZWE,Sub-Saharan Africa,1,0,UNGM (FAO)
 BHS,Latin America,1,0,UNGM (UNDP)
 ERI,Sub-Saharan Africa,1,0,UNGM (FAO)
 NIC,Latin America,1,0,UNGM (UNICEF)
 BLR,Europe,1,0,UNDP
-MNE,Europe,1,0,World Bank
 West Bank and Gaza,Other,1,0,World Bank
 TUV,Other,1,0,World Bank
 Multicountry,Other,1,0,AIIB
@@ -199,6 +200,7 @@ Lao PDR,Other,1,0,AIIB
 GAB,Sub-Saharan Africa,1,0,UNGM (UNDP)
 LBY,Middle East & North Africa,1,0,UNGM (UNHCR)
 KOR,East Asia,1,0,UNGM (UN-Women)
+GNQ,Sub-Saharan Africa,1,0,UNGM (UNDP)
 CPV,Sub-Saharan Africa,1,0,World Bank
 URY,Latin America,1,0,UNDP
 Swaziland,Other,1,0,UNDP

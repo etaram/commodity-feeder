@@ -1,13 +1,70 @@
-Wed Oct 28 05:44:05 UTC 2026
-INFO PLACSP pages 8, new 793, open 770, award entries 1720
-INFO spain: 770 rows
+Wed Oct 28 06:26:14 UTC 2026
+INFO TED total matching notices: 5961
+INFO TED fetched 5961 notices (25 pages, 3 days) -> 5754 new rows, cache 11797 open (8150387 bytes)
+INFO ted: 11797 rows
+INFO FTS new 17, open 152 (pages 1)
+INFO fts: 152 rows
+INFO SAM new 1741, open 5282 (pages 24)
+INFO sam: 5282 rows
+INFO CanadaBuys rows 800
+INFO canadabuys: 800 rows
+WARNING ZA 500
+INFO ZA new 200, open 210 (pages 3)
+INFO za: 210 rows
+INFO EBRD rows 41
+INFO ebrd: 41 rows
+INFO UNGM total active 1648, new 425, cache 424 (pages 33)
+INFO ungm: 424 rows
+INFO UNDP new 26, open 19
+INFO undp: 19 rows
+INFO AIIB new 174, kept 173, awards 275
+INFO aiib: 173 rows
+INFO IsDB new 35, open 34
+INFO isdb: 34 rows
+INFO Etimad new 132, open 205 (pages 14)
+INFO etimad: 205 rows
+INFO Prozorro feed pages 46, candidates 2601, fetched 65, open kept 327
+INFO prozorro: 327 rows
+WARNING PNCP 429 mode 4 p8
+WARNING PNCP 429 mode 6 p8
+INFO PNCP new 292, open 458
+INFO pncp: 458 rows
+INFO SECOP new 0, open 549
+INFO secop: 549 rows
+INFO Germany new 649, open 7055, award releases seen 369
+INFO germany: 7055 rows
+INFO Contracts Finder new 12, open 80
+INFO contractsfinder: 80 rows
+INFO Paraguay new 22, open 428 (fetched 394)
+INFO paraguay: 428 rows
+INFO Dominican listed 728, fetched 2, new 0, open 351
+INFO dominican: 351 rows
+INFO AusTender new 120, open 120
+INFO austender: 120 rows
+INFO Oman new 50, open 65
+INFO oman: 65 rows
+INFO BOAMP new 847, open 5422
+INFO france: 5422 rows
+INFO PLACSP pages 5, new 483, open 483, award entries 956
+INFO spain: 483 rows
+WARNING Kenya 429 page 16
+INFO Kenya new 150, open 147 (pages 16)
+INFO kenya: 147 rows
+INFO NeST new 0, open 0 (pages 80)
+INFO tanzania: 0 rows
+WARNING ghana https://www.ghaneps.gov.gh/ocds/services/recordpackage/getrecordpackage/2026/9 404
+WARNING ghana https://www.ghaneps.gov.gh/ocds/services/recordpackage/getrecordpackage/2026/10 404
+INFO ghana new 0, open 0
+INFO ghana: 0 rows
+INFO zambia new 0, open 0
+INFO zambia: 0 rows
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 586, in <module>
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 610, in <module>
     sys.exit(main())
              ^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 576, in main
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 600, in main
     run_source(a.source)
   File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
     rows, meta = m.fetch()
@@ -40,15 +97,44 @@ Traceback (most recent call last):
 ssl.SSLZeroReturnError: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
 INFO TED awards: 23 days fetched, 23148 notices, 343 days still to back-fill
 INFO awards: 0 rows
+INFO World Bank new 230, open cache 631
+INFO worldbank: 631 rows
+INFO mr.gov.il rows: 203
+INFO mrgov: 203 rows
+WARNING IY 0309: HTTP 404
+WARNING IY 2404: HTTP 404
+WARNING IY: stopping after repeated failures (rate limit)
+INFO ImportYeti headings scanned: 23 (due 141)
+INFO importyeti: 0 rows
+WARNING comtrade 030487 2025: 429
+WARNING comtrade 070310 2025: 429
+WARNING comtrade 110100 2024: 429
+WARNING comtrade 120740 2025: 429
+WARNING comtrade 151190 2025: 429
+WARNING comtrade 090111 2025: 429
+INFO market signals: 2 codes refreshed, 34 due
+INFO markets: 0 rows
+INFO enrich: looked up 177, cached 2681
 INFO initializing identifier
-[0;93m2026-10-28 05:57:35.592013303 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-10-28 07:11:05.095998880 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 WARNING Language es package default expects mwt, which has been added
+WARNING Language pt package default expects mwt, which has been added
 WARNING Language uk package default expects mwt, which has been added
 WARNING Language fr package default expects mwt, which has been added
-WARNING Language pt package default expects mwt, which has been added
-INFO translations: 405 new, 17377 pending (budget), cache 4914
-INFO awards 38128 (12m), recent 3000, buyers 5232, competitors 38502
-INFO market signals rows 517
-INFO opportunities 21811
-INFO accounts 14748
-INFO tenders 35353, importers 3230, suppliers 1938
+WARNING Language fi package default expects mwt, which has been added
+WARNING Language de package default expects mwt, which has been added
+WARNING Language el package default expects mwt, which has been added
+WARNING Language nl package default expects mwt, which has been added
+WARNING Language cs package default expects mwt, which has been added
+WARNING Language pl package default expects mwt, which has been added
+WARNING Language it package default expects mwt, which has been added
+WARNING Language sk package default expects mwt, which has been added
+WARNING Language et package default expects mwt, which has been added
+WARNING Language id package default expects mwt, which has been added
+WARNING Language ca package default expects mwt, which has been added
+INFO translations: 5779 new, 11703 pending (budget), cache 10288
+INFO awards 40174 (12m), recent 3000, buyers 5590, competitors 40169
+INFO market signals rows 715
+INFO opportunities 21718
+INFO accounts 14793
+INFO tenders 35454, importers 3460, suppliers 2076
