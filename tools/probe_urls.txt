@@ -1,5 +1,19 @@
-cppp2 CFFI https://eprocure.gov.in/cppp/latestactivetenders
-cppp3 CFFI https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page
-cppp4 https://eprocure.gov.in/cppp/
-gem2 https://gem.gov.in/
-indiadg https://www.tenderdetail.com/
+ungm_get CFFI https://www.ungm.org/Public/Notice
+ungm_post POST https://www.ungm.org/Public/Notice/Search {"PageIndex":0,"PageSize":15,"Title":"","Description":"","Reference":"","PublishedFrom":"","PublishedTo":"","DeadlineFrom":"28-Oct-2026","DeadlineTo":"","Countries":[],"Agencies":[],"UNSPSCs":[],"NoticeTypes":[],"SortField":"DatePublished","SortAscending":false,"isPicker":false,"IsSustainable":false,"NoticeDisplayType":null,"NoticeSearchTotalLabelId":"noticeSearchTotal","TypeOfCompetitions":[]}
+undp CFFI https://procurement-notices.undp.org/
+afdb CFFI https://www.afdb.org/en/projects-and-operations/procurement/notices
+afdb_spn CFFI https://www.afdb.org/en/documents/category/specific-procurement-notices
+aiib CFFI https://www.aiib.org/en/opportunities/business/project-procurement/list.html
+isdb CFFI https://www.isdb.org/project-procurement/tenders
+adb CFFI https://www.adb.org/projects/tenders
+iadb CFFI https://projectprocurement.iadb.org/en/procurement-notices
+prozorro https://public-api.prozorro.gov.ua/api/2.5/tenders?descending=1&limit=20&opt_fields=title,status,procuringEntity,value,mainProcurementCategory,tenderPeriod,items
+pncp https://pncp.gov.br/api/consulta/v1/contratacoes/proposta?dataFinal=20261130&codigoModalidadeContratacao=6&pagina=1&tamanhoPagina=10
+secop https://www.datos.gov.co/resource/p6dx-8zbt.json?$limit=5&$order=fecha_de_publicacion_del%20DESC
+austender https://api.tenders.gov.au/ocds/findByDates/contractPublished/2026-10-20T00:00:00Z/2026-10-27T00:00:00Z
+cfinder https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-10-25&size=5
+etimad CFFI https://tenders.etimad.sa/Tender/AllTendersForVisitor
+kenya https://tenders.go.ke/api/active-tenders?page=1
+nspa CFFI https://www.nspa.nato.int/business/procurement/open-procurement-opportunities
+wb_cw https://search.worldbank.org/api/v2/procnotices?format=json&rows=5&procurement_group=CW&srt=noticedate&order=desc
+ocp_registry https://data.open-contracting.org/en/publication/
