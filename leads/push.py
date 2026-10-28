@@ -62,16 +62,41 @@ class Sheets:
         if reqs:
             self._req("POST", f"{API}/{sid}:batchUpdate", json={"requests": reqs})
 
-    def replace_tab(self, sid, title, rows, chunk=5000):
-        """Writes rows (first row = header) to the tab, then clears anything below."""
+    def replace_tab(self, sid, title, rows, chunk=5000, clear_to=None):
+        """Writes rows (first row = header) to the tab, then clears what is left below - only in the data columns
+        (clear_to = last data column letter) so formula columns to the right are kept."""
         ncols = max(len(r) for r in rows) if rows else 1
         self.ensure_tab(sid, title, len(rows) + 10, ncols)
         q = title.replace("'", "''")
         for i in range(0, len(rows), chunk):
             self._req("PUT", f"{API}/{sid}/values/'{q}'!A{i + 1}", params={"valueInputOption": "USER_ENTERED"},
                       json={"values": rows[i:i + chunk]})
-        self._req("POST", f"{API}/{sid}/values/'{q}'!A{len(rows) + 1}:ZZ:clear", json={})
+        self._req("POST", f"{API}/{sid}/values/'{q}'!A{len(rows) + 1}:{clear_to or 'ZZ'}:clear", json={})
         return len(rows)
+
+
+def col_letter(n):
+    s = ""
+    while n:
+        n, r = divmod(n - 1, 26); s = chr(65 + r) + s
+    return s
+
+
+def leads_tables():
+    """(tab, rows) for the Leads Engine sheet, full size (no IMPORTDATA limit)."""
+    from .common import LEADS
+    out = []
+    chunks = sorted((LEADS / "sheet").glob("tenders_[0-9][0-9].csv"))
+    rows = []
+    for i, f in enumerate(chunks):
+        r = read_csv(f)
+        rows += r if i == 0 else r[1:]
+    out.append(("Tenders", [x for x in rows if any(x)]))
+    for tab, name in [("Opportunity Pool", "opportunities"), ("Repeat Buyers", "buyers"), ("Awards", "awards"),
+                      ("Competitors", "competitors"), ("Accounts", "accounts"), ("Importers", "importers")]:
+        full = LEADS / f"{name}_all.csv"
+        out.append((tab, read_csv(full if full.exists() else LEADS / f"{name}.csv")))
+    return out
 
 
 def read_csv(path):
@@ -92,6 +117,13 @@ def main():
         st = json.loads((PRIVATE / "universe_stats.json").read_text())
         sh.replace_tab(UNIVERSE_SHEET, "Stats", [["metric", "value"]] + [[k, v] for k, v in st.items()] +
                        [["updated_utc", time.strftime("%Y-%m-%d %H:%M")]])
+    elif a[:1] == ["leads"]:
+        for tab, rows in leads_tables():
+            if len(rows) < 2:
+                print("skip", tab, "(no data)"); continue
+            width = max(len(r) for r in rows)
+            n = sh.replace_tab(LEADS_SHEET, tab, rows, clear_to=col_letter(width))
+            print("wrote", n, "rows x", width, "cols to", tab)
     elif a[:1] == ["tab"]:
         n = sh.replace_tab(a[1], a[2], read_csv(a[3]))
         print("wrote", n, "rows to", a[2])

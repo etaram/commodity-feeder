@@ -203,6 +203,7 @@ jobs:
           set -o pipefail
           python -m leads.push check 2>&1 | tee -a data/leads/run.log
           python -m leads.push universe 2>&1 | tee -a data/leads/run.log
+          python -m leads.push leads 2>&1 | tee -a data/leads/run.log
         continue-on-error: true
       - name: commit
         run: |
