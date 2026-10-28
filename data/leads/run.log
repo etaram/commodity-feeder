@@ -1,63 +1,59 @@
-Wed Oct 28 06:26:14 UTC 2026
-INFO TED total matching notices: 5961
-INFO TED fetched 5961 notices (25 pages, 3 days) -> 5754 new rows, cache 11797 open (8150387 bytes)
-INFO ted: 11797 rows
-INFO FTS new 17, open 152 (pages 1)
-INFO fts: 152 rows
-INFO SAM new 1741, open 5282 (pages 24)
-INFO sam: 5282 rows
-INFO CanadaBuys rows 800
-INFO canadabuys: 800 rows
-WARNING ZA 500
-INFO ZA new 200, open 210 (pages 3)
-INFO za: 210 rows
-INFO EBRD rows 41
-INFO ebrd: 41 rows
-INFO UNGM total active 1648, new 425, cache 424 (pages 33)
-INFO ungm: 424 rows
-INFO UNDP new 26, open 19
-INFO undp: 19 rows
-INFO AIIB new 174, kept 173, awards 275
-INFO aiib: 173 rows
-INFO IsDB new 35, open 34
-INFO isdb: 34 rows
-INFO Etimad new 132, open 205 (pages 14)
-INFO etimad: 205 rows
-INFO Prozorro feed pages 46, candidates 2601, fetched 65, open kept 327
-INFO prozorro: 327 rows
-WARNING PNCP 429 mode 4 p8
-WARNING PNCP 429 mode 6 p8
-INFO PNCP new 292, open 458
-INFO pncp: 458 rows
-INFO SECOP new 0, open 549
-INFO secop: 549 rows
-INFO Germany new 649, open 7055, award releases seen 369
-INFO germany: 7055 rows
-INFO Contracts Finder new 12, open 80
-INFO contractsfinder: 80 rows
-INFO Paraguay new 22, open 428 (fetched 394)
-INFO paraguay: 428 rows
-INFO Dominican listed 728, fetched 2, new 0, open 351
-INFO dominican: 351 rows
-INFO AusTender new 120, open 120
-INFO austender: 120 rows
-INFO Oman new 50, open 65
-INFO oman: 65 rows
-INFO BOAMP new 847, open 5422
-INFO france: 5422 rows
-INFO PLACSP pages 5, new 483, open 483, award entries 956
-INFO spain: 483 rows
-WARNING Kenya 429 page 16
-INFO Kenya new 150, open 147 (pages 16)
-INFO kenya: 147 rows
-INFO NeST new 0, open 0 (pages 80)
-INFO tanzania: 0 rows
-WARNING ghana https://www.ghaneps.gov.gh/ocds/services/recordpackage/getrecordpackage/2026/9 404
-WARNING ghana https://www.ghaneps.gov.gh/ocds/services/recordpackage/getrecordpackage/2026/10 404
-INFO ghana new 0, open 0
-INFO ghana: 0 rows
-INFO zambia new 0, open 0
-INFO zambia: 0 rows
+Wed Oct 28 07:38:46 UTC 2026
+WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 470, in _make_request
+    self._validate_conn(conn)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 1125, in _validate_conn
+    conn.connect()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 878, in connect
+    wrapped_socket, is_verified = _ssl_wrap_socket_and_match_hostname(
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 1080, in _ssl_wrap_socket_and_match_hostname
+    ssl_sock = ssl_wrap_socket(
+               ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 437, in ssl_wrap_socket
+    ssl_sock = _ssl_wrap_socket_impl(sock, context, tls_in_tls, server_hostname)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/ssl_.py", line 481, in _ssl_wrap_socket_impl
+    return ssl_context.wrap_socket(sock, server_hostname=server_hostname)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 1054, in _create
+    self.do_handshake()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 1332, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLZeroReturnError: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 494, in _make_request
+    raise new_e
+urllib3.exceptions.SSLError: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 847, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/retry.py", line 555, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='monaqasat.mof.gov.qa', port=443): Max retries exceeded with url: /TendersOnlineServices/AvailableMinistriesTenders/1 (Caused by SSLError(SSLZeroReturnError(6, 'TLS/SSL connection has been closed (EOF) (_ssl.c:1010)')))
+
+During handling of the above exception, another exception occurred:
+
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
@@ -69,72 +65,41 @@ Traceback (most recent call last):
   File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
     rows, meta = m.fetch()
                  ^^^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/qatar.py", line 20, in fetch
-    s, t, new = chain_session(BASE), today(), []
-                ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/common.py", line 151, in chain_session
-    cadata = AIASession().cadata_from_url(url)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 230, in cadata_from_url
-    return self.cadata_from_host(split_result.netloc)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 221, in cadata_from_host
-    der_certs = list(self.aia_chase(host))
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 146, in aia_chase
-    der_cert = self.get_host_cert(host)
-               ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/aia.py", line 117, in get_host_cert
-    with self._context.wrap_socket(sock, server_hostname=host) as ss:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 455, in wrap_socket
-    return self.sslsocket_class._create(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 1054, in _create
-    self.do_handshake()
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/ssl.py", line 1332, in do_handshake
-    self._sslobj.do_handshake()
-ssl.SSLZeroReturnError: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
-INFO TED awards: 23 days fetched, 23148 notices, 343 days still to back-fill
-INFO awards: 0 rows
-INFO World Bank new 230, open cache 631
-INFO worldbank: 631 rows
-INFO mr.gov.il rows: 203
-INFO mrgov: 203 rows
-WARNING IY 0309: HTTP 404
-WARNING IY 2404: HTTP 404
-WARNING IY: stopping after repeated failures (rate limit)
-INFO ImportYeti headings scanned: 23 (due 141)
-INFO importyeti: 0 rows
-WARNING comtrade 030487 2025: 429
-WARNING comtrade 070310 2025: 429
-WARNING comtrade 110100 2024: 429
-WARNING comtrade 120740 2025: 429
-WARNING comtrade 151190 2025: 429
-WARNING comtrade 090111 2025: 429
-INFO market signals: 2 codes refreshed, 34 due
-INFO markets: 0 rows
-INFO enrich: looked up 177, cached 2681
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/qatar.py", line 22, in fetch
+    r = s.get(URL.format(page), timeout=60)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/requests/adapters.py", line 727, in send
+    raise SSLError(e, request=request)
+requests.exceptions.SSLError: HTTPSConnectionPool(host='monaqasat.mof.gov.qa', port=443): Max retries exceeded with url: /TendersOnlineServices/AvailableMinistriesTenders/1 (Caused by SSLError(SSLZeroReturnError(6, 'TLS/SSL connection has been closed (EOF) (_ssl.c:1010)')))
 INFO initializing identifier
-[0;93m2026-10-28 07:11:05.095998880 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
-WARNING Language es package default expects mwt, which has been added
-WARNING Language pt package default expects mwt, which has been added
-WARNING Language uk package default expects mwt, which has been added
-WARNING Language fr package default expects mwt, which has been added
-WARNING Language fi package default expects mwt, which has been added
-WARNING Language de package default expects mwt, which has been added
-WARNING Language el package default expects mwt, which has been added
-WARNING Language nl package default expects mwt, which has been added
-WARNING Language cs package default expects mwt, which has been added
-WARNING Language pl package default expects mwt, which has been added
-WARNING Language it package default expects mwt, which has been added
-WARNING Language sk package default expects mwt, which has been added
-WARNING Language et package default expects mwt, which has been added
-WARNING Language id package default expects mwt, which has been added
-WARNING Language ca package default expects mwt, which has been added
-INFO translations: 5779 new, 11703 pending (budget), cache 10288
-INFO awards 40174 (12m), recent 3000, buyers 5590, competitors 40169
-INFO market signals rows 715
-INFO opportunities 21718
-INFO accounts 14793
-INFO tenders 35454, importers 3460, suppliers 2076
+WARNING translator es: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-es_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator uk: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-uk_en-1_9/sentencepiece.model": No such file or directory Error #2
+INFO ('Get https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
+[0;93m2026-10-28 07:53:46.066394663 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+INFO ('Get https://argos-net.com/v1/translate-he_en-1_5.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-he_en-1_5.argosmodel',)
+WARNING translator cs: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-cs_en-1_9_6/sentencepiece.model": No such file or directory Error #2
+WARNING translator fi: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-fi_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator hu: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-hu_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator ro: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-ro_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator da: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-da_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator lt: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-lt_en-1_9/sentencepiece.model": No such file or directory Error #2
+WARNING translator id: NOT_FOUND: "/home/runner/.local/share/argos-translate/packages/translate-id_en-1_9/sentencepiece.model": No such file or directory Error #2
+INFO ('Get https://argos-net.com/v1/translate-ja_en-1_1.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-ja_en-1_1.argosmodel',)
+INFO translations: 15135 new, 2242 pending, cache 19523, 909s
+INFO awards 38128 (12m), recent 3000, buyers 5232, competitors 38502
+INFO market signals rows 517
+INFO opportunities 21811
+INFO accounts 14748
+INFO tenders 35353, importers 3230, suppliers 1938
