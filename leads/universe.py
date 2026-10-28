@@ -9,6 +9,7 @@ from collections import defaultdict
 from .common import AWARDS, LEADS, PRIVATE, log, today
 from .regions import iso3, region
 from .sectors import SECTORS
+from .taxonomy import BY_ID, group_of_text
 
 LEGAL = re.compile(r"\b(gmbh|ag|kg|sa|s\.a\.|sas|sarl|srl|s\.r\.l\.|spa|s\.p\.a\.|bv|nv|ltd|limited|llc|inc|plc|oy|ab|as|a/s|"
                    r"sp\. z o\.o\.|s\.r\.o\.|kft|d\.o\.o\.|ooo|tov|co\.?|corp|corporation|company|group|holding)\b")
@@ -31,6 +32,31 @@ def _rates():
         return {"USD": 1, "EUR": 1.08, "GBP": 1.27}
 
 
+_GCACHE = {}
+
+
+def _group(title):
+    k = title[:160]
+    if k not in _GCACHE:
+        if len(_GCACHE) > 400_000:
+            _GCACHE.clear()
+        _GCACHE[k] = group_of_text(k)
+    return _GCACHE[k]
+
+
+def quality(r):
+    """0-100: how strong a supplier looks from public evidence (value won, repeat wins, distinct buyers, exports,
+    international lenders / foreign governments as buyers, notability)."""
+    import math
+    q = min(35, 5 * math.log10(1 + r["won_usd_est"]) - 10) if r["won_usd_est"] else 0
+    q += min(20, 6 * math.log2(1 + r["wins"])) + min(15, 4 * math.log2(1 + r["buyers"]))
+    q += 10 if r["exports"] else 0
+    q += 8 if any(x in r["sources"] for x in ("World Bank", "USAspending", "UNGM", "UNDP", "AIIB", "EBRD")) else 0
+    q += 12 if r["notable"] else 0
+    q += 5 if (r["email"] or r["phone"] or r["website"]) else 0
+    return round(max(0, min(100, q)))
+
+
 def _awards():
     """(file, award row) from the public award files and the private external award datasets."""
     for f in sorted(AWARDS.glob("*.json")) + sorted(AWARDS.glob("*/*.json")):
@@ -50,7 +76,8 @@ def build():
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
                                "sectors": defaultdict(int), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
                                "last": "", "first": "9999", "sources": set(), "example": "", "ex_usd": 0,
-                               "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0})
+                               "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0,
+                               "groups": defaultdict(int)})
     n_aw = 0
     for f, a in _awards():
         if True:
@@ -73,6 +100,9 @@ def build():
                 if sec:
                     x["sectors"][sec] += 1
                     x["goods"] += 1 if sec in GOODS else 0
+                g = a.get("group") or _group(a.get("title") or "")
+                if g:
+                    x["groups"][g] += 1
                 for cp in (a.get("cpv") or "").split()[:1]:
                     x["cpv"][cp[:8]] += 1
                 x["buyer_c"].add((a.get("country") or "").split(",")[0]); x["buyers"].add(norm(a.get("buyer")))
@@ -132,6 +162,8 @@ def build():
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
             "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
+            "commodities": "; ".join(BY_ID[g]["name"] for g, _ in sorted(x["groups"].items(), key=lambda y: -y[1])[:3]
+                                     if g in BY_ID),
             "main_cpv": max(x["cpv"].items(), key=lambda y: y[1])[0] if x["cpv"] else "",
             "buyer_countries": " ".join(sorted(c for c in x["buyer_c"] if c))[:80], "buyers": len(x["buyers"]),
             "exports": "yes" if any(c and wc and c != wc for c in x["buyer_c"]) else "",
@@ -139,7 +171,10 @@ def build():
             "email": x["email"], "phone": x["phone"], "website": x["website"], "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
         })
-    out.sort(key=lambda r: (r["tier"], -r["won_usd_est"], -r["wins"]))
+    for r in out:
+        r["quality"] = quality(r)
+    out.sort(key=lambda r: (-r["quality"], -r["won_usd_est"]))
+    out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)
     cols = list(out[0].keys()) if out else ["supplier"]
     with open(PRIVATE / "universe.csv", "w", newline="", encoding="utf-8") as f:
@@ -148,7 +183,13 @@ def build():
              "with_phone": sum(1 for r in out if r["phone"]), "exporters": sum(1 for r in out if r["exports"]),
              "goods": sum(1 for r in out if r["type"] == "goods supplier"), "contacts_matched": n_ct,
              "tier_A": sum(1 for r in out if r["tier"] == "A"), "tier_B_notable": n_b,
-             "with_website": sum(1 for r in out if r["website"])}
+             "with_website": sum(1 for r in out if r["website"]),
+             "quality_40_plus": sum(1 for r in out if r["quality"] >= 40),
+             "with_any_contact": sum(1 for r in out if r["email"] or r["phone"] or r["website"] or r["address"])}
+    by_region = defaultdict(int)
+    for r in out:
+        by_region[r["region"] or "unknown"] += 1
+    stats.update({f"region: {k}": v for k, v in sorted(by_region.items(), key=lambda y: -y[1])})
     log.info("universe %s", stats)
     (PRIVATE / "universe_stats.json").write_text(json.dumps(stats))
     return out, stats

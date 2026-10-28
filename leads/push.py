@@ -62,14 +62,14 @@ class Sheets:
         if reqs:
             self._req("POST", f"{API}/{sid}:batchUpdate", json={"requests": reqs})
 
-    def replace_tab(self, sid, title, rows, chunk=5000, clear_to=None):
+    def replace_tab(self, sid, title, rows, chunk=5000, clear_to=None, raw=False):
         """Writes rows (first row = header) to the tab, then clears what is left below - only in the data columns
         (clear_to = last data column letter) so formula columns to the right are kept."""
         ncols = max(len(r) for r in rows) if rows else 1
         self.ensure_tab(sid, title, len(rows) + 10, ncols)
         q = title.replace("'", "''")
         for i in range(0, len(rows), chunk):
-            self._req("PUT", f"{API}/{sid}/values/'{q}'!A{i + 1}", params={"valueInputOption": "USER_ENTERED"},
+            self._req("PUT", f"{API}/{sid}/values/'{q}'!A{i + 1}", params={"valueInputOption": "RAW" if raw else "USER_ENTERED"},
                       json={"values": rows[i:i + chunk]})
         self._req("POST", f"{API}/{sid}/values/'{q}'!A{len(rows) + 1}:{clear_to or 'ZZ'}:clear", json={})
         return len(rows)
@@ -117,8 +117,14 @@ def main():
             print("OK", sid, sh.meta(sid)["properties"]["title"])
     elif a[:1] == ["universe"]:
         from .common import PRIVATE
-        rows = read_csv(PRIVATE / "universe.csv")
-        print("wrote", sh.replace_tab(UNIVERSE_SHEET, "Suppliers", rows), "rows to Supplier Universe")
+        rows = read_csv(PRIVATE / "universe.csv")[:150_001]  # sorted by quality; full file stays in the private cache
+        for r in rows[1:]:
+            for i in (rows[0].index("quality"), rows[0].index("wins"), rows[0].index("won_usd_est"), rows[0].index("buyers")):
+                try:
+                    r[i] = int(r[i])
+                except ValueError:
+                    pass
+        print("wrote", sh.replace_tab(UNIVERSE_SHEET, "Suppliers", rows, raw=True), "rows to Supplier Universe")
         st = json.loads((PRIVATE / "universe_stats.json").read_text())
         sh.replace_tab(UNIVERSE_SHEET, "Stats", [["metric", "value"]] + [[k, v] for k, v in st.items()] +
                        [["updated_utc", time.strftime("%Y-%m-%d %H:%M")]])
