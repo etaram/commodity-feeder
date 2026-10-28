@@ -18,7 +18,9 @@ from urllib.parse import quote_plus
 from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_rows, save_partial, today
 from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
-TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov"]
+TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
+                  "isdb", "etimad", "prozorro", "pncp", "secop"]
+NEW_MODULES = {"ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
         "articles", "prepared", "preserved", "fresh", "chilled", "frozen", "similar", "suitable", "kind", "used"}
 
@@ -46,6 +48,9 @@ def run_source(name):
         from . import ebrd as m
     elif name == "awards":
         from . import awards as m
+    elif name in NEW_MODULES:
+        import importlib
+        m = importlib.import_module(f".{name}", __package__)
     elif name == "enrich":
         from . import enrich
         imp, _, _ = merge_importyeti(benchmarks(), {})
@@ -60,11 +65,20 @@ def run_source(name):
 
 
 def _rates():
+    """USD per unit for every currency (open.er-api covers ~160 incl. UAH, COP, SAR); ECB rates as fallback."""
+    from .common import session
+    try:
+        j = session().get("https://open.er-api.com/v6/latest/USD", timeout=30).json()
+        r = {k: 1.0 / v for k, v in j["rates"].items() if v}
+        if len(r) > 100:
+            return r
+    except Exception:  # noqa: BLE001
+        pass
     try:
         from feeder.fx import usd_per_unit
         return usd_per_unit()[0]
     except Exception:  # noqa: BLE001
-        return {"EUR": 1.08, "ILS": 0.27, "GBP": 1.27}
+        return {"USD": 1.0, "EUR": 1.08, "ILS": 0.27, "GBP": 1.27}
 
 
 def _group_bench(bm):
@@ -75,46 +89,79 @@ def _group_bench(bm):
 
 
 def score(r, usd, days, new):
-    """0-100: size of the order, time left to bid, how precisely it matches a tracked commodity, region."""
-    v = 8 if usd == "" else 4 if usd < 50_000 else 10 if usd < 250_000 else 18 if usd < 1_000_000 else \
-        25 if usd < 5_000_000 else 30
-    d = 10 if days == "" else 0 if days < 3 else 10 if days <= 7 else 20 if days <= 30 else 15
-    m = r.get("match")
-    m = 15 if m in (None, "") else 20 if m >= 5 else 14 if m >= 4 else 8
-    reg = 20 if r["country"] == "ISR" else 15 if r["source"] in ("World Bank", "eTenders (South Africa)") else 10
+    """Objective 0-100, the same for every user: order size, time left to prepare a bid, openness to foreign
+    bidders, completeness of the notice. Personal preferences are applied in the sheet (Profile tab)."""
+    v = 10 if usd == "" else 6 if usd < 100_000 else 12 if usd < 500_000 else 16 if usd < 1_000_000 else \
+        22 if usd < 5_000_000 else 26 if usd < 20_000_000 else 30
+    if r.get("stage") == "planned":
+        d = 18
+    else:
+        d = 10 if days == "" else 0 if days < 3 else 6 if days <= 7 else 14 if days <= 14 else 20 if days <= 45 else 16
+    acc = (r.get("access") or "").lower()
+    a = 15 if acc.startswith("international") else 12 if ("gpa" in acc or "open to foreign" in acc or "trade agreements" in acc
+                                                          or "may bid" in acc) else 6
+    info = (5 if r.get("contact") else 0) + (3 if usd != "" else 0) + (2 if not r.get("lang") else 0)
     pen = 15 if "exemption" in r["source"] else 0  # intent to contract with a named supplier: objection window only
-    return max(0, v + d + m + reg + (5 if new else 0) + (5 if r.get("contact") else 0) - pen)
+    raw = v + d + a + info + (5 if new else 0) - pen
+    return max(0, min(100, round(raw * 100 / 80)))
 
 
 def merge_tenders(bm, seen):
+    from .regions import region
+    from .sectors import SECTORS, classify
     rates, gb, t = _rates(), _group_bench(bm), today()
     rows, status = [], []
     for s in TENDER_SOURCES:
         p = PARTIAL / f"{s}.json"
+        err = LEADS / f"error_{s}.txt"
         if not p.exists():
-            status.append([s, "", 0, "no data"]); continue
+            status.append([s, "", 0, "no data", ""]); continue
         j = json.loads(p.read_text())
-        status.append([s, j.get("ran", ""), len(j["rows"]), "OK" if j["rows"] else "EMPTY"])
+        meta = {k: v for k, v in (j.get("meta") or {}).items() if isinstance(v, (int, str, float))}
+        status.append([s, j.get("ran", ""), len(j["rows"]), "OK" if j["rows"] else "EMPTY",
+                       "; ".join(f"{k}={v}" for k, v in meta.items())[:200] +
+                       (" | last error: " + err.read_text()[-160:].replace("\n", " ") if err.exists() else "")])
         rows += j["rows"]
-    out = []
+    out, dedup = [], {}
     for r in rows:
-        g = BY_ID.get(r["group"], {})
+        if r.get("skip"):
+            continue
+        g = BY_ID.get(r.get("group") or "", {})
+        codes = (r.get("cpv") or (r.get("classification") if re.match(r"^\d{8}", r.get("classification") or "") else "")).split()
+        sec = r.get("sector") or classify(r.get("title", ""), codes or None)[0]
         first = seen.setdefault(r["id"], str(t))
         usd = ""
         if r.get("value") not in ("", None) and r.get("currency") in rates:
-            usd = round(float(r["value"]) * rates[r["currency"]])
+            try:
+                usd = round(float(r["value"]) * rates[r["currency"]])
+            except (TypeError, ValueError):
+                usd = ""
+            if usd != "" and usd > 5_000_000_000:
+                usd = ""
         dl = r.get("deadline") or ""
-        days = (dt.date.fromisoformat(dl) - t).days if dl else ""
+        try:
+            days = (dt.date.fromisoformat(dl) - t).days if dl else ""
+        except ValueError:
+            dl, days = "", ""
         new = (t - dt.date.fromisoformat(first)).days <= 2
-        out.append({
-            "score": score(r, usd, days, new),
-            "new": "NEW" if new else "",
-            "deadline": dl, "days_left": days, "group": g.get("name", r["group"]), "source": r["source"],
-            "country": r["country"], "buyer": r["buyer"], "title": r["title"], "est_value_usd": usd,
-            "est_value": r.get("value", ""), "currency": r.get("currency", ""), "published": r["published"],
-            "notice_type": r["notice_type"], "classification": r["classification"], "contact": r.get("contact", ""),
-            "benchmark": gb.get(r["group"], ""), "link": r["link"], "first_seen": first, "id": r["id"],
-        })
+        country = (r.get("country") or "").split(",")[0]
+        rec = {
+            "score": score(r, usd, days, new), "new": "NEW" if new else "", "deadline": dl, "days_left": days,
+            "stage": r.get("stage") or "tender", "sector": SECTORS.get(sec, "Other"), "commodity": g.get("name", ""),
+            "source": r["source"], "country": r.get("country", ""), "region": region(country),
+            "buyer": r.get("buyer", ""), "title": r.get("title", ""), "est_value_usd": usd,
+            "est_value": r.get("value", ""), "currency": r.get("currency", ""), "published": r.get("published", ""),
+            "notice_type": r.get("notice_type", ""), "access": r.get("access", ""), "nature": r.get("nature", ""),
+            "classification": r.get("classification", ""), "contact": r.get("contact", ""),
+            "benchmark": gb.get(r.get("group") or "", ""), "link": r.get("link", ""), "lang": r.get("lang", ""),
+            "first_seen": first, "id": r["id"],
+            "group": g.get("name", ""),  # kept for older sheet formulas / opportunities
+        }
+        key = (re.sub(r"\W+", "", rec["title"].lower())[:80], rec["deadline"], rec["country"])
+        if key in dedup and dedup[key]["source"] != rec["source"]:
+            continue  # same notice republished by a second source
+        dedup[key] = rec
+        out.append(rec)
     out.sort(key=lambda x: (-x["score"], x["deadline"] or "9999"))
     return out, status
 
@@ -285,7 +332,7 @@ def merge_opportunities(tenders, buyers, markets):
             continue
         b = bids.get((_norm_buyer(r["buyer"]), r["country"]))
         out.append({
-            "opp_id": f"T:{r['id']}", "type": "Tender", "group": r["group"], "country": r["country"],
+            "opp_id": f"T:{r['id']}", "type": "Tender", "group": r["commodity"] or r["sector"], "country": r["country"],
             "region": region(r["country"]), "buyer": r["buyer"], "what": r["title"][:160], "hs6": "",
             "buyer_price_usd_kg": "", "benchmark_usd_kg": "", "spread_pct": "",
             "deal_value_usd": r["est_value_usd"], "market_imports_usd": "",
@@ -338,7 +385,7 @@ def write_digest(tenders, buyers):
          f"נסגרים תוך 14 יום: {sum(1 for r in tenders if r['days_left'] != '' and 0 <= r['days_left'] <= 14)}", ""]
     def line(r):
         v = f"{r['est_value_usd']:,} USD" if r["est_value_usd"] != "" else "ללא היקף"
-        return (f"- [{r['score']}] {r['group']} | {r['country']} | {r['buyer'][:60]} | {r['title'][:120]} | "
+        return (f"- [{r['score']}] {r['sector']} | {r['country']} | {r['buyer'][:60]} | {r['title'][:120]} | "
                 f"{v} | הגשה עד {r['deadline'] or 'לא צוין'} | {r['link']}")
     L.append("מכרזים חדשים עם ציון 50 ומעלה:")
     L += [line(r) for r in new] or ["- אין חדשים"]
@@ -350,6 +397,30 @@ def write_digest(tenders, buyers):
           for b in soon] or ["- אין"]
     L += ["", "הטבלה המלאה: https://docs.google.com/spreadsheets/d/1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y/edit"]
     (LEADS / "digest.txt").write_text("\n".join(L), encoding="utf-8")
+
+
+def write_sector_summary(tenders):
+    """Sector x region: open notices, notices with a value, total and median value (USD), new in 48h."""
+    agg = defaultdict(lambda: {"open": 0, "valued": 0, "vals": [], "new": 0, "countries": set(), "sources": set()})
+    for r in tenders:
+        for key in ((r["sector"], r["region"]), (r["sector"], "All regions"), ("All sectors", r["region"]),
+                    ("All sectors", "All regions")):
+            a = agg[key]; a["open"] += 1; a["new"] += 1 if r["new"] else 0
+            a["countries"].add(r["country"]); a["sources"].add(r["source"].split(" (")[0])
+            if r["est_value_usd"] != "":
+                a["valued"] += 1; a["vals"].append(r["est_value_usd"])
+    out = [{"sector": k[0], "region": k[1], "open_notices": a["open"], "new_48h": a["new"], "with_value": a["valued"],
+            "total_value_usd": round(sum(a["vals"])), "median_value_usd": round(median(a["vals"])) if a["vals"] else "",
+            "countries": len(a["countries"]), "sources": len(a["sources"])} for k, a in agg.items()]
+    out.sort(key=lambda x: (x["sector"] != "All sectors", x["region"] != "All regions", -x["open_notices"]))
+    write("sectors.csv", out)
+    cs = defaultdict(lambda: {"open": 0, "vals": 0, "sources": set()})
+    for r in tenders:
+        c = cs[r["country"]]; c["open"] += 1; c["vals"] += r["est_value_usd"] or 0; c["sources"].add(r["source"])
+    from .regions import region
+    write("countries.csv", sorted(({"country": k, "region": region(k), "open_notices": v["open"],
+                                    "total_value_usd": round(v["vals"]), "sources": "; ".join(sorted(v["sources"]))[:150]}
+                                   for k, v in cs.items()), key=lambda x: -x["open_notices"]))
 
 
 def write(name, rows, cols=None):
@@ -375,19 +446,24 @@ def merge():
     markets = merge_markets(bm)
     merge_opportunities(tenders, buyers or [], markets or [])
     write_digest(tenders, buyers or [])
-    write("tenders.csv", tenders)
+    cols = ["score", "new", "deadline", "days_left", "stage", "sector", "commodity", "source", "country", "region",
+            "buyer", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
+            "classification", "contact", "benchmark", "link", "lang", "first_seen", "id"]
+    write("tenders_all.csv", tenders, cols)
+    write("tenders.csv", tenders[:6000], cols)
+    write_sector_summary(tenders)
     write("importers.csv", imp)
     write("suppliers.csv", sup)
     iyp = PARTIAL / "importyeti.json"
     iym = json.loads(iyp.read_text()) if iyp.exists() else {}
-    status.append(["importyeti", iym.get("ran", ""), n,
+    status.append(["importyeti", iym.get("ran", ""), n, "OK",
                    f"{n} HS headings cached; this run {iym.get('meta', {}).get('scanned', 0)}, "
                    f"due {iym.get('meta', {}).get('due', '')}"])
     gb = _group_bench(bm)
     write("groups.csv", [{"group": g["name"], "hs_chapters": " ".join(g["hs"]), "ted_cpv": " ".join(g["cpv"]),
                           "worldbank_keywords": ", ".join(g["wb"]), "mr_gov_categories": " ".join(g["mr"]),
                           "benchmark": gb.get(g["id"], ""), "supplier_regex": g["sup"]} for g in BY_ID.values()])
-    write("status.csv", [dict(zip(["source", "last_run_utc", "rows", "note"], s)) for s in status])
+    write("status.csv", [dict(zip(["source", "last_run_utc", "rows", "note", "detail"], s)) for s in status])
     log.info("tenders %d, importers %d, suppliers %d", len(tenders), len(imp), len(sup))
 
 

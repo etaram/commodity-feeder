@@ -11,7 +11,7 @@ concurrency:
 jobs:
   leads:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -20,7 +20,7 @@ jobs:
       - run: pip install requests curl_cffi pycountry
       - name: ted
         run: python -m leads.run --source ted
-        timeout-minutes: 10
+        timeout-minutes: 20
         continue-on-error: true
       - name: fts
         run: python -m leads.run --source fts
@@ -28,7 +28,7 @@ jobs:
         continue-on-error: true
       - name: sam
         run: python -m leads.run --source sam
-        timeout-minutes: 12
+        timeout-minutes: 15
         continue-on-error: true
       - name: canadabuys
         run: python -m leads.run --source canadabuys
@@ -40,6 +40,38 @@ jobs:
         continue-on-error: true
       - name: ebrd
         run: python -m leads.run --source ebrd
+        timeout-minutes: 5
+        continue-on-error: true
+      - name: ungm
+        run: python -m leads.run --source ungm
+        timeout-minutes: 12
+        continue-on-error: true
+      - name: undp
+        run: python -m leads.run --source undp
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: aiib
+        run: python -m leads.run --source aiib
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: isdb
+        run: python -m leads.run --source isdb
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: etimad
+        run: python -m leads.run --source etimad
+        timeout-minutes: 10
+        continue-on-error: true
+      - name: prozorro
+        run: python -m leads.run --source prozorro
+        timeout-minutes: 20
+        continue-on-error: true
+      - name: pncp
+        run: python -m leads.run --source pncp
+        timeout-minutes: 12
+        continue-on-error: true
+      - name: secop
+        run: python -m leads.run --source secop
         timeout-minutes: 5
         continue-on-error: true
       - name: awards

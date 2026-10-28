@@ -44,37 +44,53 @@ def parse(page):
     return out
 
 
-def fetch(max_pages=3):
+HE_SECTOR = [("DEFENCE", r"ביטחון|צבא|צה\"ל|משטר|אבטח|נשק|תחמושת"), ("HEALTH", r"רפוא|תרופ|בית חולים|בריאות|מעבד"),
+             ("WATER", r"מים|ביוב|שפכים|התפלה"), ("POWER", r"חשמל|שנאי|סולארי|תאורה|גנרטור"),
+             ("INFRA", r"כביש|גשר|רכבת|נמל|תשתית|סלילה"), ("ICT", r"מחשב|תוכנ|מערכות מידע|תקשורת|סייבר|ענן|דיגיטל"),
+             ("TRANSPORT_EQ", r"רכב|משאית|אוטובוס|כלי טיס|ספינ"), ("MACHINERY", r"ציוד|מכונ|משאב"),
+             ("ENERGY", r"דלק|סולר|גז"), ("AGRI_FOOD", r"מזון|חלב|בשר|ירקות|פירות|לחם|קפה|הסעדה"),
+             ("TEXTILES", r"מדים|ביגוד|הנעלה|טקסטיל"), ("CONSUMER", r"ריהוט|ריהוט|ציוד משרדי|נייר"),
+             ("ENV_WASTE", r"פסולת|ניקיון|אשפה|סביבה"), ("BUILDING", r"בניה|בנייה|שיפוץ|הקמה|עבודות"),
+             ("MAINT", r"תחזוק|תיקון|אחזקה"), ("LOGISTICS", r"הובלה|שינוע|אחסנה|נסיעות"),
+             ("ENGINEERING", r"תכנון|הנדס|פיקוח"), ("SOCIAL", r"הדרכ|הכשר|חינוך|רווחה|אירוע"),
+             ("CONSULTING", r"ייעוץ|יועצ|מחקר|ביקורת|שיווק|פרסום|משפט|ביטוח")]
+
+
+def _sector(title):
+    return next((k for k, rx in HE_SECTOR if re.search(rx, title)), "")
+
+
+def fetch(max_pages=12):
     rows, seen, t = [], set(), today()
-    for kind, g, cat in [(k, g, c) for k in ("TENDER", "EXEMPTION") for g in GROUPS for c in g["mr"]]:
-            for page in range(max_pages):
-                q = quote(f":updateDate:archive:false:category:{cat}", safe=":")
-                url = f"{BASE}/ilgstorefront/he/search/?q={q}&s={kind}&page={page}"
-                try:
-                    r = cffi_get(url)
-                except Exception as e:  # noqa: BLE001
-                    log.warning("mr.gov.il %s: %s", cat, e); break
-                items = parse(r.text) if r.status_code == 200 else []
-                for it in items:
-                    st = it.get("status", "").split(" ")[0]
-                    if it["pid"] in seen or not any(it.get("status", "").startswith(a) for a in ACTIVE):
-                        continue
-                    if SERVICE.search(it["title"]) or not (SUPPLY.search(it["title"]) or kind == "TENDER"):
-                        continue
-                    dl = _d(it.get("deadline"))
-                    if (dl and dl < t) or (kind == "EXEMPTION" and not dl):
-                        continue
-                    gid = next((k for k, rx in HE_GROUP if re.search(rx, it["title"])), g["id"])
-                    seen.add(it["pid"])
-                    rows.append({
-                        "id": f"MR-{it['pid']}", "source": "mr.gov.il (Israel)" if kind == "TENDER" else "mr.gov.il exemption notice (Israel)", "group": gid,
-                        "country": "ISR", "buyer": it.get("buyer", ""), "title": it["title"][:300],
-                        "classification": f"mr.gov.il category {cat}", "notice_type": f"{it.get('kind', '')} | {st}",
-                        "published": str(_d(it.get("published")) or ""), "deadline": str(dl or ""),
-                        "value": "", "currency": "", "link": f"{BASE}/ilgstorefront/he/p/{it['pid']}", "contact": "",
-                    })
-                polite(1.5)
-                if len(items) < 20:
-                    break
+    for kind in ("TENDER", "EXEMPTION"):
+        for page in range(max_pages):
+            q = quote(":updateDate:archive:false", safe=":")
+            url = f"{BASE}/ilgstorefront/he/search/?q={q}&s={kind}&page={page}"
+            try:
+                r = cffi_get(url)
+            except Exception as e:  # noqa: BLE001
+                log.warning("mr.gov.il %s: %s", kind, e); break
+            items = parse(r.text) if r.status_code == 200 else []
+            for it in items:
+                st = it.get("status", "").split(" ")[0]
+                if it["pid"] in seen or not any(it.get("status", "").startswith(a) for a in ACTIVE):
+                    continue
+                dl = _d(it.get("deadline"))
+                if (dl and dl < t) or (kind == "EXEMPTION" and not dl):
+                    continue
+                gid = next((k for k, rx in HE_GROUP if re.search(rx, it["title"])), "")
+                seen.add(it["pid"])
+                rows.append({
+                    "id": f"MR-{it['pid']}", "source": "mr.gov.il (Israel)" if kind == "TENDER" else "mr.gov.il exemption notice (Israel)",
+                    "group": gid, "sector": _sector(it["title"]), "nature": "", "cpv": "", "stage": "tender",
+                    "access": "National (Israeli registration)", "lang": "he",
+                    "country": "ISR", "buyer": it.get("buyer", ""), "title": it["title"][:300],
+                    "classification": "keyword (he)", "notice_type": f"{it.get('kind', '')} | {st}",
+                    "published": str(_d(it.get("published")) or ""), "deadline": str(dl or ""),
+                    "value": "", "currency": "", "link": f"{BASE}/ilgstorefront/he/p/{it['pid']}", "contact": "",
+                })
+            polite(1.5)
+            if len(items) < 10:
+                break
     log.info("mr.gov.il rows: %d", len(rows))
     return rows, {}
