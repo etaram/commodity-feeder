@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - run: pip install requests curl_cffi
+      - run: pip install requests curl_cffi aia certifi
       - run: python tools/probe.py
       - run: python tools/probe_extra.py || true
       - run: |
