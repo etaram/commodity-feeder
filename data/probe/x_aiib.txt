@@ -1,0 +1,507 @@
+STATUS: 200
+NOTE: https://www.aiib.org/en/opportunities/business/project-procurement/_common/ppo-2026.js
+TYPE: application/javascript
+
+
+$(function(){
+	var year = getURLParameters("year")==""?"All":getURLParameters("year");
+	var member = getURLParameters("member")==""?"All":getURLParameters("member");
+	var sector = getURLParameters("sector")==""?"All":getURLParameters("sector");
+	var category = getURLParameters("category")==""?"All":getURLParameters("category");
+	var type = getURLParameters("type")==""?"All":getURLParameters("type");
+	
+	writeDataTable(year, member, sector, category, type);
+	initalButtons();
+});
+
+function writeDataTable(year, member, sector, category, type){
+	var _yearArr = [];
+	var _memberArr = [];
+	var _sectorArr = [];
+	var _categoryArr = [];
+	var _typeArr = [];
+	var _html = "";
+	var number = 0;
+	//console.log(year, member, sector, category, type);
+
+	for(var i=0,len=ppoData.length; i<len; i++){
+		//console.log(ppoData[i]);
+		
+		if((year=="All"||year==ppoData[i].id.slice(-4)) && (member=="All"||member==ppoData[i].mb) && (sector=="All"||sector==ppoData[i].st) && (category=="All"||category==ppoData[i].ct) && (type=="All"||type==ppoData[i].tp)){
+			_html += '<ul class="table-row row">';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-1">';
+			_html += '		<span class="mobi-title">DATE</span>';
+			_html += '		<div class="date">';
+			_html += '			<div class="title">ISSUE DATE:</div>';
+			_html += '			<div class="value">'+ppoData[i]["id"]+'</div>';
+			_html += '		</div>';
+			if(ppoData[i]["cd"]!=null && ppoData[i]["cd"]!=""){
+				_html += '		<div class="date">';
+				_html += '			<div class="title">CLOSING DATE:</div>';
+				_html += '			<div class="value">'+ppoData[i]["cd"]+'</div>';
+				_html += '		</div>';		
+			}
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-2">';
+			_html += '		<span class="mobi-title">MEMBER</span>';
+			_html += '		<span class="value">'+ppoData[i]["mb"]+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-2 col-sm-12 col-xs-12 col-3">';
+			_html += '		<span class="mobi-title">PROJECT</span>';
+			_html += '		<span class="value">'+ppoData[i]["pj"]+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-2 col-sm-12 col-xs-12 col-4">';
+			_html += '		<span class="mobi-title">CONTRACT DESCRIPTION</span>';
+			_html += '		<span class="value">'+(ppoData[i]["ds"]==""?'<span class="null-value">—</span>':ppoData[i]["ds"])+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-12 col-xs-12 col-5">';
+			_html += '		<span class="mobi-title">CONTRACTOR / SUPPLIER / CONSULTANT</span>';
+			_html += '		<span class="value">'+(ppoData[i]["cr"]==""?'<span class="null-value">—</span>':ppoData[i]["cr"])+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-6">';
+			_html += '		<span class="mobi-title">CONTRACT PRICE</span>';
+			_html += '		<span class="value">'+(ppoData[i]["pc"]==""?'<span class="null-value">—</span>':ppoData[i]["pc"])+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-7">';
+			_html += '		<span class="mobi-title">CONTRACT SIGNING DATE</span>';
+			_html += '		<span class="value">'+(ppoData[i]["sd"]==""?'<span class="null-value">—</span>':ppoData[i]["sd"])+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-8">';
+			_html += '		<span class="mobi-title">SECTOR</span>';
+			_html += '		<span class="value sector-value">'+ppoData[i]["st"]+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-9">';
+			_html += '		<span class="mobi-title">CATEGORY</span>';
+			_html += '		<span class="value">'+(ppoData[i]["ct"]==null?'<span class="null-value">—</span>':ppoData[i]["ct"])+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-1 col-sm-6 col-xs-6 col-10">';
+			_html += '		<span class="mobi-title">TYPE</span>';
+			_html += '		<span class="value">'+ppoData[i]["tp"]+'</span>';
+			_html += '	</li>';
+			_html += '	<li class="table-col col-md-12 col-sm-12 col-xs-12 view-more">';
+			_html += '		<a class="btn-2021-red tracking-click" href="'+ppoData[i]["dc"]+'" target="_blank"><span class="glyphicon glyphicon-file"></span>VIEW MORE</span></a>';
+			_html += '	</li>';
+			_html += '</ul>';
+			
+			number++;
+
+		}
+		
+	  	// add entries in dropdown arrays
+	  	_yearArr.push(ppoData[i]["id"].trim().slice(-4));
+	  	_memberArr.push(ppoData[i]["mb"].trim());
+	  	_sectorArr.push(ppoData[i]["st"].trim());
+	  	_categoryArr.push(ppoData[i]["ct"].trim());
+		
+		// only add types for this category
+		if(category=="All"||category==ppoData[i].ct){
+			_typeArr.push(ppoData[i]["tp"].trim());	   
+		}
+	}
+	$('#articleContainer').html(_html);
+	
+	// write result
+	$('#totalResult').html(number);
+	
+	// empty search input field
+	$(".search-input input")[0].value = "";
+
+	// write pagination
+	paginateResult();
+
+	// show/hide columns for different categories
+	switchTable(category);
+
+	// clean dropdown arrays
+	_yearArr = deduplicate(_yearArr).sort(function(a, b){return b - a});
+	_memberArr = deduplicate(_memberArr).sort();
+	_sectorArr = deduplicate(_sectorArr).sort();
+	_categoryArr = deduplicate(_categoryArr).sort();
+	_typeArr = deduplicate(_typeArr).sort();
+
+	// write year dropdown
+	_html = '<option value="All">Issue Year</option>';
+	for(var i=0,len=_yearArr.length; i<len; i++){
+		_html += '<option value="'+_yearArr[i]+'" ' + (_yearArr[i]==year?"selected":"") + '>'+_yearArr[i]+'</option>';
+	}
+	$('#year').html(_html);
+	
+	// write member dropdown
+	_html = '<option value="All">Member</option>';
+	for(var i=0,len=_memberArr.length; i<len; i++){
+		_html += '<option value="'+_memberArr[i]+'" ' + (_memberArr[i]==member?"selected":"") + '>'+_memberArr[i]+'</option>';
+	}
+	$('#member').html(_html);
+	
+	// write sector dropdown
+	_html = '<option value="All">Sector</option>';
+	for(var i=0,len=_sectorArr.length; i<len; i++){
+		_html += '<option value="'+_sectorArr[i]+'" ' + (_sectorArr[i]==sector?"selected":"") + '>'+_sectorArr[i]+'</option>';
+	}
+	$('#sector').html(_html);
+	
+	// write category dropdown
+	_html = '<option value="All">Category</option>';
+	for(var i=0,len=_categoryArr.length; i<len; i++){
+		_html += '<option value="'+_categoryArr[i]+'" ' + (_categoryArr[i]==category?"selected":"") + '>'+_categoryArr[i]+'</option>';
+	}
+	$('#category').html(_html);
+	
+	// write type dropdown (no real value, to be writted by catagory selection function)
+	_html = '<option value="All">Type</option>';
+	if(category == "All"){
+		$("select#type").attr('disabled', true);	// disable select if category is not selected
+	}else{
+		for(var i=0,len=_typeArr.length; i<len; i++){
+			_html += '<option value="'+_typeArr[i]+'" ' + (_typeArr[i]==type?"selected":"") + '>'+_typeArr[i]+'</option>';
+		}
+		$("select#type").attr('disabled', false);	// enable select
+	}
+	$('select#type').html(_html);
+	
+	// highlight selected dropdown
+	//console.log(year, member, sector, category, type);
+	highlightSelectbox(year, member, sector, category, type);
+
+	
+	/* rewrite url */
+	var path = "";
+	if(year!="All" || member!="All" || sector!="All" || category!="All" || type!="All"){
+		path = location.pathname + "?year=" + year + "&member=" + member + "&sector=" + sector + "&category=" + category + "&type=" + type;
+	}else{
+		path = location.pathname;
+	}
+	var state = {url:path};
+	window.history.replaceState(state,"",path);
+}
+
+function deduplicate(data){
+	return data.filter((value, index) => data.indexOf(value) === index);
+}
+
+
+function writeDataTableBySearch(value){
+
+	// reset all items from last search
+	var obj=$(".table-body ul");
+	for(var i=0,len=obj.length; i<len; i++){
+		obj2=obj.eq(i);
+		
+		var _html = obj2.children().eq(2).find('.value').html();
+		if(_html.indexOf("<em>")>=0 || _html.indexOf("</em>")>=0){
+			_html = _html.replace("<em>", "").replace("</em>", ""); 	// remove <em> tag in project name
+			obj2.children().eq(2).find('.value').html(_html);
+		}
+
+		_html = obj2.children().eq(3).find('.value').html();
+		if(_html.indexOf("<em>")>=0 || _html.indexOf("</em>")>=0){
+			_html = _html.replace("<em>", "").replace("</em>", ""); 	// remove <em> tag in project name
+			obj2.children().eq(3).find('.value').html(_html);
+		}
+	}
+	
+	var values = value.split(" ");	// multiple keywords search: keywords separated by + sign
+	var obj=$(".table-body ul");
+	var resultNumber = 0;
+	for(var i=0,len=obj.length; i<len; i++){	// loop all prjects
+		obj2=obj.eq(i);
+		var _html = obj2.children().eq(2).find('.value').html();	// only search in Project Name
+		var _htmlUpper = _html.toUpperCase();
+		
+		var _htmlDesc = obj2.children().eq(3).find('.value').html();	// only search in Project Description
+		var _htmlUpperDesc = _htmlDesc.toUpperCase();
+		
+		var found = false;
+		for(var j=0; j<values.length; j++){	// loop all keywords
+			if(values[j]!=null && values[j]!=""){
+				var value = values[j];
+			
+				var re = new RegExp(value,'gim');
+				var valueUpper = value.toUpperCase();
+
+				if(_htmlUpper.indexOf(valueUpper)>-1 ){	// found the value in project name
+
+					_html = _html.replace(re, '<em>'+ _html.match(re)[0] +'</em>'); 
+					obj2.children().eq(2).find('.value').html(_html);
+
+					found = true;
+					//console.log("found in project name:" + valueUpper);
+				}
+
+				if(_htmlUpperDesc.indexOf(valueUpper)>-1 ){	// found the value in project dscription
+
+					_htmlDesc = _htmlDesc.replace(re, '<em>'+ _htmlDesc.match(re)[0] +'</em>'); 
+					obj2.children().eq(3).find('.value').html(_htmlDesc);
+
+					found = true;
+					//console.log("found in project description:" + valueUpper);
+				}
+			}
+		}
+		
+		if(found){
+			obj2.show();
+			resultNumber++;
+		}else{
+			obj2.hide();
+		}
+
+	}
+	
+	$('#totalResult').html(resultNumber);
+
+	paginateResult();
+}
+
+var previousCategory = "";
+function initalButtons(){
+
+	/* dropdown function */
+	$('select').on('change', function() {
+		var year = $("select#year")[0].value;
+		var member = $("select#member")[0].value;
+		var sector = $("select#sector")[0].value;
+		var category = $("select#category")[0].value;
+		var type = $("select#type")[0].value;
+		
+		if(category != previousCategory){	// if category changes, reset type
+			type = "All";
+		}
+				
+		writeDataTable(year, member, sector, category, type);
+		
+		previousCategory = category;
+	});
+
+	$(".glyphicon-search").click(function(){
+		var value=$(".search-input input").val().trim();
+		if(value.length<=2){
+			$('#input-string').show();
+			setTimeout(function() {
+				$("#input-string").fadeOut();	// hide message after 3 sec
+			}, 3000);
+		}else{
+			$('#input-string').hide();
+			
+			writeDataTableBySearch(value);
+		}
+		
+		dehighlightSelectbox();
+	});
+	
+	$(".search-input input").focus(function(){ 
+		$('#input-string').hide(); 
+	});
+	$(".search-input input").keydown(function(e){
+		e=e||window.event;
+		var curKey = e.keyCode; 
+		if(curKey == 13){ 
+			$(".glyphicon-search").trigger('click');
+			return false;
+		}
+	});
+	
+	$('a.aReset').bind('click',function(){
+		$("select#year")[0].value = "All";
+		$("select#member")[0].value = "All";
+		$("select#sector")[0].value = "All";
+		$("select#category")[0].value = "All";
+		$("select#type")[0].value = "All";
+		
+		$(".search-input input")[0].value = "";
+		
+		writeDataTable("All", "All", "All", "All", "All");
+		
+	});
+	
+	$('a.aDownload').bind('click',function(){
+		exportJsonToExcel();
+	});
+	
+	$('a.aCopy').bind('click',function(){
+		var link = location.href;
+		var $temp = $("<input>");
+		$("body").append($temp);
+		$temp.val(link).select();
+		document.execCommand("copy");
+		$temp.remove();
+
+		$("a.aCopy").siblings(".message").show();	// show the copy button message
+		setTimeout(function() {
+			$("a.aCopy").siblings(".message").fadeOut();	// hide message after 3 sec
+		}, 3000);
+	});
+	
+	$('#type-sel-parent').bind('click',function(){
+		if($("#type").prop("disabled")){	// 	type select is disabled
+			$("#type-sel-parent .message").show();	// show type select error message
+			setTimeout(function() {
+				$("#type-sel-parent .message").fadeOut();	// hide message after 3 sec
+			}, 3000);
+		}else{
+			$("#type-sel-parent .message").hide();	// hide type select error message
+		}
+	});	
+}
+
+function highlightSelectbox(year, member, sector, category, type){
+	// hightlight dropdowns and set dropdown values
+	if(year != 'All'){
+		$("select#year").addClass("active");
+		$(".table-head li.col-1").css("background", "#959595");
+	}else{
+		$("select#year").removeClass("active");
+		$(".table-head li.col-1").css("background", "#2C2C2C");
+	}
+	if(member != 'All'){
+		$("select#member").addClass("active");
+		$(".table-head li.col-2").css("background", "#959595");
+	}else{
+		$("select#member").removeClass("active");
+		$(".table-head li.col-2").css("background", "#2C2C2C");
+	}
+	if(sector != 'All'){
+		$("select#sector").addClass("active");
+		$(".table-head li.col-8").css("background", "#959595");
+	}else{
+		$("select#sector").removeClass("active");
+		$(".table-head li.col-8").css("background", "#2C2C2C");
+	}
+	if(category != 'All'){
+		$("select#category").addClass("active");
+		$(".table-head li.col-9").css("background", "#959595");
+		
+		if(type != 'All'){	// check type if category is not all
+			$("select#type").addClass("active");
+			$(".table-head li.col-10").css("background", "#959595");
+		}else{
+			$("select#type").removeClass("active");
+			$(".table-head li.col-10").css("background", "#2C2C2C");
+		}
+	}else{
+		$("select#category").removeClass("active");
+		$(".table-head li.col-9").css("background", "#2C2C2C");
+		
+		$("select#type").removeClass("active");	// deactive type if category is all
+		$(".table-head li.col-10").css("background", "#2C2C2C");
+	}
+	
+}
+
+function dehighlightSelectbox(){
+	$("select#year").removeClass("active");
+	$("select#member").removeClass("active");
+	$("select#sector").removeClass("active");
+	$("select#category").removeClass("active");
+	$("select#type").removeClass("active");
+	
+	$("select#year")[0].value = "All";
+	$("select#member")[0].value = "All";
+	$("select#sector")[0].value = "All";
+	$("select#category")[0].value = "All";
+	$("select#type")[0].value = "All";
+}
+
+var currentPage = 1;
+function paginateResult(){
+	$(".pagination-default").jPages({
+		containerID : "articleContainer",
+		first       : false,
+		previous    : "a.pagination-prev",
+		next        : "a.pagination-next",
+		last        : false,
+		perPage 	: 10,
+		midRange 	: 3,
+		startRange 	: 2,
+		endRange  	: 2,
+		minHeight   :false,
+		delay 		: 0,
+		callback    : function( pages, items ){
+			//console.log(items.count);
+			if(items.count <= 10){
+				$(".pagination").css("opacity", "0");
+			}else{
+				$(".pagination").css("opacity", "1");
+			}
+			
+			if(pages.current != currentPage){
+				$('html, body').animate({scrollTop: $(".table-con .table-div").offset().top-120}, 1000);
+				currentPage = pages.current;
+			}
+		}
+	});
+}
+
+
+function exportJsonToExcel(){
+	// Add domain to document path
+	for(let i = 0; i < ppoData.length; i++) {
+		let obj = ppoData[i];
+		
+		if(obj.dc){
+			if(obj.dc.indexOf("/cms")==0){
+				obj.dc = obj.dc.substring(4);	// remove /cms
+			}
+			obj.dc = "https://www.aiib.org" + obj.dc;	// add domain
+			
+		}
+		//console.log(obj.dc);
+	}
+
+	var Heading = [["Issue Date", "Closing Date", "Member", "Project", "Contract Description", "Name of the Contractor/Supplier/Consultant", "Contract Signing Date", "Contract Price (USD equivalent or local currencies)", "Sector", "Document Category", "Document Type", "Document"]];	// cusomized heading
+
+	// Create a new workbook
+	const wb = XLSX.utils.book_new();
+	const ws = XLSX.utils.json_to_sheet(ppoData);
+
+	// Customize Convert JSON data to a worksheet
+	XLSX.utils.sheet_add_aoa(ws, Heading);
+	XLSX.utils.sheet_add_json(ws, ppoData, { origin: 'A2', skipHeader: true });
+
+	// Append the worksheet to the workbook
+	XLSX.utils.book_append_sheet(wb, ws, "PPO Data");
+
+	// Build download file name
+	var currentdate = new Date(); 
+	var datetime = currentdate.getFullYear() +""+ (currentdate.getMonth()+1) +""+ currentdate.getDate();
+//	var datetime = currentdate.getFullYear() +""+ (currentdate.getMonth()+1) +""+ currentdate.getDate() + "-" + currentdate.getHours() +""+ currentdate.getMinutes() +""+ currentdate.getSeconds();
+
+	// Export the workbook as an Excel file
+	XLSX.writeFile(wb, "aiib-website-ppo-data-"+datetime+".xlsx");
+}
+
+function switchTable(category){
+	if(category == "Notices" || category == "Procurement Plan") {
+		$(".col-4").hide();	// show description	
+		$(".col-5").hide();	// hide contractor
+		$(".col-6").hide();	// hide signing date
+		$(".col-7").hide();	// hide price
+
+		$(".col-3").removeClassStartingWith('col-md-').addClass('col-md-4');	// wide project name
+		$(".col-8").removeClassStartingWith('col-md-').addClass('col-md-2');	// wide sector
+		$(".col-9").removeClassStartingWith('col-md-').addClass('col-md-2');	// wide category
+		$(".col-10").removeClassStartingWith('col-md-').addClass('col-md-2');	// wide type
+	}else{
+		/* reset all columns and width */
+		$(".col-4").show();	// hide description	
+		$(".col-5").show();	// show contractor
+		$(".col-6").show();	// show signing date
+		$(".col-7").show();	// show price
+
+		$(".col-3").removeClassStartingWith('col-md-').addClass('col-md-2');	// project name
+		$(".col-4").removeClassStartingWith('col-md-').addClass('col-md-2');	// description
+		$(".col-5").removeClassStartingWith('col-md-').addClass('col-md-1');	// contractor
+		$(".col-6").removeClassStartingWith('col-md-').addClass('col-md-1');	// signing date
+		$(".col-7").removeClassStartingWith('col-md-').addClass('col-md-1');	// price
+		$(".col-8").removeClassStartingWith('col-md-').addClass('col-md-1');	// sector
+		$(".col-9").removeClassStartingWith('col-md-').addClass('col-md-1');	// category
+		$(".col-10").removeClassStartingWith('col-md-').addClass('col-md-1');	// type	
+	}
+}
+
+$.fn.removeClassStartingWith = function (filter) {
+    $(this).removeClass(function (index, className) {
+        return (className.match(new RegExp("\\S*" + filter + "\\S*", 'g')) || []).join(' ')
+    });
+    return this;
+};
