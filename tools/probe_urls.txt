@@ -1,10 +1,3 @@
-traces CFFI https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/index
-lbma CFFI https://www.lbma.org.uk/good-delivery/gold-current-list
-rmi CFFI https://www.responsiblemineralsinitiative.org/smelters-refiners-lists/
-rspo CFFI https://rspo.org/search-members/
-msc CFFI https://fisheries.msc.org/en/fisheries/
-pncp_ct https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261020&dataFinal=20261027&pagina=1&tamanhoPagina=5
-secop_ct https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=3&$order=fecha_de_firma%20DESC
-flocert CFFI https://www.flocert.net/about-flocert/customer-search/
-asc CFFI https://asc-aqua.org/find-a-farm/
-gleif https://api.gleif.org/api/v1/lei-records?filter[entity.legalName]=PHARMOS%2C%20a.s.
+traces_js CFFI https://webgate.ec.europa.eu/tracesnt/assets/js/min/establishment-listing.8-2-14-20261210-113641000.min.js
+pncp_ct2 https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261020&dataFinal=20261027&pagina=1&tamanhoPagina=50
+lbma2 CFFI https://www.lbma.org.uk/good-delivery/good-delivery-list
