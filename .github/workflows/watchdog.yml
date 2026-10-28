@@ -22,7 +22,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           now=$(date -u +%s)
-          for spec in "feed.yml:14" "leads.yml:6" "suppliers.yml:14"; do
+          for spec in "feed.yml:14" "leads.yml:5" "suppliers.yml:14"; do
             wf=${spec%%:*}; max_h=${spec##*:}
             group="$wf"; [ "$wf" != "feed.yml" ] && group="leads.yml suppliers.yml"   # these two share one queue
             busy=0

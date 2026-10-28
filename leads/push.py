@@ -101,6 +101,8 @@ def leads_tables():
     th = LEADS / "sheet" / "titles_he.csv"
     if th.exists():
         out.append(("Titles HE", read_csv(th)))
+    out.append(("Meta", [["key", "value"], ["tenders_updated_utc", time.strftime("%Y-%m-%d %H:%M", time.gmtime())],
+                         ["open_tenders", str(len(out[0][1]) - 1)]]))
     dg = LEADS / "digest.txt"
     if dg.exists():
         out.append(("Digest", [["daily digest"]] + [[line] for line in dg.read_text(encoding="utf-8").splitlines()]))
