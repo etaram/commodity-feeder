@@ -423,6 +423,46 @@ def write_sheet_chunks(tenders):
     write("tenders.csv", rows[:CHUNK], SHEET_COLS)
 
 
+def write_accounts(tenders, buyers):
+    """Dynamic buyer universe: every buyer seen in open notices (all sources) joined with award history.
+    Ranked by activity: open notices, known open value and awarded value in the last 12 months."""
+    import math
+    from .regions import region
+    acc = {}
+    for r in tenders:
+        b = (r.get("buyer") or "").strip()
+        if len(b) < 3:
+            continue
+        k = (_norm_buyer(b)[:80], r["country"])
+        a = acc.setdefault(k, {"buyer": b, "country": r["country"], "open": 0, "open_usd": 0, "sectors": defaultdict(int),
+                               "sources": set(), "latest": "", "contact": "", "new": 0})
+        a["open"] += 1; a["open_usd"] += r["est_value_usd"] or 0; a["sectors"][r["sector"]] += 1
+        a["sources"].add(r["source"].split(" (")[0]); a["latest"] = max(a["latest"], r.get("published") or "")
+        a["contact"] = a["contact"] or r.get("contact", ""); a["new"] += 1 if r["new"] else 0
+    aw = {}
+    for b in buyers:
+        k = (_norm_buyer(b["buyer"])[:80], b["country"])
+        x = aw.setdefault(k, {"awards": 0, "usd": 0, "next": ""})
+        x["awards"] += b["awards_12m"]; x["usd"] += b["total_usd"] or 0
+        x["next"] = min(filter(None, [x["next"], b["next_expected"]]), default="")
+    out = []
+    for k in set(acc) | set(aw):
+        a = acc.get(k); x = aw.get(k, {"awards": 0, "usd": 0, "next": ""})
+        if not a:
+            continue
+        sc = (math.log10(1 + a["open"]) * 20 + math.log10(1 + max(0, a["open_usd"])) * 6 + math.log10(1 + x["awards"]) * 10
+              + math.log10(1 + max(0, x["usd"])) * 4)
+        out.append({"account": a["buyer"][:100], "country": a["country"], "region": region(a["country"]),
+                    "activity_score": round(sc, 1), "open_notices": a["open"], "new_48h": a["new"],
+                    "open_value_usd": round(a["open_usd"]),
+                    "main_sectors": "; ".join(s for s, _ in sorted(a["sectors"].items(), key=lambda y: -y[1])[:3]),
+                    "awards_12m": x["awards"], "awarded_usd_12m": round(x["usd"]), "next_expected_tender": x["next"],
+                    "sources": "; ".join(sorted(a["sources"])), "latest_notice": a["latest"], "contact": a["contact"][:80]})
+    out.sort(key=lambda y: -y["activity_score"])
+    write("accounts.csv", out[:4000])
+    log.info("accounts %d", len(out))
+
+
 def write_sector_summary(tenders):
     """Sector x region: open notices, notices with a value, total and median value (USD), new in 48h."""
     agg = defaultdict(lambda: {"open": 0, "valued": 0, "vals": [], "new": 0, "countries": set(), "sources": set()})
@@ -483,6 +523,10 @@ def merge():
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
     write_sector_summary(tenders)
+    try:
+        write_accounts(tenders, buyers or [])
+    except Exception as e:  # noqa: BLE001
+        log.warning("accounts: %s", e)
     write("importers.csv", imp)
     write("suppliers.csv", sup)
     iyp = PARTIAL / "importyeti.json"
