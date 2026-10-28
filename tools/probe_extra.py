@@ -34,6 +34,15 @@ def other():
     s = cr.Session(impersonate="chrome")
     for name, method, url, body in [
         ("x_prozorro_search", "POST", "https://prozorro.gov.ua/api/search/tenders", {"status": ["active.tendering"], "value": {"from": 20000000}, "page": 1}),
+        ("x_pz_a", "POST", "https://prozorro.gov.ua/api/search/tenders", {"status": ["active.tendering"], "value": {"start": 20000000}, "page": 1}),
+        ("x_pz_b", "POST", "https://prozorro.gov.ua/api/search/tenders", {"status": ["active.tendering"], "value.start": 20000000, "page": 1}),
+        ("x_pz_c", "POST", "https://prozorro.gov.ua/api/search/tenders", {"filters": {"status": ["active.tendering"], "value": {"start": 20000000}}, "page": 1}),
+        ("x_pz_fe", "GET", "https://prozorro.gov.ua/en/search/tender?status=active.tendering&value.start=20000000", None),
+        ("x_ungm_js", "GET", "https://www.ungm.org/Scripts/UNGM.js", None),
+        ("x_ungm_common", "GET", "https://www.ungm.org/bundles/ungmcommon?v=w9iy_Y8Y9kyq_MUcS9sxGREj-KMXMFKLYIM2GNCl_g81", None),
+        ("x_ungm_uvm", "GET", "https://www.ungm.org/bundles/uvm?v=m_HjKBABDeh75wS7SJKGv9qu0ZsbBy8vHQDlHNvawDk1", None),
+        ("x_etimad100", "GET", "https://tenders.etimad.sa/Tender/AllSupplierTendersForVisitorAsync?PageSize=100&PageNumber=1", None),
+        ("x_aiib_all", "GET", "https://www.aiib.org/en/opportunities/business/project-procurement/_common/ppo-data-all.js", None),
         ("x_prozorro_search_get", "GET", "https://prozorro.gov.ua/api/search/tenders?status=active.tendering&value.from=20000000&page=1", None),
         ("x_etimad", "GET", "https://tenders.etimad.sa/Tender/AllSupplierTendersForVisitorAsync?PageSize=24&PageNumber=1", None),
         ("x_aiib", "GET", "https://www.aiib.org/en/opportunities/business/project-procurement/_common/ppo-2026.js", None),
@@ -46,6 +55,6 @@ def other():
         except Exception as e:
             print(name, e)
 
-for f in (ungm, other):
+for f in (other,):
     try: f()
     except Exception: traceback.print_exc()
