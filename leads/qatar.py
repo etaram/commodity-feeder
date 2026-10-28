@@ -17,9 +17,21 @@ def _d(s):
 
 
 def fetch():
-    s, t, new = chain_session(BASE), today(), []
+    from curl_cffi import requests as cr
+    bundle = chain_session(BASE).verify
+    t, new = today(), []
+
+    def get(u):
+        for attempt in range(3):
+            try:
+                return cr.get(u, impersonate="chrome", verify=bundle, timeout=60)
+            except Exception as e:  # noqa: BLE001
+                log.warning("Qatar %s attempt %d: %s", u, attempt + 1, e); polite(10)
+        return None
     for page in range(1, 40):
-        r = s.get(URL.format(page), timeout=60)
+        r = get(URL.format(page))
+        if r is None:
+            break
         if r.status_code != 200:
             log.warning("Qatar %s p%d", r.status_code, page); break
         ids = re.findall(r"/TendersOnlineServices/TenderDetails/(\d+)", r.text)
