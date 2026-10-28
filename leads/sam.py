@@ -70,7 +70,7 @@ def fetch():
             new.append({
                 "id": f"SAM-{o['_id']}", "source": "SAM.gov (USA)", "group": group_of_text(title) or "",
                 "sector": sector, "nature": "", "cpv": "", "country": "USA",
-                "buyer": clean(" / ".join(x.get("name", "") for x in (org[:1] + org[-1:])), 120),
+                "buyer": clean(" / ".join(dict.fromkeys(x.get("name") or "" for x in (org[:1] + org[-1:]))), 120),
                 "title": title[:300], "classification": method, "notice_type": TYPES[o["type"]["code"]],
                 "stage": "planned" if o["type"]["code"] in ("p", "r") else "tender",
                 "access": "US (Buy American / TAA; GPA for covered agencies)",

@@ -47,6 +47,8 @@ def _search(s, query, max_pages=200):
         if r.status_code != 200:
             log.warning("TED %s: %s", r.status_code, r.text[:300]); break
         j = r.json(); batch = j.get("notices", []); out += batch; pages += 1
+        if pages == 1:
+            log.info("TED total matching notices: %s", j.get("totalNoticeCount"))
         token = j.get("iterationNextToken")
         if not token or not batch:
             break

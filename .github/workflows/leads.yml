@@ -25,136 +25,137 @@ jobs:
             ~/.cache/pip
           key: argos-v1
       - run: pip install requests curl_cffi pycountry langid argostranslate
+      - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: ted
-        run: python -m leads.run --source ted
+        run: set -o pipefail; python -m leads.run --source ted 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 20
         continue-on-error: true
       - name: fts
-        run: python -m leads.run --source fts
+        run: set -o pipefail; python -m leads.run --source fts 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: sam
-        run: python -m leads.run --source sam
+        run: set -o pipefail; python -m leads.run --source sam 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: canadabuys
-        run: python -m leads.run --source canadabuys
+        run: set -o pipefail; python -m leads.run --source canadabuys 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 6
         continue-on-error: true
       - name: za
-        run: python -m leads.run --source za
+        run: set -o pipefail; python -m leads.run --source za 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: ebrd
-        run: python -m leads.run --source ebrd
+        run: set -o pipefail; python -m leads.run --source ebrd 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 5
         continue-on-error: true
       - name: ungm
-        run: python -m leads.run --source ungm
+        run: set -o pipefail; python -m leads.run --source ungm 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 12
         continue-on-error: true
       - name: undp
-        run: python -m leads.run --source undp
+        run: set -o pipefail; python -m leads.run --source undp 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: aiib
-        run: python -m leads.run --source aiib
+        run: set -o pipefail; python -m leads.run --source aiib 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: isdb
-        run: python -m leads.run --source isdb
+        run: set -o pipefail; python -m leads.run --source isdb 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: etimad
-        run: python -m leads.run --source etimad
+        run: set -o pipefail; python -m leads.run --source etimad 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: prozorro
-        run: python -m leads.run --source prozorro
+        run: set -o pipefail; python -m leads.run --source prozorro 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 20
         continue-on-error: true
       - name: pncp
-        run: python -m leads.run --source pncp
+        run: set -o pipefail; python -m leads.run --source pncp 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 12
         continue-on-error: true
       - name: secop
-        run: python -m leads.run --source secop
+        run: set -o pipefail; python -m leads.run --source secop 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 5
         continue-on-error: true
       - name: germany
-        run: python -m leads.run --source germany
+        run: set -o pipefail; python -m leads.run --source germany 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: contractsfinder
-        run: python -m leads.run --source contractsfinder
+        run: set -o pipefail; python -m leads.run --source contractsfinder 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: paraguay
-        run: python -m leads.run --source paraguay
+        run: set -o pipefail; python -m leads.run --source paraguay 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: dominican
-        run: python -m leads.run --source dominican
+        run: set -o pipefail; python -m leads.run --source dominican 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: austender
-        run: python -m leads.run --source austender
+        run: set -o pipefail; python -m leads.run --source austender 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: oman
-        run: python -m leads.run --source oman
+        run: set -o pipefail; python -m leads.run --source oman 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: france
-        run: python -m leads.run --source france
+        run: set -o pipefail; python -m leads.run --source france 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: spain
-        run: python -m leads.run --source spain
+        run: set -o pipefail; python -m leads.run --source spain 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: kenya
-        run: python -m leads.run --source kenya
+        run: set -o pipefail; python -m leads.run --source kenya 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: tanzania
-        run: python -m leads.run --source tanzania
+        run: set -o pipefail; python -m leads.run --source tanzania 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: ghana
-        run: python -m leads.run --source ghana
+        run: set -o pipefail; python -m leads.run --source ghana 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: zambia
-        run: python -m leads.run --source zambia
+        run: set -o pipefail; python -m leads.run --source zambia 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: awards
-        run: python -m leads.run --source awards
+        run: set -o pipefail; python -m leads.run --source awards 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: worldbank
-        run: python -m leads.run --source worldbank
+        run: set -o pipefail; python -m leads.run --source worldbank 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: mrgov
-        run: python -m leads.run --source mrgov
+        run: set -o pipefail; python -m leads.run --source mrgov 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: importyeti
-        run: python -m leads.run --source importyeti
+        run: set -o pipefail; python -m leads.run --source importyeti 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 15
         continue-on-error: true
       - name: markets
-        run: python -m leads.run --source markets
+        run: set -o pipefail; python -m leads.run --source markets 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
       - name: enrich
-        run: python -m leads.run --source enrich
+        run: set -o pipefail; python -m leads.run --source enrich 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
       - name: merge
-        run: python -m leads.run --merge
+        run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
         continue-on-error: true
       - name: commit

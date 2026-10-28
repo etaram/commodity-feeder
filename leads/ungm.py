@@ -45,6 +45,7 @@ def fetch():
             m = re.search(r'noticeTotal = "(\d+)"', r.text); total = int(m.group(1)) if m else None
         rows = re.findall(r'data-noticeid="(\d+)"(.*?)(?=<div role="row"|\Z)', r.text, re.S)
         if not rows:
+            log.info("UNGM empty page %d (len %d): %s", page, len(r.text), r.text[:200].replace("\n", " "))
             break
         stop = False
         for nid, block in rows:
@@ -83,4 +84,4 @@ def fetch():
         polite(0.7)
     rows, _ = rolling("ungm", new, max_age_days=400)
     log.info("UNGM total active %s, new %d, cache %d (pages %d)", total, len(new), len(rows), page)
-    return rows, {"new": len(new), "total_active": total}
+    return rows, {"new": len(new), "total_active": total, "pages": page}
