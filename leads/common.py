@@ -133,3 +133,24 @@ def save_awards(source, rows, keep_days=370):
 def award_days(source):
     d = AWARDS / source
     return {p.stem for p in d.glob("*.json")} if d.exists() else set()
+
+
+_BUNDLES = {}
+
+
+def chain_session(url):
+    """requests session that verifies TLS for hosts that omit their intermediate certificate: the missing
+    intermediate is fetched via the certificate's AIA URL and added to the trust bundle (verification stays on)."""
+    from urllib.parse import urlsplit
+    host = urlsplit(url).netloc
+    s = session()
+    if host not in _BUNDLES:
+        import tempfile
+        import certifi
+        from aia import AIASession
+        cadata = AIASession().cadata_from_url(url)
+        f = tempfile.NamedTemporaryFile("w", suffix=".pem", delete=False)
+        f.write(open(certifi.where()).read() + "\n" + cadata); f.close()
+        _BUNDLES[host] = f.name
+    s.verify = _BUNDLES[host]
+    return s

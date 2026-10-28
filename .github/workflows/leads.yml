@@ -29,7 +29,7 @@ jobs:
             ~/.local/cache/argos-translate
             ~/.cache/pip
           key: argos-v1
-      - run: pip install requests curl_cffi pycountry langid argostranslate
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: ted
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ted,') }}
@@ -160,6 +160,11 @@ jobs:
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',zambia,') }}
         run: set -o pipefail; python -m leads.run --source zambia 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
+        continue-on-error: true
+      - name: qatar
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',qatar,') }}
+        run: set -o pipefail; python -m leads.run --source qatar 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 6
         continue-on-error: true
       - name: awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',awards,') }}

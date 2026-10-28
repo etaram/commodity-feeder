@@ -20,8 +20,8 @@ from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
-                  "kenya", "tanzania", "ghana", "zambia"]
-NEW_MODULES = {"ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder",
+                  "kenya", "tanzania", "ghana", "zambia", "qatar"]
+NEW_MODULES = {"ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
                "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "nigeria", "kenya", "ecuador", "france", "spain", "tanzania",
                "ghana", "zambia"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
@@ -522,19 +522,24 @@ def merge():
     cutoff = str(today() - dt.timedelta(days=120))
     seen = {k: v for k, v in seen.items() if v >= cutoff}
     seen_p.write_text(json.dumps(seen, sort_keys=True, indent=0))
+    try:
+        from .sectors import SECTORS, classify
+        from .translate import summary, translate_rows
+        translate_rows(tenders)
+        for r in tenders:
+            if r["sector"] == "Other" and r.get("title_en"):
+                sec, _ = classify(r["title_en"])
+                if sec:
+                    r["sector"] = SECTORS[sec]
+            r["summary_en"] = summary(r, r["sector"])
+    except Exception as e:  # noqa: BLE001
+        log.warning("translation skipped: %s", e)
     enp = LEADS / "enrich.json"
     imp, sup, n = merge_importyeti(bm, json.loads(enp.read_text()) if enp.exists() else {})
     buyers = merge_awards()
     markets = merge_markets(bm)
     merge_opportunities(tenders, buyers or [], markets or [])
     write_digest(tenders, buyers or [])
-    try:
-        from .translate import summary, translate_rows
-        translate_rows(tenders)
-        for r in tenders:
-            r["summary_en"] = summary(r, r["sector"])
-    except Exception as e:  # noqa: BLE001
-        log.warning("translation skipped: %s", e)
     cols = ["score", "new", "deadline", "days_left", "stage", "sector", "commodity", "source", "country", "region",
             "buyer", "title_en", "summary_en", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
             "classification", "contact", "benchmark", "link", "lang", "first_seen", "id"]
