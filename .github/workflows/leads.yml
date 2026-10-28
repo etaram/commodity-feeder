@@ -16,7 +16,7 @@ concurrency:
 jobs:
   leads:
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 160
     env:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
     steps:
@@ -202,6 +202,11 @@ jobs:
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',merge,') }}
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
+        continue-on-error: true
+      - name: ext_awards
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ext_awards,') }}
+        run: set -o pipefail; python -m leads.run --source ext_awards 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 30
         continue-on-error: true
       - name: web_contacts
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',web_contacts,') }}

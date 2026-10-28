@@ -31,16 +31,29 @@ def _rates():
         return {"USD": 1, "EUR": 1.08, "GBP": 1.27}
 
 
+def _awards():
+    """(file, award row) from the public award files and the private external award datasets."""
+    for f in sorted(AWARDS.glob("*.json")) + sorted(AWARDS.glob("*/*.json")):
+        for a in json.loads(f.read_text()):
+            yield f, a
+    for f in sorted((PRIVATE / "awards_ext").glob("*.jsonl")):
+        with open(f, encoding="utf-8") as fh:
+            for line in fh:
+                try:
+                    yield f, json.loads(line)
+                except ValueError:
+                    continue
+
+
 def build():
     rates = _rates()
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
                                "sectors": defaultdict(int), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
                                "last": "", "first": "9999", "sources": set(), "example": "", "ex_usd": 0,
                                "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0})
-    files = sorted(AWARDS.glob("*.json")) + sorted(AWARDS.glob("*/*.json"))
     n_aw = 0
-    for f in files:
-        for a in json.loads(f.read_text()):
+    for f, a in _awards():
+        if True:
             if a.get("empty") or not a.get("winners"):
                 continue
             n_aw += 1
@@ -115,7 +128,7 @@ def build():
             "tier": "B" if x.get("tier_b") else "A", "notable": "yes" if x.get("notable") else "",
             "trader": "yes" if x.get("trader") else "", "industries": x.get("industries", ""),
             "employees": x.get("employees", ""),
-            "wins_24m": x["wins"], "won_usd_est": round(x["usd"]),
+            "wins": x["wins"], "won_usd_est": round(x["usd"]),
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
             "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
@@ -126,7 +139,7 @@ def build():
             "email": x["email"], "phone": x["phone"], "website": x["website"], "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
         })
-    out.sort(key=lambda r: (r["tier"], -r["won_usd_est"], -r["wins_24m"]))
+    out.sort(key=lambda r: (r["tier"], -r["won_usd_est"], -r["wins"]))
     PRIVATE.mkdir(parents=True, exist_ok=True)
     cols = list(out[0].keys()) if out else ["supplier"]
     with open(PRIVATE / "universe.csv", "w", newline="", encoding="utf-8") as f:

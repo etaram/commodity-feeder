@@ -147,7 +147,13 @@ EXTRA = [
                    r"titres restaurant|arbeitssicherheit"),
     ("LOGISTICS", r"postal|acheminement|delivery services"),
     ("CONSUMER", r"signage|beschilderung|electoral material|ear tags|kits"),
-    ("AGRI_FOOD", r"ganader|apicult|beekeep|nursery|culinaire"),
+    ("AGRI_FOOD", r"ganader|apicult|beekeep|nursery|culinaire|\bfish|seafood|tuna\b|at[uú]n|thon\b|sardin|shrimp|prawn|"
+                  r"crustacean|mollus|\bmeat|poultry|dairy|cheese|coffee|cocoa|cacao|\btea\b|fruit|vegetable|\bnuts?\b|"
+                  r"cashew|spice|beverage|canned|cannery|frozen food|grain|cereal|oilseed|soybean|edible oil|bakery|"
+                  r"confection|animal feed|slaughter|abattoir"),
+    ("MINING_METALS", r"\bmetals?\b|ferro|zinc|nickel|\bores?\b|smelt|foundr|\bscrap|alloy|non-?ferrous|precious metal"),
+    ("CONSTR_MAT", r"quarr|crushed stone|aggregates?\b|asphalt|bitumen|ready-?mix|concrete product|glass|ceramic"),
+    ("ENERGY", r"\bcoal\b|\blng\b|\blpg\b|diesel|crude|\bfuels?\b|petroleum|refiner|natural gas"),
 ]
 _KW = [(s, re.compile(rx, re.I)) for s, rx in EXTRA + KW]
 
