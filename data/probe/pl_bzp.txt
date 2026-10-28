@@ -1,0 +1,5 @@
+URL: https://ezamowienia.gov.pl/mo-board/api/v1/notice?NoticeType=ContractNotice&PublicationDateFrom=2026-10-26&PageSize=3
+STATUS: 400
+TYPE: application/problem+json; charset=utf-8
+
+{"errors":{"PublicationDateTo":["Pole 'Publication Date To' nie może być puste."]},"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-e96f0a9db28542d04b732bdf1d7581b9-639264958d0acb57-00"}

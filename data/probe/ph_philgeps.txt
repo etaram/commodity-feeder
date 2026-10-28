@@ -1,0 +1,1410 @@
+URL: https://notices.philgeps.gov.ph/GEPSNONPILOT/Tender/SplashOpportunitiesSearchUI.aspx?menuIndex=3&ClickFrom=OpenOpp&Result=3
+STATUS: 200
+TYPE: text/html; charset=utf-8
+
+<SCRIPT LANGUAGE="JavaScript">var WinObj =null;var o=window.open;window.open=launchCenter;function launchCenter(url,name,features){features=features+',';var width=features.substring((features.indexOf('width=')+6));width=width.substring(0,width.indexOf(','));var height=features.substring((features.indexOf('height=')+7));height=height.substring(0,height.indexOf(','));features+=',innerHeight='+height;features+=',innerWidth='+width;if (window.screen) {     features += ',top='+(screen.availHeight- height)*0.5+',left='+(screen.availWidth-width)*0.5;}if(name=='helpWin'){o(url,'helpWin',features);}else{if (null != WinObj)WinObj.close();WinObj = o(url,'a',features);}}</script><link rel='stylesheet' type='text/css' href='/GEPSNONPILOT/common/Styles.css'>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+	<HEAD>
+		<title>OpportunitiesSearch</title>
+		<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR">
+		<meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE">
+		<meta content="JavaScript" name="vs_defaultClientScript">
+		<meta content="http://schemas.microsoft.com/intellisense/ie5" name="vs_targetSchema">
+		<LINK href="../Common/Styles.css" type="text/css" rel="stylesheet">
+		<script>
+			document.onkeydown = hookEnter;
+			  
+			function hookEnter()
+			{
+				var IEKey = event.keyCode; 
+				if (IEKey == 13)
+				{
+					document.OpportunitiesSearchUI.btnSearch.click();
+					event.returnValue=false;
+				}
+			}
+		</script>
+		<script language="javascript">
+			function showConfirmation(str)
+			{
+				if (confirm(str))
+				{
+				
+				document.OpportunitiesSearchUI.txtHidden.value='True'; 
+				document.forms("OpportunitiesSearchUI").submit();
+				}
+				else
+				{
+				document.OpportunitiesSearchUI.txtHidden.value='False'; 
+				document.forms("OpportunitiesSearchUI").submit();
+				}
+			}
+			function showAlert(str)
+			{
+				alert(str)
+			}
+			function showLoginRequired()
+			{
+                alert("In order to download the document, you must register first or login to the system");
+			}
+		</script>
+		<SCRIPT language="JavaScript">
+		function clearPreloadPage() 
+		{ //DOM
+			if (document.getElementById)
+			{
+				document.getElementById('prepage').style.visibility='hidden';
+			}
+			else
+			{
+				if (document.layers)
+				{ //NS4
+					document.prepage.visibility = 'hidden';
+				}
+				else 
+				{ //IE4
+					document.all.prepage.style.visibility = 'hidden';
+				}
+			}
+		}
+
+		</SCRIPT>
+	</HEAD>
+	<body onload="clearPreloadPage();">
+		<!-- Insert codes below after <BODY> tag immediately  -->
+		<div id="prepage" style="Z-INDEX: 9999; BACKGROUND: #f1f1f1; FILTER: Alpha(Opacity=50); LEFT: 0px; WIDTH: 100%; POSITION: absolute; TOP: 0px; HEIGHT: 100%"><FONT face="ËÎÌå"></FONT></div>
+		<!-- Finish to add the JavaScript Page Preloader. Add your own web contents below -->
+		<form name="OpportunitiesSearchUI" method="post" action="./SplashOpportunitiesSearchUI.aspx?menuIndex=3&amp;ClickFrom=OpenOpp&amp;Result=3" id="OpportunitiesSearchUI">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['OpportunitiesSearchUI'];
+if (!theForm) {
+    theForm = document.OpportunitiesSearchUI;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script language='javascript'> function resetfunction(selectElm){try{var selectedIndex = selectElm.selectedIndex;for (var i=0;i<selectElm.length;i++)selectElm.options[i].defaultSelected=(i==selectedIndex);}catch(ex){}}</script>
+
+<SCRIPT>
+    var now = new Date("2026/10/28 12:11:37");
+    var d_names = new Array("Sunday", "Monday", "Tuesday",
+    "Wednesday", "Thursday", "Friday", "Saturday");
+
+    var m_names = new Array("January", "February", "March",
+    "April", "May", "June", "July", "August", "September",
+    "October", "November", "December");
+
+    var d = new Date("2026/10/28 12:11:37");
+var curr_day = d.getDay();
+var curr_date = d.getDate();
+var sup = "";
+if (curr_date == 1 || curr_date == 21 || curr_date == 31) {
+    sup = "st";
+}
+else if (curr_date == 2 || curr_date == 22) {
+    sup = "nd";
+}
+else if (curr_date == 3 || curr_date == 23) {
+    sup = "rd";
+}
+else {
+    sup = "th";
+}
+var curr_month = d.getMonth();
+var curr_year = d.getFullYear();
+
+function curTime() {
+    now = new Date(now - (-1000));
+    var hrs = now.getHours()
+    var min = now.getMinutes()
+    var sec = now.getSeconds()
+    var don = "AM"
+    if (hrs >= 12) { don = "PM" }
+    if (hrs > 12) { hrs -= 12 }
+    if (hrs == 0) { hrs = 12 }
+    if (hrs < 10) { hrs = "0" + hrs }
+    if (min < 10) { min = "0" + min }
+    if (sec < 10) { sec = "0" + sec }
+    clock.innerHTML = d_names[curr_day] + ", " + m_names[curr_month] + " " + curr_date + ", " + curr_year + " " + hrs + ":" + min + " " + don
+    setTimeout("curTime()", 1000)
+}
+
+var XMLHTTP = null;
+
+function LoadXML(url) {
+    if (window.XMLHttpRequest) {
+        XMLHTTP = new XMLHttpRequest();
+    } else {
+        XMLHTTP = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+
+    if (url.indexOf("?") < 0) {
+        url += "?ver=" + new Date().getTime();
+    }
+    else {
+        url += "&ver=" + new Date().getTime();
+    }
+
+    XMLHTTP.onreadystatechange = OnResponse;
+    XMLHTTP.open('GET', url, true);
+    XMLHTTP.send(null);
+}
+
+function OnResponse() {
+
+    //var msgSpecial = 'Couldn\'t retrieve special message for now.';
+    var msgSpecial = '';
+    var contractAmt = '';
+    var msgOpportunities = '';
+    var msgAward = '';
+    var msgStat = '';
+    var msgNewsUp = "";
+    var msgUpEvent = "";
+
+    if (XMLHTTP.readyState != 4) return;
+
+    if (XMLHTTP.status != 200) {
+
+        /*Do Nothing*/
+
+    } else {
+
+        var XMLHTTPDoc;
+        var bgColor;
+
+        XMLHTTPDoc = XMLHTTP.responseXML.documentElement.getElementsByTagName("specialMessage");
+        for (var i = 0; i < XMLHTTPDoc.length; i++) {
+
+            XMLHTTPElement = XMLHTTPDoc[i].getElementsByTagName('Description');
+
+            try {
+                msgSpecial = '<MARQUEE><b>' + XMLHTTPElement[0].firstChild.nodeValue + '</b></MARQUEE>';
+                //msgSpecial = XMLHTTPElement[0].firstChild.nodeValue
+            } catch (er) {
+
+            }
+
+        }
+
+        if (document.getElementById("spMsg")) {
+            document.getElementById("spMsg").innerHTML = msgSpecial;
+        }
+
+
+    }
+
+}
+
+</SCRIPT>
+<style>
+	.bgleft {
+		/*background: url("/images/philgeps_banner1.jpg") no-repeat;
+		width: 531px;
+		height: 104px;
+		*/		
+		background: url("/GEPSNONPILOT/images/philgeps_banner.jpg") no-repeat;
+		height: 75px;
+		width: 587px;
+	}
+	
+	.bgmid {
+		/*
+		background: url("/images/philgeps_banner_bg.jpg") repeat-x;
+		height: 104px;
+		*/
+	}
+	
+	.bgright {
+		/*
+		background: url("/images/philgeps_banner3.jpg") no-repeat;
+		width: 366px;
+		height: 104px;
+		*/
+	}
+</style>
+
+<SCRIPT TYPE="text/javascript">
+<!--
+
+    function newImage(arg) {
+        if (document.images) {
+            rslt = new Image();
+            rslt.src = arg;
+            return rslt;
+        }
+    }
+
+    function changeImages() {
+        if (document.images && (preloadFlag == true)) {
+            for (var i = 0; i < changeImages.arguments.length; i += 2) {
+                document[changeImages.arguments[i]].src = changeImages.arguments[i + 1];
+            }
+        }
+    }
+
+    var preloadFlag = false;
+    function preloadImages() {
+        if (document.images) {
+            log_out_01_log_out_03_over = newImage("/GEPSNONPILOT/images/log-out_01-log-out_03_over.gif");
+	    log_out_02_log_out_03_over = newImage("/GEPSNONPILOT/images/log-out_02-log-out_03_over.gif");
+	    log_out_03_over = newImage("/GEPSNONPILOT/images/log-out_03-over.gif");
+	    log_out_04_log_out_03_over = newImage("/GEPSNONPILOT/images/log-out_04-log-out_03_over.gif");
+	    log_out_05_log_out_03_over = newImage("/GEPSNONPILOT/images/log-out_05-log-out_03_over.gif");
+	    preloadFlag = true;
+	}
+}
+
+// -->
+</SCRIPT>
+<SCRIPT TYPE="text/javascript">
+<!--
+
+    function newImage(arg) {
+        if (document.images) {
+            rslt = new Image();
+            rslt.src = arg;
+            return rslt;
+        }
+    }
+
+    function changeImages() {
+        if (document.images && (preloadFlag == true)) {
+            for (var i = 0; i < changeImages.arguments.length; i += 2) {
+                document[changeImages.arguments[i]].src = changeImages.arguments[i + 1];
+            }
+        }
+    }
+
+    var preloadFlag = false;
+    function preloadImages() {
+        if (document.images) {
+            menu_01_menu_15_over = newImage("/GEPSNONPILOT/images/menu_01-menu_15_over.gif");
+	    menu_01_menu_13_over = newImage("/GEPSNONPILOT/images/menu_01-menu_13_over.gif");
+	    menu_01_menu_11_over = newImage("/GEPSNONPILOT/images/menu_01-menu_11_over.gif");
+	    menu_01_menu_09_over = newImage("/GEPSNONPILOT/images/menu_01-menu_09_over.gif");
+	    menu_01_menu_07_over = newImage("/GEPSNONPILOT/images/menu_01-menu_07_over.gif");
+	    menu_01_menu_05_over = newImage("/GEPSNONPILOT/images/menu_01-menu_05_over.gif");
+	    menu_01_menu_03_over = newImage("/GEPSNONPILOT/images/menu_01-menu_03_over.gif");
+	    menu_02_menu_03_over = newImage("/GEPSNONPILOT/images/menu_02-menu_03_over.gif");
+	    menu_03_over = newImage("/GEPSNONPILOT/images/menu_03-over.gif");
+	    menu_04_menu_05_over = newImage("/GEPSNONPILOT/images/menu_04-menu_05_over.gif");
+	    menu_04_menu_03_over = newImage("/GEPSNONPILOT/images/menu_04-menu_03_over.gif");
+	    menu_05_over = newImage("/GEPSNONPILOT/images/menu_05-over.gif");
+	    menu_06_menu_07_over = newImage("/GEPSNONPILOT/images/menu_06-menu_07_over.gif");
+	    menu_06_menu_05_over = newImage("/GEPSNONPILOT/images/menu_06-menu_05_over.gif");
+	    menu_07_over = newImage("/GEPSNONPILOT/images/menu_07-over.gif");
+	    menu_08_menu_09_over = newImage("/GEPSNONPILOT/images/menu_08-menu_09_over.gif");
+	    menu_08_menu_07_over = newImage("/GEPSNONPILOT/images/menu_08-menu_07_over.gif");
+	    menu_09_over = newImage("/GEPSNONPILOT/images/menu_09-over.gif");
+	    menu_10_menu_11_over = newImage("/GEPSNONPILOT/images/menu_10-menu_11_over.gif");
+	    menu_10_menu_09_over = newImage("/GEPSNONPILOT/images/menu_10-menu_09_over.gif");
+	    menu_11_over = newImage("/GEPSNONPILOT/images/menu_11-over.gif");
+	    menu_12_menu_13_over = newImage("/GEPSNONPILOT/images/menu_12-menu_13_over.gif");
+	    menu_12_menu_11_over = newImage("/GEPSNONPILOT/images/menu_12-menu_11_over.gif");
+	    menu_13_over = newImage("/GEPSNONPILOT/images/menu_13-over.gif");
+	    menu_14_menu_15_over = newImage("/GEPSNONPILOT/images/menu_14-menu_15_over.gif");
+	    menu_14_menu_13_over = newImage("/GEPSNONPILOT/images/menu_14-menu_13_over.gif");
+	    menu_15_over = newImage("/GEPSNONPILOT/images/menu_15-over.gif");
+	    menu_16_menu_15_over = newImage("/GEPSNONPILOT/images/menu_16-menu_15_over.gif");
+	    menu_17_menu_07_over = newImage("/GEPSNONPILOT/images/menu_17-menu_07_over.gif");
+	    menu_17_menu_30_over = newImage("/GEPSNONPILOT/images/menu_17-menu_30_over.gif");
+	    menu_18_menu_09_over = newImage("/GEPSNONPILOT/images/menu_18-menu_09_over.gif");
+	    menu_19_menu_11_over = newImage("/GEPSNONPILOT/images/menu_19-menu_11_over.gif");
+	    menu_20_menu_13_over = newImage("/GEPSNONPILOT/images/menu_20-menu_13_over.gif");
+	    menu_20_menu_34_over = newImage("/GEPSNONPILOT/images/menu_20-menu_34_over.gif");
+	    menu_21_menu_15_over = newImage("/GEPSNONPILOT/images/menu_21-menu_15_over.gif");
+	    menu_22_menu_03_over = newImage("/GEPSNONPILOT/images/menu_22-menu_03_over.gif");
+	    menu_23_menu_05_over = newImage("/GEPSNONPILOT/images/menu_23-menu_05_over.gif");
+	    menu_23_menu_28_over = newImage("/GEPSNONPILOT/images/menu_23-menu_28_over.gif");
+	    menu_25_over = newImage("/GEPSNONPILOT/images/menu_25-over.gif");
+	    menu_27_menu_25_over = newImage("/GEPSNONPILOT/images/menu_27-menu_25_over.gif");
+	    menu_28_over = newImage("/GEPSNONPILOT/images/menu_28-over.gif");
+	    menu_29_menu_28_over = newImage("/GEPSNONPILOT/images/menu_29-menu_28_over.gif");
+	    menu_30_over = newImage("/GEPSNONPILOT/images/menu_30-over.gif");
+	    menu_31_menu_32_over = newImage("/GEPSNONPILOT/images/menu_31-menu_32_over.gif");
+	    menu_31_menu_30_over = newImage("/GEPSNONPILOT/images/menu_31-menu_30_over.gif");
+	    menu_32_over = newImage("/GEPSNONPILOT/images/menu_32-over.gif");
+	    menu_33_menu_34_over = newImage("/GEPSNONPILOT/images/menu_33-menu_34_over.gif");
+	    menu_33_menu_32_over = newImage("/GEPSNONPILOT/images/menu_33-menu_32_over.gif");
+	    menu_34_over = newImage("/GEPSNONPILOT/images/menu_34-over.gif");
+	    menu_35_menu_34_over = newImage("/GEPSNONPILOT/images/menu_35-menu_34_over.gif");
+	    menu_36_menu_25_over = newImage("/GEPSNONPILOT/images/menu_36-menu_25_over.gif");
+	    menu_37_menu_28_over = newImage("/GEPSNONPILOT/images/menu_37-menu_28_over.gif");
+	    menu_38_menu_30_over = newImage("/GEPSNONPILOT/images/menu_38-menu_30_over.gif");
+	    menu_39_menu_32_over = newImage("/GEPSNONPILOT/images/menu_39-menu_32_over.gif");
+	    menu_40_menu_34_over = newImage("/GEPSNONPILOT/images/menu_40-menu_34_over.gif");
+	    preloadFlag = true;
+	}
+}
+
+// -->
+</SCRIPT>
+<!--
+	Lloyd: 02/19/2013: Perf Tunning
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"  ONLOAD="preloadImages();LoadXML('/SplashData.aspx');" >
+-->
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"  ONLOAD="preloadImages();" >
+<table width="100%" height="20%" border="0" cellpadding="0" cellspacing="0">
+  <tr> 
+	<!--
+    <td width="531"><img src="/GEPSNONPILOT/images/philgeps_banner1.jpg" width="531" height="104" /></td>
+	<td background="/GEPSNONPILOT/images/philgeps_banner_bg.jpg">&nbsp;</td>
+	<td width="366"><img src="/GEPSNONPILOT/images/philgeps_banner3.jpg" width="366" height="104" /></td>
+	-->
+	<td nowrap><div class="bgleft"></div></td>
+	<td nowrap><div class="bgmid"></div></td>
+	<td nowrap><div class="bgright"></div></td>
+  </tr>  
+    <td height="55" colspan="3" valign="top"> 
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="127">
+			<a href="/GEPSNONPILOT~/../" onMouseOver="changeImages('menu1', '/GEPSNONPILOT/images/home_over.gif'); return true;" onMouseOut="changeImages('menu1', '/GEPSNONPILOT/images/home_out.gif'); return true;">
+				<img src="/GEPSNONPILOT/images/home_out.gif" align="absbottom" alt="Home" name="menu1" width="128" height="32" border="0" />
+			</a>
+		</td>
+		<td width="127">
+			<a href="/GEPSNONPILOT/announcement/viewAnnoucement.aspx?menuIndex=2" onMouseOver="changeImages('menu3', '/GEPSNONPILOT/images/nav_focus_over.gif'); return true;" onMouseOut="changeImages('menu3', '/GEPSNONPILOT/images/nav_focus_out.gif'); return true;">
+				<img src="/GEPSNONPILOT/images/nav_focus_out.gif" align="absbottom" alt="Announcements" name="menu3" width="128" height="32" border="0" />
+			</a>
+		</td>
+        <td width="127">
+			<img src="/GEPSNONPILOT/images/opp_over.gif" align="absbottom" width="128" height="32" />
+		</td>
+        <td width="127">
+			<a href="http://www.ps-philgeps.gov.ph/home/index.php/what-we-sell/common-use-items" target="_blank" onMouseOver="changeImages('menu_cat', '/GEPSNONPILOT/images/catalogue_over.gif'); return true;" onMouseOut="changeImages('menu_cat', '/GEPSNONPILOT/images/catalogue_out.gif'); return true;">
+				<img src="/GEPSNONPILOT/images/catalogue_out.gif" align="absbottom" alt="Catalogue" name="menu_cat" width="128" height="32" border="0" />
+			</a>
+		</td>
+        <td width="127">
+			<a href="/GEPSNONPILOT/aboutGEPS/aboutGEPS.aspx?menuIndex=5" onMouseOver="changeImages('menu4', '/GEPSNONPILOT/images/aboutus_over.gif'); return true;" onMouseOut="changeImages('menu4', '/GEPSNONPILOT/images/aboutus_%20out.gif'); return true;">
+				<img src="/GEPSNONPILOT/images/aboutus_%20out.gif" align="absbottom" alt="About GEPS" name="menu4" width="128" height="32" border="0" />
+			</a>
+		</td>
+		<td width="127">
+			<a href="/GEPSNONPILOT/SiteAdministration/SplashPage/GovrntListUI_Splash.aspx?menuIndex=6" onMouseOver="changeImages('menu6', '/GEPSNONPILOT/images/govlinks_over.gif'); return true;" onMouseOut="changeImages('menu6', '/GEPSNONPILOT/images/govlinks_%20out.gif'); return true;">
+				<img src="/GEPSNONPILOT/images/govlinks_%20out.gif" align="absbottom" alt="Government Links" name="menu6" width="128" height="32" border="0" />
+			</a>
+		</td>
+        <td width="128">&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+	<td>
+		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+			<tr height="25">
+				<td colspan="6" style="padding: 0px 1px;">					
+					<div style="background: url(/GEPSNONPILOT/images/inside_nav_bg.gif); height: 25px; line-height: 24px;">
+						<img src="/GEPSNONPILOT/images/spacer.gif" width="20" height="18" border="0" />
+						<a class=NavLink href="/GEPSNONPILOT/Tender/SplashOpenOpportunitiesUI.aspx?ClickFrom=OpenOpp&menuIndex=3">Open Opportunities</a>
+						&nbsp;&nbsp;<span class="NavPipe">|</span>&nbsp;&nbsp;
+						<a class=NavLink href="/GEPSNONPILOT/Tender/RecentAwardNoticeUI.aspx?menuIndex=3">Recent Award</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td width="10">
+					<img src="/GEPSNONPILOT/images/inside_nav_label_a.gif" align="top" width="10">
+				</td>
+				<td nowrap align="left" background="/GEPSNONPILOT/images/inside_nav_label_bg.gif">
+					<span id="ctl09_Label1" class="DisplayText5" style="display:none">Wednesday, October 28, 2026</span>&nbsp;&nbsp;<span class="DisplayText5" id="clock"></span>
+				</td>
+				<td nowrap background="/GEPSNONPILOT/images/inside_nav_label_bg.gif" width="100%">
+					<span class="DoubleArrow">»</span>
+					<span id="spMsg" class="NavTxt"></span>
+				</td>
+				<!--<td background="/GEPSNONPILOT/images/inside_nav_label_bg.gif" align="center" nowrap>
+					<span class="DoubleArrow">»</span>
+					<a href="/GEPSNONPILOT/log-in.aspx" class="NavTxtLink">Login</a>
+					<span class="ContentTXT">|</span>
+					<!--<a href="/GEPSNONPILOT/R3/R3_RegisterAs.html" id="register" class="NavTxtLink">Register Now</a>-->
+				</td>
+				<td width="10">
+					<img src="/GEPSNONPILOT/images/inside_nav_label_b.gif" align="top" width="10">
+				</td>
+			</tr>
+			<script>
+			    curTime();
+            </script>
+		</table>
+	</td>
+  </tr>
+</table>
+    
+    </td>
+        </tr>
+      </table>
+      </td>
+  </tr>
+</table>
+</body>
+	
+<!-- <div id="ctl08_helpDIV" style="PADDING-RIGHT:16px; DISPLAY:none; PADDING-LEFT:16px; RIGHT:0px; PADDING-BOTTOM:16px; PADDING-TOP:16px; POSITION:absolute; TOP:65px"> </div>-->
+<div id="helpDIV" style="DISPLAY: inline">
+	<a id="ctl08_HelpLink" tabindex="100" class="NavTxtLink" href="javascript:void(window.open(&#39;/GEPSNONPILOT/helppages/HelpRedirect.aspx&#39;, &#39;helpWin&#39;, &#39;resizable=yes,toolbar=no,menubar=no,directories=no,status=no,width=480,height=480,scrollbars=yes&#39;));">Help</a>&nbsp;<span class="ContextTXT">|</span>
+</div>
+
+			<TABLE id="Table1" cellSpacing="1" cellPadding="4" width="100%" border="0">
+				<TR>
+					<TD colSpan="3"><span id="lblOpenOpp" class="PageTitle">Open Opportunities</span>&nbsp;
+						<a id="lbtnSearch" class="A" href="javascript:__doPostBack(&#39;lbtnSearch&#39;,&#39;&#39;)">Search</a><span id="lblSlash1">|</span><a id="lbtnDetailed" class="A" href="javascript:__doPostBack(&#39;lbtnDetailed&#39;,&#39;&#39;)">Detailed Search</a><span id="lblSlash2">|</span><a id="lbtnCat" class="A" href="javascript:__doPostBack(&#39;lbtnCat&#39;,&#39;&#39;)">View By Category</a><span id="lblSlash3">|</span><a id="lbtnAgency" class="A" href="javascript:__doPostBack(&#39;lbtnAgency&#39;,&#39;&#39;)">View By Agency</a></TD>
+				</TR>
+			</TABLE>
+			<table id="Table2" cellspacing="1" cellpadding="4" width="100%" border="0">
+	<tr>
+		<TD class="DisplayTextBackground" style="WIDTH: 10%"><span id="lblSearch" class="DisplayText4" style="display:inline-block;width:32px;">Search</span></TD>
+		<TD><input name="txtKeyword" type="text" id="txtKeyword" class="Textbox5" /><input type="submit" name="btnSearch" value="Search" id="btnSearch" class="Button" /></TD>
+	</tr>
+</table>
+
+			
+			
+			<TABLE id="Table5" cellSpacing="1" cellPadding="4" width="100%" border="0">
+				<TR>
+					<TD width="100%" colSpan="3"><table id="pgCtrlDetailedSearch" border="0" style="width:100%;">
+	<tr style="height:20px;">
+		<td align="left" style="white-space:nowrap;"><span>&nbsp;&nbsp;</span><span disabled="disabled" style="font-family:Verdana;font-size:8pt;">&lt;Previous&gt;</span><span>&nbsp;&nbsp;</span><span>&nbsp;&nbsp;</span><span style="color:Blue;font-family:Verdana;font-size:8pt;">Page</span><span>&nbsp;&nbsp;</span><select name="pgCtrlDetailedSearch$pageDropDownList" onchange="javascript:resetfunction(this);form.reset();setTimeout(&#39;__doPostBack(\&#39;pgCtrlDetailedSearch$pageDropDownList\&#39;,\&#39;\&#39;)&#39;, 0)" id="pgCtrlDetailedSearch_pageDropDownList" style="font-family:Verdana;font-size:8pt;">
+			<option selected="selected" value="1">1</option>
+			<option value="21">2</option>
+			<option value="41">3</option>
+			<option value="61">4</option>
+			<option value="81">5</option>
+			<option value="101">6</option>
+			<option value="121">7</option>
+			<option value="141">8</option>
+			<option value="161">9</option>
+			<option value="181">10</option>
+			<option value="201">11</option>
+			<option value="221">12</option>
+			<option value="241">13</option>
+			<option value="261">14</option>
+			<option value="281">15</option>
+			<option value="301">16</option>
+			<option value="321">17</option>
+			<option value="341">18</option>
+			<option value="361">19</option>
+			<option value="381">20</option>
+			<option value="401">21</option>
+			<option value="421">22</option>
+			<option value="441">23</option>
+			<option value="461">24</option>
+			<option value="481">25</option>
+			<option value="501">26</option>
+			<option value="521">27</option>
+			<option value="541">28</option>
+			<option value="561">29</option>
+			<option value="581">30</option>
+			<option value="601">31</option>
+			<option value="621">32</option>
+			<option value="641">33</option>
+			<option value="661">34</option>
+			<option value="681">35</option>
+			<option value="701">36</option>
+			<option value="721">37</option>
+			<option value="741">38</option>
+			<option value="761">39</option>
+			<option value="781">40</option>
+			<option value="801">41</option>
+			<option value="821">42</option>
+			<option value="841">43</option>
+			<option value="861">44</option>
+			<option value="881">45</option>
+			<option value="901">46</option>
+			<option value="921">47</option>
+			<option value="941">48</option>
+			<option value="961">49</option>
+			<option value="981">50</option>
+			<option value="1001">51</option>
+			<option value="1021">52</option>
+			<option value="1041">53</option>
+			<option value="1061">54</option>
+			<option value="1081">55</option>
+			<option value="1101">56</option>
+			<option value="1121">57</option>
+			<option value="1141">58</option>
+			<option value="1161">59</option>
+			<option value="1181">60</option>
+			<option value="1201">61</option>
+			<option value="1221">62</option>
+			<option value="1241">63</option>
+			<option value="1261">64</option>
+			<option value="1281">65</option>
+			<option value="1301">66</option>
+			<option value="1321">67</option>
+			<option value="1341">68</option>
+			<option value="1361">69</option>
+			<option value="1381">70</option>
+			<option value="1401">71</option>
+			<option value="1421">72</option>
+			<option value="1441">73</option>
+			<option value="1461">74</option>
+			<option value="1481">75</option>
+			<option value="1501">76</option>
+			<option value="1521">77</option>
+			<option value="1541">78</option>
+			<option value="1561">79</option>
+			<option value="1581">80</option>
+			<option value="1601">81</option>
+			<option value="1621">82</option>
+			<option value="1641">83</option>
+			<option value="1661">84</option>
+			<option value="1681">85</option>
+			<option value="1701">86</option>
+			<option value="1721">87</option>
+			<option value="1741">88</option>
+			<option value="1761">89</option>
+			<option value="1781">90</option>
+			<option value="1801">91</option>
+			<option value="1821">92</option>
+			<option value="1841">93</option>
+			<option value="1861">94</option>
+			<option value="1881">95</option>
+			<option value="1901">96</option>
+			<option value="1921">97</option>
+			<option value="1941">98</option>
+			<option value="1961">99</option>
+			<option value="1981">100</option>
+			<option value="2001">101</option>
+			<option value="2021">102</option>
+			<option value="2041">103</option>
+			<option value="2061">104</option>
+			<option value="2081">105</option>
+			<option value="2101">106</option>
+			<option value="2121">107</option>
+			<option value="2141">108</option>
+			<option value="2161">109</option>
+			<option value="2181">110</option>
+			<option value="2201">111</option>
+			<option value="2221">112</option>
+			<option value="2241">113</option>
+			<option value="2261">114</option>
+			<option value="2281">115</option>
+			<option value="2301">116</option>
+			<option value="2321">117</option>
+			<option value="2341">118</option>
+			<option value="2361">119</option>
+			<option value="2381">120</option>
+			<option value="2401">121</option>
+			<option value="2421">122</option>
+			<option value="2441">123</option>
+			<option value="2461">124</option>
+			<option value="2481">125</option>
+			<option value="2501">126</option>
+			<option value="2521">127</option>
+			<option value="2541">128</option>
+			<option value="2561">129</option>
+			<option value="2581">130</option>
+			<option value="2601">131</option>
+			<option value="2621">132</option>
+			<option value="2641">133</option>
+			<option value="2661">134</option>
+			<option value="2681">135</option>
+			<option value="2701">136</option>
+			<option value="2721">137</option>
+			<option value="2741">138</option>
+			<option value="2761">139</option>
+			<option value="2781">140</option>
+			<option value="2801">141</option>
+			<option value="2821">142</option>
+			<option value="2841">143</option>
+			<option value="2861">144</option>
+			<option value="2881">145</option>
+			<option value="2901">146</option>
+			<option value="2921">147</option>
+			<option value="2941">148</option>
+			<option value="2961">149</option>
+			<option value="2981">150</option>
+			<option value="3001">151</option>
+			<option value="3021">152</option>
+			<option value="3041">153</option>
+			<option value="3061">154</option>
+			<option value="3081">155</option>
+			<option value="3101">156</option>
+			<option value="3121">157</option>
+			<option value="3141">158</option>
+			<option value="3161">159</option>
+			<option value="3181">160</option>
+			<option value="3201">161</option>
+			<option value="3221">162</option>
+			<option value="3241">163</option>
+			<option value="3261">164</option>
+			<option value="3281">165</option>
+			<option value="3301">166</option>
+			<option value="3321">167</option>
+			<option value="3341">168</option>
+			<option value="3361">169</option>
+			<option value="3381">170</option>
+			<option value="3401">171</option>
+			<option value="3421">172</option>
+			<option value="3441">173</option>
+			<option value="3461">174</option>
+			<option value="3481">175</option>
+			<option value="3501">176</option>
+			<option value="3521">177</option>
+			<option value="3541">178</option>
+			<option value="3561">179</option>
+			<option value="3581">180</option>
+			<option value="3601">181</option>
+			<option value="3621">182</option>
+			<option value="3641">183</option>
+			<option value="3661">184</option>
+			<option value="3681">185</option>
+			<option value="3701">186</option>
+			<option value="3721">187</option>
+			<option value="3741">188</option>
+			<option value="3761">189</option>
+			<option value="3781">190</option>
+			<option value="3801">191</option>
+			<option value="3821">192</option>
+			<option value="3841">193</option>
+			<option value="3861">194</option>
+			<option value="3881">195</option>
+			<option value="3901">196</option>
+			<option value="3921">197</option>
+			<option value="3941">198</option>
+			<option value="3961">199</option>
+			<option value="3981">200</option>
+			<option value="4001">201</option>
+			<option value="4021">202</option>
+			<option value="4041">203</option>
+			<option value="4061">204</option>
+			<option value="4081">205</option>
+			<option value="4101">206</option>
+			<option value="4121">207</option>
+			<option value="4141">208</option>
+			<option value="4161">209</option>
+			<option value="4181">210</option>
+			<option value="4201">211</option>
+			<option value="4221">212</option>
+			<option value="4241">213</option>
+			<option value="4261">214</option>
+			<option value="4281">215</option>
+			<option value="4301">216</option>
+			<option value="4321">217</option>
+			<option value="4341">218</option>
+			<option value="4361">219</option>
+			<option value="4381">220</option>
+			<option value="4401">221</option>
+			<option value="4421">222</option>
+			<option value="4441">223</option>
+			<option value="4461">224</option>
+			<option value="4481">225</option>
+			<option value="4501">226</option>
+			<option value="4521">227</option>
+			<option value="4541">228</option>
+			<option value="4561">229</option>
+			<option value="4581">230</option>
+			<option value="4601">231</option>
+			<option value="4621">232</option>
+			<option value="4641">233</option>
+			<option value="4661">234</option>
+			<option value="4681">235</option>
+			<option value="4701">236</option>
+			<option value="4721">237</option>
+			<option value="4741">238</option>
+			<option value="4761">239</option>
+			<option value="4781">240</option>
+			<option value="4801">241</option>
+			<option value="4821">242</option>
+			<option value="4841">243</option>
+			<option value="4861">244</option>
+			<option value="4881">245</option>
+			<option value="4901">246</option>
+			<option value="4921">247</option>
+			<option value="4941">248</option>
+			<option value="4961">249</option>
+			<option value="4981">250</option>
+			<option value="5001">251</option>
+			<option value="5021">252</option>
+			<option value="5041">253</option>
+			<option value="5061">254</option>
+			<option value="5081">255</option>
+			<option value="5101">256</option>
+			<option value="5121">257</option>
+			<option value="5141">258</option>
+			<option value="5161">259</option>
+			<option value="5181">260</option>
+			<option value="5201">261</option>
+			<option value="5221">262</option>
+			<option value="5241">263</option>
+			<option value="5261">264</option>
+			<option value="5281">265</option>
+			<option value="5301">266</option>
+			<option value="5321">267</option>
+			<option value="5341">268</option>
+			<option value="5361">269</option>
+			<option value="5381">270</option>
+			<option value="5401">271</option>
+			<option value="5421">272</option>
+			<option value="5441">273</option>
+			<option value="5461">274</option>
+			<option value="5481">275</option>
+			<option value="5501">276</option>
+			<option value="5521">277</option>
+			<option value="5541">278</option>
+			<option value="5561">279</option>
+			<option value="5581">280</option>
+			<option value="5601">281</option>
+			<option value="5621">282</option>
+			<option value="5641">283</option>
+			<option value="5661">284</option>
+			<option value="5681">285</option>
+			<option value="5701">286</option>
+			<option value="5721">287</option>
+			<option value="5741">288</option>
+			<option value="5761">289</option>
+			<option value="5781">290</option>
+			<option value="5801">291</option>
+			<option value="5821">292</option>
+			<option value="5841">293</option>
+			<option value="5861">294</option>
+			<option value="5881">295</option>
+			<option value="5901">296</option>
+			<option value="5921">297</option>
+			<option value="5941">298</option>
+			<option value="5961">299</option>
+			<option value="5981">300</option>
+			<option value="6001">301</option>
+			<option value="6021">302</option>
+			<option value="6041">303</option>
+			<option value="6061">304</option>
+			<option value="6081">305</option>
+			<option value="6101">306</option>
+			<option value="6121">307</option>
+			<option value="6141">308</option>
+			<option value="6161">309</option>
+			<option value="6181">310</option>
+			<option value="6201">311</option>
+			<option value="6221">312</option>
+			<option value="6241">313</option>
+			<option value="6261">314</option>
+			<option value="6281">315</option>
+			<option value="6301">316</option>
+			<option value="6321">317</option>
+			<option value="6341">318</option>
+			<option value="6361">319</option>
+			<option value="6381">320</option>
+			<option value="6401">321</option>
+			<option value="6421">322</option>
+			<option value="6441">323</option>
+			<option value="6461">324</option>
+			<option value="6481">325</option>
+			<option value="6501">326</option>
+			<option value="6521">327</option>
+			<option value="6541">328</option>
+			<option value="6561">329</option>
+			<option value="6581">330</option>
+			<option value="6601">331</option>
+			<option value="6621">332</option>
+			<option value="6641">333</option>
+			<option value="6661">334</option>
+			<option value="6681">335</option>
+			<option value="6701">336</option>
+			<option value="6721">337</option>
+			<option value="6741">338</option>
+			<option value="6761">339</option>
+			<option value="6781">340</option>
+			<option value="6801">341</option>
+			<option value="6821">342</option>
+			<option value="6841">343</option>
+			<option value="6861">344</option>
+			<option value="6881">345</option>
+			<option value="6901">346</option>
+			<option value="6921">347</option>
+			<option value="6941">348</option>
+			<option value="6961">349</option>
+			<option value="6981">350</option>
+			<option value="7001">351</option>
+			<option value="7021">352</option>
+			<option value="7041">353</option>
+			<option value="7061">354</option>
+			<option value="7081">355</option>
+			<option value="7101">356</option>
+			<option value="7121">357</option>
+			<option value="7141">358</option>
+			<option value="7161">359</option>
+			<option value="7181">360</option>
+			<option value="7201">361</option>
+			<option value="7221">362</option>
+			<option value="7241">363</option>
+			<option value="7261">364</option>
+			<option value="7281">365</option>
+			<option value="7301">366</option>
+			<option value="7321">367</option>
+			<option value="7341">368</option>
+			<option value="7361">369</option>
+			<option value="7381">370</option>
+			<option value="7401">371</option>
+			<option value="7421">372</option>
+			<option value="7441">373</option>
+			<option value="7461">374</option>
+			<option value="7481">375</option>
+			<option value="7501">376</option>
+			<option value="7521">377</option>
+			<option value="7541">378</option>
+			<option value="7561">379</option>
+			<option value="7581">380</option>
+			<option value="7601">381</option>
+			<option value="7621">382</option>
+			<option value="7641">383</option>
+			<option value="7661">384</option>
+			<option value="7681">385</option>
+			<option value="7701">386</option>
+			<option value="7721">387</option>
+			<option value="7741">388</option>
+			<option value="7761">389</option>
+			<option value="7781">390</option>
+			<option value="7801">391</option>
+			<option value="7821">392</option>
+			<option value="7841">393</option>
+			<option value="7861">394</option>
+			<option value="7881">395</option>
+			<option value="7901">396</option>
+			<option value="7921">397</option>
+			<option value="7941">398</option>
+			<option value="7961">399</option>
+			<option value="7981">400</option>
+			<option value="8001">401</option>
+			<option value="8021">402</option>
+			<option value="8041">403</option>
+			<option value="8061">404</option>
+			<option value="8081">405</option>
+			<option value="8101">406</option>
+			<option value="8121">407</option>
+			<option value="8141">408</option>
+			<option value="8161">409</option>
+			<option value="8181">410</option>
+			<option value="8201">411</option>
+			<option value="8221">412</option>
+			<option value="8241">413</option>
+			<option value="8261">414</option>
+			<option value="8281">415</option>
+			<option value="8301">416</option>
+			<option value="8321">417</option>
+			<option value="8341">418</option>
+			<option value="8361">419</option>
+			<option value="8381">420</option>
+			<option value="8401">421</option>
+			<option value="8421">422</option>
+			<option value="8441">423</option>
+			<option value="8461">424</option>
+			<option value="8481">425</option>
+			<option value="8501">426</option>
+			<option value="8521">427</option>
+			<option value="8541">428</option>
+			<option value="8561">429</option>
+			<option value="8581">430</option>
+			<option value="8601">431</option>
+			<option value="8621">432</option>
+			<option value="8641">433</option>
+			<option value="8661">434</option>
+			<option value="8681">435</option>
+			<option value="8701">436</option>
+			<option value="8721">437</option>
+			<option value="8741">438</option>
+			<option value="8761">439</option>
+			<option value="8781">440</option>
+			<option value="8801">441</option>
+			<option value="8821">442</option>
+			<option value="8841">443</option>
+			<option value="8861">444</option>
+			<option value="8881">445</option>
+			<option value="8901">446</option>
+			<option value="8921">447</option>
+			<option value="8941">448</option>
+			<option value="8961">449</option>
+			<option value="8981">450</option>
+			<option value="9001">451</option>
+			<option value="9021">452</option>
+			<option value="9041">453</option>
+			<option value="9061">454</option>
+			<option value="9081">455</option>
+			<option value="9101">456</option>
+			<option value="9121">457</option>
+			<option value="9141">458</option>
+			<option value="9161">459</option>
+			<option value="9181">460</option>
+			<option value="9201">461</option>
+			<option value="9221">462</option>
+			<option value="9241">463</option>
+			<option value="9261">464</option>
+			<option value="9281">465</option>
+			<option value="9301">466</option>
+			<option value="9321">467</option>
+			<option value="9341">468</option>
+			<option value="9361">469</option>
+			<option value="9381">470</option>
+			<option value="9401">471</option>
+			<option value="9421">472</option>
+			<option value="9441">473</option>
+			<option value="9461">474</option>
+			<option value="9481">475</option>
+			<option value="9501">476</option>
+			<option value="9521">477</option>
+			<option value="9541">478</option>
+			<option value="9561">479</option>
+			<option value="9581">480</option>
+			<option value="9601">481</option>
+			<option value="9621">482</option>
+			<option value="9641">483</option>
+			<option value="9661">484</option>
+			<option value="9681">485</option>
+			<option value="9701">486</option>
+			<option value="9721">487</option>
+			<option value="9741">488</option>
+			<option value="9761">489</option>
+			<option value="9781">490</option>
+			<option value="9801">491</option>
+			<option value="9821">492</option>
+			<option value="9841">493</option>
+			<option value="9861">494</option>
+			<option value="9881">495</option>
+			<option value="9901">496</option>
+			<option value="9921">497</option>
+			<option value="9941">498</option>
+			<option value="9961">499</option>
+			<option value="9981">500</option>
+			<option value="10001">501</option>
+			<option value="10021">502</option>
+			<option value="10041">503</option>
+			<option value="10061">504</option>
+			<option value="10081">505</option>
+			<option value="10101">506</option>
+			<option value="10121">507</option>
+			<option value="10141">508</option>
+			<option value="10161">509</option>
+			<option value="10181">510</option>
+			<option value="10201">511</option>
+			<option value="10221">512</option>
+			<option value="10241">513</option>
+			<option value="10261">514</option>
+			<option value="10281">515</option>
+			<option value="10301">516</option>
+			<option value="10321">517</option>
+			<option value="10341">518</option>
+			<option value="10361">519</option>
+			<option value="10381">520</option>
+			<option value="10401">521</option>
+			<option value="10421">522</option>
+			<option value="10441">523</option>
+			<option value="10461">524</option>
+			<option value="10481">525</option>
+			<option value="10501">526</option>
+			<option value="10521">527</option>
+			<option value="10541">528</option>
+			<option value="10561">529</option>
+			<option value="10581">530</option>
+			<option value="10601">531</option>
+			<option value="10621">532</option>
+			<option value="10641">533</option>
+			<option value="10661">534</option>
+			<option value="10681">535</option>
+			<option value="10701">536</option>
+			<option value="10721">537</option>
+			<option value="10741">538</option>
+			<option value="10761">539</option>
+			<option value="10781">540</option>
+			<option value="10801">541</option>
+			<option value="10821">542</option>
+			<option value="10841">543</option>
+			<option value="10861">544</option>
+			<option value="10881">545</option>
+			<option value="10901">546</option>
+			<option value="10921">547</option>
+			<option value="10941">548</option>
+			<option value="10961">549</option>
+			<option value="10981">550</option>
+			<option value="11001">551</option>
+			<option value="11021">552</option>
+			<option value="11041">553</option>
+			<option value="11061">554</option>
+			<option value="11081">555</option>
+			<option value="11101">556</option>
+			<option value="11121">557</option>
+			<option value="11141">558</option>
+			<option value="11161">559</option>
+			<option value="11181">560</option>
+			<option value="11201">561</option>
+			<option value="11221">562</option>
+			<option value="11241">563</option>
+			<option value="11261">564</option>
+			<option value="11281">565</option>
+			<option value="11301">566</option>
+			<option value="11321">567</option>
+			<option value="11341">568</option>
+			<option value="11361">569</option>
+			<option value="11381">570</option>
+			<option value="11401">571</option>
+			<option value="11421">572</option>
+			<option value="11441">573</option>
+			<option value="11461">574</option>
+			<option value="11481">575</option>
+			<option value="11501">576</option>
+			<option value="11521">577</option>
+			<option value="11541">578</option>
+			<option value="11561">579</option>
+			<option value="11581">580</option>
+			<option value="11601">581</option>
+			<option value="11621">582</option>
+			<option value="11641">583</option>
+			<option value="11661">584</option>
+			<option value="11681">585</option>
+			<option value="11701">586</option>
+			<option value="11721">587</option>
+			<option value="11741">588</option>
+			<option value="11761">589</option>
+			<option value="11781">590</option>
+			<option value="11801">591</option>
+			<option value="11821">592</option>
+			<option value="11841">593</option>
+			<option value="11861">594</option>
+			<option value="11881">595</option>
+			<option value="11901">596</option>
+			<option value="11921">597</option>
+			<option value="11941">598</option>
+			<option value="11961">599</option>
+			<option value="11981">600</option>
+			<option value="12001">601</option>
+			<option value="12021">602</option>
+			<option value="12041">603</option>
+			<option value="12061">604</option>
+			<option value="12081">605</option>
+			<option value="12101">606</option>
+			<option value="12121">607</option>
+			<option value="12141">608</option>
+			<option value="12161">609</option>
+			<option value="12181">610</option>
+			<option value="12201">611</option>
+			<option value="12221">612</option>
+			<option value="12241">613</option>
+			<option value="12261">614</option>
+			<option value="12281">615</option>
+			<option value="12301">616</option>
+			<option value="12321">617</option>
+			<option value="12341">618</option>
+			<option value="12361">619</option>
+			<option value="12381">620</option>
+			<option value="12401">621</option>
+			<option value="12421">622</option>
+			<option value="12441">623</option>
+			<option value="12461">624</option>
+			<option value="12481">625</option>
+			<option value="12501">626</option>
+			<option value="12521">627</option>
+			<option value="12541">628</option>
+			<option value="12561">629</option>
+			<option value="12581">630</option>
+			<option value="12601">631</option>
+			<option value="12621">632</option>
+			<option value="12641">633</option>
+			<option value="12661">634</option>
+			<option value="12681">635</option>
+			<option value="12701">636</option>
+			<option value="12721">637</option>
+			<option value="12741">638</option>
+			<option value="12761">639</option>
+			<option value="12781">640</option>
+			<option value="12801">641</option>
+			<option value="12821">642</option>
+			<option value="12841">643</option>
+			<option value="12861">644</option>
+			<option value="12881">645</option>
+			<option value="12901">646</option>
+			<option value="12921">647</option>
+			<option value="12941">648</option>
+			<option value="12961">649</option>
+			<option value="12981">650</option>
+			<option value="13001">651</option>
+			<option value="13021">652</option>
+			<option value="13041">653</option>
+			<option value="13061">654</option>
+			<option value="13081">655</option>
+			<option value="13101">656</option>
+			<option value="13121">657</option>
+			<option value="13141">658</option>
+			<option value="13161">659</option>
+			<option value="13181">660</option>
+			<option value="13201">661</option>
+			<option value="13221">662</option>
+			<option value="13241">663</option>
+			<option value="13261">664</option>
+			<option value="13281">665</option>
+			<option value="13301">666</option>
+			<option value="13321">667</option>
+			<option value="13341">668</option>
+			<option value="13361">669</option>
+			<option value="13381">670</option>
+
+		</select><span style="color:Blue;font-family:Verdana;font-size:8pt;">&nbsp;&nbsp;of&nbsp;&nbsp;</span><span style="color:Blue;font-family:Verdana;font-size:8pt;">670</span><span>&nbsp;&nbsp;</span><a onclick="javascript:this.document.OpportunitiesSearchUI.reset();" id="pgCtrlDetailedSearch_nextLB" tabindex="10" href="javascript:__doPostBack(&#39;pgCtrlDetailedSearch$nextLB&#39;,&#39;&#39;)" style="font-family:Verdana;font-size:8pt;">&lt;Next&gt;</a><span>&nbsp;&nbsp;</span><td align="right" style="white-space:nowrap;"><span style="font-family:Verdana;font-size:8pt;font-weight:bold;font-style:normal;color:#004080;">13,396&nbsp;opportunities found</span></td></td>
+	</tr>
+</table></TD>
+				</TR>
+				<TR>
+					<TD colSpan="3"><table class="GridTable" cellspacing="0" rules="all" border="1" id="dgSearchResult" style="border-color:White;width:100%;border-collapse:collapse;">
+	<tr class="GridHeader">
+		<td class="GridHeader" style="width:5%;"> </td><td class="GridHeader" style="width:10%;">Publish</td><td class="GridHeader" style="width:10%;">Closing</td><td class="GridHeader">Title</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">1</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">02/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl02_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13203816&amp;Result=3">PURCHASE OF FOOD SUPPLIES TO CONDCUT MENTAL HEALTH AWARNESS</a>
+										<span id="dgSearchResult_ctl02_lblOrgAndBusCat">, Food Stuff ,BARANGAY BACUSANON, PANGANTUCAN, BUKIDNON</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">2</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">03/11/2026 05:00 PM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl03_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13265405&amp;Result=3">Purchase of Various Supplies/Materials</a>
+										<span id="dgSearchResult_ctl03_lblOrgAndBusCat">, General Merchandise ,CITY OF ANTIPOLO, RIZAL</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">3</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">17/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl04_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13288020&amp;Result=3">Upgrading of Road Infrastracture to Climate Resilient Standards (Concreting of Local Roads in Brgy. Carataya, Cuartero, Capiz (Phase I))</a>
+										<span id="dgSearchResult_ctl04_lblOrgAndBusCat">, Construction Projects ,MUNICIPALITY OF CUARTERO, CAPIZ</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">4</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">17/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl05_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13288048&amp;Result=3">Construction of Dry Goods Selection Phase II Cuartero Public Market</a>
+										<span id="dgSearchResult_ctl05_lblOrgAndBusCat">, Construction Projects ,MUNICIPALITY OF CUARTERO, CAPIZ</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">5</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">03/11/2026 01:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl06_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13290647&amp;Result=3">Construction of Milk Laboratory/Office and Motor Pool Building for Bohol Nucleus Farm Project</a>
+										<span id="dgSearchResult_ctl06_lblOrgAndBusCat">, Construction Projects ,NATIONAL DAIRY AUTHORITY - CENTRAL VISAYAS DEPARTMENT</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">6</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">17/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl07_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13291211&amp;Result=3">Diesel Fuel for the Land Development (Proposed Municipal Cemetery)</a>
+										<span id="dgSearchResult_ctl07_lblOrgAndBusCat">, Fuels/Fuel Additives & Lubricants & Anti Corrosive ,MUNICIPALITY OF CUARTERO, CAPIZ</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">7</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">17/11/2026 10:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl08_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13292775&amp;Result=3">RENOVATION OF ISABEL EMERGENCY HOSPITAL ISABEL, LEYTE</a>
+										<span id="dgSearchResult_ctl08_lblOrgAndBusCat">, Construction Projects ,MUNICIPALITY OF ISABEL, LEYTE</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">8</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">16/11/2026 10:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl09_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13295345&amp;Result=3">IMPROVEMENT OF MULTI-PURPOSE BUILDINGS AT SITIO PALANG, BARANGAY NORTH POBLACION, SAN JUAN, ABRA</a>
+										<span id="dgSearchResult_ctl09_lblOrgAndBusCat">, Construction Projects ,MUNICIPALITY OF SAN JUAN, ABRA</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">9</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">16/11/2026 10:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl10_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13295485&amp;Result=3">CONSTRUCTION OF COMMUNAL IRRIGATION FOR LIVELIHOOD PURPOSES AT BARANGAY BAUG, SAN JUAN, ABRA</a>
+										<span id="dgSearchResult_ctl10_lblOrgAndBusCat">, Construction Projects ,MUNICIPALITY OF SAN JUAN, ABRA</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">10</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">16/11/2026 10:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl11_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13295523&amp;Result=3">IMPROVEMENT OF TWO (2) STOREY  MUNICIPAL MULTI-PURPOSE BUILDING EXTENSION, BARANGAY NORTH POBLACION, SAN JUAN, ABRA</a>
+										<span id="dgSearchResult_ctl11_lblOrgAndBusCat">, Construction Projects ,MUNICIPALITY OF SAN JUAN, ABRA</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">11</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">04/11/2026 02:00 PM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl12_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13296290&amp;Result=3">MEALS AND ACCOMMODATION FOR THE CONDUCT OF LOCAL CLIMATE CHANGE ADAPTATION WORKSHOP</a>
+										<span id="dgSearchResult_ctl12_lblOrgAndBusCat">, Hotel and Lodging and Meeting Facilities ,MUNICIPALITY OF IBAJAY, AKLAN</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">12</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">02/11/2026 01:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl13_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13296580&amp;Result=3">Catering Services for Feeding Program of Brgy Tugas Bato Leyte</a>
+										<span id="dgSearchResult_ctl13_lblOrgAndBusCat">, Catering Services ,LIGA NG MGA BARANGAY BATO, LEYTE CHAPTER</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">13</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">18/11/2026 02:00 PM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl14_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13296938&amp;Result=3">PROCUREMENT OF NUTRITION COMMODITIES AND ANTHROPOMETRIC EQUIPMENT</a>
+										<span id="dgSearchResult_ctl14_lblOrgAndBusCat">, Food Stuff ,MUNICIPALITY OF SAN VICENTE, CAMARINES NORTE</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">14</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">02/11/2026 01:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl15_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13298779&amp;Result=3">VOTERS EDUCATION CAMPAIGN</a>
+										<span id="dgSearchResult_ctl15_lblOrgAndBusCat">, General Merchandise ,BARANGAY PINEDA, PASIG CITY</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">15</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">02/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl16_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13298991&amp;Result=3">PURCHASE OF SOLAR LIGHTS</a>
+										<span id="dgSearchResult_ctl16_lblOrgAndBusCat">, Electrical Systems and Lighting Components ,BARANGAY TINAGO - BAYAWAN CITY, NEGROS ORIENTAL</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">16</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">03/11/2026 01:00 PM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl17_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13299065&amp;Result=3">Supply and Delivery of Meals for the 34th National Children's Month Celebration 2026 - MSWDO, Malay Aklan</a>
+										<span id="dgSearchResult_ctl17_lblOrgAndBusCat">, Food Stuff ,MUNICIPALITY OF MALAY, AKLAN</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">17</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">19/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl18_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13300237&amp;Result=3">B20265406 - Procurement of 1 Lot Contract Package: Equipment, Labor and Materials for the Rehabilitation/Improvement of Margarita M. Aala Recreational Sports Center (formerly DavNor Gym), Sports Compl</a>
+										<span id="dgSearchResult_ctl18_lblOrgAndBusCat">, Construction Projects ,PROVINCE OF DAVAO DEL NORTE</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">18</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">19/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl19_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13300251&amp;Result=3">B20265407 - Procurement of 1 Lot Contract Package: Equipment, Labor and Materials for the Improvement of Covered Court, Brgy. San Vicente, Asuncion, Davao del Norte</a>
+										<span id="dgSearchResult_ctl19_lblOrgAndBusCat">, Construction Projects ,PROVINCE OF DAVAO DEL NORTE</span>
+									</td>
+	</tr><tr class="GridItem">
+		<td align="center" valign="middle" style="width:5%;">19</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">19/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl20_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13300269&amp;Result=3">B20265408 - Procurement of 1 Lot Contract Package: Equipment, Labor and Materials for the Construction of One (1) - Storey, Two (2) - Classroom with Bundled School Furniture at Dasing Elementary Schoo</a>
+										<span id="dgSearchResult_ctl20_lblOrgAndBusCat">, Construction Projects ,PROVINCE OF DAVAO DEL NORTE</span>
+									</td>
+	</tr><tr class="GridAltItem">
+		<td align="center" valign="middle" style="width:5%;">20</td><td class="GridItemTD" align="center" valign="middle" style="width:5%;">28/10/2026</td><td class="GridItemTD" align="center" valign="middle" style="width:10%;">19/11/2026 09:00 AM</td><td class="GridItemTD">
+										<a id="dgSearchResult_ctl21_hyLinkTitle" href="SplashBidNoticeAbstractUI.aspx?menuIndex=3&amp;refID=13300538&amp;Result=3">B20265409 - Procurement of 1 Lot Contract Package: Equipment, Labor and Materials for the Construction of Multi-Purpose Building, Brgy. Gupitan, Kapalong, Davao del Norte</a>
+										<span id="dgSearchResult_ctl21_lblOrgAndBusCat">, Construction Projects ,PROVINCE OF DAVAO DEL NORTE</span>
+									</td>
+	</tr>
+</table></TD>
+				</TR>
+				<TR>
+					<TD align="center" colSpan="3"></TD>
+				</TR>
+			</TABLE>
+			<input name="txtHidden" type="hidden" id="txtHidden" />
+		
+<script language="javascript" type="text/Javascript">
+
+var aArray = document.getElementsByTagName("div");
+	for(var i = 0; i < aArray.length; i++) {
+		if(aArray[i].id.indexOf("HelpLinkDiv") > -1) {
+			aArray[i].style.display = "none";
+		}
+	}
+
+function getWindowHeight() {
+	var windowHeight = 0;
+	if(typeof window.innerHeight != 'undefined') {
+		windowHeight = window.innerHeight;		
+	}
+	else if (typeof document.documentElement != 'undefined' 
+		&& typeof document.documentElement.clientHeight != 'undefined'
+		&& document.documentElement.clientHeight != 0) {
+		windowHeight = document.documentElement.clientHeight;
+	} else {
+		windowHeight = document.getElementsByTagName('body')[0].clientHeight;
+		
+		//var isIE = (navigator.appName=="Microsoft Internet Explorer");
+		//if(isIE) windowHeight += 4;
+	}
+	return windowHeight;
+}
+
+function getDocHeight() {
+	var d = document;
+	return (navigator.appName=="Microsoft Internet Explorer") ? d.body.scrollHeight : d.documentElement.scrollHeight
+	/*
+	return Math.max(
+		Math.max(d.body.scrollHeight, d.documentElement.scrollHeight),
+		Math.max(d.body.offsetHeight, d.documentElement.offsetHeight),
+		Math.max(d.body.clientHeight, d.documentElement.clientHeight)
+	)
+	*/
+}
+
+function setFooter() {	
+	var windowHeight = getWindowHeight();
+	var docHeight = getDocHeight();
+	var footerElement = document.getElementById('TablePageFoot');	
+	if(windowHeight >= docHeight) {
+		footerElement.style.position = 'relative';		
+		footerElement.style.top = windowHeight - docHeight + 'px';
+	} else {
+		footerElement.style.position = 'static';
+	}
+		
+}
+
+function showSiteMap(path)
+{
+	window.open(path,"view1", "resizable=no,toolbar=no,menubar=no,directories=no,status=no,width=600,height=600,scrollbars=yes");
+	return false;
+}
+function showcontactus(path)
+{
+	window.open(path,"view1", "resizable=no,toolbar=no,menubar=no,directories=no,status=no,width=600,height=600,scrollbars=yes");
+	return false;
+}
+</script>
+<!--HEIGHT: expression(document.body.offsetHeight-this.offsetTop-5);"-->
+<TABLE id="TablePageFoot" class="TablePageFoot" style="WIDTH: 100%;"
+	cellSpacing="0" cellPadding="0" border="0" >	
+	<tr>
+	<TD valign="bottom" align="left"></TD>
+</tr>
+
+	<!--<tr id="ctl07_TRThinLine" height="20">
+	<TD valign="bottom" align="left" colspan="4">
+      <HR SIZE=1>
+    </TD>
+</tr>
+
+  <tr id="ctl07_TRContactGEPS" height="20">
+	<TD valign="bottom"><A class=a onclick="javascript:showcontactus('/GEPSNONPILOT/Contact/contactGEPS.aspx')" href="#" ><FONT 
+      style="FONT-SIZE: 8pt"><B 
+      >Contact&nbsp;Us</B></FONT></A>&nbsp;&nbsp; &nbsp; 
+  </TD>
+</tr>
+
+  <tr id="ctl07_TRSitemap" height="20">
+	<TD style="WIDTH: 50%" valign="bottom"><A 
+      class=a href="/GEPSNONPILOT/Sitemap/Sitemap.aspx" 
+      ><FONT style="FONT-SIZE: 8pt"><B 
+      >Sitemap</B></FONT></A></TD>
+</tr>
+ -->
+	<tr id="ctl07_TRCopyRight" bordercolor="#356aa0" bgcolor="#d5e2f2" height="25">
+	<TD width="20" background="/images/inside_nav_label_bg.gif">&nbsp;</TD>
+	<TD valign="middle" align="left" width="50%" background="/images/inside_nav_label_bg.gif">
+			<FONT style="FONT-SIZE: 8pt; COLOR: #000000"><span id="ctl07_copyLBL" class="DisplayText5">&copy;&nbsp2004-2026&nbsp;&nbsp;DBM Procurement Service. All rights reserved.</span></FONT>
+		</TD>
+	<TD valign="middle" align="right" background="/images/inside_nav_label_bg.gif">&nbsp;</TD>
+	<TD valign="middle" align="right" width="300" background="/images/inside_nav_label_bg.gif">
+		
+<!-- <div id="ctl07_Help2_helpDIV" style="PADDING-RIGHT:16px; DISPLAY:none; PADDING-LEFT:16px; RIGHT:0px; PADDING-BOTTOM:16px; PADDING-TOP:16px; POSITION:absolute; TOP:65px"> </div>-->
+<div id="helpDIV" style="DISPLAY: inline">
+	<a id="ctl07_Help2_HelpLink" tabindex="100" class="NavTxtLink" href="javascript:void(window.open(&#39;/GEPSNONPILOT/helppages/HelpRedirect.aspx&#39;, &#39;helpWin&#39;, &#39;resizable=yes,toolbar=no,menubar=no,directories=no,status=no,width=480,height=480,scrollbars=yes&#39;));">Help</a>&nbsp;<span class="ContextTXT">|</span>
+</div>
+
+		<A class="NavTxtLink" onclick="javascript:showcontactus('/GEPSNONPILOT/Contact/contactGEPS.aspx')" href="#" style="white-space: nowrap;">Contact Us</A>
+		<span class="ContextTXT">|</span>
+		<A class="NavTxtLink" href="/GEPSNONPILOT/Sitemap/Sitemap.aspx">Sitemap</A>
+		
+		</TD>
+	<TD width="20" background="/images/inside_nav_label_bg.gif">&nbsp;</TD>
+</tr>
+
+</TABLE>
+	<script language="javascript">
+	
+	var onloadfunc = window.onload || function(){};	
+	window.onload = function() {		
+		onloadfunc();
+		setFooter();
+	}
+	
+	var onresizefunc = window.onresize || function(){};	
+	window.onresize = function() {		
+		onresizefunc();
+		setFooter();
+	}
+	</script>
+
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="E3AD996F" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="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" />
+</div><input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTEyMTc1NzUxNA9kFgICAQ9kFhRmD2QWDGYPDxYCHgRUZXh0BRtXZWRuZXNkYXksIE9jdG9iZXIgMjgsIDIwMjZkZAIBDw8WAh8ABRtXZWRuZXNkYXksIE9jdG9iZXIgMjgsIDIwMjZkZAICDw8WAh8ABRtXZWRuZXNkYXksIE9jdG9iZXIgMjgsIDIwMjZkZAIDDw8WAh8ABRtXZWRuZXNkYXksIE9jdG9iZXIgMjgsIDIwMjZkZAIEDw8WAh8ABRtXZWRuZXNkYXksIE9jdG9iZXIgMjgsIDIwMjZkZAIFDw8WAh8ABRtXZWRuZXNkYXksIE9jdG9iZXIgMjgsIDIwMjZkZAIBD2QWAgIDDw8WAh4LTmF2aWdhdGVVcmwFuQFqYXZhc2NyaXB0OnZvaWQod2luZG93Lm9wZW4oJy9HRVBTTk9OUElMT1QvaGVscHBhZ2VzL0hlbHBSZWRpcmVjdC5hc3B4JywgJ2hlbHBXaW4nLCAncmVzaXphYmxlPXllcyx0b29sYmFyPW5vLG1lbnViYXI9bm8sZGlyZWN0b3JpZXM9bm8sc3RhdHVzPW5vLHdpZHRoPTQ4MCxoZWlnaHQ9NDgwLHNjcm9sbGJhcnM9eWVzJykpO2RkAgMPDxYCHgdWaXNpYmxlaGRkAg4PFgIfAmcWAmYPZBYCAgEPZBYCAgIPDxYCHwJoZGQCEA8WAh8CaGQCEg8WAh8CaGQCFA8PFkYeCkhhc09MZXR0ZXJoHgpIYXNCTGV0dGVyaB4KSGFzWExldHRlcmgeCkhhc1VMZXR0ZXJoHgNwb3MCAR4HSGFzTmV4dGceCkhhc0pMZXR0ZXJoHgpIYXNGTGV0dGVyaB4ISGFzRmlyc3RoHgpIYXNDTGV0dGVyaB4KSGFzUkxldHRlcmgeCkhhc1RMZXR0ZXJoHghwYWdlU2l6ZQIUHg9IYXNOdW1iZXJMZXR0ZXJoHglEYXRhQ291bnQCFB4KSGFzTkxldHRlcmgeCkhhc1ZMZXR0ZXJoHgpIYXNMTGV0dGVyaB4KSGFzSUxldHRlcmgeCkhhc0VMZXR0ZXJoHgpIYXNaTGV0dGVyaB4KSGFzUUxldHRlcmgeCkhhc1NMZXR0ZXJoHgpIYXNXTGV0dGVyaB4KSGFzTUxldHRlcmgeCkhhc0tMZXR0ZXJoHgpIYXNHTGV0dGVy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AicCKAIpAioCKwIsAi0CLgIvAjACMQIyAjMCNAI1AjYCNwI4AjkCOgI7AjwCPQI+Aj8CQAJBAkICQwJEAkUCRgJHAkgCSQJKAksCTAJNAk4CTwJQAlECUgJTAlQCVQJWAlcCWAJZAloCWwJcAl0CXgJfAmACYQJiAmMCZAJlAmYCZwJoAmkCagJrAmwCbQJuAm8CcAJxAnICcwJ0AnUCdgJ3AngCeQJ6AnsCfAJ9An4CfwKAAQKBAQKCAQKDAQKEAQKFAQKGAQKHAQKIAQKJAQKKAQKLAQKMAQKNAQKOAQKPAQKQAQKRAQKSAQKTAQKUAQKVAQKWAQKXAQKYAQKZAQKaAQKbAQKcAQKdAQKeAQKfAQKgAQKhAQKiAQKjAQKkAQKlAQKmAQKnAQKoAQKpAQKqAQKrAQKsAQKtAQKuAQKvAQKwAQKxAQKyAQKzAQK0AQK1AQK2AQK3AQK4AQK5AQK6AQK7AQK8AQK9AQK+AQK/AQLAAQLBAQLCAQLDAQLEAQLFAQLGAQLHAQLIAQLJAQLKAQLLAQLMAQLNAQLOAQLPAQLQAQLRAQLSAQLTAQLUAQLVAQLWAQLXAQLYAQLZAQLaAQLbAQLcAQLdAQLeAQLfAQLgAQLhAQLiAQLjAQLkAQLlAQLmAQLnAQLoAQLpAQLqAQLrAQLsAQLtAQLuAQLvAQLwAQLxAQLyAQLzAQL0AQL1AQL2AQL3AQL4AQL5AQL6AQL7AQL8AQL9AQL+AQL/AQKAAgKBAgKCAgKDAgKEAgKFAgKGAgKHAgKIAgKJAgKKAgKLAgKMAgKNAgKOAgKPAgKQAgKRAgKSAgKTAgKUAgKVAgKWAgKXAgKYAgKZAgKaAgKbAgKcAgKdAgKeAgKfAgKgAgKhAgKiAgKjAgKkAgKlAgKmAgKnAgKoAgKpAgKqAgKrAgKsAgKtAgKuAgKvAgKwAgKxAgKyAgKzAgK0AgK1AgK2AgK3AgK4AgK5AgK6AgK7AgK8AgK9AgK+AgK/AgLAAgLBAgLCAgLDAgLEAgLFAgLGAgLHAgLIAgLJAgLKAgLLAgLMAgLNAgLOAgLPAgLQAgLRAgLSAgLTAgLUAgLVAgLWAgLXAgLYAgLZAgLaAgLbAgLcAgLdAgLeAgLfAgLgAgLhAgLiAgLjAgLkAgLlAgLmAgLnAgLoAgLpAgLqAgLrAgLsAgLtAgLuAgLvAgLwAgLxAgLyAgLzAgL0AgL1AgL2AgL3AgL4AgL5AgL6AgL7AgL8AgL9AgL+AgL/AgKAAwKBAwKCAwKDAwKEAwKFAwKGAwKHAwKIAwKJAwKKAwKLAwKMAwKNAwKOAwKPAwKQAwKRAwKSAwKTAwKUAwKVAwKWAwKXAwKYAwKZAwKaAwKbAwKcAwKdAwKeAwKfAwKgAwKhAwKiAwKjAwKkAwKlAwKmAwKnAwKoAwKpAwKqAwKrAwKsAwKtAwKuAwKvAwKwAwKxAwKyAwKzAwK0AwK1AwK2AwK3AwK4AwK5AwK6AwK7AwK8AwK9AwK+AwK/AwLAAwLBAwLCAwLDAwLEAwLFAwLGAwLHAwLIAwLJAwLKAwLLAwLMAwLNAwLOAwLPAwLQAwLRAwLSAwLTAwLUAwLVAwLWAwLXAwLYAwLZAwLaAwLbAwLcAwLdAwLeAwLfAwLgAwLhAwLiAwLjAwLkAwLlAwLmAwLnAwLoAwLpAwLqAwLrAwLsAwLtAwLuAwLvAwLwAwLxAwLyAwLzAwL0AwL1AwL2AwL3AwL4AwL5AwL6AwL7AwL8AwL9AwL+AwL/AwKABAKBBAKCBAKDBAKEBAKFBAKGBAKHBAKIBAKJBAKKBAKLBAKMBAKNBAKOBAKPBAKQBAKRBAKSBAKTBAKUBAKVBAKWBAKXBAKYBAKZBAKaBAKbBAKcBAKdBAKeBAKfBAKgBAKhBAKiBAKjBAKkBAKlBAKmBAKnBAKoBAKpBAKqBAKrBAKsBAKtBAKuBAKvBAKwBAKxBAKyBAKzBAK0BAK1BAK2BAK3BAK4BAK5BAK6BAK7BAK8BAK9BAK+BAK/BALABALBBALCBALDBALEBALFBALGBALHBALIBALJBALKBALLBALMBALNBALOBALPBALQBALRBALSBALTBALUBALVBALWBALXBALYBALZBALaBALbBALcBALdBALeBALfBALgBALhBALiBALjBALkBALlBALmBALnBALoBALpBALqBALrBALsBALtBALuBALvBALwBALxBALyBALzBAL0BAL1BAL2BAL3BAL4BAL5BAL6BAL7BAL8BAL9BAL+BAL/BAKABQKBBQKCBQKDBQKEBQKFBQKGBQKHBQKIBQKJBQKKBQKLBQKMBQKNBQKOBQKPBQKQBQKRBQKSBQKTBQKUBQKVBQKWBQKXBQKYBQKZBQKaBQKbBQKcBQKdBRaeBRAFATEFATFnEAUBMgUCMjFnEAUBMwUCNDFnEAUBNAUCNjFnEAUBNQUCODFnEAUBNgUDMTAxZxAFATcFAzEyMWcQBQE4BQMxNDFnEAUBOQUDMTYxZxAFAjEwBQMxODFnEAUCMTEFAzIwMWcQBQIxMgUDMjIxZxAFAjEzBQMyNDFnEAUCMTQFAzI2MWcQBQIxNQUDMjgxZxAFAjE2BQMzMDFnEAUCMTcFAzMyMWcQBQIxOAUDMzQxZxAFAjE5BQMzNjFnEAUCMjAFAzM4MWcQBQIyMQUDNDAxZxAFAjIyBQM0MjFnEAUCMjMFAzQ0MWcQBQIyNAUDNDYxZxAFAjI1BQM0ODFnEAUCMjYFAzUwMWcQBQIyNwUDNTIxZxAFAjI4BQM1NDFnEAUCMjkFAzU2MWcQBQIzMAUDNTgxZxAFAjMxBQM2MDFnEAUCMzIFAzYyMWcQBQIzMwUDNjQxZxAFAjM0BQM2NjFnEAUCMzUFAzY4MWcQBQIzNgUDNzAxZxAFAjM3BQM3MjFnEAUCMzgFAzc0MWcQBQIzOQUDNzYxZxAFAjQwBQM3ODFnEAUCNDEFAzgwMWcQBQI0MgUDODIxZxAFAjQzBQM4NDFnEAUCNDQFAzg2MWcQBQI0NQUDODgxZxAFAjQ2BQM5MDFnEAUCNDcFAzkyMWcQBQI0OAUDOTQxZxAFAjQ5BQM5NjFnEAUCNTAFAzk4MWcQBQI1MQUEMTAwMWcQBQI1MgUEMTAyMWcQBQI1MwUEMTA0MWcQBQI1NAUEMTA2MWcQBQI1NQUEMTA4MWcQBQI1NgUEMTEwMWcQBQI1NwUEMTEyMWcQBQI1OAUEMTE0MWcQBQI1OQUEMTE2MWcQBQI2MAUEMTE4MWcQBQI2MQUEMTIwMWcQBQI2MgUEMTIyMWcQBQI2MwUEMTI0MWcQBQI2NAUEMTI2MWcQBQI2NQUEMTI4MWcQBQI2NgUEMTMwMWcQBQI2NwUEMTMyMWcQBQI2OAUEMTM0MWcQBQI2OQUEMTM2MWcQBQI3MAUEMTM4MWcQBQI3MQUEMTQwMWcQBQI3MgUEMTQyMWcQBQI3MwUEMTQ0MWcQBQI3NAUEMTQ2MWcQBQI3NQUEMTQ4MWcQBQI3NgUEMTUwMWcQBQI3NwUEMTUyMWcQBQI3OAUEMTU0MWcQBQI3OQUEMTU2MWcQBQI4MAUEMTU4MWcQBQI4MQUEMTYwMWcQBQI4MgUEMTYyMWcQBQI4MwUEMTY0MWcQBQI4NAUEMTY2MWcQBQI4NQUEMTY4MWcQBQI4NgUEMTcwMWcQBQI4NwUEMTcyMWcQBQI4OAUEMTc0MWcQBQI4OQUEMTc2MWcQBQI5MAUEMTc4MWcQBQI5MQUEMTgwMWcQBQI5MgUEMTgyMWcQBQI5MwUEMTg0MWcQBQI5NAUEMTg2MWcQBQI5NQUEMTg4MWcQBQI5NgUEMTkwMWcQBQI5NwUEMTkyMWcQBQI5OAUEMTk0MWcQBQI5OQUEMTk2MWcQBQMxMDAFBDE5ODFnEAUDMTAxBQQyMDAxZxAFAzEwMgUEMjAyMWcQBQMxMDMFBDIwNDFnEAUDMTA0BQQyMDYxZxAFAzEwNQUEMjA4MWcQBQMxMDYFBDIxMDFnEAUDMTA3BQQyMTIxZxAFAzEwOAUEMjE0MWcQBQMxMDkFBDIxNjFnEAUDMTEwBQQyMTgxZxAFAzExMQUEMjIwMWcQBQMxMTIFBDIyMjFnEAUDMTEzBQQyMjQxZxAFAzExNAUEMjI2MWcQBQMxMTUFBDIyODFnEAUDMTE2BQQyMzAxZxAFAzExNwUEMjMyMWcQBQMxMTgFBDIzNDFnEAUDMTE5BQQyMzYxZxAFAzEyMAUEMjM4MWcQBQMxMjEFBDI0MDFnEAUDMTIyBQQyNDIxZxAFAzEyMwUEMjQ0MWcQBQMxMjQFBDI0NjFnEAUDMTI1BQQyNDgxZxAFAzEyNgUEMjUwMWcQBQMxMjcFBDI1MjFnEAUDMTI4BQQyNTQxZxAFAzEyOQUEMjU2MWcQBQMxMzAFBDI1ODFnEAUDMTMxBQQyNjAxZxAFAzEzMgUEMjYyMWcQBQMxMzMFBDI2NDFnEAUDMTM0BQQyNjYxZxAFAzEzNQUEMjY4MWcQBQMxMzYFBDI3MDFnEAUDMTM3BQQyNzIxZxAFAzEzOAUEMjc0MWcQBQMxMzkFBDI3NjFnEAUDMTQwBQQyNzgxZxAFAzE0MQUEMjgwMWcQBQMxNDIFBDI4MjFnEAUDMTQzBQQyODQxZxAFAzE0NAUEMjg2MWcQBQMxNDUFBDI4ODFnEAUDMTQ2BQQyOTAxZxAFAzE0NwUEMjkyMWcQBQMxNDgFBDI5NDFnEAUDMTQ5BQQyOTYxZxAFAzE1MAUEMjk4MWcQBQMxNTEFBDMwMDFnEAUDMTUyBQQzMDIxZxAFAzE1MwUEMzA0MWcQBQMxNTQFBDMwNjFnEAUDMTU1BQQzMDgxZxAFAzE1NgUEMzEwMWcQBQMxNTcFBDMxMjFnEAUDMTU4BQQzMTQxZxAFAzE1OQUEMzE2MWcQBQMxNjAFBDMxODFnEAUDMTYxBQQzMjAxZxAFAzE2MgUEMzIyMWcQBQMxNjMFBDMyNDFnEAUDMTY0BQQzMjYxZxAFAzE2NQUEMzI4MWcQBQMxNjYFBDMzMDFnEAUDMTY3BQQzMzIxZxAFAzE2OAUEMzM0MWcQBQMxNjkFBDMzNjFnEAUDMTcwBQQzMzgxZxAFAzE3MQUEMzQwMWcQBQMxNzIFBDM0MjFnEAUDMTczBQQzNDQxZxAFAzE3NAUEMzQ2MWcQBQMxNzUFBDM0ODFnEAUDMTc2BQQzNTAxZxAFAzE3NwUEMzUyMWcQBQMxNzgFBDM1NDFnEAUDMTc5BQQzNTYxZxAFAzE4MAUEMzU4MWcQBQMxODEFBDM2MDFnEAUDMTgyBQQzNjIxZxAFAzE4MwUEMzY0MWcQBQMxODQFBDM2NjFnEAUDMTg1BQQzNjgxZxAFAzE4NgUEMzcwMWcQBQMxODcFBDM3MjFnEAUDMTg4BQQzNzQxZxAFAzE4OQUEMzc2MWcQBQMxOTAFBDM3ODFnEAUDMTkxBQQzODAxZxAFAzE5MgUEMzgyMWcQBQMxOTMFBDM4NDFnEAUDMTk0BQQzODYxZxAFAzE5NQUEMzg4MWcQBQMxOTYFBDM5MDFnEAUDMTk3BQQzOTIxZxAFAzE5OAUEMzk0MWcQBQMxOTkFBDM5NjFnEAUDMjAwBQQzOTgxZxAFAzIwMQUENDAwMWcQBQMyMDIFBDQwMjFnEAUDMjAzBQQ0MDQxZxAFAzIwNAUENDA2MWcQBQMyMDUFBDQwODFnEAUDMjA2BQQ0MTAxZxAFAzIwNwUENDEyMWcQBQMyMDgFBDQxNDFnEAUDMjA5BQQ0MTYxZxAFAzIxMAUENDE4MWcQBQMyMTEFBDQyMDFnEAUDMjEyBQQ0MjIxZxAFAzIxMwUENDI0MWcQBQMyMTQFBDQyNjFnEAUDMjE1BQQ0MjgxZxAFAzIxNgUENDMwMWcQBQMyMTcFBDQzMjFnEAUDMjE4BQQ0MzQxZxAFAzIxOQUENDM2MWcQBQMyMjAFBDQzODFnEAUDMjIxBQQ0NDAxZxAFAzIyMgUENDQyMWcQBQMyMjMFBDQ0NDFnEAUDMjI0BQQ0NDYxZxAFAzIyNQUENDQ4MWcQBQMyMjYFBDQ1MDFnEAUDMjI3BQQ0NTIxZxAFAzIyOAUENDU0MWcQBQMyMjkFBDQ1NjFnEAUDMjMwBQQ0NTgxZxAFAzIzMQUENDYwMWcQBQMyMzIFBDQ2MjFnEAUDMjMzBQQ0NjQxZxAFAzIzNAUENDY2MWcQBQMyMzUFBDQ2ODFnEAUDMjM2BQQ0NzAxZxAFAzIzNwUENDcyMWcQBQMyMzgFBDQ3NDFnEAUDMjM5BQQ0NzYxZxAFAzI0MAUENDc4MWcQBQMyNDEFBDQ4MDFnEAUDMjQyBQQ0ODIxZxAFAzI0MwUENDg0MWcQBQMyNDQFBDQ4NjFnEAUDMjQ1BQQ0ODgxZxAFAzI0NgUENDkwMWcQBQMyNDcFBDQ5MjFnEAUDMjQ4BQQ0OTQxZxAFAzI0OQUENDk2MWcQBQMyNTAFBDQ5ODFnEAUDMjUxBQQ1MDAxZxAFAzI1MgUENTAyMWcQBQMyNTMFBDUwNDFnEAUDMjU0BQQ1MDYxZxAFAzI1NQUENTA4MWcQBQMyNTYFBDUxMDFnEAUDMjU3BQQ1MTIxZxAFAzI1OAUENTE0MWcQBQMyNTkFBDUxNjFnEAUDMjYwBQQ1MTgxZxAFAzI2MQUENTIwMWcQBQMyNjIFBDUyMjFnEAUDMjYzBQQ1MjQxZxAFAzI2NAUENTI2MWcQBQMyNjUFBDUyODFnEAUDMjY2BQQ1MzAxZxAFAzI2NwUENTMyMWcQBQMyNjgFBDUzNDFnEAUDMjY5BQQ1MzYxZxAFAzI3MAUENTM4MWcQBQMyNzEFBDU0MDFnEAUDMjcyBQQ1NDIxZxAFAzI3MwUENTQ0MWcQBQMyNzQFBDU0NjFnEAUDMjc1BQQ1NDgxZxAFAzI3NgUENTUwMWcQBQMyNzcFBDU1MjFnEAUDMjc4BQQ1NTQxZxAFAzI3OQUENTU2MWcQBQMyODAFBDU1ODFnEAUDMjgxBQQ1NjAxZxAFAzI4MgUENTYyMWcQBQMyODMFBDU2NDFnEAUDMjg0BQQ1NjYxZxAFAzI4NQUENTY4MWcQBQMyODYFBDU3MDFnEAUDMjg3BQQ1NzIxZxAFAzI4OAUENTc0MWcQBQMyODkFBDU3NjFnEAUDMjkwBQQ1NzgxZxAFAzI5MQUENTgwMWcQBQMyOTIFBDU4MjFnEAUDMjkzBQQ1ODQxZxAFAzI5NAUENTg2MWcQBQMyOTUFBDU4ODFnEAUDMjk2BQQ1OTAxZxAFAzI5NwUENTkyMWcQBQMyOTgFBDU5NDFnEAUDMjk5BQQ1OTYxZxAFAzMwMAUENTk4MWcQBQMzMDEFBDYwMDFnEAUDMzAyBQQ2MDIxZxAFAzMwMwUENjA0MWcQBQMzMDQFBDYwNjFnEAUDMzA1BQQ2MDgxZxAFAzMwNgUENjEwMWcQBQMzMDcFBDYxMjFnEAUDMzA4BQQ2MTQxZxAFAzMwOQUENjE2MWcQBQMzMTAFBDYxODFnEAUDMzExBQQ2MjAxZxAFAzMxMgUENjIyMWcQBQMzMTMFBDYyNDFnEAUDMzE0BQQ2MjYxZxAFAzMxNQUENjI4MWcQBQMzMTYFBDYzMDFnEAUDMzE3BQQ2MzIxZxAFAzMxOAUENjM0MWcQBQMzMTkFBDYzNjFnEAUDMzIwBQQ2MzgxZxAFAzMyMQUENjQwMWcQBQMzMjIFBDY0MjFnEAUDMzIzBQQ2NDQxZxAFAzMyNAUENjQ2MWcQBQMzMjUFBDY0ODFnEAUDMzI2BQQ2NTAxZxAFAzMyNwUENjUyMWcQBQMzMjgFBDY1NDFnEAUDMzI5BQQ2NTYxZxAFAzMzMAUENjU4MWcQBQMzMzEFBDY2MDFnEAUDMzMyBQQ2NjIxZxAFAzMzMwUENjY0MWcQBQMzMzQFBDY2NjFnEAUDMzM1BQQ2NjgxZxAFAzMzNgUENjcwMWcQBQMzMzcFBDY3MjFnEAUDMzM4BQQ2NzQxZxAFAzMzOQUENjc2MWcQBQMzNDAFBDY3ODFnEAUDMzQxBQQ2ODAxZxAFAzM0MgUENjgyMWcQBQMzNDMFBDY4NDFnEAUDMzQ0BQQ2ODYxZxAFAzM0NQUENjg4MWcQBQMzNDYFBDY5MDFnEAUDMzQ3BQQ2OTIxZxAFAzM0OAUENjk0MWcQBQMzNDkFBDY5NjFnEAUDMzUwBQQ2OTgxZxAFAzM1MQUENzAwMWcQBQMzNTIFBDcwMjFnEAUDMzUzBQQ3MDQxZxAFAzM1NAUENzA2MWcQBQMzNTUFBDcwODFnEAUDMzU2BQQ3MTAxZxAFAzM1NwUENzEyMWcQBQMzNTgFBDcxNDFnEAUDMzU5BQQ3MTYxZxAFAzM2MAUENzE4MWcQBQMzNjEFBDcyMDFnEAUDMzYyBQQ3MjIxZxAFAzM2MwUENzI0MWcQBQMzNjQFBDcyNjFnEAUDMzY1BQQ3MjgxZxAFAzM2NgUENzMwMWcQBQMzNjcFBDczMjFnEAUDMzY4BQQ3MzQxZxAFAzM2OQUENzM2MWcQBQMzNzAFBDczODFnEAUDMzcxBQQ3NDAxZxAFAzM3MgUENzQyMWcQBQMzNzMFBDc0NDFnEAUDMzc0BQQ3NDYxZxAFAzM3NQUENzQ4MWcQBQMzNzYFBDc1MDFnEAUDMzc3BQQ3NTIxZxAFAzM3OAUENzU0MWcQBQMzNzkFBDc1NjFnEAUDMzgwBQQ3NTgxZxAFAzM4MQUENzYwMWcQBQMzODIFBDc2MjFnEAUDMzgzBQQ3NjQxZxAFAzM4NAUENzY2MWcQBQMzODUFBDc2ODFnEAUDMzg2BQQ3NzAxZxAFAzM4NwUENzcyMWcQBQMzODgFBDc3NDFnEAUDMzg5BQQ3NzYxZxAFAzM5MAUENzc4MWcQBQMzOTEFBDc4MDFnEAUDMzkyBQQ3ODIxZxAFAzM5MwUENzg0MWcQBQMzOTQFBDc4NjFnEAUDMzk1BQQ3ODgxZxAFAzM5NgUENzkwMWcQBQMzOTcFBDc5MjFnEAUDMzk4BQQ3OTQxZxAFAzM5OQUENzk2MWcQBQM0MDAFBDc5ODFnEAUDNDAxBQQ4MDAxZxAFAzQwMgUEODAyMWcQBQM0MDMFBDgwNDFnEAUDNDA0BQQ4MDYxZxAFAzQwNQUEODA4MWcQBQM0MDYFBDgxMDFnEAUDNDA3BQQ4MTIxZxAFAzQwOAUEODE0MWcQBQM0MDkFBDgxNjFnEAUDNDEwBQQ4MTgxZxAFAzQxMQUEODIwMWcQBQM0MTIFBDgyMjFnEAUDNDEzBQQ4MjQxZxAFAzQxNAUEODI2MWcQBQM0MTUFBDgyODFnEAUDNDE2BQQ4MzAxZxAFAzQxNwUEODMyMWcQBQM0MTgFBDgzNDFnEAUDNDE5BQQ4MzYxZxAFAzQyMAUEODM4MWcQBQM0MjEFBDg0MDFnEAUDNDIyBQQ4NDIxZxAFAzQyMwUEODQ0MWcQBQM0MjQFBDg0NjFnEAUDNDI1BQQ4NDgxZxAFAzQyNgUEODUwMWcQBQM0MjcFBDg1MjFnEAUDNDI4BQQ4NTQxZxAFAzQyOQUEODU2MWcQBQM0MzAFBDg1ODFnEAUDNDMxBQQ4NjAxZxAFAzQzMgUEODYyMWcQBQM0MzMFBDg2NDFnEAUDNDM0BQQ4NjYxZxAFAzQzNQUEODY4MWcQBQM0MzYFBDg3MDFnEAUDNDM3BQQ4NzIxZxAFAzQzOAUEODc0MWcQBQM0MzkFBDg3NjFnEAUDNDQwBQQ4NzgxZxAFAzQ0MQUEODgwMWcQBQM0NDIFBDg4MjFnEAUDNDQzBQQ4ODQxZxAFAzQ0NAUEODg2MWcQBQM0NDUFBDg4ODFnEAUDNDQ2BQQ4OTAxZxAFAzQ0NwUEODkyMWcQBQM0NDgFBDg5NDFnEAUDNDQ5BQQ4OTYxZxAFAzQ1MAUEODk4MWcQBQM0NTEFBDkwMDFnEAUDNDUyBQQ5MDIxZxAFAzQ1MwUEOTA0MWcQBQM0NTQFBDkwNjFnEAUDNDU1BQQ5MDgxZxAFAzQ1NgUEOTEwMWcQBQM0NTcFBDkxMjFnEAUDNDU4BQQ5MTQxZxAFAzQ1OQUEOTE2MWcQBQM0NjAFBDkxODFnEAUDNDYxBQQ5MjAxZxAFAzQ2MgUEOTIyMWcQBQM0NjMFBDkyNDFnEAUDNDY0BQQ5MjYxZxAFAzQ2NQUEOTI4MWcQBQM0NjYFBDkzMDFnEAUDNDY3BQQ5MzIxZxAFAzQ2OAUEOTM0MWcQBQM0NjkFBDkzNjFnEAUDNDcwBQQ5MzgxZxAFAzQ3MQUEOTQwMWcQBQM0NzIFBDk0MjFnEAUDNDczBQQ5NDQxZxAFAzQ3NAUEOTQ2MWcQBQM0NzUFBDk0ODFnEAUDNDc2BQQ5NTAxZxAFAzQ3NwUEOTUyMWcQBQM0NzgFBDk1NDFnEAUDNDc5BQQ5NTYxZxAFAzQ4MAUEOTU4MWcQBQM0ODEFBDk2MDFnEAUDNDgyBQQ5NjIxZxAFAzQ4MwUEOTY0MWcQBQM0ODQFBDk2NjFnEAUDNDg1BQQ5NjgxZxAFAzQ4NgUEOTcwMWcQBQM0ODcFBDk3MjFnEAUDNDg4BQQ5NzQxZxAFAzQ4OQUEOTc2MWcQBQM0OTAFBDk3ODFnEAUDNDkxBQQ5ODAxZxAFAzQ5MgUEOTgyMWcQBQM0OTMFBDk4NDFnEAUDNDk0BQQ5ODYxZxAFAzQ5NQUEOTg4MWcQBQM0OTYFBDk5MDFnEAUDNDk3BQQ5OTIxZxAFAzQ5OAUEOTk0MWcQBQM0OTkFBDk5NjFnEAUDNTAwBQQ5OTgxZxAFAzUwMQUFMTAwMDFnEAUDNTAyBQUxMDAyMWcQBQM1MDMFBTEwMDQxZxAFAzUwNAUFMTAwNjFnEAUDNTA1BQUxMDA4MWcQBQM1MDYFBTEwMTAxZxAFAzUwNwUFMTAxMjFnEAUDNTA4BQUxMDE0MWcQBQM1MDkFBTEwMTYxZxAFAzUxMAUFMTAxODFnEAUDNTExBQUxMDIwMWcQBQM1MTIFBTEwMjIxZxAFAzUxMwUFMTAyNDFnEAUDNTE0BQUxMDI2MWcQBQM1MTUFBTEwMjgxZxAFAzUxNgUFMTAzMDFnEAUDNTE3BQUxMDMyMWcQBQM1MTgFBTEwMzQxZxAFAzUxOQUFMTAzNjFnEAUDNTIwBQUxMDM4MWcQBQM1MjEFBTEwNDAxZxAFAzUyMgUFMTA0MjFnEAUDNTIzBQUxMDQ0MWcQBQM1MjQFBTEwNDYxZxAFAzUyNQUFMTA0ODFnEAUDNTI2BQUxMDUwMWcQBQM1MjcFBTEwNTIxZxAFAzUyOAUFMTA1NDFnEAUDNTI5BQUxMDU2MWcQBQM1MzAFBTEwNTgxZxAFAzUzMQUFMTA2MDFnEAUDNTMyBQUxMDYyMWcQBQM1MzMFBTEwNjQxZxAFAzUzNAUFMTA2NjFnEAUDNTM1BQUxMDY4MWcQBQM1MzYFBTEwNzAxZxAFAzUzNwUFMTA3MjFnEAUDNTM4BQUxMDc0MWcQBQM1MzkFBTEwNzYxZxAFAzU0MAUFMTA3ODFnEAUDNTQxBQUxMDgwMWcQBQM1NDIFBTEwODIxZxAFAzU0MwUFMTA4NDFnEAUDNTQ0BQUxMDg2MWcQBQM1NDUFBTEwODgxZxAFAzU0NgUFMTA5MDFnEAUDNTQ3BQUxMDkyMWcQBQM1NDgFBTEwOTQxZxAFAzU0OQUFMTA5NjFnEAUDNTUwBQUxMDk4MWcQBQM1NTEFBTExMDAxZxAFAzU1MgUFMTEwMjFnEAUDNTUzBQUxMTA0MWcQBQM1NTQFBTExMDYxZxAFAzU1NQUFMTEwODFnEAUDNTU2BQUxMTEwMWcQBQM1NTcFBTExMTIxZxAFAzU1OAUFMTExNDFnEAUDNTU5BQUxMTE2MWcQBQM1NjAFBTExMTgxZxAFAzU2MQUFMTEyMDFnEAUDNTYyBQUxMTIyMWcQBQM1NjMFBTExMjQxZxAFAzU2NAUFMTEyNjFnEAUDNTY1BQUxMTI4MWcQBQM1NjYFBTExMzAxZxAFAzU2NwUFMTEzMjFnEAUDNTY4BQUxMTM0MWcQBQM1NjkFBTExMzYxZxAFAzU3MAUFMTEzODFnEAUDNTcxBQUxMTQwMWcQBQM1NzIFBTExNDIxZxAFAzU3MwUFMTE0NDFnEAUDNTc0BQUxMTQ2MWcQBQM1NzUFBTExNDgxZxAFAzU3NgUFMTE1MDFnEAUDNTc3BQUxMTUyMWcQBQM1NzgFBTExNTQxZxAFAzU3OQUFMTE1NjFnEAUDNTgwBQUxMTU4MWcQBQM1ODEFBTExNjAxZxAFAzU4MgUFMTE2MjFnEAUDNTgzBQUxMTY0MWcQBQM1ODQFBTExNjYxZxAFAzU4NQUFMTE2ODFnEAUDNTg2BQUxMTcwMWcQBQM1ODcFBTExNzIxZxAFAzU4OAUFMTE3NDFnEAUDNTg5BQUxMTc2MWcQBQM1OTAFBTExNzgxZxAFAzU5MQUFMTE4MDFnEAUDNTkyBQUxMTgyMWcQBQM1OTMFBTExODQxZxAFAzU5NAUFMTE4NjFnEAUDNTk1BQUxMTg4MWcQBQM1OTYFBTExOTAxZxAFAzU5NwUFMTE5MjFnEAUDNTk4BQUxMTk0MWcQBQM1OTkFBTExOTYxZxAFAzYwMAUFMTE5ODFnEAUDNjAxBQUxMjAwMWcQBQM2MDIFBTEyMDIxZxAFAzYwMwUFMTIwNDFnEAUDNjA0BQUxMjA2MWcQBQM2MDUFBTEyMDgxZxAFAzYwNgUFMTIxMDFnEAUDNjA3BQUxMjEyMWcQBQM2MDgFBTEyMTQxZxAFAzYwOQUFMTIxNjFnEAUDNjEwBQUxMjE4MWcQBQM2MTEFBTEyMjAxZxAFAzYxMgUFMTIyMjFnEAUDNjEzBQUxMjI0MWcQBQM2MTQFBTEyMjYxZxAFAzYxNQUFMTIyODFnEAUDNjE2BQUxMjMwMWcQBQM2MTcFBTEyMzIxZxAFAzYxOAUFMTIzNDFnEAUDNjE5BQUxMjM2MWcQBQM2MjAFBTEyMzgxZxAFAzYyMQUFMTI0MDFnEAUDNjIyBQUxMjQyMWcQBQM2MjMFBTEyNDQxZxAFAzYyNAUFMTI0NjFnEAUDNjI1BQUxMjQ4MWcQBQM2MjYF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TWRkAgMPZBYEAgEPDxYEHwAFXUNvbnN0cnVjdGlvbiBvZiBNaWxrIExhYm9yYXRvcnkvT2ZmaWNlIGFuZCBNb3RvciBQb29sIEJ1aWxkaW5nIGZvciBCb2hvbCBOdWNsZXVzIEZhcm0gUHJvamVjdB8BBUJTcGxhc2hCaWROb3RpY2VBYnN0cmFjdFVJLmFzcHg/bWVudUluZGV4PTMmcmVmSUQ9MTMyOTA2NDcmUmVzdWx0PTNkZAIDDw8WAh8ABU4sIENvbnN0cnVjdGlvbiBQcm9qZWN0cyAsTkFUSU9OQUwgREFJUlkgQVVUSE9SSVRZIC0gQ0VOVFJBTCBWSVNBWUFTIERFUEFSVE1FTlRkZAIGDw8WAh8ABQgxMzI5MDY0N2RkAgYPZBYKZg8PFgIfAAUBNmRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMxNy8xMS8yMDI2IDA5OjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAVCRGllc2VsIEZ1ZWwgZm9yIHRoZSBMYW5kIERldmVsb3BtZW50IChQcm9wb3NlZCBNdW5pY2lwYWwgQ2VtZXRlcnkpHwEFQlNwbGFzaEJpZE5vdGljZUFic3RyYWN0VUkuYXNweD9tZW51SW5kZXg9MyZyZWZJRD0xMzI5MTIxMSZSZXN1bHQ9M2RkAgMPDxYCHwAFVSwgRnVlbHMvRnVlbCBBZGRpdGl2ZXMgJiBMdWJyaWNhbnRzICYgQW50aSBDb3Jyb3NpdmUgLE1VTklDSVBBTElUWSBPRiBDVUFSVEVSTywgQ0FQSVpkZAIGDw8WAh8ABQgxMzI5MTIxMWRkAgcPZBYKZg8PFgIfAAUBN2RkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMxNy8xMS8yMDI2IDEwOjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAU1UkVOT1ZBVElPTiBPRiBJU0FCRUwgRU1FUkdFTkNZIEhPU1BJVEFMIElTQUJFTCwgTEVZVEUfAQVCU3BsYXNoQmlkTm90aWNlQWJzdHJhY3RVSS5hc3B4P21lbnVJbmRleD0zJnJlZklEPTEzMjkyNzc1JlJlc3VsdD0zZGQCAw8PFgIfAAU2LCBDb25zdHJ1Y3Rpb24gUHJvamVjdHMgLE1VTklDSVBBTElUWSBPRiBJU0FCRUwsIExFWVRFZGQCBg8PFgIfAAUIMTMyOTI3NzVkZAIID2QWCmYPDxYCHwAFAThkZAIBDw8WAh8ABQoyOC8xMC8yMDI2ZGQCAg8PFgIfAAUTMTYvMTEvMjAyNiAxMDowMCBBTWRkAgMPZBYEAgEPDxYEHwAFYElNUFJPVkVNRU5UIE9GIE1VTFRJLVBVUlBPU0UgQlVJTERJTkdTIEFUIFNJVElPIFBBTEFORywgQkFSQU5HQVkgTk9SVEggUE9CTEFDSU9OLCBTQU4gSlVBTiwgQUJSQR8BBUJTcGxhc2hCaWROb3RpY2VBYnN0cmFjdFVJLmFzcHg/bWVudUluZGV4PTMmcmVmSUQ9MTMyOTUzNDUmUmVzdWx0PTNkZAIDDw8WAh8ABTcsIENvbnN0cnVjdGlvbiBQcm9qZWN0cyAsTVVOSUNJUEFMSVRZIE9GIFNBTiBKVUFOLCBBQlJBZGQCBg8PFgIfAAUIMTMyOTUzNDVkZAIJD2QWCmYPDxYCHwAFATlkZAIBDw8WAh8ABQoyOC8xMC8yMDI2ZGQCAg8PFgIfAAUTMTYvMTEvMjAyNiAxMDowMCBBTWRkAgMPZBYEAgEPDxYEHwAFXENPTlNUUlVDVElPTiBPRiBDT01NVU5BTCBJUlJJR0FUSU9OIEZPUiBMSVZFTElIT09EIFBVUlBPU0VTIEFUIEJBUkFOR0FZIEJBVUcsIFNBTiBKVUFOLCBBQlJBHwEFQlNwbGFzaEJpZE5vdGljZUFic3RyYWN0VUkuYXNweD9tZW51SW5kZXg9MyZyZWZJRD0xMzI5NTQ4NSZSZXN1bHQ9M2RkAgMPDxYCHwAFNywgQ29uc3RydWN0aW9uIFByb2plY3RzICxNVU5JQ0lQQUxJVFkgT0YgU0FOIEpVQU4sIEFCUkFkZAIGDw8WAh8ABQgxMzI5NTQ4NWRkAgoPZBYKZg8PFgIfAAUCMTBkZAIBDw8WAh8ABQoyOC8xMC8yMDI2ZGQCAg8PFgIfAAUTMTYvMTEvMjAyNiAxMDowMCBBTWRkAgMPZBYEAgEPDxYEHwAFc0lNUFJPVkVNRU5UIE9GIFRXTyAoMikgU1RPUkVZICBNVU5JQ0lQQUwgTVVMVEktUFVSUE9TRSBCVUlMRElORyBFWFRFTlNJT04sIEJBUkFOR0FZIE5PUlRIIFBPQkxBQ0lPTiwgU0FOIEpVQU4sIEFCUkEfAQVCU3BsYXNoQmlkTm90aWNlQWJzdHJhY3RVSS5hc3B4P21lbnVJbmRleD0zJnJlZklEPTEzMjk1NTIzJlJlc3VsdD0zZGQCAw8PFgIfAAU3LCBDb25zdHJ1Y3Rpb24gUHJvamVjdHMgLE1VTklDSVBBTElUWSBPRiBTQU4gSlVBTiwgQUJSQWRkAgYPDxYCHwAFCDEzMjk1NTIzZGQCCw9kFgpmDw8WAh8ABQIxMWRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMwNC8xMS8yMDI2IDAyOjAwIFBNZGQCAw9kFgQCAQ8PFgQfAAVTTUVBTFMgQU5EIEFDQ09NTU9EQVRJT04gRk9SIFRIRSBDT05EVUNUIE9GIExPQ0FMIENMSU1BVEUgQ0hBTkdFIEFEQVBUQVRJT04gV09SS1NIT1AfAQVCU3BsYXNoQmlkTm90aWNlQWJzdHJhY3RVSS5hc3B4P21lbnVJbmRleD0zJnJlZklEPTEzMjk2MjkwJlJlc3VsdD0zZGQCAw8PFgIfAAVJLCBIb3RlbCBhbmQgTG9kZ2luZyBhbmQgTWVldGluZyBGYWNpbGl0aWVzICxNVU5JQ0lQQUxJVFkgT0YgSUJBSkFZLCBBS0xBTmRkAgYPDxYCHwAFCDEzMjk2MjkwZGQCDA9kFgpmDw8WAh8ABQIxMmRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMwMi8xMS8yMDI2IDAxOjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAU+Q2F0ZXJpbmcgU2VydmljZXMgZm9yIEZlZWRpbmcgUHJvZ3JhbSBvZiBCcmd5IFR1Z2FzIEJhdG8gTGV5dGUfAQVCU3BsYXNoQmlkTm90aWNlQWJzdHJhY3RVSS5hc3B4P21lbnVJbmRleD0zJnJlZklEPTEzMjk2NTgwJlJlc3VsdD0zZGQCAw8PFgIfAAU9LCBDYXRlcmluZyBTZXJ2aWNlcyAsTElHQSBORyBNR0EgQkFSQU5HQVkgQkFUTywgTEVZVEUgQ0hBUFRFUmRkAgYPDxYCHwAFCDEzMjk2NTgwZGQCDQ9kFgpmDw8WAh8ABQIxM2RkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMxOC8xMS8yMDI2IDAyOjAwIFBNZGQCAw9kFgQCAQ8PFgQfAAVBUFJPQ1VSRU1FTlQgT0YgTlVUUklUSU9OIENPTU1PRElUSUVTIEFORCBBTlRIUk9QT01FVFJJQyBFUVVJUE1FTlQfAQVCU3BsYXNoQmlkTm90aWNlQWJzdHJhY3RVSS5hc3B4P21lbnVJbmRleD0zJnJlZklEPTEzMjk2OTM4JlJlc3VsdD0zZGQCAw8PFgIfAAU6LCBGb29kIFN0dWZmICxNVU5JQ0lQQUxJVFkgT0YgU0FOIFZJQ0VOVEUsIENBTUFSSU5FUyBOT1JURWRkAgYPDxYCHwAFCDEzMjk2OTM4ZGQCDg9kFgpmDw8WAh8ABQIxNGRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMwMi8xMS8yMDI2IDAxOjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAUZVk9URVJTIEVEVUNBVElPTiBDQU1QQUlHTh8BBUJTcGxhc2hCaWROb3RpY2VBYnN0cmFjdFVJLmFzcHg/bWVudUluZGV4PTMmcmVmSUQ9MTMyOTg3NzkmUmVzdWx0PTNkZAIDDw8WAh8ABTIsIEdlbmVyYWwgTWVyY2hhbmRpc2UgLEJBUkFOR0FZIFBJTkVEQSwgUEFTSUcgQ0lUWWRkAgYPDxYCHwAFCDEzMjk4Nzc5ZGQCDw9kFgpmDw8WAh8ABQIxNWRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMwMi8xMS8yMDI2IDA5OjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAUYUFVSQ0hBU0UgT0YgU09MQVIgTElHSFRTHwEFQlNwbGFzaEJpZE5vdGljZUFic3RyYWN0VUkuYXNweD9tZW51SW5kZXg9MyZyZWZJRD0xMzI5ODk5MSZSZXN1bHQ9M2RkAgMPDxYCHwAFXSwgRWxlY3RyaWNhbCBTeXN0ZW1zIGFuZCBMaWdodGluZyBDb21wb25lbnRzICxCQVJBTkdBWSBUSU5BR08gLSBCQVlBV0FOIENJVFksIE5FR1JPUyBPUklFTlRBTGRkAgYPDxYCHwAFCDEzMjk4OTkxZGQCEA9kFgpmDw8WAh8ABQIxNmRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMwMy8xMS8yMDI2IDAxOjAwIFBNZGQCAw9kFgQCAQ8PFgQfAAVpU3VwcGx5IGFuZCBEZWxpdmVyeSBvZiBNZWFscyBmb3IgdGhlIDM0dGggTmF0aW9uYWwgQ2hpbGRyZW4ncyBNb250aCBDZWxlYnJhdGlvbiAyMDI2IC0gTVNXRE8sIE1hbGF5IEFrbGFuHwEFQlNwbGFzaEJpZE5vdGljZUFic3RyYWN0VUkuYXNweD9tZW51SW5kZXg9MyZyZWZJRD0xMzI5OTA2NSZSZXN1bHQ9M2RkAgMPDxYCHwAFKiwgRm9vZCBTdHVmZiAsTVVOSUNJUEFMSVRZIE9GIE1BTEFZLCBBS0xBTmRkAgYPDxYCHwAFCDEzMjk5MDY1ZGQCEQ9kFgpmDw8WAh8ABQIxN2RkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMxOS8xMS8yMDI2IDA5OjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAXIAUIyMDI2NTQwNiAtIFByb2N1cmVtZW50IG9mIDEgTG90IENvbnRyYWN0IFBhY2thZ2U6IEVxdWlwbWVudCwgTGFib3IgYW5kIE1hdGVyaWFscyBmb3IgdGhlIFJlaGFiaWxpdGF0aW9uL0ltcHJvdmVtZW50IG9mIE1hcmdhcml0YSBNLiBBYWxhIFJlY3JlYXRpb25hbCBTcG9ydHMgQ2VudGVyIChmb3JtZXJseSBEYXZOb3IgR3ltKSwgU3BvcnRzIENvbXBsHwEFQlNwbGFzaEJpZE5vdGljZUFic3RyYWN0VUkuYXNweD9tZW51SW5kZXg9MyZyZWZJRD0xMzMwMDIzNyZSZXN1bHQ9M2RkAgMPDxYCHwAFNCwgQ29uc3RydWN0aW9uIFByb2plY3RzICxQUk9WSU5DRSBPRiBEQVZBTyBERUwgTk9SVEVkZAIGDw8WAh8ABQgxMzMwMDIzN2RkAhIPZBYKZg8PFgIfAAUCMThkZAIBDw8WAh8ABQoyOC8xMC8yMDI2ZGQCAg8PFgIfAAUTMTkvMTEvMjAyNiAwOTowMCBBTWRkAgMPZBYEAgEPDxYEHwAFpAFCMjAyNjU0MDcgLSBQcm9jdXJlbWVudCBvZiAxIExvdCBDb250cmFjdCBQYWNrYWdlOiBFcXVpcG1lbnQsIExhYm9yIGFuZCBNYXRlcmlhbHMgZm9yIHRoZSBJbXByb3ZlbWVudCBvZiBDb3ZlcmVkIENvdXJ0LCBCcmd5LiBTYW4gVmljZW50ZSwgQXN1bmNpb24sIERhdmFvIGRlbCBOb3J0ZR8BBUJTcGxhc2hCaWROb3RpY2VBYnN0cmFjdFVJLmFzcHg/bWVudUluZGV4PTMmcmVmSUQ9MTMzMDAyNTEmUmVzdWx0PTNkZAIDDw8WAh8ABTQsIENvbnN0cnVjdGlvbiBQcm9qZWN0cyAsUFJPVklOQ0UgT0YgREFWQU8gREVMIE5PUlRFZGQCBg8PFgIfAAUIMTMzMDAyNTFkZAITD2QWCmYPDxYCHwAFAjE5ZGQCAQ8PFgIfAAUKMjgvMTAvMjAyNmRkAgIPDxYCHwAFEzE5LzExLzIwMjYgMDk6MDAgQU1kZAIDD2QWBAIBDw8WBB8ABcgBQjIwMjY1NDA4IC0gUHJvY3VyZW1lbnQgb2YgMSBMb3QgQ29udHJhY3QgUGFja2FnZTogRXF1aXBtZW50LCBMYWJvciBhbmQgTWF0ZXJpYWxzIGZvciB0aGUgQ29uc3RydWN0aW9uIG9mIE9uZSAoMSkgLSBTdG9yZXksIFR3byAoMikgLSBDbGFzc3Jvb20gd2l0aCBCdW5kbGVkIFNjaG9vbCBGdXJuaXR1cmUgYXQgRGFzaW5nIEVsZW1lbnRhcnkgU2Nob28fAQVCU3BsYXNoQmlkTm90aWNlQWJzdHJhY3RVSS5hc3B4P21lbnVJbmRleD0zJnJlZklEPTEzMzAwMjY5JlJlc3VsdD0zZGQCAw8PFgIfAAU0LCBDb25zdHJ1Y3Rpb24gUHJvamVjdHMgLFBST1ZJTkNFIE9GIERBVkFPIERFTCBOT1JURWRkAgYPDxYCHwAFCDEzMzAwMjY5ZGQCFA9kFgpmDw8WAh8ABQIyMGRkAgEPDxYCHwAFCjI4LzEwLzIwMjZkZAICDw8WAh8ABRMxOS8xMS8yMDI2IDA5OjAwIEFNZGQCAw9kFgQCAQ8PFgQfAAWqAUIyMDI2NTQwOSAtIFByb2N1cmVtZW50IG9mIDEgTG90IENvbnRyYWN0IFBhY2thZ2U6IEVxdWlwbWVudCwgTGFib3IgYW5kIE1hdGVyaWFscyBmb3IgdGhlIENvbnN0cnVjdGlvbiBvZiBNdWx0aS1QdXJwb3NlIEJ1aWxkaW5nLCBCcmd5LiBHdXBpdGFuLCBLYXBhbG9uZywgRGF2YW8gZGVsIE5vcnRlHwEFQlNwbGFzaEJpZE5vdGljZUFic3RyYWN0VUkuYXNweD9tZW51SW5kZXg9MyZyZWZJRD0xMzMwMDUzOCZSZXN1bHQ9M2RkAgMPDxYCHwAFNCwgQ29uc3RydWN0aW9uIFByb2plY3RzICxQUk9WSU5DRSBPRiBEQVZBTyBERUwgTk9SVEVkZAIGDw8WAh8ABQgxMzMwMDUzOGRkAhkPDxYCHwJoZGQCHQ9kFgICCQ9kFgQCAQ9kFgICAQ8PFgIfAAVNJmNvcHk7Jm5ic3AyMDA0LTIwMjYmbmJzcDsmbmJzcDtEQk0gUHJvY3VyZW1lbnQgU2VydmljZS4gQWxsIHJpZ2h0cyByZXNlcnZlZC5kZAIDD2QWAmYPZBYCAgMPDxYCHwEFuQFqYXZhc2NyaXB0OnZvaWQod2luZG93Lm9wZW4oJy9HRVBTTk9OUElMT1QvaGVscHBhZ2VzL0hlbHBSZWRpcmVjdC5hc3B4JywgJ2hlbHBXaW4nLCAncmVzaXphYmxlPXllcyx0b29sYmFyPW5vLG1lbnViYXI9bm8sZGlyZWN0b3JpZXM9bm8sc3RhdHVzPW5vLHdpZHRoPTQ4MCxoZWlnaHQ9NDgwLHNjcm9sbGJhcnM9eWVzJykpO2RkZLJBfBK1zhwTq7zfmN3G8M0oxm5j" /></form>
+	</body>
+</HTML>

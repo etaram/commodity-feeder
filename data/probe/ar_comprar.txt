@@ -1,0 +1,2049 @@
+URL: https://comprar.gob.ar/BuscarAvanzado.aspx
+STATUS: 200
+TYPE: text/html; charset=utf-8
+
+
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html lang="es" class="lt-ie10 lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html lang="es" class="lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="es" class="lt-ie10 lt-ie9"> <![endif]-->
+<!--[if IE 9]><html lang="es" class="lt-ie10"> <![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="es">
+<!--<![endif]-->
+<head><link rel="stylesheet" type="text/css" href="/DXR.axd?r=1_68" />
+<link rel="stylesheet" type="text/css" href="/DXR.axd?r=2_0" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+	COMPR.AR - Portal de Compras Públicas de la República Argentina
+</title><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        #logoModernizacion {
+    	    margin-top: 10px;
+        }
+        .botonAtajo {
+        min-height: 1px;
+        padding-right: 15px;
+        padding-left: 15px;
+        width: 20%;
+        float: left;
+        }
+
+        @media only screen and (max-width:768px) {
+            .botonAtajo {
+                min-height: 1px;
+                padding-right: 15px;
+                padding-left: 15px;
+                width: 100%;
+                float: left;
+            }
+        }
+
+        @media only screen and (max-width: 992px) {
+            .botonAtajo {
+                min-height: 1px;
+                padding-right: 15px;
+                padding-left: 15px;
+                width: 50%;
+                float: left;
+            }
+        }
+    </style>
+<link href="App_Themes/bastrap/bootstrap.min.css" type="text/css" rel="stylesheet" /><link href="App_Themes/bastrap/bootstrap-multiselect.css" type="text/css" rel="stylesheet" /><link href="App_Themes/bastrap/font-awesome.css" type="text/css" rel="stylesheet" /><link href="App_Themes/bastrap/integracion-bp.css" type="text/css" rel="stylesheet" /><link href="App_Themes/bastrap/styles-2.min.css" type="text/css" rel="stylesheet" /><link href="App_Themes/bastrap/styles-seac-2.min.css" type="text/css" rel="stylesheet" /></head>
+<body>
+    <!--[if lt IE 9]>
+        <script src="/App_Themes/bastrap/scripts/html5shiv.min.js"></script>
+        <script src="/App_Themes/bastrap/scripts/respond.min.js"></script>
+    <![endif]-->
+    
+
+<header class="navbar-primary navbar-top">
+    <div class="container">
+        
+        <div class="row">
+
+                <a href="/Default.aspx" id="ctl00_CtrlHeader_linkLogoBAC" onclick="" style="margin-top:30px" class="navbar-brand logoBac"></a>
+
+                <div id="logoModernizacion">
+                    
+                </div>
+
+        </div>
+    </div>
+</header>
+
+    <form method="post" action="./BuscarAvanzado.aspx?AspxAutoDetectCookieSupport=1" onsubmit="javascript:return WebForm_OnSubmit();" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZHIkIAwvqk5sDLFxdCntH3FSodH-wG9KL7A4yjJiRuzvDiSddw2&amp;t=637110140437816177" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=1HpV3OVB0CaEXoaafcqmhhL0DIu0X3wSUqOAl1vjQLKkUGDOqeYW97sC8T9ftWm6Kb6hwXU_om87t2hH9M1M1AysmM-rdLD5GjOOpZD4Kay8W8PZntIt80tOnA-LsqN-BMK-bQ2&amp;t=125d5fef" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+var __cultureInfo = {"name":"es-AR","numberFormat":{"CurrencyDecimalDigits":2,"CurrencyDecimalSeparator":",","IsReadOnly":true,"CurrencyGroupSizes":[3],"NumberGroupSizes":[3],"PercentGroupSizes":[3],"CurrencyGroupSeparator":".","CurrencySymbol":"$","NaNSymbol":"NuN","CurrencyNegativePattern":2,"NumberNegativePattern":1,"PercentPositivePattern":0,"PercentNegativePattern":0,"NegativeInfinitySymbol":"-Infinito","NegativeSign":"-","NumberDecimalDigits":2,"NumberDecimalSeparator":",","NumberGroupSeparator":".","CurrencyPositivePattern":2,"PositiveInfinitySymbol":"Infinito","PositiveSign":"+","PercentDecimalDigits":2,"PercentDecimalSeparator":",","PercentGroupSeparator":".","PercentSymbol":"%","PerMilleSymbol":"‰","NativeDigits":["0","1","2","3","4","5","6","7","8","9"],"DigitSubstitution":1},"dateTimeFormat":{"AMDesignator":"a.m.","Calendar":{"MinSupportedDateTime":"\/Date(-62135586000000)\/","MaxSupportedDateTime":"\/Date(253402300799999)\/","AlgorithmType":1,"CalendarType":1,"Eras":[1],"TwoDigitYearMax":2029,"IsReadOnly":true},"DateSeparator":"/","FirstDayOfWeek":0,"CalendarWeekRule":0,"FullDateTimePattern":"dddd, dd\u0027 de \u0027MMMM\u0027 de \u0027yyyy hh:mm:ss tt","LongDatePattern":"dddd, dd\u0027 de \u0027MMMM\u0027 de \u0027yyyy","LongTimePattern":"hh:mm:ss tt","MonthDayPattern":"dd\u0027 de \u0027MMMM","PMDesignator":"p.m.","RFC1123Pattern":"ddd, dd MMM yyyy HH\u0027:\u0027mm\u0027:\u0027ss \u0027GMT\u0027","ShortDatePattern":"dd/MM/yyyy","ShortTimePattern":"hh:mm tt","SortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss","TimeSeparator":":","UniversalSortableDateTimePattern":"yyyy\u0027-\u0027MM\u0027-\u0027dd HH\u0027:\u0027mm\u0027:\u0027ss\u0027Z\u0027","YearMonthPattern":"MMMM\u0027 de \u0027yyyy","AbbreviatedDayNames":["dom","lun","mar","mié","jue","vie","sáb"],"ShortestDayNames":["do","lu","ma","mi","ju","vi","sá"],"DayNames":["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],"AbbreviatedMonthNames":["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic",""],"MonthNames":["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre",""],"IsReadOnly":true,"NativeCalendarName":"calendario gregoriano","AbbreviatedMonthGenitiveNames":["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic",""],"MonthGenitiveNames":["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre",""]},"eras":[1,"d.C.",null,0]};//]]>
+</script>
+
+<script src="/ScriptResource.axd?d=uHIkleVeDJf4xS50Krz-yLrloimtGIA5sUyFkkiByDRGpvtI0b7uyZ5heKgHpI2RzAhKtvEMAaB992jT18OGp6DkO4apkEEnX34gxi_C0y1jUksfhwiMVqaKlODLDX-nbRFM7IdCNlhoWQ9YosUcoTh6Tnw1&amp;t=ffffffffe6d5a9ac" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=Jw6tUGWnA15YEa3ai3FadJfdm9jVRbCpjSj5czfDJ_l6MsQpUkIt274jf5PJ1dKYJ31NQVoh_aFRN8nyvBprDHgE6RVCvqHRNx3x12aPfDH6pnBjr4bkMscP_-7tRVZK0cDcsA9jlvC5S8e3aRDYPDU4waQ1&amp;t=ffffffffe6d5a9ac" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=5h0NtxUlQa8Df2oWXPhUL_UEiEvTVe4PaQIBl_COc4ure5m8ghFJrQOgHhuSrcegPww99_aj-zczelYSs6ZCEtXYcRbj3UUFitEQpGjOBtCY8fFJuxqxRi-ZLzl-fuI3lix6wQ2&amp;t=ffffffff9b7d03cf" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=I5r_uwF_kmHq3vRnqwJ1AeDq0AT-IwWT8IrT5fuq4pmxKVzzJgmtodsR45M7prjrFjoAAUbl4m47sDiViTLWPCLCVftOeYd6g6T-20PtYguqaWwJxEmbgXJvVgeqXJQZ4TbHNkVsEZx8Q6zxnjjkYtRLF_Q1&amp;t=ffffffff9b7d03cf" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=g6EFcZBxYV_xLpZNaoz9NtIEjM0CyioCQEy9Djhi7f4m8Y17ezRUrRlPYXOCoITJ_rJpY5vJ3yBmrj6NSsy010WikEK4dx58LIWvg9JzEfHxtVTipZUpLGWddfkD7ci3hKQoBQ-XQH2_ixdSVEhFllVAlN8eFmUXswNJnQoB5osDZGT80&amp;t=ffffffff9b7d03cf" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+function WebForm_OnSubmit() {
+if (typeof(ValidatorOnSubmit) == "function" && ValidatorOnSubmit() == false) return false;
+return true;
+}
+//]]>
+</script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="AD3B4564" />
+</div>
+        <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$CtrlMenuPortal$logIn$updateModal','','tctl00$CtrlMenuPortal$logIn$ctl00','','tctl00$CPH1$UpdatePanel2','','tctl00$CPH1$devCbPnlNombreProveedor$UpdatePanel3','','tctl00$CPH1$UpdatePanel1','','tctl00$CPH1$devCbPnlPopupListarProveedor$uptPnlResultadoListarProveedor',''], ['ctl00$CtrlMenuPortal$logIn$btnSolicitar','','ctl00$CPH1$ddlJurisdicion','','ctl00$CPH1$btnLimpiarProveedor','','ctl00$CPH1$btnListarPliegoNumero','','ctl00$CPH1$btnListarPliegoAvanzado','','ctl00$CPH1$devCbPnlPopupListarProveedor$btnListarProveedor',''], ['ctl00$CtrlMenuPortal$logIn$lnkConfirmar',''], 90, 'ctl00');
+//]]>
+</script>
+
+        <nav class="navbar-inverse">
+            
+<div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+</div>
+<div class="collapse navbar-collapse" id="nav">
+    <div class="container">
+        <div class="row">
+            <ul class="nav navbar-nav">
+                <li><a target="_blank" href="https://www.argentina.gob.ar/jefatura/innovacion-publica/oficina-nacional-de-contrataciones"><strong>Institucional</strong></a></li>
+                <li><a target="_blank" href="http://www.infoleg.gob.ar/?page_id=91"><strong>Normativa</strong></a></li>
+                <li><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><strong>Capacitación</strong></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/ComprasElectronicas.aspx?qs=uZmpNBcarZh/t6e8LDmVN|XFAS9B6k9ddqFj4heYwZ4=" id="ctl00_CtrlMenuPortal_lnkProveedoresInstructivos">Proveedores</a></li>
+                        <li><a href="/capacitacion.aspx">Organismos</a></li>
+                    </ul>
+                </li>
+                <li><a href="/contactenos.aspx"><strong>Atención al usuario</strong></a></li>
+                
+                <li><a href="/Dictamen/Dictamen/Buscar"><strong>Material de apoyo</strong></a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                   
+                    <a id="lnkIngresar" href="../Login.aspx" style="cursor: pointer">
+                        <span class="glyphicon glyphicon-log-in"></span>
+                        <strong>Ingresar</strong>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="JavaScript/Generica.js"></script>
+<script>
+
+    // Se guardan en un array el ClientInstanceName del popup. Si se usa varias veces el control se agregan varios
+    if (document.popups == undefined) {
+        document.popups = Array();
+    }
+
+    function ClosePopups() {
+        for (i = 0; i < document.popups.length; i++) {
+            this[document.popups[i]].Hide();
+        }
+        $('.modal-backdrop').remove();
+    }
+
+
+</script>
+
+
+<div class="modal" id="modalIngresar" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="ctl00_CtrlMenuPortal_logIn_updateModal">
+	
+                    <div id="ctl00_CtrlMenuPortal_logIn_divHeaderModal" class="modal-header">
+                        <a onclick="CloseModalIngresar();" id="ctl00_CtrlMenuPortal_logIn_lnkClose" class="close" data-dismiss="modal" aria-hidden="true" href="javascript:__doPostBack(&#39;ctl00$CtrlMenuPortal$logIn$lnkClose&#39;,&#39;&#39;)">&times;</a>
+                        <h2 class="text-center">
+                            <span id="ctl00_CtrlMenuPortal_logIn_lblHeader">Bienvenido</span>
+                        </h2>
+                        
+
+                    </div>
+                    <div id="ctl00_CtrlMenuPortal_logIn_divBodyModal" class="modal-body" data-backdrop="static" data-keyboard="false">
+                        
+                            <div class="row form-group">
+                                <div class="form-horizontal">
+                                    <div class="col-md-12">
+                                        
+
+<script >
+ 
+    function Validatorctl00_CtrlMenuPortal_logIn_txtUsername(val, args) {
+        var valid = ValidarControlVacio(val, args);
+
+        var id_attr = "#" + $(val).attr("id") + "G";
+        
+        if (valid) {
+            args.IsValid = true;
+            $(val).parent().removeClass('has-error').addClass('has-success has-feedback');
+            $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+        }
+        else {
+            args.IsValid = false;
+            $(val).parent().removeClass('has-success').addClass('has-error has-feedback');
+            $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            if (args["ErrorMessage"] != null)
+                $(val).text(args["ErrorMessage"]);
+        }
+    }
+</script>
+
+<input name="ctl00$CtrlMenuPortal$logIn$txtUsername$txtTextBox" id="ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBox" class="form-control" type="text" placeholder="CUIL / CUIT / Pasaporte" />
+<span id="ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxVG" class="glyphicon form-control-feedback"></span>
+<span id="ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV" class="control-label" style="display:none;">Verifique que el CUIT haya sido ingresado</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="form-horizontal">
+                                    <div class="col-md-12">
+                                        <span id="ctl00_CtrlMenuPortal_logIn_Label2" class="text">El número de identificación que ingrese debe ser el personal. No el del organismo o empresa.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        
+
+                        
+
+                        
+
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="form-horizontal">
+                                <div class="col-md-12">
+                                    
+                                    <a id="ctl00_CtrlMenuPortal_logIn_lnkConfirmar" class="btn btn-primary pull-right" data-loading-text="Validando..." href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$CtrlMenuPortal$logIn$lnkConfirmar&quot;, &quot;&quot;, true, &quot;vgLogin&quot;, &quot;&quot;, false, true))">Siguiente</a>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modalRecuperarCuenta" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="ctl00_CtrlMenuPortal_logIn_ctl00">
+	
+                    <div class="modal-header">
+                        <a onclick="CloseModalRecuperarCuenta();" class="close" data-dismiss="modal" aria-hidden="true" href="javascript:__doPostBack(&#39;ctl00$CtrlMenuPortal$logIn$ctl03&#39;,&#39;&#39;)">&times;</a>
+                        <h2 class="text-center">
+                            <span id="ctl00_CtrlMenuPortal_logIn_Label1">Recuperar contraseña</span>
+                        </h2>
+                    </div>
+                    <div class="modal-body" data-backdrop="static" data-keyboard="false">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    
+                                    
+                                    
+                                    <div id="ctl00_CtrlMenuPortal_logIn_divAdvertencia" class="alert alert-info"><strong>Importante:</strong> El correo electrónico debe ser el mismo que ingresó al sistema al momento de registrarse como usuario.</div>
+                                    <div class="row form-group">
+                                        <div class="form-horizontal">
+                                            <div class="col-md-12">
+                                                <input name="ctl00$CtrlMenuPortal$logIn$textBoxUserRecuperoContrasenia" id="ctl00_CtrlMenuPortal_logIn_textBoxUserRecuperoContrasenia" class="form-control" type="text" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row form-group ">
+                                        <div class="form-horizontal">
+                                            <div class="col-md-12">
+                                                
+
+<script >
+ 
+    function Validatorctl00_CtrlMenuPortal_logIn_txtMail(val, args) {
+        var valid = ValidarControlEmail(val, args);
+
+        var id_attr = "#" + $(val).attr("id") + "G";
+        
+        if (valid) {
+            args.IsValid = true;
+            $(val).parent().removeClass('has-error').addClass('has-success has-feedback');
+            $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+        }
+        else {
+            args.IsValid = false;
+            $(val).parent().removeClass('has-success').addClass('has-error has-feedback');
+            $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            if (args["ErrorMessage"] != null)
+                $(val).text(args["ErrorMessage"]);
+        }
+    }
+</script>
+
+<input name="ctl00$CtrlMenuPortal$logIn$txtMail$txtTextBox" id="ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBox" class="form-control" type="text" placeholder="Correo electronico" />
+<span id="ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxVG" class="glyphicon form-control-feedback"></span>
+<span id="ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV" class="control-label" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="form-horizontal">
+                                            <div class="col-md-12">
+                                                
+
+<script >
+ 
+    function Validatorctl00_CtrlMenuPortal_logIn_txtMail2(val, args) {
+        var valid = ValidarControlReingresarEmail(val, args);
+
+        var id_attr = "#" + $(val).attr("id") + "G";
+        
+        if (valid) {
+            args.IsValid = true;
+            $(val).parent().removeClass('has-error').addClass('has-success has-feedback');
+            $(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+        }
+        else {
+            args.IsValid = false;
+            $(val).parent().removeClass('has-success').addClass('has-error has-feedback');
+            $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            if (args["ErrorMessage"] != null)
+                $(val).text(args["ErrorMessage"]);
+        }
+    }
+</script>
+
+<input name="ctl00$CtrlMenuPortal$logIn$txtMail2$txtTextBox" id="ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBox" class="form-control" type="text" placeholder="Reingrese correo electronico" />
+<span id="ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxVG" class="glyphicon form-control-feedback"></span>
+<span id="ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV" class="control-label" style="display:none;">Verifique que el correo electrónico haya sido ingresado.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pull-right">
+                                <div class="col-md-12">
+                                    <a id="ctl00_CtrlMenuPortal_logIn_btnSolicitar" class="btn btn-success m-l-1 btn-sm" href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$CtrlMenuPortal$logIn$btnSolicitar&quot;, &quot;&quot;, true, &quot;vgRecuperar&quot;, &quot;&quot;, false, true))">Solicitar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+</div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function Loading(btn) {
+
+        if (Page_ClientValidate("vgLogin")) {
+            var idbuttonLogin = 'ctl00_CtrlMenuPortal_logIn_btnIngresar';
+            var $bar = $('#' + idbuttonLogin);
+            $bar.button('loading');
+        }
+
+    }
+
+    function OpenModalIngresar() {
+        $('#ctl00_CtrlMenuPortal_logIn_MensajeUsuario').hide();
+        $('#ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBox').val('');
+        $('#ctl00_CtrlMenuPortal_logIn_txtPassword_txtTextBox').val('');
+        $('#modalIngresar').modal('show');
+    }
+
+    function CloseModalIngresar() {
+        $('#modalIngresar').modal('hide');
+    }
+
+    function CloseModalRecuperarCuenta() {
+        $('#modalRecuperarCuenta').modal('hide');
+    }
+
+    function OpenModalRecuperarCuenta() {
+        $('#modalRecuperarCuenta').modal('show');
+    }
+
+    function LimpiarCampos() {
+        $('#ctl00_CtrlMenuPortal_logIn_txtUsuario_txtTextBox').val('');
+        $('#ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBox').val('');
+        $('#ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBox').val('');
+    }
+
+    function OcultarErrores() {
+        $('#ctl00_CtrlMenuPortal_logIn_divAdvertencia').show();
+        $('#ctl00_CtrlMenuPortal_logIn_divExito').hide();
+        $('#ctl00_CtrlMenuPortal_logIn_errValidacion').hide();
+    }
+
+    function RecuperarCuenta() {
+        CloseModalIngresar();
+        LimpiarCampos();
+        OcultarErrores();
+        OpenModalRecuperarCuenta();
+    }
+
+
+
+    function ValidarControlVacio(val, args) {
+        return args.Value.length != 0;
+    }
+
+
+    function ValidarControlEmail(val, args) {
+        var valid = false;
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
+        if (args.Value.length == 0) {
+            args["ErrorMessage"] = "Verifique que el correo electrónico haya sido ingresado.";
+            return false;
+        }
+        else if (!re.test(args.Value)) {
+            args["ErrorMessage"] = "Verifique que el formato del correo electrónico sea válido.";
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    function ValidarControlReingresarEmail(val, args) {
+        var valid = false;
+        var mailOriginal = "#" + $(val).attr("id").substring(0, $(val).attr("id").length - 1);
+        mailOriginal = mailOriginal.replace('2', '');
+
+        if (args.Value.length == 0) {
+            args["ErrorMessage"] = "Verifique que el correo electrónico haya sido reingresado.";
+            return false;
+        }
+        else if (args.Value != $(mailOriginal).val()) {
+            args["ErrorMessage"] = "Verifique que el correo electrónico haya sido reingresado correctamente..";
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+</script>
+
+
+        </nav>
+        <div class="bg-white-1" style="padding-top: 5px; padding-bottom: 5px;">
+            <div class="container">
+                <div class="row">
+                    
+
+<script>
+    //Función de Fecha y Hora
+    var months = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+    var dayName = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
+    var relojGlobal
+    var intDiferencia
+
+    function reloj() {
+        var date = relojGlobal
+        intDiferencia = (relojGlobal - new Date()) / 1000
+        correrReloj()
+    }
+    function correrReloj() {
+
+        var difMax = 60;
+        var difSeg = (relojGlobal - new Date()) / 1000
+        if (difSeg > intDiferencia + difMax || difSeg < intDiferencia - difMax)
+            window.location.reload();
+
+        var date = new Date();
+        relojGlobal = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds() + intDiferencia)
+        date = relojGlobal
+
+        var year = date.getFullYear()
+        var month = date.getMonth()
+        var day = date.getDate()
+        var hour = date.getHours()
+        var minute = date.getMinutes()
+        var second = date.getSeconds()
+        var monthname = months[month]
+
+        if (hour > 12) {
+            //hour = hour - 12;
+            var AM_PM = ""
+        }
+        else {
+            var AM_PM = ""
+        }
+        if (minute < 10) { minute = "0" + minute }
+        if (second < 10) { second = "0" + second }
+        if (month < 10) { month = "0" + month }
+        var dayString = dayName[date.getDay()]
+        if (document.getElementById('divReloj') != null) {
+            document.getElementById('divReloj').innerHTML = " " + dayString + " " + day + " de " + monthname + ", <b class=\"texto11Azul\">" + hour + ":" + minute + ":" + second + " " + AM_PM + "</b>"
+        }
+        setTimeout("correrReloj()", 1000)
+    }
+</script>
+<div id="date" style="font-size: 11px; text-align: right;">
+    <span id="ctl00_CtrlTimeNow_scriptFechaHora"><script>relojGlobal= new Date(2026, 9, 28, 1, 13, 42);reloj()</script></span>
+    <span id="divReloj"></span>
+</div>
+
+                </div>
+            </div>
+        </div>
+        <section>
+            
+
+    <script src="/Scripts/jquery-3.7.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var $jquery3 = $.noConflict();
+    </script>
+
+    
+    <link href="/Scripts/select2-4.0.5/css/select2.modificado.min.css" rel="stylesheet" />
+    <script src="/Scripts/select2-4.0.5/js/select2.jquery3.js"></script>
+
+    <script type="text/javascript">
+        function CargarSelect2() {
+            $jquery3(".select2-procesos").select2({ width: "100%" });
+        }
+    </script>
+
+    <!--Inicio JavaScript-->
+    <script src="JavaScript/AjaxPanelProgreso.js" type="text/javascript"></script>
+    <script src="JavaScript/Generica.js" type="text/javascript"></script>
+    <script src="JavaScript/ValidarBuscarAvanzado.js" type="text/javascript"></script>
+    <script src="JavaScript/PopupVerExpediente.js" type="text/javascript"></script>
+    <script src="JavaScript/ValidarProveedor.js" type="text/javascript"></script>
+    <!--Fin JavaScript-->
+
+    <script type="text/javascript">
+        function fnLlamadaError(excepcion) { }
+
+        //On UpdatePanel Refresh
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+
+        if (prm != null) {
+            prm.add_endRequest(function (sender, e) {
+
+            });
+        };
+
+        function openModalProveedores() {
+            $('#myModalBuscarProveedor').modal('show');
+        }
+
+    </script>
+    <div class="container">
+        <nav role="navigation">
+            <ol class="breadcrumb">
+                <li><a href="default.aspx">Home</a></li>
+                <li id="ctl00_CPH1_mostrarLIProveedor" style="display: none;"><a href="proveedor.aspx">Proveedor</a></li>
+                <li id="ctl00_CPH1_mostrarLI" style="display: none;"><a href="ComprasElectronicas.aspx">Compras Electrónicas</a></li>
+                <li class="active">Búsqueda de Procesos</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                <ul class="nav nav-pills nav-justified" style="display: inline-block;">
+                    <li class="active"><a href="#">Buscador de Procesos</a></li>
+                    <li><a href="/BuscarAvanzadoPublicacion.aspx">Buscador de Publicaciones</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="spnEDivValidarBuscarAvanzado" style="display: none" class="alert alert-danger">Debe ingresar por lo menos un criterio de búsqueda.</div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <p>
+                        Contrataciones gestionadas electrónicamente en el COMPR.AR a partir de su publicación. 
+                        Este buscador permite hacer un seguimiento de los procesos de compra que los organismos 
+                        de la Administración Pública cargaron utilizando la plataforma del COMPR.AR y la vista 
+                        de los mismos contiene la información y documentos adjuntados, dependiendo de la instancia 
+                        del procedimiento en la que se encuentra.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Búsqueda de Procesos</h2>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default form-search">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Búsqueda rápida</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="txtNumeroProceso" class="control-label">Número de proceso:</label>
+                                </div>
+                                <div class="col-md-7" id="DivValidaNumeroProceso">
+                                    <div class="input-group">
+                                        <input name="ctl00$CPH1$txtNumeroProceso" type="text" id="ctl00_CPH1_txtNumeroProceso" class="form-control" />
+
+                                        <span class="input-group-btn">
+                                            <a id="ctl00_CPH1_btnListarPliegoNumero" class="btn btn-primary" href="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$CPH1$btnListarPliegoNumero&quot;, &quot;&quot;, true, &quot;BusquedaRapidaProceso&quot;, &quot;&quot;, false, true))">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                            </a>
+                                        </span>
+
+                                    </div>
+
+                                    <span id="ctl00_CPH1_RequiredFieldValidator1" ValidateEmptyText="false" style="display:none;">Verifique que haya ingresado el número de proceso.</span>
+                                    <span id="ctl00_CPH1_NumeroProceso_FormatoInvalido" style="display:none;">Verifique el formato del número de Proceso XXX-XXXX-(LPR/CPU/CPR/CDI/LPU/CDP)XX o XX/X-XXXX-(LPR/CPU/CPR/CDI/LPU/CDP)XX</span>
+
+                                    <span id="spnEDivValidaNumeroProceso" style="display: none" class="control-label">Verifique que el campo número proceso haya sido ingresado.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12" id="DivValidarBuscarAvanzado">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Búsqueda avanzada</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group form-horizontal">
+                                <div class="col-md-4" id="DivValidarNumeroExpediente">
+                                    <label for="txtNumeroExpediente">Número expediente:</label>
+                                    <input name="ctl00$CPH1$txtExpediente" type="text" id="ctl00_CPH1_txtExpediente" class="form-control" />
+                                    <span id="spnEDivValidarNumeroExpediente" style="display: none" class="control-label">Verifique que el campo número de expediente haya sido ingresado.</span>
+                                    
+                                </div>
+                                <div class="col-md-4" id="DivValidaNombrePliego">
+                                    <label for="txtNombrePliego">Nombre descriptivo del proceso:</label>
+                                    <input name="ctl00$CPH1$txtNombrePliego" type="text" maxlength="255" id="ctl00_CPH1_txtNombrePliego" class="form-control" />
+                                    <span id="spnEDivValidaNombrePliego" style="display: none" class="control-label">Verifique que el campo nombre descriptivo del proceso haya sido ingresado.<br />
+                                        Debe ingresar mínimo 4 caracteres.</span>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="ddlJurisdicion">Servicio Administrativo Financiero:</label>
+
+                                    <select name="ctl00$CPH1$ddlJurisdicion" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$CPH1$ddlJurisdicion\&#39;,\&#39;\&#39;)&#39;, 0)" id="ctl00_CPH1_ddlJurisdicion" class="form-control select2-procesos" MaxLength="150">
+	<option selected="selected" value="-2">Seleccionar</option>
+	<option value="590">0 - Organismo Externo</option>
+	<option value="1764">1 - Auditor&#237;a General de la Naci&#243;n</option>
+	<option value="1505">11-AYSA S.A.</option>
+	<option value="1506">20-LEVEL 3 ARGENTINA S.A. (EX GLOBAL CROSSING)</option>
+	<option value="1507">24-ABB S.A.</option>
+	<option value="1509">50-EDENOR S.A.</option>
+	<option value="1510">51-EDESUR S.A.</option>
+	<option value="1511">52-TELEFONICA DE ARGENTINA S.A</option>
+	<option value="1512">53-CAMUZZI GAS PAMPEANA</option>
+	<option value="1513">54-TELECOM ARGENTINA S.A.</option>
+	<option value="1514">55-CAMUZZI GAS DEL SUR</option>
+	<option value="1515">56-TRANSPORTADORA  DE GAS DEL NORTE S.A.</option>
+	<option value="1516">57-TRANSPORTADORA  DE GAS DEL SUR S.A.</option>
+	<option value="1517">58-TRANSENER S.A.</option>
+	<option value="1518">59-TRANSBA S.A.</option>
+	<option value="1519">61-AEROPUERTOS ARGENTINA 2000 S.A.</option>
+	<option value="1520">63-TRANSPA S.A.</option>
+	<option value="1521">64-TRANSCOMAHUE S.A.</option>
+	<option value="1523">68-METROGAS S.A.</option>
+	<option value="1524">69-NATURGY BAN S.A.</option>
+	<option value="1525">70-DISTRIBUIDORA DE GAS CUYANA S.A.</option>
+	<option value="1526">71-DISTRIBUIDORA DE GAS DEL CENTRO S.A.</option>
+	<option value="1527">72-LITORAL GAS S.A.</option>
+	<option value="1528">75-GASNOR  S.A.</option>
+	<option value="1550">85-FERROVIAS</option>
+	<option value="1851">86 - GAS NEA S.A.</option>
+	<option value="1552">89-METROVIAS S.A.</option>
+	<option value="1904">92 - INTEGRACION ELECTRICA SUR ARGENTINA S.A.</option>
+	<option value="1571">93-CONSEJO FEDERAL DE LA ENERG&#205;A ELECTRICA</option>
+	<option value="1572">98-NSS S.A.</option>
+	<option value="912">101 - Fundaci&#243;n Miguel Lillo</option>
+	<option value="1051">103 - Consejo Nacional de Investigaciones Cient&#237;ficas y T&#233;cnicas</option>
+	<option value="933">105 - Comisi&#243;n Nacional de Energ&#237;a At&#243;mica</option>
+	<option value="1316">106 - Comisi&#243;n Nacional de Actividades Espaciales</option>
+	<option value="910">107 - Administraci&#243;n de Parques Nacionales</option>
+	<option value="942">108 - Instituto Nacional del Agua</option>
+	<option value="619">109 - Sindicatura General de la Naci&#243;n</option>
+	<option value="675">112 - Autoridad Regulatoria Nuclear</option>
+	<option value="805">113 - Teatro Nacional Cervantes</option>
+	<option value="734">114 - Instituto Nacional de Asociativismo y Econom&#237;a Social</option>
+	<option value="1102">116 - Biblioteca Nacional</option>
+	<option value="798">117 - Instituto Nacional del Teatro</option>
+	<option value="665">118 - Instituto Nacional de Asuntos Ind&#237;genas</option>
+	<option value="1376">120 - Agencia de Deportes Nacional</option>
+	<option value="1425">121 - Banco Nacional de Datos Gen&#233;ticos</option>
+	<option value="1998">122 - CENTRO NACIONAL DE CIBERSEGURIDAD</option>
+	<option value="1829">173 - AGENCIA NACIONAL DE PROMOCI&#211;N DE LA INVESTIGACI&#211;N, EL DESARROLLO TECNOL&#211;GICO Y LA INNOVACI&#211;N</option>
+	<option value="703">200 - Registro Nacional de las Personas</option>
+	<option value="697">201 - Direcci&#243;n Nacional de Migraciones</option>
+	<option value="1725">202 - Instituto Nacional contra la Discriminaci&#243;n, la Xenofobia y el Racismo</option>
+	<option value="914">203 - Agencia Nacional de Seguridad Vial</option>
+	<option value="593">205 - Agencia de Administraci&#243;n de Bienes del Estado</option>
+	<option value="792">206 - Centro Internacional para la Promoci&#243;n de los Derechos Humanos</option>
+	<option value="683">207 - Ente Nacional de Comunicaciones</option>
+	<option value="701">208 - Agencia Nacional de Materiales Controlados</option>
+	<option value="1354">209 - Agencia de Acceso a la Informaci&#243;n P&#250;blica</option>
+	<option value="1127">250 - Caja de Retiros Jubilaciones y Pensiones de la Polic&#237;a Federal</option>
+	<option value="588">301 - Secretaria General de la Presidencia de la Naci&#243;n</option>
+	<option value="1726">303 - Secretar&#237;a de Pol&#237;ticas Integrales Sobre Drogas de la Naci&#243;n Argentina  (SEDRONAR)</option>
+	<option value="591">305 - Jefatura de Gabinete de Ministros</option>
+	<option value="1727">307 - Ministerio de Relaciones Exteriores, Comercio Internacional y Culto</option>
+	<option value="1728">310 - Ministerio de Salud</option>
+	<option value="1925">311 - Secretar&#237;a Nacional de Ni&#241;ez, Adolescencia y Familia</option>
+	<option value="1730">317 - Ministerio de Ambiente y Desarrollo Sostenible</option>
+	<option value="663">321 - Instituto Nacional de Estad&#237;sticas y Censos</option>
+	<option value="1731">322 - Ministerio de Turismo y Deportes</option>
+	<option value="679">323 - Comision Nacional de Comercio Exterior</option>
+	<option value="1732">325 - Ministerio del Interior</option>
+	<option value="1263">326 - Super Intendencia de la Administracion de la Policia Federal </option>
+	<option value="645">327 - Ministerio de Transporte</option>
+	<option value="1733">328 - Secretar&#237;a de Energ&#237;a</option>
+	<option value="611">329 - Ministerio de Comunicaciones</option>
+	<option value="1734">330 - SECRETARIA DE EDUCACI&#211;N – MINISTERIO DE CAPITAL HUMANO</option>
+	<option value="659">331 - Servicio Penitenciario Federal</option>
+	<option value="599">332 - Ministerio de Justicia y Derechos Humanos</option>
+	<option value="1832">334 - ENTE DE COOPERACI&#211;N TECNICA Y FINANCIERA DEL SERVICO PENITENCIARIO FEDERAL</option>
+	<option value="1926">336 - SECRETAR&#205;A DE INNOVACI&#211;N, CIENCIA Y TECNOLOG&#205;A</option>
+	<option value="1736">337 - Secretar&#237;a de Cultura</option>
+	<option value="586">338 - Secretaria Legal y T&#233;cnica</option>
+	<option value="740">341 - Secretar&#237;a Nacional de Ni&#241;ez, Adolescencia y Familia</option>
+	<option value="637">343 - Ministerio de Seguridad</option>
+	<option value="661">345 - Consejo Nacional de Coordinaci&#243;n de Politicas Sociales</option>
+	<option value="1508">346-DEFENSORIA DEL PUBLICO DE SERVICIOS DE COMUNICACI&#211;N AUDIOVISUAL</option>
+	<option value="1737">347 - Secretar&#237;a de Medios y Comunicaci&#243;n P&#250;blica</option>
+	<option value="1346">349 - Procuraci&#243;n del Tesoro de la Naci&#243;n</option>
+	<option value="1738">350 - Secretar&#237;a de Trabajo, Empleo y Seguridad Social</option>
+	<option value="1739">357 - Ministerio de Econom&#237;a</option>
+	<option value="1740">362 - Ministerio de Desarrollo Productivo</option>
+	<option value="1741">363 - Ministerio de Agricultura, Ganader&#237;a y Pesca</option>
+	<option value="1756">364-Ministerio de Obras P&#250;blicas</option>
+	<option value="1757">365-Ministerio de Desarrollo Territorial y H&#225;bitat</option>
+	<option value="1742">366 - Secretar&#237;a de Innovaci&#243;n P&#250;blica</option>
+	<option value="944">367 - Ministerio de Finanzas</option>
+	<option value="1771">368 - SECRETAR&#205;A DE COMUNICACI&#211;N Y MEDIOS DE LA PRESIDENCIA&#160;DE&#160;LA&#160;NACI&#211;N</option>
+	<option value="647">370 - Ministerio de Defensa</option>
+	<option value="1049">371 - Estado Mayor Conjunto (EMCO)</option>
+	<option value="710">372 - Instituto de Investigaciones Cient&#237;ficas y T&#233;cnicas para la Defensa</option>
+	<option value="939">374 - Estado Mayor General del Ejercito</option>
+	<option value="1129">375 - Gendarmeria Nacional</option>
+	<option value="1743">376 - Subsecretar&#237;a de Planeamiento Operativo y Servicio Log&#237;stico de la Defensa</option>
+	<option value="1907">377 - INFRAESTRUCTURA ECONOMICA Y SOCIAL</option>
+	<option value="949">379 - Estado Mayor General de la Armada</option>
+	<option value="1081">380 - Prefectura Naval Argentina</option>
+	<option value="808">381 - Estado Mayor General de La Fuerza A&#233;rea</option>
+	<option value="695">382 - Policia de Seguridad Aeroportuaria</option>
+	<option value="1754">386-Ministerio de las Mujeres, G&#233;neros y Diversidad</option>
+	<option value="1906">388 - MINSTERIO DE CAPITAL HUMANO</option>
+	<option value="1938">389 - Ministerio de Desregulaci&#243;n y Transformaci&#243;n del Estado</option>
+	<option value="1344">403 - Superintendencia de Bienestar de la Policia Federal Argentina</option>
+	<option value="724">450 - Instituto Geogr&#225;fico Nacional</option>
+	<option value="728">451 - Direcci&#243;n General de Fabricaciones Militares</option>
+	<option value="722">452 - Servicio Metereol&#243;gico Nacional</option>
+	<option value="1104">470 - Instituto de Ayuda Financiera para pago de Retiros y Pensiones Militares</option>
+	<option value="801">556 - Autoridad de Cuenca Matanza Riachuelo</option>
+	<option value="693">602 - Comisi&#243;n Nacional de Valores</option>
+	<option value="726">603 - Superintendencia de Seguros de la Naci&#243;n</option>
+	<option value="708">604 - Direcci&#243;n Nacional de Vialidad</option>
+	<option value="1898">606 - INSTITUTO NACIONAL DE TECNOLOGIA AGROPECUARIA - Direcci&#243;n General de Administraci&#243;n</option>
+	<option value="899">607 - Instituto Nacional de Investigaci&#243;n y Desarrollo Pesquero</option>
+	<option value="705">608 - Instituto Nacional de Tecnolog&#237;a Industrial</option>
+	<option value="1047">609 - Instituto Nacional de Vitivinicultura</option>
+	<option value="752">612 - Tribunal de Tasaciones de la Naci&#243;n</option>
+	<option value="720">613 - Ente Nacional de Obras H&#237;dricas de Saneamiento</option>
+	<option value="1744">614 - Instituto Nacional de Semillas</option>
+	<option value="687">620 - Tribunal Fiscal de la Naci&#243;n</option>
+	<option value="916">622 - Instituto Nacional de la Propiedad Industrial</option>
+	<option value="718">623 - Servicio Nacional de Sanidad y Calidad Agroalimentaria</option>
+	<option value="937">624 - Servicio Geol&#243;gico Minero Argentino</option>
+	<option value="1265">651 - Ente Nacional Regulador del Gas</option>
+	<option value="1318">652 - Ente Nacional Regulador de la Electricidad</option>
+	<option value="738">656 - Organismo Regulador de Seguridad de Presas</option>
+	<option value="712">661 - Comisi&#243;n Nacional de Regulaci&#243;n de Transporte</option>
+	<option value="796">664 - Organismo Regulador del Sistema Nacional de Aeropuertos</option>
+	<option value="742">669 - Administraci&#243;n Nacional de Aviaci&#243;n Civil</option>
+	<option value="691">670 - Unidad de Informaci&#243;n Financiera</option>
+	<option value="794">671 - JUNTA DE SEGURIDAD EN EL TRANSPORTE</option>
+	<option value="1955">673 - AGENCIA NACIONAL DE PUERTOS Y NAVEGACI&#211;N</option>
+	<option value="1982">674 - ENTE NACIONAL REGULADOR DEL GAS Y LA ELECTRICIDAD</option>
+	<option value="1378">716 - BICE Fideicomisos S.A</option>
+	<option value="1496">801 - Instituto Nacional de Cine y Artes Audiovisuales - INCAA</option>
+	<option value="905">802 - Fondo Nacional de las Artes</option>
+	<option value="744">804 - Comisi&#243;n Nacional de Evaluaci&#243;n y Acreditaci&#243;n Universitaria</option>
+	<option value="1529">806-UNIV. NACIONAL  DE BS. AS. </option>
+	<option value="1277">807 - Universidad Nacional de Catamarca</option>
+	<option value="1815">808 - UNIV. NACIONAL DEL CENTRO DE LA PROV. DE BS. AS.</option>
+	<option value="1100">809 - Universidad Nacional del Comahue</option>
+	<option value="1530">810-UNIV. NACIONAL  DE CORDOBA</option>
+	<option value="1721">812-Universidad Nacional de Entre R&#237;os</option>
+	<option value="1531">813-UNIV. NACIONAL  DE FORMOSA</option>
+	<option value="1532">814-UNIV. NACIONAL  GRAL. SAN MARTIN</option>
+	<option value="1533">815-UNIV. NACIONAL  DE GRAL. SARMIENTO</option>
+	<option value="1260">817 - Universidad Nacional de la Matanza</option>
+	<option value="1534">819-UNIV. NACIONAL  DE LA PLATA</option>
+	<option value="1535">820-UNIV. NACIONAL  DEL LITORAL</option>
+	<option value="1536">821-UNIV. NACIONAL  DE LOMAS DE ZAMORA</option>
+	<option value="1537">822-UNIV. NACIONAL  DE LUJAN</option>
+	<option value="1538">823-UNIV. NACIONAL  DE MAR DEL PLATA</option>
+	<option value="1539">824-UNIV. NACIONAL  DE MISIONES</option>
+	<option value="1540">825-UNIV. NACIONAL  DEL NORDESTE</option>
+	<option value="1541">826-UNIV. NACIONAL  DE LA PATAGONIA</option>
+	<option value="1309">827 - Universidad Nacional de Quilmes</option>
+	<option value="1542">828-UNIV. NACIONAL  DE RIO CUARTO</option>
+	<option value="1543">829-UNIV. NACIONAL  DE ROSARIO</option>
+	<option value="1544">830-UNIV. NACIONAL  DE SALTA</option>
+	<option value="1545">832-UNIV. NACIONAL  DE SAN LUIS</option>
+	<option value="1546">833-UNIV. NACIONAL  DE SANTIAGO DEL ESTERO</option>
+	<option value="1251">834 - Universidad Nacional del Sur</option>
+	<option value="974">835 - Universidad Tecnologica Nacional</option>
+	<option value="1063">836 - Universidad Nacional de Tucum&#225;n</option>
+	<option value="1547">837-UNIV. NACIONAL DE LA RIOJA</option>
+	<option value="1548">839-UNIV. NACIONAL DE LANUS</option>
+	<option value="1806">841 - UNIVERSIDAD NACIONAL DE VILLA MARIA</option>
+	<option value="1549">846-UNIV. NACIONAL DEL NOROESTE DE LA PROV. DE BS. AS. </option>
+	<option value="1106">847- Universidad Nacional de Rio Negro</option>
+	<option value="736">850 - Administraci&#243;n Nacional de la Seguridad Social</option>
+	<option value="1745">852 - Superintendencia de Riesgos del Trabajo</option>
+	<option value="993">864- Universidad Nacional de Tierra del Fuego, Antartida e Islas del Atl&#225;ntico Sur</option>
+	<option value="1551">871-UNIVERSIDAD NACIONAL DE RAFAELA</option>
+	<option value="1500">872 - Universidad de la Defensa Nacional</option>
+	<option value="1704">875-Universidad Pedag&#243;gica Nacional</option>
+	<option value="1935">877 - UNIVERSIDAD NACIONAL MADRES DE PLAZA DE MAYO</option>
+	<option value="935">902 - Hospital Nacional en Red Especializado en Salud Mental y Adicciones &quot;Licenciada Laura Bonaparte&quot;</option>
+	<option value="1311">903 - Hospital Nacional &quot;Dr Baldomero Sommer&quot;</option>
+	<option value="1280">904 - Administraci&#243;n Nacional de Medicamentos, Alimentos y Tecnolog&#237;a M&#233;dica - ANMAT</option>
+	<option value="1256">905 - Instituto Nacional Central &#218;nico Coordinador de Ablaci&#243;n e Implante</option>
+	<option value="962">906 - Administraci&#243;n Nacional de Laboratorios e Institutos de Salud “Dr. Carlos Malbr&#225;n”</option>
+	<option value="1746">908 - Hospital Nacional Profesor Alejandro Posadas</option>
+	<option value="968">909 - Colonia Nacional &quot;Dr. Manuel Montes de Oca&quot;</option>
+	<option value="1747">910 - Instituto Nacional de Rehabilitaci&#243;n Psicof&#237;sica del Sur &quot;Dr. Juan Otimio Tesone&quot; </option>
+	<option value="1383">911 - Instituto Nacional de Servicios Sociales para Jubilados y Pensionados - INSSJP</option>
+	<option value="803">912 - Servicio Nacional de Rehabilitaci&#243;n</option>
+	<option value="1748">914 - Superintendencia de Servicios de Salud</option>
+	<option value="790">915 - Instituto Nacional del C&#225;ncer</option>
+	<option value="784">916 - Agencia Nacional de Laboratorios P&#250;blicos</option>
+	<option value="903">917 - Agencia Nacional de Discapacidad</option>
+	<option value="908">918 - Instituto Nacional de las Mujeres</option>
+	<option value="1977">919 - ADMINISTRACION NACIONAL DE ESTABLECIMIENTOS DE SALUD</option>
+	<option value="1573">996-GOBERNACION DE LA PROVINCIA DE CATAMARCA</option>
+	<option value="1574">997-ECOMCHACO</option>
+	<option value="1503">1000-SUBSECRETAR&#205;A DE TECNOLOG&#205;AS DE GESTI&#211;N</option>
+	<option value="1553">9064-TEL3 S.A</option>
+	<option value="1554">9066-AGENCIA NACIONAL DE PROMOCION CIENTIFICA Y TECNOLOGICA</option>
+	<option value="970">9083 - Universidad Nacional de Moreno</option>
+	<option value="987">9084 - Universidad Nacional del Oeste</option>
+	<option value="1882">9091 - Teyma Abengoa S.A.</option>
+	<option value="1555">9097-INNOVAT</option>
+	<option value="1556">9105-UBATEC S.A.</option>
+	<option value="1557">9112-UNIVERSIDAD NACIONAL DE JOSE C. PAZ</option>
+	<option value="1558">9115-Universidad Nacional de Chilecito (UNdeC)</option>
+	<option value="1559">9122-FUNDACION CIENCIAS EXACTAS</option>
+	<option value="1560">9124-UNIV. NAC. DE T. DEL FUEGO, ANTARTIDA E ISLAS DEL ATLANTICO SUR</option>
+	<option value="1561">9131-Fundaci&#243;n Instituto Leloir</option>
+	<option value="1562">9132-BELGRANO CARGAS Y LOGISTICA S.A.</option>
+	<option value="1563">9135-INTERCARGO S.A.C.</option>
+	<option value="1564">9136-Hospital del Alta Complejidad en Red Dr. Nestor Carlos Kirchner SAMIC</option>
+	<option value="1565">9147-FUNDACION INSTITUTO DE  BIOLOGIA Y MEDICINA EXPERIMENTAL</option>
+	<option value="1566">9152-CGGC-EISA-HCSA.UTE</option>
+	<option value="1340">9159 - Operadora ferroviaria Sociedad de Estado</option>
+	<option value="1567">9166-FUNDACION DEL INST. DE BIOLOGIA MOLECULAR Y CELULAR DE ROSARIO</option>
+	<option value="1568">9174-ACADEMIA NACIONAL DE MEDICINA</option>
+	<option value="1697">9175-FUNDACION ARGENINTA</option>
+	<option value="1569">9178-HOSPITAL DE PEDIATRIA GARRAHAN</option>
+	<option value="1570">9180-UNIVERSIDAD NACIONAL DEL ALTO URUGUAY</option>
+	<option value="1698">9193-FUNDACI&#211;N UNIVERSIDAD NACIONAL DE SAN JUAN</option>
+	<option value="1699">9194-Universidad Nacional de San Antonio de Areco</option>
+	<option value="1475">9196 - Direcci&#243;n de Obra Social del Servicio Penitenciario Federal</option>
+	<option value="1802">9197 - FUNDACION IBIS INVESTIGACION HIV/SIDA</option>
+	<option value="1693">9198-INSTITUTO DE OBRA SOCIAL DE LAS FUERZAS ARMADAS (IOSFA)</option>
+	<option value="1865">9999 - SAF_ Sujetos obligados por los incisos b) y c) del art&#237;culo 1&#186; de la Ley 27.437</option>
+
+</select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <label for="ddlUnidadEjecutora">Unidad Operativa de Contrataciones:</label>
+                                    <div id="ctl00_CPH1_UpdatePanel2">
+	
+                                            <select name="ctl00$CPH1$ddlUnidadEjecutora" id="ctl00_CPH1_ddlUnidadEjecutora" disabled="disabled" class="aspNetDisabled form-control">
+		<option selected="selected" value="-2">Seleccionar</option>
+
+	</select>
+                                        
+</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="ddlTipoProceso">Tipo proceso:</label>
+                                    <select name="ctl00$CPH1$ddlTipoProceso" id="ctl00_CPH1_ddlTipoProceso" class="form-control">
+	<option value="-2">Seleccionar</option>
+	<option value="1">Licitaci&#243;n P&#250;blica</option>
+	<option value="2">Licitaci&#243;n Privada</option>
+	<option value="3">Concurso P&#250;blico</option>
+	<option value="4">Concurso Privado</option>
+	<option value="5">Contrataci&#243;n Directa</option>
+	<option value="9">Subasta P&#250;blica</option>
+	<option value="10">Compulsa de Precios</option>
+
+</select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="ddlEstadoProceso">Estado proceso:</label>
+                                    <select name="ctl00$CPH1$ddlEstadoProceso" id="ctl00_CPH1_ddlEstadoProceso" class="form-control">
+	<option value="-2">Seleccionar</option>
+	<option value="21">Adjudicado</option>
+	<option value="47">Adjudicado con doc. contractuales generados</option>
+	<option value="26">Autorizado Pendiente Protocolizar</option>
+	<option value="25">Dejado Sin Efecto</option>
+	<option value="23">Desierto</option>
+	<option value="15">Disponible Para Adjudicar</option>
+	<option value="13">En Apertura</option>
+	<option value="16">En Evaluacion</option>
+	<option value="42">Pendiente Adjudicaci?n</option>
+	<option value="19">Pendiente Afectaci&#243;n</option>
+	<option value="20">Pendiente An&#225;lisis</option>
+	<option value="32">Pendiente de Inicio Subasta</option>
+	<option value="17">Preadjudicado</option>
+	<option value="6">Publicado</option>
+	<option value="33">Subasta en Ejecucion</option>
+
+</select>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <label for="ddlRubro">Rubro:</label>
+                                    <select name="ctl00$CPH1$ddlRubro" id="ctl00_CPH1_ddlRubro" class="form-control">
+	<option value="-2">Seleccionar</option>
+	<option value="80010">AGRIC,GANADERIA,CAZA,SILVICULT</option>
+	<option value="80021">ALIMENTOS</option>
+	<option value="80001">ALQUILER</option>
+	<option value="79989">ARTICULOS DEL HOGAR</option>
+	<option value="80007">BANCOS Y SEGUROS</option>
+	<option value="79976">BAZAR Y MENAJE</option>
+	<option value="79979">CARPINTERIA</option>
+	<option value="80013">CEREMONIAL</option>
+	<option value="79981">CERRAJERIA</option>
+	<option value="79996">CINE/TELVIS./RADIO/FOTOGRAFIA</option>
+	<option value="79977">COMBUSTIBLES Y LUBRICANTES</option>
+	<option value="80020">CONCESION</option>
+	<option value="80019">CONSTRUCCION</option>
+	<option value="80004">CULTURA</option>
+	<option value="79973">ELEMENTOS DE LIMPIEZA</option>
+	<option value="79993">EQUIPO DE OFICINA Y MUEBLES</option>
+	<option value="80003">EQUIPO MILITAR Y DE SEGURIDAD </option>
+	<option value="79992">EQUIPOS</option>
+	<option value="79978">FERRETERIA</option>
+	<option value="89382">FINANCIERO</option>
+	<option value="79994">GASES INDUSTRIALES</option>
+	<option value="79995">HERRAMIENTAS</option>
+	<option value="79990">HERRERIA</option>
+	<option value="79997">IMPRENTA Y EDITORIALES</option>
+	<option value="79974">INDUMENT TEXTIL Y CONFECCIONES</option>
+	<option value="79983">INFORMATICA</option>
+	<option value="80016">INMUEBLES</option>
+	<option value="80018">INSUMO P/ ARMAMENTO</option>
+	<option value="80012">JOYERIA Y ORFEBRERIA</option>
+	<option value="79975">LIBRERIA,PAP. Y UTILES OFICINA</option>
+	<option value="80000">MANT. REPARACION Y LIMPIEZA</option>
+	<option value="79986">MATERIALES DE CONSTRUCCION</option>
+	<option value="80015">METALES</option>
+	<option value="80017">METALURGIA</option>
+	<option value="80009">NAUTICA</option>
+	<option value="79987">PINTURAS</option>
+	<option value="80002">PROD. MEDICO/FARMACEUTICOS/LAB</option>
+	<option value="79991">PRODUCTOS VETERINARIOS</option>
+	<option value="80014">QUIMICOS</option>
+	<option value="79984">REPUESTOS</option>
+	<option value="79982">SANITARIOS, PLOMERIA Y GAS</option>
+	<option value="80022">SECOP</option>
+	<option value="80005">SERV. PROFESIONAL Y COMERCIAL</option>
+	<option value="80006">SERVICIO DE NOTICIAS</option>
+	<option value="79998">SERVICIOS BASICOS</option>
+	<option value="79988">TAPICERIA</option>
+	<option value="80008">TRANSPORTE Y DEPOSITO</option>
+	<option value="80011">UTILES Y PRODUCTOS DEPORTIVOS</option>
+	<option value="79985">VIDRIERIA</option>
+	<option value="79999">VIGILANCIA Y SEGURIDAD</option>
+
+</select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="txtNumeroExpediente">Proveedor:</label>
+                                    <script id="dxis_1157921788" src="/DXR.axd?r=1_103" type="text/javascript"></script><script id="dxis_351352734" src="/DXR.axd?r=1_105" type="text/javascript"></script><script id="dxis_977407789" src="/DXR.axd?r=2_13" type="text/javascript"></script><script id="dxis_977407790" src="/DXR.axd?r=2_12" type="text/javascript"></script><script id="dxis_1543517086" src="/DXR.axd?r=2_7" type="text/javascript"></script><script id="dxis_1207028533" src="/DXR.axd?r=1_96" type="text/javascript"></script><script id="dxis_754637261" src="/DXR.axd?r=1_100" type="text/javascript"></script><script id="dxis_359055403" src="/DXR.axd?r=1_83" type="text/javascript"></script><script id="dxis_22566855" src="/DXR.axd?r=2_6" type="text/javascript"></script>
+<script id="dxss_1006651743" type="text/javascript">
+<!--
+window.__aspxServerFormID = 'aspnetForm';
+window.__aspxEmptyImageUrl = '/DXR.axd?r=1_74';
+//-->
+</script>
+
+<div id="ctl00_CPH1_devCbPnlNombreProveedor">
+	
+                                                <div id="ctl00_CPH1_devCbPnlNombreProveedor_UpdatePanel3">
+		
+                                                        <textarea name="ctl00$CPH1$devCbPnlNombreProveedor$txtNombreProveedor" rows="2" cols="20" maxlength="150" id="ctl00_CPH1_devCbPnlNombreProveedor_txtNombreProveedor" class="form-control" readonly="readonly">
+</textarea>
+                                                    
+	</div>
+                                            
+</div><div id="ctl00_CPH1_devCbPnlNombreProveedor_LD" class="dxcpLoadingDiv" style="left:0px;top:0px;z-index:29999;display:none;position:absolute;">
+
+</div><script id="dxss_1503902804" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientCallbackPanel('ctl00_CPH1_devCbPnlNombreProveedor');
+window['devCbPnlNombreProveedor'] = dxo;
+dxo.callBack = function(arg) { WebForm_DoCallback('ctl00$CPH1$devCbPnlNombreProveedor',arg,aspxCallback,'ctl00_CPH1_devCbPnlNombreProveedor',aspxCallbackError,true); };
+dxo.uniqueID = 'ctl00$CPH1$devCbPnlNombreProveedor';
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <br />
+                                    <a id="ctl00_CPH1_btnBuscarProveedor" class="btn btn-default" href="javascript:__doPostBack(&#39;ctl00$CPH1$btnBuscarProveedor&#39;,&#39;&#39;)">Buscar proveedor</a>
+                                    &nbsp;
+                                    <a id="ctl00_CPH1_btnLimpiarProveedor" class="btn btn-default" href="javascript:__doPostBack(&#39;ctl00$CPH1$btnLimpiarProveedor&#39;,&#39;&#39;)">Limpiar</a>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group form-horizontal">
+                                <div class="col-md-4" id="DivFechaAperturaDesde">
+                                    <label for="devDteEdtFechaAperturaDesde">Fecha de apertura desde:</label>
+                                    <input type="hidden" id="ctl00_CPH1_devDteEdtFechaAperturaDesde_Raw" name="ctl00_CPH1_devDteEdtFechaAperturaDesde_Raw" value="N" />
+<script id="dxss_883367619" type="text/javascript">
+<!--
+(function(){var a = ({'currNegPattern':2,'currGroupSeparator':'.','abbrDayNames':['dom','lun','mar','mié','jue','vie','sáb'],'monthNames':['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre',''],'numGroupSeparator':'.','shortTime':'hh:mm tt','longTime':'hh:mm:ss tt','abbrGenMonthNames':['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic',''],'currDecimalPoint':',','currPosPattern':2,'longDate':'dddd, dd\' de \'MMMM\' de \'yyyy','yearMonth':'MMMM\' de \'yyyy','pm':'p.m.','numNan':'NuN','numPosInf':'Infinito','numNegInf':'-Infinito','am':'a.m.','monthDay':'dd\' de \'MMMM','numDecimalPoint':',','dayNames':['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],'genMonthNames':['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre',''],'shortDate':'dd/MM/yyyy'});for(var b in a) __aspxCultureInfo[b] = a[b];})();
+//-->
+</script>
+
+<table class="dxeButtonEdit form-control" cellspacing="1" cellpadding="0" id="ctl00_CPH1_devDteEdtFechaAperturaDesde" style="border-collapse:separate;">
+	<tr>
+		<td class="dxic" onmousedown="return aspxDDCloseUp(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde&#39;, event)" style="width:100%;padding-left:1px;padding-right:1px;padding-top:1px;padding-bottom:1px;"><input class="dxeEditArea" id="ctl00_CPH1_devDteEdtFechaAperturaDesde_I" name="ctl00$CPH1$devDteEdtFechaAperturaDesde" onfocus="aspxEGotFocus(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde&#39;)" onblur="aspxELostFocus(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde&#39;)" onchange="aspxETextChanged(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde&#39;)" onkeyup="aspxEKeyUp(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde&#39;, event)" type="text" style="border-width:0px;height:15px;width:100%;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;" /></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_B-1" class="dxeButtonEditButton" onmousedown="return aspxDDDropDown(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde&#39;, event)" style="-khtml-user-select:none;"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+			<tr>
+				<td class="dx"><img id="ctl00_CPH1_devDteEdtFechaAperturaDesde_B-1Img" src="/DXR.axd?r=2_73" alt="v" /></td>
+			</tr>
+		</table></td>
+	</tr>
+</table><input type="hidden" id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDDWS" name="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDDWS" value="0:0:-1:0:0:0:0:0:" />
+<div id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+	<table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+		<tr>
+			<td onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD&#39;,-1,false)" style="width:200px;cursor:default;"><table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_CLW-1" cellspacing="0" cellpadding="0" style="width:200px;border-collapse:collapse;border-collapse:separate;">
+				<tr>
+					<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_PWC-1" style="height:100%;"><table style="display:none;">
+						<tr>
+							<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_D" class="dxeCalendarDay"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_DS" class="dxeCalendarSelected"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_DA" class="dxeCalendarOtherMonth"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_DW" class="dxeCalendarWeekend"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_DO" class="dxeCalendarOutOfRange"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_DT" class="dxeCalendarToday"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_DD" class="dxeDisabled"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_FNM" class="dxeCalendarFastNavMonth"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_FNMS" class="dxeCalendarFastNavMonthSelected"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_FNY" class="dxeCalendarFastNavYear"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_EC_FNYS" class="dxeCalendarFastNavYearSelected"></td>
+						</tr>
+					</table><table class="dxeCalendar" cellspacing="0" cellpadding="0" id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C" style="border-collapse:collapse;">
+						<tr>
+							<td valign="top"><table cellpadding="0" style="width:100%;border-collapse:collapse;">
+								<tr>
+									<td class="dxeCalendarHeader" style="border-top:0;"><table cellpadding="0" style="width:100%;border-collapse:collapse;">
+										<tr>
+											<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_PYC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, -12);"><img id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_PYCImg" src="/DXR.axd?r=2_65" alt="&lt;&lt;" /></td><td><div style="width:10px;font-size:0px;">
+
+											</div></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_PMC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, -1);"><img id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_PMCImg" src="/DXR.axd?r=2_64" alt="&lt;" /></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_TC" class="dxe" style="width:100%;cursor:default;"><span id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_T" onclick="aspxCalTitleClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, 0, 0)" style="cursor:pointer;">octubre 2026</span></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_NMC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, 1);"><img id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_NMCImg" src="/DXR.axd?r=2_63" alt=">" /></td><td><div style="width:10px;font-size:0px;">
+
+											</div></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_NYC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, 12);"><img id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_NYCImg" src="/DXR.axd?r=2_62" alt=">>" /></td>
+										</tr>
+									</table></td>
+								</tr><tr>
+									<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_mc" class="dxMonthGridWithWeekNumbers" style="-khtml-user-select:none;"><table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_mt" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+										<tr align="center">
+											<td></td><td class="dxeCalendarDayHeader">dom</td><td class="dxeCalendarDayHeader">lun</td><td class="dxeCalendarDayHeader">mar</td><td class="dxeCalendarDayHeader">mié</td><td class="dxeCalendarDayHeader">jue</td><td class="dxeCalendarDayHeader">vie</td><td class="dxeCalendarDayHeader">sáb</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">40</td><td class="dxeCalendarDay dxeCalendarWeekend dxeCalendarOtherMonth">27</td><td class="dxeCalendarDay dxeCalendarOtherMonth">28</td><td class="dxeCalendarDay dxeCalendarOtherMonth">29</td><td class="dxeCalendarDay dxeCalendarOtherMonth">30</td><td class="dxeCalendarDay">1</td><td class="dxeCalendarDay">2</td><td class="dxeCalendarDay dxeCalendarWeekend">3</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">41</td><td class="dxeCalendarDay dxeCalendarWeekend">4</td><td class="dxeCalendarDay">5</td><td class="dxeCalendarDay">6</td><td class="dxeCalendarDay">7</td><td class="dxeCalendarDay">8</td><td class="dxeCalendarDay">9</td><td class="dxeCalendarDay dxeCalendarWeekend">10</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">42</td><td class="dxeCalendarDay dxeCalendarWeekend">11</td><td class="dxeCalendarDay">12</td><td class="dxeCalendarDay">13</td><td class="dxeCalendarDay">14</td><td class="dxeCalendarDay">15</td><td class="dxeCalendarDay">16</td><td class="dxeCalendarDay dxeCalendarWeekend">17</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">43</td><td class="dxeCalendarDay dxeCalendarWeekend">18</td><td class="dxeCalendarDay">19</td><td class="dxeCalendarDay">20</td><td class="dxeCalendarDay">21</td><td class="dxeCalendarDay">22</td><td class="dxeCalendarDay">23</td><td class="dxeCalendarDay dxeCalendarWeekend">24</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">44</td><td class="dxeCalendarDay dxeCalendarWeekend">25</td><td class="dxeCalendarDay">26</td><td class="dxeCalendarDay">27</td><td class="dxeCalendarDay dxeCalendarToday">28</td><td class="dxeCalendarDay">29</td><td class="dxeCalendarDay">30</td><td class="dxeCalendarDay dxeCalendarWeekend">31</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">45</td><td class="dxeCalendarDay dxeCalendarWeekend dxeCalendarOtherMonth">1</td><td class="dxeCalendarDay dxeCalendarOtherMonth">2</td><td class="dxeCalendarDay dxeCalendarOtherMonth">3</td><td class="dxeCalendarDay dxeCalendarOtherMonth">4</td><td class="dxeCalendarDay dxeCalendarOtherMonth">5</td><td class="dxeCalendarDay dxeCalendarOtherMonth">6</td><td class="dxeCalendarDay dxeCalendarWeekend dxeCalendarOtherMonth">7</td>
+										</tr>
+									</table></td>
+								</tr>
+							</table></td>
+						</tr><tr>
+							<td class="dxeCalendarFooter"><table cellpadding="0" align="center" style="border-collapse:collapse;">
+								<tr>
+									<td><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+										<tr>
+											<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_BT" class="dxeCalendarButton" onclick="aspxCalTodayClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;);"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+												<tr>
+													<td class="dx" style="width:100%;">Hoy</td>
+												</tr>
+											</table></td>
+										</tr>
+									</table></td><td><div style="width:11px;font-size:0px;">
+
+									</div></td><td><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+										<tr>
+											<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_BC" class="dxeCalendarButton" onclick="aspxCalClearClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;);"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+												<tr>
+													<td class="dx" style="width:100%;">Cancelar</td>
+												</tr>
+											</table></td>
+										</tr>
+									</table></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table><input type="hidden" id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNPWS" name="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNPWS" value="0:0:-1:0:0:0:0:0:" />
+					<div id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+						<table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+							<tr>
+								<td onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP&#39;,-1,false)" style="width:0px;cursor:default;"><table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_CLW-1" cellspacing="0" cellpadding="0" style="width:0px;border-collapse:collapse;border-collapse:separate;">
+									<tr>
+										<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_PWC-1" style="height:100%;"><div class="dxeCalendarFastNav">
+											<div class="dxeCalendarFastNavMonthArea">
+												<table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_m" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+													<tr>
+														<td class="dxeCalendarFastNavMonth">Ene</td><td class="dxeCalendarFastNavMonth">Feb</td><td class="dxeCalendarFastNavMonth">Mar</td><td class="dxeCalendarFastNavMonth">Abr</td>
+													</tr><tr>
+														<td class="dxeCalendarFastNavMonth">May</td><td class="dxeCalendarFastNavMonth">Jun</td><td class="dxeCalendarFastNavMonth">Jul</td><td class="dxeCalendarFastNavMonth">Ago</td>
+													</tr><tr>
+														<td class="dxeCalendarFastNavMonth">Sep</td><td class="dxeCalendarFastNavMonth">Oct</td><td class="dxeCalendarFastNavMonth">Nov</td><td class="dxeCalendarFastNavMonth">Dic</td>
+													</tr>
+												</table>
+											</div><div class="dxeCalendarFastNavYearArea">
+												<table id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_y" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;margin-top:8px;">
+													<tr>
+														<td onclick="aspxCalFNYShuffle(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, -10)" rowspan="2" style="padding-right:8px;cursor:pointer;"><img src="/DXR.axd?r=2_57" alt="&lt;" /></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td onclick="aspxCalFNYShuffle(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, 10)" rowspan="2" style="padding-left:8px;cursor:pointer;"><img src="/DXR.axd?r=2_56" alt=">" /></td>
+													</tr><tr>
+														<td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td>
+													</tr>
+												</table>
+											</div>
+										</div><div class="dxeCalendarFastNavFooter" style="text-align:center;">
+											<table cellspacing="0" cellpadding="0" align="center" style="border-collapse:collapse;">
+												<tr>
+													<td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_BO" class="dxeCalendarButton" onclick="aspxCalFNBClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, &#39;ok&#39;)"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+														<tr>
+															<td class="dx" style="width:100%;">OK</td>
+														</tr>
+													</table></td><td><div style="width:11px;">
+
+													</div></td><td id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP_BC" class="dxeCalendarButton" onclick="aspxCalFNBClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C&#39;, &#39;cancel&#39;)"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+														<tr>
+															<td class="dx" style="width:100%;">Cancel</td>
+														</tr>
+													</table></td>
+												</tr>
+											</table>
+										</div></td>
+									</tr>
+								</table></td><td style="background:url('/DXR.axd?r=1_71') no-repeat left top;"></td>
+							</tr><tr>
+								<td style="background:url('/DXR.axd?r=1_73') no-repeat left top;"></td><td><img src="/DXR.axd?r=1_72" alt="" style="height:5px;width:5px;" /></td>
+							</tr>
+						</table>
+					</div><script id="dxss_1257237510" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP');
+window['ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_FNP'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaDesde$DDD$C$FNP';
+dxo.adjustInnerControlsSizeOnShow=false;
+dxo.isPopupPositionCorrectionOn=false;
+dxo.InlineInitialize();
+
+//-->
+</script>
+<input id="ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C_STATE" name="ctl00$CPH1$devDteEdtFechaAperturaDesde$DDD$C" type="hidden" /><script id="dxss_1569340353" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C',[[['dxeCalendarButtonHover'],[''],['BT','BC','FNP_BO','FNP_BC']],[['dxeCalendarFastNavMonthHover'],[''],['FNP_M0','FNP_M1','FNP_M2','FNP_M3','FNP_M4','FNP_M5','FNP_M6','FNP_M7','FNP_M8','FNP_M9','FNP_M10','FNP_M11']],[['dxeCalendarFastNavYearHover'],[''],['FNP_Y0','FNP_Y1','FNP_Y2','FNP_Y3','FNP_Y4','FNP_Y5','FNP_Y6','FNP_Y7','FNP_Y8','FNP_Y9']]]);
+aspxAddPressedItems('ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C',[[['dxeCalendarButtonPressed'],[''],['BT','BC','FNP_BO','FNP_BC']]]);
+
+var dxo = new ASPxClientCalendar('ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C');
+window['ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD_C'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaDesde$DDD$C';
+dxo.RequireStyleDecoration();
+dxo.styleDecoration.AddStyle('F','dxeFocused','');
+dxo.visibleDate = new Date(2026,9,28);
+dxo.isDateEditCalendar = true;
+dxo.InlineInitialize();
+
+//-->
+</script>
+</td>
+				</tr>
+			</table></td>
+		</tr>
+	</table>
+</div><script id="dxss_820091638" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD');
+window['ctl00_CPH1_devDteEdtFechaAperturaDesde_DDD'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaDesde$DDD';
+dxo.Shown.AddHandler(function (s, e) { aspxDDBPCShown('ctl00_CPH1_devDteEdtFechaAperturaDesde', e); });
+dxo.adjustInnerControlsSizeOnShow=false;
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='LeftSides';
+dxo.popupVerticalAlign='Below';
+dxo.isPopupPositionCorrectionOn=false;
+dxo.shadowHeight=0;
+dxo.shadowWidth=0;
+dxo.InlineInitialize();
+
+//-->
+</script>
+<script id="dxss_1058725585" type="text/javascript">
+<!--
+document.getElementById("ctl00_CPH1_devDteEdtFechaAperturaDesde_I").setAttribute("autocomplete", "off");
+aspxAddHoverItems('ctl00_CPH1_devDteEdtFechaAperturaDesde',[[['dxeButtonEditButtonHover'],[''],['B-1']]]);
+aspxAddPressedItems('ctl00_CPH1_devDteEdtFechaAperturaDesde',[[['dxeButtonEditButtonPressed'],[''],['B-1']]]);
+
+var dxo = new ASPxClientDateEdit('ctl00_CPH1_devDteEdtFechaAperturaDesde');
+window['dxeDteFechaDesde'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaDesde';
+aspxAddDisabledItems('ctl00_CPH1_devDteEdtFechaAperturaDesde',[[['dxeDisabled'],[''],[''],['','_I']],[['dxeDisabled dxeButtonDisabled'],[''],['B-1'],,[['/DXR.axd?r=2_72']],['Img']]]);
+dxo.RequireStyleDecoration();
+dxo.styleDecoration.AddStyle('F','dxeFocused','');
+dxo.dateFormatter = ASPxDateFormatter.Create('dd/MM/yyyy');
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+                                    
+                                </div>
+                                <div class="col-md-4" id="DivFechaAperturaHasta">
+                                    <label for="devDteEdtFechaAperturaHasta">Fecha de apertura hasta:</label>
+                                    <input type="hidden" id="ctl00_CPH1_devDteEdtFechaAperturaHasta_Raw" name="ctl00_CPH1_devDteEdtFechaAperturaHasta_Raw" value="N" />
+<table class="dxeButtonEdit form-control" cellspacing="1" cellpadding="0" id="ctl00_CPH1_devDteEdtFechaAperturaHasta" style="border-collapse:separate;">
+	<tr>
+		<td class="dxic" onmousedown="return aspxDDCloseUp(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta&#39;, event)" style="width:100%;padding-left:1px;padding-right:1px;padding-top:1px;padding-bottom:1px;"><input class="dxeEditArea" id="ctl00_CPH1_devDteEdtFechaAperturaHasta_I" name="ctl00$CPH1$devDteEdtFechaAperturaHasta" onfocus="aspxEGotFocus(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta&#39;)" onblur="aspxELostFocus(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta&#39;)" onchange="aspxETextChanged(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta&#39;)" onkeyup="aspxEKeyUp(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta&#39;, event)" type="text" style="border-width:0px;height:15px;width:100%;padding-left:0px;padding-right:0px;padding-top:0px;padding-bottom:0px;" /></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_B-1" class="dxeButtonEditButton" onmousedown="return aspxDDDropDown(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta&#39;, event)" style="-khtml-user-select:none;"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+			<tr>
+				<td class="dx"><img id="ctl00_CPH1_devDteEdtFechaAperturaHasta_B-1Img" src="/DXR.axd?r=2_73" alt="v" /></td>
+			</tr>
+		</table></td>
+	</tr>
+</table><input type="hidden" id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDDWS" name="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDDWS" value="0:0:-1:0:0:0:0:0:" />
+<div id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+	<table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+		<tr>
+			<td onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD&#39;,-1,false)" style="width:200px;cursor:default;"><table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_CLW-1" cellspacing="0" cellpadding="0" style="width:200px;border-collapse:collapse;border-collapse:separate;">
+				<tr>
+					<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_PWC-1" style="height:100%;"><table style="display:none;">
+						<tr>
+							<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_D" class="dxeCalendarDay"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_DS" class="dxeCalendarSelected"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_DA" class="dxeCalendarOtherMonth"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_DW" class="dxeCalendarWeekend"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_DO" class="dxeCalendarOutOfRange"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_DT" class="dxeCalendarToday"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_DD" class="dxeDisabled"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_FNM" class="dxeCalendarFastNavMonth"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_FNMS" class="dxeCalendarFastNavMonthSelected"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_FNY" class="dxeCalendarFastNavYear"></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_EC_FNYS" class="dxeCalendarFastNavYearSelected"></td>
+						</tr>
+					</table><table class="dxeCalendar" cellspacing="0" cellpadding="0" id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C" style="border-collapse:collapse;">
+						<tr>
+							<td valign="top"><table cellpadding="0" style="width:100%;border-collapse:collapse;">
+								<tr>
+									<td class="dxeCalendarHeader" style="border-top:0;"><table cellpadding="0" style="width:100%;border-collapse:collapse;">
+										<tr>
+											<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_PYC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, -12);"><img id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_PYCImg" src="/DXR.axd?r=2_65" alt="&lt;&lt;" /></td><td><div style="width:10px;font-size:0px;">
+
+											</div></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_PMC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, -1);"><img id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_PMCImg" src="/DXR.axd?r=2_64" alt="&lt;" /></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_TC" class="dxe" style="width:100%;cursor:default;"><span id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_T" onclick="aspxCalTitleClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, 0, 0)" style="cursor:pointer;">octubre 2026</span></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_NMC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, 1);"><img id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_NMCImg" src="/DXR.axd?r=2_63" alt=">" /></td><td><div style="width:10px;font-size:0px;">
+
+											</div></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_NYC" class="dxe" onclick="aspxCalShiftMonth(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, 12);"><img id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_NYCImg" src="/DXR.axd?r=2_62" alt=">>" /></td>
+										</tr>
+									</table></td>
+								</tr><tr>
+									<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_mc" class="dxMonthGridWithWeekNumbers" style="-khtml-user-select:none;"><table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_mt" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+										<tr align="center">
+											<td></td><td class="dxeCalendarDayHeader">dom</td><td class="dxeCalendarDayHeader">lun</td><td class="dxeCalendarDayHeader">mar</td><td class="dxeCalendarDayHeader">mié</td><td class="dxeCalendarDayHeader">jue</td><td class="dxeCalendarDayHeader">vie</td><td class="dxeCalendarDayHeader">sáb</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">40</td><td class="dxeCalendarDay dxeCalendarWeekend dxeCalendarOtherMonth">27</td><td class="dxeCalendarDay dxeCalendarOtherMonth">28</td><td class="dxeCalendarDay dxeCalendarOtherMonth">29</td><td class="dxeCalendarDay dxeCalendarOtherMonth">30</td><td class="dxeCalendarDay">1</td><td class="dxeCalendarDay">2</td><td class="dxeCalendarDay dxeCalendarWeekend">3</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">41</td><td class="dxeCalendarDay dxeCalendarWeekend">4</td><td class="dxeCalendarDay">5</td><td class="dxeCalendarDay">6</td><td class="dxeCalendarDay">7</td><td class="dxeCalendarDay">8</td><td class="dxeCalendarDay">9</td><td class="dxeCalendarDay dxeCalendarWeekend">10</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">42</td><td class="dxeCalendarDay dxeCalendarWeekend">11</td><td class="dxeCalendarDay">12</td><td class="dxeCalendarDay">13</td><td class="dxeCalendarDay">14</td><td class="dxeCalendarDay">15</td><td class="dxeCalendarDay">16</td><td class="dxeCalendarDay dxeCalendarWeekend">17</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">43</td><td class="dxeCalendarDay dxeCalendarWeekend">18</td><td class="dxeCalendarDay">19</td><td class="dxeCalendarDay">20</td><td class="dxeCalendarDay">21</td><td class="dxeCalendarDay">22</td><td class="dxeCalendarDay">23</td><td class="dxeCalendarDay dxeCalendarWeekend">24</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">44</td><td class="dxeCalendarDay dxeCalendarWeekend">25</td><td class="dxeCalendarDay">26</td><td class="dxeCalendarDay">27</td><td class="dxeCalendarDay dxeCalendarToday">28</td><td class="dxeCalendarDay">29</td><td class="dxeCalendarDay">30</td><td class="dxeCalendarDay dxeCalendarWeekend">31</td>
+										</tr><tr>
+											<td class="dxeCalendarWeekNumber">45</td><td class="dxeCalendarDay dxeCalendarWeekend dxeCalendarOtherMonth">1</td><td class="dxeCalendarDay dxeCalendarOtherMonth">2</td><td class="dxeCalendarDay dxeCalendarOtherMonth">3</td><td class="dxeCalendarDay dxeCalendarOtherMonth">4</td><td class="dxeCalendarDay dxeCalendarOtherMonth">5</td><td class="dxeCalendarDay dxeCalendarOtherMonth">6</td><td class="dxeCalendarDay dxeCalendarWeekend dxeCalendarOtherMonth">7</td>
+										</tr>
+									</table></td>
+								</tr>
+							</table></td>
+						</tr><tr>
+							<td class="dxeCalendarFooter"><table cellpadding="0" align="center" style="border-collapse:collapse;">
+								<tr>
+									<td><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+										<tr>
+											<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_BT" class="dxeCalendarButton" onclick="aspxCalTodayClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;);"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+												<tr>
+													<td class="dx" style="width:100%;">Hoy</td>
+												</tr>
+											</table></td>
+										</tr>
+									</table></td><td><div style="width:11px;font-size:0px;">
+
+									</div></td><td><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+										<tr>
+											<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_BC" class="dxeCalendarButton" onclick="aspxCalClearClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;);"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+												<tr>
+													<td class="dx" style="width:100%;">Cancelar</td>
+												</tr>
+											</table></td>
+										</tr>
+									</table></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table><input type="hidden" id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNPWS" name="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNPWS" value="0:0:-1:0:0:0:0:0:" />
+					<div id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+						<table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+							<tr>
+								<td onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP&#39;,-1,false)" style="width:0px;cursor:default;"><table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_CLW-1" cellspacing="0" cellpadding="0" style="width:0px;border-collapse:collapse;border-collapse:separate;">
+									<tr>
+										<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_PWC-1" style="height:100%;"><div class="dxeCalendarFastNav">
+											<div class="dxeCalendarFastNavMonthArea">
+												<table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_m" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+													<tr>
+														<td class="dxeCalendarFastNavMonth">Ene</td><td class="dxeCalendarFastNavMonth">Feb</td><td class="dxeCalendarFastNavMonth">Mar</td><td class="dxeCalendarFastNavMonth">Abr</td>
+													</tr><tr>
+														<td class="dxeCalendarFastNavMonth">May</td><td class="dxeCalendarFastNavMonth">Jun</td><td class="dxeCalendarFastNavMonth">Jul</td><td class="dxeCalendarFastNavMonth">Ago</td>
+													</tr><tr>
+														<td class="dxeCalendarFastNavMonth">Sep</td><td class="dxeCalendarFastNavMonth">Oct</td><td class="dxeCalendarFastNavMonth">Nov</td><td class="dxeCalendarFastNavMonth">Dic</td>
+													</tr>
+												</table>
+											</div><div class="dxeCalendarFastNavYearArea">
+												<table id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_y" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;margin-top:8px;">
+													<tr>
+														<td onclick="aspxCalFNYShuffle(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, -10)" rowspan="2" style="padding-right:8px;cursor:pointer;"><img src="/DXR.axd?r=2_57" alt="&lt;" /></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td onclick="aspxCalFNYShuffle(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, 10)" rowspan="2" style="padding-left:8px;cursor:pointer;"><img src="/DXR.axd?r=2_56" alt=">" /></td>
+													</tr><tr>
+														<td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td><td class="dxeCalendarFastNavYear"></td>
+													</tr>
+												</table>
+											</div>
+										</div><div class="dxeCalendarFastNavFooter" style="text-align:center;">
+											<table cellspacing="0" cellpadding="0" align="center" style="border-collapse:collapse;">
+												<tr>
+													<td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_BO" class="dxeCalendarButton" onclick="aspxCalFNBClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, &#39;ok&#39;)"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+														<tr>
+															<td class="dx" style="width:100%;">OK</td>
+														</tr>
+													</table></td><td><div style="width:11px;">
+
+													</div></td><td id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP_BC" class="dxeCalendarButton" onclick="aspxCalFNBClick(&#39;ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C&#39;, &#39;cancel&#39;)"><table class="dxbebt" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+														<tr>
+															<td class="dx" style="width:100%;">Cancel</td>
+														</tr>
+													</table></td>
+												</tr>
+											</table>
+										</div></td>
+									</tr>
+								</table></td><td style="background:url('/DXR.axd?r=1_71') no-repeat left top;"></td>
+							</tr><tr>
+								<td style="background:url('/DXR.axd?r=1_73') no-repeat left top;"></td><td><img src="/DXR.axd?r=1_72" alt="" style="height:5px;width:5px;" /></td>
+							</tr>
+						</table>
+					</div><script id="dxss_1828294858" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP');
+window['ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_FNP'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaHasta$DDD$C$FNP';
+dxo.adjustInnerControlsSizeOnShow=false;
+dxo.isPopupPositionCorrectionOn=false;
+dxo.InlineInitialize();
+
+//-->
+</script>
+<input id="ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C_STATE" name="ctl00$CPH1$devDteEdtFechaAperturaHasta$DDD$C" type="hidden" /><script id="dxss_1128819837" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C',[[['dxeCalendarButtonHover'],[''],['BT','BC','FNP_BO','FNP_BC']],[['dxeCalendarFastNavMonthHover'],[''],['FNP_M0','FNP_M1','FNP_M2','FNP_M3','FNP_M4','FNP_M5','FNP_M6','FNP_M7','FNP_M8','FNP_M9','FNP_M10','FNP_M11']],[['dxeCalendarFastNavYearHover'],[''],['FNP_Y0','FNP_Y1','FNP_Y2','FNP_Y3','FNP_Y4','FNP_Y5','FNP_Y6','FNP_Y7','FNP_Y8','FNP_Y9']]]);
+aspxAddPressedItems('ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C',[[['dxeCalendarButtonPressed'],[''],['BT','BC','FNP_BO','FNP_BC']]]);
+
+var dxo = new ASPxClientCalendar('ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C');
+window['ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD_C'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaHasta$DDD$C';
+dxo.RequireStyleDecoration();
+dxo.styleDecoration.AddStyle('F','dxeFocused','');
+dxo.visibleDate = new Date(2026,9,28);
+dxo.isDateEditCalendar = true;
+dxo.InlineInitialize();
+
+//-->
+</script>
+</td>
+				</tr>
+			</table></td>
+		</tr>
+	</table>
+</div><script id="dxss_1052129418" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD');
+window['ctl00_CPH1_devDteEdtFechaAperturaHasta_DDD'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaHasta$DDD';
+dxo.Shown.AddHandler(function (s, e) { aspxDDBPCShown('ctl00_CPH1_devDteEdtFechaAperturaHasta', e); });
+dxo.adjustInnerControlsSizeOnShow=false;
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='LeftSides';
+dxo.popupVerticalAlign='Below';
+dxo.isPopupPositionCorrectionOn=false;
+dxo.shadowHeight=0;
+dxo.shadowWidth=0;
+dxo.InlineInitialize();
+
+//-->
+</script>
+<script id="dxss_373996584" type="text/javascript">
+<!--
+document.getElementById("ctl00_CPH1_devDteEdtFechaAperturaHasta_I").setAttribute("autocomplete", "off");
+aspxAddHoverItems('ctl00_CPH1_devDteEdtFechaAperturaHasta',[[['dxeButtonEditButtonHover'],[''],['B-1']]]);
+aspxAddPressedItems('ctl00_CPH1_devDteEdtFechaAperturaHasta',[[['dxeButtonEditButtonPressed'],[''],['B-1']]]);
+
+var dxo = new ASPxClientDateEdit('ctl00_CPH1_devDteEdtFechaAperturaHasta');
+window['ctl00_CPH1_devDteEdtFechaAperturaHasta'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devDteEdtFechaAperturaHasta';
+dxo.RequireStyleDecoration();
+dxo.styleDecoration.AddStyle('F','dxeFocused','');
+dxo.dateFormatter = ASPxDateFormatter.Create('dd/MM/yyyy');
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="ddlResultadoOrdenadoPor">Resultado ordenado por:</label>
+                                    <select name="ctl00$CPH1$ddlResultadoOrdenadoPor" id="ctl00_CPH1_ddlResultadoOrdenadoPor" class="form-control">
+	<option value="PLI.Pliego.NumeroPliego">N&#250;mero proceso</option>
+	<option value="PLI.PliegoInformacionBasica.NombrePliego">Nombre proceso</option>
+	<option value="PLI.TipoSeleccionPliego.NombreTipoSeleccionPliego">Tipo proceso</option>
+	<option value="PLI.PliegoCronograma.FechaActoApertura">Fecha de apertura</option>
+	<option value="PLI.EstadoPliego.NombreEstadoPliego">Estado</option>
+
+</select>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <label for="h">Tipo de Operación:</label>
+                                    <select name="ctl00$CPH1$ddlTipoOperacion" id="ctl00_CPH1_ddlTipoOperacion" class="form-control">
+	<option value="-2">Seleccionar</option>
+	<option value="2">Alquiler</option>
+	<option value="1">Venta</option>
+	<option value="3">Concesi&#243;n</option>
+
+</select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a onclick="javascript:ValidarListarPliegoAvanzado(&#39;ctl00_CPH1_&#39;);return false;" id="ctl00_CPH1_btnListarPliegoAvanzado" class="btn btn-primary pull-right" href="javascript:__doPostBack(&#39;ctl00$CPH1$btnListarPliegoAvanzado&#39;,&#39;&#39;)">Buscar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12" align="right">
+                <a id="ctl00_CPH1_btnConsultarCompras" href="https://www.argentinacompra.gov.ar" target="_blank">Consultar Procesos de Compras gestionados fuera de ComprAR</a>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div id="ctl00_CPH1_UpdatePanel1">
+	
+                    <div class="col-md-12">
+                        <input type="hidden" name="ctl00$CPH1$hidEstadoListaPliegos" id="ctl00_CPH1_hidEstadoListaPliegos" value="NOREPORTEEXCEL" />
+                        <h4><small>
+                            <span id="ctl00_CPH1_lblCantidadListaPliegos"></span></small></h4>
+                        <br />
+                        
+                    </div>
+                
+</div>
+        </div>
+    </div>
+    <div class="modal" id="myModalBuscarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div id="ctl00_CPH1_devCbPnlPopupListarProveedor" style="width:100%;">
+	
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">Buscar proveedor</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class=" form-horizontal">
+                                        <div class="row form-group">
+                                            <div class="col-md-6">
+                                                <div id="divValidarNombreProveedor">
+                                                    <label for="txtPopupNombreProveedor">Razón social:</label>
+                                                    <input name="ctl00$CPH1$devCbPnlPopupListarProveedor$txtPopupNombreProveedor" type="text" maxlength="150" id="ctl00_CPH1_devCbPnlPopupListarProveedor_txtPopupNombreProveedor" class="form-control" />
+                                                    <span id="spnEdivValidarNombreProveedor" style="display: none" class="control-label">Verifique que el campo razón social haya sido ingresado.</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div id="divValidarNumeroCuit">
+                                                    <label for="txtPopupCuitProveedor">Número CUIT:</label>
+                                                    <input name="ctl00$CPH1$devCbPnlPopupListarProveedor$txtPopupCuitProveedor" type="text" maxlength="13" id="ctl00_CPH1_devCbPnlPopupListarProveedor_txtPopupCuitProveedor" class="form-control" onkeyup="mascara(this,&#39;-&#39;,patronCUIT,true)" />
+                                                    <span id="spnEdivValidarNumeroCuit" style="display: none" class="control-label">Verifique que el campo número CUIT haya sido ingresado.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div id="ctl00_CPH1_devCbPnlPopupListarProveedor_uptPnlResultadoListarProveedor">
+		
+                                        <div style="width: 100%; text-align: left">
+                                            <h4><small>
+                                                <span id="ctl00_CPH1_devCbPnlPopupListarProveedor_lblResultadoListarProveedor"></span>
+                                            </small></h4>
+                                        </div>
+                                        <br />
+                                        
+                                    
+	</div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <a onclick="javascript:ValidarListarProveedor(&#39;ctl00_CPH1_devPopupBuscarProveedor_&#39;);return false;" id="ctl00_CPH1_devCbPnlPopupListarProveedor_btnListarProveedor" class="btn btn-primary" href="javascript:__doPostBack(&#39;ctl00$CPH1$devCbPnlPopupListarProveedor$btnListarProveedor&#39;,&#39;&#39;)">Buscar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        
+</div><table id="ctl00_CPH1_devCbPnlPopupListarProveedor_LP" class="dxcpLoadingPanel" cellspacing="0" cellpadding="0" style="border-collapse:collapse;left:0px;top:0px;z-index:30000;display:none;">
+	<tr>
+		<td class="dx" style="padding-right:8px;"><img src="/DXR.axd?r=1_70" alt="" align="middle" /></td><td class="dx" style="padding-left:0px;">Loading&hellip;</td>
+	</tr>
+</table><script id="dxss_1978742544" type="text/javascript">
+<!--
+
+var dxo = new ASPxClientCallbackPanel('ctl00_CPH1_devCbPnlPopupListarProveedor');
+window['devCbPnlPopupListarProveedor'] = dxo;
+dxo.callBack = function(arg) { WebForm_DoCallback('ctl00$CPH1$devCbPnlPopupListarProveedor',arg,aspxCallback,'ctl00_CPH1_devCbPnlPopupListarProveedor',aspxCallbackError,true); };
+dxo.uniqueID = 'ctl00$CPH1$devCbPnlPopupListarProveedor';
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="ctl00_CPH1_devPopupListarProveedorWS" name="ctl00_CPH1_devPopupListarProveedorWS" value="0:0:-1:0:0:0:0:0:" />
+<div id="ctl00_CPH1_devPopupListarProveedor_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+	<table id="ctl00_CPH1_devPopupListarProveedor_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+		<tr>
+			<td class="dxpcControl modal fade" onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devPopupListarProveedor&#39;,-1,false)" style="width:800px;cursor:default;"><table id="ctl00_CPH1_devPopupListarProveedor_CLW-1" cellspacing="0" cellpadding="0" style="width:800px;border-collapse:collapse;border-collapse:separate;">
+				<tr>
+					<td id="ctl00_CPH1_devPopupListarProveedor_PWH-1" class="dxpcHeader" onmousedown="aspxPWDGMDown(event,&#39;ctl00_CPH1_devPopupListarProveedor&#39;,-1)" style="cursor:move;padding-left:12px;padding-right:2px;padding-top:2px;padding-bottom:2px;-khtml-user-select:none;"><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+						<tr>
+							<td id="ctl00_CPH1_devPopupListarProveedor_PWH-1T" class="dxpc" style="width:100%;">Buscar Proveedor</td><td style="padding-left:4px;"><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+								<tr>
+									<td id="ctl00_CPH1_devPopupListarProveedor_HCB-1" class="dxpcCloseButton" onclick="aspxPWCBClick(&#39;ctl00_CPH1_devPopupListarProveedor&#39;,-1)" onmousedown="return aspxPWCBMDown(event);" style="cursor:pointer;"><img id="ctl00_CPH1_devPopupListarProveedor_HCB-1Img" src="/DXR.axd?r=1_7" alt="[Close]" style="height:14px;width:15px;" /></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table></td>
+				</tr><tr>
+					<td id="ctl00_CPH1_devPopupListarProveedor_PWC-1" class="dxpcContent" style="height:100%;border-top-width:0px;">
+                <div id="ctl00_CPH1_devPopupListarProveedor_AjaxPanelProgresoPopupProveedor" style="visibility:hidden;display:block;">
+						
+                        <div id="divPanelFondoTransparente" class="FondoGrisTransparente">
+                        </div>
+                        <div id="divPanelProgreso" class="PanelProgresoCentroPagina">
+                            <img src="/App_Themes/styles-viejo/imagenes/iconos/AjaxPanelProgreso.gif" alt="" style="width: 75px; height: 75px;" />
+                        </div>
+                    
+					</div>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4>Buscar Proveedor</h4>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div style="width: 100%; padding-left: 10px; text-align: left;">
+                    <a href="javascript:void(0);" onclick="EsconderPopupListarProveedor()">Cerrar</a>
+                </div>
+            </td>
+				</tr>
+			</table></td><td style="background:url('/DXR.axd?r=1_71') no-repeat left top;"></td>
+		</tr><tr>
+			<td style="background:url('/DXR.axd?r=1_73') no-repeat left top;"></td><td><img src="/DXR.axd?r=1_72" alt="" style="height:5px;width:5px;" /></td>
+		</tr>
+	</table>
+</div><div id="ctl00_CPH1_devPopupListarProveedor_DXPWMB-1" class="dxpcModalBackground" style="position:absolute;visibility:hidden;left:0px;top:0px;z-index:9999;">
+
+</div><script id="dxss_1122377419" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_CPH1_devPopupListarProveedor',[[['dxpcCloseButtonHover'],[''],['HCB-1']]]);
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devPopupListarProveedor');
+window['devPopupListarProveedor'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devPopupListarProveedor';
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='WindowCenter';
+dxo.popupVerticalAlign='WindowCenter';
+dxo.popupVerticalOffset=-200;
+dxo.isPopupPositionCorrectionOn=false;
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+    <input type="hidden" name="ctl00$CPH1$hdnFldIdProveedorSeleccionado" id="ctl00_CPH1_hdnFldIdProveedorSeleccionado" />
+    <!-- Inicio Panel Emergente AjaxPanelProgreso-->
+    <div id="ctl00_CPH1_updPgsAjaxPanelProgreso" style="display:none;">
+	
+            <div id="divPanelFondoTransparente" class="FondoGrisTransparente">
+            </div>
+            <div id="divPanelProgreso" class="PanelProgresoCentroPagina">
+                <img src="/App_Themes/styles-viejo/imagenes/iconos/AjaxPanelProgreso.gif" alt="" style="width: 75px; height: 75px;" />
+            </div>
+        
+</div>
+    <!-- Fin Panel Emergente AjaxPanelProgreso-->
+    <input type="hidden" id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadanoWS" name="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadanoWS" value="0:0:-1:0:0:0:0:0:" />
+<div id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+	<table id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+		<tr>
+			<td class="dxpcControl" onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano&#39;,-1,false)" onmousemove="aspxPWMMove(event,&#39;ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano&#39;,-1)" style="height:490px;width:850px;cursor:default;"><table id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_CLW-1" cellspacing="0" cellpadding="0" style="height:490px;width:850px;border-collapse:collapse;border-collapse:separate;">
+				<tr>
+					<td id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_PWH-1" class="dxpcHeader" onmousedown="aspxPWDGMDown(event,&#39;ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano&#39;,-1)" style="cursor:move;padding-left:12px;padding-right:2px;padding-top:2px;padding-bottom:2px;-khtml-user-select:none;"><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+						<tr>
+							<td id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_PWH-1T" class="dxpc" style="width:100%;">Vista Previa Proceso Compra Ciudadano</td><td style="padding-left:4px;"><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+								<tr>
+									<td id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_HCB-1" class="dxpcCloseButton" onclick="aspxPWCBClick(&#39;ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano&#39;,-1)" onmousedown="return aspxPWCBMDown(event);" style="cursor:pointer;"><img id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_HCB-1Img" src="/DXR.axd?r=1_7" alt="[Close]" style="height:14px;width:15px;" /></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table></td>
+				</tr><tr>
+					<td id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_PWC-1" class="dxpcContent" style="height:100%;border-top-width:0px;text-align:Center;vertical-align:Middle;">&nbsp;</td>
+				</tr>
+			</table></td><td style="background:url('/DXR.axd?r=1_71') no-repeat left top;"></td>
+		</tr><tr>
+			<td style="background:url('/DXR.axd?r=1_73') no-repeat left top;"></td><td><img src="/DXR.axd?r=1_72" alt="" style="height:5px;width:5px;" /></td>
+		</tr>
+	</table>
+</div><div id="ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano_DXPWMB-1" class="dxpcModalBackground" style="position:absolute;visibility:hidden;left:0px;top:0px;z-index:9999;">
+
+</div><script id="dxss_107999195" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano',[[['dxpcCloseButtonHover'],[''],['HCB-1']]]);
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devPopupVistaPreviaProcesoCompraCiudadano');
+window['devPopupVistaPreviaProcesoCompraCiudadano'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devPopupVistaPreviaProcesoCompraCiudadano';
+dxo.allowResize=true;
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='WindowCenter';
+dxo.popupVerticalAlign='WindowCenter';
+dxo.isPopupPositionCorrectionOn=false;
+dxo.popupElementID='lnkBuscarProveedor';
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+    <input type="hidden" id="ctl00_CPH1_devPopupVistaPreviaPliegoWS" name="ctl00_CPH1_devPopupVistaPreviaPliegoWS" value="0:0:-1:0:0:0:0:0:" />
+<div id="ctl00_CPH1_devPopupVistaPreviaPliego_PW-1" style="position:absolute;left:0px;top:0px;z-index:10000;visibility:hidden;display:none;">
+	<table id="ctl00_CPH1_devPopupVistaPreviaPliego_PWST-1" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;position:relative;">
+		<tr>
+			<td class="dxpcControl" onmousedown="aspxPWMDown(event,&#39;ctl00_CPH1_devPopupVistaPreviaPliego&#39;,-1,false)" onmousemove="aspxPWMMove(event,&#39;ctl00_CPH1_devPopupVistaPreviaPliego&#39;,-1)" style="height:490px;width:850px;cursor:default;"><table id="ctl00_CPH1_devPopupVistaPreviaPliego_CLW-1" cellspacing="0" cellpadding="0" style="height:490px;width:850px;border-collapse:collapse;border-collapse:separate;">
+				<tr>
+					<td id="ctl00_CPH1_devPopupVistaPreviaPliego_PWH-1" class="dxpcHeader" onmousedown="aspxPWDGMDown(event,&#39;ctl00_CPH1_devPopupVistaPreviaPliego&#39;,-1)" style="cursor:move;padding-left:12px;padding-right:2px;padding-top:2px;padding-bottom:2px;-khtml-user-select:none;"><table cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-collapse:separate;">
+						<tr>
+							<td id="ctl00_CPH1_devPopupVistaPreviaPliego_PWH-1T" class="dxpc" style="width:100%;">Vista Previa Proceso Compra Ciudadano</td><td style="padding-left:4px;"><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-collapse:separate;">
+								<tr>
+									<td id="ctl00_CPH1_devPopupVistaPreviaPliego_HCB-1" class="dxpcCloseButton" onclick="aspxPWCBClick(&#39;ctl00_CPH1_devPopupVistaPreviaPliego&#39;,-1)" onmousedown="return aspxPWCBMDown(event);" style="cursor:pointer;"><img id="ctl00_CPH1_devPopupVistaPreviaPliego_HCB-1Img" src="/DXR.axd?r=1_7" alt="[Close]" style="height:14px;width:15px;" /></td>
+								</tr>
+							</table></td>
+						</tr>
+					</table></td>
+				</tr><tr>
+					<td id="ctl00_CPH1_devPopupVistaPreviaPliego_PWC-1" class="dxpcContent" style="height:100%;border-top-width:0px;text-align:Center;vertical-align:Middle;">&nbsp;</td>
+				</tr>
+			</table></td><td style="background:url('/DXR.axd?r=1_71') no-repeat left top;"></td>
+		</tr><tr>
+			<td style="background:url('/DXR.axd?r=1_73') no-repeat left top;"></td><td><img src="/DXR.axd?r=1_72" alt="" style="height:5px;width:5px;" /></td>
+		</tr>
+	</table>
+</div><div id="ctl00_CPH1_devPopupVistaPreviaPliego_DXPWMB-1" class="dxpcModalBackground" style="position:absolute;visibility:hidden;left:0px;top:0px;z-index:9999;">
+
+</div><script id="dxss_429769579" type="text/javascript">
+<!--
+aspxAddHoverItems('ctl00_CPH1_devPopupVistaPreviaPliego',[[['dxpcCloseButtonHover'],[''],['HCB-1']]]);
+
+var dxo = new ASPxClientPopupControl('ctl00_CPH1_devPopupVistaPreviaPliego');
+window['devPopupVistaPreviaPliego'] = dxo;
+dxo.uniqueID = 'ctl00$CPH1$devPopupVistaPreviaPliego';
+dxo.allowResize=true;
+dxo.closeAction='CloseButton';
+dxo.popupHorizontalAlign='WindowCenter';
+dxo.popupVerticalAlign='WindowCenter';
+dxo.isPopupPositionCorrectionOn=false;
+dxo.popupElementID='lnkBuscarProveedor';
+dxo.InlineInitialize();
+
+//-->
+</script>
+
+
+        </section>
+        <script src="/App_Themes/bastrap/scripts/jquery.min.js"></script>
+        <script src="/App_Themes/bastrap/scripts/bootstrap.min.js"></script>
+        
+
+<script>
+    function openModalNavegadores() {
+        $('#modalAvisoNavegadores').modal('show');
+    }
+
+    function openModalTerminos() {
+        $('#modalTerminosYCondiciones').modal('show');
+    }
+</script>
+<footer>
+    <div class="footer">
+        <div class="container">
+            <div class="col-md-2 imgLogo">
+                <!-- LOGO COMPRAR -->
+                <img src="Imagenes/Logos/jefatura.png" alt="Jefatura de Gabinete de Ministros - Argentina" style="border-style:None;width:200px;" />
+            </div>
+            <div class="col-md-2 lblFooter lblFooterLeft">
+                <span id="ctl00_pie_lblSecretaria" style="display:inline-block;width:140px;">Secretaría Ejecutiva</span>
+            </div>
+            <div class="col-md-2 lblFooter">
+                <span id="ctl00_pie_lblContrataciones" style="display:inline-block;width:140px;">Oficina Nacional de Contrataciones</span>
+            </div>
+            <div class="col-md-3 imgLogo imgLogoLeft">
+
+            </div>
+            <div class="col-md-3 links-externos">
+                <!-- LINKS EXTERNOS -->
+                <div class="row">
+                    
+                    <!-- BOLETIN OFICIAL -->
+                    <div class="col-md-12">
+                        
+                        <span>Presidencia de la nación</span>
+                    </div>
+                    <!-- INSTITUCIONAL -->
+                    <div class="col-md-12 margin-top-2">
+                        <span id="ctl00_pie_lblNombreserver" class="footer-version">PRDFINMSAPPB02</span>
+                        <span id="ctl00_pie_Label1" class="footer-version">
+                                v 1.1.934_COMPRAR</span>
+                    </div>
+                    <!-- NORMATIVA -->
+                    <div class="col-md-12 margin-top-2">
+                        <a id="ctl00_pie_LinkButton1" href="javascript:__doPostBack(&#39;ctl00$pie$LinkButton1&#39;,&#39;&#39;)">Avisos sobre Navegadores</a>
+                    </div>
+                    <div class="col-md-12 margin-top-2">
+                        <a id="ctl00_pie_LinkButton2" href="javascript:__doPostBack(&#39;ctl00$pie$LinkButton2&#39;,&#39;&#39;)">Términos y Condiciones de Uso</a>
+                    </div>
+                    <div class="col-md-12 margin-top-2">
+                        <a id="ctl00_pie_LinkButton3" href="javascript:__doPostBack(&#39;ctl00$pie$LinkButton3&#39;,&#39;&#39;)">Preguntas Frecuentes</a>
+                    </div>
+                    <div class="col-md-12 margin-top-2">
+                        <span class="glyphicon glyphicon-send"></span>&nbsp;
+                            <span id="ctl00_pie_lblTextIncidencias">Envíenos por favor un ticket</span>
+                        <a id="ctl00_pie_linkIncidencias" href="https://incidencias.innovacion.gob.ar/servicedesk/customer/portal/6" target="_blank"> aquí</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- LINKS AVISOS -->
+        
+        <!-- VERSION -->
+        
+        <!--NOMBRE SERVIDOR-->
+        
+    </div>
+</footer>
+<div class="modal" id="modalAvisoNavegadores" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="ctl00_pie_div1" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Aviso sobre Navegadores</h4>
+            </div>
+            <div class="modal-body" data-backdrop="static" data-keyboard="false">
+                <div class="container-fluid">
+                    Para brindar la mejor calidad y velocidad de navegación nuestro sitio está desarrollado en función de las últimas versiones de los navegadores:
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="container-fluid">
+                            <div class="carousel slide" data-ride="carousel" id="carouselnav">
+                                <div class="carousel-inner">
+                                    <div class="item active">
+                                        <img id="ctl00_pie_imgCarrousel" src="/App_Themes/bastrap/images/navegadores.jpg" alt="Navegadores" style="border-style:None;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalTerminosYCondiciones" tabindex="-2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <p><u>DI-2016-29-E-APN-ONC#MM – ANEXO II</u></p>
+                <h4 class="modal-title">POLÍTICAS, TÉRMINOS Y CONDICIONES DE USO DEL SISTEMA (PTCUS) COMUNES A TODOS LOS USUARIOS</h4>
+            </div>
+            <div class="modal-body" style="height: 500px; overflow-y: auto; text-align: justify;">
+                <p>Artículo 1°.- Encuadre Jurídico</p>
+                <p>El acceso y/o uso al Sistema Electrónico de Contrataciones de la Administración Nacional denominado COMPR.AR., se efectúa en el marco de lo normado por los artículos 21 y 22 del Decreto Delegado Nº 1023/01, el artículo 33 del reglamento del Régimen de Contrataciones de la Administración Nacional aprobado por el Decreto Nº 893/12, las Políticas, Términos y Condiciones de Uso del Sistema y las Condiciones Particulares que en el futuro puedan complementarlas, sustituirlas o modificarlas. </p>
+                <p>Artículo 2°.- Aceptación </p>
+                <p>Desde el momento de acceso y/o uso del COMPR.AR, se considera que el usuario acepta plenamente y sin reserva alguna, las Políticas, Términos y Condiciones así como las Condiciones Particulares de uso del sistema que pudieran dictarse, adhiriendo en forma inmediata a todas y cada de una ellas. </p>
+                <p>Artículo 3°.- Acceso</p>
+                <p>El acceso a COMPR.AR es público y gratuito, y se realiza a través de Internet, en el sitio cuya página principal se encuentra ubicada en <a>https://comprar.gob.ar</a> o aquella que en un futuro la reemplace. El Usuario deberá contar con un equipo y programas informáticos que cumplan con los requisitos mínimos de compatibilidad con el sistema (acceso por internet; navegadores Internet Explorer; Mozilla Firefox o Google Chrome). El Usuario toma conocimiento que cuando su equipo o programas de computación no reúnan tales requisitos mínimos, no podrá tener acceso al sistema y/o se podrá bloquear su acceso. </p>
+                <p>Artículo 4°.- Términos </p>
+                <p>A los efectos de las presentes Políticas, Términos y Condiciones, se entenderá que:</p>
+                <p><u>COMPR.AR</u></p>
+                <p>Constituye el Sistema Electrónico de Contrataciones de la Administración Nacional a través del cual las jurisdicciones y entidades de la Administración Pública Nacional comprendidas en el artículo 2º del Decreto Delegado Nº 1023/01 y sus modificaciones efectuarán en forma electrónica todos los procedimientos prescriptos en el Reglamento del Régimen de Contrataciones de la Administración Nacional, aprobado por el Decreto Nº 893/12 y sus modificaciones.</p>
+                <p><a>https://comprar.gob.ar</a></p>
+                <p>Es el portal sobre el que se gestiona el COMPR.AR y a través del cual se difunden las convocatorias y las restantes etapas de los procedimientos de selección. El acceso a este portal es público y gratuito. </p>
+                <p>Asimismo, es medio válido de todas las notificaciones entre la jurisdicción o entidad contratante y los interesados, oferentes, adjudicatarios o cocontratantes que deban realizarse durante los procedimientos de selección. </p>
+                <p><u>USUARIOS DEL PROVEEDOR:</u></p>
+                <p>Es la persona humana que utiliza el COMPR.AR en representación de la persona humana o jurídica inscripta en el Sistema de Información de Proveedores que administra la OFICINA NACIONAL DE CONTRATACIONES, conforme el procedimiento de autenticación de los usuarios de los proveedores obrante en el Anexo III de la presente medida. </p>
+                <p><u>USUARIOS COMPRADORES:</u></p>
+                <p>Es la persona humana designada por la Unidad Operativa de Contrataciones, en adelante UOC, como responsable de la utilización del COMPR.AR, de acuerdo a los roles otorgados conforme al procedimiento de Administradores de Perfiles y Usuarios de la Administración obrante en los Anexos IV y V. </p>
+                <p><u>SISTEMA DE INFORMACION DE PROVEEDORES:</u></p>
+                <p>El Sistema de Información de Proveedores (SIPRO) que administra la OFICINA NACIONAL DE CONTRATACIONES se incorpora también al sistema COMPR.AR. Este sistema tiene por objeto registrar información relativa a los proveedores, sus antecedentes, historial de procedimientos de selección en los que se hubieren presentado como oferentes, historial de contratos, órdenes de compra o venta, incumplimientos contractuales y extra-contractuales, en ambos casos por causas imputables al proveedor, sanciones de apercibimiento, suspensión e inhabilitación y toda otra información que la OFICINA NACIONAL DE CONTRATACIONES considere de utilidad. </p>
+                <p><u>PROTECCIÓN DE LA INFORMACIÓN CONTENIDA EN EL PORTAL:</u></p>
+                <p>Toda la información elaborada o disponible en, o a través del COMPR.AR, se encuentra protegida como propiedad intelectual. Está prohibido a todos los usuarios modificar, copiar, transmitir, vender, distribuir, exhibir, publicar, licenciar, crear trabajos derivados, o usar, en general, el contenido disponible en o a través del COMPR.AR para fines comerciales y otros. </p>
+                <p><u>USO ADECUADO DE COMPR.AR:</u></p>
+                <p>El usuario que ingresa al COMPR.AR, se compromete a utilizar el mismo en forma lícita y de acuerdo a las presentes PTCUS. Se encuentra prohibido a los usuarios, la realización de actos maliciosos o que atenten contra el sitio, o que de alguna manera puedan dañar, inutilizar, sobrecargar, deteriorar, impedir o limitar la utilización de todas o algunas de las funcionalidades del mismo.</p>
+                <p><u>RESPONSABILIDAD POR CLAVES DE USUARIO:</u></p>
+                <p>Los usuarios de COMPR.AR no pueden ceder, transferir o comunicar bajo ninguna circunstancia sus claves y nombres de usuarios, haciéndose plenamente responsables por los actos, documentos, anexos, ofertas, y demás antecedentes que bajo esas claves y nombres de usuario, ingresen al COMPR.AR. Además, los usuarios asumen la obligación de cambiar sus claves frecuentemente, las que se debe evitar que sean evidentes y/o simples. </p>
+                <p><u>RESPONSABILIDAD:</u></p>
+                <p>El Gobierno Nacional no se responsabiliza por los daños y/o perjuicios derivados del acceso y/o uso de los contenidos publicados en el sitio <a>https://comprar.gob.ar</a> o en el que en un futuro lo reemplace. </p>
+                <p>El Gobierno Nacional no se responsabiliza por las interrupciones de este servicio, ni por cualquier inconveniente originado en causas ajenas que impidan el acceso. </p>
+                <p>La veracidad e integridad de la totalidad de la información y contenido de los documentos publicados son de exclusiva responsabilidad de los usuarios que los publican y envían, de acuerdo a las claves de acceso bajo las cuales actúen. </p>
+                <p>El Gobierno Nacional no es responsable por la interrupción en la recepción de correos electrónicos por parte del usuario-proveedor. </p>
+                <p>El Gobierno Nacional no es responsable de los virus que puedan contener los documentos que adjuntan los usuarios del sitio. Es responsabilidad de cada usuario velar por que los archivos que sube al sitio no tengan virus de ninguna especie. </p>
+                <p>Las estadísticas e informes disponibles en el COMPR.AR son meramente referenciales y no comprometen a la OFICINA NACIONAL DE CONTRATACIONES, ni al Gobierno Nacional. </p>
+                <p><u>SUSPENSIÓN O ELIMINACIÓN DE USUARIOS:</u></p>
+                <p>La OFICINA NACIONAL DE CONTRATACIONES se reserva el derecho de suspender y/o eliminar unilateral y automáticamente del COMPR.AR a los usuarios que incumplan las PTCUS. </p>
+                <p><u>CENTRO DE CONTACTO. MESA DE AYUDA TELEFÓNICA:</u></p>
+                <p>La OFICINA NACIONAL DE CONTRATACIONES establecerá para todos los usuarios del COMPR.AR un centro de contacto que contará con una mesa de ayuda telefónica y vía correo electrónico. Esta mesa de ayuda atenderá las consultas de los usuarios sobre el funcionamiento del COMPR.AR.</p>
+                <p>Artículo 5°.- Usuarios de los proveedores </p>
+                <p><u>CORREOS ELECTRÓNICOS ENVIADOS POR COMPR.AR. A PROVEEDORES:</u></p>
+                <p>Los usuarios proveedores aceptan recibir permanentemente correos electrónicos relativos a procedimientos de selección y demás información relevante, a la dirección de correo informada por ellos en el SIPRO. </p>
+                <p>El sitio <a>https://comprar.gob.ar</a> o el que en un futuro lo reemplace es el medio obligatorio de difusión de las convocatorias y de las restantes etapas de los procedimientos de selección, sin perjuicio de las demás formas de difusión y publicidad que la reglamentación vigente determina.</p>
+                <p>Los correos electrónicos enviados por el COMPR.AR solo constituyen un medio de aviso. </p>
+                <p>Se recomienda a los proveedores, revisar periódicamente el COMPR.AR –en particular Escritorio del Proveedor– para informarse de las novedades vinculadas a las etapas, desarrollo del proceso de contratación electrónica y demás información relevante, como así también consultar las demás formas de difusión y publicidad que la reglamentación vigente determina.</p>
+                <p><u>LIBERACIÓN DE RESPONSABILIDAD:</u></p>
+                <p>Los usuarios proveedores deben velar por la seriedad de las ofertas ingresadas al COMPR.AR, siendo plenamente responsables por las mismas. </p>
+                <p>Los usuarios proveedores deberán aceptar que el Gobierno Nacional carece de toda responsabilidad por los resultados que obtengan en cada uno de los procedimientos de selección electrónicos en que participen. </p>
+                <p>Los usuarios proveedores liberan al Gobierno Nacional de cualquier responsabilidad derivada de la dilación o no envío oportuno de correos electrónicos de alerta, declarando conocer que el medio de notificación es la difusión que cada Usuario Comprador efectúa en el portal <a>https://comprar.gob.ar</a> o en el que en un futuro lo reemplace. La no recepción oportuna de correos electrónicos de alerta que envía el COMPR.AR, no justificará, ni se considerará como causal suficiente para eximir a los proponentes de sus cargas y responsabilidades. </p>
+                <p><u>POLÍTICAS DE PRIVACIDAD:</u></p>
+                <p>Los usuarios de COMPR.AR aceptan, por el sólo hecho de su inscripción o registro en el sitio, que los datos, antecedentes e información aportados en las diversas etapas de los procedimientos en que participan, sean de público conocimiento en el ámbito de las transacciones que se efectúan en él y que sólo están disponibles públicamente para esos efectos. Asimismo, los usuarios de COMPR.AR, por el sólo hecho de su inscripción otorgan su conformidad para que los resultados de los procedimientos de selección en que participen y las respectivas contrataciones, formen parte de las estadísticas e informes, se procesen y se publiquen por parte del Gobierno Nacional.</p>
+                <p>Cuando se solicite por parte de terceros acceso a información que pudiese afectar derechos de los usuarios proveedores, tales como los relacionados con su vida privada o derechos de carácter económico o comercial, se procederá en un todo conforme a la Ley Nº 25.326 de “Protección de Datos Personales” modificada por la Ley Nº 26.343 y reglamentada por el Decreto Nº 1558/2001 modificado por el Decreto 1160/2010, el Decreto Nº 1172/2003 de “Acceso a la Información Pública” y el Decreto N° 117/2016 “Plan de Apertura de Datos”. </p>
+                <p><u>DECLARACIÓN:</u></p>
+                <p>Los usuarios de COMPR.AR declaran conocer y aceptar la circunstancia relativa a que la OFICINA NACIONAL DE CONTRATACIONES, puede en cualquier momento modificar todo o parte de las presentes PTCUS, que serán oportunamente publicadas en el portal de COMPR.AR. </p>
+                <p><u>USUARIOS COMPRADORES:</u></p>
+                <p>El usuario-comprador es responsable de la información que se difunda y debe procurar que su contenido se adapte a las previsiones contempladas por la normativa vigente. Queda estrictamente prohibido a los usuarios compradores realizar cualquier uso de COMPR.AR ajeno al marco del proceso de contrataciones públicas electrónicas. Los Organismos de Control están autorizados a utilizar el COMPR.AR con el objeto de asegurar el correcto desempeño de los distintos procesos y velar por su transparencia. </p>
+                <p><u>LÍMITE DE RESPONSABILIDAD DEL COMPR.AR SOBRE EL PROCESO DE SELECCION:</u></p>
+                <p>El COMPR.AR es un medio que facilita la realización de los procedimientos de selección sin garantizar la seriedad e idoneidad de las ofertas recibidas, las que deben ser evaluadas por cada usuario comprador, y en su caso, por la Comisión Evaluadora de Ofertas.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+<script type="text/javascript">
+//<![CDATA[
+var Page_Validators =  new Array(document.getElementById("ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV"), document.getElementById("ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV"), document.getElementById("ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV"), document.getElementById("ctl00_CPH1_RequiredFieldValidator1"), document.getElementById("ctl00_CPH1_NumeroProceso_FormatoInvalido"));
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+var ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV = document.all ? document.all["ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV"] : document.getElementById("ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV");
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.controltovalidate = "ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBox";
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.errormessage = "Verifique que el CUIT haya sido ingresado";
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.display = "Dynamic";
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.validationGroup = "vgLogin";
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.evaluationfunction = "CustomValidatorEvaluateIsValid";
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.clientvalidationfunction = "Validatorctl00_CtrlMenuPortal_logIn_txtUsername";
+ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV.validateemptytext = "true";
+var ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV = document.all ? document.all["ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV"] : document.getElementById("ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV");
+ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV.controltovalidate = "ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBox";
+ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV.display = "Dynamic";
+ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV.validationGroup = "vgRecuperar";
+ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV.evaluationfunction = "CustomValidatorEvaluateIsValid";
+ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV.clientvalidationfunction = "Validatorctl00_CtrlMenuPortal_logIn_txtMail";
+ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV.validateemptytext = "true";
+var ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV = document.all ? document.all["ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV"] : document.getElementById("ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV");
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.controltovalidate = "ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBox";
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.errormessage = "Verifique que el correo electrónico haya sido ingresado.";
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.display = "Dynamic";
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.validationGroup = "vgRecuperar";
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.evaluationfunction = "CustomValidatorEvaluateIsValid";
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.clientvalidationfunction = "Validatorctl00_CtrlMenuPortal_logIn_txtMail2";
+ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV.validateemptytext = "true";
+var ctl00_CPH1_RequiredFieldValidator1 = document.all ? document.all["ctl00_CPH1_RequiredFieldValidator1"] : document.getElementById("ctl00_CPH1_RequiredFieldValidator1");
+ctl00_CPH1_RequiredFieldValidator1.controltovalidate = "ctl00_CPH1_txtNumeroProceso";
+ctl00_CPH1_RequiredFieldValidator1.errormessage = "Verifique que haya ingresado el número de proceso.";
+ctl00_CPH1_RequiredFieldValidator1.display = "Dynamic";
+ctl00_CPH1_RequiredFieldValidator1.validationGroup = "BusquedaRapidaProceso";
+ctl00_CPH1_RequiredFieldValidator1.evaluationfunction = "RequiredFieldValidatorEvaluateIsValid";
+ctl00_CPH1_RequiredFieldValidator1.initialvalue = "";
+var ctl00_CPH1_NumeroProceso_FormatoInvalido = document.all ? document.all["ctl00_CPH1_NumeroProceso_FormatoInvalido"] : document.getElementById("ctl00_CPH1_NumeroProceso_FormatoInvalido");
+ctl00_CPH1_NumeroProceso_FormatoInvalido.controltovalidate = "ctl00_CPH1_txtNumeroProceso";
+ctl00_CPH1_NumeroProceso_FormatoInvalido.errormessage = "Verifique el formato del número de Proceso XXX-XXXX-(LPR/CPU/CPR/CDI/LPU/CDP)XX o XX/X-XXXX-(LPR/CPU/CPR/CDI/LPU/CDP)XX";
+ctl00_CPH1_NumeroProceso_FormatoInvalido.display = "Dynamic";
+ctl00_CPH1_NumeroProceso_FormatoInvalido.validationGroup = "BusquedaRapidaProceso";
+ctl00_CPH1_NumeroProceso_FormatoInvalido.evaluationfunction = "RegularExpressionValidatorEvaluateIsValid";
+ctl00_CPH1_NumeroProceso_FormatoInvalido.validationexpression = "^[0-9]{1,}(\\/[0-9]{1,})?-[0-9]{4}-(CPU|CPR|LPU|LPR|CDI|SPU|CDP)[0-9]{2}$";
+//]]>
+</script>
+
+
+<script type="text/javascript">
+//<![CDATA[
+CargarSelect2();
+var Page_ValidationActive = false;
+if (typeof(ValidatorOnLoad) == "function") {
+    ValidatorOnLoad();
+}
+
+function ValidatorOnSubmit() {
+    if (Page_ValidationActive) {
+        return ValidatorCommonOnSubmit();
+    }
+    else {
+        return true;
+    }
+}
+        
+WebForm_InitCallback();
+document.getElementById('ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_CtrlMenuPortal_logIn_txtUsername_txtTextBoxV'));
+}
+
+document.getElementById('ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_CtrlMenuPortal_logIn_txtMail_txtTextBoxV'));
+}
+
+document.getElementById('ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_CtrlMenuPortal_logIn_txtMail2_txtTextBoxV'));
+}
+
+document.getElementById('ctl00_CPH1_RequiredFieldValidator1').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_CPH1_RequiredFieldValidator1'));
+}
+
+document.getElementById('ctl00_CPH1_NumeroProceso_FormatoInvalido').dispose = function() {
+    Array.remove(Page_Validators, document.getElementById('ctl00_CPH1_NumeroProceso_FormatoInvalido'));
+}
+Sys.Application.add_init(function() {
+    $create(AjaxControlToolkit.FilteredTextBoxBehavior, {"FilterType":15,"ValidChars":" -_()áéíóúÁÉÍÓÚ#","id":"ctl00_CPH1_txtNumeroExpediente_FilteredTextBoxExtender"}, null, null, $get("ctl00_CPH1_txtExpediente"));
+});
+Sys.Application.add_init(function() {
+    $create(AjaxControlToolkit.FilteredTextBoxBehavior, {"FilterType":15,"ValidChars":" -_()áéíóúÁÉÍÓÚñÑ","id":"ctl00_CPH1_txtNombrePliego_FilteredTextBoxExtender"}, null, null, $get("ctl00_CPH1_txtNombrePliego"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":null,"displayAfter":0,"dynamicLayout":false}, null, null, $get("ctl00_CPH1_devPopupListarProveedor_AjaxPanelProgresoPopupProveedor"));
+});
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":null,"displayAfter":0,"dynamicLayout":true}, null, null, $get("ctl00_CPH1_updPgsAjaxPanelProgreso"));
+});
+//]]>
+</script>
+</form>
+
+
+</body>
+</html>

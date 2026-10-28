@@ -1,0 +1,5 @@
+URL: https://maneps.mw/rms/api/ocds/get-records?offset=0
+STATUS: 401
+TYPE: application/json; charset=utf-8
+
+{"statusCode":401,"message":"JsonWebTokenError","path":"/api/ocds/get-records?offset=0","timestamp":"2026-10-28T04:11:36.249Z","exception":{"response":{"statusCode":401,"message":"JsonWebTokenError","error":"jwt must be provided"},"status":401,"options":{},"message":"JsonWebTokenError","name":"UnauthorizedException"}}
