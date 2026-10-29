@@ -1,159 +1,40 @@
-TOTAL active: {"size": 5, "totalElements": 44533, "totalPages": 8907, "number": 0, "maxAllowedRecords": 10000}
-KEYS: ["_id", "_rScore", "_type", "award", "descriptions", "isActive", "isCanceled", "modifications", "modifiedDate", "organizationHierarchy", "parentNoticeId", "publishDate", "responseDate", "responseDateActual", "responseTimeZone", "solicitationNumber", "title", "type"]
-{
- "isCanceled": false,
- "_rScore": 0,
- "_type": "opportunity",
- "publishDate": "2026-10-29T10:15:28+00:00",
- "isActive": true,
- "title": "Tri-Services Post Secondary Programs in Europe",
- "type": {
-  "code": "r",
-  "value": "Sources Sought"
- },
- "descriptions": [
-  {
-   "lastModifiedDate": "2026-10-29T10:15:28.771+00:00",
-   "content": "<p>This is a SOURCES SOUGHT announcement for market research purposes ONLY, to be used for preliminary planning purposes. THIS IS NOT A SOLICITATION FOR PROPOSALS AND NO CONTRACT WILL BE AWARDED FROM THIS SYNOPSIS. No reimbursement will be made for a"
-  }
- ],
- "solicitationNumber": "W564KV-27-R-TRI1",
- "responseDate": "2026-11-30T15:00:00+00:00",
- "parentNoticeId": null,
- "award": {
-  "awardee": {
-   "ueiSAM": null,
-   "name": null
-  }
- },
- "responseTimeZone": "Europe/Berlin",
- "modifiedDate": "2026-10-29T10:15:28+00:00",
- "organizationHierarchy": [
-  {
-   "organizationId": "100000000",
-   "code": "9700",
-   "address": {
-    "zip": null,
-    "country": null,
-    "city": null,
-    "streetAddress": null,
-    "streetAddress2": null,
-    "state": null
-   },
-   "level": 1,
-   "name": "DEPT OF DEFENSE",
-   "type": "DEPARTMENT",
-   "status": "active"
-  },
-  {
-   "organizationId": "300000201",
-   "code": "2100",
-   "address": {
-    "zip": null,
-    "country": null,
-    "city": null,
-    "streetAddress": null,
-    "streetAddress2": null,
-    "state": null
-   },
-   "level": 2,
-   "name": "DEPT OF THE ARMY",
-   "type": "AGENCY",
-   "status": "active"
-  },
-  {
-   "organizationId": "100000117",
-   "code": "AMC",
-   "address": {
-    "zip": null,
-    "country": null,
-    "city": null,
-    "streetAddress": null,
-    "streetAddress2": null,
-    "state": null
-   },
-   "level": 3,
-   "name": "AMC",
-   "type": "MAJOR COMMAND",
-   "status": "active"
-  },
-  {
-   "organizationId": "100007305",
-   "code": "ACC",
-   "address": {
-    "zip": null,
-    "country": null,
-    "city": null,
-    "streetAddress": null,
-    "streetAddress2": null,
-    "state": null
-   },
-   "level": 4,
-   "name": "ACC",
-   "type": "SUB COMMAND",
-   "status": "active"
-  },
-  {
-   "organizationId": "500045735",
-   "code": "ACC-OO",
-   "address": {
-    "zip": null,
-    "country": null,
-    "city": null,
-    "streetAddress": null,
-    "streetAddress2": null,
-    "state": null
-   },
-   "level": 5,
-   "name": "ACC-OO",
-   "type": "SUB COMMAND",
-   "status": "active"
-  },
-  {
-   "organizationId": "500045602",
-   "code": "409TH CSB",
-   "address": {
-    "zip": null,
-    "country": null,
-    "city": null,
-    "streetAddress": null,
-    "streetAddress2": null,
-    "state": null
-   },
-   "level": 6,
-   "name": "409TH CSB",
-   "type": "SUB COMMAND",
-   "status": "active"
-  },
-  {
-   "organizationId": "500045689",
-   "code": "W564KV",
-   "address": {
-    "zip": "09227",
-    "country": "USA",
-    "city": "APO",
-    "streetAddress": "KO DIRECTORATE OF CONTRACTING",
-    "streetAddress2": "UNIT 23156",
-    "state": "AE"
-   },
-   "level": 7,
-   "name": "0409 AQ HQ     CONTRACT",
-   "type": "OFFICE",
-   "status": "active"
-  }
- ],
- "_id": "563cb0595ff34c58b32670cfce8e0849",
- "responseDateActual": "2026-11-30T16:00:00+01:00",
- "modifications": {
-  "count": 0
- }
-}
-{'notice_type': 'o'}: {'size': 1, 'totalElements': 6514, 'totalPages': 6514, 'number': 0, 'maxAllowedRecords': 10000}
-{'notice_type': 'k'}: {'size': 1, 'totalElements': 16040, 'totalPages': 16040, 'number': 0, 'maxAllowedRecords': 10000}
-{'notice_type': 'p'}: {'size': 1, 'totalElements': 3379, 'totalPages': 3379, 'number': 0, 'maxAllowedRecords': 10000}
-{'notice_type': 'r'}: {'size': 1, 'totalElements': 3107, 'totalPages': 3107, 'number': 0, 'maxAllowedRecords': 10000}
-{'response_date.from': '2026-11-01-05:00', 'response_date.to': '2026-11-08-05:00'}: {'size': 1, 'totalElements': 3237, 'totalPages': 3237, 'number': 0, 'maxAllowedRecords': 10000}
-{'set_aside': 'NONE'}: {'size': 1, 'totalElements': 3205, 'totalPages': 3205, 'number': 0, 'maxAllowedRecords': 10000}
-{'q': 'Israel'}: {'size': 1, 'totalElements': 31, 'totalPages': 31, 'number': 0, 'maxAllowedRecords': 10000}
-DETAIL https://sam.gov/api/prod/opps/v2/opportunities/563cb0595ff34c58b32670cfce8e0849 200 {"data2":{"type":"r","award":{},"naics":[{"code":["611310"],"type":"primary"}],"title":"Tri-Services Post Secondary Programs in Europe","archive":{"date":"2026-12-15","type":"auto15"},"version":"2","permissions":{"IVL":{"read":true,"create":true,"delete":true,"update":true}},"solicitation":{"deadlines":{"response":"2026-11-30T16:00:00+01:00","responseTz":"Europe/Berlin"}},"organizationId":"500045689","pointOfContact":[{"fax":"","type":"primary","email":"carlos.a.mayorga.civ@army.mil","phone":"496111435426834","title":null,"fullName":"Carlos Mayorga"},{"fax":"","type":"secondary","email":"stephanie.l.delosreyes2.civ@army.mil","phone":"","title":null,"fullName":"Stephanie Delosreyes"}],"classificationCode":"U009","placeOfPerformance":{"city":{"code":"Multiple","name":"Multiple"},"country":{"code":"DEU","name":"GERMANY"}},"solicitationNumber":"W564KV-27-R-TRI1","additionalReporting":["none"]},"additionalInfo":{"sections":[{"id":"header","status":"updated"},{"id":"general","status":"updated"},{"id":"classification","status":"updated"},{"id":"description","status":"updated"},{"id":"attachments-links","status":"updated"},{"id":"contact","status":"updated"}]},"parent":{},"related":{},"status":{"code":"published","value":"Published"},"archived":false,"cancelled":false,"latest":true,"deleted":false,"postedDate":"2026-10-29T10:15:28.763+00:00","modifiedDate":"2026-10-29T10:15:28.769+00:00","createdDate":"2026-10-29T10:07:36.322+00:00","modifiedBy":"stephanie.l.delosreyes2.civ@mail.mil","createdBy":"stephanie.l.delosreyes2.civ@mail.mil","description":[{"opportunityId":"563cb0595ff34c58b32670cfce8e0849","descriptionId":"5bfa6b8fb98f4e4faa70e6dc95194c56","modifiedOn":"2026-10-29T10:15:28.771+00:00","body":"<p>This is a SOURCES SOUGHT announcement for market research purposes ONLY, to be used for preliminary planning purposes. THIS IS NOT A SOLICITATION FOR PROPOSALS AND NO CONTRACT WILL BE AWARDED FROM THIS SYNOPSIS. No reimbursement will be made for any costs associated with providing information to this synopsis or any follow-up information request. The 409th Contracting Support Brigade, Theater Contracting Command (TCC) Kleber Kaserne, Kaiserslautern, Germany, has a requirement for instructional (secondary, post-secondary, credit and non-credit) programs and education support services under NAICS 611310 at various European locations Belgium, Bulgaria, Germany, Italy, The Netherlands, Poland, Portugal, Romania, Spain, Turkey, and The United Kingdom. These programs form critical elements of the adult education, voluntary education programs which support lifelong learning by Service members and other authorized adult learners within the U.S. military communities; served by the voluntary education organizations of each of the U.S. Forces in the European theater. The voluntary education programs of the U.S. Forces in Europe have as their common mission the delivery and management of the widest range possible of high-quality adult and continuing education programs normally available to the general public within the continental United States (CONUS).</p>\n\n<p>The Contractor providing post-secondary educational services leading to the awarding of degrees shall be regionally or nationally accredited by an agency recognized by the U.S. Department of Education (ED). A non-accredited academic institution or organization cannot claim accredited status solely because of any affiliation or arrangement with an accredited institution.</p>\n\n<p>The requirement will support the U.S. Army, U.S. Air Force, U.S. Navy, and U.S. Marine Corps in Europe. All the services shall be in accordance with the terms, conditions, and specifications in the Performance Work Statement (PWS). A draft PWS is attached to this announcement. This Contract requires timely and responsive quality services. This is a follow-on requirement to two current incumbent contracts as follows:</p>\n\n<ul>\n\t<li>W564KV-23-P-0024 (University of Maryland Global Campus)</li>\n\t<li>W56RKV-23-
-DETAIL https://sam.gov/api/prod/opps/v3/opportunities/563cb0595ff34c58b32670cfce8e0849 404 {"type":"about:blank","title":"Not Found","status":404,"detail":"No static resource opps/v3/opportunities/563cb0595ff34c58b32670cfce8e0849.","instance":"/opps/v3/opportunities/563cb0595ff34c58b32670cfce8e0849"}
+set_aside=SBA: 10940
+set_aside=SBP: 65
+set_aside=8A: 167
+set_aside=HZC: 415
+set_aside=SDVOSBC: 1641
+set_aside=WOSB: 510
+set_aside=NONE: 3205
+set_aside=xyz: 0
+{"title": "EMI CHAMBER", "solicitation": {"deadlines": {"response": "2026-11-05T12:00:00-04:00", "responseTz": "America/New_York"}}, "pop": {"zip": "22448", "streetAddress": "NSWC DAHLGRENRECEIVING OFFICER DAHLGREN DIV, 6220 TISDALE RD SUITE 159 BLDG 125DAHLGREN, VA 22448-5114"}, "psc": "6636", "naics": [{"code": ["332313"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "53--STUD,SHOULDERED", "solicitation": {"setAside": "SBA", "deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "53", "naics": [{"code": ["332722"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "16--CYLINDER,ACTUATING,LIN", "solicitation": {"deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "16", "naics": [{"code": ["336413"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "53--MOUNT,RESILIENT,WEAPON", "solicitation": {"setAside": "SBA", "deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "53", "naics": [{"code": ["332994"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "62--LIGHT,NAVIGATIONAL,AIR", "solicitation": {"deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "62", "naics": [{"code": ["336320"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "62--LIGHT,INDICATOR", "solicitation": {"setAside": "SBA", "deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "62", "naics": [{"code": ["334419"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "15--FORMER,AIRCRAFT", "solicitation": {"setAside": "SBA", "deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "15", "naics": [{"code": ["336413"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "16--FILTER BODY,FLUID", "solicitation": {"deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "16", "naics": [{"code": ["336413"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "53--WASHER,FLAT", "solicitation": {"deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "53", "naics": [{"code": ["332722"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "15--SKIN,AIRCRAFT", "solicitation": {"setAside": "SBA", "deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "15", "naics": [{"code": ["336413"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "48--VALVE,SAFETY RELIEF", "solicitation": {"deadlines": {"response": "2026-11-06"}}, "pop": null, "psc": "48", "naics": [{"code": ["332911"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+{"title": "47--COUPLING HALF,QUICK DI", "solicitation": {"setAside": "SBA", "deadlines": {"response": "2026-11-09"}}, "pop": null, "psc": "47", "naics": [{"code": ["332996"], "type": "primary"}], "keys": ["additionalReporting", "archive", "classificationCode", "farCases", "naics", "organizationId", "permissions", "placeOfPerformance", "pointOfContact", "solicitation", "solicitationNumber", "title", "type"]}
+ISR: Israel Construction Multiple Award Task Order Contract (MATOC) | Award Notice
+ISR: Israel Construction Multiple Award Task Order Contract (MATOC) | Award Notice
+ISR: Israel Construction Multiple Award Task Order Contract (MATOC) | Award Notice
+ISR: Israel Construction Multiple Award Task Order Contract (MATOC) | Award Notice
+ISR: LEASE OF NON-TACTICAL VEHICLES (NTVs), ISRAEL | Solicitation
+ISR: 6515--ROLLA PACKAGE 073 PT EQUIP/ CO | Solicitation
+ISR: Multiple Award Schedule | Award Notice
+ISR: 3D Printers | Combined Synopsis/Solicitation
+ISR: 6515--ROLLA PACKAGE 073 PT EQUIP/ CO | Presolicitation
+ISR: 6515--ROLLA PACKAGE 073 PT EQUIP/ CO | Presolicitation
+ISR: FCI Three Rivers - Q2 FY26 -  Dairy | Combined Synopsis/Solicitation
+ISR: Multiple Support Equipment Items in support of the Foreign Military Sales (FMS) Israel SH-60F Progra | Solicitation
+ISR: 81--SHIPPING AND STORAG | Combined Synopsis/Solicitation
+ISR: CH-53K Program O-Level Bag Group E | Award Notice
+ISR: Drayage Services Germany | Sources Sought
+ISR: CH-53K Program O-Level Bag Group D | Award Notice
+ISR: CH-53K Program O-Level Bag Group C | Award Notice
+ISR: 81--SHIPPING AND STORAG | Combined Synopsis/Solicitation
+ISR: CH-53: FY26 O-Level Peculiar Support Equipment Group A | Award Notice
+ISR: 59--RELAY,ELECTROMAGNET | Combined Synopsis/Solicitation
