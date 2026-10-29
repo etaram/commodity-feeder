@@ -87,7 +87,7 @@ def run(max_queries=120, budget_s=420):
                           "date": a["date"], "headline": a["title"], "domain": a["domain"], "link": a["url"]})
     for r in rows:
         r.setdefault("press_count", ""); r.setdefault("press_top", ""); r.setdefault("press_link", "")
-    out_cols = list(cols) + ["press_count", "press_top", "press_link"]
+    out_cols = [c for c in cols if c not in ("press_count", "press_top", "press_link")] + ["press_count", "press_top", "press_link"]
     with open(dc, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=out_cols)
         w.writeheader(); w.writerows(rows)
