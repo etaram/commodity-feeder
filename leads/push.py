@@ -101,7 +101,7 @@ def leads_tables():
                       ("Sectors", "sectors"), ("Countries", "countries"), ("Sources", "status"),
                       ("Market Signals", "markets"), ("Suppliers", "suppliers"), ("Groups", "groups"),
                       ("Deal Calc", "deal_calc"), ("Price Trends", "price_trends"), ("Price Series", "price_series"),
-                      ("Commodity Prices", "commodity_prices"), ("Israel", "../israel/items")]:
+                      ("Commodity Prices", "commodity_prices"), ("Israel", "../israel/items"), ("Press", "press")]:
         full = LEADS / f"{name}_all.csv"
         path = full if full.exists() else LEADS / f"{name}.csv"
         if path.exists():

@@ -203,6 +203,10 @@ jobs:
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 45
         continue-on-error: true
+      - name: news
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',news,') || contains(format(',{0},', inputs.only), ',merge,') }}
+        timeout-minutes: 12
+        run: set -o pipefail; python -m leads.news 2>&1 | tee -a data/leads/run.log
       - name: push
         if: ${{ env.GOOGLE_SERVICE_ACCOUNT_JSON != '' && (inputs.only == '' || contains(format(',{0},', inputs.only), ',push,')) }}
         run: |

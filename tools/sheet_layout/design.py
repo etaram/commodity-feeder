@@ -395,6 +395,10 @@ table_header(S, 71, 1, 10, ["Country", "Opportunity", "Route", "Deal value", "Ne
 put(tab, 72, 1, [[f'=IFERROR(ARRAY_CONSTRAIN(SORT(FILTER({{{DC}!S2:S,{DC}!W2:W,{DC}!AC2:AC,{DC}!F2:F,{DC}!L2:L,{DC}!E2:E,{DC}!C2:C,{DC}!AE2:AE,{DC}!X2:X,{DC}!Z2:Z}},{DC}!B2:B="Pursue"),8,FALSE),30,10),"Waiting for the next refresh")']])
 nf(S, 72, 101, 4, 4, USD); nf(S, 72, 101, 5, 5, PCT1); nf(S, 72, 101, 6, 6, PCT); nf(S, 72, 101, 7, 8, USD); nf(S, 72, 101, 9, 9, DATE)
 rows_style(S, 72, 101, 1, 10); fmt(rng(S, 72, 101, 8, 8), {"textFormat": text("green", 10, True)}, "userEnteredFormat.textFormat")
+section(tab, S, 104, 1, 10, "Buyers in the news - world press on the buyers of the best deals (GDELT)")
+table_header(S, 105, 1, 5, ["Date", "Headline", "Buyer", "Source", "Link"], tab)
+put(tab, 106, 1, [["=IFERROR(ARRAY_CONSTRAIN(SORT(FILTER({Press!D2:D,Press!E2:E,Press!B2:B,Press!F2:F,Press!G2:G},Press!G2:G<>\"\"),1,FALSE),20,5),\"No linked articles yet - the press check runs with the next data refresh\")"]])
+rows_style(S, 106, 125, 1, 5)
 chart(S, "Expected value by region (Pursue)", rng(S, 26, 35, 6, 6), rng(S, 26, 35, 8, 8), 8, 1, 560, 300, color="green")
 chart(S, "Expected value by sector (Pursue)", rng(S, 43, 54, 1, 1), rng(S, 43, 54, 3, 3), 8, 4, 560, 300)
 
@@ -477,7 +481,7 @@ req.append({"addConditionalFormatRule": {"rule": {"ranges": [rng(TEN, 2, 0, 29, 
 table_tab(41, 15, [90, 55, 230, 140, 90, 80, 90, 480, 95, 70, 95, 160, 250, 200, 120], raw=True, protect=True)
 nf(41, 2, 0, 1, 1, DATE); nf(41, 2, 0, 9, 9, DATE); nf(41, 2, 0, 11, 11, DATE); chip([rng(41, 2, 0, 2, 2)], "NEW", "green", "green_bg")
 chip([rng(41, 2, 0, 6, 6)], "call", "accent", "light"); chip([rng(41, 2, 0, 6, 6)], "exemption", "muted", "gray_bg")
-table_tab(40, 31, [150, 80, 110, 60, 70, 120, 140, 70, 70, 70, 70, 70, 110, 90, 70, 70, 70, 90, 60, 190, 160, 220, 380, 95, 200, 420, 60, 130, 150, 60, 110],
+table_tab(40, 34, [150, 80, 110, 60, 70, 120, 140, 70, 70, 70, 70, 70, 110, 90, 70, 70, 70, 90, 60, 190, 160, 220, 380, 95, 200, 420, 60, 130, 150, 60, 110, 60, 320, 160],
           raw=True, protect=True)
 nf(40, 2, 0, 3, 3, USD); nf(40, 2, 0, 4, 4, ("NUMBER", '0.0"x"')); nf(40, 2, 0, 5, 5, PCT); nf(40, 2, 0, 6, 6, USD)
 nf(40, 2, 0, 8, 10, PCT); nf(40, 2, 0, 11, 12, PCT1); nf(40, 2, 0, 13, 14, USD); nf(40, 2, 0, 24, 24, DATE)
@@ -486,6 +490,8 @@ for sid, n, ws in ((8, 15, [360, 70, 200, 80, 130, 160, 100, 100, 320, 70, 230, 
                    (9, 26, None), (43, 10, [90, 70, 380, 100, 110, 220, 100, 230, 170, 260])):
     table_tab(sid, n, ws, raw=True, protect=True)
 table_tab("@sheet:Upcoming", 28, None, raw=True, protect=True)
+table_tab(58, 7, [150, 300, 70, 90, 420, 180, 260], raw=True, protect=True)
+nf(58, 2, 0, 4, 4, ("NUMBER", "0"))
 # work tables (agents append rows; no protection)
 for sid, n, ws in ((47, 18, [150, 320, 220, 70, 150, 150, 120, 90, 120, 90, 120, 90, 280, 110, 110, 220, 200, 110]),
                    (24, 22, [170, 90, 80, 320, 240, 70, 170, 110, 120, 220, 320, 320, 260, 320, 320, 280, 110, 320, 260, 90, 200, 260]),
@@ -522,7 +528,7 @@ for sid, name, line in ((53, "ANALYSIS", "Analysis  -  one screen per kind of da
 NAVY, TEAL, GRAYT, AMBER, BLACK = C["navy"], C["teal"], C["gray_tab"], C["amber_tab"], C["black"]
 ORDER = [(45, NAVY), (31, NAVY), (47, NAVY), (24, NAVY),
          (53, BLACK), (50, TEAL), (48, TEAL), (49, TEAL), (57, TEAL), (51, TEAL), (52, TEAL), (29, TEAL), (13, TEAL),
-         (54, BLACK), (1, GRAYT), (41, GRAYT), (40, GRAYT),
+         (54, BLACK), (1, GRAYT), (41, GRAYT), (40, GRAYT), (58, GRAYT),
          (55, BLACK), (19, AMBER), (46, AMBER), (15, AMBER), (26, AMBER), (25, AMBER)]
 # kept (formulas and agents use them) but hidden: their content is shown on the analysis screens
 HIDE = [28, 18, "@sheet:Upcoming", 8, 9, 43, 42, 44, 0, 7, 17, 23, 20, 21, 10, 12, 11, 16, 14, 2, 3, 5, 22, 864500415,
@@ -535,7 +541,8 @@ for i, sid in enumerate(HIDE):
     req.append({"updateSheetProperties": {"properties": {"sheetId": sid, "index": len(ORDER) + i, "hidden": True},
                                           "fields": "index,hidden"}})
 pre = [{"addSheet": {"properties": {"sheetId": LISTS, "title": "Lists", "hidden": True, "gridProperties": {"rowCount": 100, "columnCount": 26}}}},
-       {"addSheet": {"properties": {"sheetId": 57, "title": "USA", "gridProperties": {"rowCount": 400, "columnCount": 12}}}}]
+       {"addSheet": {"properties": {"sheetId": 57, "title": "USA", "gridProperties": {"rowCount": 400, "columnCount": 12}}}},
+       {"addSheet": {"properties": {"sheetId": 58, "title": "Press", "gridProperties": {"rowCount": 2000, "columnCount": 7}}}}]
 out = {"reset": reset, "pre_requests": pre, "clear": clear, "values": values, "requests": req}
 Path(__file__).with_name("design.json").write_text(json.dumps(out, ensure_ascii=False))
 print(len(values), "value ranges,", len(req), "requests,", len(reset), "tabs reset")

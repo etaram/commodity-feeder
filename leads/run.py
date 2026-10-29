@@ -161,9 +161,17 @@ def merge_tenders(bm, seen):
             "first_seen": first, "id": r["id"],
             "group": g.get("name", ""),  # kept for older sheet formulas / opportunities
         }
-        key = (re.sub(r"\W+", "", rec["title"].lower())[:80], rec["deadline"], rec["country"])
-        if key in dedup and dedup[key]["source"] != rec["source"]:
-            continue  # same notice republished by a second source
+        key = (re.sub(r"\W+", "", rec["title"].lower())[:80], rec["country"],
+               re.sub(r"\W+", "", rec["buyer"].lower())[:40])
+        prev = dedup.get(key)
+        if prev is not None:
+            # same tender published twice (second source, or several notices on one portal):
+            # keep ONE row - the one with a deadline, then the newer publication
+            better = (bool(rec["deadline"]), rec["published"] or rec["first_seen"]) > \
+                     (bool(prev["deadline"]), prev["published"] or prev["first_seen"])
+            if better:
+                prev.update({k: v for k, v in rec.items() if k != "first_seen"})
+            continue
         dedup[key] = rec
         out.append(rec)
     out.sort(key=lambda x: (-x["score"], x["deadline"] or "9999"))
