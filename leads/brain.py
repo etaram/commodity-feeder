@@ -143,10 +143,15 @@ def enrich(tenders, awards):
             inc = "; ".join(w for w, _ in sorted(x["wins"].items(), key=lambda y: -y[1])[:2])[:120]
         # Probability that a capable outside supplier wins: fair share among bidders, scaled by how open the market
         # has been to foreign winners (0.3 = neutral), capped.
-        openness = min(1.6, max(0.15, fr / 0.3))
-        trad = TRADABLE.get(sec) or (0.5 if (r.get("nature") or "").startswith("serv") else 1.0)
-        if fsrc != "access rules":
-            trad = trad ** 0.5  # the measured foreign rate already reflects part of it
+        home = _c(country) == "ISR"  # Sinder is an Israeli company: home market, no foreign-bidder discount
+        if home:
+            openness, trad = 1.3, 1.0
+            fsrc = "home market"
+        else:
+            openness = min(1.6, max(0.15, fr / 0.3))
+            trad = TRADABLE.get(sec) or (0.5 if (r.get("nature") or "").startswith("serv") else 1.0)
+            if fsrc != "access rules":
+                trad = trad ** 0.5  # the measured foreign rate already reflects part of it
         p = min(0.6, (1.0 / (bidders + 1.0)) * openness * trad)
         margin = MARGIN.get(sec, 0.08)
         usd = r.get("est_value_usd")
@@ -170,7 +175,7 @@ def enrich(tenders, awards):
         if isinstance(days, int) and days < 7 and r.get("stage") != "planned":
             why.append(f"only {days} days left")
         why.append(f"{bidders:g} bidders expected ({bsrc})")
-        why.append(f"foreign win rate {fr:.0%} ({fsrc})")
+        why.append("Israel: home market for Sinder" if home else f"foreign win rate {fr:.0%} ({fsrc})")
         if fw:
             why.append("framework: value is a ceiling")
         if trad < 1:
@@ -179,7 +184,7 @@ def enrich(tenders, awards):
             why.append(f"incumbent: {inc[:60]}")
         if isinstance(days, int) and days < 5 and r.get("stage") != "planned":
             decision = "Ignore"
-        elif ev != "" and ev >= 25_000 and p >= 0.05:
+        elif ev != "" and ev >= (8_000 if home else 25_000) and p >= 0.05:
             decision = "Pursue"
         elif (ev != "" and ev >= 2_000) or (ev == "" and r["score"] >= 60 and p >= 0.08) or r.get("stage") == "planned":
             decision = "Watch"

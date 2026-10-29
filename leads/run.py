@@ -102,7 +102,7 @@ def score(r, usd, days, new):
     else:
         d = 10 if days == "" else 0 if days < 3 else 6 if days <= 7 else 14 if days <= 14 else 20 if days <= 45 else 16
     acc = (r.get("access") or "").lower()
-    a = 15 if acc.startswith("international") else 12 if ("gpa" in acc or "open to foreign" in acc or "trade agreements" in acc
+    a = 15 if acc.startswith("international") or (r.get("country") or "")[:3] == "ISR" else 12 if ("gpa" in acc or "open to foreign" in acc or "trade agreements" in acc
                                                           or "may bid" in acc) else 6
     info = (5 if r.get("contact") else 0) + (3 if usd != "" else 0) + (2 if not r.get("lang") else 0)
     pen = 15 if "exemption" in r["source"] else 0  # intent to contract with a named supplier: objection window only
