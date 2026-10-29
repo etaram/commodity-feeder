@@ -36,9 +36,21 @@ def _deadline(text):
     return best
 
 
+FR_NAMES = {"guinée-bissau": "GNB", "guinée bissau": "GNB", "guinée": "GIN", "tunisie": "TUN", "comores": "COM", "maroc": "MAR",
+            "cameroun": "CMR", "égypte": "EGY", "egypte": "EGY", "algérie": "DZA", "mauritanie": "MRT", "tchad": "TCD",
+            "bénin": "BEN", "benin": "BEN", "rdc": "COD", "république démocratique du congo": "COD", "congo": "COG",
+            "gabon": "GAB", "guinée équatoriale": "GNQ", "madagascar": "MDG", "maurice": "MUS", "libye": "LBY",
+            "centrafrique": "CAF", "république centrafricaine": "CAF", "cap-vert": "CPV", "cabo verde": "CPV",
+            "éthiopie": "ETH", "ouganda": "UGA", "tanzanie": "TZA", "zambie": "ZMB", "namibie": "NAM", "soudan": "SDN",
+            "somalie": "SOM", "érythrée": "ERI", "sierra leone": "SLE", "gambie": "GMB", "nigéria": "NGA", "afrique du sud": "ZAF"}
+
+
 def _country(title):
     for part in re.split(r"\s[-–—:]\s|\s*\|\s*|,\s*", title):
-        c = iso3(part.strip())
+        p = part.strip()
+        if len(p) <= 4:  # AMI, AAO, GPN, EOI ... are notice types, not countries
+            continue
+        c = FR_NAMES.get(p.lower()) or iso3(p)
         if c:
             return c
     m = re.search(r"\b(Multinational|Regional)\b", title, re.I)
@@ -67,7 +79,7 @@ def fetch():
                 continue
             if not dl and pub and pub < t - dt.timedelta(days=60):
                 continue
-            gpn = re.search(r"general procurement notice|avis général", title, re.I)
+            gpn = re.search(r"general procurement notice|avis général|^(GPN|AGPM|PPM)\b", title, re.I)
             sector, method = classify(f"{title} | {desc[:400]}")
             new.append({
                 "id": "AfDB-" + (link.rstrip("/").rsplit("/", 1)[-1] or title)[:90], "source": "AfDB", "group": "",
