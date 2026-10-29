@@ -37,26 +37,33 @@ def fetch():
             if not items:
                 break
             for p in items:
-                name = clean(p.get("project_name") or "")
+                pn = p.get("project_name")
+                name = clean(pn[0] if isinstance(pn, list) else (pn or ""))
                 if not name:
                     continue
                 sec = ""
                 s1 = p.get("sector1")
                 if isinstance(s1, dict):
                     sec = s1.get("Name") or ""
+                elif isinstance(s1, list) and s1:
+                    sec = s1[0].get("Name", "") if isinstance(s1[0], dict) else str(s1[0])
                 elif isinstance(s1, str):
                     sec = s1
                 title = f"{name} ({sec})" if sec else name
                 sector, method = classify(title)
                 cc = p.get("countrycode") or p.get("countryshortname") or ""
-                country = iso3(cc) if cc else ""
-                if country in ("", None):
-                    continue
+                if isinstance(cc, list):
+                    cc = cc[0] if cc else ""
+                if isinstance(cc, dict):
+                    cc = cc.get("code") or cc.get("name") or ""
+                country = iso3(str(cc)) if cc else ""
+                if not country or len(country) != 3:
+                    continue  # regional / multi-country projects have no single buyer country
                 amt = _amount(p.get("totalamt"))
                 rows.append({
                     "id": f"WBP-{p.get('id')}", "source": "World Bank pipeline", "group": group_of_text(title) or "",
                     "sector": sector, "cpv": "", "country": country, "nature": "",
-                    "buyer": clean(p.get("impagency") or f"Government of {p.get('countryshortname', '')}")[:200],
+                    "buyer": clean(str(p.get("impagency") or f"Government of {p.get('countryshortname', '')}"))[:200],
                     "title": title[:300], "classification": method or "keyword",
                     "notice_type": f"Project {p.get('projectstatusdisplay') or status} | {p.get('lendinginstr') or ''}".strip(" |"),
                     "stage": "planned", "access": ACCESS, "published": (p.get("boardapprovaldate") or "")[:10],
