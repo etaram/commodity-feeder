@@ -19,7 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Link href="/today" className="text-lg font-bold tracking-tight">Sinder <span className="text-[#9FBBDD] font-semibold">Deal Desk</span></Link>
             {session && (
               <nav className="flex flex-wrap gap-4 text-sm text-[#C9D6E6]">
-                {NAV.map(([href, label]) => (<Link key={href} href={href} className="hover:text-white">{label}</Link>))}
+                {NAV.map(([href, label]) => (<a key={href} href={href} className="hover:text-white">{label}</a>))}
               </nav>
             )}
             <div className="ml-auto text-xs text-[#9FBBDD]">{session ? session.email : ""}</div>
