@@ -1,2 +1,9 @@
-INFO:leads:World Bank pipeline: 0 projects (pipeline + recently approved)
-{'projects': 0}
+== {'format': 'json', 'rows': 2, 'status': 'Pipeline'} 200
+keys: ['rows', 'os', 'page', 'total', 'projects', 'facets'] total: 28212
+{"id": "P518248", "proj_id": "P518248", "countryshortname": "Burundi", "boardapprovaldate": "2027-10-26T00:00:00Z", "curr_ibrd_commitment": "0", "grantamt": "0", "totalamt": "85000000", "regionname": "Eastern and Southern Africa", "lendprojectcost": "86500000", "closingdate": "2034-05-31", "borrower": "The Republic of Burundi", "impagency": "Ministry of the Environment, Agriculture and Livestock", "idacommamt": "85000000", "project_name": "Kajeke-Gihanga III hydro-agricultural development project", "projid_id_display": "P518248"}
+== {'format': 'json', 'rows': 2, 'projectstatusdisplay_exact': 'Pipeline'} 200
+keys: ['rows', 'os', 'page', 'total', 'projects', 'facets'] total: 28212
+{"id": "P518248", "proj_id": "P518248", "countryshortname": "Burundi", "boardapprovaldate": "2027-10-26T00:00:00Z", "curr_ibrd_commitment": "0", "grantamt": "0", "totalamt": "85000000", "regionname": "Eastern and Southern Africa", "lendprojectcost": "86500000", "closingdate": "2034-05-31", "borrower": "The Republic of Burundi", "impagency": "Ministry of the Environment, Agriculture and Livestock", "idacommamt": "85000000", "project_name": "Kajeke-Gihanga III hydro-agricultural development project", "projid_id_display": "P518248"}
+== {'format': 'json', 'rows': 2, 'fl': 'id,project_name,countrycode,status,projectstatusdisplay,totalamt,boardapprovaldate,sector1,impagency,url'} 200
+keys: ['rows', 'os', 'page', 'total', 'projects', 'facets'] total: 28212
+{"id": "P518248", "proj_id": "P518248", "boardapprovaldate": "2027-10-26T00:00:00Z", "totalamt": "85000000", "project_abstract": "Rehabilitation of the Kajeke dam and the associated irrigation perimeter Gihanga III, combined with related capacity building and agricultural value chain development. ", "impagency": "Ministry of the Environment, Agriculture and Livestock", "countrycode": ["BI"], "status": "Pipeline", "project_name": "Kajeke-Gihanga III hydro-agricultural development project"}
