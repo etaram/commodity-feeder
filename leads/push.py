@@ -166,6 +166,33 @@ def main():
         for i in range(0, len(reqs), 200):
             sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": reqs[i:i + 200]})
         print("applied", len(reqs), "requests to", a[1])
+    elif a[:1] == ["layout"]:
+        # python -m leads.push layout <spreadsheet id> <layout.json> : {"clear": [ranges], "values": [{"range", "rows"}],
+        # "requests": [batchUpdate requests]} - values are written USER_ENTERED (formulas work), then formatting
+        from urllib.parse import quote
+        lay = json.loads(open(a[2], encoding="utf-8").read())
+        ids = {x["properties"]["title"]: x["properties"]["sheetId"] for x in sh.meta(a[1])["sheets"]}
+
+        def resolve(o):  # "@sheet:<title>" -> that tab's sheetId
+            if isinstance(o, dict):
+                return {k: resolve(v) for k, v in o.items()}
+            if isinstance(o, list):
+                return [resolve(v) for v in o]
+            if isinstance(o, str) and o.startswith("@sheet:"):
+                return ids[o[7:]]
+            return o
+        lay = resolve(lay)
+        if lay.get("pre_requests"):
+            sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": lay["pre_requests"]})
+        for rng in lay.get("clear", []):
+            sh._req("POST", f"{API}/{a[1]}/values/{quote(rng)}:clear", json={})
+        for v in lay.get("values", []):
+            sh._req("PUT", f"{API}/{a[1]}/values/{quote(v['range'])}", params={"valueInputOption": "USER_ENTERED"},
+                    json={"values": v["rows"]})
+        reqs = lay.get("requests", [])
+        for i in range(0, len(reqs), 200):
+            sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": reqs[i:i + 200]})
+        print("layout applied:", len(lay.get("values", [])), "ranges,", len(reqs), "requests")
     elif a[:1] == ["tab"]:
         n = sh.replace_tab(a[1], a[2], read_csv(a[3]))
         print("wrote", n, "rows to", a[2])
