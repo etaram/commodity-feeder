@@ -1,7 +1,7 @@
-"""US federal award notices (SAM.gov public search, notice type 'a'): who won, for how much, from which agency.
+"""US federal contract awards (USAspending.gov official API): who won, for how much, from which agency.
 
 Purpose: US solicitations almost never state a value, so the deal engine had to guess from other countries' awards.
-With SAM award notices it learns the typical award size per US buyer (same agency names as the solicitations) and
+With recent federal awards it learns the typical award size per US buyer (same agency names as the solicitations) and
 per sector, plus how often foreign firms win. Written as an award file (data/leads/awards/sam/<date>.json) that the
 normal award merge reads. Public data only.
 Run: python -m leads.sam_awards [days=90]
@@ -11,76 +11,57 @@ import json
 import sys
 
 from .common import LEADS, clean, log, polite, session, today
-from .sam import URL, _sector
+from .sam import _sector
 
 OUT = LEADS / "awards" / "sam"
 
 
-def _amount(o):
-    for path in (("award", "amount"), ("award", "awardAmount"), ("awardAmount",), ("award", "dollarsObligated")):
-        x = o
-        for k in path:
-            x = x.get(k) if isinstance(x, dict) else None
-        try:
-            v = float(str(x).replace(",", "").replace("$", ""))
-            if v > 0:
-                return v
-        except (TypeError, ValueError):
-            continue
-    return None
+USAS = "https://api.usaspending.gov/api/v2/search/spending_by_award/"
 
 
-def _awardee(o):
-    a = (o.get("award") or {}).get("awardee") or o.get("awardee") or {}
-    if isinstance(a, list):
-        a = a[0] if a else {}
-    name = clean(a.get("name") or a.get("legalBusinessName") or "", 120)
-    loc = a.get("location") or {}
-    ctry = loc.get("country") or {}
-    code = (ctry.get("code") if isinstance(ctry, dict) else ctry) or ""
-    return name, (code or "USA")[:3].upper() if len(code or "") >= 2 else "USA"
-
-
-def fetch(days=90):
-    s = session(); s.headers["Accept"] = "application/hal+json"
+def fetch(days=90, pages=60):
+    """Most recent federal contract awards (newest first, no amount filter, so medians are not biased), with the
+    Product/Service Code mapped to the same sectors as SAM solicitations."""
+    s = session()
     t = today()
     since = t - dt.timedelta(days=days)
-    rows, sample_logged = [], False
-    # weekly windows keep each query under the 10,000-result cap
-    for w in range(0, days, 7):
-        a, b = since + dt.timedelta(days=w), min(t, since + dt.timedelta(days=w + 6))
-        for page in range(100):
-            try:
-                r = s.get(URL, params={"index": "opp", "page": page, "size": 100, "mode": "search", "notice_type": "a",
-                                       "modified_date.from": f"{a}-05:00", "modified_date.to": f"{b}-05:00"}, timeout=60)
-                j = r.json()
-            except Exception as e:  # noqa: BLE001
-                log.warning("SAM awards %s page %d: %s", a, page, e); break
-            res = (j.get("_embedded") or {}).get("results") or []
-            if not res:
-                break
-            if not sample_logged:
-                log.info("SAM award sample keys: %s | award: %s", sorted(res[0].keys())[:40],
-                         json.dumps(res[0].get("award"))[:400])
-                sample_logged = True
-            for o in res:
-                amt = _amount(o)
-                name, wc = _awardee(o)
-                if not amt or not name:
-                    continue
-                title = clean(o.get("title"))
-                org = o.get("organizationHierarchy") or []
-                sector, _ = _sector(title)
-                rows.append({
-                    "id": f"SAMA-{o.get('_id')}", "source": "SAM.gov awards", "sector": sector or "", "title": title[:200],
-                    "buyer": clean(" / ".join(dict.fromkeys(x.get("name") or "" for x in (org[:1] + org[-1:]))), 120),
-                    "country": "USA", "cpv": "", "published": (o.get("publishDate") or o.get("modifiedDate") or "")[:10],
-                    "winners": [name], "winner_country": wc, "value": round(amt), "currency": "USD", "bids": "",
-                    "link": f"https://sam.gov/opp/{o.get('_id')}/view"})
-            tot = (j.get("page") or {}).get("totalPages", 0)
-            if page + 1 >= min(tot, 100):
-                break
-            polite(0.3)
+    fields = ["Award ID", "Recipient Name", "Award Amount", "Description", "Awarding Agency", "Awarding Sub Agency",
+              "Start Date", "PSC", "NAICS", "Recipient Location", "generated_internal_id"]
+    flt = {"award_type_codes": ["A", "B", "C", "D"], "time_period": [{"start_date": str(since), "end_date": str(t)}]}
+    rows = []
+    for page in range(1, pages + 1):
+        try:
+            r = s.post(USAS, json={"filters": flt, "fields": fields, "limit": 100, "page": page,
+                                   "sort": "Start Date", "order": "desc"}, timeout=120)
+        except Exception as e:  # noqa: BLE001
+            log.warning("USAspending page %d: %s", page, e); break
+        if r.status_code in (429, 500, 502, 503):
+            polite(10); continue
+        if r.status_code != 200:
+            log.warning("USAspending %s %s", r.status_code, r.text[:200]); break
+        j = r.json()
+        for a in j.get("results") or []:
+            amt = a.get("Award Amount") or 0
+            name = clean(a.get("Recipient Name") or "", 120)
+            if not name or not amt or amt <= 0:
+                continue
+            psc = a.get("PSC") or {}
+            code = (psc.get("code") if isinstance(psc, dict) else str(psc or "")) or ""
+            desc = clean(a.get("Description") or "", 200)
+            sector, _ = _sector(f"{code[:2] if code[:1].isdigit() else code[:1]}--{desc}") if code else _sector(desc)
+            loc = a.get("Recipient Location") or {}
+            agency = clean(a.get("Awarding Agency") or "", 80)
+            sub = clean(a.get("Awarding Sub Agency") or "", 80)
+            rows.append({
+                "id": f"USAS-{a.get('generated_internal_id') or a.get('Award ID')}", "source": "USAspending awards",
+                "sector": sector or "", "title": desc, "buyer": " / ".join(x for x in dict.fromkeys([agency, sub]) if x)[:120],
+                "country": "USA", "cpv": "", "published": (a.get("Start Date") or "")[:10], "winners": [name],
+                "winner_country": (loc.get("location_country_code") or "USA")[:3].upper(), "value": round(amt),
+                "currency": "USD", "bids": "",
+                "link": f"https://www.usaspending.gov/award/{a.get('generated_internal_id')}" if a.get("generated_internal_id") else ""})
+        if not (j.get("page_metadata") or {}).get("hasNext"):
+            break
+        polite(0.4)
     seen, out = set(), []
     for r in rows:
         if r["id"] not in seen:
@@ -89,14 +70,14 @@ def fetch(days=90):
     for f in OUT.glob("*.json"):
         f.unlink()
     (OUT / f"{t}.json").write_text(json.dumps(out))
-    log.info("SAM awards: %d award notices with amount and awardee (last %d days)", len(out), days)
+    log.info("US awards (USAspending): %d recent contract awards (last %d days)", len(out), days)
     return out
 
 
 if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.INFO)
-    rows = fetch(int(sys.argv[1]) if len(sys.argv) > 1 else 90)
+    rows = fetch(int(sys.argv[1]) if len(sys.argv) > 1 else 90, int(sys.argv[2]) if len(sys.argv) > 2 else 60)
     import statistics
     v = [r["value"] for r in rows]
     print(len(rows), "awards; median", statistics.median(v) if v else None,
