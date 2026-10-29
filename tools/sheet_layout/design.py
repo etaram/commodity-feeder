@@ -490,8 +490,7 @@ for sid, n, ws in ((8, 15, [360, 70, 200, 80, 130, 160, 100, 100, 320, 70, 230, 
                    (9, 26, None), (43, 10, [90, 70, 380, 100, 110, 220, 100, 230, 170, 260])):
     table_tab(sid, n, ws, raw=True, protect=True)
 table_tab("@sheet:Upcoming", 28, None, raw=True, protect=True)
-table_tab(58, 7, [150, 300, 70, 90, 420, 180, 260], raw=True, protect=True)
-nf(58, 2, 0, 4, 4, ("NUMBER", "0"))
+table_tab("@sheet:Press", 7, [150, 300, 70, 90, 420, 180, 260], raw=True, protect=True)
 # work tables (agents append rows; no protection)
 for sid, n, ws in ((47, 18, [150, 320, 220, 70, 150, 150, 120, 90, 120, 90, 120, 90, 280, 110, 110, 220, 200, 110]),
                    (24, 22, [170, 90, 80, 320, 240, 70, 170, 110, 120, 220, 320, 320, 260, 320, 320, 280, 110, 320, 260, 90, 200, 260]),
@@ -528,7 +527,7 @@ for sid, name, line in ((53, "ANALYSIS", "Analysis  -  one screen per kind of da
 NAVY, TEAL, GRAYT, AMBER, BLACK = C["navy"], C["teal"], C["gray_tab"], C["amber_tab"], C["black"]
 ORDER = [(45, NAVY), (31, NAVY), (47, NAVY), (24, NAVY),
          (53, BLACK), (50, TEAL), (48, TEAL), (49, TEAL), (57, TEAL), (51, TEAL), (52, TEAL), (29, TEAL), (13, TEAL),
-         (54, BLACK), (1, GRAYT), (41, GRAYT), (40, GRAYT), (58, GRAYT),
+         (54, BLACK), (1, GRAYT), (41, GRAYT), (40, GRAYT), ("@sheet:Press", GRAYT),
          (55, BLACK), (19, AMBER), (46, AMBER), (15, AMBER), (26, AMBER), (25, AMBER)]
 # kept (formulas and agents use them) but hidden: their content is shown on the analysis screens
 HIDE = [28, 18, "@sheet:Upcoming", 8, 9, 43, 42, 44, 0, 7, 17, 23, 20, 21, 10, 12, 11, 16, 14, 2, 3, 5, 22, 864500415,
@@ -541,8 +540,7 @@ for i, sid in enumerate(HIDE):
     req.append({"updateSheetProperties": {"properties": {"sheetId": sid, "index": len(ORDER) + i, "hidden": True},
                                           "fields": "index,hidden"}})
 pre = [{"addSheet": {"properties": {"sheetId": LISTS, "title": "Lists", "hidden": True, "gridProperties": {"rowCount": 100, "columnCount": 26}}}},
-       {"addSheet": {"properties": {"sheetId": 57, "title": "USA", "gridProperties": {"rowCount": 400, "columnCount": 12}}}},
-       {"addSheet": {"properties": {"sheetId": 58, "title": "Press", "gridProperties": {"rowCount": 2000, "columnCount": 7}}}}]
+       {"addSheet": {"properties": {"sheetId": 57, "title": "USA", "gridProperties": {"rowCount": 400, "columnCount": 12}}}}]
 out = {"reset": reset, "pre_requests": pre, "clear": clear, "values": values, "requests": req}
 Path(__file__).with_name("design.json").write_text(json.dumps(out, ensure_ascii=False))
 print(len(values), "value ranges,", len(req), "requests,", len(reset), "tabs reset")
