@@ -82,7 +82,10 @@ def extract(page_url, text, today=None):
         title = re.sub(r"\s+", " ", title or ctx).strip(" -|:")[:260]
         if len(title) < 12 or SKIP.search(title):
             continue
-        if not TENDER.search(title + " " + ctx[:300]):
+        num_in_title = re.search(r"\b(?:[A-Z]{2,6}[- ]?)?\d{2,4}[-/]\d{2,6}\b", title)
+        if not TENDER.search(title) and not (num_in_title and TENDER.search(ctx[:300])):
+            continue
+        if re.search(r"video|swagit|agenda|meeting|news|press release|calendar", title + " " + a["href"], re.I):
             continue
         dl = deadline(ctx, today)
         if dl and dl < today:

@@ -21,19 +21,21 @@ CITIES = [  # (city, adapters)
                       ("html", "https://www.phila.gov/departments/procurement-department/")]),
     ("San Antonio", [("bonfire", "sanantonio"), ("html", "https://webapp1.sanantonio.gov/BidContractOpps/Default.aspx")]),
     ("San Diego", [("html", "https://www.sandiego.gov/purchasing/bids-contracts")]),
-    ("Dallas", [("html", "https://dallascityhall.com/departments/procurement/Pages/default.aspx")]),
+    ("Dallas", [("html", "https://dallascityhall.com/departments/procurement/Pages/bid_opportunities.aspx"),
+                ("html", "https://dallascityhall.com/departments/procurement/Pages/default.aspx")]),
     ("Jacksonville", [("html", "https://www.jacksonville.gov/departments/office-of-administrative-services/procurement")]),
     ("Fort Worth", [("bonfire", "fortworthtexas")]),
     ("Austin", [("html", "https://financeonline.austintexas.gov/afo/account_services/solicitation/solicitations.cfm")]),
-    ("San Jose", [("html", "https://www.sanjoseca.gov/your-government/departments-offices/finance/purchasing-and-risk-management")]),
+    ("San Jose", [("html", "https://www.sanjoseca.gov/your-government/departments-offices/finance/purchasing/bid-opportunities")]),
     ("Charlotte", [("bonfire", "charlottenc")]),
-    ("Columbus", [("html", "https://www.columbus.gov/Business-Development/Bid-Opportunities")]),
-    ("Indianapolis", [("html", "https://www.indy.gov/activity/bid-on-city-contracts")]),
+    ("Columbus", [("html", "https://www.columbus.gov/Business-Development/Bids-Solicitations/RFPs"),
+                  ("html", "https://www.columbus.gov/Government/Departments/Finance-and-Management/Purchasing-Office")]),
+    ("Indianapolis", [("html", "https://www.indy.gov/agency/purchasing-division"), ("html", "https://www.indy.gov/activity/bid-on-city-contracts")]),
     ("San Francisco", [("js", "https://sfcitypartner.sfgov.org/pages/Events-BS3/event-search.aspx")]),
     ("Seattle", [("html", "https://www.seattle.gov/purchasing-and-contracting")]),
     ("Denver", [("html", "https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/General-Services/Purchasing")]),
-    ("Oklahoma City", [("html", "https://www.okc.gov/departments/finance/purchasing")]),
-    ("Nashville", [("html", "https://www.nashville.gov/departments/finance/procurement/open-solicitations")]),
+    ("Oklahoma City", [("hosted", "https://bidnetdirect.com/cityofoklahomacityandtrusts")]),
+    ("Nashville", [("html", "https://www.nashville.gov/departments/finance/procurement")]),
 ]
 
 
@@ -100,6 +102,8 @@ def fetch():
                     got = _bonfire(city, arg, t); note = "Bonfire portal"
                 elif kind == "html":
                     got, page, st = _html(city, arg, t); note = f"web page {st}: {page}"
+                elif kind == "hosted":
+                    note = "bids hosted on a commercial platform that requires registration: not scanned"
                 else:
                     note = "portal needs a browser (JavaScript): not scanned"
             except Exception as e:  # noqa: BLE001
