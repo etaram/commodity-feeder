@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDeal, getPress, getAwards, num, usd, pct, ROUTE_LABEL } from "@/lib/data";
 import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
+import { tenders } from "@/lib/index";
 
 export const revalidate = 900;
 
@@ -18,9 +19,23 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const deal = await getDeal(decodeURIComponent(id));
   if (!deal) {
-    return <div className="rounded-xl border border-line bg-white p-8 text-sm text-muted">
-      This opportunity is not in the current top-8,000 deal list (it may have closed or moved down the ranking). <Link href="/" className="text-accent font-semibold">Back to Today</Link>
-    </div>;
+    const t = (await tenders()).find((r) => r.id === decodeURIComponent(id));
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-xs text-muted"><Link href="/tenders" className="font-semibold text-accent hover:underline">Tenders</Link><span>/</span><span>{decodeURIComponent(id)}</span></div>
+        {t ? (
+          <div className="rounded-xl border border-line bg-white p-6 shadow-sm">
+            <h1 className="text-lg font-bold text-navy">{t.t || t.id}</h1>
+            <div className="mt-1 text-sm text-muted">{t.b} &middot; {t.c} &middot; {t.s}</div>
+            <div className="mt-3 text-sm">Value: <b>{t.v != null ? usd(t.v) : "not stated"}</b> &middot; Deadline: <b>{t.dl || "-"}</b> &middot; Engine decision: <b>{t.d}</b></div>
+            <p className="mt-3 text-sm text-muted">This notice is outside the top 8,000 deals, so it has no full deal file. Open the official notice for the details.</p>
+            {t.l && <a href={t.l} target="_blank" className="mt-3 inline-block rounded-full bg-accent px-3 py-1 text-xs font-bold text-white">Open the official notice</a>}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-line bg-white p-8 text-sm text-muted">This notice has closed or is no longer in the data. <Link href="/tenders" className="text-accent font-semibold">Back to search</Link></div>
+        )}
+      </div>
+    );
   }
   const [pressAll, awardsAll] = await Promise.all([getPress(), getAwards()]);
   const press = pressAll.filter((p) => p.id === deal.id);

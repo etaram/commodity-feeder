@@ -33,6 +33,10 @@ export default async function Today() {
         <Stat label="New Israeli notices" value={String(ilNew.length)} />
       </div>
 
+      <div className="flex flex-wrap gap-2 text-sm">
+        <Link href="/tenders" className="rounded-md bg-accent px-3 py-1.5 font-semibold text-white hover:bg-blue">Search all tenders</Link>
+        <Link href="/suppliers" className="rounded-md border border-accent px-3 py-1.5 font-semibold text-accent hover:bg-accent hover:text-white">Search suppliers</Link>
+      </div>
       <section>
         <div className="flex items-baseline justify-between">
           <h2 className="text-lg font-bold text-navy">What to act on today</h2>
