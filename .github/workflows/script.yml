@@ -15,12 +15,14 @@ jobs:
   run:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install requests curl_cffi certifi aia
+      - run: pip install requests curl_cffi certifi aia google-auth beautifulsoup4 lxml openpyxl
       - run: mkdir -p data/probe data/israel
       - run: timeout ${{ inputs.minutes }}m python ${{ inputs.script }} 2>&1 | tail -c 200000 > data/probe/script.log; true
       - run: |

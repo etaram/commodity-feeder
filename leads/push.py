@@ -156,6 +156,12 @@ def main():
             width = max(len(r) for r in rows)
             n = sh.replace_tab(LEADS_SHEET, tab, rows, clear_to=col_letter(width))
             print("wrote", n, "rows x", width, "cols to", tab)
+    elif a[:1] == ["batch"]:
+        # python -m leads.push batch <spreadsheet id> <requests.json> : Sheets batchUpdate (layout / formatting)
+        reqs = json.loads(open(a[2], encoding="utf-8").read())
+        for i in range(0, len(reqs), 200):
+            sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": reqs[i:i + 200]})
+        print("applied", len(reqs), "requests to", a[1])
     elif a[:1] == ["tab"]:
         n = sh.replace_tab(a[1], a[2], read_csv(a[3]))
         print("wrote", n, "rows to", a[2])
