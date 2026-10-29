@@ -530,8 +530,8 @@ ORDER = [(45, NAVY), (31, NAVY), (47, NAVY), (24, NAVY),
          (54, BLACK), (1, GRAYT), (41, GRAYT), (40, GRAYT), ("@sheet:Press", GRAYT),
          (55, BLACK), (19, AMBER), (46, AMBER), (15, AMBER), (26, AMBER), (25, AMBER)]
 # kept (formulas and agents use them) but hidden: their content is shown on the analysis screens
-HIDE = [28, 18, "@sheet:Upcoming", 8, 9, 43, 42, 44, 0, 7, 17, 23, 20, 21, 10, 12, 11, 16, 14, 2, 3, 5, 22, 864500415,
-        1203289973, 1755813676, 27, 4, 6]
+HIDE = [28, 18, "@sheet:Upcoming", 8, 9, 43, 42, 44, 23, 20, 21, 10, 12, 11, 14, 2, 3, 5, 864500415,
+        1203289973, 1755813676, 4]
 for i, (sid, color) in enumerate(ORDER):
     req.append({"updateSheetProperties": {"properties": {"sheetId": sid, "index": i, "hidden": False, "tabColorStyle": {"rgbColor": rgb(color)}},
                                           "fields": "index,hidden,tabColorStyle"}})
