@@ -15,9 +15,9 @@ C = {"navy": "0B1B33", "blue": "1E3A5F", "accent": "2F6FB3", "light": "E6ECF3", 
      "text": "1C2733", "muted": "667385", "white": "FFFFFF", "green": "0B7A4B", "green_bg": "DDF3E7", "amber": "8A5300",
      "amber_bg": "FFF0D1", "red": "B42318", "red_bg": "FDE7E5", "gray_bg": "EEF0F3", "yellow": "FFF7D6", "teal": "0E7C86",
      "gray_tab": "8A94A6", "amber_tab": "C27C0E", "black": "000000"}
-G = {"Home": 45, "Search": 31, "Pipeline": 47, "Pursuits": 24, "Quotes": 28, "Deals": 50, "Markets": 48, "Israel": 49,
+G = {"Home": 45, "Search": 31, "Pipeline": 47, "Pursuits": 24, "Quotes": 28, "Deals": 50, "Markets": 48, "Israel": 49, "USA": 57,
      "Commodities": 51, "Buyers": 52, "Intel": 29, "Guide": 25}
-NAV = ["Home", "Search", "Pipeline", "Pursuits", "Deals", "Markets", "Israel", "Commodities", "Buyers", "Intel", "Guide"]
+NAV = ["Home", "Search", "Pipeline", "Pursuits", "Deals", "Markets", "Israel", "USA", "Commodities", "Buyers", "Intel", "Guide"]
 values, req, clear, reset = [], [], [], []
 _chart_id = [900000]
 
@@ -291,8 +291,8 @@ put("Lists", 1, 20, [['=SORT(UNIQUE(FILTER(Tenders!F2:F,Tenders!F2:F<>"")))', '=
                       '=SORT(UNIQUE(FILTER(Tenders!T2:T,Tenders!T2:T<>"")))']])
 
 # ================================================================== analysis screens
-def analysis(tab, sid, ncols, ws, title, subtitle, kp):
-    screen(tab, sid, ncols, ws, title, subtitle)
+def analysis(tab, sid, ncols, ws, title, subtitle, kp, rows=140):
+    screen(tab, sid, ncols, ws, title, subtitle, rows)
     kpis(tab, sid, 5, kp)
 
 
@@ -346,6 +346,31 @@ nf(S, 75, 104, 4, 4, DATE); nf(S, 75, 104, 7, 7, DATE); rows_style(S, 75, 104, 1
 fmt(rng(S, 46, 104, 3, 3), {"horizontalAlignment": "RIGHT"}, "userEnteredFormat.horizontalAlignment")
 chart(S, "Open notices by type of body", rng(S, 26, 40, 1, 1), rng(S, 26, 40, 2, 2), 8, 1, 520, 300)
 chart(S, "Open notices by district", rng(S, 26, 34, 3, 3), rng(S, 26, 34, 4, 4), 8, 4, 520, 300, kind="COLUMN", color="teal")
+
+# ---- USA
+S, tab = 57, "USA"
+U_OPEN = f'{T}!G2:G="USA",NOT(REGEXMATCH({T}!M2:M&{T}!N2:N,"(?i)set-aside"))'
+analysis(tab, S, 11, [70, 430, 260, 200, 110, 100, 70, 60, 90, 160, 230],
+         "USA", "US federal (SAM.gov), New York City and the 20 largest US cities. Set-asides for US small businesses are excluded from the lists below.",
+         [("US OPEN TENDERS", f'=COUNTIF({T}!G2:G,"USA")', INT),
+          ("OPEN TO FOREIGN FIRMS", f'=IFERROR(ROWS(FILTER({T}!G2:G,{U_OPEN})),0)', INT),
+          ("SMALL-BUSINESS SET-ASIDES", f'=COUNTIFS({T}!G2:G,"USA",{T}!N2:N,"*set-aside*")', INT),
+          ("CITIES AND NYC", f'=COUNTIFS({T}!G2:G,"USA",{T}!L2:L,"US city*")+COUNTIFS({T}!G2:G,"USA",{T}!L2:L,"NYC*")', INT),
+          ("CLOSING IN 14 DAYS", f'=COUNTIFS({T}!G2:G,"USA",{T}!D2:D,">=0",{T}!D2:D,"<=14")', INT)], rows=400)
+section(tab, S, 24, 1, 3, "Open to foreign firms by sector"); section(tab, S, 24, 5, 7, "By source")
+put(tab, 25, 1, [[f"=QUERY({T}!A2:AE,\"select F, count(S) where G = 'USA' and not M contains 'set-aside' group by F order by count(S) desc label F 'Sector', count(S) 'Tenders'\",1)"]])
+put(tab, 25, 5, [[f"=QUERY({T}!A2:AE,\"select L, count(S) where G = 'USA' group by L order by count(S) desc label L 'Source', count(S) 'Tenders'\",1)"]])
+table_header(S, 25, 1, 3); put(tab, 25, 3, [["Share"]]); bars(tab, S, 26, 49, 2, 3)
+table_header(S, 25, 5, 6); rows_style(S, 26, 49, 1, 3); rows_style(S, 26, 40, 5, 6)
+section(tab, S, 52, 1, 11, "Best US tenders for Sinder - open to foreign firms, best fit first")
+table_header(S, 53, 1, 11, ["Fit", "Tender", "Buyer", "Sector", "Value (USD)", "Deadline", "Days left", "", "Decision", "Notice type", "Link"], tab)
+put(tab, 54, 1, [[f'=IFERROR(ARRAY_CONSTRAIN(SORT(FILTER({{{T}!AC2:AC,{T}!J2:J,{T}!I2:I,{T}!F2:F,{T}!K2:K,{T}!C2:C,{T}!D2:D,{T}!S2:S,{T}!T2:T,{T}!N2:N,{T}!P2:P}},{U_OPEN},N({T}!D2:D)>=3),1,FALSE,7,TRUE),300,11),"Waiting for the next refresh")']])
+nf(S, 54, 353, 5, 5, USD); nf(S, 54, 353, 6, 6, DATE); rows_style(S, 54, 353, 1, 11)
+decision_chips([rng(S, 54, 353, 9, 9)]); chip([rng(S, 54, 353, 7, 7)], "7", "red", "red_bg", "NUMBER_LESS")
+req.append({"addConditionalFormatRule": {"rule": {"ranges": [rng(S, 54, 353, 1, 1)], "gradientRule": {
+    "minpoint": {"colorStyle": {"rgbColor": rgb(C["white"])}, "type": "NUMBER", "value": "40"},
+    "maxpoint": {"colorStyle": {"rgbColor": rgb("8FD3B0")}, "type": "NUMBER", "value": "100"}}}, "index": 0}})
+chart(S, "US tenders open to foreign firms, by sector", rng(S, 26, 40, 1, 1), rng(S, 26, 40, 2, 2), 8, 1, 1100, 300)
 
 # ---- Deals
 S, tab = 50, "Deals"
@@ -496,7 +521,7 @@ for sid, name, line in ((53, "ANALYSIS", "Analysis  -  one screen per kind of da
     heights(sid, 1, 1, 64); widths(sid, [1000, 60, 60, 60])
 NAVY, TEAL, GRAYT, AMBER, BLACK = C["navy"], C["teal"], C["gray_tab"], C["amber_tab"], C["black"]
 ORDER = [(45, NAVY), (31, NAVY), (47, NAVY), (24, NAVY),
-         (53, BLACK), (50, TEAL), (48, TEAL), (49, TEAL), (51, TEAL), (52, TEAL), (29, TEAL), (13, TEAL),
+         (53, BLACK), (50, TEAL), (48, TEAL), (49, TEAL), (57, TEAL), (51, TEAL), (52, TEAL), (29, TEAL), (13, TEAL),
          (54, BLACK), (1, GRAYT), (41, GRAYT), (40, GRAYT),
          (55, BLACK), (19, AMBER), (46, AMBER), (15, AMBER), (26, AMBER), (25, AMBER)]
 # kept (formulas and agents use them) but hidden: their content is shown on the analysis screens
@@ -509,8 +534,8 @@ for i, (sid, color) in enumerate(ORDER):
 for i, sid in enumerate(HIDE):
     req.append({"updateSheetProperties": {"properties": {"sheetId": sid, "index": len(ORDER) + i, "hidden": True},
                                           "fields": "index,hidden"}})
-pre = [{"addSheet": {"properties": {"sheetId": LISTS, "title": "Lists", "hidden": True, "gridProperties": {"rowCount": 100, "columnCount": 26}}}}] \
-
+pre = [{"addSheet": {"properties": {"sheetId": LISTS, "title": "Lists", "hidden": True, "gridProperties": {"rowCount": 100, "columnCount": 26}}}},
+       {"addSheet": {"properties": {"sheetId": 57, "title": "USA", "gridProperties": {"rowCount": 400, "columnCount": 12}}}}]
 out = {"reset": reset, "pre_requests": pre, "clear": clear, "values": values, "requests": req}
 Path(__file__).with_name("design.json").write_text(json.dumps(out, ensure_ascii=False))
 print(len(values), "value ranges,", len(req), "requests,", len(reset), "tabs reset")
