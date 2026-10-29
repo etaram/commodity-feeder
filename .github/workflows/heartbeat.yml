@@ -1,0 +1,44 @@
+name: heartbeat
+# GitHub drops many scheduled runs. This job stays alive for ~5h50m, checks every 10 minutes whether a data workflow
+# is overdue and starts it, then starts its own next copy, so the data keeps flowing even when schedules are skipped.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+permissions:
+  actions: write
+  contents: read
+concurrency:
+  group: heartbeat
+  cancel-in-progress: false
+jobs:
+  beat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          check() {
+            now=$(date -u +%s)
+            for spec in "feed.yml:13" "leads.yml:4" "suppliers.yml:12"; do
+              wf=${spec%%:*}; max_h=${spec##*:}
+              group="$wf"; [ "$wf" != "feed.yml" ] && group="leads.yml suppliers.yml"
+              busy=0
+              for g in $group; do
+                n=$(gh api "repos/$REPO/actions/workflows/$g/runs?per_page=5" --jq '[.workflow_runs[]|select(.status!="completed")]|length' || echo 1)
+                busy=$((busy + n))
+              done
+              last=$(gh api "repos/$REPO/actions/workflows/$wf/runs?status=success&per_page=1" --jq '.workflow_runs[0].updated_at // "1970-01-01T00:00:00Z"' || echo "")
+              [ -z "$last" ] && continue
+              age_m=$(( (now - $(date -u -d "$last" +%s)) / 60 ))
+              echo "$(date -u +%H:%M) $wf last success $last (${age_m} min), active: $busy"
+              if [ "$busy" = "0" ] && [ "$age_m" -ge $((max_h * 60)) ]; then
+                echo "-> starting $wf"; gh workflow run "$wf" --repo "$REPO" --ref main || true
+              fi
+            done
+          }
+          end=$(( $(date +%s) + 345*60 ))
+          while [ "$(date +%s)" -lt "$end" ]; do check; sleep 600; done
+          gh workflow run heartbeat.yml --repo "$REPO" --ref main
