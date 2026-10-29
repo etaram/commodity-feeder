@@ -101,6 +101,18 @@ def leads_tables():
     th = LEADS / "sheet" / "titles_he.csv"
     if th.exists():
         out.append(("Titles HE", read_csv(th)))
+    # upcoming tenders: planned notices (prior information notices, procurement plans) sorted by value
+    hdr = rows[0] if rows else []
+    if "stage" in hdr:
+        si, vi = hdr.index("stage"), hdr.index("est_value_usd") if "est_value_usd" in hdr else None
+        up = [r for r in rows[1:] if len(r) > si and r[si] == "planned"]
+        def _v(r):
+            try:
+                return float(str(r[vi]).replace(",", "")) if vi is not None else 0
+            except ValueError:
+                return 0
+        up.sort(key=lambda r: -_v(r))
+        out.append(("Upcoming", [hdr] + up[:3000]))
     out.append(("Meta", [["key", "value"], ["tenders_updated_utc", time.strftime("%Y-%m-%d %H:%M", time.gmtime())],
                          ["open_tenders", str(len(out[0][1]) - 1)]]))
     dg = LEADS / "digest.txt"
