@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install requests curl_cffi certifi aia google-auth beautifulsoup4 lxml openpyxl
+      - run: pip install requests curl_cffi certifi aia google-auth beautifulsoup4 lxml openpyxl pycountry
       - run: mkdir -p data/probe data/israel
       - run: timeout ${{ inputs.minutes }}m python ${{ inputs.script }} 2>&1 | tail -c 200000 > data/probe/script.log; true
       - run: |
