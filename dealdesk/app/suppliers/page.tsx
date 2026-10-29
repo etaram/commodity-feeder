@@ -28,15 +28,19 @@ function apply(all: Supplier[], p: SP) {
   });
 }
 
-const SORTS: [string, string][] = [["quality", "Quality score"], ["wins", "Public contracts won"], ["usd", "Value won"], ["recent", "Most recent win"], ["name", "Name"]];
+const TIERS: Record<string, string> = { "1": "Tier 1 - Strategic", "2": "Tier 2 - Proven", "3": "Tier 3 - Qualified", "4": "Tier 4 - Unproven" };
+const tierChip = (t?: string) => t === "1" ? "bg-gobg text-go" : t === "2" ? "bg-[#E6ECF3] text-blue" : t === "3" ? "bg-watchbg text-watch" : "bg-paper text-muted";
+
+const SORTS: [string, string][] = [["tier", "Tier, then quality"], ["quality", "Quality score"], ["wins", "Public contracts won"], ["usd", "Value won"], ["recent", "Most recent win"], ["name", "Name"]];
 function sortRows(rows: Supplier[], s: string) {
   const f = {
+    tier: (a: Supplier, b: Supplier) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0),
     quality: (a: Supplier, b: Supplier) => (b.q || 0) - (a.q || 0),
     wins: (a: Supplier, b: Supplier) => (b.w || 0) - (a.w || 0),
     usd: (a: Supplier, b: Supplier) => (b.u || 0) - (a.u || 0),
     recent: (a: Supplier, b: Supplier) => (b.lw || "").localeCompare(a.lw || ""),
     name: (a: Supplier, b: Supplier) => a.n.localeCompare(b.n),
-  }[s as "quality"] || ((a: Supplier, b: Supplier) => (b.q || 0) - (a.q || 0));
+  }[s as "quality"] || ((a: Supplier, b: Supplier) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0));
   return rows.sort(f);
 }
 
@@ -51,18 +55,19 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
       </div>
     );
   }
-  const rows = sortRows(apply(all, p), p.sort || "quality");
+  const rows = sortRows(apply(all, p), p.sort || "tier");
   const page = Math.max(1, Number(p.page || 1)), pages = Math.ceil(rows.length / PER);
   const shown = rows.slice((page - 1) * PER, page * PER);
   const buyerCountries = facet(all.flatMap((r) => (r.bc || "").split(" ").filter(Boolean).map((c) => ({ c }))), (x) => x.c, 200);
   const exporters = rows.filter((r) => r.x).length, strong = rows.filter((r) => (r.q || 0) >= 75).length;
+  const byTier = (t: string) => rows.filter((r) => r.tr === t).length;
   const fields: Field[] = [
     { kind: "text", name: "q", label: "Products or name", placeholder: "e.g. HDPE pipe, transformers, urea, Siemens" },
     { kind: "select", name: "country", label: "Supplier country", options: facet(all, (r) => r.c) },
     { kind: "select", name: "region", label: "Region", options: facet(all, (r) => r.rg) },
     { kind: "select", name: "sector", label: "Sector", options: facet(all, (r) => r.s) },
     { kind: "select", name: "kind", label: "Type", options: facet(all, KIND) },
-    { kind: "select", name: "tier", label: "Tier", options: facet(all, (r) => r.tr) },
+    { kind: "select", name: "tier", label: "Tier", options: facet(all, (r) => r.tr).sort((a, b) => a[0].localeCompare(b[0])).map(([v, n]) => [v, n] as [string, number]), all: "All tiers" },
     { kind: "number", name: "minq", label: "Min quality (0-100)", placeholder: "e.g. 60" },
     { kind: "number", name: "minwins", label: "Min contracts won", placeholder: "e.g. 3" },
     { kind: "select", name: "sells", label: "Has sold to country", options: buyerCountries },
@@ -79,25 +84,27 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
       </div>
       <section className="rounded-xl border-l-4 border-go bg-white p-4 text-sm shadow-sm">
         <span className="text-[11px] font-bold uppercase tracking-wide text-muted">Bottom line</span>
-        <p className="mt-1"><b>{rows.length.toLocaleString()}</b> suppliers match; <b>{strong.toLocaleString()}</b> are top quality (75+) and <b>{exporters.toLocaleString()}</b> have proven cross-border sales - start RFQs with those. Contacts are in the Supplier Universe sheet or via the panel.</p>
+        <p className="mt-1"><b>{rows.length.toLocaleString()}</b> suppliers match: <b>{byTier("1").toLocaleString()}</b> Tier 1 (strategic), <b>{byTier("2").toLocaleString()}</b> Tier 2 (proven), <b>{byTier("3").toLocaleString()}</b> Tier 3 (qualified). Send RFQs to Tier 1-2 first; <b>{exporters.toLocaleString()}</b> have proven cross-border sales and <b>{strong.toLocaleString()}</b> score 75+. Contacts are in the Supplier Universe sheet or via the panel.</p>
+        <p className="mt-1 text-xs text-muted">Tier 1: 10M+ USD and 5+ public wins, or 5M+ with sales abroad, or a notable producer with a public record. Tier 2: 1M+ and 3+ wins, sales abroad, or a notable producer. Tier 3: repeat winner or 250K+, reachable. Tier 4: one small award or thin data.</p>
       </section>
-      <FilterBar fields={fields} values={p} action="/suppliers" sort={p.sort || "quality"} sortOptions={SORTS} />
+      <FilterBar fields={fields} values={p} action="/suppliers" sort={p.sort || "tier"} sortOptions={SORTS} />
       <div className="flex flex-wrap items-center justify-end gap-2">
         <Pager page={page} pages={pages} total={rows.length} href={qs} />
       </div>
       <div className="overflow-x-auto rounded-xl border border-line bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead><tr className="border-b border-line text-left text-[11px] uppercase text-muted">
-            <th className="px-3 py-2">Quality</th><th className="px-3 py-2">Supplier</th><th className="px-3 py-2">Country</th><th className="px-3 py-2">Sector / products</th>
+            <th className="px-3 py-2">Tier</th><th className="px-3 py-2">Quality</th><th className="px-3 py-2">Supplier</th><th className="px-3 py-2">Country</th><th className="px-3 py-2">Sector / products</th>
             <th className="px-3 py-2 text-right">Wins</th><th className="px-3 py-2 text-right">Value won</th><th className="px-3 py-2">Sold to</th><th className="px-3 py-2"></th>
           </tr></thead>
           <tbody>
             {shown.map((r, i) => (
               <tr key={`${r.n}-${i}`} className="border-b border-line/60 align-top">
+                <td className="px-3 py-2 whitespace-nowrap" title={r.why || ""}><span className={`rounded-full px-2 py-0.5 text-xs font-bold ${tierChip(r.tr)}`}>{r.tr ? `T${r.tr}` : "-"}</span><div className="mt-0.5 text-[10px] text-muted">{r.tr ? (TIERS[r.tr] || "").split(" - ")[1] : ""}</div></td>
                 <td className="px-3 py-2"><span className={`rounded-full px-2 py-0.5 text-xs font-bold ${(r.q || 0) >= 75 ? "bg-gobg text-go" : (r.q || 0) >= 50 ? "bg-watchbg text-watch" : "bg-paper text-muted"}`}>{r.q ?? "-"}</span></td>
                 <td className="px-3 py-2">
                   <div className="font-semibold">{r.n}</div>
-                  <div className="text-xs text-muted">{[KIND(r), r.tr ? `tier ${r.tr}` : "", r.x ? `exporter (${r.x})` : ""].filter(Boolean).join(" · ")}</div>
+                  <div className="text-xs text-muted">{[KIND(r), r.x ? `exporter (${r.x})` : "", r.why ? r.why.split(": ")[1] : ""].filter(Boolean).join(" · ")}</div>
                 </td>
                 <td className="px-3 py-2 font-bold">{r.c}</td>
                 <td className="px-3 py-2 text-xs"><div className="font-semibold text-ink">{r.s}</div><div className="text-muted">{r.p || r.cm || ""}</div></td>
@@ -107,7 +114,7 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
                 <td className="px-3 py-2">{r.web && <a href={r.web} target="_blank" className="text-xs font-semibold text-accent hover:underline">Website</a>}</td>
               </tr>
             ))}
-            {!shown.length && <tr><td colSpan={8} className="px-3 py-8 text-center text-sm text-muted">No suppliers match these filters.</td></tr>}
+            {!shown.length && <tr><td colSpan={9} className="px-3 py-8 text-center text-sm text-muted">No suppliers match these filters.</td></tr>}
           </tbody>
         </table>
       </div>

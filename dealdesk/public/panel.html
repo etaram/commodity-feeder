@@ -197,6 +197,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
           <select id="ccountry"><option value="" data-i="all_countries">All countries</option></select>
           <select id="csector"><option value="" data-i="all_sectors">All sectors</option></select>
           <select id="crole"><option value="" data-i="all_types">All types</option><option value="logistics" data-i="role_log">Logistics and shipping</option><option value="goods" data-i="role_goods">Manufacturer / goods supplier</option><option value="trader" data-i="role_trader">Trader</option><option value="epc" data-i="role_epc">EPC contractors</option></select>
+          <select id="ctier"><option value="" data-i="st_all">All tiers</option><option value="1" data-i="st_1">Tier 1 - Strategic</option><option value="2" data-i="st_2">Tier 2 - Proven</option><option value="3" data-i="st_3">Tier 3 - Qualified</option><option value="4" data-i="st_4">Tier 4 - Unproven</option></select>
           <label><input type="checkbox" id="ccontact" checked> <span data-i="with_contact">With contact details</span></label>
         </div>
         <div class="note" id="cscope" style="margin:0 2px 8px"></div>
@@ -330,7 +331,7 @@ const L = {
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
     fired_now: "The worker started now; the answer usually arrives within 5 to 15 minutes.", fired_later: "The worker will pick it up on its next scheduled run (every two hours, 08:13 to 22:13 Israel time).",
     fired_running: "The worker is already running and will pick this job up too.", sent: "Sent to the worker ({id}).", open_jobs: "Open Jobs", added_pursuits: "Added to Pursuits. You can now run a full eligibility check on it.",
-    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
+    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
     c_pick: "Pick a company to see what it sells and how to reach it, then run research or outreach.", exporter: "exporter", notable: "notable", contact_p: "contact", trader: "trader", quality: "Quality",
     e_comp_f: "No suppliers match these filters.", e_acc_f: "No accounts match these filters.", tenders_n: "tenders",
     country: "Country", field: "Field", products: "Products", supplied: "Supplied", commodities: "Commodities", won: "Contracts won", wins: "wins", buyers_n: "buyers", in_: "in",
@@ -422,7 +423,7 @@ const L = {
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
     fired_now: "העובד הופעל עכשיו, התשובה תגיע בדרך כלל תוך 5 עד 15 דקות.", fired_later: "העובד יאסוף את המשימה בריצה הקבועה הבאה (כל שעתיים, 08:13 עד 22:13).",
     fired_running: "העובד כבר רץ ויאסוף גם את המשימה הזו.", sent: "נשלח לעובד ({id}).", open_jobs: "למשימות", added_pursuits: "נוסף ל-Pursuits. אפשר להפעיל עליו בדיקת תנאי סף מלאה.",
-    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
+    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
     c_pick: "בחר חברה כדי לראות מה היא מוכרת, פרטי קשר, ולהפעיל מחקר או פנייה.", exporter: "מייצא", notable: "מוכר", contact_p: "פרטי קשר", trader: "טריידר", quality: "איכות",
     e_comp_f: "אין ספקים שמתאימים לסינון.", e_acc_f: "אין חשבונות שמתאימים לסינון.", tenders_n: "מכרזים",
     country: "מדינה", field: "תחום", products: "מוצרים", supplied: "מה סיפקו", commodities: "סחורות", won: "היקף זכיות", wins: "זכיות", buyers_n: "קונים", in_: "ב-",
@@ -620,6 +621,7 @@ const BD = () => (S.data.bd || []).slice().reverse();
 function decisionPill(d) { return d === "Pursue" ? `<span class="pill good">Pursue</span>` : d === "Watch" ? `<span class="pill warn">Watch</span>` : d ? `<span class="pill">${esc(d)}</span>` : ""; }
 function daysPill(d) { const n = num(d); if (!isFinite(n)) return ""; return `<span class="pill ${n < 7 ? "bad" : n < 15 ? "warn" : "info"}">${n} ${esc(t("days"))}</span>`; }
 function prioPill(p) { return p === "High" ? `<span class="pill acc">High</span>` : p === "Medium" ? `<span class="pill info">Medium</span>` : p ? `<span class="pill">${esc(p)}</span>` : ""; }
+const supTier = (s, long) => { const tr = String(s.tier || ""); if (!/^[1-4]$/.test(tr)) return ""; return `<span class="pill ${tr === "1" ? "good" : tr === "2" ? "info" : tr === "3" ? "warn" : ""}" title="${esc(s.tier_reason || "")}">${esc(long ? t("st_" + tr) : "T" + tr)}</span>`; };
 const hasContact = s => !!(s.email || s.phone || s.website);
 function fillCountries(sel, rows) {
   const cur = sel.value, first = sel.options[0].outerHTML, m = new Map();
@@ -652,7 +654,7 @@ function renderToday() {
   mini("#t-repeat", rep, r => [`<span class="pill info num">${esc(r.next_expected)}</span>`, `<div class="t">${flag(r.country)}${txt(tr(r.buyer))}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(r.awards_12m)} ${esc(t("awards_year"))}</div>`, `<div class="num">${money(r.total_usd)}</div>`], r => gotoDeal("rep", r), t("e_rep"));
   const acc = (S.data.accounts || []).filter(r => r["latest signal"] && !/לא נמצא|no new signal/i.test(r["latest signal"])).sort((a, b) => String(b["last checked"]).localeCompare(String(a["last checked"]))).slice(0, 6);
   mini("#t-accounts", acc, r => [prioPill(r.Priority), `<div class="t">${flag(r.Country)}${esc(r.Account)}</div><div class="sub">${txt(tr(String(r["latest signal"])).slice(0, 200))}</div>`, `<span class="sub num">${esc(r["last checked"])}</span>`], r => { S.compMode = "acc"; setSeg(); go("companies"); renderCompanies(); openAccount(r); }, t("e_acc"));
-  const top = sup.filter(s => hasContact(s) && (s.exports === "yes" || s.notable === "yes")).slice(0, 7);
+  const top = sup.filter(s => hasContact(s) && (String(s.tier) === "1" || String(s.tier) === "2" || !!s.exports || s.notable === "yes")).slice(0, 7);
   mini("#t-companies", top, s => [`<span class="score">${esc(s.quality)}</span>`, `<div class="t">${flag(s.country)}${txt(s.supplier)}</div><div class="sub">${esc(s.country)} · ${esc(s.main_sector)}${s.commodities ? " · " + esc(s.commodities) : ""}</div>`, `<div class="num">${money(s.won_usd_est)}</div>`], s => { S.compMode = "sup"; setSeg(); go("companies"); renderCompanies(); openSupplier(s); }, S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("e_comp"));
   const done = jobs.filter(j => j.status === "done").sort((a, b) => String(b.updated).localeCompare(String(a.updated))).slice(0, 6);
   mini("#t-jobs", done, j => [`<span class="pill good">${esc(t("ready"))}</span>`, `<div class="t">${esc(t("jt_" + j.type))}: ${txt(j.target)}</div><div class="sub">${txt(String(j.result).slice(0, 150))}</div>`, `<span class="sub num">${esc(j.updated)}</span>`], j => { go("jobs"); renderJobs(j.job_id); }, t("e_jobs_today"));
@@ -1051,7 +1053,7 @@ function renderCompanies() {
   const q = $("#cq").value.trim().toLowerCase(), reg = $("#cregion").value, sec = $("#csector").value, cty = $("#ccountry").value;
   if (S.compMode === "sup") {
     fillSelect($("#cregion"), REGIONS); fillSelect($("#csector"), SECTORS); fillCountries($("#ccountry"), sup);
-    $("#crole").disabled = $("#ccontact").disabled = false;
+    $("#crole").disabled = $("#ccontact").disabled = $("#ctier").disabled = false;
     const role = $("#crole").value, needC = $("#ccontact").checked;
     const ts = num((S.data.tot_s_raw || [])[0]);
     if (isFinite(ts)) $("#c-companies").textContent = ts.toLocaleString("en-US");
@@ -1075,13 +1077,16 @@ function renderCompanies() {
     rows = rows || sup.filter(s => (!cty || s.country === cty) && (!reg || s.region === reg) && (!sec || s.main_sector === sec) && (!needC || hasContact(s))
       && (!role || (role === "logistics" ? (s.logistics_role || LOGI.test(s.main_sector)) : role === "trader" ? (s.trader === "yes" || /trader/i.test(s.type)) : role === "epc" ? !!s.epc : /goods/i.test(s.type)))
       && (!q || `${s.supplier} ${s.products} ${s.supplied} ${s.commodities} ${s.industries} ${s.web_title} ${s.country} ${s.logistics_role || ""}`.toLowerCase().includes(q)));
+    const tierF = $("#ctier").value;
+    if (tierF) rows = rows.filter(s => String(s.tier) === tierF);
+    rows = rows.slice().sort((a, b) => String(a.tier || 9).localeCompare(String(b.tier || 9)) || num(b.quality) - num(a.quality));
     listInto("#clist", rows, "c", s => `<span class="score ${num(s.quality) >= 50 ? "hi" : ""}">${esc(s.quality)}</span>
       <div style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)}</div><div class="sub">${esc(s.country)} · ${esc(s.logistics_role || s.main_sector)}${s.commodities ? " · " + esc(s.commodities) : ""}</div><div class="sub">${txt(String(s.products || s.supplied || "").slice(0, 120))}</div></div>
-      <div class="right"><span class="num">${money(s.won_usd_est)}</span>${s.exports === "yes" ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.notable === "yes" ? `<span class="pill acc">${esc(t("notable"))}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}${hasContact(s) ? `<span class="pill good">${esc(t("contact_p"))}</span>` : ""}</div>`,
+      <div class="right">${supTier(s)}<span class="num">${money(s.won_usd_est)}</span>${s.exports ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.notable === "yes" ? `<span class="pill acc">${esc(t("notable"))}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}${hasContact(s) ? `<span class="pill good">${esc(t("contact_p"))}</span>` : ""}</div>`,
       s => openSupplier(s), S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("e_comp_f"), s => s === S.sel.c);
   } else {
     fillSelect($("#cregion"), acc.map(a => a.Region)); fillSelect($("#csector"), acc.map(a => a.Sector));
-    $("#crole").disabled = $("#ccontact").disabled = true; scopeNote("#cscope", "");
+    $("#crole").disabled = $("#ccontact").disabled = $("#ctier").disabled = true; scopeNote("#cscope", "");
     const rows = acc.filter(a => (!reg || a.Region === reg) && (!sec || a.Sector === sec) && (!q || Object.values(a).join(" ").toLowerCase().includes(q)))
       .sort((a, b) => (a.Priority === "High" ? 0 : 1) - (b.Priority === "High" ? 0 : 1));
     listInto("#clist", rows, "c", a => `${prioPill(a.Priority)}<div style="min-width:0"><div class="t">${flag(a.Country)}${esc(a.Account)}</div><div class="sub">${esc(a.Country)} · ${esc(a.Sector)} · ${esc(a["Primary commodity group"])}</div>${a["latest signal"] ? `<div class="sub">${txt(tr(String(a["latest signal"])).slice(0, 160))}</div>` : ""}</div>
@@ -1093,7 +1098,7 @@ const kvRows = rows => rows.map(([k, v, raw]) => `<dt>${esc(t(k))}</dt><dd>${raw
 function openSupplier(s) {
   S.sel.c = s;
   $("#cdetail").innerHTML = `
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span class="pill acc">${esc(t("quality"))} ${esc(s.quality)}</span>${s.tier ? `<span class="pill">Tier ${esc(s.tier)}</span>` : ""}${s.exports === "yes" ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.trader === "yes" ? `<span class="pill warn">${esc(t("trader"))}</span>` : ""}${s.logistics_role ? `<span class="pill acc">${esc(s.logistics_role)}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span class="pill acc">${esc(t("quality"))} ${esc(s.quality)}</span>${supTier(s, true)}${s.exports ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.trader === "yes" ? `<span class="pill warn">${esc(t("trader"))}</span>` : ""}${s.logistics_role ? `<span class="pill acc">${esc(s.logistics_role)}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}</div>
     <h2>${flag(s.country)}${txt(s.supplier)}</h2>
     <dl class="kv">${kvRows([
       ["country", `${s.country} · ${s.region}`], ["field", [s.main_sector, s.other_sectors, s.industries].filter(Boolean).join(" · ")],
@@ -1101,7 +1106,7 @@ function openSupplier(s) {
       ["won", `<span class="num">${money(s.won_usd_est) || "-"}</span> · ${esc(s.wins)} ${esc(t("wins"))} · ${esc(s.buyers)} ${esc(t("buyers_n"))}${s.buyer_countries ? " · " + esc(t("in_")) + " " + esc(s.buyer_countries) : ""}`, true],
       ["website", (link(s.website, s.website) || "-") + (s.website_source ? ` <span class="sub">(${esc(s.website_source)})</span>` : ""), true],
       ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span>`, true],
-      ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources]])}</dl>
+      ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
     <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
     <div id="more-c" data-jobcard="${esc(s.legal_id || s.supplier)}">${cardHtml(s.legal_id || s.supplier)}</div><div id="more-c-flash"></div>
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
@@ -1261,7 +1266,7 @@ function renderAll() { renderStatus(); renderToday(); renderTenders(); renderCom
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
 ["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
-["#cq", "#cregion", "#ccountry", "#csector", "#crole", "#ccontact"].forEach(s => $(s).addEventListener("input", () => { S.limit.c = 60; renderCompanies(); }));
+["#cq", "#cregion", "#ccountry", "#csector", "#crole", "#ccontact", "#ctier"].forEach(s => $(s).addEventListener("input", () => { S.limit.c = 60; renderCompanies(); }));
 $("#dq").addEventListener("input", () => { S.limit.d = 60; renderDeals(); });
 ["#iq", "#icat", "#iregion", "#ihigh"].forEach(s_ => $(s_).addEventListener("input", renderIntel));
 $("#cs-sup").onclick = () => { S.compMode = "sup"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };

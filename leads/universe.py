@@ -138,6 +138,30 @@ def quality(r):
     return round(max(0, min(100, q)))
 
 
+TIER_NAMES = {"1": "Strategic", "2": "Proven", "3": "Qualified", "4": "Unproven"}
+
+
+def supplier_tier(r):
+    """Supplier tier 1-4 from public evidence of capacity and reach (independent of any single tender):
+    1 Strategic - large and repeat public contracts (>= $10M won and 5+ wins, or >= $5M with cross-border sales),
+                  or a notable producer that also wins public contracts
+    2 Proven    - >= $1M won with 3+ wins, cross-border sales, or a notable producer / verified exporter
+    3 Qualified - repeat winner (2+ wins) or >= $250K won, and reachable (contact or website)
+    4 Unproven  - a single small award or thin data
+    Returns (tier, reason)."""
+    usd, wins, cross = r["won_usd_est"] or 0, r["wins"] or 0, bool(r["exports"])
+    notable = bool(r["notable"]) or "Wikidata products" in r["sources"]
+    reach = bool(r["email"] or r["phone"] or r["website"])
+    m = f"${usd / 1e6:.1f}M won, {wins} wins" if usd >= 1e6 else f"${usd / 1e3:.0f}K won, {wins} wins"
+    if (usd >= 10e6 and wins >= 5) or (usd >= 5e6 and cross) or (notable and wins >= 3 and usd >= 1e6):
+        return "1", f"Strategic: {m}" + (", sells abroad" if cross else "") + (", notable producer" if notable else "")
+    if (usd >= 1e6 and wins >= 3) or cross or notable:
+        return "2", f"Proven: {m}" + (", sells abroad" if cross else "") + (", notable producer" if notable else "")
+    if (wins >= 2 or usd >= 250e3) and reach:
+        return "3", f"Qualified: {m}, reachable"
+    return "4", f"Unproven: {m}" + ("" if reach else ", no contact yet")
+
+
 def _awards():
     """(file, award row) from the public award files and the private external award datasets."""
     for f in sorted(AWARDS.glob("*.json")) + sorted(AWARDS.glob("*/*.json")):
@@ -290,7 +314,7 @@ def build():
         secs = sorted(x["sectors"].items(), key=lambda y: -y[1])
         out.append({
             "supplier": name[:120], "country": wc, "region": region(wc) if wc else "",
-            "tier": "B" if x.get("tier_b") else "A", "notable": "yes" if x.get("notable") else "",
+            "tier": "", "notable": "yes" if x.get("notable") else "",
             "trader": "yes" if x.get("trader") else "", "industries": x.get("industries", ""),
             "employees": x.get("employees", ""),
             "wins": x["wins"], "won_usd_est": round(x["usd"]),
@@ -312,10 +336,12 @@ def build():
             "first_win": x["first"] if x["first"] != "9999" else "", "last_win": x["last"],
             "email": x["email"], "phone": x["phone"], "website": x["website"], "website_source": site_src, "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
+            "tier_reason": "", "origin": "B" if x.get("tier_b") else "A",  # new columns stay at the end (sheet formulas)
         })
     for r in out:
         r["quality"] = quality(r)
-    out.sort(key=lambda r: (-r["quality"], -r["won_usd_est"]))
+        r["tier"], r["tier_reason"] = supplier_tier(r)
+    out.sort(key=lambda r: (r["tier"], -r["quality"], -r["won_usd_est"]))  # best tier first, then quality
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)
     cols = list(out[0].keys()) if out else ["supplier"]
@@ -324,7 +350,8 @@ def build():
     stats = {"awards": n_aw, "suppliers": len(out), "with_email": sum(1 for r in out if r["email"]),
              "with_phone": sum(1 for r in out if r["phone"]), "exporters": sum(1 for r in out if r["exports"]),
              "goods": sum(1 for r in out if r["type"] == "goods supplier"), "contacts_matched": n_ct,
-             "tier_A": sum(1 for r in out if r["tier"] == "A"), "tier_B_notable": n_b,
+             "tier_A": sum(1 for r in out if r["origin"] == "A"), "tier_B_notable": n_b,
+             **{f"tier_{t}_{n.lower()}": sum(1 for r in out if r["tier"] == t) for t, n in TIER_NAMES.items()},
              "with_website": sum(1 for r in out if r["website"]),
              "quality_40_plus": sum(1 for r in out if r["quality"] >= 40),
              "with_any_contact": sum(1 for r in out if r["email"] or r["phone"] or r["website"] or r["address"])}

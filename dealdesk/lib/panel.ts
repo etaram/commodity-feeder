@@ -35,7 +35,7 @@ async function snapshot(part: "static" | "live"): Promise<Snap> {
 const SUP_COLS: [string, keyof Supplier][] = [["quality", "q"], ["supplier", "n"], ["country", "c"], ["region", "rg"], ["tier", "tr"],
   ["main_sector", "s"], ["other_sectors", "s2"], ["type", "ty"], ["trader", "td"], ["epc", "epc"], ["logistics_role", "lg"],
   ["products", "p"], ["commodities", "cm"], ["exports", "x"], ["wins", "w"], ["won_usd_est", "u"], ["buyer_countries", "bc"],
-  ["website", "web"], ["last_win", "lw"]];
+  ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"]];
 const SUP_HEAD = [...SUP_COLS.map(([k]) => k), "sources"];
 const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), "public award records"];
 

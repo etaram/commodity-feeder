@@ -61,8 +61,9 @@ def tenders():
 SUP_FIELDS = {"quality": "q", "supplier": "n", "country": "c", "region": "rg", "tier": "tr", "main_sector": "s",
               "other_sectors": "s2", "type": "ty", "trader": "td", "epc": "epc", "logistics_role": "lg",
               "products": "p", "commodities": "cm", "exports": "x", "wins": "w", "won_usd_est": "u",
-              "buyer_countries": "bc", "website": "web", "last_win": "lw"}
-CUT = {"p": 90, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80}
+              "buyer_countries": "bc", "website": "web", "last_win": "lw",
+              "tier_reason": "why"}
+CUT = {"why": 90, "p": 90, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80}
 
 
 def suppliers(limit=90_000):
