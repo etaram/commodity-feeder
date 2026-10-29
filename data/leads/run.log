@@ -1,6 +1,28 @@
-Thu Oct 29 08:14:20 UTC 2026
+Thu Oct 29 11:25:25 UTC 2026
+INFO SAM set-aside notices: 11556
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 669, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 659, in main
+    run_source(a.source)
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/sam.py", line 145, in fetch
+    new += [x for x in (_row(o, t, aside, tzc) for o in res) if x]
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/sam.py", line 145, in <genexpr>
+    new += [x for x in (_row(o, t, aside, tzc) for o in res) if x]
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/sam.py", line 100, in _row
+    desc = " ".join(d.get("content", "") for d in o.get("descriptions") or [])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: sequence item 2: expected str instance, NoneType found
 INFO initializing identifier
-[0;93m2026-10-29 08:14:40.145448324 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-10-29 11:27:29.539833453 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['Spain – Ambulance services – Contratación de servicios de transporte sanitario terrestre mediante ambulancias tipo B y tipo C para las zonas de Gran Canaria y Tenerife.'])
 INFO ('apply_packaged_translation', 'Spain – Ambulance services – Contratación de servicios de transporte sanitario terrestre mediante ambulancias tipo B y tipo C para las zonas de Gran Canaria y Tenerife.')
@@ -4611,52 +4633,51 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['mainstre@@', 'mains
 INFO ('value_hypotheses:', [('mainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstre@@', -25.129764556884766)])
 INFO ('translated_paragraphs:', [[('mainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstre@@', -25.129764556884766)]])
 INFO ('hypotheses_to_return:', [('mainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstre@@', -25.129764556884766)])
-INFO translations: 0 new, 4504 pending, cache 22901, 1549s
-INFO awards 197314 (12m), recent 3000, buyers 27438, competitors 169507
-INFO price trends: 15 groups, 33 series (https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx)
-INFO market signals rows 1245
-INFO opportunities.csv trimmed for the sheet: 3828 of 35174 rows
-INFO opportunities 35174
-INFO sheet/tenders_01.csv trimmed for the sheet: 2458 of 2500 rows
-INFO sheet/tenders_06.csv trimmed for the sheet: 2447 of 2500 rows
-INFO sheet/tenders_07.csv trimmed for the sheet: 2386 of 2500 rows
-INFO sheet/tenders_08.csv trimmed for the sheet: 2385 of 2500 rows
-INFO sheet/tenders_09.csv trimmed for the sheet: 2355 of 2500 rows
-INFO sheet/tenders_10.csv trimmed for the sheet: 2426 of 2500 rows
-INFO sheet/tenders_11.csv trimmed for the sheet: 2336 of 2500 rows
-INFO sheet/tenders_12.csv trimmed for the sheet: 2298 of 2500 rows
-INFO sheet/tenders_13.csv trimmed for the sheet: 2322 of 2500 rows
-INFO sheet/tenders_14.csv trimmed for the sheet: 2371 of 2500 rows
-INFO sheet/tenders_15.csv trimmed for the sheet: 2445 of 2500 rows
-INFO sheet/tenders_16.csv trimmed for the sheet: 2389 of 2500 rows
-INFO tenders.csv trimmed for the sheet: 2458 of 2500 rows
+INFO translations: 0 new, 4531 pending, cache 22901, 1566s
+INFO awards 197634 (12m), recent 3000, buyers 27511, competitors 169562
+INFO market signals rows 1442
+INFO opportunities.csv trimmed for the sheet: 3828 of 35263 rows
+INFO opportunities 35263
+INFO sheet/tenders_01.csv trimmed for the sheet: 2457 of 2500 rows
+INFO sheet/tenders_06.csv trimmed for the sheet: 2449 of 2500 rows
+INFO sheet/tenders_07.csv trimmed for the sheet: 2384 of 2500 rows
+INFO sheet/tenders_08.csv trimmed for the sheet: 2396 of 2500 rows
+INFO sheet/tenders_09.csv trimmed for the sheet: 2364 of 2500 rows
+INFO sheet/tenders_10.csv trimmed for the sheet: 2412 of 2500 rows
+INFO sheet/tenders_11.csv trimmed for the sheet: 2335 of 2500 rows
+INFO sheet/tenders_12.csv trimmed for the sheet: 2304 of 2500 rows
+INFO sheet/tenders_13.csv trimmed for the sheet: 2324 of 2500 rows
+INFO sheet/tenders_14.csv trimmed for the sheet: 2364 of 2500 rows
+INFO sheet/tenders_15.csv trimmed for the sheet: 2448 of 2500 rows
+INFO sheet/tenders_16.csv trimmed for the sheet: 2391 of 2500 rows
+INFO tenders.csv trimmed for the sheet: 2457 of 2500 rows
 INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 2239 new, 6123 total, 12 pending, 126s
-INFO accounts 16750
-INFO importers.csv trimmed for the sheet: 3981 of 4570 rows
-INFO tenders 41482, importers 4570, suppliers 2742
+INFO hebrew titles: 9 new, 6124 total, 11 pending, 6s
+INFO accounts 16753
+INFO importers.csv trimmed for the sheet: 3981 of 4590 rows
+INFO tenders 41513, importers 4590, suppliers 2754
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
-wrote 38619 rows x 28 cols to Tenders
-wrote 35175 rows x 19 cols to Opportunity Pool
+wrote 38629 rows x 28 cols to Tenders
+wrote 35264 rows x 19 cols to Opportunity Pool
 wrote 5001 rows x 13 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
 wrote 5001 rows x 7 cols to Competitors
 wrote 4001 rows x 14 cols to Accounts
-wrote 4581 rows x 18 cols to Importers
+wrote 4591 rows x 18 cols to Importers
 wrote 283 rows x 9 cols to Sectors
 wrote 209 rows x 5 cols to Countries
 wrote 29 rows x 5 cols to Sources
-wrote 1246 rows x 15 cols to Market Signals
-wrote 2743 rows x 18 cols to Suppliers
+wrote 1443 rows x 15 cols to Market Signals
+wrote 2755 rows x 18 cols to Suppliers
 wrote 20 rows x 7 cols to Groups
 wrote 8001 rows x 28 cols to Deal Calc
 wrote 16 rows x 6 cols to Price Trends
 wrote 34 rows x 8 cols to Price Series
 wrote 1896 rows x 10 cols to Commodity Prices
 wrote 2150 rows x 15 cols to Israel
-wrote 6124 rows x 2 cols to Titles HE
-wrote 1454 rows x 28 cols to Upcoming
+wrote 6125 rows x 2 cols to Titles HE
+wrote 1453 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
