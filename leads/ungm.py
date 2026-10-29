@@ -13,8 +13,13 @@ SKIP = re.compile(r"request for information|call for individual|individual consu
 
 
 def _d(s):
-    m = re.search(r"(\d{2})-([A-Za-z]{3})-(\d{4})", s or "")
-    return dt.datetime.strptime(m.group(0), "%d-%b-%Y").date() if m else None
+    # Reference numbers such as "04-IND-2026" look like dates; try every match and keep the first real one.
+    for m in re.finditer(r"\d{2}-[A-Za-z]{3}-\d{4}", s or ""):
+        try:
+            return dt.datetime.strptime(m.group(0), "%d-%b-%Y").date()
+        except ValueError:
+            continue
+    return None
 
 
 def _txt(s):

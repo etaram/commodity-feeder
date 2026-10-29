@@ -57,6 +57,7 @@ class Stats:
         self.bids_cs, self.bids_s = defaultdict(list), defaultdict(list)
         self.foreign = defaultdict(lambda: [0, 0])
         self.buyer = defaultdict(lambda: {"n": 0, "usd": [], "bids": [], "wins": defaultdict(int), "foreign": 0})
+        self.usd_cs, self.usd_s = defaultdict(list), defaultdict(list)
         for a in awards:
             c, s = _c(a.get("country")), a.get("sector_name") or "Other"
             b = a.get("bids")
@@ -72,6 +73,7 @@ class Stats:
             x = self.buyer[k]; x["n"] += 1
             if a.get("usd"):
                 x["usd"].append(a["usd"])
+                self.usd_cs[(c, s)].append(a["usd"]); self.usd_s[s].append(a["usd"])
             if isinstance(b, int) and 0 < b < 200:
                 x["bids"].append(b)
             for w in a.get("winners") or []:
@@ -89,6 +91,19 @@ class Stats:
         if s and len(s) >= 10:
             return median(s), "sector history"
         return DEFAULT_BIDS, "default"
+
+    def est_value(self, buyer, country, sector):
+        """Typical award size when the notice states no value: buyer history, then country+sector, then sector."""
+        x = self.buyer.get((_norm(buyer), _c(country)))
+        if x and len(x["usd"]) >= 2:
+            return median(x["usd"]), "buyer's past awards"
+        cs = self.usd_cs.get((_c(country), sector))
+        if cs and len(cs) >= 8:
+            return median(cs), "country+sector awards"
+        s = self.usd_s.get(sector)
+        if s and len(s) >= 30:
+            return median(s), "sector awards"
+        return None, ""
 
     def foreign_rate(self, country, sector):
         f = self.foreign.get((_c(country), sector)) or [0, 0]
@@ -137,15 +152,21 @@ def enrich(tenders, awards):
         usd = r.get("est_value_usd")
         fw = bool(FRAMEWORK.search(f"{r.get('title', '')} {r.get('title_en', '')} {r.get('notice_type', '')}"))
         cost = PURSUIT_COST.get(r.get("stage") or "tender", 3000)
-        if usd not in ("", None):
-            v = min(usd, 100_000_000) * (0.3 if fw else 1.0)  # framework values are ceilings shared by several suppliers
+        est_src = ""
+        if usd in ("", None):
+            ev_usd, est_src = st.est_value(r.get("buyer"), country, sec)
+        else:
+            ev_usd = usd
+        if ev_usd not in ("", None):
+            # framework values are ceilings shared by several suppliers; estimated values get a 50% haircut
+            v = min(ev_usd, 100_000_000) * (0.3 if fw else 1.0) * (0.5 if est_src else 1.0)
             ev = round(v * margin * p - cost)
         else:
             ev = ""
         days = r.get("days_left")
         why = []
         if usd in ("", None):
-            why.append("value not stated")
+            why.append(f"value not stated (estimated from {est_src})" if est_src else "value not stated")
         if isinstance(days, int) and days < 7 and r.get("stage") != "planned":
             why.append(f"only {days} days left")
         why.append(f"{bidders:g} bidders expected ({bsrc})")
