@@ -2,9 +2,10 @@
 a rolling cache. Sector from the Federal Supply Class / service code that prefixes many titles (e.g. '61--CABLE'),
 else by keyword."""
 import datetime as dt
+import json
 import re
 
-from .common import cache_empty, clean, log, polite, rolling, session, today
+from .common import CACHE, cache_empty, clean, log, polite, rolling, session, today
 from .sectors import classify
 from .taxonomy import group_of_text
 
@@ -42,48 +43,121 @@ def _sector(title):
     return classify(title)
 
 
+SET_ASIDES = ["SBA", "SBP", "8A", "8AN", "HZC", "HZS", "SDVOSBC", "SDVOSBS", "WOSB", "WOSBSS", "EDWOSB", "EDWOSBSS",
+              "LAS", "IEE", "ISBEE", "BICiv", "VSA", "VSS"]
+STATE = CACHE / "sam_state.json"
+
+
+def _tz_country():
+    """IANA time zone -> ISO3 country, from the system zone table (the response time zone tells where an overseas
+    US contracting office buys: Europe/Berlin, Asia/Jerusalem ...)."""
+    out = {}
+    for f in ("/usr/share/zoneinfo/zone1970.tab", "/usr/share/zoneinfo/zone.tab"):
+        try:
+            for line in open(f, encoding="utf-8"):
+                if line.startswith("#"):
+                    continue
+                parts = line.split("\t")
+                if len(parts) >= 3:
+                    cc = parts[0].split(",")[0]
+                    out.setdefault(parts[2].strip(), cc)
+        except OSError:
+            continue
+    try:
+        import pycountry
+        return {tz: (pycountry.countries.get(alpha_2=cc).alpha_3 if pycountry.countries.get(alpha_2=cc) else "")
+                for tz, cc in out.items()}
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+def _pages(s, params, max_pages=100):
+    for page in range(max_pages):
+        try:
+            r = s.get(URL, params={"index": "opp", "page": page, "size": 100, "mode": "search", "is_active": "true",
+                                   **params}, timeout=60)
+            j = r.json()
+        except Exception as e:  # noqa: BLE001
+            log.warning("SAM %s page %d: %s", params, page, e); return
+        res = j.get("_embedded", {}).get("results", [])
+        if not res:
+            return
+        yield res
+        tot = (j.get("page") or {}).get("totalPages", 0)
+        if page + 1 >= min(tot, 100):
+            return
+        polite(0.4)
+
+
+def _row(o, t, aside, tzc):
+    if (o.get("type") or {}).get("code") not in TYPES or o.get("isCanceled"):
+        return None
+    dl = (o.get("responseDate") or "")[:10]
+    if dl and dl < str(t):
+        return None
+    title = clean(o.get("title"))
+    org = o.get("organizationHierarchy") or []
+    desc = " ".join(d.get("content", "") for d in o.get("descriptions") or [])
+    em = EMAIL.search(desc)
+    sector, method = _sector(title)
+    orgs = " ".join(x.get("name") or "" for x in org).upper()
+    if not sector and re.search(r"DEFENSE|ARMY|NAVY|AIR FORCE|MARINE CORPS|SPACE FORCE", orgs):
+        sector, method = "DEFENCE", "military buyer"
+    tz = o.get("responseTimeZone") or ""
+    pop = tzc.get(tz, "") if tz and not tz.startswith(("America/", "Pacific/", "US/")) else ""
+    code = aside.get(o["_id"])
+    if code:
+        access = f"US set-aside ({code}): US small businesses only"
+    elif pop and pop != "USA":
+        access = "International: US agency buying abroad, open to local and international firms"
+    else:
+        access = "US full and open competition, open to foreign firms (TAA/GPA: Israeli products eligible)"
+    return {
+        "id": f"SAM-{o['_id']}", "source": "SAM.gov (USA)", "group": group_of_text(title) or "",
+        "sector": sector, "nature": "", "cpv": "", "country": pop if pop and pop != "USA" else "USA",
+        "buyer": clean(" / ".join(dict.fromkeys(x.get("name") or "" for x in (org[:1] + org[-1:]))), 120),
+        "title": title[:300], "classification": method, "notice_type": TYPES[o["type"]["code"]] + (f" | set-aside {code}" if code else ""),
+        "stage": "planned" if o["type"]["code"] in ("p", "r") else "tender", "access": access,
+        "published": (o.get("publishDate") or "")[:10], "deadline": dl, "value": "", "currency": "",
+        "link": f"https://sam.gov/opp/{o['_id']}/view", "contact": em.group(0) if em else "", "lang": "",
+    }
+
+
 def fetch():
+    """Daily full sweep of every active solicitation (all four notice types, combined synopses split by response-date
+    week to stay under the 10,000-result cap) plus small-business set-aside tagging; incremental runs in between."""
     s = session(); s.headers["Accept"] = "application/hal+json"
     t = today()
-    cut = str(t - dt.timedelta(days=21 if cache_empty("sam") else 3))
-    new, page = [], 0
-    while page < 100:
-        try:
-            r = s.get(URL, params={"index": "opp", "page": page, "size": 100, "sort": "-modifiedDate",
-                                   "mode": "search", "is_active": "true"}, timeout=60)
-            res = r.json().get("_embedded", {}).get("results", [])
-        except Exception as e:  # noqa: BLE001
-            log.warning("SAM page %d: %s", page, e); break
-        if not res:
-            break
-        for o in res:
-            if (o.get("type") or {}).get("code") not in TYPES:
-                continue
-            dl = (o.get("responseDate") or "")[:10]
-            if dl and dl < str(t):
-                continue
-            title = clean(o.get("title"))
-            org = o.get("organizationHierarchy") or []
-            desc = " ".join(d.get("content", "") for d in o.get("descriptions") or [])
-            em = EMAIL.search(desc)
-            sector, method = _sector(title)
-            orgs = " ".join(x.get("name") or "" for x in org).upper()
-            if not sector and re.search(r"DEFENSE|ARMY|NAVY|AIR FORCE|MARINE CORPS|SPACE FORCE", orgs):
-                sector, method = "DEFENCE", "military buyer"
-            new.append({
-                "id": f"SAM-{o['_id']}", "source": "SAM.gov (USA)", "group": group_of_text(title) or "",
-                "sector": sector, "nature": "", "cpv": "", "country": "USA",
-                "buyer": clean(" / ".join(dict.fromkeys(x.get("name") or "" for x in (org[:1] + org[-1:]))), 120),
-                "title": title[:300], "classification": method, "notice_type": TYPES[o["type"]["code"]],
-                "stage": "planned" if o["type"]["code"] in ("p", "r") else "tender",
-                "access": "US (Buy American / TAA; GPA for covered agencies)",
-                "published": (o.get("publishDate") or "")[:10], "deadline": dl, "value": "", "currency": "",
-                "link": f"https://sam.gov/opp/{o['_id']}/view", "contact": em.group(0) if em else "", "lang": "",
-            })
-        if (res[-1].get("modifiedDate") or "")[:10] < cut:
-            break
-        page += 1
-        polite(0.5)
+    st = json.loads(STATE.read_text()) if STATE.exists() else {}
+    full = cache_empty("sam") or st.get("full_sweep") != str(t)
+    aside = st.get("set_aside", {}) if not full else {}
+    tzc = _tz_country()
+    if full:
+        for code in SET_ASIDES:
+            for res in _pages(s, {"set_aside": code}):
+                for o in res:
+                    aside[o["_id"]] = code
+        log.info("SAM set-aside notices: %d", len(aside))
+    new = []
+    if full:
+        for typ in ("o", "p", "r"):
+            for res in _pages(s, {"notice_type": typ, "sort": "-modifiedDate"}):
+                new += [x for x in (_row(o, t, aside, tzc) for o in res) if x]
+        for w in range(0, 420, 7):
+            a, b = t + dt.timedelta(days=w - 1), t + dt.timedelta(days=w + 6)
+            for res in _pages(s, {"notice_type": "k", "response_date.from": f"{a}-05:00", "response_date.to": f"{b}-05:00"}):
+                new += [x for x in (_row(o, t, aside, tzc) for o in res) if x]
+        (CACHE / "sam.jsonl").unlink(missing_ok=True)  # rebuild: drops cancelled and withdrawn notices
+    else:
+        cut = str(t - dt.timedelta(days=2))
+        for res in _pages(s, {"sort": "-modifiedDate"}, max_pages=40):
+            new += [x for x in (_row(o, t, aside, tzc) for o in res) if x]
+            if (res[-1].get("modifiedDate") or "")[:10] < cut:
+                break
     rows, _ = rolling("sam", new)
-    log.info("SAM new %d, open %d (pages %d)", len(new), len(rows), page + 1)
-    return rows, {"new": len(new)}
+    if full:
+        STATE.write_text(json.dumps({"full_sweep": str(t), "set_aside": aside}))
+    open_ = sum(1 for r in rows if "set-aside" not in r["access"])
+    log.info("SAM %s: fetched %d, open %d (%d open to foreign firms)", "full sweep" if full else "incremental",
+             len(new), len(rows), open_)
+    return rows, {"fetched": len(new), "set_aside": len(aside), "open_to_foreign": open_, "full": int(full)}

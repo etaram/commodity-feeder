@@ -217,6 +217,8 @@ def deal(r, st, trends):
         p = max(p, min(0.85, places / max(bidders, 1.0)) * min(openness, 1.0) * trad)
     if inc and x and x["n"] >= 2:
         p *= 0.8
+    if "set-aside" in (r.get("access") or ""):
+        p *= 0.02  # reserved for US small businesses
     if "exemption" in (r.get("source") or "").lower() or re.search(r"התקשרות בפטור|כוונה להתקשר|exemption", text, re.I):
         p *= 0.1  # intent to contract with a named supplier: only an objection window
     days = r.get("days_left")

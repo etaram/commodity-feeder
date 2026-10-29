@@ -51,7 +51,7 @@ jobs:
       - name: sam
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',sam,') }}
         run: set -o pipefail; python -m leads.run --source sam 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 15
+        timeout-minutes: 25
         continue-on-error: true
       - name: canadabuys
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',canadabuys,') }}
