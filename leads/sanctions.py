@@ -99,7 +99,7 @@ def screen(tenders):
             if len(n) < 6 or (GENERIC.match(n) and len(n.split()) <= 5):
                 continue  # "ministry of defence" alone would flag every country's ministry
             exact.setdefault(n, src)
-            if len(n) >= 15 and len(n.split()) >= 2:
+            if len(n) >= 15 and len(n.split()) >= 2 and not GENERIC.match(n):  # generic starts only on exact match
                 long_names.append((n, src))
     by_tok = {}  # long listed names indexed by their first word, so each buyer is compared with a handful only
     for n, src in long_names:
