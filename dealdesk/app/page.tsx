@@ -49,6 +49,9 @@ export default async function Today() {
                     {d.route && d.route !== "direct" && (
                       <span className="rounded-full bg-[#E6ECF3] px-2 py-0.5 font-semibold text-blue">{ROUTE_LABEL[d.route] || d.route}</span>
                     )}
+                    {num(d.fta_edge_pct) > 0 && (
+                      <span className="rounded-full bg-gobg px-2 py-0.5 font-semibold text-go">FTA edge +{(num(d.fta_edge_pct) * 100).toFixed(1)}%</span>
+                    )}
                     {num(d.press_count) > 0 && (
                       <span className="rounded-full bg-watchbg px-2 py-0.5 font-semibold text-watch">{d.press_count} press</span>
                     )}
@@ -67,7 +70,7 @@ export default async function Today() {
                 <div><div className="text-[11px] text-muted">Expected value</div><div className="font-semibold text-go">{usd(num(d.ev_usd))}</div></div>
                 <div><div className="text-[11px] text-muted">Deadline</div><div className="font-semibold">{d.deadline || "-"}{d.days_left !== "" ? ` (${d.days_left}d)` : ""}</div></div>
                 <div className="text-right">
-                  <Link href={`/deal/${encodeURIComponent(d.id)}`} className="text-sm font-semibold text-accent hover:underline">Open deal file →</Link>
+                  <Link href={`/deal/${encodeURIComponent(d.id)}`} className="text-sm font-semibold text-accent hover:underline">Open deal file</Link>
                 </div>
               </div>
             </div>

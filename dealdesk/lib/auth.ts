@@ -25,11 +25,12 @@ export function verifySession(token: string | undefined): { email: string } | nu
   return { email };
 }
 
-export function checkLogin(email: string, passcode: string): boolean {
+export function checkLogin(user: string, passcode: string): boolean {
   const pass = process.env.TEAM_PASSCODE || "";
   if (!pass || passcode !== pass) return false;
+  const teamUser = (process.env.TEAM_USER || "").trim().toLowerCase();
+  if (teamUser) return user.trim().toLowerCase() === teamUser;
   const allowed = (process.env.ALLOWED_EMAILS || "")
     .split(/[\s,;]+/).map((x) => x.trim().toLowerCase()).filter(Boolean);
-  if (allowed.length && !allowed.includes(email.trim().toLowerCase())) return false;
-  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
+  return !allowed.length || allowed.includes(user.trim().toLowerCase());
 }

@@ -18,7 +18,7 @@ export default function Login() {
     });
     setBusy(false);
     if (r.ok) window.location.href = "/";
-    else setErr("Wrong e-mail or passcode.");
+    else setErr("Wrong username or password.");
   }
 
   return (
@@ -27,12 +27,12 @@ export default function Login() {
       <p className="mt-1 text-sm text-muted">Sinder team access only.</p>
       <form onSubmit={submit} className="mt-6 space-y-4">
         <div>
-          <label className="text-xs font-semibold text-muted">E-MAIL</label>
-          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+          <label className="text-xs font-semibold text-muted">USERNAME</label>
+          <input type="text" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)}
             className="mt-1 w-full rounded-md border border-line px-3 py-2 text-sm outline-none focus:border-accent" />
         </div>
         <div>
-          <label className="text-xs font-semibold text-muted">TEAM PASSCODE</label>
+          <label className="text-xs font-semibold text-muted">PASSWORD</label>
           <input type="password" required value={passcode} onChange={(e) => setPasscode(e.target.value)}
             className="mt-1 w-full rounded-md border border-line px-3 py-2 text-sm outline-none focus:border-accent" />
         </div>

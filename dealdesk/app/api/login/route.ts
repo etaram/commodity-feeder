@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
   const res = NextResponse.json({ ok: true });
-  res.cookies.set("dd_session", signSession(email.trim().toLowerCase()), {
+  res.cookies.set("dd_session", signSession(email.trim()), {
     httpOnly: true, secure: true, sameSite: "lax", maxAge: 30 * 864e2, path: "/",
   });
   return res;

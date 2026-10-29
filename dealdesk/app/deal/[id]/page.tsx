@@ -42,7 +42,7 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
           <span className={`rounded-full px-2.5 py-1 font-bold ${deal.decision === "Pursue" ? "bg-gobg text-go" : deal.decision === "Watch" ? "bg-watchbg text-watch" : "bg-paper text-muted"}`}>{deal.decision}</span>
           <span className="rounded-full bg-[#E6ECF3] px-2.5 py-1 font-semibold text-blue">{ROUTE_LABEL[deal.route] || deal.route || "direct"}</span>
           {deal.deadline && <span className="rounded-full bg-paper px-2.5 py-1 font-semibold">Deadline {deal.deadline} ({deal.days_left || "?"} days)</span>}
-          {deal.link && <a href={deal.link} target="_blank" className="rounded-full bg-accent px-2.5 py-1 font-bold text-white hover:bg-blue">Open the official notice ↗</a>}
+          {deal.link && <a href={deal.link} target="_blank" className="rounded-full bg-accent px-2.5 py-1 font-bold text-white hover:bg-blue">Open the official notice</a>}
         </div>
       </div>
 
@@ -64,6 +64,13 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
           <div>Price trend (3m): <b>{deal.price_trend_3m_pct ? `${deal.price_trend_3m_pct}%` : "-"} {deal.price_signal}</b></div>
           <div>ROI: <b>{deal.roi ? `${num(deal.roi).toFixed(1)}x` : "-"}</b></div>
         </div>
+      </section>
+
+      <section className="rounded-xl border border-line bg-white p-5 shadow-sm">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-muted">Trade-agreement edge</h2>
+        {deal.fta_note ? (
+          <p className="mt-2 text-sm leading-6">{deal.fta_note}{deal.import_duty_pct ? ` Import duty for this commodity group: ${pct(deal.import_duty_pct, 1)}.` : ""}</p>
+        ) : (<p className="mt-2 text-sm text-muted">No duty data for this market and group yet, or the scope is works or services.</p>)}
       </section>
 
       <section className="rounded-xl border border-line bg-white p-5 shadow-sm">

@@ -22,7 +22,7 @@ export default async function Settings() {
         <div className="rounded-xl border border-line bg-white p-5 shadow-sm">
           <div className="text-sm font-bold">Where the data comes from</div>
           <p className="mt-1 text-sm text-muted">
-            Official procurement portals and APIs only, collected every 4 hours (Israel daily), scored by the deal engine, enriched with World Bank prices, freight indices and world press.
+            Official procurement portals and APIs only, collected every 4 hours (Israel daily), scored by the deal engine, enriched with World Bank prices, freight indices, trade-agreement duties and world press.
           </p>
         </div>
       </div>
