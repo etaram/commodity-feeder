@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getDeal, getPress, getAwards, num, usd, pct, ROUTE_LABEL } from "@/lib/data";
 import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
+import BottomLine from "@/components/BottomLine";
+import { verdict } from "@/lib/verdict";
 import { tenders } from "@/lib/index";
 
 export const revalidate = 900;
@@ -60,6 +62,8 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
           {deal.link && <a href={deal.link} target="_blank" className="rounded-full bg-accent px-2.5 py-1 font-bold text-white hover:bg-blue">Open the official notice</a>}
         </div>
       </div>
+
+      <BottomLine v={verdict(deal)} />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Fact label="Expected value" value={usd(num(deal.ev_usd))} strong />

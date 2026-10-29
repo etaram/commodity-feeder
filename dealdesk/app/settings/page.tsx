@@ -1,11 +1,16 @@
 import { getSources, num } from "@/lib/data";
 import { sheetsEnabled } from "@/lib/sheets";
+import { facet } from "@/lib/index";
+import FilterBar from "@/components/FilterBar";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
-export default async function Settings() {
+export default async function Settings({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const p = await searchParams;
   const sources = await getSources();
-  const rows = sources.filter((s) => s.source).sort((a, b) => num(b.rows) - num(a.rows));
+  const allRows = sources.filter((s) => s.source).sort((a, b) => num(b.rows) - num(a.rows));
+  const rows = allRows.filter((s) => (!p.state || s.note === p.state) && (!p.q || s.source.toLowerCase().includes(p.q.toLowerCase())));
+  const failing = allRows.filter((s) => s.note !== "OK");
   const sheets = sheetsEnabled();
   return (
     <div className="space-y-6">
@@ -26,6 +31,11 @@ export default async function Settings() {
           </p>
         </div>
       </div>
+      <section className="rounded-xl border-l-4 border-go bg-white p-4 text-sm shadow-sm">
+        <span className="text-[11px] font-bold uppercase tracking-wide text-muted">Bottom line</span>
+        <p className="mt-1"><b>{allRows.length - failing.length}</b> of <b>{allRows.length}</b> sources delivered data on the last run{failing.length ? <>; not delivering: <b>{failing.map((s) => s.source).join(", ")}</b></> : " - all healthy"}.</p>
+      </section>
+      <FilterBar fields={[{ kind: "text", name: "q", label: "Source", placeholder: "e.g. sam, ted" }, { kind: "select", name: "state", label: "State", options: facet(allRows, (s) => s.note) }]} values={p} action="/settings" />
       <div className="overflow-x-auto rounded-xl border border-line bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead><tr className="border-b border-line text-left text-[11px] uppercase text-muted">

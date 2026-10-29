@@ -202,6 +202,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --source enrich 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 10
         continue-on-error: true
+      - name: us_awards
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',us_awards,') }}
+        timeout-minutes: 15
+        continue-on-error: true
+        run: set -o pipefail; python -m leads.sam_awards 90 60 2>&1 | tee -a data/leads/run.log
       - name: merge
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',merge,') }}
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log

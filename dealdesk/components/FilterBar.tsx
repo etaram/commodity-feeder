@@ -7,9 +7,9 @@ export type Field =
   | { kind: "check"; name: string; label: string };
 
 /** Plain GET form: filters live in the URL, so a filtered view can be bookmarked or sent to a partner. */
-export default function FilterBar({ fields, values, action, sort, sortOptions }: {
+export default function FilterBar({ fields, values, action, sort, sortOptions, sortName = "sort", sortLabel = "Sort by" }: {
   fields: Field[]; values: Record<string, string | undefined>; action: string;
-  sort: string; sortOptions: [string, string][];
+  sort?: string; sortOptions?: [string, string][]; sortName?: string; sortLabel?: string;
 }) {
   const active = fields.filter((f) => values[f.name]).length;
   return (
@@ -41,12 +41,14 @@ export default function FilterBar({ fields, values, action, sort, sortOptions }:
             )}
           </label>
         ))}
-        <label className="block">
-          <span className="text-[11px] font-bold uppercase tracking-wide text-muted">Sort by</span>
-          <select name="sort" defaultValue={sort} className="mt-1 w-full rounded-md border border-line bg-white px-2 py-1.5 text-sm outline-none focus:border-accent">
-            {sortOptions.map(([v, l]) => (<option key={v} value={v}>{l}</option>))}
-          </select>
-        </label>
+        {sortOptions && sortOptions.length > 0 && (
+          <label className="block">
+            <span className="text-[11px] font-bold uppercase tracking-wide text-muted">{sortLabel}</span>
+            <select name={sortName} defaultValue={sort} className="mt-1 w-full rounded-md border border-line bg-white px-2 py-1.5 text-sm outline-none focus:border-accent">
+              {sortOptions.map(([v, l]) => (<option key={v} value={v}>{l}</option>))}
+            </select>
+          </label>
+        )}
       </div>
       <div className="mt-3 flex items-center gap-3">
         <button className="rounded-md bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-blue">Apply filters</button>
