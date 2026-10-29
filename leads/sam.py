@@ -161,3 +161,12 @@ def fetch():
     log.info("SAM %s: fetched %d, open %d (%d open to foreign firms)", "full sweep" if full else "incremental",
              len(new), len(rows), open_)
     return rows, {"fetched": len(new), "set_aside": len(aside), "open_to_foreign": open_, "full": int(full)}
+
+
+if __name__ == "__main__":
+    import collections
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    r, m = fetch()
+    print(m)
+    print(collections.Counter(x["access"].split(":")[0][:60] for x in r).most_common(10))
