@@ -11,11 +11,7 @@ async function client(): Promise<JWT | null> {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   if (!raw) return null;
   const key = JSON.parse(raw);
-  return new JWT({
-    email: key.client_email,
-    key: key.private_key,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
+  return new JWT({ email: key.client_email, key: key.private_key, scopes: ["https://www.googleapis.com/auth/spreadsheets"] });
 }
 
 async function call(jwt: JWT, method: string, url: string, body?: unknown) {
@@ -29,28 +25,31 @@ async function call(jwt: JWT, method: string, url: string, body?: unknown) {
   return r.json();
 }
 
+export async function appendRow(tab: string, row: (string | number)[]) {
+  return append(tab, row);
+}
+
 async function append(tab: string, row: (string | number)[]) {
   const jwt = await client();
-  if (!jwt) throw new Error("Sheets is not configured (GOOGLE_SERVICE_ACCOUNT_JSON is missing)");
+  if (!jwt) throw new Error("Sheets is not configured");
   const range = encodeURIComponent(`'${tab}'!A1`);
+  const url = `${API}/${SHEET}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
   try {
-    await call(jwt, "POST", `${API}/${SHEET}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, { values: [row] });
+    await call(jwt, "POST", url, { values: [row] });
   } catch (e: unknown) {
     if (String(e).includes("Unable to parse range")) {
       await call(jwt, "POST", `${API}/${SHEET}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
-      await call(jwt, "POST", `${API}/${SHEET}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`, { values: [row] });
+      await call(jwt, "POST", url, { values: [row] });
     } else throw e;
   }
 }
 
 const now = () => new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jerusalem" }).slice(0, 16);
 
-/** One row per human decision; the qualification analyst reads this tab. */
 export async function recordDecision(id: string, decision: string, email: string, note: string, title: string, buyer: string, country: string) {
   await append("Decisions", [id, decision, email, now(), note, title.slice(0, 200), buyer.slice(0, 120), country]);
 }
 
-/** Queues a job for the Panel worker agent (same format the in-sheet panel uses). */
 export async function queueJob(type: string, targetId: string, target: string, context: string, request: string, email: string) {
   const jobId = `WEB-${Date.now().toString(36).toUpperCase()}`;
   await append("Panel Jobs", [jobId, now(), type, targetId, target.slice(0, 200), context.slice(0, 1500), request.slice(0, 1000), "queued", "", "", now(), `from ${email}`]);

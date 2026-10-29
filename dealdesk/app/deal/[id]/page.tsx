@@ -48,7 +48,7 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
     <div className="space-y-6">
       <div>
         <div className="flex items-center gap-2 text-xs text-muted">
-          <Link href="/" className="font-semibold text-accent hover:underline">Today</Link><span>/</span><span>{deal.id}</span>
+          <Link href="/today" className="font-semibold text-accent hover:underline">Today</Link><span>/</span><span>{deal.id}</span>
         </div>
         <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
           <h1 className="max-w-3xl text-xl font-bold text-navy">{deal.title_en || deal.id}</h1>
@@ -134,7 +134,7 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
 
       <section className="rounded-xl border border-line bg-white p-5 shadow-sm">
         <h2 className="text-sm font-bold uppercase tracking-wide text-muted">Hand it to the research agents</h2>
-        <p className="mt-1 text-xs text-muted">Queues a job for the overnight worker; results appear in the sheet and here.</p>
+        <p className="mt-1 text-xs text-muted">Queues a job for the worker agent; results appear in the sheet (Panel Jobs).</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <JobButton type="eligibility" deal={deal} label="Full eligibility check" />
           <JobButton type="quote" deal={deal} label="Build a price quote" />

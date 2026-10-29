@@ -8,7 +8,7 @@ const PER = 50;
 
 type SP = Record<string, string | undefined>;
 
-const SIZES: [string, number][] = [["Under $100K", 0], ["$100K - $1M", 0], ["$1M - $10M", 0], ["$10M - $50M", 0], ["Over $50M", 0]];
+const SIZES = ["Under $100K", "$100K - $1M", "$1M - $10M", "$10M - $50M", "Over $50M"];
 const inSize = (v: number | null, s: string) => {
   if (v == null) return false;
   if (s === "Under $100K") return v < 1e5;
@@ -65,13 +65,16 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
   const page = Math.max(1, Number(p.page || 1)), pages = Math.ceil(rows.length / PER);
   const shown = rows.slice((page - 1) * PER, page * PER);
   const valueSum = rows.reduce((s, r) => s + (r.v || 0), 0);
+  const pursue = rows.filter((r) => r.d === "Pursue"), watch = rows.filter((r) => r.d === "Watch").length;
+  const valued = rows.filter((r) => r.v != null).length;
+  const isUSA = p.country === "USA";
   const fields: Field[] = [
     { kind: "text", name: "q", label: "Keywords", placeholder: "e.g. cable, pipes, solar, Mekorot" },
     { kind: "select", name: "country", label: "Country", options: facet(all, (r) => r.c) },
     { kind: "select", name: "region", label: "Region", options: facet(all, (r) => r.rg) },
     { kind: "select", name: "sector", label: "Sector", options: facet(all, (r) => r.s) },
     { kind: "select", name: "group", label: "Commodity group", options: facet(all, (r) => r.g) },
-    { kind: "select", name: "size", label: "Tender size", options: SIZES.map(([l]) => [l, all.filter((r) => inSize(r.v, l)).length] as [string, number]), all: "Any size" },
+    { kind: "select", name: "size", label: "Tender size", options: SIZES.map((l) => [l, all.filter((r) => inSize(r.v, l)).length] as [string, number]), all: "Any size" },
     { kind: "number", name: "min", label: "Min value ($K)", placeholder: "e.g. 500" },
     { kind: "number", name: "max", label: "Max value ($K)" },
     { kind: "number", name: "within", label: "Closes within (days)", placeholder: "e.g. 30" },
@@ -88,12 +91,16 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="text-xl font-bold text-navy">Tender search</h1>
+        <h1 className="text-xl font-bold text-navy">{isUSA ? "United States - tenders" : "Tender search"}</h1>
         <span className="text-xs text-muted">{all.length.toLocaleString()} open notices from every source · the link keeps your filters, so you can send it to a partner</span>
       </div>
+      <section className="rounded-xl border-l-4 border-go bg-white p-4 text-sm leading-6 shadow-sm">
+        <span className="text-[11px] font-bold uppercase tracking-wide text-muted">Bottom line</span>
+        <p className="mt-1"><b>{rows.length.toLocaleString()}</b> tenders match: <b>{pursue.length}</b> worth pursuing, <b>{watch.toLocaleString()}</b> to watch. Only <b>{valued.toLocaleString()}</b> state a value ({usd(valueSum)} together); the rest are valued by the engine from past awards.</p>
+        {isUSA && <p className="mt-1 text-muted">US federal solicitations almost never publish a value and most are small (median award about $80K), so few clear the pursue bar. Worth it only with a SAM.gov registration and a product line where Sinder is price-competitive; set-asides for US small businesses are closed to Sinder. Sort by value or filter a sector to find the large ones.</p>}
+      </section>
       <FilterBar fields={fields} values={p} action="/tenders" sort={p.sort || "ev"} sortOptions={SORTS} />
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm"><b>{rows.length.toLocaleString()}</b> tenders match · stated value <b>{usd(valueSum)}</b> · <b>{rows.filter((r) => r.d === "Pursue").length}</b> Pursue</div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <Pager page={page} pages={pages} total={rows.length} href={qs} />
       </div>
       <div className="overflow-x-auto rounded-xl border border-line bg-white shadow-sm">
@@ -107,9 +114,7 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
               <tr key={r.id} className="border-b border-line/60 align-top">
                 <td className="px-3 py-2 font-bold">{r.c}{r.n ? <span className="ml-1 rounded bg-gobg px-1 text-[9px] text-go">NEW</span> : null}</td>
                 <td className="px-3 py-2">
-                  {r.d === "Pursue" || r.d === "Watch"
-                    ? <Link href={`/deal/${encodeURIComponent(r.id)}`} className="font-semibold text-ink hover:text-accent">{r.t || r.id}</Link>
-                    : <span className="font-semibold">{r.t || r.id}</span>}
+                  <Link href={`/deal/${encodeURIComponent(r.id)}`} className="font-semibold text-ink hover:text-accent">{r.t || r.id}</Link>
                   <div className="text-xs text-muted">{r.b}{r.acc === "set-aside" ? " · US small-business set-aside" : ""}{r.st === "planned" ? " · planned" : ""}</div>
                 </td>
                 <td className="px-3 py-2 text-xs text-muted">{r.s}</td>

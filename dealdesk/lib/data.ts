@@ -1,7 +1,7 @@
 import Papa from "papaparse";
 
 const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main";
-const TTL = 900; // seconds; the pipeline refreshes every 4 hours
+const TTL = 900;
 
 export type Row = Record<string, string>;
 
@@ -44,8 +44,6 @@ export async function getDeal(id: string): Promise<Row | undefined> {
   const deals = await getDeals();
   return deals.find((d) => d.id === id);
 }
-
-export type Decision = "Go" | "Watch" | "No";
 
 export const ROUTE_LABEL: Record<string, string> = {
   direct: "Direct bid",

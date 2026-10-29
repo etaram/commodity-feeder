@@ -6,7 +6,6 @@ export type Field =
   | { kind: "number"; name: string; label: string; placeholder?: string }
   | { kind: "check"; name: string; label: string };
 
-/** Plain GET form: filters live in the URL, so a filtered view can be bookmarked or sent to a partner. */
 export default function FilterBar({ fields, values, action, sort, sortOptions, sortName = "sort", sortLabel = "Sort by" }: {
   fields: Field[]; values: Record<string, string | undefined>; action: string;
   sort?: string; sortOptions?: [string, string][]; sortName?: string; sortLabel?: string;
@@ -19,16 +18,13 @@ export default function FilterBar({ fields, values, action, sort, sortOptions, s
           <label key={f.name} className={`block ${f.kind === "text" ? "col-span-2" : ""}`}>
             <span className="text-[11px] font-bold uppercase tracking-wide text-muted">{f.label}</span>
             {f.kind === "text" && (
-              <input name={f.name} defaultValue={values[f.name] || ""} placeholder={f.placeholder}
-                className="mt-1 w-full rounded-md border border-line px-3 py-1.5 text-sm outline-none focus:border-accent" />
+              <input name={f.name} defaultValue={values[f.name] || ""} placeholder={f.placeholder} className="mt-1 w-full rounded-md border border-line px-3 py-1.5 text-sm outline-none focus:border-accent" />
             )}
             {f.kind === "number" && (
-              <input name={f.name} type="number" min="0" defaultValue={values[f.name] || ""} placeholder={f.placeholder}
-                className="mt-1 w-full rounded-md border border-line px-3 py-1.5 text-sm outline-none focus:border-accent" />
+              <input name={f.name} type="number" min="0" defaultValue={values[f.name] || ""} placeholder={f.placeholder} className="mt-1 w-full rounded-md border border-line px-3 py-1.5 text-sm outline-none focus:border-accent" />
             )}
             {f.kind === "select" && (
-              <select name={f.name} defaultValue={values[f.name] || ""}
-                className="mt-1 w-full rounded-md border border-line bg-white px-2 py-1.5 text-sm outline-none focus:border-accent">
+              <select name={f.name} defaultValue={values[f.name] || ""} className="mt-1 w-full rounded-md border border-line bg-white px-2 py-1.5 text-sm outline-none focus:border-accent">
                 <option value="">{f.all || "All"}</option>
                 {f.options.map(([v, n]) => (<option key={v} value={v}>{v} ({n.toLocaleString()})</option>))}
               </select>

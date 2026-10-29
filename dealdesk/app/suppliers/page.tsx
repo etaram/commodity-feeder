@@ -55,6 +55,7 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
   const page = Math.max(1, Number(p.page || 1)), pages = Math.ceil(rows.length / PER);
   const shown = rows.slice((page - 1) * PER, page * PER);
   const buyerCountries = facet(all.flatMap((r) => (r.bc || "").split(" ").filter(Boolean).map((c) => ({ c }))), (x) => x.c, 200);
+  const exporters = rows.filter((r) => r.x).length, strong = rows.filter((r) => (r.q || 0) >= 75).length;
   const fields: Field[] = [
     { kind: "text", name: "q", label: "Products or name", placeholder: "e.g. HDPE pipe, transformers, urea, Siemens" },
     { kind: "select", name: "country", label: "Supplier country", options: facet(all, (r) => r.c) },
@@ -74,11 +75,14 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
     <div className="space-y-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h1 className="text-xl font-bold text-navy">Supplier search</h1>
-        <span className="text-xs text-muted">{all.length.toLocaleString()} suppliers from public award records · contact details stay in the private Supplier Universe sheet</span>
+        <span className="text-xs text-muted">{all.length.toLocaleString()} suppliers from public award records and research · contact details stay in the private Supplier Universe sheet</span>
       </div>
+      <section className="rounded-xl border-l-4 border-go bg-white p-4 text-sm shadow-sm">
+        <span className="text-[11px] font-bold uppercase tracking-wide text-muted">Bottom line</span>
+        <p className="mt-1"><b>{rows.length.toLocaleString()}</b> suppliers match; <b>{strong.toLocaleString()}</b> are top quality (75+) and <b>{exporters.toLocaleString()}</b> have proven cross-border sales - start RFQs with those. Contacts are in the Supplier Universe sheet or via the panel.</p>
+      </section>
       <FilterBar fields={fields} values={p} action="/suppliers" sort={p.sort || "quality"} sortOptions={SORTS} />
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm"><b>{rows.length.toLocaleString()}</b> suppliers match · <b>{rows.filter((r) => r.x).length.toLocaleString()}</b> proven exporters</div>
+      <div className="flex flex-wrap items-center justify-end gap-2">
         <Pager page={page} pages={pages} total={rows.length} href={qs} />
       </div>
       <div className="overflow-x-auto rounded-xl border border-line bg-white shadow-sm">

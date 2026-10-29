@@ -51,7 +51,6 @@ export async function suppliers(): Promise<{ rows: Supplier[]; error?: string }>
   }
 }
 
-/** distinct values with counts, most common first */
 export function facet<T>(rows: T[], get: (r: T) => string | undefined, limit = 300): [string, number][] {
   const m = new Map<string, number>();
   for (const r of rows) {

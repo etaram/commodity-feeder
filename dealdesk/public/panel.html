@@ -1,0 +1,1302 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Sinder Opportunity Panel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap">
+<style>
+/* Layout: a trading-desk console. Top bar + tabs, then a list column and a detail column (stacked on phones). */
+:root{
+  --ink:#14213a; --bg:#f3f4f7; --panel:#ffffff; --line:#dfe3ea; --muted:#5d6779; --soft:#eef1f6;
+  --accent:#b07a1e; --accent-ink:#ffffff; --accent-soft:#f6ecd9;
+  --good:#1f7a4d; --good-soft:#e1f2e8; --warn:#9a6a00; --warn-soft:#fbf0d2; --bad:#a83232; --bad-soft:#f8e1e1; --info:#2c5aa0; --info-soft:#e3ebf7;
+  --f-display:"Secular One","IBM Plex Sans Hebrew","IBM Plex Sans",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","IBM Plex Sans Hebrew",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ink:#e8ecf3; --bg:#0f1522; --panel:#161e2e; --line:#273249; --muted:#9aa5b8; --soft:#1c2638;
+  --accent:#d9a440; --accent-ink:#1a1305; --accent-soft:#33291a;
+  --good:#5cc392; --good-soft:#163628; --warn:#e2b34c; --warn-soft:#3a2f14; --bad:#ec7f7f; --bad-soft:#3d1c1f; --info:#86aeea; --info-soft:#1b2a44; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ink:#e8ecf3; --bg:#0f1522; --panel:#161e2e; --line:#273249; --muted:#9aa5b8; --soft:#1c2638;
+  --accent:#d9a440; --accent-ink:#1a1305; --accent-soft:#33291a;
+  --good:#5cc392; --good-soft:#163628; --warn:#e2b34c; --warn-soft:#3a2f14; --bad:#ec7f7f; --bad-soft:#3d1c1f; --info:#86aeea; --info-soft:#1b2a44; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
+html[lang="he"] body{--f-body:"IBM Plex Sans Hebrew","IBM Plex Sans",system-ui,Arial,sans-serif;font-family:var(--f-body)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1440px;margin:0 auto}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--panel);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:16px;padding-block:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:22px;letter-spacing:.2px;white-space:nowrap}
+.brand small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:500;margin-inline-start:8px;letter-spacing:.06em}
+.status{margin-inline-start:auto;display:flex;gap:10px;align-items:center;color:var(--muted);font-size:12.5px;flex-wrap:wrap}
+nav.tabs{display:flex;gap:4px;overflow-x:auto}
+nav.tabs button{border:0;background:none;color:var(--muted);font:600 14px var(--f-body);padding:10px 14px;border-bottom:3px solid transparent;border-radius:0;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs .count{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin-inline-start:6px}
+button,.btn{font:600 13px var(--f-body);border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+button:hover,.btn:hover{border-color:var(--accent)}
+button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+button.ghost{background:none;border-color:transparent;color:var(--muted)}
+button:disabled{opacity:.55;cursor:default}
+main{padding-block:18px 40px}
+h2{font-family:var(--f-display);font-weight:400;font-size:19px;margin:0}
+h3{font-size:14px;margin:0;font-weight:700}
+.muted{color:var(--muted)}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;unicode-bidi:isolate}
+.today{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.box-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.box-head .muted{font-size:12.5px}
+.box-head button{margin-inline-start:auto}
+.mini{display:flex;flex-direction:column}
+.mini .it{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:9px 0;border-top:1px solid var(--line);cursor:pointer}
+.mini .it:first-child{border-top:0}
+.mini .it:hover .t{color:var(--accent)}
+.t{font-weight:600;overflow-wrap:anywhere}
+.sub{color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
+.empty{color:var(--muted);padding:12px 0;font-size:13px}
+.split{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center}
+.filters input,.filters select{font:13px var(--f-body);padding:7px 9px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--ink);min-width:0}
+.filters input[type=search]{flex:1 1 220px}
+.filters label{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;padding:11px 14px;border-top:1px solid var(--line);cursor:pointer;align-items:start}
+.row:first-child{border-top:0}
+.row:hover{background:var(--soft)}
+.row[aria-current="true"]{background:var(--accent-soft)}
+.row .right{text-align:end;white-space:nowrap;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.score{font-family:var(--f-mono);font-weight:500;font-size:13px;width:38px;height:38px;border-radius:8px;display:grid;place-items:center;background:var(--soft);border:1px solid var(--line)}
+.score.hi{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good)} .pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)} .pill.info{background:var(--info-soft);color:var(--info)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+.more{padding:10px 14px;border-top:1px solid var(--line);text-align:center}
+.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 110px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-height:calc(100vh - 130px);overflow:auto;min-width:0}
+@media (max-width:900px){.detail{position:static;max-height:none}}
+.detail h2{font-family:var(--f-body);font-weight:700;font-size:17px;line-height:1.35;overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:minmax(110px,max-content) minmax(0,1fr);gap:6px 14px;margin:12px 0;font-size:13px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;overflow-wrap:anywhere}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 6px}
+.section{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+.ai{background:var(--soft);border-radius:8px;padding:12px 14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13.5px}
+.note{font-size:12.5px;color:var(--muted)}
+.flash{font-size:12.5px;padding:8px 10px;border-radius:7px;margin-top:8px}
+.flash.ok{background:var(--good-soft);color:var(--good)} .flash.err{background:var(--bad-soft);color:var(--bad)} .flash.info{background:var(--info-soft);color:var(--info)}
+.sup{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.sup:first-child{border-top:0}
+textarea,.field input,.field select{width:100%;font:13.5px var(--f-body);padding:8px 10px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+textarea{min-height:180px;resize:vertical;line-height:1.5}
+.field{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.field label{font-size:12.5px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:none}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.banner{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+.banner.err{background:var(--bad-soft);color:var(--bad)}
+.result{white-space:pre-wrap;font-size:13px;background:var(--soft);border-radius:8px;padding:10px 12px;margin-top:6px;overflow-wrap:anywhere}
+.he{font-family:"IBM Plex Sans Hebrew",var(--f-body)}
+a{color:var(--info)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.kpis{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px}
+.kpi{display:flex;flex-direction:column}
+.kpi b{font-family:var(--f-mono);font-size:20px;font-weight:500}
+.kpi span{font-size:12px;color:var(--muted)}
+.lang button{padding:5px 10px;font-size:12.5px}
+.meter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--soft);border-radius:9px;padding:10px 12px;margin:10px 0}
+.bars{display:inline-flex;gap:3px}.bars i{width:16px;height:8px;border-radius:2px;background:var(--line)}
+.bars.l1 i:nth-child(-n+1){background:var(--good)}.bars.l2 i:nth-child(-n+2){background:var(--info)}
+.bars.l3 i:nth-child(-n+3){background:var(--warn)}.bars.l4 i:nth-child(-n+4){background:var(--bad)}
+.flag{font-size:1.15em;line-height:1;margin-inline-end:5px;vertical-align:-1px}
+form.ask{display:flex;gap:8px;margin-bottom:10px}
+form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12px;border-radius:9px;border:1.5px solid var(--accent);background:var(--panel);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-2px 0 10px;font-size:12.5px;color:var(--muted)}
+.chip{background:var(--accent-soft);color:var(--ink);border-radius:999px;padding:2px 10px;font-size:12px}
+.card{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-top:12px;background:var(--soft)}
+.card .result{background:none;padding:6px 0 0}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="brand">Sinder<small data-i="brand_sub">Opportunity Panel</small></div>
+      <div class="status" id="status"><span class="spin" aria-hidden="true"></span></div>
+      <div class="seg lang" role="group" aria-label="Language">
+        <button type="button" id="lang-en" aria-pressed="true">English</button>
+        <button type="button" id="lang-he" aria-pressed="false">עברית</button>
+      </div>
+      <a class="btn" href="/today" data-i="deal_desk">Classic screens</a>
+      <button id="refresh" type="button" data-i="refresh">Refresh</button>
+    </div>
+    <nav class="tabs" role="tablist" id="tabs">
+      <button role="tab" data-v="today" aria-selected="true"><span data-i="tab_today">Today</span></button>
+      <button role="tab" data-v="tenders" aria-selected="false"><span data-i="tab_tenders">Tenders</span><span class="count" id="c-tenders"></span></button>
+      <button role="tab" data-v="companies" aria-selected="false"><span data-i="tab_companies">Companies</span><span class="count" id="c-companies"></span></button>
+      <button role="tab" data-v="deals" aria-selected="false"><span data-i="tab_deals">Deals</span><span class="count" id="c-deals"></span></button>
+      <button role="tab" data-v="intel" aria-selected="false"><span data-i="tab_intel">Intelligence</span><span class="count" id="c-intel"></span></button>
+      <button role="tab" data-v="jobs" aria-selected="false"><span data-i="tab_jobs">Jobs</span><span class="count" id="c-jobs"></span></button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="banner"></div>
+
+  <section class="view" id="v-today">
+    <div class="kpis" id="kpis"></div>
+    <div class="today">
+      <div class="box"><div class="box-head"><h2 data-i="b_tenders">Tenders to decide on</h2><span class="muted" data-i="b_tenders_s">Pursue, 7+ days to close</span></div><div class="mini" id="t-tenders"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="b_deals">New trade opportunities</h2><span class="muted" data-i="b_deals_s">From the BD agent, last 14 days</span></div><div class="mini" id="t-deals"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="b_repeat">Buyers likely to tender soon</h2><span class="muted" data-i="b_repeat_s">From their buying pattern, next 60 days</span></div><div class="mini" id="t-repeat"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="b_acc">Key account signals</h2><span class="muted" data-i="b_acc_s">Latest agent check</span></div><div class="mini" id="t-accounts"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="b_comp">Companies worth a call</h2><span class="muted" data-i="b_comp_s">High-quality suppliers with contact details</span></div><div class="mini" id="t-companies"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="b_jobs">Results ready for you</h2><span class="muted" data-i="b_jobs_s">Finished jobs</span><button type="button" data-goto="jobs" data-i="all_jobs">All jobs</button></div><div class="mini" id="t-jobs"></div></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-tenders" hidden>
+    <div class="split">
+      <div>
+        <form class="ask" id="ask-t"><input id="askq-t" data-ph="ask_ph_t" autocomplete="off"><button class="primary" type="submit" data-i="ask_btn">Search</button></form>
+        <div class="chips" id="nl-t" hidden></div>
+        <div class="filters">
+          <input type="search" id="tq" data-ph="tq_ph">
+          <select id="tsector"><option value="" data-i="all_sectors">All sectors</option></select>
+          <select id="tregion"><option value="" data-i="all_regions">All regions</option></select>
+          <select id="tcountry"><option value="" data-i="all_countries">All countries</option></select>
+          <select id="tsize"><option value="" data-i="any_size">Any size</option><option value="0-100000">&lt; $100K</option><option value="100000-1000000">$100K - $1M</option><option value="1000000-10000000">$1M - $10M</option><option value="10000000-50000000">$10M - $50M</option><option value="50000000-">&gt; $50M</option></select>
+          <select id="tdec"><option value="" data-i="all_decisions">All decisions</option><option>Pursue</option><option>Watch</option><option>Ignore</option></select>
+          <label><span data-i="min_days">Min. days to close</span> <input type="number" id="tdays" min="0" value="7" style="width:64px"></label>
+        </div>
+        <div class="note" id="tscope" style="margin:0 2px 8px"></div>
+        <div class="list" id="tlist"></div>
+      </div>
+      <aside class="detail" id="tdetail"><div class="empty" data-i="t_pick">Pick a tender to see its details.</div></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-companies" hidden>
+    <div class="split">
+      <div>
+        <form class="ask" id="ask-c"><input id="askq-c" data-ph="ask_ph_c" autocomplete="off"><button class="primary" type="submit" data-i="ask_btn">Search</button></form>
+        <div class="chips" id="nl-c" hidden></div>
+        <div class="filters">
+          <div class="seg" role="group">
+            <button type="button" id="cs-sup" aria-pressed="true" data-i="cs_sup">Suppliers</button>
+            <button type="button" id="cs-acc" aria-pressed="false" data-i="cs_acc">Key accounts (buyers)</button>
+          </div>
+          <input type="search" id="cq" data-ph="cq_ph">
+          <select id="cregion"><option value="" data-i="all_regions">All regions</option></select>
+          <select id="ccountry"><option value="" data-i="all_countries">All countries</option></select>
+          <select id="csector"><option value="" data-i="all_sectors">All sectors</option></select>
+          <select id="crole"><option value="" data-i="all_types">All types</option><option value="logistics" data-i="role_log">Logistics and shipping</option><option value="goods" data-i="role_goods">Manufacturer / goods supplier</option><option value="trader" data-i="role_trader">Trader</option><option value="epc" data-i="role_epc">EPC contractors</option></select>
+          <label><input type="checkbox" id="ccontact" checked> <span data-i="with_contact">With contact details</span></label>
+        </div>
+        <div class="note" id="cscope" style="margin:0 2px 8px"></div>
+        <div class="list" id="clist"></div>
+      </div>
+      <aside class="detail" id="cdetail"><div class="empty" data-i="c_pick">Pick a company.</div></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-deals" hidden>
+    <div class="split">
+      <div>
+        <form class="ask" id="ask-d"><input id="askq-d" data-ph="ask_ph_d" autocomplete="off"><button class="primary" type="submit" data-i="ask_btn">Search</button></form>
+        <div class="chips" id="nl-d" hidden></div>
+        <div class="filters">
+          <div class="seg" role="group">
+            <button type="button" id="ds-bd" aria-pressed="true" data-i="ds_bd">Trade opportunities</button>
+            <button type="button" id="ds-rep" aria-pressed="false" data-i="ds_rep">Repeat buyers</button>
+            <button type="button" id="ds-mkt" aria-pressed="false" data-i="ds_mkt">Market signals</button>
+          </div>
+          <input type="search" id="dq" data-ph="dq_ph">
+        </div>
+        <div class="note" id="dscope" style="margin:0 2px 8px"></div>
+        <div class="list" id="dlist"></div>
+      </div>
+      <aside class="detail" id="ddetail"><div class="empty" data-i="d_pick">Pick an opportunity.</div></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-intel" hidden>
+    <div class="split">
+      <div>
+        <div class="filters">
+          <input type="search" id="iq" data-ph="iq_ph">
+          <select id="icat"><option value="" data-i="all_cats">All categories</option></select>
+          <select id="iregion"><option value="" data-i="all_regions">All regions</option></select>
+          <label><input type="checkbox" id="ihigh"> <span data-i="high_only">High signal only</span></label>
+        </div>
+        <div class="note" id="iscope" style="margin:0 2px 8px"></div>
+        <div class="list" id="ilist"></div>
+      </div>
+      <aside class="detail" id="idetail">
+        <div class="box-head"><h2 data-i="up_h">Tenders expected to open</h2></div><p class="note" data-i="up_note"></p><div class="mini" id="i-up"></div>
+        <div class="section"><h3 data-i="b_repeat">Buyers likely to tender soon</h3><div class="mini" id="i-rep"></div></div>
+        <div class="section"><h3 data-i="grow_h">Fastest-growing import demand</h3><p class="note" data-i="grow_note"></p><div class="mini" id="i-grow"></div></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-jobs" hidden>
+    <div class="split">
+      <div>
+        <div class="filters"><h2 style="margin-inline-end:auto" data-i="jobs_h">Jobs for the worker</h2><button type="button" id="jobs-refresh" data-i="jobs_refresh">Refresh status</button></div>
+        <div class="list" id="jlist"></div>
+      </div>
+      <aside class="detail">
+        <h2 data-i="new_req">New request</h2>
+        <p class="note" data-i="worker_note"></p>
+        <form id="jobform">
+          <div class="field"><label for="jtype" data-i="f_type">Type</label>
+            <select id="jtype"><option value="supplier_search" data-i="jt_supplier_search"></option><option value="company_research" data-i="jt_company_research"></option><option value="deal_research" data-i="jt_deal_research"></option><option value="eligibility" data-i="jt_eligibility"></option><option value="logistics" data-i="jt_logistics"></option><option value="quote" data-i="jt_quote"></option><option value="outreach" data-i="jt_outreach"></option><option value="other" data-i="jt_other"></option></select></div>
+          <div class="field"><label for="jtarget" data-i="f_target"></label><input id="jtarget" required data-ph="f_target_ph"></div>
+          <div class="field"><label for="jreq" data-i="f_req"></label><textarea id="jreq" style="min-height:110px" data-ph="f_req_ph"></textarea></div>
+          <div class="actions"><button class="primary" type="submit" id="jsubmit" data-i="send_worker">Send to worker</button></div>
+          <div id="jflash"></div>
+        </form>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<script src="/panel-shim.js"></script>
+<script>
+(() => {
+"use strict";
+const LE = "1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y";   // Leads Engine
+const SU = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";   // Supplier Universe (private)
+const WORKER = "trig_01A5jFXfyR7CXcgF6JfrkGDu";
+const SHEETS = "Google Sheets", GMAIL = "Gmail", REMOTE = "Claude Code Remote";
+const RANGES = {
+  tenders: [LE, "'My Leads'!A1:AE1500"],
+  titles: [LE, "'Titles HE'!A1:B20000"],
+  bd: [LE, "'BD Agent'!A1:M600"],
+  accounts: [LE, "'Key Accounts'!A1:S400"],
+  repeat: [LE, "'Repeat Buyers'!A1:O5600"],
+  markets: [LE, "'Market Signals'!A1:O3200"],
+  meta: [LE, "'Meta'!A1:B5"],
+  intel: [LE, "'Intel'!A1:P2000"],
+  upcoming: [LE, "'Upcoming'!A1:AE1500"],
+  stats: [SU, "'Stats'!A1:B60"],
+  tot_t: [LE, "'Panel Search'!A6:B6"],
+  tot_s: [SU, "'Panel Search'!D1:E1"],
+  pursuits: [LE, "'Pursuits'!A1:V600"],
+  jobs: [LE, "'Panel Jobs'!A1:L800"],
+  suppliers: [SU, "'Suppliers'!A1:AJ6001"],
+};
+const OPTIONAL = new Set(["titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming"]);
+const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
+const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
+const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60 }, he: new Map() };
+let mcp = null, sample = null, LANG = "en";
+
+/* ---------- language ---------- */
+const L = {
+  en: {
+    brand_sub: "OPPORTUNITY PANEL", refresh: "Refresh", tab_today: "Today", tab_tenders: "Tenders", tab_companies: "Companies", tab_deals: "Deals", tab_jobs: "Jobs",
+    loading: "Loading data from your sheets...", up_to_date: "Up to date", data_as_of: "data as of", n_failed: "{n} sources not loaded", not_connected: "Not connected",
+    b_tenders: "Tenders to decide on", b_tenders_s: "Pursue, 7+ days to close", b_deals: "New trade opportunities", b_deals_s: "From the BD agent, last 14 days",
+    b_repeat: "Buyers likely to tender soon", b_repeat_s: "From their buying pattern, next 60 days", b_acc: "Key account signals", b_acc_s: "Latest agent check",
+    b_comp: "Companies worth a call", b_comp_s: "High-quality suppliers with contact details", b_jobs: "Results ready for you", b_jobs_s: "Finished jobs", all_jobs: "All jobs",
+    k_open: "open tenders in your profile", k_pursue: "marked Pursue", k_bd: "trade opportunities, 14 days", k_sup: "top suppliers loaded", k_jobs: "jobs in progress",
+    e_pursue: "No Pursue tenders with 7+ days left right now. Try the Tenders tab.", e_bd: "The agent has not added opportunities in the last two weeks.",
+    e_rep: "No repeat buyers are expected to tender in the next 60 days.", e_acc: "The agent has not found new signals in your key accounts yet.",
+    e_comp: "The supplier database is still filling up.", e_jobs_today: "No results yet. Every deep check you start shows up here.",
+    awards_year: "awards a year", ready: "Ready", running: "Running", queued: "Queued", error: "Error",
+    tq_ph: "Search: product, buyer, country...", all_sectors: "All sectors", all_regions: "All regions", all_countries: "All countries", any_size: "Any size", deal_desk: "Classic screens", all_decisions: "All decisions", min_days: "Min. days to close",
+    t_pick: "Pick a tender to see its details and run an eligibility check, supplier matching or outreach.", no_value: "no value", planned: "planned", days: "days", new_: "new",
+    e_tenders: "No tenders match these filters.", more: "Show more ({n} more)",
+    buyer: "Buyer", sector: "Sector", est_value: "Estimated value", deadline: "Deadline", access: "Foreign access", ev: "Expected value", win_chance: "win chance", exp_bidders: "expected bidders",
+    buyer_hist: "Buyer history", awards_12m: "awards in 12 months", median: "median", incumbent: "incumbent", why: "Why", contact: "Contact", notice: "Notice", open_notice: "Open the original notice",
+    not_stated: "not stated", title_en: "English title", title_orig: "Original title",
+    a_quick: "Quick analysis", a_elig: "Full eligibility check", a_sup: "Matching suppliers", a_track: "Track in Pursuits", tracked: "Already tracked",
+    t_note: "Quick analysis uses the data shown here and takes about half a minute. The full eligibility check goes to the worker, which reads the tender documents, fills a Pursuits row and posts the answer in the Jobs tab.",
+    thinking: "Thinking...", only_in_claude: "AI features on the web need an Anthropic API key in Vercel. They work now in the panel inside Claude.", sup_for: "Suppliers for: ",
+    sup_h: "Matching suppliers from the database", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
+    e_sup_match: "No matching suppliers in the loaded set. Send a supplier search to the worker.", draft_sel: "Draft outreach to selected", deep_sup: "Deep supplier search on the web",
+    tick_one: "Tick at least one supplier with an e-mail address.", sup_not_loaded: "The supplier database has not loaded yet.", select: "Select",
+    out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft...", create_draft: "Create Gmail draft", rewrite: "Rewrite",
+    draft_note: "The draft is saved in your Gmail and not sent. With several recipients, each gets a separate draft.", hand_write: "Automatic drafting works inside Claude. You can write here by hand.",
+    add_email: "Add at least one e-mail address.", open_draft: "open draft", unclear_draft: "unclear whether it was created, check Gmail before trying again", drafts: "Gmail drafts:",
+    job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
+    fired_now: "The worker started now; the answer usually arrives within 5 to 15 minutes.", fired_later: "The worker will pick it up on its next scheduled run (every two hours, 08:13 to 22:13 Israel time).",
+    fired_running: "The worker is already running and will pick this job up too.", sent: "Sent to the worker ({id}).", open_jobs: "Open Jobs", added_pursuits: "Added to Pursuits. You can now run a full eligibility check on it.",
+    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
+    c_pick: "Pick a company to see what it sells and how to reach it, then run research or outreach.", exporter: "exporter", notable: "notable", contact_p: "contact", trader: "trader", quality: "Quality",
+    e_comp_f: "No suppliers match these filters.", e_acc_f: "No accounts match these filters.", tenders_n: "tenders",
+    country: "Country", field: "Field", products: "Products", supplied: "Supplied", commodities: "Commodities", won: "Contracts won", wins: "wins", buyers_n: "buyers", in_: "in",
+    website: "Website", email: "E-mail", phone: "Phone", address: "Address", company_id: "Company ID", sources: "Sources", not_known: "not known yet",
+    c_quick: "Quick summary", c_deep: "Deep research", c_mail: "Draft outreach", c_similar: "Similar suppliers", quick_note: "Based on the database fields only. For web research press \"Deep research\".",
+    mainly_buys: "Mainly buys", channel: "Procurement channel", verified_page: "Verified procurement page", not_checked: "not checked yet", latest_signal: "Latest signal", next_step: "Next step", sup_in_db: "Suppliers in database",
+    open_from_buyer: "Open tenders from this buyer", acc_deep: "Current research on this buyer", acc_mail: "Draft outreach to procurement", acc_sup: "Suppliers that fit this buyer",
+    ds_bd: "Trade opportunities", ds_rep: "Repeat buyers", ds_mkt: "Market signals", dq_ph: "Search: market, commodity, buyer...", d_pick: "Pick an opportunity to see the data and run research, supplier search or outreach.",
+    e_bd_all: "No trade opportunities yet.", e_rep_all: "No repeat buyers.", e_mkt: "No market signals.", imports: "imports", premium: "premium", awards: "awards",
+    market: "Market", commodity: "Commodity", why_now: "Why now", demand: "Demand data", examples: "Examples", expected_tender: "expected to tender", group: "Group", volume: "Volume", buying_months: "Buying months",
+    last_award: "Last award", current_sup: "Current suppliers", avg_bids: "Average bids", buyer_email: "Buyer e-mail", last_notice: "Last notice", open: "open", growth: "Growth", world_share: "World share",
+    unit_value: "Unit value", vs_bench: "vs benchmark", source: "Source", prev_year: "previous year", d_deep: "Deep deal research",
+    jobs_h: "Jobs for the worker", jobs_refresh: "Refresh status", new_req: "New request", result: "Result", link: "Link",
+    worker_note: "The worker is Claude with web search, your sheets and Gmail. It runs the request, writes the result here and in the sheet, and never sends e-mails, it only creates drafts.",
+    f_type: "Type", f_target: "Subject (company, product, tender or link)", f_target_ph: "e.g. canned tuna from Ecuador, 3 containers a month", f_req: "What to check or prepare",
+    f_req_ph: "Details, quantities, specs, destination, dates, language and recipients for outreach", send_worker: "Send to worker",
+    jt_eligibility: "Tender eligibility check", jt_company_research: "Company research", jt_deal_research: "Deal / market research", jt_supplier_search: "Find suppliers", jt_outreach: "Gmail outreach drafts", jt_other: "Other",
+    e_jobs: "No jobs yet. Send a request from the form, or from any tender, company or deal.",
+    open_in_claude: "The panel reads your sheets through Claude. Open it inside Claude to see the data.", need_connectors: "The panel needs access to your connectors (Google Sheets, Gmail). Open it inside Claude, in the account where the sheets are connected.",
+    approve: "Approve and load", retry: "Try again",
+    ask_btn: "Search", ask_ph_t: "Ask in your own words: e.g. hospital equipment tenders in Africa closing next month",
+    ask_ph_c: "Ask in your own words: e.g. canned tuna exporters in Ecuador with an e-mail",
+    ask_ph_d: "Ask in your own words: e.g. wheat buyers in the Gulf, or steel demand in Saudi Arabia",
+    nl_thinking: "Understanding your request...", nl_as: "Searching for:", nl_clear: "Clear", nl_fail: "Could not interpret the request; searching the words as typed.",
+    more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
+    more_wait: "Researching... the answer will appear here.", more_done: "Research result", more_again: "Research again", more_err: "The research failed:",
+    a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
+    est_ptw: "Estimated price to win: {lo} to {mid} (from {src}, about {n} bidders). The worker's price quote checks this against real prices.",
+    est_noval: "No budget or award history for this tender, so no price to win yet. Use Price quote to research it.",
+    est_cost: "Supplier cost USD", est_freight: "Freight USD", est_duty: "Duty %", est_other: "Other costs %", est_margin: "Margin %",
+    est_note: "Other costs: insurance, guarantees, financing, FX buffer and contingency (about 7% by default). Duty only if you deliver duty paid.",
+    est_maxcost: "To win with this margin, the total supplier cost should stay under about {v}.", est_landed: "Landed cost", est_bid: "Bid price",
+    est_ok: "Inside the price to win; you keep about {m}% at the price-to-win level.", est_tight: "Above the price to win at this margin; bidding at the price to win leaves about {m}%.",
+    est_no: "Not competitive: cost must fall by about {v} to keep a 2% margin at the price to win.",
+    dscope_bd: "Opportunities the BD agent researched on the web: a market, a buyer and a reason to act now, with sources. Ranked by date and priority.",
+    dscope_rep: "Public buyers that bought the same goods several times in the last 12 months. The expected date is projected from their buying months, so you can prepare before the tender appears.",
+    dscope_mkt: "Customs import data per product and country: import value, growth and the import unit price against a world benchmark. A high premium means the market pays more than the benchmark, which is room for a trading margin.",
+    a_log: "Logistics", jt_logistics: "Logistics options", jt_quote: "Price quote",
+    upd_t: "tenders updated {d}", upd_s: "suppliers {d}", upd_note: "Tenders refresh every 4 hours, suppliers twice a day, the BD agent every morning. Refresh reloads the latest data now.",
+    tab_intel: "Intelligence", iq_ph: "Search: country, commodity, buyer...", all_cats: "All categories", high_only: "High signal only",
+    iscope: "Verified market signals published every morning: only official sources (governments, state buyers, development banks, UN, statistics), tier-1 media (Reuters, Bloomberg, FT, Platts, Argus) and industry bodies. Each item links to its source.",
+    e_intel: "The intelligence agent publishes its first items this morning; they will appear here.", tier_off: "Official source", tier_1: "Tier-1 media", event: "event",
+    up_h: "Tenders expected to open", up_note: "Prior information notices and procurement plans already published by the buyers, by value.",
+    e_up: "Planned notices will appear after the next tender update.", grow_h: "Fastest-growing import demand",
+    grow_note: "Customs data: markets importing over $20M a year with fast growth.",
+    a_sum: "Summary", a_thr: "Eligibility conditions", thr_full: "Verify from the tender documents",
+    thr_note: "These are the conditions expected for this buyer, country and procedure. The full check has the worker read the actual tender documents and add the tender to Pursuits.",
+    comp_h: "Competition", comp_1: "Low", comp_2: "Moderate", comp_3: "High", comp_4: "Very high",
+    comp_bidders: "about {n} bidders expected ({src})", comp_inc: "incumbent: {n}", comp_foreign: "foreign suppliers win {p}% here",
+    role_epc: "EPC contractors", a_epc: "EPC contractors", epc_h: "EPC contractors for this project",
+    epc_note: "Main contractors that won large works in this country, region or sector. They buy the equipment and materials for projects like this one, and can be partners for a joint bid.",
+    epc_none: "No EPC contractors in the loaded set for this region and sector. Search the web for them.", epc_web: "Find EPC contractors on the web",
+    web_more: "Find more on the web", web_more_req: "Find the main producers, manufacturers and traders of this product worldwide (or in the requested country) and add them to the database.",
+    searching_all: "Searching all {n} tenders...", found_all: "{n} matches across all tenders{cap}", top2000: " (showing the top 2,000)",
+    scope_t: "Your top {n} tenders by fit. Search or filter to cover all {all}.", searching_all_s: "Searching all {n} suppliers...",
+    found_all_s: "{n} matches across all suppliers{cap}", scope_s: "The top {n} suppliers by quality. Search or filter to cover all {all}.",
+    s_not_granted: "The panel was not allowed to use Claude.", s_rate: "Too many requests right now. Try again in a few minutes.", s_disabled: "Claude is not available for this account.", s_expired: "Sign in to Claude again.", s_cancel: "Cancelled.", s_other: "Interrupted. You can try again.",
+    err_reauth: "The {s} connection expired. Reconnect it in Claude settings, under Connectors.", err_notconn: "{s} is not connected in the web version. Use the panel inside Claude for this action.",
+    err_sel: "There is more than one {s} connection. Choose one in the prompt at the top of the page.", err_approval: "The panel needs your approval to use {s}.",
+    err_manifest: "Access to {s} was not approved for this panel. You can allow it from the artifact's permissions menu.", err_policy: "Your organization's policy blocks {s} for this panel.",
+    err_unavail: "{s} did not answer just now. Try again in a minute.", err_tool: "{s} returned an error.", err_other: "Could not reach {s}.", sup_db: "Supplier Universe",
+  },
+  he: {
+    brand_sub: "פאנל הזדמנויות", refresh: "רענון", tab_today: "היום", tab_tenders: "מכרזים", tab_companies: "חברות", tab_deals: "עסקאות", tab_jobs: "משימות",
+    loading: "טוען נתונים מהגיליונות...", up_to_date: "מעודכן", data_as_of: "נתונים מ-", n_failed: "{n} מקורות לא נטענו", not_connected: "לא מחובר",
+    b_tenders: "מכרזים שכדאי להחליט עליהם", b_tenders_s: "Pursue, לפחות 7 ימים לסגירה", b_deals: "הזדמנויות סחר חדשות", b_deals_s: "מסוכן ה-BD, 14 ימים אחרונים",
+    b_repeat: "קונים שצפויים לצאת למכרז", b_repeat_s: "לפי דפוס הרכש שלהם, 60 ימים קדימה", b_acc: "אותות מחשבונות מפתח", b_acc_s: "בדיקה אחרונה של הסוכן",
+    b_comp: "חברות בולטות לשיחה", b_comp_s: "ספקים באיכות גבוהה עם פרטי קשר", b_jobs: "תוצאות שהוכנו עבורך", b_jobs_s: "משימות שהסתיימו", all_jobs: "כל המשימות",
+    k_open: "מכרזים פתוחים בפרופיל שלך", k_pursue: "בהמלצת Pursue", k_bd: "הזדמנויות סחר ב-14 ימים", k_sup: "ספקים מובילים טעונים", k_jobs: "משימות בעבודה",
+    e_pursue: "אין כרגע מכרזי Pursue עם 7 ימים ויותר. נסה את לשונית מכרזים.", e_bd: "הסוכן עדיין לא הוסיף הזדמנויות בשבועיים האחרונים.",
+    e_rep: "אין קונים חוזרים שצפויים לצאת למכרז ב-60 הימים הקרובים.", e_acc: "הסוכן עוד לא מצא אותות חדשים בחשבונות המפתח.",
+    e_comp: "מאגר הספקים עדיין מתמלא.", e_jobs_today: "עדיין אין תוצאות. כל בדיקה מעמיקה שתפעיל תופיע כאן.",
+    awards_year: "זכיות בשנה", ready: "מוכן", running: "בעבודה", queued: "בתור", error: "שגיאה",
+    tq_ph: "חיפוש: מוצר, קונה, מדינה...", all_sectors: "כל הסקטורים", all_regions: "כל האזורים", all_countries: "כל המדינות", any_size: "כל גודל", deal_desk: "מסכים קלאסיים", all_decisions: "כל ההחלטות", min_days: "ימים לסגירה לפחות",
+    t_pick: "בחר מכרז כדי לראות פרטים ולהפעיל בדיקת תנאי סף, התאמת ספקים ופנייה.", no_value: "ללא ערך", planned: "מתוכנן", days: "ימים", new_: "חדש",
+    e_tenders: "אין מכרזים שמתאימים לסינון.", more: "הצג עוד ({n} נוספים)",
+    buyer: "קונה", sector: "סקטור", est_value: "ערך משוער", deadline: "מועד אחרון", access: "גישה לספק זר", ev: "תוחלת רווח", win_chance: "סיכוי זכייה", exp_bidders: "מציעים צפויים",
+    buyer_hist: "היסטוריית הקונה", awards_12m: "זכיות ב-12 חודשים", median: "חציון", incumbent: "ספק נוכחי", why: "למה", contact: "קשר", notice: "הודעה", open_notice: "פתיחת ההודעה המקורית",
+    not_stated: "לא צוין", title_en: "כותרת באנגלית", title_orig: "כותרת מקורית",
+    a_quick: "ניתוח מהיר", a_elig: "בדיקת תנאי סף מלאה", a_sup: "ספקים מתאימים", a_track: "הוסף למעקב (Pursuits)", tracked: "כבר במעקב",
+    t_note: "ניתוח מהיר מבוסס על הנתונים שכאן ולוקח כחצי דקה. בדיקת תנאי סף מלאה נשלחת לעובד שקורא את מסמכי המכרז, ממלא שורה ב-Pursuits ומחזיר תשובה בלשונית משימות.",
+    thinking: "חושב...", only_in_claude: "יכולות AI בגרסת הווב דורשות מפתח Anthropic API ב-Vercel. בפאנל שבתוך Claude הן עובדות כבר עכשיו.", sup_for: "ספקים לפי: ",
+    sup_h: "ספקים מתאימים מהמאגר", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
+    e_sup_match: "לא נמצאו ספקים מתאימים בטעינה הנוכחית. שלח איתור ספקים לעובד.", draft_sel: "נסח פנייה לספקים המסומנים", deep_sup: "איתור ספקים מעמיק ברשת",
+    tick_one: "סמן לפחות ספק אחד עם כתובת מייל.", sup_not_loaded: "מאגר הספקים עוד לא נטען.", select: "בחר",
+    out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה...", create_draft: "צור טיוטה ב-Gmail", rewrite: "נסח מחדש",
+    draft_note: "הטיוטה נשמרת ב-Gmail שלך ולא נשלחת. אם יש כמה נמענים, נוצרת טיוטה נפרדת לכל אחד.", hand_write: "ניסוח אוטומטי זמין בתוך Claude. אפשר לכתוב כאן ידנית.",
+    add_email: "הוסף לפחות כתובת מייל אחת.", open_draft: "פתח טיוטה", unclear_draft: "לא ברור אם נוצרה, בדוק ב-Gmail לפני שתנסה שוב", drafts: "טיוטות ב-Gmail:",
+    job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
+    fired_now: "העובד הופעל עכשיו, התשובה תגיע בדרך כלל תוך 5 עד 15 דקות.", fired_later: "העובד יאסוף את המשימה בריצה הקבועה הבאה (כל שעתיים, 08:13 עד 22:13).",
+    fired_running: "העובד כבר רץ ויאסוף גם את המשימה הזו.", sent: "נשלח לעובד ({id}).", open_jobs: "למשימות", added_pursuits: "נוסף ל-Pursuits. אפשר להפעיל עליו בדיקת תנאי סף מלאה.",
+    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
+    c_pick: "בחר חברה כדי לראות מה היא מוכרת, פרטי קשר, ולהפעיל מחקר או פנייה.", exporter: "מייצא", notable: "מוכר", contact_p: "פרטי קשר", trader: "טריידר", quality: "איכות",
+    e_comp_f: "אין ספקים שמתאימים לסינון.", e_acc_f: "אין חשבונות שמתאימים לסינון.", tenders_n: "מכרזים",
+    country: "מדינה", field: "תחום", products: "מוצרים", supplied: "מה סיפקו", commodities: "סחורות", won: "היקף זכיות", wins: "זכיות", buyers_n: "קונים", in_: "ב-",
+    website: "אתר", email: "מייל", phone: "טלפון", address: "כתובת", company_id: "מזהה", sources: "מקורות", not_known: "לא ידוע עדיין",
+    c_quick: "סיכום מהיר", c_deep: "מחקר מעמיק", c_mail: "נסח פנייה", c_similar: "ספקים דומים", quick_note: "מבוסס על נתוני המאגר בלבד. למחקר עם חיפוש ברשת לחץ על \"מחקר מעמיק\".",
+    mainly_buys: "קונה בעיקר", channel: "ערוץ רכש", verified_page: "דף רכש מאומת", not_checked: "עדיין לא נבדק", latest_signal: "אות אחרון", next_step: "צעד הבא", sup_in_db: "ספקים במאגר",
+    open_from_buyer: "מכרזים פתוחים של הקונה", acc_deep: "מחקר עדכני על הקונה", acc_mail: "נסח פנייה לרכש", acc_sup: "ספקים שמתאימים לקונה",
+    ds_bd: "הזדמנויות סחר", ds_rep: "קונים חוזרים", ds_mkt: "אותות שוק", dq_ph: "חיפוש: שוק, סחורה, קונה...", d_pick: "בחר הזדמנות כדי לראות את הנתונים ולהפעיל מחקר, איתור ספקים או פנייה.",
+    e_bd_all: "אין עדיין הזדמנויות סחר.", e_rep_all: "אין קונים חוזרים.", e_mkt: "אין אותות שוק.", imports: "יבוא", premium: "פרמיה", awards: "זכיות",
+    market: "שוק", commodity: "סחורה", why_now: "למה עכשיו", demand: "נתוני ביקוש", examples: "דוגמאות", expected_tender: "צפוי לצאת למכרז", group: "קבוצה", volume: "היקף", buying_months: "חודשי רכש",
+    last_award: "זכייה אחרונה", current_sup: "ספקים נוכחיים", avg_bids: "מציעים בממוצע", buyer_email: "מייל הקונה", last_notice: "הודעה אחרונה", open: "פתיחה", growth: "צמיחה", world_share: "נתח מהעולם",
+    unit_value: "מחיר יחידה", vs_bench: "מול בנצ'מרק", source: "מקור", prev_year: "שנה קודמת", d_deep: "מחקר עסקה מעמיק",
+    jobs_h: "משימות לעובד", jobs_refresh: "רענון סטטוס", new_req: "בקשה חדשה", result: "תוצאה", link: "קישור",
+    worker_note: "העובד הוא Claude עם חיפוש ברשת, הגיליונות ו-Gmail. הוא מריץ את הבקשה, כותב את התוצאה כאן ובגיליון, ולעולם לא שולח מיילים, רק יוצר טיוטות.",
+    f_type: "סוג", f_target: "על מה (חברה, מוצר, מכרז או קישור)", f_target_ph: "למשל: canned tuna from Ecuador, 3 containers per month", f_req: "מה לבדוק או להכין",
+    f_req_ph: "פרטים, כמויות, מפרט, יעד, מועדים, שפה ונמענים לפנייה", send_worker: "שלח לעובד",
+    jt_eligibility: "בדיקת תנאי סף למכרז", jt_company_research: "מחקר חברה", jt_deal_research: "מחקר עסקה / שוק", jt_supplier_search: "איתור ספקים", jt_outreach: "טיוטות פנייה ב-Gmail", jt_other: "אחר",
+    e_jobs: "עדיין אין משימות. אפשר לשלוח בקשה מהטופס, או מכל מכרז, חברה או עסקה.",
+    open_in_claude: "הפאנל קורא את הגיליונות שלך דרך Claude. פתח אותו מתוך Claude כדי לראות את הנתונים.", need_connectors: "הפאנל צריך גישה לחיבורים שלך (Google Sheets, Gmail). פתח אותו מתוך Claude, בחשבון שבו הגיליונות מחוברים.",
+    approve: "אשר גישה וטען", retry: "נסה שוב",
+    ask_btn: "חפש", ask_ph_t: "חפש במילים שלך: למשל מכרזי ציוד רפואי באפריקה שנסגרים בחודש הבא",
+    ask_ph_c: "חפש במילים שלך: למשל יצואני טונה משומרת מאקוודור עם מייל",
+    ask_ph_d: "חפש במילים שלך: למשל קוני חיטה במפרץ, או ביקוש לפלדה בסעודיה",
+    nl_thinking: "מבין את הבקשה...", nl_as: "מחפש:", nl_clear: "נקה", nl_fail: "לא הצלחתי לפרש את הבקשה, מחפש את המילים כפי שנכתבו.",
+    more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
+    more_wait: "בתהליך מחקר... התשובה תופיע כאן.", more_done: "תוצאת המחקר", more_again: "חקור שוב", more_err: "המחקר נכשל:",
+    a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
+    est_ptw: "מחיר משוער לזכייה: {lo} עד {mid} (לפי {src}, כ-{n} מציעים). הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
+    est_noval: "אין תקציב או היסטוריית זכיות למכרז הזה, ולכן עוד אין מחיר לזכייה. לחץ על הצעת מחיר כדי לחקור.",
+    est_cost: "עלות ספק USD", est_freight: "הובלה USD", est_duty: "מכס %", est_other: "עלויות נוספות %", est_margin: "מרווח %",
+    est_note: "עלויות נוספות: ביטוח, ערבויות, מימון, כרית מט\"ח ובלת\"מ (כ-7% כברירת מחדל). מכס רק אם מספקים כולל מכס (DDP).",
+    est_maxcost: "כדי לזכות במרווח הזה, עלות הספק הכוללת צריכה להישאר מתחת לכ-{v}.", est_landed: "עלות נחיתה", est_bid: "מחיר הצעה",
+    est_ok: "בתוך המחיר לזכייה; במחיר הזכייה נשאר מרווח של כ-{m}%.", est_tight: "מעל המחיר לזכייה במרווח הזה; הצעה במחיר הזכייה משאירה כ-{m}%.",
+    est_no: "לא תחרותי: העלות צריכה לרדת בכ-{v} כדי להשאיר 2% במחיר הזכייה.",
+    dscope_bd: "הזדמנויות שסוכן ה-BD חקר ברשת: שוק, קונה וסיבה לפעול עכשיו, עם מקורות. ממוין לפי תאריך ועדיפות.",
+    dscope_rep: "גופים ציבוריים שקנו את אותה סחורה כמה פעמים ב-12 החודשים האחרונים. התאריך הצפוי מחושב מחודשי הרכש שלהם, כדי להתכונן לפני שהמכרז מתפרסם.",
+    dscope_mkt: "נתוני יבוא מהמכס לפי מוצר ומדינה: ערך יבוא, צמיחה ומחיר יבוא ליחידה מול מחיר עולמי. פרמיה גבוהה אומרת שהשוק משלם יותר מהבנצ'מרק, כלומר יש מקום למרווח סחר.",
+    a_log: "לוגיסטיקה", jt_logistics: "אפשרויות לוגיסטיקה", jt_quote: "הצעת מחיר",
+    upd_t: "מכרזים עודכנו {d}", upd_s: "ספקים {d}", upd_note: "מכרזים מתעדכנים כל 4 שעות, ספקים פעמיים ביום, סוכן ה-BD כל בוקר. רענון טוען עכשיו את הנתונים האחרונים.",
+    tab_intel: "מודיעין", iq_ph: "חיפוש: מדינה, סחורה, קונה...", all_cats: "כל הקטגוריות", high_only: "רק אות חזק",
+    iscope: "אותות שוק מאומתים שמתפרסמים כל בוקר: רק ממקורות רשמיים (ממשלות, קונים ממלכתיים, בנקי פיתוח, האו\"ם, לשכות סטטיסטיקה), מדיה מהשורה הראשונה (Reuters, Bloomberg, FT, Platts, Argus) וגופי תעשייה. כל פריט מקושר למקור שלו.",
+    e_intel: "סוכן המודיעין מפרסם את הפריטים הראשונים הבוקר, והם יופיעו כאן.", tier_off: "מקור רשמי", tier_1: "מדיה מובילה", event: "מועד",
+    up_h: "מכרזים שצפויים להיפתח", up_note: "הודעות מוקדמות ותוכניות רכש שהקונים כבר פרסמו, לפי היקף.",
+    e_up: "הודעות מתוכננות יופיעו אחרי עדכון המכרזים הבא.", grow_h: "ביקוש יבוא בצמיחה המהירה ביותר",
+    grow_note: "נתוני מכס: שווקים שמייבאים מעל 20 מיליון דולר בשנה עם צמיחה מהירה.",
+    a_sum: "תקציר", a_thr: "תנאי סף", thr_full: "אמת מול מסמכי המכרז",
+    thr_note: "אלה תנאי הסף הצפויים לקונה, למדינה ולהליך הזה. הבדיקה המלאה שולחת את העובד לקרוא את מסמכי המכרז עצמם ולהוסיף את המכרז ל-Pursuits.",
+    comp_h: "תחרות", comp_1: "נמוכה", comp_2: "בינונית", comp_3: "גבוהה", comp_4: "גבוהה מאוד",
+    comp_bidders: "צפויים כ-{n} מציעים ({src})", comp_inc: "ספק נוכחי: {n}", comp_foreign: "ספקים זרים זוכים כאן ב-{p}%",
+    role_epc: "קבלני EPC", a_epc: "קבלני EPC", epc_h: "קבלני EPC לפרויקט הזה",
+    epc_note: "קבלנים ראשיים שזכו בעבודות גדולות במדינה, באזור או בסקטור הזה. הם קונים את הציוד והחומרים לפרויקטים כאלה, ויכולים להיות שותפים להגשה משותפת.",
+    epc_none: "אין קבלני EPC בטעינה הנוכחית לאזור ולסקטור האלה. חפש אותם ברשת.", epc_web: "מצא קבלני EPC ברשת",
+    web_more: "מצא עוד ברשת", web_more_req: "Find the main producers, manufacturers and traders of this product worldwide (or in the requested country) and add them to the database.",
+    searching_all: "מחפש בכל {n} המכרזים...", found_all: "{n} תוצאות מכל המכרזים{cap}", top2000: " (מוצגות 2,000 המובילות)",
+    scope_t: "{n} המכרזים המתאימים לך ביותר. חיפוש או סינון מכסים את כל {all}.", searching_all_s: "מחפש בכל {n} הספקים...",
+    found_all_s: "{n} תוצאות מכל הספקים{cap}", scope_s: "{n} הספקים המובילים לפי איכות. חיפוש או סינון מכסים את כל {all}.",
+    s_not_granted: "לא ניתן אישור להשתמש ב-Claude מהפאנל.", s_rate: "יותר מדי בקשות כרגע. נסה שוב בעוד כמה דקות.", s_disabled: "Claude לא זמין לחשבון הזה.", s_expired: "יש להתחבר מחדש ל-Claude.", s_cancel: "בוטל.", s_other: "נקטע. אפשר לנסות שוב.",
+    err_reauth: "החיבור ל-{s} פג. יש לחבר אותו מחדש בהגדרות של Claude, תחת Connectors.", err_notconn: "{s} לא מחובר בגרסת הווב. לפעולה הזו השתמש בפאנל שבתוך Claude.",
+    err_sel: "יש יותר מחיבור אחד בשם {s}. בחר אחד בחלון שנפתח בראש העמוד.", err_approval: "הפאנל צריך אישור לגשת ל-{s}.",
+    err_manifest: "הגישה ל-{s} לא אושרה לפאנל הזה. אפשר לאשר דרך תפריט ההרשאות של הארטיפקט.", err_policy: "מדיניות הארגון חוסמת את {s} לפאנל הזה.",
+    err_unavail: "{s} לא ענה כרגע. נסה שוב בעוד דקה.", err_tool: "{s} החזיר שגיאה.", err_other: "שגיאה בחיבור ל-{s}.", sup_db: "מאגר הספקים",
+  },
+};
+const t = (k, vars) => { let s = (L[LANG] && L[LANG][k]) ?? L.en[k] ?? k; if (vars) for (const [a, b] of Object.entries(vars)) s = s.replace("{" + a + "}", b); return s; };
+function applyLang() {
+  document.documentElement.lang = LANG; document.documentElement.dir = LANG === "he" ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i]").forEach(el => { el.textContent = t(el.dataset.i); });
+  document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = t(el.dataset.ph); });
+  $("#lang-en").setAttribute("aria-pressed", LANG === "en"); $("#lang-he").setAttribute("aria-pressed", LANG === "he");
+}
+function setLang(l) { LANG = l; try { localStorage.setItem("sinder-panel-lang", l); } catch (e) {} applyLang(); if (S.noConn) showNoConn(S.noConn); else if (Object.keys(S.data).length) renderAll(); else setStatus(`<span class="spin" aria-hidden="true"></span> ${esc(t("loading"))}`); reopen(); }
+function showNoConn(k) { S.noConn = k; setStatus(`<span class="pill warn">${esc(t("not_connected"))}</span>`); $("#banner").innerHTML = `<div class="banner">${esc(t(k))}</div>`; }
+function reopen() { if (S.sel.t && S.view === "tenders") openTender(S.sel.t, true); }
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const num = v => { const n = Number(String(v ?? "").replace(/[,%$\s]/g, "")); return isFinite(n) ? n : NaN; };
+const money = v => { const n = num(v); if (!isFinite(n) || !n) return ""; if (n >= 1e9) return "$" + (n / 1e9).toFixed(1) + "B"; if (n >= 1e6) return "$" + (n / 1e6).toFixed(1) + "M"; if (n >= 1e3) return "$" + Math.round(n / 1e3) + "K"; return "$" + Math.round(n); };
+const today = () => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+const nowStamp = () => { const d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16).replace("T", " "); };
+const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+const url = u => /^https?:\/\//i.test(String(u || "").trim()) ? String(u).trim() : "";
+const link = (u, label) => url(u) ? `<a href="${esc(url(u))}" target="_blank" rel="noopener" dir="auto">${esc(label || u)}</a>` : "";
+const heb = s => /[֐-׿]/.test(String(s || ""));
+const txt = s => `<span dir="auto"${heb(s) ? ' class="he"' : ""}>${esc(s)}</span>`;
+// tender title in the panel's language: English titles come from the pipeline, Hebrew ones from 'Titles HE'
+const heTitle = r => S.he.get(r.id) || (heb(r.title_original) ? r.title_original : "");
+const tTitle = r => LANG === "he" ? (heTitle(r) || tr(r.title_en || r.title_original)) : (r.title_en || tr(r.title_original));
+const tAlt = r => LANG === "he" && heTitle(r) && r.title_en ? r.title_en : "";
+
+/* ---------- content translation: text in the other language is translated by Claude (quick model) and kept in
+   this browser, so each text is translated once ---------- */
+const TR = (() => { try { return JSON.parse(localStorage.getItem("sinder-tr-v1") || "{}"); } catch (e) { return {}; } })();
+const trPending = new Set(), trFailed = new Set(); let trTimer = null, trBusy = false;
+const hkey = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return LANG + ":" + (h >>> 0).toString(36) + ":" + s.length; };
+function tr(s) {
+  s = String(s ?? ""); if (!s.trim()) return s;
+  const isHe = heb(s);
+  if ((LANG === "en" && !isHe) || (LANG === "he" && (isHe || !/[a-z]{3}/i.test(s)))) return s;
+  const k = hkey(s); if (TR[k]) return TR[k];
+  if (sample && !trFailed.has(k) && !trPending.has(k)) { trPending.add(k); trQueue.push([k, s, LANG]); clearTimeout(trTimer); trTimer = setTimeout(trFlush, 250); }
+  return s;
+}
+const trQueue = [];
+async function trFlush() {
+  if (trBusy || !trQueue.length || !sample) return;
+  trBusy = true;
+  try {
+    for (let round = 0; round < 4 && trQueue.length; round++) {
+      const lang = trQueue[0][2]; const batch = [];
+      while (trQueue.length && batch.length < 40 && trQueue[0][2] === lang) batch.push(trQueue.shift());
+      const target = lang === "he" ? "Hebrew" : "English";
+      try {
+        const res = await sample.json(`Translate each string in the JSON array into ${target}. Keep company names, organisation acronyms, codes, numbers, dates and URLs as they are. Business and procurement register, concise. Reply with only a JSON array of the translated strings, same length and order.\n\n` + JSON.stringify(batch.map(b => b[1].slice(0, 500))), { modelTier: "quick", cache: { gcTime: 86400000 } });
+        if (Array.isArray(res) && res.length === batch.length) batch.forEach((b, i) => { if (typeof res[i] === "string" && res[i].trim()) TR[b[0]] = res[i]; else trFailed.add(b[0]); });
+        else batch.forEach(b => trFailed.add(b[0]));
+      } catch (e) { batch.forEach(b => trFailed.add(b[0])); if (["not_granted", "sampling_disabled", "rate_limited"].includes(e?.code)) { trQueue.length = 0; break; } }
+      batch.forEach(b => trPending.delete(b[0]));
+    }
+    try { const keys = Object.keys(TR); if (keys.length > 6000) keys.slice(0, keys.length - 6000).forEach(k => delete TR[k]); localStorage.setItem("sinder-tr-v1", JSON.stringify(TR)); } catch (e) {}
+    rerender();
+  } finally { trBusy = false; if (trQueue.length) setTimeout(trFlush, 500); }
+}
+function rerender() {
+  if (!Object.keys(S.data).length) return;
+  renderToday(); renderTenders(); renderCompanies(); renderDeals(); renderIntel(); renderJobs();
+  if (S.view === "tenders" && S.sel.t && !$("#t-out")?.innerHTML) openTender(S.sel.t, true);
+  if (S.view === "deals" && S.sel.d && S.sel.dmode && !$("#d-out")?.innerHTML) openDeal(S.sel.dmode, S.sel.d);
+  if (S.view === "companies" && S.sel.c && S.sel.c.Account && !$("#c-out")?.innerHTML) openAccount(S.sel.c);
+}
+
+function toObjects(values) {
+  if (!values || values.length < 2) return [];
+  const h = values[0].map(x => String(x).trim());
+  return values.slice(1).filter(r => r.some(c => String(c).trim() !== "")).map((r, i) => {
+    const o = { _row: i + 2 }; h.forEach((k, j) => { if (k) o[k] = r[j] ?? ""; }); return o;
+  });
+}
+
+const ECODE = { needs_reauth: "err_reauth", server_not_connected: "err_notconn", selection_required: "err_sel", approval_required: "err_approval", not_in_manifest: "err_manifest", blocked_by_policy: "err_policy", server_unavailable: "err_unavail", tool_error: "err_tool" };
+const errText = (e, s) => t(ECODE[e?.code] || "err_other", { s: e?.server || s }) + (e?.code === "tool_error" && e.message ? " " + String(e.message).slice(0, 160) : "");
+const SUPS = () => SHEETS + " (" + t("sup_db") + ")";
+
+async function load(key, fresh) {
+  const [sid, range] = RANGES[key];
+  try {
+    const r = await mcp.callTool(SHEETS, "get_values", { spreadsheetId: sid, range },
+      { cache: fresh ? { staleTime: 300000, gcTime: 86400000, refresh: true } : { staleTime: 300000, gcTime: 86400000 } });
+    const p = r.payload || {};
+    S.data[key] = toObjects(p.values || []);
+    S.at[key] = r.cache?.storedAt || Date.now();
+    delete S.err[key];
+    if (key === "titles") S.he = new Map(S.data.titles.map(x => [x.id, x.title_he]));
+    if (key === "tot_t" || key === "tot_s") S.data[key + "_raw"] = [(p.values || [[]])[0].slice(-1)[0]];
+  } catch (e) {
+    if (e?.retryable && !fresh) { await new Promise(r => setTimeout(r, (e.retryAfterMs || 1500) + Math.random() * 800)); return load(key, true); }
+    if (OPTIONAL.has(key)) { S.data[key] = []; return; }
+    S.err[key] = e; if (["needs_reauth", "server_not_connected", "not_in_manifest", "blocked_by_policy"].includes(e?.code)) S.data[key] = [];
+  }
+}
+
+async function loadAll(fresh) {
+  setStatus(`<span class="spin" aria-hidden="true"></span> ${esc(t("loading"))}`);
+  await load("tenders", fresh);   // the first call may ask for approval; run it alone
+  if (S.err.tenders?.code === "approval_required") { renderAll(); return; }
+  await Promise.all(Object.keys(RANGES).filter(k => k !== "tenders").map(k => load(k, fresh)));
+  renderAll();
+}
+function setStatus(html) { $("#status").innerHTML = html; }
+
+function renderStatus() {
+  const errs = Object.entries(S.err);
+  const oldest = Math.min(...Object.values(S.at).filter(Boolean));
+  const tm = isFinite(oldest) ? new Date(oldest).toLocaleTimeString(LANG === "he" ? "he-IL" : "en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  const upd = (rows, key) => { const v = (rows || []).find(x => x.key === key || x.metric === key); if (!v) return ""; const d = new Date(String(v.value).replace(" ", "T") + "Z"); return isFinite(d) ? d.toLocaleString(LANG === "he" ? "he-IL" : "en-GB", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : ""; };
+  const ut = upd(S.data.meta, "tenders_updated_utc"), us = upd(S.data.stats, "updated_utc");
+  const fresh = [ut && t("upd_t", { d: ut }), us && t("upd_s", { d: us })].filter(Boolean).join(" · ");
+  setStatus(errs.length ? `<span class="pill bad">${esc(t("n_failed", { n: errs.length }))}</span> ${esc(fresh)}` : `<span class="pill good">${esc(t("up_to_date"))}</span> <span title="${esc(t("upd_note"))}">${esc(fresh || (t("data_as_of") + " " + tm))}</span>`);
+  const b = $("#banner");
+  if (!errs.length) { b.innerHTML = ""; return; }
+  const codes = [...new Set(errs.map(([, e]) => e?.code))];
+  if (codes.length === 1 && codes[0] === "approval_required") {
+    b.innerHTML = `<div class="banner">${esc(t("err_approval", { s: SHEETS }))} <button type="button" id="approve">${esc(t("approve"))}</button></div>`;
+    $("#approve").onclick = () => loadAll(true); return;
+  }
+  const lines = [...new Set(errs.map(([k, e]) => errText(e, k === "suppliers" ? SUPS() : SHEETS)))];
+  b.innerHTML = `<div class="banner err">${lines.map(esc).join("<br>")} <button type="button" id="retry">${esc(t("retry"))}</button></div>`;
+  $("#retry").onclick = () => loadAll(true);
+}
+
+/* ---------- derived data ---------- */
+const T = () => S.data.tenders || [];
+const SUP = () => S.data.suppliers || [];
+const BD = () => (S.data.bd || []).slice().reverse();
+function decisionPill(d) { return d === "Pursue" ? `<span class="pill good">Pursue</span>` : d === "Watch" ? `<span class="pill warn">Watch</span>` : d ? `<span class="pill">${esc(d)}</span>` : ""; }
+function daysPill(d) { const n = num(d); if (!isFinite(n)) return ""; return `<span class="pill ${n < 7 ? "bad" : n < 15 ? "warn" : "info"}">${n} ${esc(t("days"))}</span>`; }
+function prioPill(p) { return p === "High" ? `<span class="pill acc">High</span>` : p === "Medium" ? `<span class="pill info">Medium</span>` : p ? `<span class="pill">${esc(p)}</span>` : ""; }
+const hasContact = s => !!(s.email || s.phone || s.website);
+function fillCountries(sel, rows) {
+  const cur = sel.value, first = sel.options[0].outerHTML, m = new Map();
+  rows.forEach(r => { const c = (r.country || "").trim(); if (/^[A-Z]{3}$/.test(c)) m.set(c, (m.get(c) || 0) + 1); });
+  if (cur && !m.has(cur)) m.set(cur, 0);
+  sel.innerHTML = first + [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([c, n]) => `<option value="${esc(c)}">${esc(c)}${n ? " (" + n + ")" : ""}</option>`).join("");
+  sel.value = cur;
+}
+const sizeRange = v => { if (!v) return [0, 0]; const [a, b] = v.split("-"); return [num(a) || 0, num(b) || 0]; };
+const inSize = (r, v) => { if (!v) return true; const [lo, hi] = sizeRange(v), x = num(r.est_value_usd); return isFinite(x) && x > 0 && x >= lo && (!hi || x < hi); };
+function fillSelect(sel, values) {
+  const cur = sel.value; const first = sel.options[0].outerHTML;
+  sel.innerHTML = first + [...new Set(values.filter(Boolean))].sort().map(v => `<option>${esc(v)}</option>`).join("");
+  sel.value = cur;
+}
+
+/* ---------- TODAY ---------- */
+function renderToday() {
+  const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
+  const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
+  $("#kpis").innerHTML = [
+    [ts.length.toLocaleString("en-US"), t("k_open")], [ts.filter(r => r.decision === "Pursue").length, t("k_pursue")],
+    [BD().filter(r => r.date && daysBetween(r.date, today()) <= 14).length, t("k_bd")], [sup.length.toLocaleString("en-US"), t("k_sup")],
+    [jobs.filter(j => j.status === "queued" || j.status === "running").length, t("k_jobs")],
+  ].map(([v, l]) => `<div class="kpi"><b class="num">${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+  mini("#t-tenders", pursue.slice(0, 7), r => [`<span class="score hi">${esc(r.fit || r.score)}</span>`, `<div class="t">${flag(r.country)}${txt(tTitle(r))}</div>${tAlt(r) ? `<div class="sub">${txt(tAlt(r))}</div>` : ""}<div class="sub">${txt(tr(r.buyer))} · ${esc(r.country)}</div>`, `<div class="num">${money(r.est_value_usd)}</div>${daysPill(r.days_left)}`], r => openTender(r), S.err.tenders ? errText(S.err.tenders, SHEETS) : t("e_pursue"));
+  const bd = BD().filter(r => r.date && daysBetween(r.date, today()) <= 14).sort((a, b) => (a.priority === "High" ? 0 : 1) - (b.priority === "High" ? 0 : 1)).slice(0, 7);
+  mini("#t-deals", bd, r => [prioPill(r.priority), `<div class="t">${flag(r.market)}${txt(tr(String(r.opportunity)).slice(0, 170))}</div><div class="sub">${esc(r.market)} · ${esc(r["commodity group"])}</div>`, `<span class="sub num">${esc(r.date)}</span>`], r => gotoDeal("bd", r), t("e_bd"));
+  const rep = (S.data.repeat || []).filter(r => r.next_expected && daysBetween(today(), r.next_expected) >= -5 && daysBetween(today(), r.next_expected) <= 60).sort((a, b) => num(b.total_usd) - num(a.total_usd)).slice(0, 7);
+  mini("#t-repeat", rep, r => [`<span class="pill info num">${esc(r.next_expected)}</span>`, `<div class="t">${flag(r.country)}${txt(tr(r.buyer))}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(r.awards_12m)} ${esc(t("awards_year"))}</div>`, `<div class="num">${money(r.total_usd)}</div>`], r => gotoDeal("rep", r), t("e_rep"));
+  const acc = (S.data.accounts || []).filter(r => r["latest signal"] && !/לא נמצא|no new signal/i.test(r["latest signal"])).sort((a, b) => String(b["last checked"]).localeCompare(String(a["last checked"]))).slice(0, 6);
+  mini("#t-accounts", acc, r => [prioPill(r.Priority), `<div class="t">${flag(r.Country)}${esc(r.Account)}</div><div class="sub">${txt(tr(String(r["latest signal"])).slice(0, 200))}</div>`, `<span class="sub num">${esc(r["last checked"])}</span>`], r => { S.compMode = "acc"; setSeg(); go("companies"); renderCompanies(); openAccount(r); }, t("e_acc"));
+  const top = sup.filter(s => hasContact(s) && (s.exports === "yes" || s.notable === "yes")).slice(0, 7);
+  mini("#t-companies", top, s => [`<span class="score">${esc(s.quality)}</span>`, `<div class="t">${flag(s.country)}${txt(s.supplier)}</div><div class="sub">${esc(s.country)} · ${esc(s.main_sector)}${s.commodities ? " · " + esc(s.commodities) : ""}</div>`, `<div class="num">${money(s.won_usd_est)}</div>`], s => { S.compMode = "sup"; setSeg(); go("companies"); renderCompanies(); openSupplier(s); }, S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("e_comp"));
+  const done = jobs.filter(j => j.status === "done").sort((a, b) => String(b.updated).localeCompare(String(a.updated))).slice(0, 6);
+  mini("#t-jobs", done, j => [`<span class="pill good">${esc(t("ready"))}</span>`, `<div class="t">${esc(t("jt_" + j.type))}: ${txt(j.target)}</div><div class="sub">${txt(String(j.result).slice(0, 150))}</div>`, `<span class="sub num">${esc(j.updated)}</span>`], j => { go("jobs"); renderJobs(j.job_id); }, t("e_jobs_today"));
+}
+function mini(sel, rows, cells, onclick, emptyText) {
+  const el = $(sel);
+  if (!rows.length) { el.innerHTML = `<div class="empty">${esc(emptyText)}</div>`; return; }
+  el.innerHTML = rows.map((r, i) => { const [a, b, c] = cells(r); return `<div class="it" tabindex="0" data-i2="${i}">${a}<div style="min-width:0">${b}</div><div style="text-align:end">${c}</div></div>`; }).join("");
+  el.querySelectorAll(".it").forEach(n => { const f = () => onclick(rows[+n.dataset.i2]); n.onclick = f; n.onkeydown = e => { if (e.key === "Enter") f(); }; });
+}
+
+/* ---------- TENDERS ---------- */
+function tenderFilter() {
+  const q = $("#tq").value.trim().toLowerCase(), sec = $("#tsector").value, reg = $("#tregion").value, dec = $("#tdec").value, md = num($("#tdays").value) || 0;
+  const cty = $("#tcountry").value, size = $("#tsize").value;
+  return T().filter(r => (!cty || r.country === cty) && inSize(r, size) && (!sec || r.sector === sec) && (!reg || r.region === reg) && (!dec || r.decision === dec) && (r.stage === "planned" || !isFinite(num(r.days_left)) || num(r.days_left) >= md)
+    && (!q || `${r.title_en} ${r.title_original} ${heTitle(r)} ${r.buyer} ${r.country} ${r.sector} ${r.commodity}`.toLowerCase().includes(q)));
+}
+/* ---------- full-database search: the panel writes the filters into a hidden 'Panel Search' tab and reads back the
+   matches, so searches cover every row (35k tenders, 150k suppliers) without loading them into the browser ---------- */
+let chain = Promise.resolve();
+const SRV = { t: { key: "", rows: null, busy: false, err: null, seq: 0 }, c: { key: "", rows: null, busy: false, err: null, seq: 0 } };
+const reEsc = q => q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const qRegex = q => q ? "\\b" + reEsc(q.toLowerCase()) : "";
+let srvTimer = {};
+function serverSearch(kind, key, writeRange, values, sid, readRange, headerRow) {
+  const st = SRV[kind];
+  if (st.key === key && (st.rows || st.busy)) return;
+  st.key = key; st.rows = null; st.busy = true; st.err = null; const seq = ++st.seq;
+  clearTimeout(srvTimer[kind]);
+  srvTimer[kind] = setTimeout(() => {
+    chain = chain.then(async () => {
+      if (seq !== st.seq) return;
+      try {
+        await mcp.callTool(SHEETS, "update_values", { spreadsheetId: sid, range: writeRange, values });
+        if (seq !== st.seq) return;
+        const r = await mcp.callTool(SHEETS, "get_values", { spreadsheetId: sid, range: readRange }, { cache: false });
+        if (seq !== st.seq) return;
+        const v = (r.payload || {}).values || [];
+        st.rows = toObjects(v.slice(headerRow));
+      } catch (e) { if (seq === st.seq) st.err = e; }
+      if (seq === st.seq) { st.busy = false; kind === "t" ? renderTenders() : renderCompanies(); }
+    });
+  }, 650);
+}
+const total = k => { const v = (S.data[k] || [])[0]; return v ? num(Object.values(v).find(x => isFinite(num(x)))) : NaN; };
+function scopeNote(sel, html) { const el = $(sel); if (el) el.innerHTML = html; }
+
+function renderTenders() {
+  fillSelect($("#tsector"), SECTORS); fillSelect($("#tregion"), REGIONS); fillCountries($("#tcountry"), T());
+  const tt = num((S.data.tot_t_raw || [])[0]);
+  $("#c-tenders").textContent = isFinite(tt) ? tt.toLocaleString("en-US") : (T().length ? T().length.toLocaleString("en-US") : "");
+  const q = $("#tq").value.trim(), sec = $("#tsector").value, reg = $("#tregion").value, dec = $("#tdec").value, md = num($("#tdays").value) || 0;
+  const cty = $("#tcountry").value, size = $("#tsize").value, [lo, hi] = sizeRange(size);
+  const nl = S.nl.t;
+  if (mcp && (q || sec || reg || dec || cty || size || nl)) {
+    const key = JSON.stringify([q, sec, reg, dec, md, cty, size, nl]);
+    serverSearch("t", key, "'Panel Search'!B1:D5", [[nl ? nl.re : qRegex(q), "country", cty || nl?.country || ""], [sec, "min value", lo || ""], [reg, "max value", hi || ""], [dec, "", ""], [md, "", ""]], LE, "'Panel Search'!A9:AE2009", 0);
+    const st = SRV.t;
+    if (st.busy || st.key !== key) { scopeNote("#tscope", `<span class="spin"></span> ${esc(t("searching_all", { n: isFinite(tt) ? tt.toLocaleString("en-US") : "" }))}`); $("#tlist").innerHTML = ""; return; }
+    if (st.err) { scopeNote("#tscope", ""); $("#tlist").innerHTML = `<div class="empty" style="padding:14px">${esc(errText(st.err, SHEETS))}</div>`; return; }
+    scopeNote("#tscope", esc(t("found_all", { n: st.rows.length.toLocaleString("en-US"), cap: st.rows.length >= 2000 ? t("top2000") : "" })));
+    return renderTenderList(st.rows);
+  }
+  scopeNote("#tscope", esc(t("scope_t", { n: T().length.toLocaleString("en-US"), all: isFinite(tt) ? tt.toLocaleString("en-US") : "" })));
+  renderTenderList(tenderFilter());
+}
+function renderTenderList(rows) {
+  listInto("#tlist", rows, "t", r => `<span class="score ${num(r.fit) >= 80 ? "hi" : ""}">${esc(r.fit || r.score)}</span>
+    <div style="min-width:0"><div class="t">${flag(r.country)}${txt(tTitle(r))}</div>${tAlt(r) ? `<div class="sub">${txt(tAlt(r))}</div>` : ""}<div class="sub">${txt(tr(r.buyer))} · ${esc(r.country)} · ${esc(r.sector)}</div></div>
+    <div class="right"><span class="num">${money(r.est_value_usd) || `<span class='muted'>${esc(t("no_value"))}</span>`}</span>${r.stage === "planned" ? `<span class="pill info">${esc(t("planned"))}</span>` : daysPill(r.days_left)}${decisionPill(r.decision)}${compHtml(r, true)}</div>`,
+    r => openTender(r), S.err.tenders ? errText(S.err.tenders, SHEETS) : t("e_tenders"), r => r.id === S.sel.t?.id);
+}
+function listInto(sel, rows, key, tpl, onclick, emptyText, isSel) {
+  const el = $(sel), lim = S.limit[key];
+  if (!rows.length) { el.innerHTML = `<div class="empty" style="padding:14px">${esc(emptyText)}</div>`; return; }
+  el.innerHTML = rows.slice(0, lim).map((r, i) => `<div class="row" tabindex="0" data-i2="${i}" ${isSel && isSel(r) ? 'aria-current="true"' : ""}>${tpl(r)}</div>`).join("")
+    + (rows.length > lim ? `<div class="more"><button type="button" class="ghost">${esc(t("more", { n: rows.length - lim }))}</button></div>` : "");
+  el.querySelectorAll(".row").forEach(n => { const f = () => { el.querySelectorAll(".row").forEach(x => x.removeAttribute("aria-current")); n.setAttribute("aria-current", "true"); onclick(rows[+n.dataset.i2]); }; n.onclick = f; n.onkeydown = e => { if (e.key === "Enter") f(); }; });
+  const m = el.querySelector(".more button"); if (m) m.onclick = () => { S.limit[key] += 100; listInto(sel, rows, key, tpl, onclick, emptyText, isSel); };
+}
+/* ---------- country flags (ISO3 codes or English country names) ---------- */
+const ISO = Object.fromEntries("ABWAW,AFGAF,AGOAO,AIAAI,ALAAX,ALBAL,ANDAD,AREAE,ARGAR,ARMAM,ASMAS,ATAAQ,ATFTF,ATGAG,AUSAU,AUTAT,AZEAZ,BDIBI,BELBE,BENBJ,BESBQ,BFABF,BGDBD,BGRBG,BHRBH,BHSBS,BIHBA,BLMBL,BLRBY,BLZBZ,BMUBM,BOLBO,BRABR,BRBBB,BRNBN,BTNBT,BVTBV,BWABW,CAFCF,CANCA,CCKCC,CHECH,CHLCL,CHNCN,CIVCI,CMRCM,CODCD,COGCG,COKCK,COLCO,COMKM,CPVCV,CRICR,CUBCU,CUWCW,CXRCX,CYMKY,CYPCY,CZECZ,DEUDE,DJIDJ,DMADM,DNKDK,DOMDO,DZADZ,ECUEC,EGYEG,ERIER,ESHEH,ESPES,ESTEE,ETHET,FINFI,FJIFJ,FLKFK,FRAFR,FROFO,FSMFM,GABGA,GBRGB,GEOGE,GGYGG,GHAGH,GIBGI,GINGN,GLPGP,GMBGM,GNBGW,GNQGQ,GRCGR,GRDGD,GRLGL,GTMGT,GUFGF,GUMGU,GUYGY,HKGHK,HMDHM,HNDHN,HRVHR,HTIHT,HUNHU,IDNID,IMNIM,INDIN,IOTIO,IRLIE,IRNIR,IRQIQ,ISLIS,ISRIL,ITAIT,JAMJM,JEYJE,JORJO,JPNJP,KAZKZ,KENKE,KGZKG,KHMKH,KIRKI,KNAKN,KORKR,KWTKW,LAOLA,LBNLB,LBRLR,LBYLY,LCALC,LIELI,LKALK,LSOLS,LTULT,LUXLU,LVALV,MACMO,MAFMF,MARMA,MCOMC,MDAMD,MDGMG,MDVMV,MEXMX,MHLMH,MKDMK,MLIML,MLTMT,MMRMM,MNEME,MNGMN,MNPMP,MOZMZ,MRTMR,MSRMS,MTQMQ,MUSMU,MWIMW,MYSMY,MYTYT,NAMNA,NCLNC,NERNE,NFKNF,NGANG,NICNI,NIUNU,NLDNL,NORNO,NPLNP,NRUNR,NZLNZ,OMNOM,PAKPK,PANPA,PCNPN,PERPE,PHLPH,PLWPW,PNGPG,POLPL,PRIPR,PRKKP,PRTPT,PRYPY,PSEPS,PYFPF,QATQA,REURE,ROURO,RUSRU,RWARW,SAUSA,SDNSD,SENSN,SGPSG,SGSGS,SHNSH,SJMSJ,SLBSB,SLESL,SLVSV,SMRSM,SOMSO,SPMPM,SRBRS,SSDSS,STPST,SURSR,SVKSK,SVNSI,SWESE,SWZSZ,SXMSX,SYCSC,SYRSY,TCATC,TCDTD,TGOTG,THATH,TJKTJ,TKLTK,TKMTM,TLSTL,TONTO,TTOTT,TUNTN,TURTR,TUVTV,TWNTW,TZATZ,UGAUG,UKRUA,UMIUM,URYUY,USAUS,UZBUZ,VATVA,VCTVC,VENVE,VGBVG,VIRVI,VNMVN,VUTVU,WLFWF,WSMWS,YEMYE,ZAFZA,ZMBZM,ZWEZW".split(",").map(x => [x.slice(0, 3), x.slice(3)]));
+const NAME2 = (() => { const m = {}; try { const dn = new Intl.DisplayNames(["en"], { type: "region" }); Object.values(ISO).forEach(c => { const n = dn.of(c); if (n) m[n.toLowerCase()] = c; }); } catch (e) {}
+  Object.assign(m, { "usa": "US", "united states": "US", "uk": "GB", "united kingdom": "GB", "uae": "AE", "united arab emirates": "AE", "russia": "RU", "south korea": "KR", "korea": "KR", "rep. of korea": "KR", "vietnam": "VN", "iran": "IR", "turkey": "TR", "turkiye": "TR", "czech republic": "CZ", "ivory coast": "CI", "cote d'ivoire": "CI", "drc": "CD", "dr congo": "CD", "tanzania": "TZ", "bolivia": "BO", "venezuela": "VE", "syria": "SY", "laos": "LA", "moldova": "MD", "taiwan": "TW", "palestine": "PS", "kyrgyz republic": "KG", "the gambia": "GM", "eswatini": "SZ" }); return m; })();
+function flag(c) {
+  let s = String(c || "").trim(); if (!s) return "";
+  s = s.split(/[,;]/)[0].trim();
+  const a2 = s.length === 3 && ISO[s.toUpperCase()] ? ISO[s.toUpperCase()] : s.length === 2 && /^[A-Za-z]{2}$/.test(s) ? s.toUpperCase() : NAME2[s.toLowerCase()];
+  if (!a2) return "";
+  return `<span class="flag" title="${esc(s)}" aria-label="${esc(s)}">${String.fromCodePoint(...[...a2].map(ch => 127397 + ch.charCodeAt(0)))}</span>`;
+}
+const pick = (o, ks) => Object.fromEntries(ks.filter(k => o[k] !== undefined && o[k] !== "").map(k => [k, o[k]]));
+function openTender(r, keep) {
+  S.sel.t = r; if (S.view !== "tenders") { go("tenders"); renderTenders(); }
+  const inP = (S.data.pursuits || []).some(p => p["Opportunity ID"] === r.id);
+  const he = heTitle(r);
+  $("#tdetail").innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">${decisionPill(r.decision)}${r.new === "NEW" ? `<span class="pill acc">${esc(t("new_"))}</span>` : ""}${daysPill(r.days_left)}<span class="pill">${esc(r.source)}</span></div>
+    <h2>${flag(r.country)}${txt(tTitle(r))}</h2>
+    ${compHtml(r)}
+    <dl class="kv">
+      ${he && r.title_en ? `<dt>${esc(t("title_en"))}</dt><dd>${txt(r.title_en)}</dd>` : ""}
+      ${r.title_original && r.title_original !== r.title_en && r.title_original !== he ? `<dt>${esc(t("title_orig"))}</dt><dd>${txt(r.title_original)}</dd>` : ""}
+      <dt>${esc(t("buyer"))}</dt><dd>${txt(tr(r.buyer))} · ${esc(r.country)} (${esc(r.region)})</dd>
+      <dt>${esc(t("sector"))}</dt><dd>${esc(r.sector)}${r.commodity ? " · " + esc(r.commodity) : ""}</dd>
+      <dt>${esc(t("est_value"))}</dt><dd class="num">${money(r.est_value_usd) || esc(t("not_stated"))}</dd>
+      <dt>${esc(t("deadline"))}</dt><dd class="num">${esc(r.deadline || t("not_stated"))}</dd>
+      <dt>${esc(t("access"))}</dt><dd>${esc(r.access)}</dd>
+      <dt>${esc(t("ev"))}</dt><dd><span class="num">${money(r.ev_usd) || "-"}</span> · ${esc(t("win_chance"))} <span class="num">${esc(r.p_win_market)}</span> · ${esc(t("exp_bidders"))} <span class="num">${esc(r.est_bidders)}</span></dd>
+      <dt>${esc(t("buyer_hist"))}</dt><dd>${esc(r.buyer_awards_12m || 0)} ${esc(t("awards_12m"))}${r.buyer_median_award_usd ? ` · ${esc(t("median"))} <span class="num">${money(r.buyer_median_award_usd)}</span>` : ""}${r.incumbent ? ` · ${esc(t("incumbent"))}: ${txt(r.incumbent)}` : ""}</dd>
+      <dt>${esc(t("why"))}</dt><dd>${esc(r.why)}</dd>
+      <dt>${esc(t("contact"))}</dt><dd dir="ltr">${esc(r.contact) || "-"}</dd>
+      <dt>${esc(t("notice"))}</dt><dd>${link(r.link, t("open_notice"))}</dd>
+    </dl>
+    <div class="actions">
+      <button class="primary" type="button" id="a-sum">${esc(t("a_sum"))}</button>
+      <button type="button" id="a-thr">${esc(t("a_thr"))}</button>
+      <button type="button" id="a-quick">${esc(t("a_quick"))}</button>
+      <button type="button" id="a-quote">${esc(t("a_quote"))}</button>
+      <button type="button" id="a-log">${esc(t("a_log"))}</button>
+      <button type="button" id="a-epc">${esc(t("a_epc"))}</button>
+      <button type="button" id="a-sup">${esc(t("a_sup"))}</button>
+      <button type="button" id="a-pur" ${inP ? "disabled" : ""}>${esc(inP ? t("tracked") : t("a_track"))}</button>
+    </div>
+    <div class="note">${esc(t("t_note"))}</div>
+    <div id="more-t" data-jobcard="${esc(r.id)}">${cardHtml(r.id)}</div><div id="more-t-flash"></div>
+    <div id="more-q" data-jobcard="${esc("Q:" + r.id)}">${cardHtml("Q:" + r.id)}</div><div id="more-q-flash"></div>
+    <div id="more-l" data-jobcard="${esc("L:" + r.id)}">${cardHtml("L:" + r.id)}</div><div id="more-l-flash"></div>
+    ${estimateHtml(r)}
+    <div id="t-out"></div>`;
+  $("#a-quick").onclick = () => quickTender(r);
+  $("#a-sum").onclick = () => tenderAsk(r, "sum");
+  $("#a-thr").onclick = () => tenderAsk(r, "thr");
+  const eligJob = e => moreInfo({ type: "eligibility", target_id: r.id, target: r.title_en, context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "sector", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "why"]), title_he: he } }, e?.currentTarget, "#more-t");
+  S.eligJob = eligJob;
+  $("#a-sup").onclick = () => showSuppliers(r.sector, `${r.title_en} ${r.commodity}`, "#t-out", { kind: "tender", r });
+  $("#a-quote").onclick = e => moreInfo({ type: "quote", target_id: "Q:" + r.id, target: "Quote: " + (r.title_en || "").slice(0, 200), context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "est_bidders", "buyer_median_award_usd", "why"]), title_he: he } }, e.currentTarget, "#more-q");
+  $("#a-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + r.id, target: "Logistics: " + (r.title_en || "").slice(0, 200), context: { ...pick(r, ["id", "title_en", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "link", "access"]), title_he: he } }, e.currentTarget, "#more-l");
+  $("#a-epc").onclick = () => showEPC(r, "#t-out");
+  wireEstimate(r);
+  $("#a-pur").onclick = e => addPursuit(r, e.currentTarget, "#t-out");
+}
+const outLang = () => LANG === "he" ? "Hebrew" : "English";
+/* summary and threshold conditions: instant answers from the notice data; the threshold answer offers a full check of
+   the tender documents by the worker */
+async function tenderAsk(r, kind) {
+  const out = $("#t-out");
+  if (!sample) { out.innerHTML = `<div class="flash err">${esc(t("only_in_claude"))}</div>`; return; }
+  out.innerHTML = `<div class="section"><h3>${esc(t(kind === "sum" ? "a_sum" : "a_thr"))}</h3><div class="ai" dir="auto" id="ta-out"><span class="spin"></span> ${esc(t("thinking"))}</div>${kind === "thr" ? `<div class="actions"><button type="button" class="primary" id="ta-full">${esc(t("thr_full"))}</button></div><p class="note">${esc(t("thr_note"))}</p>` : ""}</div>`;
+  if (kind === "thr") $("#ta-full").onclick = e => S.eligJob(e);
+  const data = JSON.stringify(pick(r, ["title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "days_left", "stage", "access", "notice_type", "source", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent", "contact", "link"]));
+  const prompt = kind === "sum"
+    ? `Write a short brief of this public tender for a busy trader, in ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", under these headings: What is being bought (plain words, main items); Order of magnitude (the estimated value in USD and what that means, for example roughly how many units, tonnes or months of service it buys at typical market prices, labelled as an estimate); Who buys and where (buyer, country, delivery place if known); Timeline (deadline, days left, likely contract period); Competition (expected bidders, incumbent, how open to foreign suppliers); Why it may matter for Sinder (one or two lines). Use only the data below plus general market knowledge, and say when something is not stated. Data: ${data}`
+    : `List the threshold (eligibility) conditions a foreign supplier is likely to face in this public tender, in ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", grouped as: Registration and legal (supplier portal registration, local entity, agent or partner, tax and company documents); Financial (minimum turnover, bid security amount as a typical % of value, performance guarantee, audited accounts); Technical and experience (similar contracts in recent years, certificates such as ISO, CE, product registrations); Submission (language, electronic portal, signatures, legalisation); Red flags for a foreign bidder. Base it on the procedure, the country's procurement rules and this buyer's practice; mark every item as expected and to be verified in the tender documents. Data: ${data}`;
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#ta-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#ta-out").textContent = text; }
+  catch (e) { $("#ta-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
+}
+async function quickTender(r) {
+  const out = $("#t-out");
+  if (!sample) { out.innerHTML = `<div class="flash err">${esc(t("only_in_claude"))}</div>`; return; }
+  out.innerHTML = `<div class="section"><h3>${esc(t("a_quick"))}</h3><div class="ai" dir="auto" id="qa"><span class="spin"></span> ${esc(t("thinking"))}</div></div>`;
+  const prompt = `You are a senior international procurement analyst for Sinder, an Israeli firm that sources goods and project supply from global manufacturers for public buyers. Assess this open tender for a foreign supplier/prime. Answer in ${outLang()}, concise, no emojis, no em-dashes.
+Return exactly these sections (translate the headings into ${outLang()}), each with short lines starting with "- ":
+1. What is being bought (one or two lines, plain words)
+2. Likely eligibility and threshold requirements (what this buyer, country and procedure typically require: registration, local agent or entity, bid bond, experience, certificates, language). Say clearly these are expected and must be verified in the documents
+3. Risks and barriers for a foreign supplier
+4. Go / No-go / Need info, with a short reason based on the data
+5. What to check now (3 checks)
+6. A final line starting with "KEYWORDS:" and 5 comma-separated English keywords for supplier search
+Tender data (JSON): ${JSON.stringify(pick(r, ["title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "days_left", "access", "notice_type", "source", "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent", "why"]))}`;
+  try {
+    const { text } = await sample(prompt, { onText: ({ text }) => { $("#qa").textContent = text; }, cache: { gcTime: 3600000 } });
+    $("#qa").textContent = text.replace(/KEYWORDS:.*$/m, "").trim();
+    const kw = (text.match(/KEYWORDS:\s*(.*)$/m) || [])[1] || "";
+    if (kw) { const b = document.createElement("button"); b.type = "button"; b.textContent = t("sup_for") + kw.slice(0, 60); b.style.marginTop = "8px"; b.onclick = () => showSuppliers(r.sector, kw + " " + r.title_en, "#t-out", { kind: "tender", r }); $("#qa").after(b); }
+  } catch (e) { $("#qa").textContent = (e.text || "") + "\n" + sampleErr(e); }
+}
+function sampleErr(e) { return t(({ not_granted: "s_not_granted", rate_limited: "s_rate", sampling_disabled: "s_disabled", session_expired: "s_expired", cancelled: "s_cancel" })[e?.code] || "s_other"); }
+
+/* ---------- supplier matching (local, over the top suppliers loaded from the Supplier Universe) ---------- */
+const STOP = new Set("the and for with from supply supplies delivery services service provision procurement purchase framework agreement lot lots various other works contract tender of to in on by a an des de la le du et pour del los las para y e o do da dos das und der die für von zur".split(" "));
+function tokens(s) { return [...new Set(String(s || "").toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/).filter(w => w.length >= 4 && !STOP.has(w)))].slice(0, 14); }
+function matchSuppliers(sector, text, n = 12) {
+  const tk = tokens(text);
+  return SUP().map(s => {
+    const blob = `${s.products} ${s.supplied} ${s.commodities} ${s.web_title} ${s.industries} ${s.supplier} ${s.logistics_role || ""}`.toLowerCase();
+    let sc = 0; if (sector && s.main_sector === sector) sc += 3; else if (sector && String(s.other_sectors).includes(sector)) sc += 1;
+    let hits = 0; tk.forEach(w => { if (blob.includes(w)) hits++; }); sc += Math.min(6, hits * 2);
+    sc += (num(s.quality) || 0) / 25 + (hasContact(s) ? 1 : 0);
+    return { s, sc, hits };
+  }).filter(x => x.hits > 0 || (sector && x.s.main_sector === sector)).sort((a, b) => b.sc - a.sc).slice(0, n).map(x => x.s);
+}
+function showSuppliers(sector, text, outSel, ctx) {
+  const out = $(outSel);
+  if (!SUP().length) { out.innerHTML = `<div class="flash err">${esc(S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("sup_not_loaded"))}</div>`; return; }
+  const list = matchSuppliers(sector, text);
+  out.innerHTML = `<div class="section"><h3>${esc(t("sup_h"))}</h3><p class="note">${esc(t("sup_note", { n: SUP().length.toLocaleString("en-US") }))}</p>
+    ${list.length ? list.map((s, i) => `<div class="sup"><input type="checkbox" id="ms${i}" ${s.email ? "" : "disabled"} aria-label="${esc(t("select"))} ${esc(s.supplier)}"><label for="ms${i}" style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)} <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span></div>
+      <div class="sub">${txt(String(s.products || s.supplied || s.commodities || s.main_sector).slice(0, 220))}</div>
+      <div class="sub" dir="ltr">${[s.email, s.phone].filter(Boolean).map(esc).join(" · ")} ${link(s.website, s.website)}</div></label></div>`).join("") : `<div class="empty">${esc(t("e_sup_match"))}</div>`}
+    <div class="actions"><button class="primary" type="button" id="ms-rfq">${esc(t("draft_sel"))}</button><button type="button" id="ms-job">${esc(t("deep_sup"))}</button></div><div id="ms-out"></div></div>`;
+  $("#ms-rfq").onclick = () => { const chosen = list.filter((s, i) => $("#ms" + i)?.checked); if (!chosen.length) { $("#ms-out").innerHTML = `<div class="flash info">${esc(t("tick_one"))}</div>`; return; } compose({ kind: "rfq", ctx, to: chosen }, "#ms-out"); };
+  $("#ms-job").onclick = e => queueJob({ type: "supplier_search", target_id: ctx?.r?.id || "", target: (ctx?.r?.title_en || text).slice(0, 200), context: { sector, text: text.slice(0, 400), from: ctx?.kind } }, e.currentTarget, "#ms-out");
+}
+
+/* EPC contractors near this tender: main contractors that win large works in the same sector or region are the
+   buyers of equipment and materials for such projects (and possible partners for a joint bid) */
+function showEPC(r, outSel) {
+  const out = $(outSel);
+  const list = SUP().filter(s => s.epc).map(s => ({ s, sc: (s.main_sector === r.sector ? 3 : 0) + (s.region === r.region ? 2 : 0) + (s.country === r.country ? 3 : 0) + (String(s.buyer_countries).includes(r.country) ? 3 : 0) + (num(s.quality) || 0) / 30 }))
+    .filter(x => x.sc >= 2).sort((a, b) => b.sc - a.sc).slice(0, 12).map(x => x.s);
+  out.innerHTML = `<div class="section"><h3>${esc(t("epc_h"))}</h3><p class="note">${esc(t("epc_note"))}</p>
+    ${list.length ? list.map(s => `<div class="sup"><span class="pill warn">${esc(s.epc)}</span><div style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)}</div><div class="sub">${esc(s.main_sector)} · ${money(s.won_usd_est)} · ${esc(t("in_"))} ${esc(s.buyer_countries)}</div><div class="sub" dir="ltr">${[s.email, s.phone].filter(Boolean).map(esc).join(" · ")} ${link(s.website, s.website)}</div></div></div>`).join("") : `<div class="empty">${esc(t("epc_none"))}</div>`}
+    <div class="actions"><button type="button" id="epc-web">${esc(t("epc_web"))}</button></div><div id="epc-flash"></div></div>`;
+  $("#epc-web").onclick = e => queueJob({ type: "supplier_search", target_id: "EPC:" + r.id, target: "EPC contractors for: " + (r.title_en || "").slice(0, 160), context: pick(r, ["title_en", "buyer", "country", "region", "sector", "est_value_usd", "link"]), request: "Find the EPC and main contractors active in this country and sector (who won similar projects in the last 3 years, who is likely to bid), with their procurement departments and supplier registration pages. Add them to Research Suppliers with type epc." }, e.currentTarget, "#epc-flash");
+}
+
+/* ---------- outreach (Claude writes, you edit, Gmail stores a draft) ---------- */
+async function compose({ kind, ctx, to }, outSel) {
+  const out = $(outSel);
+  const recips = (to || []).map(s => ({ name: s.supplier || s.Account || s.name, email: String(s.email || "").split(/[;,\s]+/)[0] }));
+  out.innerHTML = `<div class="section"><h3>${esc(t("out_h"))}</h3>
+    <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
+    <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
+    <div class="field"><label for="m-body">${esc(t("body"))}</label><textarea id="m-body" dir="auto">${esc(t("writing"))}</textarea></div>
+    <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t("create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
+    <div class="note">${esc(t("draft_note"))}</div><div id="m-flash"></div></div>`;
+  const write = async (fresh) => {
+    if (!sample) { $("#m-body").value = ""; $("#m-flash").innerHTML = `<div class="flash info">${esc(t("hand_write"))}</div>`; $("#m-draft").disabled = false; return; }
+    $("#m-draft").disabled = $("#m-again").disabled = true;
+    const what = kind === "rfq" ? `a request for quotation (RFQ) to supplier(s) for this opportunity` : kind === "buyer" ? `an introduction e-mail to this buyer / procurement unit offering Sinder as an international supplier and asking about supplier registration and upcoming needs` : `a first business introduction to this company exploring supply cooperation with Sinder`;
+    const prompt = `Write ${what}, in English (business e-mails to foreign companies are in English). Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes. For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
+Return JSON only: {"subject": "...", "body": "..."} (body as plain text with line breaks).
+Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", "sector", "commodity", "est_value_usd", "deadline", "link", "opportunity", "market", "commodity group", "product", "Account", "Primary commodity group", "products", "supplied", "supplier"]) : {})}`;
+    try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || ""; }
+    catch (e) { $("#m-body").value = e.text || ""; $("#m-flash").innerHTML = `<div class="flash err">${esc(sampleErr(e))}</div>`; }
+    $("#m-draft").disabled = $("#m-again").disabled = false;
+  };
+  $("#m-again").onclick = () => write(true);
+  $("#m-draft").onclick = async e => {
+    const btn = e.currentTarget, list = $("#m-to").value.split(/[,;\s]+/).filter(x => /@/.test(x));
+    if (!list.length) { $("#m-flash").innerHTML = `<div class="flash err">${esc(t("add_email"))}</div>`; return; }
+    btn.disabled = true; const done = [];
+    for (const addr of list) {
+      try { const r = await mcp.callTool(GMAIL, "create_draft", { to: [addr], subject: $("#m-sub").value, body: $("#m-body").value }); const p = r.payload || {}; done.push(`${esc(addr)} ${p.viewUrl ? link(p.viewUrl, t("open_draft")) : ""}`); }
+      catch (err) { done.push(`${esc(addr)}: ${esc(err?.code === "server_unavailable" || err?.code === "upstream_error" ? t("unclear_draft") : errText(err, GMAIL))}`); }
+    }
+    $("#m-flash").innerHTML = `<div class="flash ok">${esc(t("drafts"))}<br>${done.join("<br>")}</div>`;
+  };
+  write(false);
+}
+
+/* ---------- queue a job for the worker ---------- */
+let lastFire = 0;
+async function queueJob(job, btn, outSel) {
+  const out = $(outSel); if (btn) btn.disabled = true;
+  const id = "J" + Date.now().toString(36).toUpperCase();
+  const row = [id, nowStamp(), job.type, job.target_id || "", String(job.target || "").slice(0, 300), JSON.stringify(job.context || {}).slice(0, 45000), job.request || "", "queued", "", "", nowStamp(), "panel; lang=" + LANG];
+  try { await mcp.callTool(SHEETS, "append_values", { spreadsheetId: LE, range: "'Panel Jobs'!A1", values: [row] }); }
+  catch (e) { out.innerHTML = `<div class="flash err">${esc(t("job_not_saved") + errText(e, SHEETS))}${["server_unavailable", "upstream_error"].includes(e?.code) ? esc(t("maybe_saved")) : ""}</div>`; if (btn) btn.disabled = false; return; }
+  (S.data.jobs = S.data.jobs || []).push({ job_id: id, created: row[1], type: job.type, target_id: job.target_id || "", target: row[4], status: "queued", updated: row[10] });
+  renderJobsCount();
+  let fired;
+  if (Date.now() - lastFire > 120000) {
+    try { await mcp.callTool(REMOTE, "fire_trigger", { trigger_id: WORKER, text: `New panel job ${id} (${job.type}) is queued. Process the queue now.` }); lastFire = Date.now(); fired = t("fired_now"); }
+    catch (e) { fired = t("fired_later"); }
+  } else fired = t("fired_running");
+  out.insertAdjacentHTML("beforeend", `<div class="flash ok">${esc(t("sent", { id }))} ${esc(fired)} <button type="button" class="ghost" data-goto="jobs">${esc(t("open_jobs"))}</button></div>`);
+  wireGoto(out);
+}
+async function addPursuit(r, btn, outSel) {
+  btn.disabled = true;
+  const row = [r.id, today(), "panel", r.title_en, r.buyer, r.country, r.sector, money(r.est_value_usd), r.deadline, r.link, "", "", "", "", "", "", "", "", "", "New", "", heTitle(r)];
+  try { await mcp.callTool(SHEETS, "append_values", { spreadsheetId: LE, range: "'Pursuits'!A1", values: [row] }); (S.data.pursuits = S.data.pursuits || []).push({ "Opportunity ID": r.id }); btn.textContent = t("tracked"); $(outSel).insertAdjacentHTML("beforeend", `<div class="flash ok">${esc(t("added_pursuits"))}</div>`); }
+  catch (e) { btn.disabled = false; $(outSel).insertAdjacentHTML("beforeend", `<div class="flash err">${esc(errText(e, SHEETS))}</div>`); }
+}
+
+/* ---------- competition indicator: expected bidders from award history, raised by an incumbent, plus how often
+   foreign suppliers win in this country and sector ---------- */
+function competition(r) {
+  const b = num(r.est_bidders), fr = num(String(r.foreign_win_rate).replace("%", "")) , fw = isFinite(fr) ? (fr > 1 ? fr / 100 : fr) : NaN;
+  if (!isFinite(b)) return null;
+  let lvl = b <= 2 ? 1 : b <= 4 ? 2 : b <= 7 ? 3 : 4;
+  if (r.incumbent && lvl < 4) lvl += 1;
+  const src = (String(r.why).match(/bidders expected \(([^)]+)\)/) || [])[1] || "";
+  return { lvl, b, fw, src };
+}
+function compHtml(r, small) {
+  const c = competition(r); if (!c) return "";
+  const label = t("comp_" + c.lvl);
+  if (small) return `<span class="bars l${c.lvl}" title="${esc(t("comp_h"))}: ${esc(label)}"><i></i><i></i><i></i><i></i></span>`;
+  const parts = [t("comp_bidders", { n: c.b, src: c.src || "-" })];
+  if (r.incumbent) parts.push(t("comp_inc", { n: r.incumbent }));
+  if (isFinite(c.fw)) parts.push(t("comp_foreign", { p: Math.round(c.fw * 100) }));
+  return `<div class="meter"><b>${esc(t("comp_h"))}:</b> <span class="bars l${c.lvl}"><i></i><i></i><i></i><i></i></span> <b>${esc(label)}</b><span class="sub">${parts.map(esc).join(" · ")}</span></div>`;
+}
+
+/* ---------- instant price estimate: price to win from the data, and the bid price your own cost leads to ---------- */
+function ptw(r) {
+  const budget = num(r.est_value_usd), med = num(r.buyer_median_award_usd), bidders = num(r.est_bidders) || 3;
+  const ref = isFinite(budget) && budget > 0 ? budget : (isFinite(med) && med > 0 ? med : NaN);
+  if (!isFinite(ref)) return null;
+  const disc = Math.min(0.25, 0.03 + 0.03 * bidders);            // more bidders, deeper discount below the budget
+  return { ref, src: isFinite(budget) && budget > 0 ? t("ptw_budget") : t("ptw_median"), lo: ref * (1 - disc - 0.05), mid: ref * (1 - disc), bidders };
+}
+function estimateHtml(r) {
+  const p = ptw(r);
+  return `<div class="section"><h3>${esc(t("est_h"))}</h3>
+    <p class="note">${p ? esc(t("est_ptw", { lo: money(p.lo), mid: money(p.mid), src: p.src, n: p.bidders })) : esc(t("est_noval"))}</p>
+    <div class="filters" style="margin-top:6px">
+      <label>${esc(t("est_cost"))} <input type="number" id="e-cost" min="0" step="1000" style="width:120px"></label>
+      <label>${esc(t("est_freight"))} <input type="number" id="e-fr" min="0" step="500" value="0" style="width:100px"></label>
+      <label>${esc(t("est_duty"))} <input type="number" id="e-duty" min="0" step="0.5" value="0" style="width:64px"></label>
+      <label>${esc(t("est_other"))} <input type="number" id="e-oth" min="0" step="0.5" value="7" style="width:64px"></label>
+      <label>${esc(t("est_margin"))} <input type="number" id="e-m" min="0" step="0.5" value="10" style="width:64px"></label>
+    </div>
+    <div id="e-out" class="note"></div><p class="note">${esc(t("est_note"))}</p></div>`;
+}
+function wireEstimate(r) {
+  const p = ptw(r), ids = ["#e-cost", "#e-fr", "#e-duty", "#e-oth", "#e-m"];
+  const calc = () => {
+    const c = num($("#e-cost").value), fr = num($("#e-fr").value) || 0, du = (num($("#e-duty").value) || 0) / 100, ot = (num($("#e-oth").value) || 0) / 100, m = (num($("#e-m").value) || 0) / 100;
+    if (!isFinite(c) || c <= 0) { $("#e-out").innerHTML = p ? esc(t("est_maxcost", { v: money(p.mid / (1 + m) / (1 + ot)) })) : ""; return; }
+    const landed = (c + fr) * (1 + du) * (1 + ot), bid = landed * (1 + m);
+    let verdict = "";
+    if (p) { const realM = p.mid / landed - 1; verdict = bid <= p.mid ? t("est_ok", { m: (realM * 100).toFixed(1) }) : realM > 0.02 ? t("est_tight", { m: (realM * 100).toFixed(1) }) : t("est_no", { v: money(landed - p.mid / 1.02) }); }
+    $("#e-out").innerHTML = `<b>${esc(t("est_landed"))}</b> <span class="num">${money(landed)}</span> · <b>${esc(t("est_bid"))}</b> <span class="num">${money(bid)}</span>${verdict ? `<br>${esc(verdict)}` : ""}`;
+  };
+  ids.forEach(i => $(i)?.addEventListener("input", calc)); calc();
+}
+
+/* ---------- free-language search: Claude turns the request into keywords (with synonyms) and filters ---------- */
+const NL_CTX = { t: "searching open public tenders worldwide", c: "searching a database of 150,000 suppliers: manufacturers, traders, exporters and logistics companies", d: "searching trade opportunities, repeat public buyers and import market signals" };
+async function askSubmit(key) {
+  const q = $("#askq-" + key).value.trim(), chips = $("#nl-" + key);
+  if (!q) { clearNL(key); return; }
+  chips.hidden = false; chips.innerHTML = `<span class="spin"></span> ${esc(t("nl_thinking"))}`;
+  let f = null;
+  if (sample) {
+    try {
+      f = await sample.json(`Turn this search request from an international procurement trader into structured filters. Context: ${NL_CTX[key]}.
+Request: ${JSON.stringify(q)}
+Reply with JSON only: {"keywords": [3 to 10 lowercase English search terms: the product or service, its synonyms and common trade names, single words or two-word phrases; no country names, no generic words like supplier, company, tender],
+ "keywords_he": [Hebrew equivalents of the main terms, 0 to 4],
+ "country_iso3": "ISO 3166 alpha-3 code or empty", "country_name": "English country name or empty",
+ "region": one of ${JSON.stringify(REGIONS)} or "", "sector": one of ${JSON.stringify(SECTORS)} or "",
+ "role": "logistics" or "goods" or "trader" or "epc" (EPC / construction contractors) or "", "contact_required": true or false, "min_quality": 0,
+ "label": "the request restated in 3 to 8 words, in ${outLang()}"}`, { modelTier: "quick", cache: { gcTime: 86400000 } });
+    } catch (e) { f = null; }
+  }
+  const kws = f && Array.isArray(f.keywords) && f.keywords.length ? [...f.keywords, ...(f.keywords_he || [])] : q.split(/[,\s]+/).filter(w => w.length > 2);
+  const alt = [...new Set(kws.map(w => String(w).toLowerCase().trim()).filter(Boolean))].slice(0, 14).map(reEsc).join("|");
+  // word start without \p{L}: the sheet lower-cases the pattern, which would break \p{L}
+  const nl = { re: alt ? "(?:^|[^a-z0-9\\x{00c0}-\\x{024f}\\x{0400}-\\x{04ff}\\x{0590}-\\x{05ff}])(?:" + alt + ")" : "", country: (f?.country_iso3 || "").toUpperCase().slice(0, 3), cname: f?.country_name || "", minq: Number(f?.min_quality) || 0, label: f?.label || q, kws: kws.slice(0, 6) };
+  try { nl.jsre = alt ? new RegExp("(?:^|[^a-z0-9\\u{00c0}-\\u{024f}\\u{0400}-\\u{04ff}\\u{0590}-\\u{05ff}])(?:" + alt + ")", "iu") : null; } catch (e) { nl.jsre = null; }
+  S.nl[key] = nl;
+  if (key === "t") { $("#tq").value = ""; if (f) { if (SECTORS.includes(f.sector)) $("#tsector").value = f.sector; if (REGIONS.includes(f.region)) $("#tregion").value = f.region; } S.limit.t = 60; }
+  if (key === "c") { S.compMode = "sup"; setSeg(); $("#cq").value = ""; if (f) { $("#cregion").value = REGIONS.includes(f.region) ? f.region : ""; $("#csector").value = SECTORS.includes(f.sector) ? f.sector : ""; $("#crole").value = ["logistics", "goods", "trader", "epc"].includes(f.role) ? f.role : ""; $("#ccontact").checked = !!f.contact_required; } S.limit.c = 60; }
+  if (key === "d") { $("#dq").value = ""; S.limit.d = 60; }
+  chips.innerHTML = `${esc(t("nl_as"))} <b>${txt(nl.label)}</b> ${nl.kws.map(k => `<span class="chip">${txt(k)}</span>`).join("")}${nl.country ? `<span class="chip">${esc(nl.country)}</span>` : ""}${f ? "" : ` <span>${esc(t("nl_fail"))}</span>`} <button type="button" class="ghost" id="nlc-${key}">${esc(t("nl_clear"))}</button>`;
+  $("#nlc-" + key).onclick = () => clearNL(key);
+  key === "t" ? renderTenders() : key === "c" ? renderCompanies() : renderDeals();
+}
+function clearNL(key) {
+  S.nl[key] = null; $("#askq-" + key).value = ""; const c = $("#nl-" + key); c.hidden = true; c.innerHTML = "";
+  key === "t" ? renderTenders() : key === "c" ? renderCompanies() : renderDeals();
+}
+
+/* ---------- "More info": a research job whose answer appears inside the item's own card ---------- */
+const latestJob = tid => (S.data.jobs || []).filter(j => j.target_id === tid).sort((a, b) => String(b.created).localeCompare(String(a.created)))[0];
+function cardHtml(tid) {
+  const j = latestJob(tid); if (!j) return "";
+  if (j.status === "queued" || j.status === "running") return `<div class="card"><b>${esc(t({ logistics: "a_log", quote: "a_quote", eligibility: "a_elig" }[j.type] || "more_info"))}</b> <span class="spin"></span> ${esc(t("more_wait"))}<div class="note">${esc(t("more_note"))}</div></div>`;
+  if (j.status === "error") return `<div class="card"><b>${esc(t("more_err"))}</b> ${esc(j.notes || "")}</div>`;
+  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${esc(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
+  return "";
+}
+function renderCards() { document.querySelectorAll("[data-jobcard]").forEach(el => { el.innerHTML = cardHtml(el.dataset.jobcard); }); }
+async function moreInfo(job, btn, cardSel, force) {
+  const ex = latestJob(job.target_id);
+  if (!force && ex && ex.status !== "error") { renderCards(); $(cardSel)?.scrollIntoView({ behavior: "smooth", block: "nearest" }); return; }
+  await queueJob(job, btn, cardSel + "-flash");
+  renderCards(); $(cardSel)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+/* ---------- COMPANIES ---------- */
+function setSeg() {
+  $("#cs-sup").setAttribute("aria-pressed", S.compMode === "sup"); $("#cs-acc").setAttribute("aria-pressed", S.compMode === "acc");
+  ["bd", "rep", "mkt"].forEach(m => $("#ds-" + m).setAttribute("aria-pressed", S.dealMode === m));
+}
+const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;
+function renderCompanies() {
+  const sup = SUP(), acc = S.data.accounts || [];
+  $("#c-companies").textContent = sup.length ? sup.length.toLocaleString("en-US") : "";
+  const q = $("#cq").value.trim().toLowerCase(), reg = $("#cregion").value, sec = $("#csector").value, cty = $("#ccountry").value;
+  if (S.compMode === "sup") {
+    fillSelect($("#cregion"), REGIONS); fillSelect($("#csector"), SECTORS); fillCountries($("#ccountry"), sup);
+    $("#crole").disabled = $("#ccontact").disabled = false;
+    const role = $("#crole").value, needC = $("#ccontact").checked;
+    const ts = num((S.data.tot_s_raw || [])[0]);
+    if (isFinite(ts)) $("#c-companies").textContent = ts.toLocaleString("en-US");
+    let rows;
+    const nl = S.nl.c;
+    if (mcp && (q || reg || sec || role || cty || nl)) {
+      const key = JSON.stringify([q, reg, sec, role, needC, cty, nl]);
+      serverSearch("c", key, "'Panel Search'!B1:B7", [[nl ? nl.re : qRegex(q)], [reg], [cty || nl?.country || ""], [sec], [nl?.minq || 0], [needC ? "yes" : ""], [role]], SU, "'Panel Search'!A9:AJ2009", 0);
+      const st = SRV.c;
+      if (st.busy || st.key !== key) { scopeNote("#cscope", `<span class="spin"></span> ${esc(t("searching_all_s", { n: isFinite(ts) ? ts.toLocaleString("en-US") : "" }))}`); $("#clist").innerHTML = ""; return; }
+      if (st.err) { scopeNote("#cscope", ""); $("#clist").innerHTML = `<div class="empty" style="padding:14px">${esc(errText(st.err, SUPS()))}</div>`; return; }
+      const what = nl ? nl.label : q;
+      scopeNote("#cscope", esc(t("found_all_s", { n: st.rows.length.toLocaleString("en-US"), cap: st.rows.length >= 2000 ? t("top2000") : "" })) +
+        (what ? ` <button type="button" id="web-more" class="${st.rows.length < 25 ? "primary" : ""}">${esc(t("web_more"))}</button><div id="web-more-flash"></div>` : ""));
+      const wm = $("#web-more");
+      if (wm) wm.onclick = e => queueJob({ type: "supplier_search", target_id: "S:" + what.toLowerCase().slice(0, 80), target: what, context: { query: q || nl?.label, keywords: nl?.kws || [], country: nl?.country || "", region: reg, sector: sec, role }, request: t("web_more_req") }, e.currentTarget, "#web-more-flash");
+      rows = st.rows;
+    } else {
+      scopeNote("#cscope", esc(t("scope_s", { n: sup.length.toLocaleString("en-US"), all: isFinite(ts) ? ts.toLocaleString("en-US") : "" })));
+    }
+    rows = rows || sup.filter(s => (!cty || s.country === cty) && (!reg || s.region === reg) && (!sec || s.main_sector === sec) && (!needC || hasContact(s))
+      && (!role || (role === "logistics" ? (s.logistics_role || LOGI.test(s.main_sector)) : role === "trader" ? (s.trader === "yes" || /trader/i.test(s.type)) : role === "epc" ? !!s.epc : /goods/i.test(s.type)))
+      && (!q || `${s.supplier} ${s.products} ${s.supplied} ${s.commodities} ${s.industries} ${s.web_title} ${s.country} ${s.logistics_role || ""}`.toLowerCase().includes(q)));
+    listInto("#clist", rows, "c", s => `<span class="score ${num(s.quality) >= 50 ? "hi" : ""}">${esc(s.quality)}</span>
+      <div style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)}</div><div class="sub">${esc(s.country)} · ${esc(s.logistics_role || s.main_sector)}${s.commodities ? " · " + esc(s.commodities) : ""}</div><div class="sub">${txt(String(s.products || s.supplied || "").slice(0, 120))}</div></div>
+      <div class="right"><span class="num">${money(s.won_usd_est)}</span>${s.exports === "yes" ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.notable === "yes" ? `<span class="pill acc">${esc(t("notable"))}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}${hasContact(s) ? `<span class="pill good">${esc(t("contact_p"))}</span>` : ""}</div>`,
+      s => openSupplier(s), S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("e_comp_f"), s => s === S.sel.c);
+  } else {
+    fillSelect($("#cregion"), acc.map(a => a.Region)); fillSelect($("#csector"), acc.map(a => a.Sector));
+    $("#crole").disabled = $("#ccontact").disabled = true; scopeNote("#cscope", "");
+    const rows = acc.filter(a => (!reg || a.Region === reg) && (!sec || a.Sector === sec) && (!q || Object.values(a).join(" ").toLowerCase().includes(q)))
+      .sort((a, b) => (a.Priority === "High" ? 0 : 1) - (b.Priority === "High" ? 0 : 1));
+    listInto("#clist", rows, "c", a => `${prioPill(a.Priority)}<div style="min-width:0"><div class="t">${flag(a.Country)}${esc(a.Account)}</div><div class="sub">${esc(a.Country)} · ${esc(a.Sector)} · ${esc(a["Primary commodity group"])}</div>${a["latest signal"] ? `<div class="sub">${txt(tr(String(a["latest signal"])).slice(0, 160))}</div>` : ""}</div>
+      <div class="right"><span class="sub num">${esc(a["last checked"] || "")}</span><span class="pill">${esc(a["open tenders now"] || 0)} ${esc(t("tenders_n"))}</span></div>`,
+      a => openAccount(a), S.err.accounts ? errText(S.err.accounts, SHEETS) : t("e_acc_f"), a => a === S.sel.c);
+  }
+}
+const kvRows = rows => rows.map(([k, v, raw]) => `<dt>${esc(t(k))}</dt><dd>${raw ? v : txt(v ?? "-")}</dd>`).join("");
+function openSupplier(s) {
+  S.sel.c = s;
+  $("#cdetail").innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span class="pill acc">${esc(t("quality"))} ${esc(s.quality)}</span>${s.tier ? `<span class="pill">Tier ${esc(s.tier)}</span>` : ""}${s.exports === "yes" ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.trader === "yes" ? `<span class="pill warn">${esc(t("trader"))}</span>` : ""}${s.logistics_role ? `<span class="pill acc">${esc(s.logistics_role)}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}</div>
+    <h2>${flag(s.country)}${txt(s.supplier)}</h2>
+    <dl class="kv">${kvRows([
+      ["country", `${s.country} · ${s.region}`], ["field", [s.main_sector, s.other_sectors, s.industries].filter(Boolean).join(" · ")],
+      ["products", s.products || s.web_title || t("not_known")], ["supplied", s.supplied || s.example_award || "-"], ["commodities", s.commodities || "-"],
+      ["won", `<span class="num">${money(s.won_usd_est) || "-"}</span> · ${esc(s.wins)} ${esc(t("wins"))} · ${esc(s.buyers)} ${esc(t("buyers_n"))}${s.buyer_countries ? " · " + esc(t("in_")) + " " + esc(s.buyer_countries) : ""}`, true],
+      ["website", (link(s.website, s.website) || "-") + (s.website_source ? ` <span class="sub">(${esc(s.website_source)})</span>` : ""), true],
+      ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span>`, true],
+      ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources]])}</dl>
+    <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
+    <div id="more-c" data-jobcard="${esc(s.legal_id || s.supplier)}">${cardHtml(s.legal_id || s.supplier)}</div><div id="more-c-flash"></div>
+    <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
+    <div id="c-out"></div>`;
+  $("#c-quick").onclick = () => quickCompany(s);
+  $("#c-deep").onclick = e => moreInfo({ type: "company_research", target_id: s.legal_id || s.supplier, target: `${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "main_sector", "products", "supplied", "commodities", "website", "email", "phone", "address", "legal_id", "sources"]) }, e.currentTarget, "#more-c");
+  $("#c-mail").onclick = () => compose({ kind: "supplier", ctx: { r: s }, to: [s] }, "#c-out");
+  $("#c-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + (s.legal_id || s.supplier), target: `Logistics from ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "address", "products", "supplied", "commodities", "main_sector"]), request: "Shipping options from this supplier's country to Israel, the Gulf and Europe for its main products." }, e.currentTarget, "#more-cl");
+  $("#c-similar").onclick = () => showSuppliers(s.main_sector, `${s.products} ${s.commodities} ${s.supplied}`, "#c-out", { kind: "similar", r: s });
+}
+function openAccount(a) {
+  S.sel.c = a;
+  const open = T().filter(r => a["match keyword"] && `${r.buyer}`.toLowerCase().includes(String(a["match keyword"]).toLowerCase())).slice(0, 8);
+  $("#cdetail").innerHTML = `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">${prioPill(a.Priority)}<span class="pill">${esc(a.status || "Not started")}</span></div>
+    <h2>${flag(a.Country)}${esc(a.Account)}</h2>
+    <dl class="kv">${kvRows([
+      ["country", `${a.Country} · ${a.Region}`], ["sector", a.Sector], ["mainly_buys", [a["Primary commodity group"], a["Also buys"]].filter(Boolean).join(" · ")],
+      ["channel", a["Procurement channel"]], ["verified_page", link(a["verified procurement page"], a["verified procurement page"]) || esc(t("not_checked")), true],
+      ["latest_signal", tr(a["latest signal"]) || "-"], ["next_step", tr(a["next step"]) || "-"], ["sup_in_db", a["suppliers in DB"]]])}</dl>
+    ${open.length ? `<div class="section"><h3>${esc(t("open_from_buyer"))}</h3>${open.map((r, i) => `<div class="sup"><span class="score">${esc(r.fit || r.score)}</span><div><a href="#" data-ot="${i}">${txt(tTitle(r))}</a><div class="sub">${money(r.est_value_usd)} · ${esc(r.deadline)}</div></div></div>`).join("")}</div>` : ""}
+    <div class="actions"><button class="primary" type="button" id="a-deep">${esc(t("more_info"))}</button><button type="button" id="a-mail">${esc(t("acc_mail"))}</button><button type="button" id="a-sup">${esc(t("acc_sup"))}</button></div>
+    <div id="more-c" data-jobcard="${esc(a.Account)}">${cardHtml(a.Account)}</div><div id="more-c-flash"></div>
+    <div id="c-out"></div>`;
+  $("#cdetail").querySelectorAll("[data-ot]").forEach(n => n.onclick = e => { e.preventDefault(); openTender(open[+n.dataset.ot]); });
+  $("#a-deep").onclick = e => moreInfo({ type: "deal_research", target_id: a.Account, target: `Key account: ${a.Account} (${a.Country})`, context: a, request: "Find current procurement plans, open and upcoming tenders, supplier registration steps and the best entry point for Sinder." }, e.currentTarget, "#more-c");
+  $("#a-mail").onclick = () => compose({ kind: "buyer", ctx: { r: a }, to: [] }, "#c-out");
+  $("#a-sup").onclick = () => showSuppliers("", `${a["Primary commodity group"]} ${a["Also buys"]}`, "#c-out", { kind: "account", r: a });
+}
+async function quickCompany(s) {
+  const out = $("#c-out");
+  if (!sample) { out.innerHTML = `<div class="flash err">${esc(t("only_in_claude"))}</div>`; return; }
+  out.innerHTML = `<div class="section"><h3>${esc(t("c_quick"))}</h3><div class="ai" dir="auto" id="cq-out"><span class="spin"></span> ${esc(t("thinking"))}</div><p class="note">${esc(t("quick_note"))}</p></div>`;
+  const prompt = `In ${outLang()}, concise lines starting with "- ", no emojis, no em-dashes. From the data below about a company in Sinder's supplier database, explain: what it most likely makes or supplies, how strong the evidence is (public contract wins, values, buyers, exports), which kinds of Sinder deals it fits (as a supplier for which tenders or buyers), and what to ask in a first call. Say what is unknown. Data: ${JSON.stringify(pick(s, ["supplier", "country", "region", "main_sector", "other_sectors", "type", "logistics_role", "products", "web_title", "supplied", "commodities", "wins", "won_usd_est", "buyers", "buyer_countries", "exports", "first_win", "last_win", "website", "sources", "industries", "employees", "example_award"]))}`;
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#cq-out").textContent = text; }, modelTier: "quick", cache: { gcTime: 3600000 } }); $("#cq-out").textContent = text; }
+  catch (e) { $("#cq-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
+}
+
+/* ---------- DEALS ---------- */
+function dealMatch(r) {
+  const nl = S.nl.d; if (!nl) return true;
+  const blob = Object.values(r).join(" ");
+  if (nl.jsre && !nl.jsre.test(blob)) return false;
+  if (nl.country || nl.cname) { const c = `${r.country || ""} ${r.market || ""}`.toLowerCase(); if (!((nl.country && c.includes(nl.country.toLowerCase())) || (nl.cname && c.includes(nl.cname.toLowerCase())))) return false; }
+  return true;
+}
+function renderDeals() {
+  const q = $("#dq").value.trim().toLowerCase(); let rows;
+  $("#c-deals").textContent = (S.data.bd || []).length || "";
+  scopeNote("#dscope", esc(t("dscope_" + S.dealMode)));
+  if (S.dealMode === "bd") {
+    rows = BD().filter(r => dealMatch(r) && (!q || Object.values(r).join(" ").toLowerCase().includes(q)));
+    listInto("#dlist", rows, "d", r => `${prioPill(r.priority)}<div style="min-width:0"><div class="t">${flag(r.market)}${txt(tr(String(r.opportunity)).slice(0, 180))}</div><div class="sub">${esc(r.market)} · ${esc(r["commodity group"])}</div></div><div class="right"><span class="sub num">${esc(r.date)}</span><span class="pill">${esc(r.status || "new")}</span></div>`, r => openDeal("bd", r), S.err.bd ? errText(S.err.bd, SHEETS) : t("e_bd_all"), r => r === S.sel.d);
+  } else if (S.dealMode === "rep") {
+    rows = (S.data.repeat || []).filter(r => dealMatch(r) && (!q || Object.values(r).join(" ").toLowerCase().includes(q))).sort((a, b) => String(a.next_expected).localeCompare(String(b.next_expected)) || num(b.total_usd) - num(a.total_usd)).filter(r => !r.next_expected || daysBetween(today(), r.next_expected) >= -30);
+    listInto("#dlist", rows, "d", r => `<span class="pill info num">${esc(r.next_expected || "?")}</span><div style="min-width:0"><div class="t">${flag(r.country)}${txt(tr(r.buyer))}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(r.awards_12m)} ${esc(t("awards"))} · ${esc(r.award_months)}</div></div><div class="right"><span class="num">${money(r.total_usd)}</span></div>`, r => openDeal("rep", r), S.err.repeat ? errText(S.err.repeat, SHEETS) : t("e_rep_all"), r => r === S.sel.d);
+  } else {
+    rows = (S.data.markets || []).filter(r => dealMatch(r) && (!q || Object.values(r).join(" ").toLowerCase().includes(q))).sort((a, b) => num(b.signal_score) - num(a.signal_score));
+    listInto("#dlist", rows, "d", r => `<span class="score ${num(r.signal_score) >= 70 ? "hi" : ""}">${esc(r.signal_score)}</span><div style="min-width:0"><div class="t">${flag(r.country)}${esc(r.product)}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(t("imports"))} ${money(r.imports_usd)} (${esc(r.year)})</div></div><div class="right"><span class="pill ${num(r.growth_pct) > 0 ? "good" : "bad"} num">${esc(r.growth_pct)}%</span><span class="sub">${esc(t("premium"))} ${esc(r.premium_vs_benchmark_pct)}%</span></div>`, r => openDeal("mkt", r), S.err.markets ? errText(S.err.markets, SHEETS) : t("e_mkt"), r => r === S.sel.d);
+  }
+}
+const dealId = (mode, r) => mode + ":" + (mode === "mkt" ? `${r.hs6}|${r.country}` : mode === "rep" ? `${r.buyer}|${r.country}` : `${r.date}|${String(r.opportunity).slice(0, 40)}`);
+async function quickDeal(mode, r) {
+  const out = $("#d-out");
+  if (!sample) { out.innerHTML = `<div class="flash err">${esc(t("only_in_claude"))}</div>`; return; }
+  out.innerHTML = `<div class="section"><h3>${esc(t("a_quick"))}</h3><div class="ai" dir="auto" id="dq-out"><span class="spin"></span> ${esc(t("thinking"))}</div></div>`;
+  const kind = mode === "bd" ? "a trade opportunity found by the BD research agent" : mode === "rep" ? "a public buyer that buys the same goods repeatedly (from award history) and is expected to tender again" : "an import market signal (customs data: import value, growth, unit price vs a world benchmark price)";
+  const prompt = `You are Sinder's deal strategist (Israeli international procurement and commodity trading firm that connects global manufacturers with buyers). This is ${kind}. In ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", under these headings: 1. What the deal is (who buys what, roughly how much) 2. Why it can make money (price gap, demand growth, weak competition, timing), with the numbers from the data 3. Realistic economics (deal size, likely gross margin range for this kind of trade, cash and guarantees needed) 4. Main risks 5. The 3 next steps for Sinder this week. Say clearly what is an estimate. Data (JSON): ${JSON.stringify(r).slice(0, 6000)}`;
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#dq-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#dq-out").textContent = text; }
+  catch (e) { $("#dq-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
+}
+function gotoDeal(mode, r) { S.dealMode = mode; setSeg(); go("deals"); renderDeals(); openDeal(mode, r); }
+function openDeal(mode, r) {
+  S.sel.d = r; S.sel.dmode = mode; let head, kv, text;
+  if (mode === "bd") {
+    head = tr(r.opportunity); text = `${r["commodity group"]} ${r.opportunity}`;
+    kv = [["market", r.market], ["commodity", r["commodity group"]], ["why_now", tr(r["why now (evidence)"])], ["demand", tr(r["demand data"])], ["sup_in_db", r["suppliers in DB"]], ["examples", r["example suppliers"]], ["next_step", tr(r["suggested next step"])], ["sources", (r.sources || "").split("|").map(u => link(u.trim(), u.trim().replace(/^https?:\/\//, "").slice(0, 60))).join("<br>"), true]];
+  } else if (mode === "rep") {
+    head = `${tr(r.buyer)}: ${t("expected_tender")} ${r.next_expected || ""}`; text = r.group;
+    kv = [["country", r.country], ["group", r.group], ["awards_12m", r.awards_12m], ["volume", money(r.total_usd)], ["buying_months", r.award_months], ["last_award", r.last_award], ["current_sup", r.current_suppliers], ["avg_bids", r.avg_bids], ["buyer_email", r.buyer_email], ["last_notice", link(r.last_notice, t("open")), true]];
+  } else {
+    head = `${r.product}: ${r.country}`; text = `${r.product} ${r.group}`;
+    kv = [["HS", r.hs6], ["imports", `${money(r.imports_usd)} (${r.year}), ${t("prev_year")} ${money(r.prev_year_usd)}`], ["growth", r.growth_pct + "%"], ["world_share", r.world_share_pct + "%"], ["unit_value", `$${r.unit_value_usd_kg}/kg ${t("vs_bench")} $${r.benchmark_usd_kg}/kg`], ["premium", r.premium_vs_benchmark_pct + "%"], ["source", r.benchmark_source]];
+  }
+  $("#ddetail").innerHTML = `<h2>${flag(mode === "bd" ? r.market : r.country)}${txt(head)}</h2><dl class="kv">${kvRows(kv)}</dl>
+    <div class="actions"><button class="primary" type="button" id="d-quick">${esc(t("a_quick"))}</button><button type="button" id="d-deep">${esc(t("more_info"))}</button><button type="button" id="d-log">${esc(t("a_log"))}</button><button type="button" id="d-sup">${esc(t("a_sup"))}</button><button type="button" id="d-mail">${esc(t("c_mail"))}</button></div>
+    <div id="more-d" data-jobcard="${esc(dealId(mode, r))}">${cardHtml(dealId(mode, r))}</div><div id="more-d-flash"></div>
+    <div id="more-dl" data-jobcard="${esc("L:" + dealId(mode, r))}">${cardHtml("L:" + dealId(mode, r))}</div><div id="more-dl-flash"></div><div id="d-out"></div>`;
+  $("#d-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + dealId(mode, r), target: "Logistics: " + String(head).slice(0, 200), context: r }, e.currentTarget, "#more-dl");
+  $("#d-deep").onclick = e => moreInfo({ type: "deal_research", target_id: dealId(mode, r), target: String(head).slice(0, 200), context: r }, e.currentTarget, "#more-d");
+  $("#d-sup").onclick = () => showSuppliers("", text, "#d-out", { kind: "deal", r });
+  $("#d-quick").onclick = () => quickDeal(mode, r);
+  $("#d-mail").onclick = () => compose({ kind: mode === "rep" ? "buyer" : "rfq", ctx: { r }, to: mode === "rep" && r.buyer_email ? [{ name: r.buyer, email: r.buyer_email }] : [] }, "#d-out");
+}
+
+/* ---------- INTELLIGENCE: verified signals from the market intelligence agent (official, tier-1 and industry
+   sources only) next to what our own official data shows: planned tenders, repeat buyers and import growth ---------- */
+const tierPill = s => /official/i.test(s) ? `<span class="pill good">${esc(t("tier_off"))}</span>` : /tier/i.test(s) ? `<span class="pill info">${esc(t("tier_1"))}</span>` : s ? `<span class="pill">${esc(s)}</span>` : "";
+const sigPill = s => /high/i.test(s) ? `<span class="pill acc">High</span>` : s ? `<span class="pill">${esc(s)}</span>` : "";
+function renderIntel() {
+  const all = (S.data.intel || []).filter(x => !x.valid_until || x.valid_until >= today()).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || (/high/i.test(b.signal) ? 1 : 0) - (/high/i.test(a.signal) ? 1 : 0));
+  fillSelect($("#icat"), all.map(x => x.category)); fillSelect($("#iregion"), all.map(x => x.region));
+  $("#c-intel").textContent = all.length || "";
+  const q = $("#iq").value.trim().toLowerCase(), cat = $("#icat").value, reg = $("#iregion").value, hi = $("#ihigh").checked;
+  const rows = all.filter(x => (!cat || x.category === cat) && (!reg || x.region === reg) && (!hi || /high/i.test(x.signal)) && (!q || Object.values(x).join(" ").toLowerCase().includes(q)));
+  scopeNote("#iscope", esc(t("iscope")));
+  const H = x => LANG === "he" ? (x.headline_he || x.headline_en) : (x.headline_en || tr(x.headline_he));
+  const W = x => LANG === "he" ? (x.what_it_means_he || x.what_it_means_en) : (x.what_it_means_en || tr(x.what_it_means_he));
+  const el = $("#ilist");
+  if (!rows.length) el.innerHTML = `<div class="empty" style="padding:14px">${esc(S.err.intel ? errText(S.err.intel, SHEETS) : t("e_intel"))}</div>`;
+  else el.innerHTML = rows.slice(0, 200).map((x, i) => `<div class="row" style="cursor:default;grid-template-columns:minmax(0,1fr)"><div style="min-width:0">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">${sigPill(x.signal)}<span class="pill">${esc(x.category)}</span>${tierPill(x.source_tier)}<span class="sub num">${esc(x.date)}${x.event_date ? " · " + esc(t("event")) + " " + esc(x.event_date) : ""}</span></div>
+      <div class="t">${flag(x.country)}${txt(H(x))}</div>
+      <div class="sub" style="margin-top:3px">${txt(W(x))}</div>
+      <div class="sub" style="margin-top:3px">${esc(x.country)}${x.commodity_group ? " · " + esc(x.commodity_group) : ""} · ${link(x.url, x.source_name || x.url)}</div>
+      <div class="actions" style="margin:8px 0 0"><button type="button" data-ii="${i}" data-act="deep">${esc(t("more_info"))}</button><button type="button" data-ii="${i}" data-act="sup">${esc(t("a_sup"))}</button><button type="button" data-ii="${i}" data-act="log">${esc(t("a_log"))}</button></div>
+      <div id="intel-card-${i}" data-jobcard="${esc("I:" + x.id)}">${cardHtml("I:" + x.id)}</div><div id="intel-card-${i}-flash"></div><div id="intel-log-${i}" data-jobcard="${esc("LI:" + x.id)}">${cardHtml("LI:" + x.id)}</div><div id="intel-log-${i}-flash"></div><div id="intel-out-${i}"></div>
+    </div></div>`).join("");
+  el.querySelectorAll("[data-act]").forEach(b => b.onclick = e => {
+    const x = rows[+b.dataset.ii], i = b.dataset.ii;
+    if (b.dataset.act === "deep") moreInfo({ type: "deal_research", target_id: "I:" + x.id, target: String(x.headline_en || x.headline_he).slice(0, 200), context: x }, e.currentTarget, "#intel-card-" + i);
+    else if (b.dataset.act === "sup") showSuppliers("", `${x.commodity_group} ${x.headline_en}`, "#intel-out-" + i, { kind: "deal", r: x });
+    else moreInfo({ type: "logistics", target_id: "LI:" + x.id, target: "Logistics: " + String(x.headline_en || "").slice(0, 180), context: x }, e.currentTarget, "#intel-log-" + i);
+  });
+  // official-data side panels
+  const up = (S.data.upcoming || []).slice(0, 12);
+  mini("#i-up", up, r => [`<span class="pill info">${esc(t("planned"))}</span>`, `<div class="t">${flag(r.country)}${txt(tTitle(r))}</div><div class="sub">${txt(tr(r.buyer))} · ${esc(r.source)}</div>`, `<div class="num">${money(r.est_value_usd)}</div>`], r => openTender(r), t("e_up"));
+  const rep = (S.data.repeat || []).filter(r => r.next_expected && daysBetween(today(), r.next_expected) >= -5 && daysBetween(today(), r.next_expected) <= 60).sort((a, b) => num(b.total_usd) - num(a.total_usd)).slice(0, 8);
+  mini("#i-rep", rep, r => [`<span class="pill info num">${esc(r.next_expected)}</span>`, `<div class="t">${flag(r.country)}${txt(tr(r.buyer))}</div><div class="sub">${esc(r.group)}</div>`, `<div class="num">${money(r.total_usd)}</div>`], r => gotoDeal("rep", r), t("e_rep"));
+  const grow = (S.data.markets || []).filter(r => num(r.imports_usd) >= 2e7 && num(r.growth_pct) > 15).sort((a, b) => num(b.growth_pct) * Math.log10(num(b.imports_usd)) - num(a.growth_pct) * Math.log10(num(a.imports_usd))).slice(0, 8);
+  mini("#i-grow", grow, r => [`<span class="pill good num">+${esc(Math.round(num(r.growth_pct)))}%</span>`, `<div class="t">${flag(r.country)}${esc(r.product)}</div><div class="sub">${esc(r.country)} · ${money(r.imports_usd)} (${esc(r.year)})</div>`, ``], r => gotoDeal("mkt", r), t("e_mkt"));
+}
+
+/* ---------- JOBS ---------- */
+const statusPill = s => s === "done" ? `<span class="pill good">${esc(t("ready"))}</span>` : s === "running" ? `<span class="pill info">${esc(t("running"))}</span>` : s === "queued" ? `<span class="pill warn">${esc(t("queued"))}</span>` : s === "error" ? `<span class="pill bad">${esc(t("error"))}</span>` : `<span class="pill">${esc(s)}</span>`;
+function renderJobsCount() { const n = (S.data.jobs || []).filter(j => j.status === "queued" || j.status === "running").length; $("#c-jobs").textContent = n ? n : ""; }
+function renderJobs(openId) {
+  renderJobsCount();
+  const jobs = (S.data.jobs || []).slice().sort((a, b) => String(b.created).localeCompare(String(a.created)));
+  const el = $("#jlist");
+  if (!jobs.length) { el.innerHTML = `<div class="empty" style="padding:14px">${esc(S.err.jobs ? errText(S.err.jobs, SHEETS) : t("e_jobs"))}</div>`; return; }
+  el.innerHTML = jobs.map(j => `<div class="row" style="cursor:default">${statusPill(j.status)}<div style="min-width:0"><div class="t">${esc(t("jt_" + j.type))}: ${txt(j.target)}</div><div class="sub num">${esc(j.job_id)} · ${esc(j.created)}</div>
+    ${j.result ? `<details ${j.job_id === openId ? "open" : ""}><summary class="sub" style="cursor:pointer">${esc(t("result"))}</summary><div class="result" dir="auto">${esc(j.result)}</div>${j.result_link ? `<div style="margin-top:6px">${link(j.result_link, t("link"))}</div>` : ""}</details>` : ""}${j.notes && j.status === "error" ? `<div class="sub">${esc(j.notes)}</div>` : ""}</div>
+    <div class="right"><span class="sub num">${esc(j.updated)}</span></div></div>`).join("");
+}
+
+/* ---------- navigation and wiring ---------- */
+const VIEWS = ["today", "tenders", "companies", "deals", "intel", "jobs"];
+function go(v) {
+  S.view = v; document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v));
+  document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== "v-" + v);
+  try { localStorage.setItem("sinder-panel-view", v); } catch (e) {}
+  if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
+}
+function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => { go(b.dataset.goto); renderJobs(); }); }
+function renderAll() { renderStatus(); renderToday(); renderTenders(); renderCompanies(); renderDeals(); renderIntel(); renderJobs(); wireGoto(document); }
+
+document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
+["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
+["#cq", "#cregion", "#ccountry", "#csector", "#crole", "#ccontact"].forEach(s => $(s).addEventListener("input", () => { S.limit.c = 60; renderCompanies(); }));
+$("#dq").addEventListener("input", () => { S.limit.d = 60; renderDeals(); });
+["#iq", "#icat", "#iregion", "#ihigh"].forEach(s_ => $(s_).addEventListener("input", renderIntel));
+$("#cs-sup").onclick = () => { S.compMode = "sup"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
+$("#cs-acc").onclick = () => { S.compMode = "acc"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
+["bd", "rep", "mkt"].forEach(m => $("#ds-" + m).onclick = () => { S.dealMode = m; setSeg(); S.limit.d = 60; renderDeals(); });
+["t", "c", "d"].forEach(k => $("#ask-" + k).addEventListener("submit", e => { e.preventDefault(); askSubmit(k); }));
+$("#tq").addEventListener("input", () => { if (S.nl.t) { S.nl.t = null; $("#nl-t").hidden = true; } });
+$("#cq").addEventListener("input", () => { if (S.nl.c) { S.nl.c = null; $("#nl-c").hidden = true; } });
+$("#lang-en").onclick = () => setLang("en");
+$("#lang-he").onclick = () => setLang("he");
+$("#refresh").onclick = () => mcp ? loadAll(true) : null;
+$("#jobs-refresh").onclick = async () => { if (!mcp) return; await load("jobs", true); renderJobs(); renderToday(); };
+$("#jobform").addEventListener("submit", e => {
+  e.preventDefault(); if (!mcp) return;
+  queueJob({ type: $("#jtype").value, target: $("#jtarget").value.trim(), request: $("#jreq").value.trim(), context: {} }, $("#jsubmit"), "#jflash")
+    .then(() => { $("#jsubmit").disabled = false; $("#jtarget").value = ""; $("#jreq").value = ""; renderJobs(); });
+});
+try { const l = localStorage.getItem("sinder-panel-lang"); if (l === "he" || l === "en") LANG = l; } catch (e) {}
+applyLang();
+setStatus(`<span class="spin" aria-hidden="true"></span> ${esc(t("loading"))}`);
+["#t-tenders", "#t-deals", "#t-repeat", "#t-accounts", "#t-companies", "#t-jobs"].forEach(s => { $(s).innerHTML = `<div class="empty">${esc(t("loading"))}</div>`; });
+let start = "today"; try { start = (location.hash || "").slice(1) || localStorage.getItem("sinder-panel-view") || "today"; } catch (e) {}
+if (!VIEWS.includes(start)) start = "today";
+go(start);
+window.addEventListener("hashchange", () => { const v = location.hash.slice(1); if (VIEWS.includes(v)) go(v); });
+
+(async () => {
+  const c = window.claude;
+  if (!c || typeof c.use !== "function") { showNoConn("open_in_claude"); return; }
+  [mcp, sample] = await Promise.all([c.use("mcp").catch(() => null), c.use("sample").catch(() => null)]);
+  if (!mcp) { showNoConn("need_connectors"); return; }
+  loadAll(false);
+  setInterval(async () => { if (document.hidden || !mcp) return; if (!(S.data.jobs || []).some(j => j.status === "queued" || j.status === "running")) return; await load("jobs", true); renderJobs(); renderToday(); renderCards(); }, 30000);
+})();
+})();
+</script>
+
+</body></html>

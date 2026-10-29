@@ -57,7 +57,7 @@ export default async function Explore({ searchParams }: { searchParams: Promise<
           {" "}Volume alone is misleading: Europe has the most tenders, but the money per deal is often higher where competition is thinner.
         </p>
       </section>
-      <FilterBar fields={fields} values={p} action="/explore" sort={measure === "n" ? "n" : measure} sortName="by" sortLabel="Rank by" sortOptions={[["n", "Number of tenders"], ["ev", "Expected value (Pursue)"], ["value", "Stated value"]]} />
+      <FilterBar fields={fields} values={p} action="/explore" sort={measure} sortName="by" sortLabel="Rank by" sortOptions={[["n", "Number of tenders"], ["ev", "Expected value (Pursue)"], ["value", "Stated value"]]} />
 
       <section className="grid gap-6 md:grid-cols-2">
         <div className="rounded-xl border border-line bg-white p-5 shadow-sm">

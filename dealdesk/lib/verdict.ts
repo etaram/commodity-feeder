@@ -2,7 +2,6 @@ import { num, usd, type Row } from "@/lib/data";
 
 export type Verdict = { action: string; tone: "go" | "watch" | "no"; reasons: string[]; risks: string[]; next: string };
 
-/** Plain-language bottom line for one deal, built only from the engine's own numbers. */
 export function verdict(d: Row): Verdict {
   const days = d.days_left === "" ? null : num(d.days_left);
   const ev = num(d.ev_usd), p = num(d.p_win_market), net = num(d.net_margin_pct), value = num(d.deal_value_usd);
@@ -39,7 +38,6 @@ export function verdict(d: Row): Verdict {
   return { action, tone, reasons: reasons.slice(0, 4), risks: risks.slice(0, 4), next };
 }
 
-/** Bottom line for a set of deals (Today screen). */
 export function portfolioLine(deals: Row[]) {
   const pursue = deals.filter((d) => d.decision === "Pursue");
   const ev = pursue.reduce((s, d) => s + num(d.ev_usd), 0);
