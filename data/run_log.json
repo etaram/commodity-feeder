@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-29T00:52:02",
+  "finished_utc": "2026-10-29T11:48:38",
   "fx_source": "ECB via Frankfurter 2026-10-28",
   "fx": {
     "EUR": 1.1133006022956258,
@@ -40,27 +40,27 @@
     },
     "em_global": {
       "ok": true,
-      "prices": 21,
-      "sec": 27,
+      "prices": 22,
+      "sec": 53,
       "newest_date": "2026-10-29",
       "log": [
         "INFO em_global board: 640 rows",
-        "INFO em_global: 21 prices"
+        "INFO em_global: 22 prices"
       ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
       "sec": 2,
-      "newest_date": "2026-10-28",
+      "newest_date": "2026-10-29",
       "log": [
-        "INFO cn_spot: 52 prices (2026-10-28)"
+        "INFO cn_spot: 52 prices (2026-10-29)"
       ]
     },
     "eu_agri": {
       "ok": true,
       "prices": 64,
-      "sec": 12,
+      "sec": 18,
       "newest_date": "2026-10-31",
       "log": [
         "INFO eu_agri: 64 prices"
@@ -69,7 +69,7 @@
     "dtn": {
       "ok": true,
       "prices": 7,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-10-23",
       "log": [
         "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/10/28/fertilizer-prices-continue-climb-6"
@@ -96,7 +96,7 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 3,
+      "sec": 0,
       "newest_date": "2026-10-28",
       "log": [
         "INFO smi: 5 prices (as of 2026-10-28)"
@@ -105,7 +105,7 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 10,
+      "sec": 12,
       "newest_date": "2026-10-28",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -135,7 +135,7 @@
     "comext": {
       "ok": true,
       "prices": 1918,
-      "sec": 57,
+      "sec": 56,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -145,7 +145,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 14,
+      "sec": 12,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 25 HS codes still missing",
@@ -155,13 +155,13 @@
     }
   },
   "rows_with_price": 1962,
-  "candidates": 2197,
-  "flagged": 229,
+  "candidates": 2198,
+  "flagged": 227,
   "by_source_selected": {
-    "yahoo": 32,
+    "yahoo": 31,
     "westmetall": 6,
-    "em_global": 3,
-    "cn_spot": 32,
+    "em_global": 4,
+    "cn_spot": 31,
     "eu_agri": 50,
     "dtn": 7,
     "ssb": 2,
@@ -171,12 +171,12 @@
     "census": 0,
     "comext": 1727,
     "comtrade": 3,
-    "derived": 29
+    "derived": 30
   },
   "by_tier": {
-    "T1 Exchange benchmark": 78,
+    "T1 Exchange benchmark": 79,
     "T2 Official market reporting": 81,
-    "T3 Industry assessment": 73,
+    "T3 Industry assessment": 72,
     "T4 Trade statistics (unit value)": 1730
   }
 }
