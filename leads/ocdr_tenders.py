@@ -11,6 +11,7 @@ import datetime as dt
 import gzip
 import io
 import json
+import re
 import time
 
 from .common import LEADS, log, session, today
@@ -23,6 +24,17 @@ EU = {"AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU
       "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE"}
 COVERED = EU | {"UKR", "PRY", "DOM", "COL", "BRA", "GBR", "KEN", "ZAF", "CAN", "AUS", "USA", "ISR", "SAU", "OMN", "QAT"}
 CLOSED = {"complete", "cancelled", "unsuccessful", "withdrawn"}
+# direct awards, quotations and restricted procedures are not open to a foreign supplier
+NOT_OPEN = re.compile(r"direct|baja cuant|cotizaci|ínfima|infima|menor cuant|limited|restricted|privad|selectiva|"
+                      r"negociad|single source|sole source|shopping|request for quotation|\brfq\b", re.I)
+
+
+def keep(row, today_s):
+    if NOT_OPEN.search(row.get("notice_type") or ""):
+        return False
+    if row.get("deadline"):
+        return row["deadline"] >= today_s
+    return (row.get("published") or "") >= str(today() - dt.timedelta(days=30))  # no deadline: recent notices only
 
 
 def _read(s, pub, year, today_s, t_end):
@@ -53,8 +65,8 @@ def _read(s, pub, year, today_s, t_end):
             row = tender_row(rel, source=src, prefix=f"OCT{pub['id']}", country=pub["iso"], today_s=today_s)
             if not row or not (row["title"] or "").strip():
                 continue
-            if not row["deadline"] and (row["published"] or "") < str(today() - dt.timedelta(days=60)):
-                continue  # no deadline and old: most likely closed without a later release in this file
+            if not keep(row, today_s):
+                continue
             if not row["link"]:
                 row["link"] = f"{BASE}/publication/{pub['id']}"
             prev = rows.get(ocid)
@@ -91,7 +103,7 @@ def fetch():
             log.info("OCDR tenders %s %s %s: %d open of %d releases", p["id"], p["iso"], year, len(res[0]), res[1])
     out = []
     for v in store.values():  # keep only rows still open
-        v["rows"] = [r for r in v.get("rows", []) if not r.get("deadline") or r["deadline"] >= today_s]
+        v["rows"] = [r for r in v.get("rows", []) if keep(r, today_s)]
         out += v["rows"]
     CACHE.parent.mkdir(parents=True, exist_ok=True)
     CACHE.write_text(json.dumps(cache, ensure_ascii=False))
