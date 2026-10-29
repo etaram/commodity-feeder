@@ -104,6 +104,19 @@ def _model(lang, to="en"):
     return m
 
 
+REPEAT = re.compile(r"(.{3,15}?)\1{3,}")
+
+
+def sane(src, out):
+    """Machine translation sometimes loops ("mainstremainstremain..."). Reject such output."""
+    if not out:
+        return False
+    if REPEAT.search(out) or len(out) > 2.5 * len(src) + 40:
+        return False
+    w = out.split()
+    return not (len(w) > 8 and len(set(w)) / len(w) < 0.35)
+
+
 def _translate_batch(lang, texts, to="en"):
     m = _model(lang, to)
     if not m:
@@ -112,7 +125,8 @@ def _translate_batch(lang, texts, to="en"):
         return [m[1].translate(x[:400]) for x in texts]
     tr, sp = m
     toks = sp.encode([t[:400] for t in texts], out_type=str)
-    res = tr.translate_batch(toks, beam_size=2, max_batch_size=64, max_decoding_length=160)
+    res = tr.translate_batch(toks, beam_size=2, max_batch_size=64, max_decoding_length=160,
+                             no_repeat_ngram_size=4, repetition_penalty=1.15)
     return [sp.decode(r.hypotheses[0]).replace("\u2581", " ").strip() for r in res]
 
 
@@ -129,7 +143,7 @@ def translate_rows(rows, field="title", budget_sec=1500):
         if lang == "en" or lang not in SUPPORTED:
             r["title_en"] = text; continue
         k = _key(text)
-        if k in cache:
+        if k in cache and sane(text, cache[k]):
             r["title_en"] = cache[k]; continue
         r["title_en"] = ""
         pending.setdefault(lang, []).append((k, text, r))
@@ -142,9 +156,11 @@ def translate_rows(rows, field="title", budget_sec=1500):
                 outs = _translate_batch(lang, [x[1] for x in chunk])
             except Exception as e:  # noqa: BLE001
                 log.warning("translate %s: %s", lang, e); break
-            for (k, _, r), en in zip(chunk, outs):
-                if en:
+            for (k, src, r), en in zip(chunk, outs):
+                if sane(src, en):
                     cache[k] = en; r["title_en"] = en; done += 1
+                else:
+                    r["title_en"] = src  # keep the original rather than a broken translation
     save(cache)
     left = sum(1 for items in pending.values() for x in items if not x[2]["title_en"])
     log.info("translations: %d new, %d pending, cache %d, %.0fs", done, left, len(cache), time.time() - t0)
@@ -180,7 +196,7 @@ def to_hebrew(rows, limit=6000, budget_sec=900):
         if not en:
             continue
         k = _key(en)
-        if k in cache:
+        if k in cache and sane(en, cache[k]):
             out[r["id"]] = cache[k]
         else:
             todo.append((r["id"], k, en))
@@ -193,8 +209,8 @@ def to_hebrew(rows, limit=6000, budget_sec=900):
             res = _translate_batch("en", [x[2] for x in chunk], to="he")
         except Exception as e:  # noqa: BLE001
             log.warning("hebrew titles: %s", e); break
-        for (rid, k, _), he in zip(chunk, res):
-            if he:
+        for (rid, k, src), he in zip(chunk, res):
+            if sane(src, he):
                 cache[k] = he; out[rid] = he; done += 1
     PHE.write_text("\n".join(json.dumps({"k": k, "he": v}, ensure_ascii=False) for k, v in sorted(cache.items())) + "\n",
                    encoding="utf-8")
