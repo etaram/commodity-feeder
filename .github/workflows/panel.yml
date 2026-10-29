@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: "35 * * * *"
   workflow_dispatch:
+    inputs:
+      parts:
+        description: "static, live or both"
+        required: false
+        default: "live"
 permissions:
   contents: write
 concurrency:
@@ -20,12 +25,12 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -q requests google-auth cryptography
-      - run: python -m leads.webpanel live
+      - run: python -m leads.webpanel ${{ inputs.parts || 'live' }}
       - name: commit
         run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/web/panel_live.enc data/web/panel_live.sha 2>/dev/null || true
+          git add data/web/panel_*.enc data/web/panel_*.sha 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m "panel: $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3 4; do git pull --rebase -X theirs origin main && git push && break; sleep 7; done
