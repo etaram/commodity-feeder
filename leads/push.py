@@ -201,11 +201,13 @@ def main():
         pre = [r for r in lay.get("pre_requests", []) if r.get("addSheet", {}).get("properties", {}).get("title") not in ids]
         if pre:
             sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": pre})
-        for rng in lay.get("clear", []):
-            sh._req("POST", f"{API}/{a[1]}/values/{quote(rng)}:clear", json={})
-        for v in lay.get("values", []):
-            sh._req("PUT", f"{API}/{a[1]}/values/{quote(v['range'])}", params={"valueInputOption": "USER_ENTERED"},
-                    json={"values": v["rows"]})
+        if lay.get("clear"):
+            sh._req("POST", f"{API}/{a[1]}/values:batchClear", json={"ranges": lay["clear"]})
+        vals = lay.get("values", [])
+        for i in range(0, len(vals), 40):
+            sh._req("POST", f"{API}/{a[1]}/values:batchUpdate",
+                    json={"valueInputOption": "USER_ENTERED",
+                          "data": [{"range": v["range"], "values": v["rows"]} for v in vals[i:i + 40]]})
         reqs = lay.get("requests", [])
         for i in range(0, len(reqs), 200):
             sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": reqs[i:i + 200]})
