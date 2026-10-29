@@ -1,10 +1,10 @@
 sector,region,open_notices,new_48h,with_value,total_value_usd,median_value_usd,countries,sources
-All sectors,All regions,41482,41482,9472,75604690505,631362,208,26
-All sectors,Europe,28696,28696,6976,65661605779,656540,50,11
-All sectors,North America,6855,6855,3,10643760,3900960,3,6
+All sectors,All regions,41513,41513,9473,75604787439,631307,208,26
+All sectors,Europe,28697,28697,6977,65661702713,656476,50,11
+All sectors,North America,6856,6856,3,10643760,3900960,3,6
 All sectors,Latin America,3192,3192,2489,9898877174,526818,21,9
-All sectors,Sub-Saharan Africa,1320,1320,1,1671840,1671840,51,8
-All sectors,Middle East & North Africa,559,559,0,0,,22,9
+All sectors,Sub-Saharan Africa,1327,1327,1,1671840,1671840,51,8
+All sectors,Middle East & North Africa,581,581,0,0,,22,9
 All sectors,Israel,205,205,0,0,,1,3
 All sectors,South Asia,162,162,0,0,,8,4
 All sectors,Oceania,136,136,0,0,,3,3
@@ -13,29 +13,29 @@ All sectors,CIS & Central Asia,116,116,0,0,,12,6
 All sectors,Southeast Asia,93,93,1,2229120,2229120,8,5
 All sectors,East Asia,24,24,1,2109112,2109112,4,4
 Building construction works,All regions,6085,6085,1007,8748932979,857899,98,25
-ICT & telecom,All regions,3274,3274,920,6069188849,685806,94,24
-Healthcare & pharmaceuticals,All regions,2980,2980,1200,12580778585,714088,84,25
+ICT & telecom,All regions,3277,3277,920,6069188849,685806,94,24
+Healthcare & pharmaceuticals,All regions,2989,2989,1200,12580778585,714088,84,25
 Engineering & architecture services,All regions,2486,2486,607,2217342981,504075,60,22
 "Consulting, business & financial services",All regions,2464,2464,703,3782689662,469972,96,23
-Power & electrical equipment,All regions,2285,2285,301,2444157418,587659,84,24
-"Environment, waste & cleaning",All regions,2178,2178,466,3126833133,826262,71,23
-Other,All regions,2111,2111,137,2518436108,1006003,98,20
+Power & electrical equipment,All regions,2286,2286,301,2444157418,587659,85,25
+"Environment, waste & cleaning",All regions,2180,2180,466,3126833133,826262,71,23
+Other,All regions,2120,2120,137,2518436108,1006003,98,20
 "Vehicles, rolling stock, ships & aircraft",All regions,2100,2100,419,5296671669,456970,69,24
 "Repair, maintenance & installation",All regions,2012,2012,487,3775309756,698703,68,23
 Transport & civil infrastructure works,All regions,1878,1878,358,5238147871,948240,102,21
-Industrial & construction machinery,All regions,1812,1812,236,187687524,307250,69,23
-"Education, social & hospitality services",All regions,1468,1468,391,2770460978,601810,91,23
-Defence & security,All regions,1311,1311,222,1535589864,1174518,54,22
-Agriculture & food,All regions,1278,1278,444,2188689978,656516,69,21
+Industrial & construction machinery,All regions,1813,1813,236,187687524,307250,69,23
+"Education, social & hospitality services",All regions,1469,1469,391,2770460978,601810,91,23
+Defence & security,All regions,1312,1312,222,1535589864,1174518,54,22
+Agriculture & food,All regions,1279,1279,444,2188689978,656516,69,21
 Construction materials & building systems,All regions,1060,1060,246,494775757,367835,48,19
 Water & wastewater,All regions,1024,1024,208,1832629850,916259,77,22
 "Furniture, appliances & consumer goods",All regions,991,991,329,918423883,296548,65,21
-Scientific & measuring instruments,All regions,762,762,195,2580350586,359521,51,20
-"Energy, fuels & utilities",All regions,589,589,189,1614468208,675047,39,20
+Scientific & measuring instruments,All regions,763,763,195,2580350586,359521,52,21
+"Energy, fuels & utilities",All regions,590,590,190,1614565142,662144,39,20
 Transport & logistics services,All regions,566,566,192,5145847157,642218,53,21
 "Textiles, apparel & leather",All regions,431,431,107,249933469,535832,46,19
 Chemicals & plastics,All regions,220,220,76,260969385,515494,33,16
-"Mining, minerals & metals",All regions,117,117,32,26374855,382572,25,16
+"Mining, minerals & metals",All regions,118,118,32,26374855,382572,25,16
 Building construction works,Europe,5255,5255,701,7868923646,1058832,36,10
 ICT & telecom,Europe,2600,2600,788,5747679974,721120,36,10
 Engineering & architecture services,Europe,2274,2274,523,2141746089,557280,35,7
@@ -62,7 +62,7 @@ Industrial & construction machinery,Europe,512,512,163,145225084,300931,31,9
 Construction materials & building systems,North America,478,478,0,0,,2,2
 Scientific & measuring instruments,Europe,461,461,128,486198821,372348,29,7
 Transport & logistics services,Europe,451,451,163,5132175020,724464,32,8
-"Energy, fuels & utilities",Europe,446,446,146,1272120818,694505,24,8
+"Energy, fuels & utilities",Europe,447,447,147,1272217752,686569,24,8
 Construction materials & building systems,Europe,409,409,134,339503856,367073,29,6
 "Repair, maintenance & installation",North America,341,341,0,0,,3,4
 Building construction works,Latin America,326,326,306,880009333,766676,5,6
@@ -71,8 +71,8 @@ ICT & telecom,North America,269,269,0,0,,2,2
 Other,Latin America,247,247,132,2481261786,1084486,12,6
 Agriculture & food,Latin America,237,237,181,390583799,512244,5,5
 Building construction works,North America,201,201,0,0,,2,2
+Other,Sub-Saharan Africa,198,198,0,0,,29,6
 Building construction works,Sub-Saharan Africa,197,197,0,0,,21,5
-Other,Sub-Saharan Africa,195,195,0,0,,29,6
 Transport & civil infrastructure works,North America,195,195,0,0,,2,2
 Scientific & measuring instruments,North America,188,188,0,0,,2,2
 ICT & telecom,Latin America,180,180,132,321508875,593044,7,7
@@ -91,21 +91,21 @@ Defence & security,Latin America,105,105,99,318217576,1334647,6,7
 Industrial & construction machinery,Latin America,95,95,73,42462440,329803,8,6
 Engineering & architecture services,Latin America,92,92,84,75596892,170487,6,6
 "Vehicles, rolling stock, ships & aircraft",Latin America,91,91,70,114665377,382255,7,7
-ICT & telecom,Sub-Saharan Africa,89,89,0,0,,19,4
+ICT & telecom,Sub-Saharan Africa,90,90,0,0,,19,4
 Water & wastewater,Latin America,88,88,72,248949411,916259,6,4
+Healthcare & pharmaceuticals,Middle East & North Africa,85,85,0,0,,8,5
 "Education, social & hospitality services",North America,82,82,0,0,,3,3
 Scientific & measuring instruments,Latin America,81,81,66,2066598045,242773,4,4
 Engineering & architecture services,North America,81,81,0,0,,2,2
 "Consulting, business & financial services",Sub-Saharan Africa,76,76,1,1671840,1671840,22,5
-Healthcare & pharmaceuticals,Middle East & North Africa,76,76,0,0,,8,5
 ICT & telecom,Middle East & North Africa,74,74,0,0,,8,4
 Power & electrical equipment,Latin America,71,71,54,105867267,607738,9,7
 "Textiles, apparel & leather",Latin America,71,71,57,133760018,373881,7,5
 "Environment, waste & cleaning",Latin America,70,70,61,388639234,693076,6,7
+Healthcare & pharmaceuticals,Sub-Saharan Africa,70,70,0,0,,16,5
 Water & wastewater,Sub-Saharan Africa,70,70,0,0,,14,5
 "Energy, fuels & utilities",North America,69,69,0,0,,2,2
 "Education, social & hospitality services",Sub-Saharan Africa,69,69,0,0,,23,4
-Healthcare & pharmaceuticals,Sub-Saharan Africa,68,68,0,0,,16,5
 "Furniture, appliances & consumer goods",North America,68,68,0,0,,3,3
 Agriculture & food,North America,66,66,0,0,,2,2
 "Textiles, apparel & leather",North America,63,63,0,0,,2,2
@@ -113,39 +113,39 @@ Other,Israel,62,62,0,0,,1,2
 Building construction works,Middle East & North Africa,55,55,0,0,,14,6
 Transport & logistics services,North America,55,55,0,0,,2,3
 Power & electrical equipment,Sub-Saharan Africa,54,54,0,0,,18,5
+Industrial & construction machinery,Middle East & North Africa,53,53,0,0,,5,4
 "Repair, maintenance & installation",Sub-Saharan Africa,52,52,0,0,,14,4
-Industrial & construction machinery,Middle East & North Africa,52,52,0,0,,5,4
+Other,Middle East & North Africa,50,50,0,0,,13,7
 "Energy, fuels & utilities",Latin America,49,49,43,342347390,522927,4,5
 Water & wastewater,North America,45,45,0,0,,2,2
 "Mining, minerals & metals",Europe,44,44,11,7464458,411121,14,6
 Transport & civil infrastructure works,CIS & Central Asia,44,44,0,0,,7,5
-Other,Middle East & North Africa,44,44,0,0,,13,7
+"Environment, waste & cleaning",Middle East & North Africa,43,43,0,0,,4,4
 "Environment, waste & cleaning",Sub-Saharan Africa,41,41,0,0,,13,4
 Transport & civil infrastructure works,Middle East & North Africa,41,41,0,0,,10,6
-"Environment, waste & cleaning",Middle East & North Africa,41,41,0,0,,4,4
 Transport & civil infrastructure works,South Asia,38,38,0,0,,6,4
 Industrial & construction machinery,Sub-Saharan Africa,38,38,0,0,,14,4
-"Mining, minerals & metals",North America,35,35,0,0,,2,2
+"Mining, minerals & metals",North America,36,36,0,0,,2,2
+Agriculture & food,Sub-Saharan Africa,35,35,0,0,,14,4
 Chemicals & plastics,North America,35,35,0,0,,2,2
 Water & wastewater,Middle East & North Africa,35,35,0,0,,8,6
-Agriculture & food,Sub-Saharan Africa,34,34,0,0,,14,4
 Other,Oceania,33,33,0,0,,2,2
 Transport & logistics services,Latin America,31,31,29,13672137,37873,4,4
 Water & wastewater,CIS & Central Asia,31,31,0,0,,6,4
 "Mining, minerals & metals",Latin America,28,28,21,18910397,273527,4,4
-"Education, social & hospitality services",Middle East & North Africa,24,24,0,0,,9,4
+"Education, social & hospitality services",Middle East & North Africa,25,25,0,0,,9,4
 "Repair, maintenance & installation",Israel,24,24,0,0,,1,3
 "Furniture, appliances & consumer goods",Sub-Saharan Africa,23,23,0,0,,10,4
 Scientific & measuring instruments,Sub-Saharan Africa,23,23,0,0,,8,4
 "Vehicles, rolling stock, ships & aircraft",Middle East & North Africa,23,23,0,0,,8,5
 "Consulting, business & financial services",Other,23,23,0,0,,11,2
-Healthcare & pharmaceuticals,Israel,23,23,0,0,,1,2
 "Vehicles, rolling stock, ships & aircraft",Sub-Saharan Africa,21,21,0,0,,9,4
 Engineering & architecture services,Sub-Saharan Africa,21,21,0,0,,7,4
 Chemicals & plastics,Latin America,21,21,15,4740843,29968,3,3
+Healthcare & pharmaceuticals,Israel,21,21,0,0,,1,2
+ICT & telecom,Israel,21,21,0,0,,1,2
 Construction materials & building systems,Sub-Saharan Africa,20,20,0,0,,6,5
 "Energy, fuels & utilities",Sub-Saharan Africa,19,19,0,0,,5,4
-ICT & telecom,Israel,19,19,0,0,,1,2
 Other,Other,18,18,0,0,,11,4
 "Furniture, appliances & consumer goods",Middle East & North Africa,17,17,0,0,,5,3
 "Consulting, business & financial services",Middle East & North Africa,16,16,0,0,,6,5
@@ -164,15 +164,15 @@ Building construction works,Other,13,13,0,0,,5,1
 Transport & logistics services,Sub-Saharan Africa,12,12,0,0,,3,2
 Water & wastewater,South Asia,12,12,0,0,,3,3
 Building construction works,South Asia,12,12,0,0,,6,3
+Power & electrical equipment,Middle East & North Africa,12,12,0,0,,7,5
 Other,Southeast Asia,11,11,0,0,,7,3
-Power & electrical equipment,Middle East & North Africa,11,11,0,0,,6,4
+Defence & security,Middle East & North Africa,11,11,0,0,,2,2
 ICT & telecom,Oceania,11,11,0,0,,1,1
 Transport & civil infrastructure works,Oceania,11,11,0,0,,1,1
 Defence & security,Oceania,11,11,0,0,,1,1
 "Consulting, business & financial services",Southeast Asia,10,10,1,2229120,2229120,6,3
 "Mining, minerals & metals",Sub-Saharan Africa,10,10,0,0,,5,4
 Water & wastewater,Southeast Asia,10,10,0,0,,2,2
-Defence & security,Middle East & North Africa,10,10,0,0,,2,2
 Water & wastewater,Israel,10,10,0,0,,1,2
 "Education, social & hospitality services",Israel,10,10,0,0,,1,2
 Building construction works,Oceania,10,10,0,0,,1,1
@@ -209,6 +209,7 @@ Agriculture & food,Oceania,4,4,0,0,,2,2
 "Furniture, appliances & consumer goods",South Asia,4,4,0,0,,4,1
 Transport & logistics services,Israel,4,4,0,0,,1,1
 Building construction works,Israel,4,4,0,0,,1,1
+"Textiles, apparel & leather",Middle East & North Africa,4,4,0,0,,2,2
 Power & electrical equipment,Israel,4,4,0,0,,1,2
 "Textiles, apparel & leather",Middle East & North Africa,4,4,0,0,,2,2
 Engineering & architecture services,Israel,4,4,0,0,,1,2
@@ -247,6 +248,7 @@ Industrial & construction machinery,Oceania,2,2,0,0,,1,1
 Scientific & measuring instruments,Oceania,2,2,0,0,,1,1
 "Furniture, appliances & consumer goods",East Asia,2,2,0,0,,1,1
 Construction materials & building systems,South Asia,2,2,0,0,,1,1
+Scientific & measuring instruments,Middle East & North Africa,2,2,0,0,,2,2
 Engineering & architecture services,Southeast Asia,1,1,0,0,,1,1
 "Vehicles, rolling stock, ships & aircraft",East Asia,1,1,0,0,,1,1
 Chemicals & plastics,Other,1,1,0,0,,1,1
@@ -273,7 +275,6 @@ Scientific & measuring instruments,CIS & Central Asia,1,1,0,0,,1,1
 "Repair, maintenance & installation",Southeast Asia,1,1,0,0,,1,1
 Industrial & construction machinery,South Asia,1,1,0,0,,1,1
 "Furniture, appliances & consumer goods",Southeast Asia,1,1,0,0,,1,1
-Scientific & measuring instruments,Middle East & North Africa,1,1,0,0,,1,1
 "Energy, fuels & utilities",Israel,1,1,0,0,,1,1
 Construction materials & building systems,Israel,1,1,0,0,,1,1
 Transport & logistics services,CIS & Central Asia,1,1,0,0,,1,1
