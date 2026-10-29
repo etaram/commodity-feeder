@@ -1,11 +1,2 @@
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 219, in <module>
-    main()
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 207, in main
-    sh._req("PUT", f"{API}/{a[1]}/values/{quote(v['range'])}", params={"valueInputOption": "USER_ENTERED"},
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 45, in _req
-    raise RuntimeError("Sheets API retries exhausted")
-RuntimeError: Sheets API retries exhausted
-reset 79 objects
+reset 0 objects
+layout applied: 176 ranges, 1021 requests
