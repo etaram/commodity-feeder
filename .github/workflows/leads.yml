@@ -173,6 +173,10 @@ jobs:
         run: set -o pipefail; python -m leads.run --source awards 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 30
         continue-on-error: true
+      - name: wb_pipeline
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',wb_pipeline,') }}
+        run: set -o pipefail; python -m leads.run --source wb_pipeline 2>&1 | tee -a data/leads/run.log
+        continue-on-error: true
       - name: worldbank
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',worldbank,') }}
         run: set -o pipefail; python -m leads.run --source worldbank 2>&1 | tee -a data/leads/run.log
