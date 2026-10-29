@@ -305,7 +305,10 @@ def build():
                                      if g in BY_ID),
             "main_cpv": max(x["cpv"].items(), key=lambda y: y[1])[0] if x["cpv"] else "",
             "buyer_countries": " ".join(sorted(c for c in x["buyer_c"] if c))[:80], "buyers": len(x["buyers"]),
-            "exports": "yes" if any(c and wc and c != wc for c in x["buyer_c"]) else "",
+            # cross-border evidence: won tenders abroad, verified by the research worker, or a known producer
+            "exports": ("won abroad" if any(c and wc and c != wc for c in x["buyer_c"]) else
+                        "verified (research)" if "Research" in x["sources"] else
+                        "producer (Wikidata)" if "Wikidata products" in x["sources"] else ""),
             "first_win": x["first"] if x["first"] != "9999" else "", "last_win": x["last"],
             "email": x["email"], "phone": x["phone"], "website": x["website"], "website_source": site_src, "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
