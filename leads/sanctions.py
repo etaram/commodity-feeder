@@ -95,6 +95,9 @@ def screen(tenders):
             exact.setdefault(n, src)
             if len(n) >= 15 and len(n.split()) >= 2:
                 long_names.append((n, src))
+    by_tok = {}  # long listed names indexed by their first word, so each buyer is compared with a handful only
+    for n, src in long_names:
+        by_tok.setdefault(n.split()[0], []).append((n, src))
     stats = {"country_block": 0, "country_restricted": 0, "entity": 0, "listed_names": len(exact)}
     for t in tenders:
         note = ""
@@ -102,7 +105,8 @@ def screen(tenders):
         b = norm(t.get("buyer"))
         hit = exact.get(b) if b else None
         if not hit and b and len(b) >= 15:
-            hit = next((src for n, src in long_names if f" {n} " in f" {b} "), None)
+            pb = f" {b} "
+            hit = next((src for tok in set(b.split()) for n, src in by_tok.get(tok, ()) if f" {n} " in pb), None)
         if hit:
             t["decision"] = "Ignore"; note = f"SANCTIONS: buyer matches {hit} - check before any contact"
             stats["entity"] += 1
