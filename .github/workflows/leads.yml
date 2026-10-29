@@ -36,7 +36,7 @@ jobs:
           path: data/private
           key: private-${{ github.run_id }}
           restore-keys: private-
-      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth openpyxl
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth openpyxl cryptography
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: ted
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ted,') }}
@@ -227,6 +227,11 @@ jobs:
       - name: webindex
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',merge,') || contains(format(',{0},', inputs.only), ',webindex,') }}
         run: set -o pipefail; python -m leads.webindex tenders 2>&1 | tee -a data/leads/run.log
+        continue-on-error: true
+      - name: webpanel
+        if: ${{ env.GOOGLE_SERVICE_ACCOUNT_JSON != '' && (inputs.only == '' || contains(format(',{0},', inputs.only), ',push,') || contains(format(',{0},', inputs.only), ',webpanel,')) }}
+        run: set -o pipefail; python -m leads.webpanel static live 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 8
         continue-on-error: true
       - name: commit
         run: |

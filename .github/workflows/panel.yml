@@ -1,0 +1,31 @@
+name: panel
+on:
+  schedule:
+    - cron: "35 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: panel-live
+  cancel-in-progress: true
+jobs:
+  panel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests google-auth cryptography
+      - run: python -m leads.webpanel live
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/web/panel_live.enc data/web/panel_live.sha 2>/dev/null || true
+          git diff --cached --quiet && exit 0
+          git commit -m "panel: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3 4; do git pull --rebase -X theirs origin main && git push && break; sleep 7; done
