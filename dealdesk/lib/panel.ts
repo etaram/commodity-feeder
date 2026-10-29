@@ -43,7 +43,7 @@ async function allSuppliers(): Promise<Supplier[]> {
   return cached("sup-sorted", 900_000, async () => {
     const { rows, error } = await supplierIndex();
     if (error && !rows.length) throw new Error(error);
-    return rows.slice().sort((a, b) => (b.q || 0) - (a.q || 0));
+    return rows.slice().sort((a, b) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0));
   });
 }
 
