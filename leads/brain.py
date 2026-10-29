@@ -8,9 +8,11 @@ Per tender it adds:
   foreign_win_rate    share of awards in the buyer's country and sector won by suppliers from another country
   buyer_awards_12m    awards by this buyer in the last 12 months; buyer_median_award_usd; incumbent
   p_win_market        win probability for a capable outside supplier before supplier coverage (sheet adds that)
-  margin_pct          default gross margin for the sector (Assumptions tab can override)
-  ev_usd              expected value = value x margin x p_win - pursuit cost
-  decision            Pursue / Watch / Ignore, and why (one line)
+  margin_pct          gross margin: sector default x competition factor +/- commodity price trend (World Bank)
+  ev_usd              expected value = p_win x deal value x net margin x sqrt(value confidence) - pursuit cost
+  deal_value_usd ...  the full deal calculation (see deal()): value basis, addressable share, framework split,
+                      net margin after financing and bonds, gross profit, pursuit cost, ROI
+  decision            Pursue (EV over threshold, p_win >= 5%, ROI >= 2) / Watch / Ignore, and why (one line)
 """
 import re
 from collections import defaultdict
@@ -126,75 +128,187 @@ def _access_prior(access):
     return 0.05
 
 
-def enrich(tenders, awards):
+# ------------------------------------------------------------------ deal model (v2)
+# Share of the contract value that a sourcing company like Sinder actually supplies: all of a goods contract, the
+# materials and equipment part of works, a small part of services.
+ADDRESSABLE = {
+    "Building construction works": 0.35, "Transport & civil infrastructure works": 0.35, "Water & wastewater": 0.5,
+    "Repair, maintenance & installation": 0.3, "Environment, waste & cleaning": 0.3,
+    "Transport & logistics services": 0.2, "Engineering & architecture services": 0.1,
+    "Consulting, business & financial services": 0.05, "Education, social & hospitality services": 0.15,
+}
+PAYMENT_DAYS = {"Israel": 45, "Europe": 60, "North America": 45, "Oceania": 45}  # others: 90
+COST_OF_CAPITAL = 0.10   # a year, on the goods Sinder pays for before the buyer pays
+BOND_COST = 0.003        # bid + performance guarantee fees, share of revenue
+GROUP_ID = {}
+PLACES = re.compile(r"(?:up to|maximum of|max\.?|a maximum of|até|hasta|bis zu|jusqu'à)\s*(\d{1,2})\s*"
+                    r"(?:operators|suppliers|economic operators|participants|places|contractors|firms|bidders)|"
+                    r"עד\s*(\d{1,2})\s*(?:זוכים|ספקים|מציעים)", re.I)
+
+
+SERVICE_TXT = re.compile(r"\bservices?\b|\bcare\b|consultan|management of|maintenance|cleaning|catering|training|"
+                         r"operation of|provision of|support|fostering|advisory|audit|insurance|legal|security guard|"
+                         r"שירות|שירותי|ייעוץ|יועץ|תחזוקה|אחזקה|ניקיון|הסעדה|הדרכה|אבטחה|ליווי|הפעלת|ניהול", re.I)
+GOODS_TXT = re.compile(r"\bsuppl(y|ies)\b|delivery of|purchase of|procurement of|equipment|materials?\b|products?\b|"
+                       r"devices?|vehicles?|spare parts|consumables|machinery|pipes?|cables?|fuel|food|"
+                       r"אספקת|רכישת|ציוד|חומרי|מוצרי|כלי רכב|חלקי חילוף|מתכלים", re.I)
+
+
+def _group_id(name):
+    if not GROUP_ID:
+        from .taxonomy import BY_ID
+        GROUP_ID.update({g["name"]: gid for gid, g in BY_ID.items()})
+    return GROUP_ID.get(name or "", "")
+
+
+def deal(r, st, trends):
+    """Deal economics for one notice. Returns a dict of numbers plus a one-line explanation.
+
+    value  V      stated value, else the buyer's median award, else country+sector median, else sector median
+    share  s      framework ceiling split across its places (parsed, else 30%); x addressable share of the scope
+    margin m      sector default x competition factor (few bidders = more room) +/- commodity price trend effect
+    net    n      m - financing of the goods until the buyer pays - bond fees
+    p_win  p      fair share among expected bidders x openness to foreign winners x tradability x incumbent x time
+    EV            p x V x s x n - pursuit cost;  ROI = EV / pursuit cost
+    """
+    sec, country = r["sector"], r["country"]
+    region = r.get("region") or ""
+    home = _c(country) == "ISR"
+    bidders, bsrc = st.est_bidders(r.get("buyer"), country, sec)
+    fr, n_aw = st.foreign_rate(country, sec)
+    fsrc = f"{n_aw} awards"
+    if fr is None:
+        fr, fsrc = _access_prior(r.get("access")), "access rules"
+    x = st.buyer.get((_norm(r.get("buyer")), _c(country)))
+    inc = "; ".join(w for w, _ in sorted(x["wins"].items(), key=lambda y: -y[1])[:2])[:120] if x and x["wins"] else ""
+    text = f"{r.get('title', '')} {r.get('title_en', '')} {r.get('notice_type', '')}"
+    fw = bool(FRAMEWORK.search(text))
+    pm = PLACES.search(text)
+    places = int(pm.group(1) or pm.group(2)) if pm else 0
+
+    # --- value
+    usd, basis, conf = r.get("est_value_usd"), "stated", 1.0
+    if usd in ("", None):
+        usd, src = st.est_value(r.get("buyer"), country, sec)
+        basis = src or "unknown"
+        conf = {"buyer's past awards": 0.7, "country+sector awards": 0.5, "sector awards": 0.35}.get(src, 0)
+    nature = (r.get("nature") or "").lower()
+    if not nature:
+        svc, goods = SERVICE_TXT.search(text), GOODS_TXT.search(text)
+        nature = "services" if svc and not goods else "supplies" if goods and not svc else ""
+    addr = 1.0 if nature.startswith("supp") or nature.startswith("goods") else ADDRESSABLE.get(sec, 1.0)
+    if nature.startswith("serv") and sec not in ADDRESSABLE:
+        addr = 0.1
+    if nature.startswith("work"):
+        addr = min(addr, 0.35)
+    split = (1.0 / places if places else 0.3) if fw else 1.0
+    deal_v = min(usd, 100_000_000) * split * addr if usd not in ("", None) else None
+
+    # --- win probability
+    if home:
+        openness, trad, fsrc = 1.3, 1.0, "home market"
+    else:
+        openness = min(1.3, max(0.15, fr / 0.3))
+        trad = TRADABLE.get(sec) or (0.4 if nature.startswith("serv") else 1.0)
+        if fsrc != "access rules":
+            trad = trad ** 0.5
+    p = (1.0 / (bidders + 1.0)) * openness * trad
+    if fw and places:
+        p = max(p, min(0.85, places / max(bidders, 1.0)) * min(openness, 1.0) * trad)
+    if inc and x and x["n"] >= 2:
+        p *= 0.8
+    if "exemption" in (r.get("source") or "").lower() or re.search(r"התקשרות בפטור|כוונה להתקשר|exemption", text, re.I):
+        p *= 0.1  # intent to contract with a named supplier: only an objection window
+    days = r.get("days_left")
+    if isinstance(days, int) and r.get("stage") != "planned":
+        p *= 0.5 if days < 7 else 0.85 if days < 14 else 1.0
+    p = min(0.45 if not (fw and places) else 0.85, p)
+
+    # --- margin
+    m = MARGIN.get(sec, 0.08) * min(1.2, max(0.6, 1.3 - 0.075 * bidders))
+    gid = _group_id(r.get("commodity") or r.get("group"))
+    tr = trends.get(gid) if gid else None
+    tnote = ""
+    if tr and tr.get("chg_3m_pct") is not None:
+        c3 = tr["chg_3m_pct"]
+        long_contract = fw or bool(re.search(r"\b\d+\s*(months|years|meses|años|mois|ans|monate|jahre)\b|חודשים|שנים", text, re.I))
+        if c3 >= 8:
+            m -= 0.015 if long_contract else 0.007
+            tnote = f"{gid} prices +{c3}% in 3m: fixed-price risk"
+        elif c3 >= 3:
+            m -= 0.007 if long_contract else 0.0
+            tnote = f"{gid} prices +{c3}% in 3m"
+        elif c3 <= -8:
+            m += 0.01
+            tnote = f"{gid} prices {c3}% in 3m: cost tailwind"
+        elif c3 <= -3:
+            m += 0.005
+            tnote = f"{gid} prices {c3}% in 3m"
+    m = max(0.015, m)
+    pay_days = PAYMENT_DAYS.get(region, 90) + 30   # buyer terms + transit and acceptance
+    fin = (1 - m) * COST_OF_CAPITAL * pay_days / 365
+    net = m - fin - BOND_COST
+
+    # --- cost of pursuit
+    cost = PURSUIT_COST.get(r.get("stage") or "tender", 3000) * (0.5 if home else 1.0)
+    if usd not in ("", None) and usd > 10_000_000:
+        cost += 2000
+    gp = deal_v * net if deal_v is not None else None
+    ev = round(p * gp * (conf ** 0.5) - cost) if gp is not None else ""
+    roi = round(ev / cost, 1) if ev != "" and cost else ""
+    return {
+        "home": home, "bidders": bidders, "bsrc": bsrc, "fr": fr, "fsrc": fsrc, "inc": inc, "x": x, "fw": fw,
+        "places": places, "trad": trad, "p": p, "m": m, "net": net, "deal_v": deal_v, "basis": basis, "conf": conf,
+        "addr": addr, "split": split, "gp": gp, "ev": ev, "roi": roi, "cost": cost, "trend": tr, "tnote": tnote,
+        "pay_days": pay_days,
+    }
+
+
+def enrich(tenders, awards, trends=None):
     st = Stats(awards)
+    trends = trends or {}
     for r in tenders:
-        sec, country = r["sector"], r["country"]
-        bidders, bsrc = st.est_bidders(r.get("buyer"), country, sec)
-        fr, n_aw = st.foreign_rate(country, sec)
-        if fr is None:
-            fr = _access_prior(r.get("access"))
-            fsrc = "access rules"
-        else:
-            fsrc = f"{n_aw} awards"
-        x = st.buyer.get((_norm(r.get("buyer")), _c(country)))
-        inc = ""
-        if x and x["wins"]:
-            inc = "; ".join(w for w, _ in sorted(x["wins"].items(), key=lambda y: -y[1])[:2])[:120]
-        # Probability that a capable outside supplier wins: fair share among bidders, scaled by how open the market
-        # has been to foreign winners (0.3 = neutral), capped.
-        home = _c(country) == "ISR"  # Sinder is an Israeli company: home market, no foreign-bidder discount
-        if home:
-            openness, trad = 1.3, 1.0
-            fsrc = "home market"
-        else:
-            openness = min(1.6, max(0.15, fr / 0.3))
-            trad = TRADABLE.get(sec) or (0.5 if (r.get("nature") or "").startswith("serv") else 1.0)
-            if fsrc != "access rules":
-                trad = trad ** 0.5  # the measured foreign rate already reflects part of it
-        p = min(0.6, (1.0 / (bidders + 1.0)) * openness * trad)
-        margin = MARGIN.get(sec, 0.08)
-        usd = r.get("est_value_usd")
-        fw = bool(FRAMEWORK.search(f"{r.get('title', '')} {r.get('title_en', '')} {r.get('notice_type', '')}"))
-        cost = PURSUIT_COST.get(r.get("stage") or "tender", 3000)
-        est_src = ""
-        if usd in ("", None):
-            ev_usd, est_src = st.est_value(r.get("buyer"), country, sec)
-        else:
-            ev_usd = usd
-        if ev_usd not in ("", None):
-            # framework values are ceilings shared by several suppliers; estimated values get a 50% haircut
-            v = min(ev_usd, 100_000_000) * (0.3 if fw else 1.0) * (0.5 if est_src else 1.0)
-            ev = round(v * margin * p - cost)
-        else:
-            ev = ""
-        days = r.get("days_left")
+        d = deal(r, st, trends)
+        days, ev, p = r.get("days_left"), d["ev"], d["p"]
         why = []
-        if usd in ("", None):
-            why.append(f"value not stated (estimated from {est_src})" if est_src else "value not stated")
+        if ev != "":
+            why.append(f"EV ${ev:,.0f} = {p:.0%} x GP ${d['gp']:,.0f} - cost ${d['cost']:,.0f}")
+            why.append(f"deal ${d['deal_v']:,.0f} ({d['basis']}{', framework 1/' + str(d['places']) if d['fw'] and d['places'] else ', framework 30%' if d['fw'] else ''}"
+                       f"{', ' + format(d['addr'], '.0%') + ' of scope' if d['addr'] < 1 else ''}) x net {d['net']:.1%}")
+        else:
+            why.append("value unknown")
         if isinstance(days, int) and days < 7 and r.get("stage") != "planned":
             why.append(f"only {days} days left")
-        why.append(f"{bidders:g} bidders expected ({bsrc})")
-        why.append("Israel: home market for Sinder" if home else f"foreign win rate {fr:.0%} ({fsrc})")
-        if fw:
-            why.append("framework: value is a ceiling")
-        if trad < 1:
-            why.append("local-service sector")
-        if inc:
-            why.append(f"incumbent: {inc[:60]}")
+        why.append(f"{d['bidders']:g} bidders ({d['bsrc']})")
+        why.append("Israel: home market" if d["home"] else f"foreign win rate {d['fr']:.0%} ({d['fsrc']})")
+        if d["tnote"]:
+            why.append(d["tnote"])
+        if d["inc"]:
+            why.append(f"incumbent: {d['inc'][:50]}")
+        thr = 8_000 if d["home"] else 25_000
         if isinstance(days, int) and days < 5 and r.get("stage") != "planned":
             decision = "Ignore"
-        elif ev != "" and ev >= (8_000 if home else 25_000) and p >= 0.05:
+        elif d["net"] <= 0:
+            decision = "Ignore"
+        elif ev != "" and ev >= thr and p >= 0.05 and (d["roi"] or 0) >= 2:
             decision = "Pursue"
         elif (ev != "" and ev >= 2_000) or (ev == "" and r["score"] >= 60 and p >= 0.08) or r.get("stage") == "planned":
             decision = "Watch"
         else:
             decision = "Ignore"
+        x = d["x"]
+        tr = d["trend"] or {}
         r.update({
-            "est_bidders": round(bidders, 1), "foreign_win_rate": round(fr, 3),
+            "est_bidders": round(d["bidders"], 1), "foreign_win_rate": round(d["fr"], 3),
             "buyer_awards_12m": x["n"] if x else 0,
             "buyer_median_award_usd": round(median(x["usd"])) if x and x["usd"] else "",
-            "incumbent": inc, "p_win_market": round(p, 3), "margin_pct": margin, "ev_usd": ev,
-            "decision": decision, "why": "; ".join(why)[:240],
+            "incumbent": d["inc"], "p_win_market": round(p, 3), "margin_pct": round(d["m"], 4), "ev_usd": ev,
+            "decision": decision, "why": "; ".join(why)[:300],
+            "deal_value_usd": round(d["deal_v"]) if d["deal_v"] is not None else "", "value_basis": d["basis"],
+            "value_confidence": d["conf"], "addressable_share": d["addr"], "framework_split": round(d["split"], 3),
+            "gross_margin_pct": round(d["m"], 4), "net_margin_pct": round(d["net"], 4),
+            "gross_profit_usd": round(d["gp"]) if d["gp"] is not None else "", "pursuit_cost_usd": round(d["cost"]),
+            "roi": d["roi"], "payment_days": d["pay_days"], "price_trend_3m_pct": tr.get("chg_3m_pct", ""),
+            "price_signal": tr.get("signal", ""),
         })
     return st

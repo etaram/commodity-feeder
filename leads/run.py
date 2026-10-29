@@ -587,7 +587,15 @@ def merge():
     buyers = merge_awards()
     try:
         from . import brain
-        st = brain.enrich(tenders, AWARD_ROWS)
+        from . import price_trends
+        trends, series = price_trends.load()
+        st = brain.enrich(tenders, AWARD_ROWS, trends)
+        write("price_trends.csv", [{"group": BY_ID[g]["name"] if g in BY_ID else g, **v} for g, v in trends.items()],
+              ["group", "signal", "chg_1m_pct", "chg_3m_pct", "chg_12m_pct", "series"])
+        write("price_series.csv", series, ["group", "series", "unit", "month", "price", "chg_1m_pct", "chg_3m_pct",
+                                           "chg_12m_pct"])
+        write("commodity_prices.csv", price_trends.tracker_rows(),
+              ["id", "hs6", "commodity", "price_usd", "unit", "price_type", "date", "source", "quality", "link"])
         comp = []
         for (c, sec), (fw, n) in st.foreign.items():
             if sec == "*" or n < 5:
@@ -607,6 +615,12 @@ def merge():
             "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent",
             "margin_pct", "why"]
     write_digest(tenders, buyers or [])
+    dcols = ["id", "decision", "ev_usd", "roi", "p_win_market", "deal_value_usd", "value_basis", "value_confidence",
+             "addressable_share", "framework_split", "gross_margin_pct", "net_margin_pct", "gross_profit_usd",
+             "pursuit_cost_usd", "payment_days", "est_bidders", "price_trend_3m_pct", "price_signal", "country",
+             "sector", "commodity", "buyer", "title_en", "deadline", "link", "why"]
+    dc = sorted([t for t in tenders if t.get("ev_usd") not in ("", None)], key=lambda t: -t["ev_usd"])[:8000]
+    write("deal_calc.csv", [{**t, "title_en": (t.get("title_en") or t.get("title") or "")[:160]} for t in dc], dcols)
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
     try:

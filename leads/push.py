@@ -95,9 +95,13 @@ def leads_tables():
     for tab, name in [("Opportunity Pool", "opportunities"), ("Repeat Buyers", "buyers"), ("Awards", "awards"),
                       ("Competitors", "competitors"), ("Accounts", "accounts"), ("Importers", "importers"),
                       ("Sectors", "sectors"), ("Countries", "countries"), ("Sources", "status"),
-                      ("Market Signals", "markets"), ("Suppliers", "suppliers"), ("Groups", "groups")]:
+                      ("Market Signals", "markets"), ("Suppliers", "suppliers"), ("Groups", "groups"),
+                      ("Deal Calc", "deal_calc"), ("Price Trends", "price_trends"), ("Price Series", "price_series"),
+                      ("Commodity Prices", "commodity_prices"), ("Israel", "../israel/items")]:
         full = LEADS / f"{name}_all.csv"
-        out.append((tab, read_csv(full if full.exists() else LEADS / f"{name}.csv")))
+        path = full if full.exists() else LEADS / f"{name}.csv"
+        if path.exists():
+            out.append((tab, read_csv(path)))
     th = LEADS / "sheet" / "titles_he.csv"
     if th.exists():
         out.append(("Titles HE", read_csv(th)))
