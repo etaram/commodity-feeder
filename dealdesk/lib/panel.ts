@@ -1,6 +1,3 @@
-// Server side of the web Opportunity Panel: the same tabs the panel reads inside Claude, served from the encrypted
-// snapshots the data runs publish (data/web/panel_static.enc, panel_live.enc), the supplier index (suppliers.enc, no
-// contact data) and the public tender files. Writes (jobs, pursuits) go to the sheet through the service account.
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
@@ -35,7 +32,6 @@ async function snapshot(part: "static" | "live"): Promise<Snap> {
   });
 }
 
-// ---------- suppliers: the encrypted index, expanded to the panel's column names ----------
 const SUP_COLS: [string, keyof Supplier][] = [["quality", "q"], ["supplier", "n"], ["country", "c"], ["region", "rg"], ["tier", "tr"],
   ["main_sector", "s"], ["other_sectors", "s2"], ["type", "ty"], ["trader", "td"], ["epc", "epc"], ["logistics_role", "lg"],
   ["products", "p"], ["commodities", "cm"], ["exports", "x"], ["wins", "w"], ["won_usd_est", "u"], ["buyer_countries", "bc"],
@@ -51,7 +47,6 @@ async function allSuppliers(): Promise<Supplier[]> {
   });
 }
 
-// ---------- tenders: the full public list (same rows as the sheet's Tenders tab) plus fit from the snapshot ----------
 async function allTenders(): Promise<{ head: string[]; rows: Record<string, string>[] }> {
   return cached("tenders-full", 900_000, async () => {
     const files = await Promise.all(Array.from({ length: 30 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
@@ -81,7 +76,6 @@ const toRe = (p: string) => {
   try { return new RegExp(p.replace(/\\x\{([0-9a-fA-F]+)\}/g, "\\u{$1}"), "iu"); } catch { return null; }
 };
 
-// ---------- the panel's ranges ----------
 export async function getRange(key: string): Promise<Grid> {
   if (["tenders", "titles", "repeat", "markets", "meta", "upcoming", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
   if (["bd", "accounts", "intel", "pursuits", "jobs", "stats"].includes(key)) return ((await snapshot("live"))[key] as Grid) || [];
@@ -90,7 +84,6 @@ export async function getRange(key: string): Promise<Grid> {
   throw new Error(`unknown range ${key}`);
 }
 
-// Same inputs the panel writes into the sheet's hidden 'Panel Search' tab
 export async function searchTenders(v: string[][]): Promise<Grid> {
   const g = (r: number, c: number) => String((v[r] || [])[c] ?? "").trim();
   const re = toRe(g(0, 0).toLowerCase()), cty = g(0, 2), sec = g(1, 0), lo = num(g(1, 2)), reg = g(2, 0), hi = num(g(2, 2)), dec = g(3, 0), md = num(g(4, 0));

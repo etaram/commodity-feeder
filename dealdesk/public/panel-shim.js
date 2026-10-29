@@ -1,5 +1,3 @@
-// Web bridge for the Opportunity Panel: provides the same window.claude interface the panel uses inside Claude,
-// backed by the Deal Desk server (snapshots of the sheet tabs, full-database search, sheet writes, optional AI).
 (() => {
   "use strict";
   const RANGE_KEY = {

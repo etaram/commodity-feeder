@@ -97,7 +97,7 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
       <section className="rounded-xl border-l-4 border-go bg-white p-4 text-sm leading-6 shadow-sm">
         <span className="text-[11px] font-bold uppercase tracking-wide text-muted">Bottom line</span>
         <p className="mt-1"><b>{rows.length.toLocaleString()}</b> tenders match: <b>{pursue.length}</b> worth pursuing, <b>{watch.toLocaleString()}</b> to watch. Only <b>{valued.toLocaleString()}</b> state a value ({usd(valueSum)} together); the rest are valued by the engine from past awards.</p>
-        {isUSA && <p className="mt-1 text-muted">US federal solicitations almost never publish a value and most are small (median award about $80K), so few clear the pursue bar. Worth it only with a SAM.gov registration and a product line where Sinder is price-competitive; set-asides for US small businesses are closed to Sinder. Sort by value or filter a sector to find the large ones.</p>}
+        {isUSA && <p className="mt-1 text-muted">Reality check from 5,924 recent federal awards (USAspending): foreign firms won about 1% (mostly Canada), Israeli firms none. Federal solicitations rarely state a value, so the engine values them from these awards, and with ~1% win odds none clears the pursue bar on its own. The realistic routes: sell through a US distributor or prime contractor, or bid only where Israeli-made goods qualify under the Trade Agreements Act. US small-business set-asides are closed to Sinder.</p>}
       </section>
       <FilterBar fields={fields} values={p} action="/tenders" sort={p.sort || "ev"} sortOptions={SORTS} />
       <div className="flex flex-wrap items-center justify-end gap-2">
