@@ -22,7 +22,7 @@ EU = "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1
 SUFFIX = r"\b(the|ltd|llc|limited|co|company|corp|corporation|inc|jsc|ojsc|pjsc|cjsc|sa|s a|gmbh|plc|fze|fzco|llp|ooo|zao|oao)\b"
 
 
-GENERIC = re.compile(r"^(ministry|department|government|state|national|central|federal|office|agency|bank|committee|council|directorate|general)\\b")
+GENERIC = re.compile(r"^(ministry|department|government|state|national|central|federal|office|agency|bank|committee|council|directorate|general)\b")
 
 
 def norm(s):
