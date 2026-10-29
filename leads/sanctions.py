@@ -25,6 +25,11 @@ SUFFIX = r"\b(the|ltd|llc|limited|co|company|corp|corporation|inc|jsc|ojsc|pjsc|
 GENERIC = re.compile(r"^(ministry|department|government|state|national|central|federal|office|agency|bank|committee|council|directorate|general)\b")
 
 
+HOME_OF_LISTS = {"AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "IRL", "ITA", "LVA",
+                 "LTU", "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE", "NOR", "ISL", "LIE", "CHE",
+                 "GBR", "USA", "CAN", "AUS", "NZL", "JPN", "KOR", "ISR"}
+
+
 def norm(s):
     s = re.sub(r"[^a-z0-9Ѐ-ӿ؀-ۿ ]+", " ", (s or "").lower())
     return re.sub(r"\s+", " ", re.sub(SUFFIX, " ", s)).strip()
@@ -62,7 +67,8 @@ def _eu(s):
     for x in rows:
         if (x.get("Entity_SubjectType") or x.get("Entity_SubjectType_Code") or "").lower().startswith("e"):
             n = x.get("NameAlias_WholeName") or ""
-            if n:
+            lang = (x.get("NameAlias_NameLanguage") or "").upper()
+            if n and lang in ("", "EN"):  # the EU list repeats names in every EU language ("Ministry of Defence" ...)
                 out.append([n, "EU " + (x.get("Entity_Programme") or "")[:20]])
     return out
 
@@ -107,6 +113,8 @@ def screen(tenders):
         if not hit and b and len(b) >= 15:
             pb = f" {b} "
             hit = next((src for tok in set(b.split()) for n, src in by_tok.get(tok, ()) if f" {n} " in pb), None)
+        if hit and t.get("country") in HOME_OF_LISTS:
+            hit = None  # a public body of an EU/G7/allied state is not on these lists: same-name false match
         if hit:
             t["decision"] = "Ignore"; note = f"SANCTIONS: buyer matches {hit} - check before any contact"
             stats["entity"] += 1
