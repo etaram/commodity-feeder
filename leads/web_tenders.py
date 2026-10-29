@@ -109,6 +109,8 @@ def candidate_links(base_url, text):
         u = urljoin(base_url, a["href"].strip()).split("#")[0]
         if not u.startswith("http") or re.search(r"\.(pdf|docx?|xlsx?|zip)(\?|$)", u, re.I):
             continue
+        if re.search(r"swagit|youtube|facebook|twitter|instagram|linkedin|granicus|vimeo", u, re.I):
+            continue
         sc = 0
         if NAV.search(t):
             sc += 10
