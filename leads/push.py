@@ -182,8 +182,25 @@ def main():
                 return ids[o[7:]]
             return o
         lay = resolve(lay)
-        if lay.get("pre_requests"):
-            sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": lay["pre_requests"]})
+        if lay.get("reset"):
+            m = sh._req("GET", f"{API}/{a[1]}", params={"fields": "sheets(properties.sheetId,charts.chartId,conditionalFormats,"
+                                                                 "bandedRanges.bandedRangeId,protectedRanges.protectedRangeId)"})
+            rq = []
+            for sht in m.get("sheets", []):
+                sid = sht["properties"]["sheetId"]
+                if sid not in lay["reset"]:
+                    continue
+                rq += [{"deleteEmbeddedObject": {"objectId": c["chartId"]}} for c in sht.get("charts", [])]
+                rq += [{"deleteConditionalFormatRule": {"sheetId": sid, "index": i}}
+                       for i in reversed(range(len(sht.get("conditionalFormats", []))))]
+                rq += [{"deleteBanding": {"bandedRangeId": b["bandedRangeId"]}} for b in sht.get("bandedRanges", [])]
+                rq += [{"deleteProtectedRange": {"protectedRangeId": p_["protectedRangeId"]}} for p_ in sht.get("protectedRanges", [])]
+            if rq:
+                sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": rq})
+            print("reset", len(rq), "objects")
+        pre = [r for r in lay.get("pre_requests", []) if r.get("addSheet", {}).get("properties", {}).get("title") not in ids]
+        if pre:
+            sh._req("POST", f"{API}/{a[1]}:batchUpdate", json={"requests": pre})
         for rng in lay.get("clear", []):
             sh._req("POST", f"{API}/{a[1]}/values/{quote(rng)}:clear", json={})
         for v in lay.get("values", []):
