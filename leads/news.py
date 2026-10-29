@@ -34,7 +34,11 @@ def _fetch(s, q):
     try:
         r = s.get(DOC, params={"query": q, "mode": "artlist", "format": "json", "maxrecords": 8,
                                "timespan": "120d", "sort": "datedesc"}, timeout=12)
-        arts = (r.json() or {}).get("articles", [])
+        try:
+            arts = (r.json() or {}).get("articles", [])
+        except ValueError:
+            log.warning("gdelt %s: HTTP %s %s", q[:40], r.status_code, r.text[:120].replace("\n", " "))
+            return None
     except Exception as e:  # noqa: BLE001
         log.warning("gdelt %s: %s", q[:40], type(e).__name__)
         return None

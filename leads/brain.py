@@ -339,6 +339,10 @@ def enrich(tenders, awards, trends=None, prefs=None):
         elif d["route"] == "sub-supply to the winner" and (d["priority_ev"] or 0) >= 2_000:
             decision = "Watch"  # the opportunity opens at award: approach the winner then
             why.append("track the award, then offer materials to the winner")
+        elif r.get("stage") == "planned":
+            # announced projects and prior notices: no tender to bid yet - track them, never "Pursue"
+            decision = "Watch" if (ev == "" or ev >= 2_000 or r["score"] >= 50) else "Ignore"
+            why.append("planned: the tender is not open yet")
         elif ev != "" and (d["priority_ev"] or 0) >= thr and p >= 0.05 and (d["roi"] or 0) >= 2:
             decision = "Pursue"
         elif (ev != "" and ev >= 2_000) or (ev == "" and r["score"] >= 60 and p >= 0.08) or r.get("stage") == "planned":
