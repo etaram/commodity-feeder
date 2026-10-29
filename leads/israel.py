@@ -115,7 +115,8 @@ def fetch():  # leads.run interface
             "group": next((k for k, rx in HE_GROUP if re.search(rx, t)), ""), "sector": _sector(t), "nature": "",
             "cpv": "", "stage": "tender", "access": "Israeli bidders (home market)", "lang": "he", "country": "ISR",
             "buyer": it["body"], "title": t[:300], "classification": "keyword (he)",
-            "notice_type": ("קול קורא" if it["kind"] == "call" else "מכרז") + (f" {it['number']}" if it["number"] else ""),
+            "notice_type": {"call": "קול קורא", "exemption": "הודעת פטור (exemption)"}.get(it["kind"], "מכרז")
+            + (f" {it['number']}" if it["number"] else ""),
             "published": it.get("published", ""), "deadline": it["deadline"], "value": "", "currency": "",
             "link": it["link"], "contact": "",
         })

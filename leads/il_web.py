@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 TENDER_TXT = re.compile(r"מכרז|מכרזים|קול קורא|קולות קוראים|קול-קורא|הזמנה להציע|הזמנה להגיש|בקשה לקבלת הצעות|"
                         r"בקשה להצעות|בקשה להציע|פנייה לקבלת הצעות|פניה לקבלת הצעות|הליך תחרותי|הליך פנייה|"
-                        r"\bRFP\b|\bRFI\b|\bRFQ\b|התקשרות בפטור|הודעה על כוונה להתקשר|מכרז פומבי|מכרז זוטא|"
+                        r"\bRFP\b|\bRFI\b|\bRFQ\b|התקשרות בפטור|הודעות פטור|הודעת פטור|הודעה על כוונה להתקשר|מכרז פומבי|מכרז זוטא|"
                         r"\btenders?\b|procurement|הליכי רכש|הודעות רכש|רכש והתקשרויות", re.I)
 NAV_TXT = re.compile(r"^(מכרזים|מכרזים וקולות קוראים|מכרזים ודרושים|קולות קוראים|מכרזים והתקשרויות|הליכי רכש|"
                      r"מכרזים פעילים|מכרזים והודעות|tenders|procurement|מכרזים ורכש|רכש|מכרזים וספקים|מכרזים והצעות מחיר|"
@@ -20,6 +20,10 @@ JOB = re.compile(r"משרה|משרת|דרוש|דרושים|דרושות|כוח �
                  r"משאבי אנוש|היקף משרה|תקן|מלגה|מלגות|הנחה בארנונה|ועדת השמות", re.I)
 SALE = re.compile(r"השכרת|להשכרה|מכירת|למכירה|חכירה|הקצאת קרקע|הקצאת מבנה|הרשמה להגרלה|דירה|מגרש|הפעלת קיוסק|"
                   r"הפעלת מזנון|הפעלת קפיטריה|זיכיון", re.I)
+CLOSED = re.compile(r"תם מועד|בוטל|מבוטל|הסתיים|נסגר|ארכיון|פרוטוקול|הבהרות|שאלות הבהרה|תשובות לשאלות|"
+                    r"תוצאות|זוכה|זוכים|הודעה על זכייה|החלטת ועדת|עדכון מס|תיקון מס|נספח|טופס|מדריך|הנחיות|"
+                    r"\bpdf\b|קובץ|doc\b|הורדת|לצפייה|צפייה|browse|manual|דף הבית|»|›|בית\s*>", re.I)
+OLD_YEAR = re.compile(r"(?:/|-|\.|\s)(20[12]\d)(?!\d)")
 GENERIC = re.compile(r"^(לחץ כאן|לחצו כאן|קרא עוד|קראו עוד|למידע נוסף|לפרטים|לפרטים נוספים|פרטים|הורדה|להורדה|"
                      r"מסמכי המכרז|מסמכים|צפייה|לצפייה|pdf|docx?|קובץ|נספח.*|עוד|more|download|view)$", re.I)
 DATE = re.compile(r"(?<!\d)(\d{1,2})[./-](\d{1,2})[./-](\d{4}|\d{2})(?!\d)")
@@ -195,10 +199,13 @@ def extract(page_url, text, today=None):
             if m and m.start() > 15:
                 title = title[:m.start()]
         title = re.sub(r"\s+", " ", title).strip(" -|:")[:260]
-        if len(title) < 12 or JOB.search(title) or SALE.search(title):
+        if len(title) < 15 or JOB.search(title) or SALE.search(title) or CLOSED.search(title):
             continue
-        if not TENDER_TXT.search(title + " " + ctx[:200]):
+        if not TENDER_TXT.search(title):
             continue
+        years = [int(y) for y in OLD_YEAR.findall(title)]
+        if years and max(years) < today.year - 1:
+            continue  # e.g. "מכרז 28/2023": an old notice still listed on the page
         link = urljoin(page_url, a["href"]).split("#")[0]
         key = re.sub(r"\W+", "", title)[:90]
         if key in seen:
@@ -206,7 +213,12 @@ def extract(page_url, text, today=None):
         seen.add(key)
         dl, pub = _deadline(ctx, today)
         num = NUMBER.search(title + " " + ctx)
-        kind = "call" if re.search(r"קול(ות)? קור", title + ctx[:150]) else "tender"
+        if dl and dl < today:
+            continue
+        if not dl and pub and (today - pub).days > 150:
+            continue
+        kind = ("exemption" if re.search(r"פטור|כוונה להתקשר|ספק יחיד", title) else
+                "call" if re.search(r"קול(ות)? קור", title + ctx[:150]) else "tender")
         items.append({"title": title, "link": link, "number": num.group(1) if num else "",
                       "deadline": dl.isoformat() if dl else "", "published": pub.isoformat() if pub else "",
                       "kind": kind, "context": ctx[:400]})

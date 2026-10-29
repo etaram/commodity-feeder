@@ -44,12 +44,13 @@ def _home(body):
     """The body's verified home page: registry website first, then .muni.il guesses for authorities."""
     sites = [body["website"]] if body["website"] else []
     sites += [g for g in _guesses(body) if g not in sites]
-    first = None
+    first, last = None, "no website"
     for site in sites:
         if not site.startswith("http"):
             site = "https://" + site
         for u in (site, ("http://" if site.startswith("https") else "https://") + urlparse(site).netloc):
             st, final, txt = fetch(u)
+            last = st
             if st == "ok":
                 if _named(body, txt):
                     return st, final, txt, site
@@ -58,7 +59,7 @@ def _home(body):
             if st in ("robots", "blocked"):
                 first = first or (st, final, txt, site)
                 break
-    return first or ("unreachable", "", "", body["website"])
+    return first or (f"unreachable ({last})", "", "", body["website"])
 
 
 def discover(body):
