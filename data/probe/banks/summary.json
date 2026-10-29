@@ -1,0 +1,166 @@
+{
+ "adb_tenders": {
+  "url": "https://www.adb.org/projects/tenders",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.adb.org/projects/tenders",
+  "size": 5652,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "adb_howto": {
+  "url": "https://www.adb.org/business/how-to/where-to-find-current-tenders-bidding-opportunities",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.adb.org/business/how-to/where-to-find-current-tenders-bidding-opportunities",
+  "size": 5869,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "adb_rss": {
+  "url": "https://www.adb.org/rss",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.adb.org/rss",
+  "size": 5591,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "afdb_proc": {
+  "url": "https://www.afdb.org/en/projects-and-operations/procurement",
+  "robots_allowed": true,
+  "status": 200,
+  "final": "https://www.afdb.org/en/projects-and-operations/procurement",
+  "size": 108746,
+  "ctype": "text/html; charset=utf-8",
+  "feeds": [
+   "https://www.afdb.org/en/projects-and-operations/procurement.xml",
+   "https://www.afdb.org/en/rss-feeds"
+  ],
+  "sample_links": [
+   "https://www.afdb.org/en/about-us/corporate-procurement",
+   "https://www.afdb.org/en/documents/project-related-procurement",
+   "https://www.afdb.org/en/projects-and-operations/procurement",
+   "https://www.afdb.org/en/projects-and-operations/procurement.xml",
+   "https://www.afdb.org/en/projects-and-operations/procurement/frequently-asked-questions",
+   "https://www.afdb.org/en/projects-and-operations/procurement/new-procurement-policy",
+   "https://www.afdb.org/en/projects-and-operations/procurement/projects-procurements-services-contacts",
+   "https://www.afdb.org/en/projects-and-operations/procurement/resources-for-borrowers",
+   "https://www.afdb.org/en/projects-and-operations/procurement/resources-for-businesses",
+   "https://www.afdb.org/en/projects-and-operations/procurement/tools-reports",
+   "https://www.afdb.org/en/projects-and-operations/procurement?page=1",
+   "https://www.afdb.org/en/projects-and-operations/procurement?page=2",
+   "https://www.afdb.org/en/projects-and-operations/procurement?page=3",
+   "https://www.afdb.org/en/projects-and-operations/procurement?page=702",
+   "https://www.afdb.org/fr/projects-and-operations/procurement"
+  ]
+ },
+ "afdb_notices": {
+  "url": "https://www.afdb.org/en/projects-and-operations/procurement/notices",
+  "robots_allowed": true,
+  "status": 200,
+  "final": "https://www.afdb.org/en/projects-and-operations/procurement/notices",
+  "size": 97900,
+  "ctype": "text/html; charset=utf-8",
+  "feeds": [
+   "https://www.afdb.org/en/rss-feeds"
+  ],
+  "sample_links": [
+   "https://www.afdb.org/ar/projects-and-operations/procurement/notices",
+   "https://www.afdb.org/en/about-us/corporate-procurement",
+   "https://www.afdb.org/en/documents/project-related-procurement",
+   "https://www.afdb.org/en/projects-and-operations/procurement",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?order=field_project_approval_date&amp;sort=asc",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?order=field_project_country&amp;sort=asc",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?order=field_project_name&amp;sort=asc",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?order=field_project_status&amp;sort=asc",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?order=name&amp;sort=asc",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?page=1",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?page=2",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?page=220",
+   "https://www.afdb.org/en/projects-and-operations/procurement/notices?page=3",
+   "https://www.afdb.org/fr/projects-and-operations/procurement/notices",
+   "https://www.afdb.org/pt/projects-and-operations/procurement/notices"
+  ]
+ },
+ "afdb_rss": {
+  "url": "https://www.afdb.org/en/rss-feeds",
+  "robots_allowed": true,
+  "status": 200,
+  "final": "https://www.afdb.org/en/rss-feeds",
+  "size": 86449,
+  "ctype": "text/html; charset=utf-8",
+  "feeds": [
+   "https://www.afdb.org/en/about-us/careers/current-vacancies/consultants/rss",
+   "https://www.afdb.org/en/about-us/careers/current-vacancies/rss/",
+   "https://www.afdb.org/en/about-us/corporate-procurement/procurement-notices/current-solicitations.xml",
+   "https://www.afdb.org/en/ext-pr-private-sector/en/rss.xml",
+   "https://www.afdb.org/en/news-and-events/adf/rss",
+   "https://www.afdb.org/en/news-and-events/rss",
+   "https://www.afdb.org/en/projects-and-operations/procurement.xml",
+   "https://www.afdb.org/en/rss-feeds",
+   "https://www.afdb.org/fr/flux-rss"
+  ],
+  "sample_links": [
+   "https://www.afdb.org/en/about-us/corporate-procurement",
+   "https://www.afdb.org/en/about-us/corporate-procurement/procurement-notices/current-solicitations.xml",
+   "https://www.afdb.org/en/documents/project-related-procurement",
+   "https://www.afdb.org/en/projects-and-operations/procurement",
+   "https://www.afdb.org/en/projects-and-operations/procurement.xml"
+  ]
+ },
+ "idb_notices": {
+  "url": "https://projectprocurement.iadb.org/en/procurement-notices",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://projectprocurement.iadb.org/en/procurement-notices",
+  "size": 5657,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "idb_proc": {
+  "url": "https://www.iadb.org/en/how-we-can-work-together/procurement",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.iadb.org/en/how-we-can-work-together/procurement",
+  "size": 5657,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "nspa_open": {
+  "url": "https://www.nspa.nato.int/business/procurement/open-procurements",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.nspa.nato.int/business/procurement/open-procurements",
+  "size": 5810,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "nspa_biz": {
+  "url": "https://www.nspa.nato.int/business/procurement",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.nspa.nato.int/business/procurement",
+  "size": 5734,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ },
+ "ncia_biz": {
+  "url": "https://www.ncia.nato.int/business/procurement.html",
+  "robots_allowed": true,
+  "status": 403,
+  "final": "https://www.ncia.nato.int/business/procurement.html",
+  "size": 5792,
+  "ctype": "text/html; charset=UTF-8",
+  "feeds": [],
+  "sample_links": []
+ }
+}
