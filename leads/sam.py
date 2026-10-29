@@ -97,7 +97,7 @@ def _row(o, t, aside, tzc):
         return None
     title = clean(o.get("title"))
     org = o.get("organizationHierarchy") or []
-    desc = " ".join(d.get("content", "") for d in o.get("descriptions") or [])
+    desc = " ".join(d.get("content") or "" for d in o.get("descriptions") or [])
     em = EMAIL.search(desc)
     sector, method = _sector(title)
     orgs = " ".join(x.get("name") or "" for x in org).upper()
