@@ -219,10 +219,14 @@ jobs:
           python -m leads.push check 2>&1 | tee -a data/leads/run.log
           python -m leads.push leads 2>&1 | tee -a data/leads/run.log
         continue-on-error: true
+      - name: webindex
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',merge,') || contains(format(',{0},', inputs.only), ',webindex,') }}
+        run: set -o pipefail; python -m leads.webindex tenders 2>&1 | tee -a data/leads/run.log
+        continue-on-error: true
       - name: commit
         run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A data/leads
+          git add -A data/leads data/web
           git diff --cached --quiet || git commit -m "leads: $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done

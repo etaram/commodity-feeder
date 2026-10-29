@@ -37,7 +37,7 @@ jobs:
           path: data/private
           key: private-${{ github.run_id }}
           restore-keys: private-
-      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth cryptography
       - run: mkdir -p data/leads && date -u > data/leads/run_suppliers.log
       - name: latam_awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',latam_awards,') }}
@@ -82,10 +82,15 @@ jobs:
         if: ${{ env.GOOGLE_SERVICE_ACCOUNT_JSON != '' && (inputs.only == '' || contains(format(',{0},', inputs.only), ',push,')) }}
         run: set -o pipefail; python -m leads.push universe 2>&1 | tee -a data/leads/run_suppliers.log
         continue-on-error: true
+      - name: webindex
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',webindex,') || contains(format(',{0},', inputs.only), ',universe,') }}
+        run: set -o pipefail; python -m leads.webindex suppliers 2>&1 | tee -a data/leads/run_suppliers.log
+        continue-on-error: true
       - name: commit
         run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A data/leads/awards data/leads/companies data/leads/run_suppliers.log
+          mkdir -p data/web
+          git add -A data/leads/awards data/leads/companies data/leads/run_suppliers.log data/web
           git diff --cached --quiet || git commit -m "suppliers: $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done
