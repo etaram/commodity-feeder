@@ -4,6 +4,8 @@ import glob
 import logging
 import sys
 import time
+import functools
+print = functools.partial(print, flush=True)
 
 sys.path.insert(0, ".")
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -22,9 +24,11 @@ print("SCREEN", st)
 changed = [r for r in rows if before[r["id"]] != r["decision"]]
 print("DECISIONS CHANGED", len(changed))
 for r in rows:
-    if r["why"].startswith(("SANCTIONS", "BLOCKED", "RESTRICTED")) and before[r["id"]] in ("Pursue", "Watch"):
+    if r["why"].startswith("SANCTIONS") or (r["why"].startswith(("BLOCKED", "RESTRICTED")) and before[r["id"]] == "Pursue"):
         print("  ", r["country"], before[r["id"]], "->", r["decision"], "|", r["buyer"][:50], "|", r["why"][:110])
 
+if "press" not in sys.argv:
+    sys.exit(0)
 s = session()
 dc = list(csv.DictReader(open("data/leads/deal_calc.csv", encoding="utf-8")))
 qs = [q for q in dict.fromkeys(news._query(r["buyer"]) for r in dc if r["decision"] == "Pursue") if q][:12]
