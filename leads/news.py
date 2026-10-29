@@ -32,8 +32,13 @@ def _query(buyer):
 
 def _fetch(s, q):
     try:
-        r = s.get(DOC, params={"query": q, "mode": "artlist", "format": "json", "maxrecords": 8,
-                               "timespan": "120d", "sort": "datedesc"}, timeout=12)
+        for wait in (0, 20, 45):  # shared runner IPs hit GDELT's per-IP limit: back off and retry
+            if wait:
+                time.sleep(wait)
+            r = s.get(DOC, params={"query": q, "mode": "artlist", "format": "json", "maxrecords": 8,
+                                   "timespan": "120d", "sort": "datedesc"}, timeout=15)
+            if r.status_code != 429:
+                break
         try:
             arts = (r.json() or {}).get("articles", [])
         except ValueError:
@@ -54,7 +59,7 @@ def _fetch(s, q):
     return out
 
 
-def run(max_queries=120, budget_s=420):
+def run(max_queries=40, budget_s=300):
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
     cut = (dt.date.today() - dt.timedelta(days=7)).isoformat()
     dc = LEADS / "deal_calc.csv"
@@ -103,5 +108,7 @@ def run(max_queries=120, budget_s=420):
 
 if __name__ == "__main__":
     import logging
+    import sys
     logging.basicConfig(level=logging.INFO)
-    run()
+    # leads run: python -m leads.news (short, mostly re-applies the cache); press job: python -m leads.news 250 1500
+    run(*(int(x) for x in sys.argv[1:3]))

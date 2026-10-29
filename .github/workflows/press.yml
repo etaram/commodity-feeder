@@ -1,0 +1,29 @@
+name: press
+on:
+  schedule:
+    - cron: "50 5,15 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: repo-data-writes
+  cancel-in-progress: false
+jobs:
+  press:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests curl_cffi certifi aia
+      - run: python -m leads.news 300 1800 2>&1 | tail -40
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/leads/deal_calc.csv data/leads/press.csv data/leads/cache/news.json
+          git diff --cached --quiet && exit 0
+          git commit -m "press: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3; do git pull --rebase -X ours origin main && git push && break; sleep 5; done
