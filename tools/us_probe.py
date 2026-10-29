@@ -1,26 +1,26 @@
-import json, re
+import re
 from pathlib import Path
 from curl_cffi import requests as cr
 s = cr.Session(impersonate="chrome", timeout=40)
 out = []
-def get(u, **kw):
+t = s.get("https://www.txsmartbuy.gov/esbd").text
+out.append("TX services: " + str(sorted(set(re.findall(r'[\w/.-]*\.ss[^"\'\s]{0,60}', t)))[:30]))
+out.append("TX esbd refs: " + str(sorted(set(re.findall(r'[^"\'\s]*esbd[^"\'\s]{0,80}', t, re.I)))[:30]))
+for u in ["https://www.txsmartbuy.gov/app/extensions/CPA/CPAMain/1.0.0/services/ESBD.Service.ss?page=1&status=1",
+          "https://www.txsmartbuy.gov/app/extensions/CPA/CPAMain/1.0.0/services/ESBD.Service.ss?c=852252&n=2&page=1"]:
     try:
-        r = s.get(u, **kw); return r.status_code, r.headers.get("content-type", ""), r.text
+        r = s.get(u); out.append(f"TRY {u} {r.status_code} {r.text[:600]}")
     except Exception as e:
-        return "ERR", "", str(e)
-# NYC City Record (Socrata)
-c, ct, t = get("https://data.cityofnewyork.us/resource/dg92-zbpx.json", params={"$limit": 3, "$order": "start_date DESC", "section_name": "Procurement"})
-out.append(f"NYC {c} {t[:2500]}")
-c, ct, t = get("https://data.cityofnewyork.us/resource/dg92-zbpx.json", params={"$select": "count(*)", "$where": "section_name='Procurement' AND due_date > '2026-10-29'"})
-out.append(f"NYC open count {c} {t[:300]}")
-for name, u in [("TX ESBD", "https://www.txsmartbuy.gov/esbd"), ("FL VBS", "https://vendor.myfloridamarketplace.com/search/bids"),
-                ("CA eProcure", "https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx"),
-                ("MTA", "https://new.mta.info/doing-business-with-us/procurement"), ("PANYNJ", "https://www.panynj.gov/port-authority/en/business-opportunities/solicitations-advertisements.html"),
-                ("LA Metro", "https://business.metro.net/webcenter/portal/VendorPortal/pages_home/solicitations/openSolicitations"),
-                ("IDB", "https://www.iadb.org/en/how-we-can-work-together/procurement/procurement-projects/project-procurement"),
-                ("IDB notices", "https://projectprocurement.iadb.org/en/procurement-notices"),
-                ("IMF", "https://www.imf.org/en/About/procurement")]:
-    c, ct, t = get(u)
-    links = re.findall(r'https?://[^"\']+(?:api|json|service|search)[^"\']{0,80}', t)[:8]
-    out.append(f"{name} {c} {ct} len={len(t)} title={re.search(r'<title>(.*?)</title>', t, re.S).group(1).strip()[:80] if '<title>' in t else ''} links={links}")
+        out.append(f"TRY {u} ERR {e}")
+t = s.get("https://vendor.myfloridamarketplace.com/search/bids").text
+out.append("FL: " + t[:1100])
+js = re.findall(r'src="([^"]+\.js)"', t)
+out.append("FL js: " + str(js))
+for j in js[:4]:
+    u = j if j.startswith("http") else "https://vendor.myfloridamarketplace.com/" + j.lstrip("/")
+    try:
+        b = s.get(u).text
+        out.append(f"FL js {u}: " + str(sorted(set(re.findall(r'["\'](/?api/[^"\']{3,80}|https?://[^"\']*api[^"\']{0,80})["\']', b)))[:40]))
+    except Exception as e:
+        out.append(f"FL js ERR {e}")
 Path("data/probe/us_probe.txt").write_text("\n".join(out))
