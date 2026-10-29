@@ -1,0 +1,443 @@
+{
+ "source": "https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx",
+ "built": "2026-10-29",
+ "groups": {
+  "FUEL": {
+   "chg_1m_pct": 16.8,
+   "chg_3m_pct": 33.0,
+   "chg_12m_pct": 73.6,
+   "signal": "rising fast",
+   "series": "Crude oil, average, Coal, Australian, Natural gas, Europe"
+  },
+  "GRAIN": {
+   "chg_1m_pct": 4.8,
+   "chg_3m_pct": 13.5,
+   "chg_12m_pct": 32.9,
+   "signal": "rising fast",
+   "series": "Wheat, US HRW, Maize, Rice, Thai 5%"
+  },
+  "OILSEED": {
+   "chg_1m_pct": 3.8,
+   "chg_3m_pct": 3.0,
+   "chg_12m_pct": 27.6,
+   "signal": "rising",
+   "series": "Soybean oil, Palm oil, Soybeans"
+  },
+  "SOFTS": {
+   "chg_1m_pct": -0.9,
+   "chg_3m_pct": 16.4,
+   "chg_12m_pct": -4.9,
+   "signal": "rising fast",
+   "series": "Sugar, world, Coffee, Arabica, Cocoa, Tea, avg 3 auctions"
+  },
+  "FEED": {
+   "chg_1m_pct": 10.1,
+   "chg_3m_pct": 6.7,
+   "chg_12m_pct": 24.9,
+   "signal": "rising",
+   "series": "Soybean meal"
+  },
+  "FERT": {
+   "chg_1m_pct": 0.1,
+   "chg_3m_pct": -2.1,
+   "chg_12m_pct": 1.7,
+   "signal": "stable",
+   "series": "Urea, DAP, Phosphate rock, Potassium chloride **"
+  },
+  "STEEL": {
+   "chg_1m_pct": 1.5,
+   "chg_3m_pct": -3.1,
+   "chg_12m_pct": -5.4,
+   "signal": "falling",
+   "series": "Iron ore, cfr spot"
+  },
+  "NONFERROUS": {
+   "chg_1m_pct": 0.8,
+   "chg_3m_pct": 2.2,
+   "chg_12m_pct": 28.5,
+   "signal": "stable",
+   "series": "Aluminum, Copper, Zinc, Nickel"
+  },
+  "PRECIOUS": {
+   "chg_1m_pct": -1.6,
+   "chg_3m_pct": -0.4,
+   "chg_12m_pct": 34.3,
+   "signal": "stable",
+   "series": "Gold, Silver"
+  },
+  "MEAT": {
+   "chg_1m_pct": 0.6,
+   "chg_3m_pct": -2.9,
+   "chg_12m_pct": 1.7,
+   "signal": "stable",
+   "series": "Beef **, Chicken **"
+  },
+  "FISH": {
+   "chg_1m_pct": -1.3,
+   "chg_3m_pct": -12.2,
+   "chg_12m_pct": -25.0,
+   "signal": "falling fast",
+   "series": "Shrimps, Mexican"
+  },
+  "WOODPAPER": {
+   "chg_1m_pct": 0.3,
+   "chg_3m_pct": 1.7,
+   "chg_12m_pct": -3.0,
+   "signal": "stable",
+   "series": "Sawnwood, Malaysian, Logs, Malaysian"
+  },
+  "TEXTILE": {
+   "chg_1m_pct": -0.5,
+   "chg_3m_pct": 10.5,
+   "chg_12m_pct": 22.1,
+   "signal": "rising fast",
+   "series": "Cotton, A Index"
+  },
+  "PLASTIC": {
+   "chg_1m_pct": 7.6,
+   "chg_3m_pct": 7.1,
+   "chg_12m_pct": 38.5,
+   "signal": "rising",
+   "series": "Rubber, TSR20 **"
+  },
+  "CHEM": {
+   "chg_1m_pct": 21.2,
+   "chg_3m_pct": 25.2,
+   "chg_12m_pct": 53.8,
+   "signal": "rising fast",
+   "series": "Crude oil, average"
+  }
+ },
+ "series": [
+  {
+   "group": "FUEL",
+   "series": "Crude oil, average",
+   "unit": "($/bbl)",
+   "month": "2026M09",
+   "price": 102.3,
+   "chg_1m_pct": 21.2,
+   "chg_3m_pct": 25.2,
+   "chg_12m_pct": 53.8
+  },
+  {
+   "group": "FUEL",
+   "series": "Coal, Australian",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 147.1,
+   "chg_1m_pct": 8.8,
+   "chg_3m_pct": 6.2,
+   "chg_12m_pct": 38.4
+  },
+  {
+   "group": "FUEL",
+   "series": "Natural gas, Europe",
+   "unit": "($/mmbtu)",
+   "month": "2026M09",
+   "price": 25.42,
+   "chg_1m_pct": 20.4,
+   "chg_3m_pct": 67.6,
+   "chg_12m_pct": 128.6
+  },
+  {
+   "group": "GRAIN",
+   "series": "Wheat, US HRW",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 347.0,
+   "chg_1m_pct": 5.2,
+   "chg_3m_pct": 21.3,
+   "chg_12m_pct": 48.4
+  },
+  {
+   "group": "GRAIN",
+   "series": "Maize",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 239.6,
+   "chg_1m_pct": 7.0,
+   "chg_3m_pct": 21.6,
+   "chg_12m_pct": 21.4
+  },
+  {
+   "group": "GRAIN",
+   "series": "Rice, Thai 5%",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 482.0,
+   "chg_1m_pct": 2.3,
+   "chg_3m_pct": -2.4,
+   "chg_12m_pct": 28.9
+  },
+  {
+   "group": "OILSEED",
+   "series": "Soybean oil",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 1615.0,
+   "chg_1m_pct": -1.5,
+   "chg_3m_pct": -7.2,
+   "chg_12m_pct": 39.3
+  },
+  {
+   "group": "OILSEED",
+   "series": "Palm oil",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 1180.0,
+   "chg_1m_pct": 4.2,
+   "chg_3m_pct": 3.3,
+   "chg_12m_pct": 13.8
+  },
+  {
+   "group": "OILSEED",
+   "series": "Soybeans",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 524.0,
+   "chg_1m_pct": 8.7,
+   "chg_3m_pct": 12.9,
+   "chg_12m_pct": 29.7
+  },
+  {
+   "group": "SOFTS",
+   "series": "Sugar, world",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 0.41,
+   "chg_1m_pct": 7.9,
+   "chg_3m_pct": 28.1,
+   "chg_12m_pct": 17.1
+  },
+  {
+   "group": "SOFTS",
+   "series": "Coffee, Arabica",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 7.26,
+   "chg_1m_pct": -8.9,
+   "chg_3m_pct": 6.9,
+   "chg_12m_pct": -17.8
+  },
+  {
+   "group": "SOFTS",
+   "series": "Cocoa",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 5.92,
+   "chg_1m_pct": -0.5,
+   "chg_3m_pct": 34.5,
+   "chg_12m_pct": -15.8
+  },
+  {
+   "group": "SOFTS",
+   "series": "Tea, avg 3 auctions",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 2.85,
+   "chg_1m_pct": -2.1,
+   "chg_3m_pct": -4.0,
+   "chg_12m_pct": -3.1
+  },
+  {
+   "group": "FEED",
+   "series": "Soybean meal",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 447.0,
+   "chg_1m_pct": 10.1,
+   "chg_3m_pct": 6.7,
+   "chg_12m_pct": 24.9
+  },
+  {
+   "group": "FERT",
+   "series": "Urea",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 407.5,
+   "chg_1m_pct": 4.5,
+   "chg_3m_pct": -10.1,
+   "chg_12m_pct": -11.6
+  },
+  {
+   "group": "FERT",
+   "series": "DAP",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 800.6,
+   "chg_1m_pct": 0.9,
+   "chg_3m_pct": 2.1,
+   "chg_12m_pct": 2.6
+  },
+  {
+   "group": "FERT",
+   "series": "Phosphate rock",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 170.0,
+   "chg_1m_pct": 0.0,
+   "chg_3m_pct": 8.3,
+   "chg_12m_pct": 11.5
+  },
+  {
+   "group": "FERT",
+   "series": "Potassium chloride **",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 367.5,
+   "chg_1m_pct": -5.0,
+   "chg_3m_pct": -8.7,
+   "chg_12m_pct": 4.3
+  },
+  {
+   "group": "STEEL",
+   "series": "Iron ore, cfr spot",
+   "unit": "($/dmtu)",
+   "month": "2026M09",
+   "price": 97.7,
+   "chg_1m_pct": 1.5,
+   "chg_3m_pct": -3.1,
+   "chg_12m_pct": -5.4
+  },
+  {
+   "group": "NONFERROUS",
+   "series": "Aluminum",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 3283.0,
+   "chg_1m_pct": 1.0,
+   "chg_3m_pct": -4.5,
+   "chg_12m_pct": 23.7
+  },
+  {
+   "group": "NONFERROUS",
+   "series": "Copper",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 14474.0,
+   "chg_1m_pct": 1.0,
+   "chg_3m_pct": 6.8,
+   "chg_12m_pct": 45.0
+  },
+  {
+   "group": "NONFERROUS",
+   "series": "Zinc",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 4021.0,
+   "chg_1m_pct": 3.8,
+   "chg_3m_pct": 13.6,
+   "chg_12m_pct": 37.1
+  },
+  {
+   "group": "NONFERROUS",
+   "series": "Nickel",
+   "unit": "($/mt)",
+   "month": "2026M09",
+   "price": 16324.0,
+   "chg_1m_pct": -2.5,
+   "chg_3m_pct": -7.2,
+   "chg_12m_pct": 8.1
+  },
+  {
+   "group": "PRECIOUS",
+   "series": "Gold",
+   "unit": "($/troy oz)",
+   "month": "2026M09",
+   "price": 4319.0,
+   "chg_1m_pct": -2.1,
+   "chg_3m_pct": 2.2,
+   "chg_12m_pct": 17.7
+  },
+  {
+   "group": "PRECIOUS",
+   "series": "Silver",
+   "unit": "($/troy oz)",
+   "month": "2026M09",
+   "price": 64.6,
+   "chg_1m_pct": -1.2,
+   "chg_3m_pct": -3.1,
+   "chg_12m_pct": 50.9
+  },
+  {
+   "group": "MEAT",
+   "series": "Beef **",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 6.86,
+   "chg_1m_pct": -5.8,
+   "chg_3m_pct": -8.0,
+   "chg_12m_pct": -0.6
+  },
+  {
+   "group": "MEAT",
+   "series": "Chicken **",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 1.81,
+   "chg_1m_pct": 7.1,
+   "chg_3m_pct": 2.3,
+   "chg_12m_pct": 4.0
+  },
+  {
+   "group": "FISH",
+   "series": "Shrimps, Mexican",
+   "unit": "($/kg)",
+   "month": "2023M10",
+   "price": 8.6,
+   "chg_1m_pct": -1.3,
+   "chg_3m_pct": -12.2,
+   "chg_12m_pct": -25.0
+  },
+  {
+   "group": "WOODPAPER",
+   "series": "Sawnwood, Malaysian",
+   "unit": "($/cubic meter)",
+   "month": "2026M09",
+   "price": 731.3,
+   "chg_1m_pct": -0.9,
+   "chg_3m_pct": 0.6,
+   "chg_12m_pct": -0.6
+  },
+  {
+   "group": "WOODPAPER",
+   "series": "Logs, Malaysian",
+   "unit": "($/cubic meter)",
+   "month": "2026M09",
+   "price": 190.3,
+   "chg_1m_pct": 1.5,
+   "chg_3m_pct": 2.7,
+   "chg_12m_pct": -5.5
+  },
+  {
+   "group": "TEXTILE",
+   "series": "Cotton, A Index",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 2.1,
+   "chg_1m_pct": -0.5,
+   "chg_3m_pct": 10.5,
+   "chg_12m_pct": 22.1
+  },
+  {
+   "group": "PLASTIC",
+   "series": "Rubber, TSR20 **",
+   "unit": "($/kg)",
+   "month": "2026M09",
+   "price": 2.41,
+   "chg_1m_pct": 7.6,
+   "chg_3m_pct": 7.1,
+   "chg_12m_pct": 38.5
+  },
+  {
+   "group": "CHEM",
+   "series": "Crude oil, average",
+   "unit": "($/bbl)",
+   "month": "2026M09",
+   "price": 102.3,
+   "chg_1m_pct": 21.2,
+   "chg_3m_pct": 25.2,
+   "chg_12m_pct": 53.8
+  }
+ ]
+}

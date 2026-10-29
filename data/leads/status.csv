@@ -8,21 +8,22 @@ worldbank,2026-10-29T07:32,657,OK,new=281; cache=657; days=10
 ebrd,2026-10-29T06:58,42,OK,
 mrgov,2026-10-29T07:34,204,OK,
 ungm,2026-10-28T09:18,458,OK,"new=455; total_active=1667; pages=35 | last error: py"", line 432, in _strptime     raise ValueError(""time data %r does not match format %r"" % ValueError: time data '04-IND-2026' does not match format '%d-%b-%Y' "
-undp,2026-10-29T06:58,19,OK,new=26; cache=19
-aiib,2026-10-29T06:58,173,OK,new=174; awards=275
-isdb,2026-10-29T06:58,34,OK,new=35
-etimad,2026-10-29T06:59,273,OK,new=150; pages=15
-prozorro,2026-10-29T07:02,458,OK,candidates=2718; fetched=72
-pncp,2026-10-29T07:02,1631,OK,new=0
-secop,2026-10-29T07:02,608,OK,new=108
-germany,2026-10-29T07:02,7761,OK,new=1378; awards_seen=746; awards_saved=813
-contractsfinder,2026-10-29T07:02,83,OK,new=17
-paraguay,2026-10-29T07:10,384,OK,new=1
-dominican,2026-10-29T07:12,465,OK,new=104; listed=1000
-austender,2026-10-29T07:12,124,OK,new=122
-oman,2026-10-29T07:12,141,OK,new=50
-france,2026-10-29T07:12,5649,OK,new=850
-spain,2026-10-29T07:23,1075,OK,new=425; pages=4; awards_seen=727
-kenya,2026-10-29T07:24,486,OK,new=40
-qatar,2026-10-29T07:26,0,EMPTY,new=0
-importyeti,2026-10-29T07:36,1,OK,"1 HS headings cached; this run 24, due 30"
+undp,2026-10-29T05:46,19,OK,new=26; cache=19
+aiib,2026-10-29T05:46,173,OK,new=174; awards=275
+isdb,2026-10-29T05:46,34,OK,new=35
+etimad,2026-10-29T05:47,270,OK,new=147; pages=14
+prozorro,2026-10-29T05:48,457,OK,candidates=2710; fetched=54
+pncp,2026-10-29T05:49,1631,OK,new=192
+secop,2026-10-29T05:49,608,OK,new=108
+germany,2026-10-29T05:49,7761,OK,new=1378; awards_seen=746; awards_saved=797
+contractsfinder,2026-10-29T05:49,83,OK,new=17
+paraguay,2026-10-29T05:57,384,OK,new=1
+dominican,2026-10-29T05:58,465,OK,new=104; listed=1000
+austender,2026-10-29T05:59,124,OK,new=122
+oman,2026-10-29T05:59,122,OK,new=50
+france,2026-10-29T05:59,5649,OK,new=850
+spain,2026-10-29T06:10,1075,OK,new=533; pages=5; awards_seen=990
+kenya,2026-10-29T06:10,486,OK,new=0
+qatar,2026-10-29T06:12,0,EMPTY,new=0
+israel,,0,no data,
+importyeti,2026-10-29T06:21,1,OK,"1 HS headings cached; this run 23, due 30"
