@@ -1,19 +1,15 @@
-Wed Oct 28 20:01:37 UTC 2026
-INFO LatAm awards: Brazil 805 (4 days), Colombia 388
+Thu Oct 29 09:43:47 UTC 2026
+INFO LatAm awards: Brazil 964 (4 days), Colombia 387
 INFO latam_awards: 0 rows
-INFO Prozorro awards: 36503 candidates, 1596 read, 1603 awards
+INFO Prozorro awards: 38097 candidates, 950 read, 952 awards
 INFO prozorro_awards: 0 rows
-INFO OCDR 145 RWA 2026: 4144 releases, 5897 awards, 25261 contacts
-INFO OCDR 143 ZAF 2026: 3056 releases, 412 awards, 0 contacts
-INFO OCDR 152 TZA 2026: 62293 releases, 21123 awards, 21123 contacts
-INFO OCDR 130 UGA 2026: 14162 releases, 6992 awards, 0 contacts
-INFO OCDR 43 URY 2026: 23945 releases, 31573 awards, 31573 contacts
-INFO OCDR 3 ZMB 2026: 26157 releases, 5169 awards, 5169 contacts
-INFO OCDR 137 ARG 2025: 8089 releases, 12123 awards, 0 contacts
-INFO OCDR {'files': 7, 'awards': 83289, 'contacts': 83126, 'pending': 161}
+INFO OCDR 157 BRA 2025: 17948 releases, 26527 awards, 26527 contacts
+INFO OCDR 144 CHL 2025: 316124 releases, 308707 awards, 308707 contacts
+INFO OCDR 22 DOM 2025: 13492 releases, 11902 awards, 15191 contacts
+INFO OCDR {'files': 3, 'awards': 347136, 'contacts': 350425, 'pending': 158}
 INFO ocdr: 0 rows
 INFO USAspending foreign: 10000
-INFO USAspending 11: 2737
+INFO USAspending 11: 2736
 INFO USAspending 21: 317
 INFO USAspending 31: 8000
 Traceback (most recent call last):
@@ -72,10 +68,10 @@ During handling of the above exception, another exception occurred:
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 655, in <module>
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 669, in <module>
     sys.exit(main())
              ^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 645, in main
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 659, in main
     run_source(a.source)
   File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
     rows, meta = m.fetch()
@@ -106,14 +102,18 @@ WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
+WARNING wikidata: Invalid control character at: line 1808 column 116 (char 41057)
+WARNING wikidata: Invalid control character at: line 1808 column 116 (char 41057)
+WARNING wikidata: Invalid control character at: line 1808 column 116 (char 41057)
+WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 502
 WARNING wikidata 504
 WARNING wikidata 504
-WARNING wikidata 504
-INFO wikidata companies: 4 countries refreshed (165 companies), 24 countries cached
+WARNING wikidata 502
+INFO wikidata companies: 5 countries refreshed (204 companies), 29 countries cached
 INFO wikidata_companies: 0 rows
-INFO web profiles: 1588 read, 88 websites discovered of 700 tried
+INFO web profiles: 1612 read, 112 websites discovered of 700 tried
 INFO web_contacts: 0 rows
-INFO:leads:universe {'awards': 869896, 'suppliers': 221186, 'with_email': 59756, 'with_phone': 62851, 'exporters': 11229, 'goods': 61425, 'contacts_matched': 144296, 'tier_A': 218610, 'tier_B_notable': 826, 'with_website': 36567, 'quality_40_plus': 44867, 'with_any_contact': 97314, 'region: Latin America': 98060, 'region: Europe': 57261, 'region: Sub-Saharan Africa': 39432, 'region: South Asia': 7108, 'region: unknown': 4806, 'region: Southeast Asia': 4355, 'region: Middle East & North Africa': 2848, 'region: East Asia': 2474, 'region: CIS & Central Asia': 2211, 'region: North America': 1584, 'region: Other': 508, 'region: Oceania': 308, 'region: Israel': 231}
+INFO:leads:universe {'awards': 1335917, 'suppliers': 329599, 'with_email': 111223, 'with_phone': 112652, 'exporters': 15097, 'goods': 99825, 'contacts_matched': 287001, 'tier_A': 326832, 'tier_B_notable': 1025, 'with_website': 84429, 'quality_40_plus': 71506, 'with_any_contact': 194666, 'region: Latin America': 131561, 'region: Europe': 130340, 'region: Sub-Saharan Africa': 39456, 'region: South Asia': 7118, 'region: unknown': 6313, 'region: Southeast Asia': 4368, 'region: Middle East & North Africa': 2899, 'region: East Asia': 2502, 'region: CIS & Central Asia': 2216, 'region: North America': 1730, 'region: Other': 533, 'region: Oceania': 322, 'region: Israel': 241}
 wrote 150001 rows to Supplier Universe
