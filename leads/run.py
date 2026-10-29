@@ -404,6 +404,33 @@ def merge_opportunities(tenders, buyers, markets):
     log.info("opportunities %d", len(out))
 
 
+def load_prefs():
+    """Owner preferences from the Leads Engine sheet: Profile weights (sector, region) and the Partners tab
+    (country -> partner strength). Cached in the private folder (partner names are not public)."""
+    from .common import PRIVATE
+    cache = PRIVATE / "prefs.json"
+    try:
+        from .push import LEADS_SHEET, Sheets
+        sh = Sheets()
+        prof = sh.values(LEADS_SHEET, "Profile!A4:E27")
+        part = sh.values(LEADS_SHEET, "Partners!A2:D200")
+
+        def num(x, d=1.0):
+            try:
+                return float(str(x).replace(",", "."))
+            except ValueError:
+                return d
+        prefs = {"sector": {r[0]: num(r[1]) for r in prof if len(r) > 1 and r[0]},
+                 "region": {r[3]: num(r[4]) for r in prof if len(r) > 4 and r[3]},
+                 "partners": {r[0].strip().upper(): num(r[3], 1.0) for r in part if len(r) > 3 and r[0].strip()}}
+        PRIVATE.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps(prefs))
+        return prefs
+    except Exception as e:  # noqa: BLE001
+        log.warning("prefs from sheet: %s", e)
+        return json.loads(cache.read_text()) if cache.exists() else {}
+
+
 def write_digest(tenders, buyers):
     """Plain-text daily summary (Hebrew headings) used by the scheduled e-mail: the brain's best opportunities first."""
     t = today()
@@ -589,7 +616,7 @@ def merge():
         from . import brain
         from . import price_trends
         trends, series = price_trends.load()
-        st = brain.enrich(tenders, AWARD_ROWS, trends)
+        st = brain.enrich(tenders, AWARD_ROWS, trends, load_prefs())
         write("price_trends.csv", [{"group": BY_ID[g]["name"] if g in BY_ID else g, **v} for g, v in trends.items()],
               ["group", "signal", "chg_1m_pct", "chg_3m_pct", "chg_12m_pct", "series"])
         write("price_series.csv", series, ["group", "series", "unit", "month", "price", "chg_1m_pct", "chg_3m_pct",
@@ -618,8 +645,9 @@ def merge():
     dcols = ["id", "decision", "ev_usd", "roi", "p_win_market", "deal_value_usd", "value_basis", "value_confidence",
              "addressable_share", "framework_split", "gross_margin_pct", "net_margin_pct", "gross_profit_usd",
              "pursuit_cost_usd", "payment_days", "est_bidders", "price_trend_3m_pct", "price_signal", "country",
-             "sector", "commodity", "buyer", "title_en", "deadline", "link", "why", "days_left", "region"]
-    dc = sorted([t for t in tenders if t.get("ev_usd") not in ("", None)], key=lambda t: -t["ev_usd"])[:8000]
+             "sector", "commodity", "buyer", "title_en", "deadline", "link", "why", "days_left", "region", "route", "edge_weight", "priority_ev_usd"]
+    dc = sorted([t for t in tenders if t.get("ev_usd") not in ("", None)],
+                key=lambda t: -(t.get("priority_ev_usd") if t.get("priority_ev_usd") not in ("", None) else t["ev_usd"]))[:8000]
     write("deal_calc.csv", [{**t, "title_en": (t.get("title_en") or t.get("title") or "")[:160]} for t in dc], dcols)
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)

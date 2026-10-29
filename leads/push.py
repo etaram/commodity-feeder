@@ -44,6 +44,10 @@ class Sheets:
             return r.json() if r.text else {}
         raise RuntimeError("Sheets API retries exhausted")
 
+    def values(self, sid, rng):
+        from urllib.parse import quote
+        return self._req("GET", f"{API}/{sid}/values/{quote(rng)}").get("values", [])
+
     def meta(self, sid):
         return self._req("GET", f"{API}/{sid}", params={"fields": "properties.title,sheets.properties"})
 

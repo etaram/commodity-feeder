@@ -161,7 +161,7 @@ def _group_id(name):
     return GROUP_ID.get(name or "", "")
 
 
-def deal(r, st, trends):
+def deal(r, st, trends, prefs=None):
     """Deal economics for one notice. Returns a dict of numbers plus a one-line explanation.
 
     value  V      stated value, else the buyer's median award, else country+sector median, else sector median
@@ -257,8 +257,35 @@ def deal(r, st, trends):
         cost += 2000
     gp = deal_v * net if deal_v is not None else None
     ev = round(p * gp * (conf ** 0.5) - cost) if gp is not None else ""
+    route = "direct"
+    # --- alternative routes when a direct bid is weak: through a local partner, or as a supplier to the winner
+    prefs = prefs or {}
+    ps = (prefs.get("partners") or {}).get(_c(country), 0.0)
+    acc = (r.get("access") or "").lower()
+    direct_ok = home or acc.startswith("international") or any(k in acc for k in ("gpa", "open to foreign", "may bid", "trade agreements"))
+    if usd not in ("", None) and not home:
+        alts = []
+        if not direct_ok or ps:
+            pp = min(0.45, (1.0 / (bidders + 1.0)) * trad * ((0.5 + 0.5 * ps) if ps else 0.35))
+            npart = net - 0.03  # partner's share
+            if deal_v and npart > 0:
+                alts.append(("via local partner" if ps else "needs local partner", pp, deal_v * npart, cost + 1000))
+        works = sec in ("Building construction works", "Transport & civil infrastructure works", "Water & wastewater") \
+            or nature.startswith("work")
+        if works and usd >= 1_000_000:
+            v_sub = min(usd, 100_000_000) * 0.35
+            n_sub = max(0.0, 0.07 - (0.93 * COST_OF_CAPITAL * pay_days / 365) - BOND_COST)
+            alts.append(("sub-supply to the winner", 0.1, v_sub * n_sub, 800, v_sub))
+        for alt in alts:
+            name, pr, g, c = alt[:4]
+            e = round(pr * g * (conf ** 0.5) - c)
+            if ev == "" or e > ev:
+                route, p, gp, ev, cost = name, pr, g, e, c
+                if len(alt) > 4:
+                    deal_v, addr = alt[4], 0.35
     roi = round(ev / cost, 1) if ev != "" and cost else ""
-    return {
+    w = (prefs.get("sector") or {}).get(sec, 1.0) * (prefs.get("region") or {}).get(region, 1.0)
+    return {"route": route, "edge": w, "priority_ev": round(ev * w) if ev != "" and ev > 0 else ev, 
         "home": home, "bidders": bidders, "bsrc": bsrc, "fr": fr, "fsrc": fsrc, "inc": inc, "x": x, "fw": fw,
         "places": places, "trad": trad, "p": p, "m": m, "net": net, "deal_v": deal_v, "basis": basis, "conf": conf,
         "addr": addr, "split": split, "gp": gp, "ev": ev, "roi": roi, "cost": cost, "trend": tr, "tnote": tnote,
@@ -266,15 +293,17 @@ def deal(r, st, trends):
     }
 
 
-def enrich(tenders, awards, trends=None):
+def enrich(tenders, awards, trends=None, prefs=None):
+    """prefs: {"sector": {name: weight}, "region": {name: weight}, "partners": {iso3: strength}} from the sheet."""
     st = Stats(awards)
     trends = trends or {}
     for r in tenders:
-        d = deal(r, st, trends)
+        d = deal(r, st, trends, prefs)
         days, ev, p = r.get("days_left"), d["ev"], d["p"]
         why = []
         if ev != "":
-            why.append(f"EV ${ev:,.0f} = {p:.0%} x GP ${d['gp']:,.0f} - cost ${d['cost']:,.0f}")
+            why.append(f"EV ${ev:,.0f} = {p:.0%} x GP ${d['gp']:,.0f} - cost ${d['cost']:,.0f}"
+                       + (f" [{d['route']}]" if d["route"] != "direct" else ""))
             why.append(f"deal ${d['deal_v']:,.0f} ({d['basis']}{', framework 1/' + str(d['places']) if d['fw'] and d['places'] else ', framework 30%' if d['fw'] else ''}"
                        f"{', ' + format(d['addr'], '.0%') + ' of scope' if d['addr'] < 1 else ''}) x net {d['net']:.1%}")
         else:
@@ -292,7 +321,10 @@ def enrich(tenders, awards, trends=None):
             decision = "Ignore"
         elif d["net"] <= 0:
             decision = "Ignore"
-        elif ev != "" and ev >= thr and p >= 0.05 and (d["roi"] or 0) >= 2:
+        elif d["route"] == "sub-supply to the winner" and (d["priority_ev"] or 0) >= 2_000:
+            decision = "Watch"  # the opportunity opens at award: approach the winner then
+            why.append("track the award, then offer materials to the winner")
+        elif ev != "" and (d["priority_ev"] or 0) >= thr and p >= 0.05 and (d["roi"] or 0) >= 2:
             decision = "Pursue"
         elif (ev != "" and ev >= 2_000) or (ev == "" and r["score"] >= 60 and p >= 0.08) or r.get("stage") == "planned":
             decision = "Watch"
@@ -311,6 +343,7 @@ def enrich(tenders, awards, trends=None):
             "gross_margin_pct": round(d["m"], 4), "net_margin_pct": round(d["net"], 4),
             "gross_profit_usd": round(d["gp"]) if d["gp"] is not None else "", "pursuit_cost_usd": round(d["cost"]),
             "roi": d["roi"], "payment_days": d["pay_days"], "price_trend_3m_pct": tr.get("chg_3m_pct", ""),
-            "price_signal": tr.get("signal", ""),
+            "price_signal": tr.get("signal", ""), "route": d["route"], "edge_weight": round(d["edge"], 2),
+            "priority_ev_usd": d["priority_ev"],
         })
     return st
