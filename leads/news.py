@@ -33,7 +33,7 @@ def _query(buyer):
 def _fetch(s, q):
     try:
         r = s.get(DOC, params={"query": q, "mode": "artlist", "format": "json", "maxrecords": 8,
-                               "timespan": "120d", "sort": "datedesc"}, timeout=30)
+                               "timespan": "120d", "sort": "datedesc"}, timeout=12)
         arts = (r.json() or {}).get("articles", [])
     except Exception as e:  # noqa: BLE001
         log.warning("gdelt %s: %s", q[:40], type(e).__name__)
@@ -50,7 +50,7 @@ def _fetch(s, q):
     return out
 
 
-def run(max_queries=120):
+def run(max_queries=120, budget_s=420):
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
     cut = (dt.date.today() - dt.timedelta(days=7)).isoformat()
     dc = LEADS / "deal_calc.csv"
@@ -62,14 +62,15 @@ def run(max_queries=120):
            [r for r in rows if r.get("decision") == "Watch"][:300]
     s = session()
     press, q_done = [], 0
+    t_end = time.time() + budget_s
     for r in todo:
         q = _query(r.get("buyer", ""))
         key = q or r.get("buyer", "")[:60]
         hit = cache.get(key)
-        if q and (not hit or hit["ts"] < cut) and q_done < max_queries:
+        if q and (not hit or hit["ts"] < cut) and q_done < max_queries and time.time() < t_end:
             arts = _fetch(s, q)
             q_done += 1
-            time.sleep(1.1)
+            time.sleep(5.2)  # GDELT asks for at most one request every 5 seconds
             if arts is not None:
                 hit = {"ts": dt.date.today().isoformat(), "articles": arts}
                 cache[key] = hit
