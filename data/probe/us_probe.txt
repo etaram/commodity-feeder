@@ -1,13 +1,29 @@
-NYC 200 [{"request_id":"20261021012","start_date":"2026-10-28T00:00:00.000","end_date":"2026-10-28T00:00:00.000","agency_name":"Fire Department","type_of_notice_description":"Award","category_description":"Goods","short_title":"057270000423-License Plate Recognition Software (100 Rekor Scout)","selection_method_description":"M/WBE Noncompetitive Small Purchase","section_name":"Procurement","pin":"05727W0022001","contact_name":"Tetyana Sydoruk","email":"tetyana.sydoruk@fdny.nyc.gov","contract_amount":"86526","additional_description_1":"<p>From November 1, 2026, through October 31, 2027.</p><p>To help Bureau of Fire Investigation Fire Marshals with investigations into auto fires and auto theft recovery. Rekor is the only company that allows integrations with the other 56 police departments and JTTF organizations that we are already sharing data with. Currently they are the only company that has been providing consistent and accurate data that we have used in our environment. Rekor is superior to other LPR platforms as it records and analyzes video data which allows the user to search for vehicle by make/model/color and type of automobile. Rekor is also part of the global user share group which allows partnering law enforcement agencies to search for vehicles globally that use Rekor.</p>","vendor_name":"K Systems Solutions LLC","vendor_address":"405 Kearny Avenue"}
-,{"request_id":"20261022002","start_date":"2026-10-28T00:00:00.000","end_date":"2026-10-28T00:00:00.000","agency_name":"Housing Preservation and Development","type_of_notice_description":"Award","category_description":"Services (other than human services)","short_title":"ENS Mandates Intros 195_193_583A_5A_6A_434","selection_method_description":"Intergovernmental Purchase","section_name":"Procurement","pin":"80626G0001001","contact_name":"Gaurav Channan","email":"channang@hpd.nyc.gov","contract_amount":"8621289","additional_description_1":"<p>This project involves enhancing multiple systems across the Housing Preservation and Development (HPD) department to comply with six legislative initiatives (Intros 195-A, 434-A, 5-A, 6A-, 193-A, and 583-A). The project consolidates the business needs of multiple mandates aimed at improving the efficiency and regulatory compliance of HPD's operations. The mandates are related to the Heat Sensor Program, vacant unit inspections, lead-based paint hazard management, and addressing false certifications of violation corrections. This project addresses specific legislative 
-NYC open count 200 [{"count":"207"}]
-
-TX ESBD 200 text/html;charset=utf-8 len=89016 title=ESBD Solicitations links=['https://mycpa.cpa.state.tx.us/tpasscmblsearch/tpasscmblsearch.do', 'https://comptroller.texas.gov/purchasing/programs/print-services.php', 'https://www.txsmartbuy.gov/app/services/ShoppingUserEnvironment.Service.ss?lang=en_US&cur=null&X-SC-Touchpoint=shoppin']
-FL VBS 200  len=1132 title=MyFloridaMarket Place Vendor Information Portal links=['https://fonts.googleapis.com/css?family=Open+Sans:300,400,500&display=swap', 'https://fonts.googleapis.com/icon?family=Material+Icons', 'https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|']
-CA eProcure 200 text/html; charset=utf-8 len=50099 title=California eProcurement Portal links=['https://fonts.googleapis.com/css?family=Lato:300,400,700']
-MTA 200 text/html; charset=utf-8 len=57209 title=MTA Procurement links=['https://consist.mta.info/search-icon/index.js', 'https://consist.mta.info/search-icon/assets/index.css']
-PANYNJ 200 text/html;charset=utf-8 len=3709 title=Solicitations/Advertisements Information | Port Authority of New York and New Je links=[]
-LA Metro 200 text/html;charset=utf-8 len=6721 title= links=[]
-IDB 404 text/html; charset=UTF-8 len=28366 title=IDB | 404 Page not found links=[]
-IDB notices 526 text/html; charset=UTF-8 len=7767 title=iadb.org | 526: Invalid SSL certificate links=[]
-IMF 403 text/html len=543 title= links=[]
+TX services: ['//www.txsmartbuy.gov/app/services/ShoppingUserEnvironment.Service.ss?lang=en_US&cur=null&X-SC-Touchpoint=shopping', '/app/public/shopping.environment.shortcache.ssp?X-SC-Touchpoint=shopping&amp;t=1744143740649', '/app/public/shopping.environment.ssp?lang=en_US&amp;cur=null&amp;X-SC-Touchpoint=shopping&amp;t']
+TX esbd refs: ['#/esbd', '#/esbd-grants', '/esbd', '/esbd-grants', '/esbd-presolicitations', '/esbd/2026-10072026', '/esbd/26-1080', '/esbd/405-26R0028971', '/esbd/601310000103333', '/esbd/601440000052176', '/esbd/601440000054271', '/esbd/601440000054633', '/esbd/644-26-072126', '/esbd/6510-51-001_1026', '/esbd/6510-77-001_1126', '/esbd/6510-78-001_1126', '/esbd/6510-79-001_1126', '/esbd/6510-80-001_1126', '/esbd/6511-33-001_1126', '/esbd/717-27-712', '/esbd/750-26-27-001', '/esbd/HHS0017108', '/esbd/IFB2027-B01', '/esbd/IFB2027-B02', '/esbd/IFB2027-B03', '/esbd/IW270424', '/esbd/RFP-2026-27-001', '/esbd/RFP-TRN26-16', '/esbd/UTHSCT2027-001', '/esbdawards']
+TRY https://www.txsmartbuy.gov/app/extensions/CPA/CPAMain/1.0.0/services/ESBD.Service.ss?page=1&status=1 200 {"errorStatusCode":"405","errorCode":"ERR_METHOD_NOT_ALLOWED","errorMessage":"Sorry, you are not allowed to perform this action."}
+TRY https://www.txsmartbuy.gov/app/extensions/CPA/CPAMain/1.0.0/services/ESBD.Service.ss?c=852252&n=2&page=1 200 {"errorStatusCode":"405","errorCode":"ERR_METHOD_NOT_ALLOWED","errorMessage":"Sorry, you are not allowed to perform this action."}
+FL: <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>MyFloridaMarket Place Vendor Information Portal</title>
+        <base href="/" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500&display=swap"
+            rel="stylesheet"
+        />
+        <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+            rel="stylesheet"
+        />
+    <link rel="stylesheet" href="styles.bf32ad8afa0c0f1f1cf1.css"></head>
+    <body class="mat-typography">
+        <mfmp-root></mfmp-root>
+    <script src="runtime.9dc77ad85d7558c1a2ef.js" defer></script><script src="polyfills.cffa1011ea985b605258.js" defer></script><script src="main.12e7aa9e28ddadbb00b9.js"
+FL js: ['runtime.9dc77ad85d7558c1a2ef.js', 'polyfills.cffa1011ea985b605258.js', 'main.12e7aa9e28ddadbb00b9.js']
+FL js https://vendor.myfloridamarketplace.com/runtime.9dc77ad85d7558c1a2ef.js: []
+FL js https://vendor.myfloridamarketplace.com/polyfills.cffa1011ea985b605258.js: []
+FL js https://vendor.myfloridamarketplace.com/main.12e7aa9e28ddadbb00b9.js: ['https://international-autocomplete.api.smartystreets.com/lookup', 'https://international-street.api.smartystreets.com/verify', 'https://us-autocomplete-pro.api.smartystreets.com/lookup', 'https://us-autocomplete.api.smartystreets.com/suggest', 'https://us-extract.api.smartystreets.com/', 'https://us-reverse-geo.api.smartystreets.com/lookup', 'https://us-street.api.smartystreets.com/street-address', 'https://us-zipcode.api.smartystreets.com/lookup']
