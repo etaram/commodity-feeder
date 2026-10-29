@@ -1,6 +1,8 @@
-Thu Oct 29 13:57:29 UTC 2026
+Thu Oct 29 16:39:38 UTC 2026
+INFO:leads:US awards (USAspending): 5924 recent contract awards (last 90 days)
+5924 awards; median 496.0 foreign winners 41
 INFO initializing identifier
-[0;93m2026-10-29 13:57:49.819814180 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-10-29 16:42:19.054391136 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['CONSTRUCCION DE INFRAESTRUCTURA SOCIAL EN LOS MUNICIPIOS DE CALAMAR; CICUCO; SAN JACINTO; SAN JUAN NEPOMUCENO Y SANTA ROSA EN EL DEPARTAMENTO DE BOLIVAR - CONSTRUCCION DE INFRAESTRUCTURA SOCIAL EN LOS MUNICIPIOS DE CALAMAR, CICUCO, SAN JACINTO, SAN JUAN NEPOMUCENO Y SANTA ROSA EN EL DEPARTAMENTO DE'])
 INFO ('apply_packaged_translation', 'CONSTRUCCION DE INFRAESTRUCTURA SOCIAL EN LOS MUNICIPIOS DE CALAMAR; CICUCO; SAN JACINTO; SAN JUAN NEPOMUCENO Y SANTA ROSA EN EL DEPARTAMENTO DE BOLIVAR - CONSTRUCCION DE INFRAESTRUCTURA SOCIAL EN LOS MUNICIPIOS DE CALAMAR, CICUCO, SAN JACINTO, SAN JUAN NEPOMUCENO Y SANTA ROSA EN EL DEPARTAMENTO DE')
@@ -904,55 +906,53 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['Moldova', '-', 'D@@
 INFO ('value_hypotheses:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
 INFO ('translated_paragraphs:', [[('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)]])
 INFO ('hypotheses_to_return:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
-INFO translations: 0 new, 0 pending, cache 26632, 308s
-INFO awards 199510 (12m), recent 3000, buyers 27740, competitors 171102
+INFO translations: 0 new, 0 pending, cache 26632, 311s
+INFO awards 205434 (12m), recent 3000, buyers 27913, competitors 172516
 INFO market signals rows 1442
-INFO opportunities.csv trimmed for the sheet: 4053 of 35573 rows
-INFO opportunities 35573
-INFO sheet/tenders_05.csv trimmed for the sheet: 2463 of 2500 rows
-INFO sheet/tenders_07.csv trimmed for the sheet: 2396 of 2500 rows
-INFO sheet/tenders_08.csv trimmed for the sheet: 2424 of 2500 rows
-INFO sheet/tenders_09.csv trimmed for the sheet: 2369 of 2500 rows
-INFO sheet/tenders_10.csv trimmed for the sheet: 2433 of 2500 rows
+INFO opportunities.csv trimmed for the sheet: 4053 of 35609 rows
+INFO opportunities 35609
+INFO sheet/tenders_04.csv trimmed for the sheet: 2420 of 2500 rows
+INFO sheet/tenders_05.csv trimmed for the sheet: 2387 of 2500 rows
+INFO sheet/tenders_06.csv trimmed for the sheet: 2352 of 2500 rows
+INFO sheet/tenders_07.csv trimmed for the sheet: 2339 of 2500 rows
+INFO sheet/tenders_08.csv trimmed for the sheet: 2369 of 2500 rows
+INFO sheet/tenders_09.csv trimmed for the sheet: 2424 of 2500 rows
 INFO sheet/tenders_11.csv trimmed for the sheet: 2382 of 2500 rows
-INFO sheet/tenders_12.csv trimmed for the sheet: 2330 of 2500 rows
-INFO sheet/tenders_13.csv trimmed for the sheet: 2332 of 2500 rows
-INFO sheet/tenders_14.csv trimmed for the sheet: 2363 of 2500 rows
-INFO sheet/tenders_15.csv trimmed for the sheet: 2360 of 2500 rows
-INFO sheet/tenders_16.csv trimmed for the sheet: 2418 of 2500 rows
+INFO sheet/tenders_12.csv trimmed for the sheet: 2324 of 2500 rows
+INFO sheet/tenders_13.csv trimmed for the sheet: 2306 of 2500 rows
+INFO sheet/tenders_14.csv trimmed for the sheet: 2473 of 2500 rows
+INFO sheet/tenders_15.csv trimmed for the sheet: 2382 of 2500 rows
 INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 1 new, 6947 total, 4 pending, 3s
+INFO hebrew titles: 32 new, 6972 total, 4 pending, 5s
 INFO accounts 17744
 INFO importers.csv trimmed for the sheet: 3981 of 4590 rows
 INFO tenders 41667, importers 4590, suppliers 2754
-WARNING:leads:gdelt "Riigi Kaitseinvesteeringute Keskus": ReadTimeout
 WARNING:leads:gdelt "Slovenské elektrárne, a.s.": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "Danish Ministry of Defence Acquisition : HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "South Yorkshire Mayoral Combined Author: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "CP - Comboios de Portugal, EPE": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "Amgros I/S": ReadTimeout
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as P
+WARNING:leads:gdelt "Amgros I/S": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "European High-Performance Computing Joi: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "Nukissiorfiit": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Fakultní nemocnice Bulovka": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Rogun Hydropower Development Project – : HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Plzeňské městské dopravní podniky, a.s.: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Region Hovedstaden": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Stadsbyggnadskontoret SBK": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "Numera Palvelut Oy": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Scottish Water": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "AGENCIA DE MODERNIZACAO DA GESTAO DE PR: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "HOFOR Fjernvarme P/S": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "VšĮ Lietuvos muzikos ir teatro akademij: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Vilniaus vandenys PV": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 619 deals checked, 25 GDELT queries, 10 linked articles
+WARNING:leads:gdelt "EMPRESA DE ACUEDUCTO Y ALCANTARILLADO D: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "UNIVERSIDAD DE ANTIOQUIA": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "Scottish Water": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO:leads:news: 606 deals checked, 26 GDELT queries, 13 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
-wrote 38771 rows x 28 cols to Tenders
+wrote 38659 rows x 28 cols to Tenders
 wrote 5001 rows x 13 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
 wrote 5001 rows x 7 cols to Competitors
@@ -969,8 +969,9 @@ wrote 16 rows x 6 cols to Price Trends
 wrote 34 rows x 8 cols to Price Series
 wrote 1896 rows x 10 cols to Commodity Prices
 wrote 966 rows x 15 cols to Israel
-wrote 11 rows x 7 cols to Press
-wrote 6948 rows x 2 cols to Titles HE
-wrote 2706 rows x 28 cols to Upcoming
+wrote 14 rows x 7 cols to Press
+wrote 6973 rows x 2 cols to Titles HE
+wrote 2705 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
+INFO:leads:web index: 38658 tenders, 17.8 MB raw, 3.7 MB gz
