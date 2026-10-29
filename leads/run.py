@@ -625,6 +625,11 @@ def merge():
         from . import price_trends
         trends, series = price_trends.load()
         st = brain.enrich(tenders, AWARD_ROWS, trends, load_prefs())
+        try:
+            from .sanctions import screen
+            screen(tenders)
+        except Exception as e:  # noqa: BLE001
+            log.warning("sanctions screen: %s", e)
         write("price_trends.csv", [{"group": BY_ID[g]["name"] if g in BY_ID else g, **v} for g, v in trends.items()],
               ["group", "signal", "chg_1m_pct", "chg_3m_pct", "chg_12m_pct", "series"])
         write("price_series.csv", series, ["group", "series", "unit", "month", "price", "chg_1m_pct", "chg_3m_pct",
