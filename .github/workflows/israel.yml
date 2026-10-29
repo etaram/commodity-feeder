@@ -1,0 +1,58 @@
+name: israel
+# Daily scan of the tenders / calls-for-proposals pages of ~1,000 Israeli public bodies (leads/israel.py).
+on:
+  schedule:
+    - cron: "50 3 * * *"
+  workflow_dispatch:
+    inputs:
+      discover:
+        description: "max bodies to (re)discover this run"
+        required: false
+        default: "400"
+      rebuild:
+        description: "rebuild the registry (yes/no)"
+        required: false
+        default: "no"
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: israel
+  cancel-in-progress: false
+jobs:
+  israel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests curl_cffi beautifulsoup4 lxml certifi
+      - name: registry
+        run: |
+          age=999
+          [ -f data/israel/registry_built.txt ] && age=$(( ( $(date -u +%s) - $(date -u -d "$(cat data/israel/registry_built.txt)" +%s) ) / 86400 ))
+          if [ ! -f data/israel/bodies.csv ] || [ "$age" -ge 7 ] || [ "${{ inputs.rebuild }}" = "yes" ]; then python -m leads.il_registry; fi
+        timeout-minutes: 30
+        continue-on-error: true
+      - name: discover
+        run: python -m leads.il_discover ${{ inputs.discover || '250' }} 35
+        timeout-minutes: 45
+        continue-on-error: true
+      - name: scan
+        run: python -m leads.run --source israel
+        timeout-minutes: 65
+        continue-on-error: true
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A data/israel data/leads/partial/israel.json data/leads/error_israel.txt 2>/dev/null || true
+          git add -A data/israel
+          git diff --cached --quiet || git commit -m "israel: $(date -u +%Y-%m-%dT%H:%MZ)"
+          for i in 1 2 3 4; do git pull --rebase origin main && git push && break; sleep 10; done
+      - name: refresh sheet
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run leads.yml --repo "${{ github.repository }}" --ref main -f only=merge,push || true

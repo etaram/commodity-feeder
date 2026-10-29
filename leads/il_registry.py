@@ -17,8 +17,6 @@ import html
 import re
 import time
 from pathlib import Path
-from urllib.parse import urlparse
-
 import requests
 
 from .common import DATA, log
@@ -26,9 +24,9 @@ from .common import DATA, log
 OUT = DATA / "israel" / "bodies.csv"
 CURATED = Path(__file__).with_name("il_curated.csv")
 UA = "SinderTenderMonitor/1.0 (public procurement research; https://github.com/etaram/commodity-feeder)"
-FIELDS = ["id", "type", "name", "name_short", "district", "website", "website_source", "tenders_urls", "status",
+FIELDS = ["id", "type", "name", "name_short", "name_en", "district", "website", "website_source", "tenders_urls", "status",
           "last_discovered", "last_scanned", "open_items", "priority", "keep"]
-TYPE_PRIORITY = {"municipality": 1, "regional_council": 1, "local_council": 1, "gov_company": 1, "infra": 1,
+TYPE_PRIORITY = {"city_association": 2, "planning_committee": 3, "municipality": 1, "regional_council": 1, "local_council": 1, "gov_company": 1, "infra": 1,
                  "statutory": 2, "cluster": 2, "water_corp": 2, "hmo": 2, "hospital": 2, "municipal_company": 2,
                  "drainage": 3, "academic": 3, "religious_council": 3, "company": 3}
 SKIP_DOMAINS = ("wikipedia.org", "wikidata.org", "facebook.com", "youtube.com", "instagram.com", "twitter.com",
@@ -159,12 +157,16 @@ MUNI_TYPE = {"עירייה": "municipality", "מועצה מקומית": "local_c
 
 
 def municipal():
+    en = {}
+    for r in ckan_records("e9701dcb-9f1c-43bb-bd44-eb380ade542f"):
+        en[str(r.get("symbol_number"))] = (r.get("name_in_english") or "").strip().lower()
     out = []
     for r in ckan_records("c4916937-f5d3-4295-a22e-88a1af5cde6a"):
         t = MUNI_TYPE.get((r.get("LocalAuthorityType") or "").strip(), "local_council")
         name = (r.get("LocalAuthorityName") or "").strip()
         out.append({"type": t, "name": (r.get("LocalAuthorityLongName") or name).strip(), "name_short": name,
-                    "district": r.get("LocalAuthorityDistrict") or "", "id": f"MUNI-{r.get('LocalAuthorityCode')}"})
+                    "district": r.get("LocalAuthorityDistrict") or "", "id": f"MUNI-{r.get('LocalAuthorityCode')}",
+                    "name_en": en.get(str(r.get("LocalAuthorityCode")), "") if t != "regional_council" else ""})
     return out
 
 
@@ -211,7 +213,9 @@ def water_corps():
 def municipal_companies():
     """Municipal economic companies: names from Hebrew Wikipedia search (official websites come from discovery)."""
     names = set()
-    for q in ("החברה הכלכלית לפיתוח", "החברה הכלכלית", "חברה עירונית לפיתוח", "החברה העירונית", "החברה לפיתוח"):
+    for q in ("החברה הכלכלית לפיתוח", "החברה הכלכלית", "חברה כלכלית", "חברה עירונית לפיתוח", "החברה העירונית",
+              "החברה לפיתוח", "חברה לפיתוח", "איגוד ערים", "ועדה מרחבית לתכנון ובנייה", "ועדה מקומית לתכנון ובנייה",
+              "תאגיד מים", "תאגיד המים", "החברה למשק וכלכלה", "החברה לתרבות הפנאי", "החברה העירונית לתרבות"):
         off = 0
         while off < 300:
             j = _get("https://he.wikipedia.org/w/api.php", action="query", list="search", srsearch=f'intitle:"{q}"',
@@ -223,7 +227,16 @@ def municipal_companies():
                 break
             off += 50
             time.sleep(0.5)
-    return [{"type": "municipal_company", "name": n} for n in sorted(names)]
+    out = []
+    for n in sorted(names):
+        if re.search(r"^(רשימת|פורטל|תבנית|קטגוריה|ויקיפדיה)|ועדת ", n):
+            continue
+        t = ("water_corp" if re.search(r"תאגיד.*מים|מים וביוב", n) else
+             "municipal_company" if re.search(r"חברה|החברה", n) else
+             "city_association" if "איגוד ערים" in n else "planning_committee" if "ועדה" in n else "")
+        if t:
+            out.append({"type": t, "name": n})
+    return out
 
 
 def curated():
@@ -281,8 +294,9 @@ def build():
                 qid, links = pages[t]
                 site = qsites.get(qid)
                 if not site:
-                    site = next((clean_url(u) for u in links if re.search(r"\.muni\.il|\.org\.il|\.co\.il|\.gov\.il|\.ac\.il", u)
-                                 and clean_url(u)), "")
+                    # an external link on the article counts only when it is a local-authority domain
+                    site = next((clean_url(u) for u in links if re.search(r"\.muni\.il", u) and clean_url(u)), "")
+                    site = re.sub(r"^(https?://[^/]+).*$", r"\1", site)
                     src = "wikipedia link" if site else ""
                 else:
                     src = "wikidata"
@@ -310,7 +324,7 @@ def build():
         same = o.get("website") == site
         rows.append({
             "id": bid, "type": b["type"], "name": b["name"], "name_short": b.get("name_short", ""),
-            "district": b.get("district", ""), "website": site,
+            "name_en": b.get("name_en", ""), "district": b.get("district", ""), "website": site,
             "website_source": b.get("website_source") or o.get("website_source", ""),
             "tenders_urls": o.get("tenders_urls", "") if same else "", "status": o.get("status", "") if same else "",
             "last_discovered": o.get("last_discovered", "") if same else "", "last_scanned": o.get("last_scanned", ""),

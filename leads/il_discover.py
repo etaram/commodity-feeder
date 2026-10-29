@@ -6,6 +6,7 @@ actually list notices. Re-checks a body every 30 days, or sooner when its pages 
 Run: python -m leads.il_discover [max_bodies] [minutes]
 """
 import csv
+import re
 import datetime as dt
 import sys
 import time
@@ -20,19 +21,52 @@ COMMON_PATHS = ["/tenders", "/Tenders", "/michrazim", "/he/tenders", "/מכרז�
                 "/procurement", "/he/procurement", "/Pages/tenders.aspx"]
 
 
+MUNI = {"municipality", "local_council", "regional_council", "religious_council"}
+
+
+def _guesses(body):
+    en = re.sub(r"[^a-z\- ]", "", (body.get("name_en") or "").lower()).strip()
+    if not en or body["type"] not in ("municipality", "local_council"):
+        return []
+    slugs = dict.fromkeys([en.replace(" ", "-"), en.replace(" ", "").replace("-", ""), en.split(" ")[0]])
+    return [f"https://www.{s}.muni.il" for s in slugs if len(s) > 2]
+
+
+def _named(body, txt):
+    short = re.sub(r'["\'״׳\-]', "", body.get("name_short") or "")
+    if body["type"] not in MUNI or not short:
+        return True
+    page = re.sub(r'["\'״׳\-]', "", txt[:60000])
+    return short in page or short.replace(" ", "") in page.replace(" ", "")
+
+
+def _home(body):
+    """The body's verified home page: registry website first, then .muni.il guesses for authorities."""
+    sites = [body["website"]] if body["website"] else []
+    sites += [g for g in _guesses(body) if g not in sites]
+    first = None
+    for site in sites:
+        if not site.startswith("http"):
+            site = "https://" + site
+        for u in (site, ("http://" if site.startswith("https") else "https://") + urlparse(site).netloc):
+            st, final, txt = fetch(u)
+            if st == "ok":
+                if _named(body, txt):
+                    return st, final, txt, site
+                first = first or (st, final, txt, site)
+                break
+            if st in ("robots", "blocked"):
+                first = first or (st, final, txt, site)
+                break
+    return first or ("unreachable", "", "", body["website"])
+
+
 def discover(body):
-    site = body["website"]
-    if not site.startswith("http"):
-        site = "https://" + site
-    st, final, txt = fetch(site)
+    st, final, txt, site = _home(body)
+    if site and site != body["website"]:
+        body["website"], body["website_source"] = site, "verified guess"
     if st != "ok":
-        # retry on the bare domain over http(s)
-        p = urlparse(site)
-        alt = ("http://" if p.scheme == "https" else "https://") + p.netloc
-        st2, final2, txt2 = fetch(alt)
-        if st2 != "ok":
-            return {"status": f"home {st}", "tenders_urls": ""}
-        final, txt = final2, txt2
+        return {"status": f"home {st}", "tenders_urls": ""}
     pages = {}
     cands = candidate_links(final, txt)[:4]
     if not cands:
@@ -74,7 +108,7 @@ def run(max_bodies=600, minutes=50):
     today = dt.date.today()
 
     def due(r):
-        if not r["website"]:
+        if not r["website"] and not r.get("name_en"):
             return False
         if not r["last_discovered"]:
             return True
@@ -95,7 +129,7 @@ def run(max_bodies=600, minutes=50):
                 res = f.result()
             except Exception as e:  # noqa: BLE001
                 res = {"status": f"error {type(e).__name__}", "tenders_urls": ""}
-            r.update(res)
+            r.update(res)  # discover() may also correct r["website"]
             r["last_discovered"] = today.isoformat()
             found += bool(res["tenders_urls"])
             if time.time() > end:

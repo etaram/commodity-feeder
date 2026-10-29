@@ -22,9 +22,9 @@ jobs:
         run: |
           check() {
             now=$(date -u +%s)
-            for spec in "feed.yml:13" "leads.yml:4" "suppliers.yml:12"; do
+            for spec in "feed.yml:13" "leads.yml:4" "suppliers.yml:12" "israel.yml:26"; do
               wf=${spec%%:*}; max_h=${spec##*:}
-              group="$wf"; [ "$wf" != "feed.yml" ] && group="leads.yml suppliers.yml"
+              group="$wf"; [ "$wf" = "leads.yml" ] || [ "$wf" = "suppliers.yml" ] && group="leads.yml suppliers.yml"
               busy=0
               for g in $group; do
                 n=$(gh api "repos/$REPO/actions/workflows/$g/runs?per_page=5" --jq '[.workflow_runs[]|select(.status!="completed")]|length' || echo 1)
