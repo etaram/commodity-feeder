@@ -1,13 +1,2 @@
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/wb_pipeline.py", line 79, in <module>
-    r, m = fetch()
-           ^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/wb_pipeline.py", line 52, in fetch
-    country = iso3(cc) if cc else ""
-              ^^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/regions.py", line 30, in iso3
-    s = (name_or_code or "").strip()
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'list' object has no attribute 'strip'
+INFO:leads:World Bank pipeline: 0 projects (pipeline + recently approved)
+{'projects': 0}
