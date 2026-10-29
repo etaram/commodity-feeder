@@ -1,34 +1,70 @@
-INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
-INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
-INFO OCDR tenders 110 ECU 2026: 931 open of 121705 releases
-INFO OCDR tenders 85 GHA 2026: 0 open of 169 releases
-INFO OCDR tenders 142 GTM 2026: 15979 open of 342057 releases
-INFO OCDR tenders 122 HND 2026: 46 open of 46050 releases
-INFO OCDR tenders 123 HND 2026: 0 open of 43975 releases
-INFO OCDR tenders 156 LBR 2026: 0 open of 1227 releases
-INFO OCDR tenders 127 NGA 2025: 0 open of 3 releases
-INFO OCDR tenders 64 NGA 2026: 0 open of 281 releases
-INFO OCDR tenders 86 NGA 2025: 0 open of 20 releases
-INFO OCDR tenders 118 NGA 2026: 0 open of 3 releases
-INFO OCDR tenders 125 NGA 2025: 0 open of 122 releases
-INFO OCDR tenders 135 PER 2026: 288 open of 134917 releases
-INFO OCDR tenders 145 RWA 2026: 0 open of 4144 releases
-INFO OCDR tenders 152 TZA 2026: 0 open of 62293 releases
-INFO OCDR tenders 130 UGA 2026: 2 open of 14162 releases
-INFO OCDR tenders 43 URY 2026: 76 open of 64000 releases
-INFO OCDR tenders 3 ZMB 2026: 1 open of 26157 releases
-INFO OCDR tenders 101 IDN 2120: 0 open of 1 releases
-INFO OCDR tenders 160 TWN 2026: 0 open of 6 releases
-INFO OCDR tenders 158 THA 2026: 0 open of 208218 releases
-INFO OCDR tenders 134 ALB 2025: 0 open of 722 releases
-INFO OCDR tenders 52 GEO 2025: 0 open of 10 releases
-INFO OCDR tenders 115 SRB 2026: 0 open of 597 releases
-INFO OCDR tenders 111 MEX 2025: 0 open of 10 releases
-INFO OCDR tenders 83 MEX 2025: 0 open of 26 releases
-INFO OCDR tenders 31 MEX 2025: 0 open of 205 releases
-INFO OCDR tenders 149 MEX 2026: 65 open of 4256 releases
-INFO OCDR tenders 32 MEX 2025: 0 open of 26 releases
-INFO OCDR tenders 132 MEX 2025: 0 open of 702 releases
-INFO OCDR tenders 34 MDA 2026: 0 open of 47356 releases
-INFO OCDR tenders {'publications': 32, 'read': 32, 'releases': 1125155, 'open_tenders': 17388, 'countries': 8}
-INFO ocdr_tenders: 17388 rows
+INFO sanctions hit: Ministerie van Defensie (NLD) ~ EU 
+INFO sanctions hit: Ministerie van Defensie (NLD) ~ EU 
+INFO sanctions hit: Ministerstvo vnútra Slovenskej republiky (SVK) ~ EU 
+INFO sanctions hit: Ministerstvo vnútra Slovenskej republiky (SVK) ~ EU 
+INFO sanctions hit: Ministère de la Défense (BEL) ~ EU 
+INFO sanctions hit: REPUBLIKA HRVATSKA MINISTARSTVO OBRANE (HRV) ~ EU 
+INFO sanctions hit: Ministère de l'Intérieur (FRA) ~ EU 
+INFO sanctions hit: Ministère de la Défense (BEL) ~ EU 
+INFO sanctions hit: Ministerstvo vnútra Slovenskej republiky (SVK) ~ EU 
+INFO sanctions hit: Ministero dell'Interno ­ Dipartimento della Pubblica Sicurezza­, Direzione Centrale dei Se (ITA) ~ EU 
+INFO sanctions hit: Ministère de l'Intérieur / DEPAFI / SAILMI (FRA) ~ EU 
+INFO sanctions hit: Ministerstvo vnútra Slovenskej republiky (SVK) ~ EU 
+INFO sanctions hit: Министерство на отбраната (BGR) ~ EU 
+INFO sanctions hit: Ministère de la Défense (BEL) ~ EU 
+INFO sanctions hit: MINISTRSTVO ZA NOTRANJE ZADEVE IN JAVNO UPRAVO (SVN) ~ EU 
+INFO sanctions screen: {'country_block': 43, 'country_restricted': 57, 'entity': 81, 'listed_names': 24066}
+LISTS {'ofac': 11955, 'un': 831, 'eu': 14327}
+SCREEN {'country_block': 43, 'country_restricted': 57, 'entity': 81, 'listed_names': 24066}
+DECISIONS CHANGED 40
+   NLD Pursue -> Ignore | Ministerie van Defensie | SANCTIONS: buyer matches EU  - check before any contact; EV $799,185 = 14% x GP $5,910,756 - cost $5,000; deal
+   NLD Pursue -> Ignore | Ministerie van Defensie | SANCTIONS: buyer matches EU  - check before any contact; EV $111,929 = 6% x GP $1,948,813 - cost $5,000; deal 
+   SVK Pursue -> Ignore | Ministerstvo vnútra Slovenskej republiky | SANCTIONS: buyer matches EU  - check before any contact; EV $90,714 = 8% x GP $1,220,359 - cost $5,000; deal $
+   SVK Pursue -> Ignore | Ministerstvo vnútra Slovenskej republiky | SANCTIONS: buyer matches EU  - check before any contact; EV $69,769 = 8% x GP $927,799 - cost $3,000; deal $8,
+   BEL Pursue -> Ignore | Ministère de la Défense | SANCTIONS: buyer matches EU  - check before any contact; EV $60,844 = 40% x GP $189,749 - cost $3,000; deal $1
+   HRV Pursue -> Ignore | REPUBLIKA HRVATSKA MINISTARSTVO OBRANE | SANCTIONS: buyer matches EU  - check before any contact; EV $41,818 = 6% x GP $746,973 - cost $3,000; deal $6,
+   FRA Pursue -> Ignore | Ministère de l'Intérieur | SANCTIONS: buyer matches EU  - check before any contact; EV $41,507 = 9% x GP $469,071 - cost $3,000; deal $4,
+   BEL Pursue -> Ignore | Ministère de la Défense | SANCTIONS: buyer matches EU  - check before any contact; EV $24,809 = 22% x GP $150,829 - cost $3,000; deal $1
+   IRQ Watch -> Watch | Mayoralty of Baghdad,Ministry of Construction, Hou | RESTRICTED: no diplomatic relations with Israel; Israeli suppliers usually excluded; EV $3,589,511 = 43% x GP 
+   LBN Watch -> Ignore | Office of the Minister of State for Administrative | BLOCKED: enemy state under Israeli law; EV $3,589,511 = 43% x GP $8,290,411 - cost $3,000; deal $100,000,000 (
+   YEM Watch -> Watch | UNICEF,WHO | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $3,373,961 = 43% x GP $7,792,986 - cost $3,000
+   AFG Watch -> Watch | Aga Khan Foundation,Catholic Relief Services,Food  | RESTRICTED: Taliban-related UN/US listings; payment channels restricted; EV $2,844,575 = 45% x GP $6,327,945 -
+   YEM Watch -> Watch | United Nations Children's Fund (UNICEF) | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $2,844,575 = 45% x GP $6,327,945 - cost $3,000
+   AFG Watch -> Watch | Aga Khan Foundation - Afghanistan,Aga Khan Health  | RESTRICTED: Taliban-related UN/US listings; payment channels restricted; EV $2,702,197 = 45% x GP $6,011,548 -
+   AFG Watch -> Watch | Government of Afghanistan | RESTRICTED: Taliban-related UN/US listings; payment channels restricted; EV $2,702,197 = 45% x GP $6,011,548 -
+   SYR Watch -> Ignore | Ministry of Health | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $2,691,384 = 43% x GP $6,217,808 - cost $3
+   LBN Watch -> Ignore | Ministry of Social Affairs | BLOCKED: enemy state under Israeli law; EV $2,560,078 = 43% x GP $5,914,795 - cost $3,000; deal $100,000,000 (
+   IRQ Watch -> Watch | South Electricity Transmission Company | RESTRICTED: no diplomatic relations with Israel; Israeli suppliers usually excluded; EV $2,439,620 = 32% x GP 
+   IRQ Watch -> Watch | Middle Electricity Distribution Company,South Elec | RESTRICTED: no diplomatic relations with Israel; Israeli suppliers usually excluded; EV $2,439,620 = 32% x GP 
+   YEM Watch -> Watch | UNITED NATIONS OFFICE FOR PROJECT SERVICES,United  | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $2,439,620 = 32% x GP $7,515,753 - cost $3,000
+   YEM Watch -> Watch | United Nations Development Program,United Nations  | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $1,037,879 = 32% x GP $3,202,705 - cost $3,000
+   YEM Watch -> Watch | United Nations Development Programme | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $566,515 = 45% x GP $1,265,589 - cost $3,000; 
+   SYR Watch -> Ignore | Ministry of Transport | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $565,225 = 16% x GP $3,642,466 - cost $3,0
+   SYR Watch -> Ignore | Ministry of Agriculture | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $535,877 = 6% x GP $8,290,411 - cost $3,00
+   IRQ Watch -> Watch | Ministry of Higher Education and Scientific Resear | RESTRICTED: no diplomatic relations with Israel; Israeli suppliers usually excluded; EV $535,877 = 6% x GP $8,
+   AFG Watch -> Watch | ACGF Foundation,United Nations Office for Project  | RESTRICTED: Taliban-related UN/US listings; payment channels restricted; EV $424,136 = 45% x GP $949,192 - cos
+   SYR Watch -> Ignore | Ministry of Education | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $347,270 = 6% x GP $5,388,767 - cost $3,00
+   YEM Watch -> Watch | World Food Programme ,Food and Agriculture Organiz | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $274,452 = 32% x GP $853,699 - cost $3,000; de
+   IRQ Watch -> Watch | Ministry of Construction, Housing, and Public Muni | RESTRICTED: no diplomatic relations with Israel; Israeli suppliers usually excluded; EV $195,879 = 16% x GP $1
+   SYR Watch -> Ignore | Ministry of Energy, Water Resources Directorate | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $161,527 = 26% x GP $632,795 - cost $3,000
+   MMR Watch -> Watch | Government of Myanmar | RESTRICTED: US/EU sanctions on state entities; EV $93,064 = 17% x GP $554,214 - cost $3,000; deal $6,685,000 (
+   SYR Watch -> Ignore | Central Bank of Syria | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $92,556 = 15% x GP $653,373 - cost $3,000;
+   SVK Watch -> Ignore | Ministerstvo vnútra Slovenskej republiky | SANCTIONS: buyer matches EU  - check before any contact; EV $55,470 = 3% x GP $2,015,671 - cost $5,000; deal $
+   YEM Watch -> Watch | Government of Yemen, Republic of | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $31,551 = 26% x GP $132,887 - cost $3,000; dea
+   ITA Watch -> Ignore | Ministero dell'Interno ­ Dipartimento della Pubbli | SANCTIONS: buyer matches EU  - check before any contact; EV $24,357 = 3% x GP $978,551 - cost $5,000; deal $13
+   SYR Watch -> Ignore | Ministry of Finance | BLOCKED: enemy state under Israeli law; residual US/EU listings; EV $16,111 = 15% x GP $130,675 - cost $3,000;
+   FRA Watch -> Ignore | Ministère de l'Intérieur / DEPAFI / SAILMI | SANCTIONS: buyer matches EU  - check before any contact; EV $13,828 = 3% x GP $754,262 - cost $3,000; deal $9,
+   SVK Watch -> Ignore | Ministerstvo vnútra Slovenskej republiky | SANCTIONS: buyer matches EU  - check before any contact; EV $13,707 = 9% x GP $182,255 - cost $3,000; deal $2,
+   BGR Watch -> Ignore | Министерство на отбраната | SANCTIONS: buyer matches EU  - check before any contact; EV $13,316 = 10% x GP $141,162 - cost $800 [sub-suppl
+   BEL Watch -> Ignore | Ministère de la Défense | SANCTIONS: buyer matches EU  - check before any contact; EV $12,452 = 12% x GP $150,829 - cost $3,000; deal $1
+   SVN Watch -> Ignore | MINISTRSTVO ZA NOTRANJE ZADEVE IN JAVNO UPRAVO | SANCTIONS: buyer matches EU  - check before any contact; EV $9,652 = 8% x GP $148,942 - cost $3,000; deal $1,2
+   LBN Watch -> Ignore | Digital Opportunity Trust (DOT),Forward MENA | BLOCKED: enemy state under Israeli law; EV $7,755 = 43% x GP $34,150 - cost $1,000; deal $411,926 (sector awar
+   YEM Watch -> Watch | Urban Water - Project Management Unit | RESTRICTED: conflict zone and Houthi-related US/UN listings; EV $7,755 = 43% x GP $34,150 - cost $1,000; deal 
+   NLD Watch -> Ignore | Ministerie van Defensie | SANCTIONS: buyer matches EU  - check before any contact; EV $7,534 = 6% x GP $175,569 - cost $3,000; deal $1,8
+   LBN Watch -> Ignore | Ministry of Public Health | BLOCKED: enemy state under Israeli law; EV $6,867 = 43% x GP $30,689 - cost $1,000; deal $370,172 (sector awar
+   BEL Watch -> Ignore | Ministère de la Défense | SANCTIONS: buyer matches EU  - check before any contact; EV $6,305 = 15% x GP $72,988 - cost $3,000; deal $1,5
+   LBN WatchWARNING gdelt "Riigi Kaitseinvesteeringute Keskus": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING gdelt "South Yorkshire Mayoral Combined Author: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING gdelt "Ministerie van Defensie": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
+WARNING gdelt "CP - Comboios de Portugal, EPE": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
