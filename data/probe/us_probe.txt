@@ -1,29 +1,38 @@
-TX services: ['//www.txsmartbuy.gov/app/services/ShoppingUserEnvironment.Service.ss?lang=en_US&cur=null&X-SC-Touchpoint=shopping', '/app/public/shopping.environment.shortcache.ssp?X-SC-Touchpoint=shopping&amp;t=1744143740649', '/app/public/shopping.environment.ssp?lang=en_US&amp;cur=null&amp;X-SC-Touchpoint=shopping&amp;t']
-TX esbd refs: ['#/esbd', '#/esbd-grants', '/esbd', '/esbd-grants', '/esbd-presolicitations', '/esbd/2026-10072026', '/esbd/26-1080', '/esbd/405-26R0028971', '/esbd/601310000103333', '/esbd/601440000052176', '/esbd/601440000054271', '/esbd/601440000054633', '/esbd/644-26-072126', '/esbd/6510-51-001_1026', '/esbd/6510-77-001_1126', '/esbd/6510-78-001_1126', '/esbd/6510-79-001_1126', '/esbd/6510-80-001_1126', '/esbd/6511-33-001_1126', '/esbd/717-27-712', '/esbd/750-26-27-001', '/esbd/HHS0017108', '/esbd/IFB2027-B01', '/esbd/IFB2027-B02', '/esbd/IFB2027-B03', '/esbd/IW270424', '/esbd/RFP-2026-27-001', '/esbd/RFP-TRN26-16', '/esbd/UTHSCT2027-001', '/esbdawards']
-TRY https://www.txsmartbuy.gov/app/extensions/CPA/CPAMain/1.0.0/services/ESBD.Service.ss?page=1&status=1 200 {"errorStatusCode":"405","errorCode":"ERR_METHOD_NOT_ALLOWED","errorMessage":"Sorry, you are not allowed to perform this action."}
-TRY https://www.txsmartbuy.gov/app/extensions/CPA/CPAMain/1.0.0/services/ESBD.Service.ss?c=852252&n=2&page=1 200 {"errorStatusCode":"405","errorCode":"ERR_METHOD_NOT_ALLOWED","errorMessage":"Sorry, you are not allowed to perform this action."}
-FL: <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>MyFloridaMarket Place Vendor Information Portal</title>
-        <base href="/" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/x-icon" href="favicon.ico" />
-        <link
-            href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500&display=swap"
-            rel="stylesheet"
-        />
-        <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-        <link
-            href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
-            rel="stylesheet"
-        />
-    <link rel="stylesheet" href="styles.bf32ad8afa0c0f1f1cf1.css"></head>
-    <body class="mat-typography">
-        <mfmp-root></mfmp-root>
-    <script src="runtime.9dc77ad85d7558c1a2ef.js" defer></script><script src="polyfills.cffa1011ea985b605258.js" defer></script><script src="main.12e7aa9e28ddadbb00b9.js"
-FL js: ['runtime.9dc77ad85d7558c1a2ef.js', 'polyfills.cffa1011ea985b605258.js', 'main.12e7aa9e28ddadbb00b9.js']
-FL js https://vendor.myfloridamarketplace.com/runtime.9dc77ad85d7558c1a2ef.js: []
-FL js https://vendor.myfloridamarketplace.com/polyfills.cffa1011ea985b605258.js: []
-FL js https://vendor.myfloridamarketplace.com/main.12e7aa9e28ddadbb00b9.js: ['https://international-autocomplete.api.smartystreets.com/lookup', 'https://international-street.api.smartystreets.com/verify', 'https://us-autocomplete-pro.api.smartystreets.com/lookup', 'https://us-autocomplete.api.smartystreets.com/suggest', 'https://us-extract.api.smartystreets.com/', 'https://us-reverse-geo.api.smartystreets.com/lookup', 'https://us-street.api.smartystreets.com/street-address', 'https://us-zipcode.api.smartystreets.com/lookup']
+LA socrata | 200 | len=741 | kw=4 | https://data.lacity.org/resource/hf3r-utnq.json?%24limit=2 | '[{"rampid":"232765","title":"On-Call Strategic Media Consulting and Crisis Communication Services","stagename":"Open","category":"Personal Services","type":"RFP - Request For Proposal","bidpost":"2026'
+bonfire dallascitypurchasing | ERR DNSError Failed to perform, curl: (6) Could not resolve host: dallascitypurchasing.bonfirehub.com (Domain nam | https://dallascitypurchasing.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire fortworthtexas | 200 | len=6015 | kw=8 | https://fortworthtexas.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData | '{"success":1,"message":"Success","payload":{"projects":{"249076":{"ProjectID":"249076","PrivateProjectID":"3eebacd5e4a44b46fdffeb38a21a0352","ReferenceID":"26-0297","ProjectStatusID":"2","ProjectSubSt'
+bonfire charlottenc | 200 | len=9040 | kw=4 | https://charlottenc.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData | '{"success":1,"message":"Success","payload":{"projects":{"255277":{"ProjectID":"255277","PrivateProjectID":"1bb220c5d8efb6058839db641a0f19b1","ReferenceID":"269-2027-006","ProjectStatusID":"2","Project'
+bonfire denver | ERR DNSError Failed to perform, curl: (6) Could not resolve host: denver.bonfirehub.com (Domain name not found).  | https://denver.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire okc | ERR DNSError Failed to perform, curl: (6) Could not resolve host: okc.bonfirehub.com (Domain name not found). See | https://okc.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire indianapolis | ERR DNSError Failed to perform, curl: (6) Could not resolve host: indianapolis.bonfirehub.com (Domain name not fo | https://indianapolis.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire jacksonville | ERR DNSError Failed to perform, curl: (6) Could not resolve host: jacksonville.bonfirehub.com (Domain name not fo | https://jacksonville.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire sanjose | ERR DNSError Failed to perform, curl: (6) Could not resolve host: sanjose.bonfirehub.com (Domain name not found). | https://sanjose.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire columbusoh | ERR DNSError Failed to perform, curl: (6) Could not resolve host: columbusoh.bonfirehub.com (Domain name not foun | https://columbusoh.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire sandiego | ERR DNSError Failed to perform, curl: (6) Could not resolve host: sandiego.bonfirehub.com (Domain name not found) | https://sandiego.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire austintexas | ERR DNSError Failed to perform, curl: (6) Could not resolve host: austintexas.bonfirehub.com (Domain name not fou | https://austintexas.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire phoenix | ERR DNSError Failed to perform, curl: (6) Could not resolve host: phoenix.bonfirehub.com (Domain name not found). | https://phoenix.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire cityofchicago | ERR DNSError Failed to perform, curl: (6) Could not resolve host: cityofchicago.bonfirehub.com (Domain name not f | https://cityofchicago.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire houstontx | ERR DNSError Failed to perform, curl: (6) Could not resolve host: houstontx.bonfirehub.com (Domain name not found | https://houstontx.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire seattle | ERR DNSError Failed to perform, curl: (6) Could not resolve host: seattle.bonfirehub.com (Domain name not found). | https://seattle.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire sanantonio | 200 | len=74085 | kw=6 | https://sanantonio.bonfirehub.com/portal | '<!DOCTYPE html> <html lang=en> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta name="referrer" content="origin"> <title>Portal'
+bonfire sfgov | ERR DNSError Failed to perform, curl: (6) Could not resolve host: sfgov.bonfirehub.com (Domain name not found). S | https://sfgov.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+bonfire philadelphia | ERR DNSError Failed to perform, curl: (6) Could not resolve host: philadelphia.bonfirehub.com (Domain name not fo | https://philadelphia.bonfirehub.com/PublicPortal/getOpenPublicOpportunitiesSectionData
+Chicago | 200 | len=16360 | kw=48 | https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html | ' <!DOCTYPE HTML> <html lang="en-US"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <m'
+Houston OBO | 200 | len=37976 | kw=31 | https://www.houstontx.gov/obo/current_contracting_opportunities.html | '<!DOCTYPE HTML> <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]--> <!--[if IE 7]> <html class="ie7 oldie"> <![endif]--> <!--[if IE 8]> <html class="ie8 oldie"> <![endif]--> <!--[if gt IE 8]'
+Houston purchasing | 200 | len=36211 | kw=17 | https://www.houstontx.gov/bizwithhou/ | '<!DOCTYPE HTML> <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]--> <!--[if IE 7]> <html class="ie7 oldie"> <![endif]--> <!--[if IE 8]> <html class="ie8 oldie"> <![endif]--> <!--[if gt IE 8]'
+Phoenix | 200 | len=58376 | kw=44 | https://solicitations.phoenix.gov/ | ' <!DOCTYPE html> <html> <head> <meta charset="utf-8" /> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> '
+Philadelphia BuySpeed | ERR HTTPError Failed to perform, curl: (61) Error while processing content unencoding: incorrect header check. See | https://www.phlcontracts.phila.gov/bso/external/publicBids.sdo
+San Antonio | 200 | len=73459 | kw=24 | https://webapp1.sanantonio.gov/BidContractOpps/Default.aspx | ' <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head><title> Bidding & Contracting </title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1" name="viewp'
+San Diego | 200 | len=145874 | kw=38 | https://www.sandiego.gov/purchasing/bids-contracts | '<!DOCTYPE html> <html lang="en" dir="ltr" prefix="og: https://ogp.me/ns#"> <head> <meta charset="utf-8" /> <noscript><style>form.antibot > * { display: none !important; } form.antibot noscript {'
+Jacksonville | 200 | len=73327 | kw=5 | https://www.jacksonville.gov/departments/office-of-administrative-services/procurement | ' <!DOCTYPE html> <html lang="EN"> <head id="head"> <meta name="viewport" content="width=device-width, initial-scale=1" /> <meta charset="UTF-8" /> <link rel="icon" href'
+Austin | 200 | len=110692 | kw=56 | https://financeonline.austintexas.gov/afo/account_services/solicitation/solicitations.cfm | ' <!DOCTYPE html> <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]--> <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]--> <!--[if !IE]><!--> <html lang="en"> <!--<![endif]--> '
+San Jose | 404 | len=66163 | kw=0 | https://www.sanjoseca.gov/your-government/departments-offices/finance/purchasing-risk-management | ' <!DOCTYPE html> <html lang="en"> <head id="Head1"><meta charset="UTF-8" /><link href="/DefaultContent/Default/bootstrap.v3.4.1.min.css" rel="stylesheet"/> <meta http-equiv="X-UA-Compatible" con'
+Charlotte | 404 | len=261229 | kw=4 | https://www.charlottenc.gov/Departments/Procurement | '<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]--> <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]--> <!--[if IE 8'
+Columbus | 404 | len=97383 | kw=14 | https://www.columbus.gov/Business-Development/Doing-Business-with-the-City | '<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]--> <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]--> <!--[if IE 8'
+Indianapolis | 200 | len=4383 | kw=0 | https://www.indy.gov/agency/office-of-minority-and-women-business-development | '<!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1"> <meta '
+SF | 200 | len=28416 | kw=0 | https://sfcitypartner.sfgov.org/pages/Events-BS3/event-search.aspx | ' <!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta charset="utf-8"> <meta name="viewport" content="width=devi'
+Seattle | 200 | len=47863 | kw=14 | https://www.seattle.gov/purchasing-and-contracting | ' <!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="GlobalMegaMenu_FF LeftNavVue_FF TopNavVueJS_FF Tabs2021_FF RssCard_FF OfficialBanner_FF GlobalFooterSocialM'
+Denver | 200 | len=155705 | kw=5 | https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Direc | '<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]--> <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]--> <!--[if IE 8'
+OKC | 404 | len=106342 | kw=9 | https://www.okc.gov/departments/finance/purchasing | '<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]--> <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]--> <!--[if IE 8'
+Fort Worth | 200 | len=162789 | kw=40 | https://www.fortworthtexas.gov/departments/finance/purchasing | '<!DOCTYPE html> <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]--> <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]--> <!--[if IE 8'
+Dallas | 200 | len=49543 | kw=8 | https://dallascityhall.com/departments/procurement/Pages/default.aspx | ' <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd"> <html lang="en-US" dir="ltr"> <head><meta http-equiv="X-UA-Compatible" content="IE=edge" '
