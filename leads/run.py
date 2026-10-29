@@ -20,8 +20,8 @@ from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
-                  "kenya", "qatar", "israel"]
-NEW_MODULES = {"israel", "ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
+                  "kenya", "qatar", "israel", "nyc"]
+NEW_MODULES = {"israel", "nyc", "ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
                "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "nigeria", "kenya", "ecuador", "france", "spain", "tanzania",
                "ghana", "zambia", "latam_awards", "wikidata_companies", "web_contacts", "ext_awards", "prozorro_awards", "ocdr", "commodity_producers"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
