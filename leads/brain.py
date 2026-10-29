@@ -161,7 +161,7 @@ def _group_id(name):
     return GROUP_ID.get(name or "", "")
 
 
-def deal(r, st, trends, prefs=None):
+def deal(r, st, trends, prefs=None, edge=None):
     """Deal economics for one notice. Returns a dict of numbers plus a one-line explanation.
 
     value  V      stated value, else the buyer's median award, else country+sector median, else sector median
@@ -247,6 +247,12 @@ def deal(r, st, trends, prefs=None):
             m += 0.005
             tnote = f"{gid} prices {c3}% in 3m"
     m = max(0.015, m)
+    # --- trade-agreement edge: preferential origin removes the import duty competitors pay
+    fta_up, fta_note, fta_duty, fta_origins = 0.0, "", None, []
+    if edge is not None:
+        goods = not (nature.startswith("serv") or nature.startswith("work")) and addr >= 0.5
+        fta_up, fta_note, fta_duty, fta_origins = edge.of(country, r.get("commodity") or r.get("group") or "", goods)
+        m += fta_up
     pay_days = PAYMENT_DAYS.get(region, 90) + 30   # buyer terms + transit and acceptance
     fin = (1 - m) * COST_OF_CAPITAL * pay_days / 365
     net = m - fin - BOND_COST
@@ -289,7 +295,7 @@ def deal(r, st, trends, prefs=None):
         "home": home, "bidders": bidders, "bsrc": bsrc, "fr": fr, "fsrc": fsrc, "inc": inc, "x": x, "fw": fw,
         "places": places, "trad": trad, "p": p, "m": m, "net": net, "deal_v": deal_v, "basis": basis, "conf": conf,
         "addr": addr, "split": split, "gp": gp, "ev": ev, "roi": roi, "cost": cost, "trend": tr, "tnote": tnote,
-        "pay_days": pay_days,
+        "pay_days": pay_days, "fta_up": fta_up, "fta_note": fta_note, "fta_duty": fta_duty, "fta_origins": fta_origins,
     }
 
 
@@ -297,8 +303,15 @@ def enrich(tenders, awards, trends=None, prefs=None):
     """prefs: {"sector": {name: weight}, "region": {name: weight}, "partners": {iso3: strength}} from the sheet."""
     st = Stats(awards)
     trends = trends or {}
+    try:
+        from .fta import Edge
+        edge = Edge()
+    except Exception as e:  # noqa: BLE001
+        import logging
+        logging.getLogger("leads").warning("fta edge unavailable: %s", e)
+        edge = None
     for r in tenders:
-        d = deal(r, st, trends, prefs)
+        d = deal(r, st, trends, prefs, edge)
         days, ev, p = r.get("days_left"), d["ev"], d["p"]
         why = []
         if ev != "":
@@ -314,6 +327,8 @@ def enrich(tenders, awards, trends=None, prefs=None):
         why.append("Israel: home market" if d["home"] else f"foreign win rate {d['fr']:.0%} ({d['fsrc']})")
         if d["tnote"]:
             why.append(d["tnote"])
+        if d["fta_up"]:
+            why.append(f"FTA origin {'/'.join(d['fta_origins'][:3])} +{d['fta_up']:.1%}")
         if d["inc"]:
             why.append(f"incumbent: {d['inc'][:50]}")
         thr = 8_000 if d["home"] else 25_000
@@ -345,5 +360,7 @@ def enrich(tenders, awards, trends=None, prefs=None):
             "roi": d["roi"], "payment_days": d["pay_days"], "price_trend_3m_pct": tr.get("chg_3m_pct", ""),
             "price_signal": tr.get("signal", ""), "route": d["route"], "edge_weight": round(d["edge"], 2),
             "priority_ev_usd": d["priority_ev"],
+            "import_duty_pct": round(d["fta_duty"], 4) if d["fta_duty"] is not None else "",
+            "fta_edge_pct": round(d["fta_up"], 4) if d["fta_up"] else "", "fta_note": d["fta_note"],
         })
     return st
