@@ -21,10 +21,11 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install requests curl_cffi certifi aia
+      - run: mkdir -p data/probe data/israel
       - run: timeout ${{ inputs.minutes }}m python ${{ inputs.script }} 2>&1 | tail -c 200000 > data/probe/script.log; true
       - run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/probe data/israel || true
+          git add -A data/probe data/israel data/leads/partial 2>/dev/null; git add -A data/probe; git add -A data/israel || true
           git diff --cached --quiet || git commit -m "script: ${{ inputs.script }} $(date -u +%H:%MZ)"
           for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 5; done
