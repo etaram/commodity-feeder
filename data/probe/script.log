@@ -1,11 +1,1 @@
-2026-10-29 07:26:17,082 municipal: 259
-2026-10-29 07:26:17,622 gov_companies: 106
-2026-10-29 07:26:17,875 religious_councils: 129
-2026-10-29 07:26:21,298 water corporations: 29
-2026-10-29 07:26:21,298 water_corps: 29
-2026-10-29 07:26:21,999 municipal_companies: 16
-2026-10-29 07:26:22,000 curated: 193
-2026-10-29 07:26:35,269 wikidata_bodies: 235
-2026-10-29 07:28:50,999 registry: 895 bodies, 815 with website; {'municipality': 82, 'local_council': 123, 'regional_council': 54, 'gov_company': 113, 'religious_council': 129, 'water_corp': 29, 'municipal_company': 15, 'statutory': 82, 'hmo': 4, 'academic': 104, 'cluster': 13, 'drainage': 11, 'infra': 27, 'company': 54, 'hospital': 55}
-/home/runner/work/commodity-feeder/commodity-feeder/leads/il_registry.py:328: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
-  (DATA / "israel" / "registry_built.txt").write_text(dt.datetime.utcnow().isoformat(timespec="minutes"))
+applied 112 requests to 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y
