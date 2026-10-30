@@ -20,23 +20,31 @@ jobs:
             code=$(curl -s -m 25 -L -o /tmp/o -w '%{http_code} %{size_download}' -A "$UA" "$url" || echo "ERR")
             echo "$name | $code | $(head -c 700 /tmp/o | tr '\n\r' '  ')" >> data/leads/probe.txt
           done <<'LIST'
-          simap_a https://www.simap.ch/api/publications/v2/project/project-search?lang=en&processTypes=tender&pageSize=3
-          simap_b https://www.simap.ch/api/publications/v2/project/project-search?lang=en&pubTypes=tender&pageSize=3
-          simap_c https://www.simap.ch/api/publications/v2/project/project-search?pageSize=3&lang=de&search=
-          simap_d https://www.simap.ch/api/publications/v1/publication/search
-          gets_list https://www.gets.govt.nz/ExternalIndex.htm
-          cppp https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page
-          cg_a https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133?pagina=1&tamanhoPagina=10&dataPublicacaoPncpInicial=2026-10-20&dataPublicacaoPncpFinal=2026-10-30&codigoModalidade=8
-          cg_b https://dadosabertos.compras.gov.br/modulo-contratacoes/2_consultarItensContratacoes_PNCP_14133?pagina=1&tamanhoPagina=10&dataInclusaoPncpInicial=2026-10-25&dataInclusaoPncpFinal=2026-10-30
-          comprasmx https://comprasmx.buengobierno.gob.mx/sitiopublico/
-          nz_gets_atom https://www.gets.govt.nz/Rss.htm
-          sg_gebiz https://www.gebiz.gov.sg/
-          ph_philgeps https://notices.philgeps.gov.ph/
-          bd_cptu https://eprocure.gov.bd/
-          ke_open https://tenders.go.ke/api/tenders?per_page=2
-          rs_javne https://jnportal.ujn.gov.rs/
-          mk_esjn https://e-nabavki.gov.mk/
-          ge_spa https://tenders.procurement.gov.ge/
+          tw_openfun https://pcc-api.openfun.app/api/listbydate?date=20261029
+          tw_pcc https://web.pcc.gov.tw/prkms/tender/common/noticeDate/readTenderNoticeDate
+          hk_gld https://www.gld.gov.hk/en/tenders/
+          hk_tenders https://www.gld.gov.hk/egazette/english/gazette/tender.html
+          ph_geps https://notices.philgeps.gov.ph/GEPSNONPILOT/Tenders/SplashOpportunitiesSearchUI.aspx?menuIndex=3&ClickFrom=OpenOpp&Result=3
+          kw_capt https://www.capt.gov.kw/
+          kw_capt2 https://www.capt.gov.kw/en/tenders/
+          bh_tb https://www.tenderboard.gov.bh/
+          bh_tb2 https://etendering.tenderboard.gov.bh/Tenders/Active
+          ar_comprar https://comprar.gob.ar/
+          ar_open https://datos.gob.ar/dataset?q=contrataciones
+          cr_sicop https://www.sicop.go.cr/index.jsp
+          vn_mua https://muasamcong.mpi.gov.vn/en
+          id_inaproc https://data.inaproc.id/
+          my_myp https://www.eperolehan.gov.my/
+          mn_tender https://www.tender.gov.mn/en
+          kz_goszakup https://goszakup.gov.kz/en
+          kg_zakupki https://zakupki.gov.kg/
+          lk_pro https://www.nprocurement.gov.lk/
+          bw_ppadb https://www.ppadb.co.bw/
+          na_cpb https://www.cpb.com.na/
+          zw_praz https://www.praz.org.zw/
+          rs_jn https://jnportal.ujn.gov.rs/
+          al_app https://www.app.gov.al/
+          jo_joneps https://www.jordan-eprocurement.gov.jo/
           LIST
           mkdir -p data/leads/probe_html
           UA2="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
