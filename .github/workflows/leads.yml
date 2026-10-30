@@ -119,6 +119,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --source simap 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
+      - name: gets
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',gets,') }}
+        run: set -o pipefail; python -m leads.run --source gets 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 4
+        continue-on-error: true
       - name: grants
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',grants,') }}
         run: set -o pipefail; python -m leads.run --source grants 2>&1 | tee -a data/leads/run.log

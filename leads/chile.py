@@ -4,13 +4,14 @@ used, which is rate limited, so only the list is read. Keeps the larger tender t
 supplier can bid on; small L1 purchases are skipped. Rolling store."""
 import datetime as dt
 import os
+import re
 
 from .common import clean, log, polite, rolling, session, today
 from .sectors import classify
 
 API = "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json"
 DEMO = "F8537A18-6766-4DEF-9E59-426B4FEE2844"
-KEEP = ("-LE", "-LP", "-LQ", "-LR")
+KEEP = re.compile(r"-(LE|LP|LQ|LR)\d{2}$")
 DETAIL_PER_RUN = 120
 
 
@@ -32,7 +33,7 @@ def fetch():
     ticket = os.environ.get("CHILE_TICKET") or DEMO
     s, t = session(), today()
     lst = _get(s, {"estado": "activas", "ticket": ticket})
-    items = [x for x in (lst or {}).get("Listado", []) if str(x.get("CodigoExterno", "")).endswith(KEEP)]
+    items = [x for x in (lst or {}).get("Listado", []) if KEEP.search(str(x.get("CodigoExterno", "")))]
     log.info("Chile: %d active, %d of kept types", (lst or {}).get("Cantidad", 0), len(items))
     new, n_det = [], 0
     for x in items:
