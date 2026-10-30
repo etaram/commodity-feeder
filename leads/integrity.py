@@ -23,8 +23,8 @@ from statistics import median
 from .common import LEADS, log, session, today
 
 CACHE = LEADS / "cache" / "governance.json"
-IND = {"CC.EST": "control_of_corruption", "RL.EST": "rule_of_law", "RQ.EST": "regulatory_quality",
-       "GE.EST": "government_effectiveness"}
+IND = {"GOV_WGI_CC.EST": "control_of_corruption", "GOV_WGI_RL.EST": "rule_of_law", "GOV_WGI_RQ.EST": "regulatory_quality",
+       "GOV_WGI_GE.EST": "government_effectiveness"}
 API = "https://api.worldbank.org/v2/country/all/indicator/{}"
 
 
@@ -36,15 +36,20 @@ def wgi():
     s, data = session(), defaultdict(dict)
     for code, name in IND.items():
         try:
-            r = s.get(API.format(code), params={"format": "json", "per_page": 1000, "mrnev": 1}, timeout=60)
-            rows = (r.json() or [None, []])[1] or []
+            r = s.get(API.format(code), params={"format": "json", "per_page": 20000, "source": 3,
+                                                 "date": f"{today().year - 6}:{today().year}"}, timeout=90)
+            j = r.json()
+            rows = j[1] if isinstance(j, list) and len(j) > 1 and j[1] else []
         except Exception as e:  # noqa: BLE001 - keep the cached copy if the API is down
             log.warning("WGI %s: %s", code, str(e)[:160]); rows = []
-        for x in rows:
+        for x in rows:  # newest year with a value per country
             iso = (x.get("countryiso3code") or "").upper()
-            if len(iso) == 3 and x.get("value") is not None:
+            if len(iso) != 3 or x.get("value") is None:
+                continue
+            if data[iso].get(name + "_year", "") < str(x.get("date", "")):
                 data[iso][name] = round(float(x["value"]), 3)
-                data[iso]["year"] = x.get("date", "")
+                data[iso][name + "_year"] = str(x.get("date", ""))
+                data[iso]["year"] = max(data[iso].get("year", ""), str(x.get("date", "")))
         log.info("WGI %s: %d countries", code, len(rows))
     if not data:
         return c.get("data") or {}

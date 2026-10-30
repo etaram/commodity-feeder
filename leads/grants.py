@@ -79,9 +79,10 @@ def eu_calls(s):
     for page in range(1, 6):
         try:
             r = s.post(EU, params={"apiKey": "SEDIA", "text": "***", "pageSize": 100, "pageNumber": page},
-                       files={"query": (None, json.dumps({"bool": {"must": [{"terms": {"type": ["1", "2"]}},
-                                                                            {"terms": {"status": ["31094501", "31094502"]}}]}})),
-                              "languages": (None, '["en"]')}, timeout=60)
+                       files={"query": ("blob", json.dumps({"bool": {"must": [{"terms": {"type": ["1", "2"]}},
+                                                                              {"terms": {"status": ["31094501", "31094502"]}}]}}), "application/json"),
+                              "languages": ("blob", json.dumps(["en"]), "application/json"),
+                              "sort": ("blob", json.dumps({"field": "sortStatus", "order": "ASC"}), "application/json")}, timeout=60)
             res = (r.json() or {}).get("results") or []
         except Exception as e:  # noqa: BLE001
             log.warning("EU calls p%d: %s", page, str(e)[:120]); break
