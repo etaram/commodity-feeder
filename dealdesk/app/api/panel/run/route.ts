@@ -18,6 +18,16 @@ const GUIDE: Record<string, string> = {
   logistics: "Give practical logistics options to deliver this: likely origin ports, destination port or border point, shipping mode, typical transit time and indicative freight cost range, customs and import rules at destination, and freight forwarders that serve the lane.",
   quote: "Estimate a realistic price: comparable public award prices or market prices with sources, the likely price to win, and the main cost drivers.",
   outreach: "Prepare outreach: who to contact (role, organisation, official channel) and a short professional email draft.",
+  company_intel: `Business intelligence (due diligence) on this company, from public sources only. Sections:
+1. Identity: legal name, registration number and registry, legal form, status (active / dissolved / in insolvency), founding date, address.
+2. Who it is linked to: owners and ultimate beneficial owners where public, parent company and group, main subsidiaries, directors and senior managers (business roles only), notable partners.
+3. History: founding, key events, name changes, mergers and acquisitions.
+4. Activity volume: revenue, profit, employees (with year), main markets, exports, public contracts won (use our data in the JSON).
+5. Credit rating and payment behaviour: public ratings (S&P, Moody's, Fitch or local agencies) if any; public signals such as late-payment reports, insolvency or bankruptcy notices, tax liens, bounced-cheque or restricted-account lists. Say clearly that a full credit report and payment history need a paid provider (for example Dun & Bradstreet, Creditsafe or Coface).
+6. Legal and compliance: court cases, arbitration, regulatory fines, debarment (World Bank and other development bank debarment lists), sanctions (OFAC, EU, UN, UK), criminal or corruption investigations.
+7. Reputation: recent news, controversies.
+8. Red flags and a bottom line for Sinder: low / medium / high risk, and what to verify before signing.
+Mark every fact with its source; never guess; write "not found in public sources" where nothing was found.`,
   other: "Answer the request practically.",
 };
 
@@ -37,14 +47,14 @@ Task type: ${type || "other"}. ${GUIDE[type] || GUIDE.other}
 Subject: ${String(target || "").slice(0, 400)}
 ${request ? `Specific request: ${String(request).slice(0, 1500)}\n` : ""}Data we already have (JSON): ${JSON.stringify(context || {}).slice(0, 6000)}
 
-Use web search to check current facts. Write in ${he ? "Hebrew" : "English"}, practical and short (at most about 350 words), short headings and lines starting with "- ". No emojis, no em-dashes.
+Use web search to check current facts. Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" ? 600 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
 Never invent people, emails, phone numbers or companies; if a fact was not found, say so. Never suggest paying or doing favours for officials.
 End with one line "Next step:" saying the single most useful action.`;
 
   try {
     const { text, sources } = await claude({
       max_tokens: 4000,
-      tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
+      tools: [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" ? 6 : 3 }],
       messages: [{ role: "user", content: prompt }],
     });
     const src = sources.slice(0, 8).map((s) => `- ${s.title}: ${s.url}`).join("\n");

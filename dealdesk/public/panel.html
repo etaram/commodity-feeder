@@ -387,7 +387,7 @@ const L = {
     ask_ph_c: "Ask in your own words: e.g. canned tuna exporters in Ecuador with an e-mail",
     ask_ph_d: "Ask in your own words: e.g. wheat buyers in the Gulf, or steel demand in Saudi Arabia",
     nl_thinking: "Understanding your request...", nl_as: "Searching for:", nl_clear: "Clear", nl_fail: "Could not interpret the request; searching the words as typed.",
-    instant_wait: "Researching now on the web (usually under a minute)...", share_wa: "Share on WhatsApp", share_copy: "Copy text", share_copied: "Copied", days_word: "days", deal_file: "Deal file", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
+    instant_wait: "Researching now on the web (usually under a minute)...", share_wa: "Share on WhatsApp", share_copy: "Copy text", share_copied: "Copied", days_word: "days", deal_file: "Deal file", c_intel: "Business intelligence", jt_company_intel: "Business intelligence", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
     more_wait: "Researching... the answer will appear here.", more_done: "Research result", more_again: "Research again", more_err: "The research failed:",
     a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
     est_ptw: "Estimated price to win: {lo} to {mid} (from {src}, about {n} bidders). The worker's price quote checks this against real prices.",
@@ -492,7 +492,7 @@ const L = {
     ask_ph_c: "חפש במילים שלך: למשל יצואני טונה משומרת מאקוודור עם מייל",
     ask_ph_d: "חפש במילים שלך: למשל קוני חיטה במפרץ, או ביקוש לפלדה בסעודיה",
     nl_thinking: "מבין את הבקשה...", nl_as: "מחפש:", nl_clear: "נקה", nl_fail: "לא הצלחתי לפרש את הבקשה, מחפש את המילים כפי שנכתבו.",
-    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)...", share_wa: "שתף בוואטסאפ", share_copy: "העתק טקסט", share_copied: "הועתק", days_word: "ימים", deal_file: "תיק עסקה", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
+    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)...", share_wa: "שתף בוואטסאפ", share_copy: "העתק טקסט", share_copied: "הועתק", days_word: "ימים", deal_file: "תיק עסקה", c_intel: "מודיעין עסקי", jt_company_intel: "מודיעין עסקי", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
     more_wait: "בתהליך מחקר... התשובה תופיע כאן.", more_done: "תוצאת המחקר", more_again: "חקור שוב", more_err: "המחקר נכשל:",
     a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
     est_ptw: "מחיר משוער לזכייה: {lo} עד {mid} (לפי {src}, כ-{n} מציעים). הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
@@ -1144,9 +1144,9 @@ const latestJob = tid => (S.data.jobs || []).filter(j => j.target_id === tid).so
 const linkify = x => esc(x).replace(/https?:\/\/[^\s<)"]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
 function cardHtml(tid) {
   const j = latestJob(tid); if (!j) return "";
-  if (j.status === "queued" || j.status === "running") return `<div class="card"><b>${esc(t({ logistics: "a_log", quote: "a_quote", eligibility: "a_elig" }[j.type] || "more_info"))}</b> <span class="spin"></span> ${esc(t("more_wait"))}<div class="note">${esc(t(window.DD_INSTANT ? "instant_wait" : "more_note"))}</div></div>`;
+  if (j.status === "queued" || j.status === "running") return `<div class="card"><b>${esc(t({ logistics: "a_log", quote: "a_quote", eligibility: "a_elig", company_intel: "c_intel" }[j.type] || "more_info"))}</b> <span class="spin"></span> ${esc(t("more_wait"))}<div class="note">${esc(t(window.DD_INSTANT ? "instant_wait" : "more_note"))}</div></div>`;
   if (j.status === "error") return `<div class="card"><b>${esc(t("more_err"))}</b> ${esc(j.notes || "")}</div>`;
-  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${linkify(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
+  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote", company_intel: "c_intel" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${linkify(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
   return "";
 }
 function renderCards() { document.querySelectorAll("[data-jobcard]").forEach(el => { el.innerHTML = cardHtml(el.dataset.jobcard); }); }
@@ -1223,11 +1223,20 @@ function openSupplier(s) {
       ["website", (link(s.website, s.website) || "-") + (s.website_source ? ` <span class="sub">(${esc(s.website_source)})</span>` : ""), true],
       ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span>`, true],
       ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
-    <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
+    <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-bi">${esc(t("c_intel"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
     <div id="more-c" data-jobcard="${esc(s.legal_id || s.supplier)}">${cardHtml(s.legal_id || s.supplier)}</div><div id="more-c-flash"></div>
+    <div id="more-ci" data-jobcard="${esc("BI:" + (s.legal_id || s.supplier))}">${cardHtml("BI:" + (s.legal_id || s.supplier))}</div><div id="more-ci-flash"></div>
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
     <div id="c-out"></div>`;
   $("#c-quick").onclick = () => quickCompany(s);
+  $("#c-bi").onclick = e => moreInfo({ type: "company_intel", target_id: "BI:" + (s.legal_id || s.supplier), target: `Business intelligence: ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "region", "main_sector", "industries", "products", "website", "address", "legal_id", "wins", "won_usd_est", "buyers", "buyer_countries", "first_win", "last_win", "sources", "tier_reason"]) }, e.currentTarget, "#more-ci");
+  if (window.DD_CONTACT && !s._ct && !(s.email || s.phone || s.address)) {
+    s._ct = 1;
+    window.DD_CONTACT(s.supplier, s.country).then(c => {
+      if (!c) return; ["email", "phone", "website", "website_source", "address", "legal_id"].forEach(k => { if (c[k] && !s[k]) s[k] = c[k]; });
+      if (S.sel.c === s) openSupplier(s);
+    }).catch(() => {});
+  }
   $("#c-deep").onclick = e => moreInfo({ type: "company_research", target_id: s.legal_id || s.supplier, target: `${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "main_sector", "products", "supplied", "commodities", "website", "email", "phone", "address", "legal_id", "sources"]) }, e.currentTarget, "#more-c");
   $("#c-mail").onclick = () => compose({ kind: "supplier", ctx: { r: s }, to: [s] }, "#c-out");
   $("#c-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + (s.legal_id || s.supplier), target: `Logistics from ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "address", "products", "supplied", "commodities", "main_sector"]), request: "Shipping options from this supplier's country to Israel, the Gulf and Europe for its main products." }, e.currentTarget, "#more-cl");
@@ -1244,12 +1253,14 @@ function openAccount(a) {
       ["channel", a["Procurement channel"]], ["verified_page", link(a["verified procurement page"], a["verified procurement page"]) || esc(t("not_checked")), true],
       ["latest_signal", tr(a["latest signal"]) || "-"], ["next_step", tr(a["next step"]) || "-"], ["sup_in_db", a["suppliers in DB"]]])}</dl>
     ${open.length ? `<div class="section"><h3>${esc(t("open_from_buyer"))}</h3>${open.map((r, i) => `<div class="sup"><span class="score">${esc(r.fit || r.score)}</span><div><a href="#" data-ot="${i}">${txt(tTitle(r))}</a><div class="sub">${money(r.est_value_usd)} · ${esc(r.deadline)}</div></div></div>`).join("")}</div>` : ""}
-    <div class="actions"><button class="primary" type="button" id="a-deep">${esc(t("more_info"))}</button><button type="button" id="a-mail">${esc(t("acc_mail"))}</button><button type="button" id="a-sup">${esc(t("acc_sup"))}</button></div>
+    <div class="actions"><button class="primary" type="button" id="a-deep">${esc(t("more_info"))}</button><button type="button" id="a-intel">${esc(t("c_intel"))}</button><button type="button" id="a-mail">${esc(t("acc_mail"))}</button><button type="button" id="a-sup">${esc(t("acc_sup"))}</button></div>
     <div id="more-c" data-jobcard="${esc(a.Account)}">${cardHtml(a.Account)}</div><div id="more-c-flash"></div>
+    <div id="more-ai" data-jobcard="${esc("BI:" + a.Account)}">${cardHtml("BI:" + a.Account)}</div><div id="more-ai-flash"></div>
     <div id="c-out"></div>`;
   $("#cdetail").querySelectorAll("[data-ot]").forEach(n => n.onclick = e => { e.preventDefault(); openTender(open[+n.dataset.ot]); });
   $("#a-deep").onclick = e => moreInfo({ type: "deal_research", target_id: a.Account, target: `Key account: ${a.Account} (${a.Country})`, context: a, request: "Find current procurement plans, open and upcoming tenders, supplier registration steps and the best entry point for Sinder." }, e.currentTarget, "#more-c");
   $("#a-mail").onclick = () => compose({ kind: "buyer", ctx: { r: a }, to: [] }, "#c-out");
+  $("#a-intel").onclick = e => moreInfo({ type: "company_intel", target_id: "BI:" + a.Account, target: `Business intelligence: ${a.Account} (${a.Country})`, context: a }, e.currentTarget, "#more-ai");
   $("#a-sup").onclick = () => showSuppliers("", `${a["Primary commodity group"]} ${a["Also buys"]}`, "#c-out", { kind: "account", r: a });
 }
 async function quickCompany(s) {

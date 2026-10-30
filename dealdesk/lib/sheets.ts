@@ -34,6 +34,26 @@ export async function readRanges(sid: string, ranges: string[]): Promise<string[
   return (j.valueRanges || []).map((v: { values?: string[][] }) => v.values || []);
 }
 
+// One supplier's official contact details from the private Supplier Universe sheet (columns B name, C country,
+// AA email, AB phone, AC website, AD website source, AE address, AF company ID), looked up with a server-side query.
+const UNIVERSE = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";
+export async function lookupContact(name: string, country: string): Promise<Record<string, string> | null> {
+  const jwt = await client();
+  if (!jwt || !name) return null;
+  const lit = (v: string) => (v.includes("'") ? `"${v.replace(/"/g, "")}"` : `'${v}'`);
+  const tq = `select B,C,AA,AB,AC,AD,AE,AF where B = ${lit(name)}${country ? ` and C = ${lit(country)}` : ""} limit 1`;
+  const { token } = await jwt.getAccessToken();
+  const url = `https://docs.google.com/spreadsheets/d/${UNIVERSE}/gviz/tq?sheet=Suppliers&tqx=out:json&tq=${encodeURIComponent(tq)}`;
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!r.ok) throw new Error(`lookup ${r.status}`);
+  const txt = await r.text();
+  const j = JSON.parse(txt.slice(txt.indexOf("{"), txt.lastIndexOf("}") + 1));
+  const row = j?.table?.rows?.[0]?.c;
+  if (!row) return null;
+  const v = (i: number) => String(row[i]?.v ?? "").trim();
+  return { email: v(2), phone: v(3), website: v(4), website_source: v(5), address: v(6), legal_id: v(7) };
+}
+
 export async function appendRow(tab: string, row: (string | number)[]) {
   return append(tab, row);
 }
