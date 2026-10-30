@@ -112,7 +112,7 @@ jobs:
       - name: chile
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',chile,') }}
         run: set -o pipefail; python -m leads.run --source chile 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 4
+        timeout-minutes: 10
         continue-on-error: true
       - name: simap
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',simap,') }}

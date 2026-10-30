@@ -42,7 +42,7 @@ def fetch():
         if dl and dl < str(t):
             continue
         buyer, value, cur, pub = "Chile public buyer", "", "", str(t)
-        if n_det < DETAIL_PER_RUN and ticket != DEMO or n_det < 25:
+        if ticket != DEMO and n_det < DETAIL_PER_RUN:
             try:
                 d = _get(s, {"codigo": code, "ticket": ticket})
                 it = ((d or {}).get("Listado") or [{}])[0]
