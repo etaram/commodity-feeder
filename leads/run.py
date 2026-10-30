@@ -475,7 +475,7 @@ SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "count
               "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
               "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
               "buyer_median_award_usd", "incumbent", "why"]
-CHUNK, CHUNKS = 2500, 16
+CHUNK, CHUNKS = 2500, 32
 
 
 def _num(v):
