@@ -79,6 +79,14 @@ h3{font-size:14px;margin:0;font-weight:700}
 .more{padding:10px 14px;border-top:1px solid var(--line);text-align:center}
 .detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 110px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-height:calc(100vh - 130px);overflow:auto;min-width:0}
 @media (max-width:900px){.detail{position:static;max-height:none}}
+.sheet-bar{display:none}
+@media (max-width:900px){
+.detail.sheet{position:fixed;inset:0;z-index:1000;max-height:none;border:0;border-radius:0;margin:0;padding:calc(env(safe-area-inset-top,0px) + 64px) 16px calc(env(safe-area-inset-bottom,0px) + 28px);overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+body.sheet-on{overflow:hidden}
+body.sheet-on .sheet-bar{display:flex;position:fixed;top:0;left:0;right:0;z-index:1001;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--panel);border-bottom:1px solid var(--line)}
+.sheet-bar button{font:inherit;font-weight:700;font-size:15px;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+}
+
 .detail h2{font-family:var(--f-body);font-weight:700;font-size:17px;line-height:1.35;overflow-wrap:anywhere}
 .kv{display:grid;grid-template-columns:minmax(110px,max-content) minmax(0,1fr);gap:6px 14px;margin:12px 0;font-size:13px}
 .kv dt{color:var(--muted)} .kv dd{margin:0;overflow-wrap:anywhere}
@@ -336,7 +344,7 @@ const L = {
     e_rep: "No repeat buyers are expected to tender in the next 60 days.", e_acc: "The agent has not found new signals in your key accounts yet.",
     e_comp: "The supplier database is still filling up.", e_jobs_today: "No results yet. Every deep check you start shows up here.",
     awards_year: "awards a year", ready: "Ready", running: "Running", queued: "Queued", error: "Error",
-    tq_ph: "Search: product, buyer, country...", all_sectors: "All sectors", all_regions: "All regions", all_countries: "All countries", any_size: "Any size", deal_desk: "Classic screens", all_decisions: "All decisions", min_days: "Min. days to close",
+    tq_ph: "Search: product, buyer, country...", all_sectors: "All sectors", all_regions: "All regions", all_countries: "All countries", any_size: "Any size", sheet_back: "← Back to list", deal_desk: "Classic screens", all_decisions: "All decisions", min_days: "Min. days to close",
     t_pick: "Pick a tender to see its details and run an eligibility check, supplier matching or outreach.", no_value: "no value", planned: "planned", days: "days", new_: "new",
     e_tenders: "No tenders match these filters.", more: "Show more ({n} more)",
     buyer: "Buyer", sector: "Sector", est_value: "Estimated value", deadline: "Deadline", access: "Foreign access", ev: "Expected value", win_chance: "win chance", exp_bidders: "expected bidders",
@@ -441,7 +449,7 @@ const L = {
     e_rep: "אין קונים חוזרים שצפויים לצאת למכרז ב-60 הימים הקרובים.", e_acc: "הסוכן עוד לא מצא אותות חדשים בחשבונות המפתח.",
     e_comp: "מאגר הספקים עדיין מתמלא.", e_jobs_today: "עדיין אין תוצאות. כל בדיקה מעמיקה שתפעיל תופיע כאן.",
     awards_year: "זכיות בשנה", ready: "מוכן", running: "בעבודה", queued: "בתור", error: "שגיאה",
-    tq_ph: "חיפוש: מוצר, קונה, מדינה...", all_sectors: "כל הסקטורים", all_regions: "כל האזורים", all_countries: "כל המדינות", any_size: "כל גודל", deal_desk: "מסכים קלאסיים", all_decisions: "כל ההחלטות", min_days: "ימים לסגירה לפחות",
+    tq_ph: "חיפוש: מוצר, קונה, מדינה...", all_sectors: "כל הסקטורים", all_regions: "כל האזורים", all_countries: "כל המדינות", any_size: "כל גודל", sheet_back: "→ חזרה לרשימה", deal_desk: "מסכים קלאסיים", all_decisions: "כל ההחלטות", min_days: "ימים לסגירה לפחות",
     t_pick: "בחר מכרז כדי לראות פרטים ולהפעיל בדיקת תנאי סף, התאמת ספקים ופנייה.", no_value: "ללא ערך", planned: "מתוכנן", days: "ימים", new_: "חדש",
     e_tenders: "אין מכרזים שמתאימים לסינון.", more: "הצג עוד ({n} נוספים)",
     buyer: "קונה", sector: "סקטור", est_value: "ערך משוער", deadline: "מועד אחרון", access: "גישה לספק זר", ev: "תוחלת רווח", win_chance: "סיכוי זכייה", exp_bidders: "מציעים צפויים",
@@ -1403,4 +1411,36 @@ window.addEventListener("hashchange", () => { const v = location.hash.slice(1); 
 })();
 </script>
 
+
+<div class="sheet-bar" id="sheetbar"><button type="button" id="sheetclose" data-i="sheet_back">&larr; Back to list</button></div>
+<script>
+(() => {
+  const narrow = () => matchMedia("(max-width:900px)").matches;
+  let lastClick = 0, pushed = false;
+  document.addEventListener("click", e => { if (!e.target.closest(".sheet-bar")) lastClick = Date.now(); }, true);
+  const close = fromPop => {
+    document.querySelectorAll(".detail.sheet").forEach(d => d.classList.remove("sheet"));
+    document.body.classList.remove("sheet-on");
+    if (pushed && !fromPop) { pushed = false; history.back(); } else pushed = false;
+  };
+  const open = d => {
+    if (!narrow() || d.querySelector(":scope > .empty")) return;
+    document.querySelectorAll(".detail.sheet").forEach(x => x !== d && x.classList.remove("sheet"));
+    if (!d.classList.contains("sheet")) { d.classList.add("sheet"); d.scrollTop = 0; }
+    document.body.classList.add("sheet-on");
+    if (!pushed) { try { history.pushState({ sheet: 1 }, ""); pushed = true; } catch (e) {} }
+  };
+  const obs = new MutationObserver(muts => {
+    if (Date.now() - lastClick > 4000) return;
+    const seen = new Set();
+    muts.forEach(m => { const d = m.target.closest ? m.target.closest(".detail") : null; if (d && !seen.has(d)) { seen.add(d); open(d); } });
+  });
+  document.querySelectorAll(".detail").forEach(d => obs.observe(d, { childList: true, subtree: true }));
+  document.getElementById("sheetclose").onclick = () => close(false);
+  addEventListener("popstate", () => { if (document.body.classList.contains("sheet-on")) close(true); });
+  addEventListener("keydown", e => { if (e.key === "Escape") close(false); });
+  addEventListener("resize", () => { if (!narrow()) close(false); });
+  document.addEventListener("click", e => { if (e.target.closest(".tabs button, nav button, [data-view]") && !e.target.closest(".detail")) close(false); });
+})();
+</script>
 </body></html>
