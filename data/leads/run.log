@@ -1,5 +1,6 @@
-Fri Oct 30 11:35:23 UTC 2026
+Fri Oct 30 11:38:29 UTC 2026
 INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1237291', 'noticeid': '682', 'type': 'SPECIFIC', 'countryname': 'DOMINICAN REPUBLIC', 'projectnumber': 'DR-T1158_x000D_', 'proyecturl': 'https://www.iadb.org/en/project/DR-T1158', 'loannumber': '', 'noticetitle': 'Consultoría para la Adquisición e Implem', 'ezshareid': 'EZSHARE-1132444900-23188', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': '', 'publicationyear': '2019', 'publicationdate': '2019-08-02 00:00:00.000000000', 'deadline': '2019-08-12'}
+INFO IDB dates min=2000-07-06 max=2026-04-10 sample=['2019-08-02 00:00:00.000000000', '2019-07-01 00:00:00.000000000', '2018-12-03 00:00:00.000000000'] deadlines=['2019-08-12', '2019-07-16', '2019-01-28']
 INFO IDB page 0: 1000 recs, 1000 old, kept so far 0
 INFO IDB new 0, open 0
 INFO iadb: 0 rows
