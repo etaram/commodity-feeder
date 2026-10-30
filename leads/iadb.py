@@ -57,6 +57,8 @@ def fetch():
                 "published": pub, "deadline": dl, "value": "", "currency": "", "link": x.get("documenturl") or x.get("proyecturl") or "",
                 "contact": "", "lang": "es" if any(c in title for c in "ñáéíóú") else "",
             })
+        ds = sorted((x.get("publicationdate") or "")[:10] for x in recs)
+        log.info("IDB dates min=%s max=%s sample=%s deadlines=%s", ds[0], ds[-1], [x.get("publicationdate") for x in recs[:3]], [x.get("deadline") for x in recs[:3]])
         log.info("IDB page %d: %d recs, %d old, kept so far %d", page, len(recs), old, len(new))
         if old > len(recs) * 0.6:
             break
