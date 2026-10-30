@@ -1,21 +1,51 @@
 name: probe
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 permissions:
   contents: write
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - run: pip install requests curl_cffi aia certifi
-      - run: python tools/probe.py
-      - run: python tools/probe_extra.py || true
-      - run: |
-          git config user.name "commodity-feed-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add data/probe
-          git diff --cached --quiet || git commit -m "probe: $(date -u +%H:%MZ)"
-          git pull --rebase origin main
-          git push
+      - name: probe endpoints
+        run: |
+          mkdir -p data/leads
+          UA="Mozilla/5.0 (compatible; SinderResearch/1.0)"
+          : > data/leads/probe.txt
+          while read -r name url; do
+            code=$(curl -s -m 25 -L -o /tmp/o -w '%{http_code} %{size_download}' -A "$UA" "$url" || echo "ERR")
+            echo "$name | $code | $(head -c 90 /tmp/o | tr '\n\r' '  ')" >> data/leads/probe.txt
+          done <<'LIST'
+          gleif https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=Equinor&page%5Bsize%5D=1
+          brreg https://data.brreg.no/enhetsregisteret/api/enheter?navn=equinor&size=1
+          france https://recherche-entreprises.api.gouv.fr/search?q=airbus&per_page=1
+          prh https://avoindata.prh.fi/opendata-ytj-api/v3/companies?name=nokia
+          ares https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/27082440
+          edgar https://data.sec.gov/submissions/CIK0000320193.json
+          wikidata https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Siemens&language=en&format=json
+          ofac_sdn https://www.treasury.gov/ofac/downloads/sdn.csv
+          ofac_cons https://www.treasury.gov/ofac/downloads/consolidated/cons_prim.csv
+          uk_sanctions https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv
+          un_sanctions https://scsanctions.un.org/resources/xml/en/consolidated.xml
+          eu_sanctions https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw
+          opensanctions https://data.opensanctions.org/datasets/latest/default/targets.simple.csv
+          worldbank_debar https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRESS/FIRM/SANCTIONED_FIRM
+          comprasgov https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133?pagina=1&tamanhoPagina=10&dataPublicacaoPncpInicial=2026-10-01&dataPublicacaoPncpFinal=2026-10-30&codigoModalidade=6
+          chile https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?estado=activas&ticket=F8537A18-6766-4DEF-9E59-426B4FEE2844
+          wto https://apiportal.wto.org/
+          gets https://www.gets.govt.nz/ExternalIndex.htm
+          kbo https://kbopub.economie.fgov.be/kbopub/zoeknaamfonetischform.html
+          cvrapi https://cvrapi.dk/api?search=novo&country=dk
+          zefix https://www.zefix.ch/en/search/entity/welcome
+          sirene https://api.insee.fr/entreprises/sirene/V3.11/siret/55208131766522
+          abn https://abr.business.gov.au/
+          kenya_open https://tenders.go.ke/
+          eu_ftp https://ec.europa.eu/info/funding-tenders/opportunities/data/referenceData/grantsTenders.json
+          tendfeed https://github.com/tendfeed-eu/tendfeed-mcp
+          LIST
+          cat data/leads/probe.txt
+      - name: commit
+        run: |
+          git config user.name github-actions; git config user.email actions@github.com
+          git add data/leads/probe.txt; git commit -qm "probe results" || true
+          git pull -q --rebase origin main; git push -q origin HEAD:main || true
