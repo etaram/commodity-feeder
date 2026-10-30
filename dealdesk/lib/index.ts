@@ -26,9 +26,19 @@ async function load<T>(name: string, decode: (b: Buffer) => T): Promise<T> {
   return data;
 }
 
+// A tender whose deadline has passed is closed and never shown (the data files are refreshed every few hours,
+// so the check runs against today's date at request time). Tenders without a stated deadline stay.
+export function isClosed(deadline: string | undefined): boolean {
+  const d = Date.parse(String(deadline || "").slice(0, 10));
+  if (!isFinite(d)) return false;
+  const now = new Date();
+  return d < Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+}
+
 export async function tenders(): Promise<Tender[]> {
   try {
-    return await load("tenders.json.gz", (b) => JSON.parse(gunzipSync(b).toString("utf-8")));
+    const all: Tender[] = await load("tenders.json.gz", (b) => JSON.parse(gunzipSync(b).toString("utf-8")));
+    return all.filter((r) => !isClosed(r.dl));
   } catch {
     return [];
   }

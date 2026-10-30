@@ -387,7 +387,7 @@ const L = {
     ask_ph_c: "Ask in your own words: e.g. canned tuna exporters in Ecuador with an e-mail",
     ask_ph_d: "Ask in your own words: e.g. wheat buyers in the Gulf, or steel demand in Saudi Arabia",
     nl_thinking: "Understanding your request...", nl_as: "Searching for:", nl_clear: "Clear", nl_fail: "Could not interpret the request; searching the words as typed.",
-    instant_wait: "Researching now on the web (usually under a minute)...", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
+    instant_wait: "Researching now on the web (usually under a minute)...", share_wa: "Share on WhatsApp", share_copy: "Copy text", share_copied: "Copied", days_word: "days", deal_file: "Deal file", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
     more_wait: "Researching... the answer will appear here.", more_done: "Research result", more_again: "Research again", more_err: "The research failed:",
     a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
     est_ptw: "Estimated price to win: {lo} to {mid} (from {src}, about {n} bidders). The worker's price quote checks this against real prices.",
@@ -492,7 +492,7 @@ const L = {
     ask_ph_c: "חפש במילים שלך: למשל יצואני טונה משומרת מאקוודור עם מייל",
     ask_ph_d: "חפש במילים שלך: למשל קוני חיטה במפרץ, או ביקוש לפלדה בסעודיה",
     nl_thinking: "מבין את הבקשה...", nl_as: "מחפש:", nl_clear: "נקה", nl_fail: "לא הצלחתי לפרש את הבקשה, מחפש את המילים כפי שנכתבו.",
-    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)...", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
+    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)...", share_wa: "שתף בוואטסאפ", share_copy: "העתק טקסט", share_copied: "הועתק", days_word: "ימים", deal_file: "תיק עסקה", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
     more_wait: "בתהליך מחקר... התשובה תופיע כאן.", more_done: "תוצאת המחקר", more_again: "חקור שוב", more_err: "המחקר נכשל:",
     a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
     est_ptw: "מחיר משוער לזכייה: {lo} עד {mid} (לפי {src}, כ-{n} מציעים). הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
@@ -617,7 +617,36 @@ function toObjects(values) {
   const h = values[0].map(x => String(x).trim());
   return values.slice(1).filter(r => r.some(c => String(c).trim() !== "")).map((r, i) => {
     const o = { _row: i + 2 }; h.forEach((k, j) => { if (k) o[k] = r[j] ?? ""; }); return o;
-  });
+  }).filter(openTenderRow);
+}
+/* a tender whose deadline has passed is closed and never shown; days left are recomputed from today's date */
+function openTenderRow(o) {
+  if (!("deadline" in o) || !("days_left" in o)) return true;
+  const d = Date.parse(String(o.deadline).slice(0, 10)); if (!isFinite(d)) return true;
+  const n = new Date(), dl = Math.round((d - Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate())) / 86400000);
+  o.days_left = String(dl); return dl >= 0;
+}
+/* share to WhatsApp or copy the text */
+const SITE = "https://sinder-deal-desk.vercel.app";
+const plain = x => String(x ?? "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, " ").trim();
+function shareHtml(text) {
+  return `<a class="btn" style="background:#1F7A4D;color:#fff;border-color:#1F7A4D;text-decoration:none" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">${esc(t("share_wa"))}</a><button type="button" data-copytext="${esc(text)}">${esc(t("share_copy"))}</button>`;
+}
+document.addEventListener("click", async e => {
+  const b = e.target.closest("[data-copytext]"); if (!b) return;
+  const txt = b.dataset.copytext;
+  try { await navigator.clipboard.writeText(txt); }
+  catch (err) { const ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (x) {} ta.remove(); }
+  const old = b.textContent; b.textContent = t("share_copied"); setTimeout(() => { b.textContent = old; }, 1600);
+});
+function tenderShare(r) {
+  return [`*${plain(tTitle(r))}*`, `${plain(tr(r.buyer))} · ${r.country}${r.sector ? " · " + r.sector : ""}`,
+    money(r.est_value_usd) ? `${t("est_value")}: ${money(r.est_value_usd)}` : "", r.deadline ? `${t("deadline")}: ${r.deadline} (${r.days_left} ${t("days_word")})` : "",
+    r.decision ? `Sinder: ${r.decision}` : "", r.link ? `${t("notice")}: ${r.link}` : "", `${t("deal_file")}: ${SITE}/deal/${encodeURIComponent(r.id)}`].filter(Boolean).join("\n");
+}
+function dealShare(head, kv) {
+  const lines = kv.slice(0, 8).map(([k, v]) => { const p = plain(v); return p && p !== "-" ? `${t(k)}: ${p}` : ""; }).filter(Boolean);
+  return [`*${plain(head)}*`, ...lines, `Sinder Deal Desk: ${SITE}`].join("\n");
 }
 
 const ECODE = { needs_reauth: "err_reauth", server_not_connected: "err_notconn", selection_required: "err_sel", approval_required: "err_approval", not_in_manifest: "err_manifest", blocked_by_policy: "err_policy", server_unavailable: "err_unavail", tool_error: "err_tool" };
@@ -846,6 +875,7 @@ function openTender(r, keep) {
       <button type="button" id="a-epc">${esc(t("a_epc"))}</button>
       <button type="button" id="a-sup">${esc(t("a_sup"))}</button>
       <button type="button" id="a-pur" ${inP ? "disabled" : ""}>${esc(inP ? t("tracked") : t("a_track"))}</button>
+      ${shareHtml(tenderShare(r))}
     </div>
     <div class="note">${esc(t("t_note"))}</div>
     <div id="more-t" data-jobcard="${esc(r.id)}">${cardHtml(r.id)}</div><div id="more-t-flash"></div>
@@ -1294,6 +1324,7 @@ function openDeal(mode, r) {
     kv = [["HS", r.hs6], ["imports", `${money(r.imports_usd)} (${r.year}), ${t("prev_year")} ${money(r.prev_year_usd)}`], ["growth", r.growth_pct + "%"], ["world_share", r.world_share_pct + "%"], ["unit_value", `$${r.unit_value_usd_kg}/kg ${t("vs_bench")} $${r.benchmark_usd_kg}/kg`], ["premium", r.premium_vs_benchmark_pct + "%"], ["source", r.benchmark_source]];
   }
   $("#ddetail").innerHTML = `<h2>${flag(mode === "bd" ? r.market : r.country)}${txt(head)}</h2><dl class="kv">${kvRows(kv)}</dl>
+    <div class="actions">${shareHtml(dealShare(head, kv))}</div>
     <div class="actions"><button class="primary" type="button" id="d-quick">${esc(t("a_quick"))}</button><button type="button" id="d-deep">${esc(t("more_info"))}</button><button type="button" id="d-log">${esc(t("a_log"))}</button><button type="button" id="d-sup">${esc(t("a_sup"))}</button><button type="button" id="d-mail">${esc(t("c_mail"))}</button></div>
     <div id="more-d" data-jobcard="${esc(dealId(mode, r))}">${cardHtml(dealId(mode, r))}</div><div id="more-d-flash"></div>
     <div id="more-dl" data-jobcard="${esc("L:" + dealId(mode, r))}">${cardHtml("L:" + dealId(mode, r))}</div><div id="more-dl-flash"></div><div id="d-out"></div>`;

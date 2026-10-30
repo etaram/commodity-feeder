@@ -1,7 +1,7 @@
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
-import { suppliers as supplierIndex, type Supplier } from "@/lib/index";
+import { suppliers as supplierIndex, isClosed, type Supplier } from "@/lib/index";
 import { readRanges } from "@/lib/sheets";
 
 const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
@@ -44,7 +44,16 @@ async function allSuppliers(): Promise<Supplier[]> {
   return cached("sup-sorted", 900_000, async () => {
     const { rows, error } = await supplierIndex();
     if (error && !rows.length) throw new Error(error);
-    return rows.slice().sort((a, b) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0));
+    // Best tier first; within a tier, interleave regions so the top is not only EU suppliers (whose awards are larger
+    // and better documented): best of Europe, best of Latin America, best of Africa, best of Asia, and so on.
+    const sorted = rows.slice().sort((a, b) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0));
+    const seen = new Map<string, number>();
+    const keyed = sorted.map((r, i) => {
+      const reg = r.rg || "unknown", k = (r.tr || "9") + "|" + reg, n = (seen.get(k) || 0) + 1;
+      seen.set(k, n);
+      return { r, t: r.tr || "9", rr: n * (reg === "unknown" || reg === "Other" ? 4 : 1), i };
+    });
+    return keyed.sort((a, b) => a.t.localeCompare(b.t) || a.rr - b.rr || a.i - b.i).map((x) => x.r);
   });
 }
 
@@ -61,7 +70,7 @@ async function allTenders(): Promise<{ head: string[]; rows: Record<string, stri
       const p = Papa.parse<Record<string, string>>(text, { header: true, skipEmptyLines: true });
       if (!head.length) head = p.meta.fields || [];
       for (const r of p.data) {
-        if (!r.id) continue;
+        if (!r.id || isClosed(r.deadline)) continue;
         const f = fit[r.id] || [];
         r.fit = f[0] || r.score || ""; r.your_suppliers = f[1] || ""; r.tier_AB = f[2] || "";
         rows.push(r);

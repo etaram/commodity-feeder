@@ -4,9 +4,28 @@ import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
 import BottomLine from "@/components/BottomLine";
 import { verdict } from "@/lib/verdict";
-import { tenders } from "@/lib/index";
+import { tenders, isClosed } from "@/lib/index";
 
 export const revalidate = 900;
+
+function liveDays(deadline: string): number | null {
+  const d = Date.parse(String(deadline).slice(0, 10));
+  if (!isFinite(d)) return null;
+  const n = new Date();
+  return Math.round((d - Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate())) / 86400000);
+}
+function shareText(d: Row): string {
+  const v = num(d.est_value_usd);
+  return [
+    `*${d.title_en || d.title_original || "Tender"}*`,
+    `${d.buyer || ""} · ${d.country || ""}${d.sector ? " · " + d.sector : ""}`,
+    v ? `Value: ${usd(v)}` : "",
+    d.deadline ? `Deadline: ${d.deadline}` : "",
+    d.decision ? `Sinder view: ${d.decision}` : "",
+    d.link ? `Official notice: ${d.link}` : "",
+    `Deal file: https://sinder-deal-desk.vercel.app/deal/${encodeURIComponent(d.id)}`,
+  ].filter(Boolean).join("\n");
+}
 
 const IG_CHIP: Record<string, string> = { open: "bg-gobg text-go", caution: "bg-watchbg text-watch", "high risk": "bg-nobg text-no" };
 
@@ -88,10 +107,12 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
         <div className="mt-2 flex flex-wrap gap-2 text-xs">
           <span className={`rounded-full px-2.5 py-1 font-bold ${deal.decision === "Pursue" ? "bg-gobg text-go" : deal.decision === "Watch" ? "bg-watchbg text-watch" : "bg-paper text-muted"}`}>{deal.decision}</span>
           <span className="rounded-full bg-[#E6ECF3] px-2.5 py-1 font-semibold text-blue">{ROUTE_LABEL[deal.route] || deal.route || "direct"}</span>
-          {deal.deadline && <span className="rounded-full bg-paper px-2.5 py-1 font-semibold">Deadline {deal.deadline} ({deal.days_left || "?"} days)</span>}
+          {deal.deadline && <span className="rounded-full bg-paper px-2.5 py-1 font-semibold">Deadline {deal.deadline} ({liveDays(deal.deadline) ?? "?"} days)</span>}
           {deal.link && <a href={deal.link} target="_blank" className="rounded-full bg-accent px-2.5 py-1 font-bold text-white hover:bg-blue">Open the official notice</a>}
+          <a href={"https://wa.me/?text=" + encodeURIComponent(shareText(deal))} target="_blank" rel="noopener" className="rounded-full bg-[#1F7A4D] px-2.5 py-1 font-bold text-white hover:opacity-90">Share on WhatsApp</a>
         </div>
       </div>
+      {isClosed(deal.deadline) && <div className="rounded-xl border-l-4 border-no bg-nobg p-3 text-sm font-semibold text-no">This tender closed on {deal.deadline}. It is kept here for reference only and no longer appears in the lists.</div>}
 
       <BottomLine v={verdict(deal)} />
 

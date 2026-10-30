@@ -11,7 +11,7 @@ const DAILY_LIMIT = Number(process.env.AI_RUN_DAILY_LIMIT || 80);
 let day = "", used = 0;
 
 const GUIDE: Record<string, string> = {
-  supplier_search: "Find real companies that can supply this (manufacturers first, then exporters and traders). For each: name, country, what they make, why they fit, official website. Only official public contact details found on the company's own site or an official register, with the source.",
+  supplier_search: "Find real companies that can supply this (manufacturers first, then exporters and traders). For each: name, country, what they make, why they fit, official website. Do not stop at Western firms: where emerging markets are major sources of this product (for example China, India, Turkey, Vietnam, Indonesia, Malaysia, Thailand, Brazil, Egypt, South Africa, Ukraine, Kazakhstan), include competitive producers and exporters from there, and say which origin is usually cheapest. Only official public contact details found on the company's own site or an official register, with the source.",
   company_research: "Research this company: what it does, size and ownership, main products and markets, public-sector and export track record, recent news, risks, and how Sinder could work with it.",
   deal_research: "Research this opportunity: who the buyer is and what they buy, budget and timing, who usually wins and at what prices, eligibility for a foreign or Israeli supplier, and the concrete next steps for Sinder.",
   eligibility: "List the threshold (eligibility) conditions for a foreign supplier: registration and legal, financial (turnover, guarantees), technical (experience, certificates), documents, local partner needs, and where the official tender documents are.",

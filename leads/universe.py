@@ -138,6 +138,21 @@ def quality(r):
     return round(max(0, min(100, q)))
 
 
+def balance_regions(rows):
+    """Within each tier, interleave regions (best of Europe, best of Latin America, best of Africa, best of South Asia...)
+    so the top of the list is not dominated by EU suppliers, whose public awards are larger and better documented.
+    Rows of unknown region come later. Input must already be sorted by tier then quality."""
+    import collections
+    seen = collections.Counter()
+    keyed = []
+    for i, r in enumerate(rows):
+        reg = r.get("region") or "unknown"
+        seen[(r["tier"], reg)] += 1
+        rr = seen[(r["tier"], reg)] * (4 if reg in ("unknown", "Other") else 1)
+        keyed.append(((r["tier"], rr, i), r))
+    return [r for _, r in sorted(keyed, key=lambda x: x[0])]
+
+
 TIER_NAMES = {"1": "Strategic", "2": "Proven", "3": "Qualified", "4": "Unproven"}
 
 
@@ -342,6 +357,7 @@ def build():
         r["quality"] = quality(r)
         r["tier"], r["tier_reason"] = supplier_tier(r)
     out.sort(key=lambda r: (r["tier"], -r["quality"], -r["won_usd_est"]))  # best tier first, then quality
+    out = balance_regions(out)
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)
     cols = list(out[0].keys()) if out else ["supplier"]
