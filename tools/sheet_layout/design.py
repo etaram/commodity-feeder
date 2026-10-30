@@ -374,7 +374,7 @@ chart(S, "US tenders open to foreign firms, by sector", rng(S, 26, 40, 1, 1), rn
 
 # ---- Deals
 S, tab = 50, "Deals"
-analysis(tab, S, 10, [80, 380, 170, 130, 100, 100, 130, 130, 110, 430],
+analysis(tab, S, 11, [80, 380, 170, 130, 100, 100, 130, 130, 110, 430, 90],
          "Deals", "What the deal calculation says: expected value = win probability x deal value x net margin - pursuit cost, weighted by Profile and Partners.",
          [("PURSUE DEALS", f'=COUNTIF({DC}!B2:B,"Pursue")', INT), ("EXPECTED VALUE", f'=SUMIF({DC}!B2:B,"Pursue",{DC}!C2:C)', USD),
           ("PRIORITY VALUE", f'=SUMIF({DC}!B2:B,"Pursue",{DC}!AE2:AE)', USD),
@@ -391,8 +391,8 @@ put(tab, 42, 1, [[f"=QUERY({DC}!A2:AE,\"select T, count(A), sum(C), avg(L), avg(
 table_header(S, 42, 1, 6); put(tab, 42, 6, [["Share of value"]]); bars(tab, S, 43, 68, 3, 6, "green")
 nf(S, 43, 68, 3, 3, USD); nf(S, 43, 68, 4, 4, PCT1); nf(S, 43, 68, 5, 5, PCT); rows_style(S, 43, 68, 1, 6)
 section(tab, S, 70, 1, 10, "Top 30 deals by priority value")
-table_header(S, 71, 1, 10, ["Country", "Opportunity", "Route", "Deal value", "Net margin", "Win prob.", "Expected value", "Priority value", "Deadline", "Why"], tab)
-put(tab, 72, 1, [[f'=IFERROR(ARRAY_CONSTRAIN(SORT(FILTER({{{DC}!S2:S,{DC}!W2:W,{DC}!AC2:AC,{DC}!F2:F,{DC}!L2:L,{DC}!E2:E,{DC}!C2:C,{DC}!AE2:AE,{DC}!X2:X,{DC}!Z2:Z}},{DC}!B2:B="Pursue"),8,FALSE),30,10),"Waiting for the next refresh")']])
+table_header(S, 71, 1, 11, ["Country", "Opportunity (click: official notice)", "Route", "Deal value", "Net margin", "Win prob.", "Expected value", "Priority value", "Deadline", "Why", "Deal file"], tab)
+put(tab, 72, 1, [[f'=IFERROR(ARRAY_CONSTRAIN(SORT(FILTER({{{DC}!S2:S,IF({DC}!Y2:Y<>"",HYPERLINK({DC}!Y2:Y,{DC}!W2:W),{DC}!W2:W),{DC}!AC2:AC,{DC}!F2:F,{DC}!L2:L,{DC}!E2:E,{DC}!C2:C,{DC}!AE2:AE,{DC}!X2:X,{DC}!Z2:Z,HYPERLINK("https://sinder-deal-desk.vercel.app/deal/"&ENCODEURL({DC}!A2:A),"Open")}},{DC}!B2:B="Pursue"),8,FALSE),30,11),"Waiting for the next refresh")']])
 nf(S, 72, 101, 4, 4, USD); nf(S, 72, 101, 5, 5, PCT1); nf(S, 72, 101, 6, 6, PCT); nf(S, 72, 101, 7, 8, USD); nf(S, 72, 101, 9, 9, DATE)
 rows_style(S, 72, 101, 1, 10); fmt(rng(S, 72, 101, 8, 8), {"textFormat": text("green", 10, True)}, "userEnteredFormat.textFormat")
 section(tab, S, 104, 1, 10, "Buyers in the news - world press on the buyers of the best deals (GDELT)")
