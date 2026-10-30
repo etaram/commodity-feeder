@@ -1,3 +1,4 @@
+import { logEvent } from "@/lib/log";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     cache.set(k, { at: Date.now(), v });
     return NextResponse.json({ ok: true, contact: v });
   } catch (e) {
-    console.error("[contact]", String(e).slice(0, 200));
+    await logEvent("error", "contact", String(e).slice(0, 200));
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 502 });
   }
 }

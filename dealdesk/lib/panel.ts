@@ -3,6 +3,7 @@ import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
 import { suppliers as supplierIndex, isClosed, type Supplier } from "@/lib/index";
 import { readRanges } from "@/lib/sheets";
+import { logEvent } from "@/lib/log";
 
 const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
 type Grid = string[][];
@@ -115,7 +116,7 @@ async function liveDirect(): Promise<Snap | null> {
       }
       return out;
     });
-  } catch { return null; }
+  } catch (e) { if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) await logEvent("warn", "sheets", "live read failed, using the encrypted snapshot", String(e).slice(0, 300)); return null; }
 }
 export async function liveSource(): Promise<"sheets" | "snapshot"> { return (await liveDirect()) ? "sheets" : "snapshot"; }
 

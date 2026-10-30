@@ -1,4 +1,23 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+.mk-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:12px;justify-content:space-between}
+.mk-groups{display:flex;flex-wrap:wrap;gap:8px}
+.mk-g{border:1px solid var(--line);border-radius:9px;padding:7px 11px;background:var(--soft);min-width:150px;flex:1 1 150px}
+.mk-g b{display:block;font-size:13px}
+.mk-g span{font-family:var(--f-mono);font-size:12.5px}
+.mk-wrap{overflow-x:auto}
+table.mk{width:100%;border-collapse:collapse;font-size:13.5px}
+table.mk th{position:sticky;top:0;background:var(--panel);text-align:start;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.mk td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:top}
+table.mk td:first-child{white-space:normal;min-width:220px;max-width:340px}
+table.mk tr:last-child td{border-bottom:0}
+.up{color:var(--bad);font-weight:600}.dn{color:var(--good);font-weight:600}.fl{color:var(--muted)}
+.dk-card{border-top:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start}
+.dk-card:first-child{border-top:0}
+.dk-rank{font-family:var(--f-mono);color:var(--muted);font-size:13px;padding-top:2px}
+.dk-ev{text-align:end}.dk-ev b{font-family:var(--f-mono);font-size:16px;font-weight:500;display:block}
+.dk-card ul{margin:4px 0 0;padding-inline-start:18px;color:var(--muted);font-size:12.5px}
+@media (max-width:640px){.dk-card{grid-template-columns:1fr}.dk-ev{text-align:start}.dk-rank{display:none}}
+</style></head><body>
 <title>Sinder Opportunity Panel</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -140,7 +159,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
         <button type="button" id="lang-en" aria-pressed="true">English</button>
         <button type="button" id="lang-he" aria-pressed="false">עברית</button>
       </div>
-      <a class="btn" href="/prices" data-i="cm_prices">Commodity prices</a> <a class="btn" href="/today" data-i="deal_desk">Classic screens</a>
+      <a class="btn" href="/today" data-i="deal_desk">Classic screens</a>
       <button id="refresh" type="button" data-i="refresh">Refresh</button>
     </div>
     <nav class="tabs" role="tablist" id="tabs">
@@ -148,6 +167,8 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <button role="tab" data-v="tenders" aria-selected="false"><span data-i="tab_tenders">Tenders</span><span class="count" id="c-tenders"></span></button>
       <button role="tab" data-v="companies" aria-selected="false"><span data-i="tab_companies">Companies</span><span class="count" id="c-companies"></span></button>
       <button role="tab" data-v="deals" aria-selected="false"><span data-i="tab_deals">Deals</span><span class="count" id="c-deals"></span></button>
+      <button role="tab" data-v="markets" aria-selected="false"><span data-i="tab_markets">Markets</span></button>
+      <button role="tab" data-v="desk" aria-selected="false"><span data-i="tab_desk">Deal Desk</span></button>
       <button role="tab" data-v="grants" aria-selected="false"><span data-i="tab_grants">Grants</span><span class="count" id="c-grants"></span></button>
       <button role="tab" data-v="intel" aria-selected="false"><span data-i="tab_intel">Intelligence</span><span class="count" id="c-intel"></span></button>
       <button role="tab" data-v="jobs" aria-selected="false"><span data-i="tab_jobs">Jobs</span><span class="count" id="c-jobs"></span></button>
@@ -162,6 +183,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div class="kpis" id="kpis"></div>
     <div class="today">
       <div class="box"><div class="box-head"><h2 data-i="b_tenders">Tenders to decide on</h2><span class="muted" data-i="b_tenders_s">Pursue, 7+ days to close</span></div><div class="mini" id="t-tenders"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="b_mk">Commodity markets</h2><span class="muted" id="t-mk-upd"></span><button type="button" data-goto="markets" data-i="all_prices">All prices</button></div><div class="mini" id="t-markets"></div></div>
       <div class="box"><div class="box-head"><h2 data-i="b_deals">New trade opportunities</h2><span class="muted" data-i="b_deals_s">From the BD agent, last 14 days</span></div><div class="mini" id="t-deals"></div></div>
       <div class="box"><div class="box-head"><h2 data-i="b_repeat">Buyers likely to tender soon</h2><span class="muted" data-i="b_repeat_s">From their buying pattern, next 60 days</span></div><div class="mini" id="t-repeat"></div></div>
       <div class="box"><div class="box-head"><h2 data-i="b_acc">Key account signals</h2><span class="muted" data-i="b_acc_s">Latest agent check</span></div><div class="mini" id="t-accounts"></div></div>
@@ -235,6 +257,29 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
         <div class="list" id="dlist"></div>
       </div>
       <aside class="detail" id="ddetail"><div class="empty" data-i="d_pick">Pick an opportunity.</div></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-markets" hidden>
+    <div class="mk-head"><div><h2 data-i="mk_title">Commodity prices</h2><div class="sub" id="mk-upd"></div></div><div class="chips" id="mk-health"></div></div>
+    <div class="today" id="mk-movers"></div>
+    <div class="box" style="margin-top:16px"><div class="box-head"><h2 data-i="mk_groups">Where prices are heading</h2><span class="muted" data-i="mk_groups_s">By commodity group, from the World Bank series</span></div><div class="mk-groups" id="mk-groups"></div></div>
+    <div class="filters" style="margin-top:16px">
+      <input type="search" id="mq" data-ph="mq_ph">
+      <select id="mtier"><option value="live" data-i="mt_live">Live market prices</option><option value="T1" data-i="mt_t1">Exchanges only</option><option value="T2" data-i="mt_t2">Official market reports</option><option value="T3" data-i="mt_t3">Industry assessments</option><option value="T4" data-i="mt_t4">Trade statistics (monthly, delayed)</option><option value="all" data-i="mt_all">Everything</option></select>
+      <select id="mcat"><option value="" data-i="all_cats">All categories</option></select>
+      <select id="msort"><option value="name" data-i="ms_name">Sort: name</option><option value="d1" data-i="ms_d1">Biggest 1-day move</option><option value="d7" data-i="ms_d7">Biggest 7-day move</option><option value="m1" data-i="ms_m1">Biggest 1-month move</option><option value="m3" data-i="ms_m3">Biggest 3-month move</option><option value="y1" data-i="ms_y1">Biggest 12-month move</option></select>
+    </div>
+    <div class="box" style="padding:0"><div class="mk-wrap" id="mk-table"></div></div>
+    <div class="note" id="mk-note" style="margin:8px 2px"></div>
+  </section>
+
+  <section class="view" id="v-desk" hidden>
+    <div class="kpis" id="dk-kpis"></div>
+    <div class="box" id="dk-bottom"></div>
+    <div class="today" style="margin-top:16px">
+      <div class="box" style="grid-column:1/-1"><div class="box-head"><h2 data-i="dk_top">Best deals to pursue now</h2><span class="muted" data-i="dk_top_s">Ranked by expected value after pursuit cost, 5+ days to close</span><a class="btn" href="/today" data-i="dk_more">Full deal desk</a></div><div id="dk-list"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="dk_press">Buyers in the news</h2><span class="muted" data-i="dk_press_s">Worth reading before you bid</span></div><div class="mini" id="dk-press"></div></div>
     </div>
   </section>
 
@@ -334,7 +379,7 @@ let mcp = null, sample = null, LANG = "en";
 /* ---------- language ---------- */
 const L = {
   en: {
-    brand_sub: "OPPORTUNITY PANEL", refresh: "Refresh", tab_today: "Today", tab_tenders: "Tenders", tab_companies: "Companies", tab_deals: "Deals", tab_jobs: "Jobs",
+    tab_markets: "Markets", tab_desk: "Deal Desk", b_mk: "Commodity markets", all_prices: "All prices", mk_title: "Commodity prices", mk_groups: "Where prices are heading", mk_groups_s: "By commodity group, from the World Bank series", mq_ph: "Search commodity, HS code or source...", mt_live: "Live market prices", mt_t1: "Exchanges only", mt_t2: "Official market reports", mt_t3: "Industry assessments", mt_t4: "Trade statistics (monthly, delayed)", mt_all: "Everything", ms_name: "Sort: name", ms_d1: "Biggest 1-day move", ms_d7: "Biggest 7-day move", ms_m1: "Biggest 1-month move", ms_m3: "Biggest 3-month move", ms_y1: "Biggest 12-month move", dk_top: "Best deals to pursue now", dk_top_s: "Ranked by expected value after pursuit cost, 5+ days to close", dk_more: "Full deal desk", dk_press: "Buyers in the news", dk_press_s: "Worth reading before you bid", brand_sub: "OPPORTUNITY PANEL", refresh: "Refresh", tab_today: "Today", tab_tenders: "Tenders", tab_companies: "Companies", tab_deals: "Deals", tab_jobs: "Jobs",
     loading: "Loading data from your sheets...", up_to_date: "Up to date", data_as_of: "data as of", n_failed: "{n} sources not loaded", not_connected: "Not connected",
     b_tenders: "Tenders to decide on", b_tenders_s: "Pursue, 7+ days to close", b_deals: "New trade opportunities", b_deals_s: "From the BD agent, last 14 days",
     b_repeat: "Buyers likely to tender soon", b_repeat_s: "From their buying pattern, next 60 days", b_acc: "Key account signals", b_acc_s: "Latest agent check",
@@ -439,7 +484,7 @@ const L = {
     err_unavail: "{s} did not answer just now. Try again in a minute.", err_tool: "{s} returned an error.", err_other: "Could not reach {s}.", sup_db: "Supplier Universe",
   },
   he: {
-    brand_sub: "פאנל הזדמנויות", refresh: "רענון", tab_today: "היום", tab_tenders: "מכרזים", tab_companies: "חברות", tab_deals: "עסקאות", tab_jobs: "משימות",
+    tab_markets: "שווקים", tab_desk: "Deal Desk", b_mk: "שווקי סחורות", all_prices: "כל המחירים", mk_title: "מחירי סחורות", mk_groups: "לאן המחירים הולכים", mk_groups_s: "לפי קבוצת סחורות, מסדרות הבנק העולמי", mq_ph: "חיפוש סחורה, קוד HS או מקור...", mt_live: "מחירי שוק חיים", mt_t1: "בורסות בלבד", mt_t2: "דיווחי שוק רשמיים", mt_t3: "הערכות ענף", mt_t4: "סטטיסטיקת סחר (חודשי, מאוחר)", mt_all: "הכול", ms_name: "מיון: שם", ms_d1: "תנודת יום גדולה", ms_d7: "תנודת שבוע גדולה", ms_m1: "תנודת חודש גדולה", ms_m3: "תנודת 3 חודשים גדולה", ms_y1: "תנודת שנה גדולה", dk_top: "העסקאות הכי כדאיות לרדוף עכשיו", dk_top_s: "לפי ערך צפוי אחרי עלות המרדף, 5+ ימים לסגירה", dk_more: "Deal Desk המלא", dk_press: "קונים בחדשות", dk_press_s: "כדאי לקרוא לפני שמגישים הצעה", brand_sub: "פאנל הזדמנויות", refresh: "רענון", tab_today: "היום", tab_tenders: "מכרזים", tab_companies: "חברות", tab_deals: "עסקאות", tab_jobs: "משימות",
     loading: "טוען נתונים מהגיליונות...", up_to_date: "מעודכן", data_as_of: "נתונים מ-", n_failed: "{n} מקורות לא נטענו", not_connected: "לא מחובר",
     b_tenders: "מכרזים שכדאי להחליט עליהם", b_tenders_s: "Pursue, לפחות 7 ימים לסגירה", b_deals: "הזדמנויות סחר חדשות", b_deals_s: "מסוכן ה-BD, 14 ימים אחרונים",
     b_repeat: "קונים שצפויים לצאת למכרז", b_repeat_s: "לפי דפוס הרכש שלהם, 60 ימים קדימה", b_acc: "אותות מחשבונות מפתח", b_acc_s: "בדיקה אחרונה של הסוכן",
@@ -677,6 +722,7 @@ async function loadAll(fresh) {
   if (S.err.tenders?.code === "approval_required") { renderAll(); return; }
   await Promise.all(Object.keys(RANGES).filter(k => k !== "tenders").map(k => load(k, fresh)));
   renderAll();
+  loadMarkets();
 }
 function setStatus(html) { $("#status").innerHTML = html; }
 
@@ -1420,8 +1466,77 @@ function renderJobs(openId) {
     <div class="right"><span class="sub num">${esc(j.updated)}</span></div></div>`).join("");
 }
 
+
+/* ---------- MARKETS and DEAL DESK (web) ---------- */
+const mt = (en, he) => LANG === "he" ? he : en;
+const chgCls = v => v > 0.05 ? "up" : v < -0.05 ? "dn" : "fl";
+const chgTxt = v => v === null || v === undefined || !isFinite(v) ? `<span class="fl">-</span>` : `<span class="${chgCls(v)} num">${v > 0 ? "+" : ""}${v.toFixed(Math.abs(v) < 10 ? 1 : 0)}%</span>`;
+const px = p => p >= 100 ? p.toLocaleString("en-US", { maximumFractionDigits: 1 }) : p >= 1 ? p.toFixed(2) : String(Number(p.toPrecision(3)));
+const TIER = { T1: ["Exchange", "בורסה"], T2: ["Official report", "דיווח רשמי"], T3: ["Industry", "הערכת ענף"], T4: ["Trade stats", "סטטיסטיקת סחר"] };
+function ilTime(iso) { const d = new Date(iso); return isFinite(d) ? new Intl.DateTimeFormat(LANG === "he" ? "he-IL" : "en-GB", { timeZone: "Asia/Jerusalem", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: false }).format(d) : ""; }
+function mkUpdated() {
+  const m = S.mk; if (!m) return "";
+  if (m.sheet_updated) return m.sheet_updated.replace(/^\d{4}-(\d\d)-(\d\d)/, (a, mo, da) => da + "/" + mo);
+  return m.feed_finished_utc ? ilTime(m.feed_finished_utc) : "";
+}
+const moveOf = r => { const v = r.chg && r.chg.d1 != null ? r.chg.d1 : r.pchg; return v == null ? null : v; };
+function mkMovers(tiers) {
+  const live = (S.mk?.items || []).filter(r => (tiers || ["T1", "T2", "T3"]).includes(r.tier) && r.status !== "מיושן" && moveOf(r) !== null && Math.abs(moveOf(r)) < 25);
+  return { up: live.filter(r => moveOf(r) > 0).sort((a, b) => moveOf(b) - moveOf(a)).slice(0, 6), dn: live.filter(r => moveOf(r) < 0).sort((a, b) => moveOf(a) - moveOf(b)).slice(0, 6) };
+}
+const shortName = r => { const n = String(r.name).split(" - ")[0]; return n.length > 58 ? n.slice(0, 56) + "..." : n; };
+function renderMkToday() {
+  const el = $("#t-markets"); if (!el) return;
+  if (!S.mk) { el.innerHTML = `<div class="empty">${esc(S.mkErr ? mt("Prices are not available right now.", "המחירים אינם זמינים כרגע.") : mt("Loading prices...", "טוען מחירים..."))}</div>`; return; }
+  const mv = mkMovers(["T1"]), rows = [...mv.up.slice(0, 3), ...mv.dn.slice(0, 3)];
+  $("#t-mk-upd").textContent = mt("updated ", "עודכן ") + mkUpdated();
+  mini("#t-markets", rows, r => [`<span class="pill ${moveOf(r) > 0 ? "bad" : "good"}">${moveOf(r) > 0 ? mt("up", "עלייה") : mt("down", "ירידה")}</span>`, `<div class="t">${esc(shortName(r))}</div><div class="sub num">${esc(px(r.price))} ${esc(r.unit)}</div>`, `<div>${chgTxt(moveOf(r))}</div>`], () => go("markets"), mt("No moves yet.", "אין תנודות עדיין."));
+}
+function renderMarkets() {
+  const m = S.mk;
+  if (!m) { $("#mk-table").innerHTML = `<div class="empty" style="padding:14px">${esc(S.mkErr ? mt("Prices are not available right now: ", "המחירים אינם זמינים כרגע: ") + S.mkErr : mt("Loading prices...", "טוען מחירים..."))}</div>`; return; }
+  $("#mk-upd").textContent = mt("Last price update: ", "עדכון מחירים אחרון: ") + mkUpdated() + mt(" (Israel time). Prices are collected twice a day, around 08:00 and 23:30.", " (שעון ישראל). המחירים נאספים פעמיים ביום, בערך ב-08:00 וב-23:30.");
+  const live = m.items.filter(r => r.tier !== "T4"), stale = m.items.filter(r => r.status === "מיושן").length;
+  $("#mk-health").innerHTML = `<span class="pill good">${m.items.length.toLocaleString("en-US")} ${esc(mt("tracked", "במעקב"))}</span><span class="pill info">${live.length} ${esc(mt("live market prices", "מחירי שוק חיים"))}</span>${stale ? `<span class="pill warn">${stale} ${esc(mt("stale", "מיושנים"))}</span>` : ""}`;
+  const mv = mkMovers(["T1", "T2"]), box = (title, rows) => `<div class="box"><div class="box-head"><h2>${esc(title)}</h2><span class="muted">${esc(mt("1 day, live prices", "יום אחד, מחירי שוק"))}</span></div><div class="mini">${rows.map(r => `<div class="it" style="cursor:default"><span></span><div style="min-width:0"><div class="t">${esc(shortName(r))}</div><div class="sub num">${esc(px(r.price))} ${esc(r.unit)}</div></div><div>${chgTxt(moveOf(r))}</div></div>`).join("") || `<div class="empty">-</div>`}</div></div>`;
+  $("#mk-movers").innerHTML = box(mt("Biggest rises", "העליות הגדולות"), mv.up) + box(mt("Biggest falls", "הירידות הגדולות"), mv.dn);
+  $("#mk-groups").innerHTML = (m.trends || []).sort((a, b) => Math.abs(b.m3 || 0) - Math.abs(a.m3 || 0)).map(g => `<div class="mk-g"><b>${esc(g.group)}</b><span>${chgTxt(g.m3)} <span class="fl">3m</span> · ${chgTxt(g.y1)} <span class="fl">12m</span></span></div>`).join("");
+  const cats = [...new Set(m.items.map(r => r.cat).filter(Boolean))].sort();
+  const cs = $("#mcat"); if (cs.options.length <= 1) { cats.forEach(c => cs.add(new Option(c, c))); if (LANG !== "he") cs.hidden = true; }
+  const q = $("#mq").value.trim().toLowerCase(), tier = $("#mtier").value, cat = cs.value, sort = $("#msort").value;
+  let rows = m.items.filter(r => (tier === "all" || (tier === "live" ? r.tier !== "T4" : r.tier === tier)) && (!cat || r.cat === cat) && (!q || `${r.name} ${r.hs} ${r.source} ${r.cat}`.toLowerCase().includes(q)));
+  rows = sort === "name" ? rows.sort((a, b) => String(a.name).localeCompare(String(b.name))) : rows.sort((a, b) => Math.abs((b.chg && b.chg[sort]) ?? -1) - Math.abs((a.chg && a.chg[sort]) ?? -1));
+  const lim = S.mkLimit || 80;
+  const H = [["d1", mt("1 day", "יום")], ["d7", mt("7 days", "שבוע")], ["m1", mt("1 month", "חודש")], ["m3", mt("3 months", "3 חודשים")], ["y1", mt("12 months", "שנה")]];
+  $("#mk-table").innerHTML = `<table class="mk"><thead><tr><th>${esc(mt("Commodity", "סחורה"))}</th><th>${esc(mt("Price (USD)", "מחיר (USD)"))}</th><th>${esc(mt("Price date", "תאריך מחיר"))}</th>${H.map(([, l]) => `<th>${esc(l)}</th>`).join("")}<th>${esc(mt("Source", "מקור"))}</th></tr></thead><tbody>${rows.slice(0, lim).map(r => {
+    const ch = r.chg || {}; const hasAny = H.some(([k]) => ch[k] != null);
+    return `<tr><td><b>${esc(r.name)}</b><div class="sub">${esc(TIER[r.tier] ? TIER[r.tier][LANG === "he" ? 1 : 0] : "")}${r.hs ? " · HS " + esc(r.hs) : ""}${r.status === "מיושן" ? ` · <span style="color:var(--warn)">${esc(mt("stale", "מיושן"))}</span>` : ""}</div></td><td class="num">${esc(px(r.price))} <span class="sub">${esc(r.unit)}</span></td><td class="sub num">${esc(r.date)}</td>${H.map(([k]) => `<td>${chgTxt(ch[k] ?? (k === "d1" && !hasAny ? r.pchg : null))}</td>`).join("")}<td class="sub">${r.link ? `<a href="${esc(url(r.link) || "")}" target="_blank" rel="noopener">${esc(String(r.source).slice(0, 34))}</a>` : esc(String(r.source).slice(0, 34))}</td></tr>`;
+  }).join("") || `<tr><td colspan="9" class="empty" style="padding:16px">${esc(mt("Nothing matches.", "אין התאמות."))}</td></tr>`}</tbody></table>${rows.length > lim ? `<div style="padding:10px"><button type="button" id="mk-more">${esc(mt("Show more", "הצג עוד"))} (${rows.length - lim})</button></div>` : ""}`;
+  const mb = $("#mk-more"); if (mb) mb.onclick = () => { S.mkLimit = lim + 200; renderMarkets(); };
+  $("#mk-note").textContent = mt("Red = price up (costlier to buy), green = down. Exchange prices show every horizon at once; for other prices the longer horizons fill in as our price history builds up. A dash means no data yet.", "אדום = המחיר עלה (יקר יותר לקנות), ירוק = ירד. במחירי בורסה מוצגים כל הטווחים מיד; במחירים אחרים הטווחים הארוכים מתמלאים עם הזמן. מקף = אין נתון עדיין.");
+}
+function renderDesk() {
+  const m = S.mk, d = m?.deals;
+  if (!d) { $("#dk-kpis").innerHTML = ""; $("#dk-bottom").innerHTML = `<div class="empty">${esc(S.mkErr ? mt("Deal desk data is not available right now.", "נתוני ה-Deal Desk אינם זמינים כרגע.") : mt("Loading...", "טוען..."))}</div>`; $("#dk-list").innerHTML = ""; $("#dk-press").innerHTML = ""; return; }
+  $("#dk-kpis").innerHTML = [[d.count, mt("Deals worth pursuing", "עסקאות שכדאי לרדוף")], [money(d.ev), mt("Expected value on the table", "ערך צפוי על השולחן")], [d.urgent, mt("Closing within 10 days", "נסגרות בתוך 10 ימים")], [d.partner, mt("Need a local partner", "דורשות שותף מקומי")]].map(([v, l]) => `<div class="kpi"><b class="num">${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+  const reg = (d.regions || []).map(([r, v]) => `${r} ${money(v)}`).join(", ");
+  $("#dk-bottom").innerHTML = `<div class="sub" style="text-transform:uppercase;letter-spacing:.06em;font-weight:700">${esc(mt("Bottom line", "שורה תחתונה"))}</div><p style="margin:6px 0 0">${esc(mt(`${d.count} deals are worth pursuing with about ${money(d.ev)} of expected value after pursuit cost.`, `${d.count} עסקאות שכדאי לרדוף, עם ערך צפוי של כ-${money(d.ev)} אחרי עלות המרדף.`))}${reg ? " " + esc(mt("Most of it is in ", "רובו ב-") + reg + ".") : ""}${d.urgent ? " " + esc(mt(`${d.urgent} close within 10 days: decide first on those.`, `${d.urgent} נסגרות בתוך 10 ימים: להחליט קודם עליהן.`)) : ""}</p>`;
+  $("#dk-list").innerHTML = d.top.map((x, i) => `<div class="dk-card"><div class="dk-rank">${i + 1}</div><div style="min-width:0"><div class="t">${flag(x.country)}${esc(x.title)}</div><div class="sub">${esc(x.buyer)} · ${esc(x.country)} · ${esc(x.region || "")}</div><div style="margin-top:5px"><span class="pill good">${esc(x.action)}</span> ${x.days !== "" ? `<span class="pill ${Number(x.days) < 10 ? "warn" : ""}">${esc(x.days)} ${esc(t("days_word"))}</span>` : ""}</div>${x.reasons.length || x.risks.length ? `<ul>${x.reasons.map(r => `<li>${esc(r)}</li>`).join("")}${x.risks.map(r => `<li style="color:var(--warn)">${esc(r)}</li>`).join("")}</ul>` : ""}<div class="sub" style="margin-top:5px"><b>${esc(mt("Next:", "הצעד הבא:"))}</b> ${esc(x.next)}</div></div><div class="dk-ev"><b>${money(x.ev)}</b><span class="sub">${esc(mt("expected value", "ערך צפוי"))}</span><div style="margin-top:6px"><a class="btn" href="/deal/${encodeURIComponent(x.id)}">${esc(t("deal_file"))}</a></div></div></div>`).join("") || `<div class="empty">-</div>`;
+  mini("#dk-press", m.press || [], p => [`<span class="pill info num">${esc(p.date)}</span>`, `<div class="t">${txt(p.headline)}</div><div class="sub">${esc(p.buyer)} · ${esc(p.country)}</div>`, ""], p => { if (p.link) window.open(p.link, "_blank", "noopener"); }, mt("Nothing new.", "אין חדש."));
+}
+async function loadMarkets() {
+  try {
+    const r = await fetch("/api/panel/markets", { method: "POST", credentials: "same-origin" });
+    if (r.status === 401) { location.href = "/login"; return; }
+    const j = await r.json(); if (!j.ok) throw new Error(j.error || r.status);
+    S.mk = j; delete S.mkErr;
+  } catch (e) { S.mkErr = String(e.message || e).slice(0, 120); }
+  renderMarkets(); renderDesk(); renderMkToday();
+}
+["#mq", "#mtier", "#mcat", "#msort"].forEach(s_ => $(s_).addEventListener("input", () => { S.mkLimit = 80; renderMarkets(); }));
+
 /* ---------- navigation and wiring ---------- */
-const VIEWS = ["today", "tenders", "companies", "deals", "grants", "intel", "jobs"];
+const VIEWS = ["today", "tenders", "companies", "deals", "markets", "desk", "grants", "intel", "jobs"];
 function go(v) {
   S.view = v; document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v));
   document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== "v-" + v);
@@ -1429,7 +1544,7 @@ function go(v) {
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
 }
 function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => { go(b.dataset.goto); renderJobs(); }); }
-function renderAll() { renderStatus(); renderToday(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderJobs(); wireGoto(document); }
+function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderJobs(); wireGoto(document); }
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
 ["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
