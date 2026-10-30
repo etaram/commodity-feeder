@@ -21,11 +21,27 @@ PORTALS = [
     ("Kerala", "https://etenders.kerala.gov.in/nicgep/app"),
     ("Uttar Pradesh", "https://etender.up.nic.in/nicgep/app"),
     ("Haryana", "https://haryanaeprocurement.gov.in/nicgep/app"),
-    ("Gujarat", "https://tender.nprocure.com"),
-    ("Karnataka", "https://kppp.karnataka.gov.in"),
+    ("West Bengal", "https://wbtenders.gov.in/nicgep/app"),
+    ("Odisha", "https://tendersodisha.gov.in/nicgep/app"),
+    ("Jharkhand", "https://jharkhandtenders.gov.in/nicgep/app"),
+    ("Himachal Pradesh", "https://hptenders.gov.in/nicgep/app"),
+    ("Uttarakhand", "https://uktenders.gov.in/nicgep/app"),
+    ("Assam", "https://assamtenders.gov.in/nicgep/app"),
+    ("Madhya Pradesh", "https://mptenders.gov.in/nicgep/app"),
+    ("Rajasthan", "https://eproc.rajasthan.gov.in/nicgep/app"),
+    ("Punjab", "https://eproc.punjab.gov.in/nicgep/app"),
+    ("Jammu and Kashmir", "https://jktenders.gov.in/nicgep/app"),
+    ("Chandigarh", "https://etenders.chd.nic.in/nicgep/app"),
+    ("Tripura", "https://tripuratenders.gov.in/nicgep/app"),
+    ("Meghalaya", "https://meghalayatenders.gov.in/nicgep/app"),
+    ("Nagaland", "https://nagalandtenders.gov.in/nicgep/app"),
+    ("Manipur", "https://manipurtenders.gov.in/nicgep/app"),
+    ("Mizoram", "https://mizoramtenders.gov.in/nicgep/app"),
+    ("Goa", "https://eprocure.goa.gov.in/nicgep/app"),
+    ("PMGSY rural roads", "https://pmgsytenders.gov.in/nicgep/app"),
 ]
 ORG_ROW = re.compile(r'<tr class="(?:even|odd)" id="informal_\d+">(.*?)</tr>', re.S)
-BUDGET = 900  # seconds for the whole module
+BUDGET = 1500  # seconds for the whole module
 
 
 def _dt(txt):
@@ -35,7 +51,7 @@ def _dt(txt):
 
 def _portal(s, name, base, t_end, today_s):
     root = base.rsplit("/", 1)[0] + "/"
-    r = s.get(base + "?page=FrontEndTendersByOrganisation&service=page", timeout=60)
+    r = s.get(base + "?page=FrontEndTendersByOrganisation&service=page", timeout=25)
     r.raise_for_status()
     orgs = []
     for body in ORG_ROW.findall(r.text):
