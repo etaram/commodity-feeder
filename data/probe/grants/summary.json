@@ -1,0 +1,86 @@
+{
+ "grants_gov": {
+  "status": 200,
+  "len": 24914,
+  "ctype": "application/json",
+  "note": "",
+  "head": "{\"errorcode\":0,\"msg\":\"Webservice Succeeds\",\"token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjZLeGk3NHdsYU9RT2orQUdncHI2WFZ0c3c0S2RiR3QvcnVzYU5KUXdXM0U9Ig.GCHEjTWrd9rLjrlD3sP3sLbAPKpL78JehTDHE8SKX_o\",\"data\":{\"searchParams\":{\"resultType\":\"json\",\"searchOnly\":false,\"oppNum\":\"\",\"cfda\":\"\",\"sortBy\":\"\",\"oppStatuses\":\"forecasted|posted\",\"startRecordNum\":0,\"eligibilities\":\"\",\"fundingInstruments\":\"\",\"fundingCategories\":\"\",\"agencies\":\"\",\"rows\":20,\"keyword\":\"\",\"keywordEncoded\":false},\"hitCount\":1463,\"startRecord\":0,\"oppHits\":[{\"id\":\"355824\",\"number\":\"MP-CPI-25-001\",\"title\":\"Making America Healthy Again by Ad"
+ },
+ "eu_ft": {
+  "status": 500,
+  "len": 82,
+  "ctype": "application/json",
+  "note": "",
+  "head": "{\"apiVersion\":\"2.157.1\",\"type\":\"throwable\",\"message\":\"An internal error occurred\"}"
+ },
+ "wgi_CC": {
+  "status": 200,
+  "len": 128,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "[{\"message\":[{\"id\":\"175\",\"key\":\"Invalid format\",\"value\":\"The indicator was not found. It may have been deleted or archived.\"}]}]"
+ },
+ "wgi_RQ": {
+  "status": 200,
+  "len": 128,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "[{\"message\":[{\"id\":\"175\",\"key\":\"Invalid format\",\"value\":\"The indicator was not found. It may have been deleted or archived.\"}]}]"
+ },
+ "wgi_GE": {
+  "status": 200,
+  "len": 128,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "[{\"message\":[{\"id\":\"175\",\"key\":\"Invalid format\",\"value\":\"The indicator was not found. It may have been deleted or archived.\"}]}]"
+ },
+ "wgi_RL": {
+  "status": 200,
+  "len": 128,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "[{\"message\":[{\"id\":\"175\",\"key\":\"Invalid format\",\"value\":\"The indicator was not found. It may have been deleted or archived.\"}]}]"
+ },
+ "datagov_search": {
+  "status": 200,
+  "len": 13282,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "{\"help\": \"https://data.gov.il/api/3/action/help_show?name=package_search\", \"success\": true, \"result\": {\"count\": 2, \"facets\": {}, \"results\": [{\"author\": null, \"author_email\": \"tomers@cio.gov.il\", \"creator_user_id\": \"e01f2a18-b401-4758-9533-db0a713d1d6c\", \"id\": \"5c02b77d-9295-4d4d-91c8-7e06e18e1a5d\", \"isopen\": true, \"license_id\": \"other-open\", \"license_title\": \"Other (Open)\", \"maintainer\": null, \"maintainer_email\": null, \"metadata_created\": \"2020-12-06T16:05:16.688135\", \"metadata_modified\": \"2023-03-21T18:32:47.687636\", \"name\": \"exemptions\", \"notes\": \"\\u05d3\\u05d5\\\"\\u05d7 \\u05de\\u05e8\\u05db\\u05d"
+ },
+ "datagov_search2": {
+  "status": 200,
+  "len": 199,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "{\"help\": \"https://data.gov.il/api/3/action/help_show?name=package_search\", \"success\": true, \"result\": {\"count\": 0, \"facets\": {}, \"results\": [], \"sort\": \"metadata_modified desc\", \"search_facets\": {}}}"
+ },
+ "datagov_grants": {
+  "status": 200,
+  "len": 78865,
+  "ctype": "application/json;charset=utf-8",
+  "note": "",
+  "head": "{\"help\": \"https://data.gov.il/api/3/action/help_show?name=package_search\", \"success\": true, \"result\": {\"count\": 10, \"facets\": {}, \"results\": [{\"author\": null, \"author_email\": \"avi@most.gov.il\", \"creator_user_id\": \"e813f4f8-56e8-49e9-ba68-50f3e4b297ed\", \"id\": \"80862c9b-fe75-4950-8bc8-62d9e414dd2e\", \"isopen\": true, \"license_id\": \"other-open\", \"license_title\": \"Other (Open)\", \"mail_box\": \"\", \"maintainer\": null, \"maintainer_email\": null, \"metadata_created\": \"2019-03-19T10:57:09.560881\", \"metadata_modified\": \"2026-03-25T16:33:48.208171\", \"name\": \"02\", \"notes\": \"\\u05e8\\u05e9\\u05d9\\u05de\\u05ea \\u05d4"
+ },
+ "ungm_api": {
+  "status": 404,
+  "len": 82599,
+  "ctype": "text/html; charset=utf-8",
+  "note": "",
+  "head": "\r \r <!DOCTYPE html>\r <html lang=\"en\" dir=\"ltr\">\r <head>\r     <meta charset=\"utf-8\" />\r     \r <title>404: File not found</title>\r <meta name=\"description\" content=\"Welcome to the United Nations Global Marketplace (UNGM), the official procurement platform of the UN system.\" />\r <meta property=\"og:title\" content=\"404: File not found\" />\r <meta property=\"og:description\" content=\"Welcome to the United Nations Global Marketplace (UNGM), the official procurement platform of the UN system.\" />\r <meta property=\"og:image\" content=\"http://www.ungm.org/Styles/Images/HomeV2/logo-ungm-2025-lg.png\" />\r \r    "
+ },
+ "devex_robots": {
+  "status": 403,
+  "len": 772,
+  "ctype": "text/html;charset=utf-8",
+  "note": "",
+  "head": "<html lang=\"en\"><head><title>devex.com</title><style>#cmsg{animation: A 1.5s;}@keyframes A{0%{opacity:0;}99%{opacity:0;}100%{opacity:1;}}</style></head><body style=\"margin:0\"><p id=\"cmsg\">Please enable JS and disable any ad blocker</p><script data-cfasync=\"false\">var dd={'rt':'i','cid':'AHrlqAAAAAMAPTddSF4Ei1YArNCY0A==','hsh':'8A6A68E045DB8FD4F345090D6D5310','b':2461432,'s':32317,'e':'8332c2c4f8ab5562fcc7e9bab09e561af38dcc2e360e71018d936d06614bed14b2aebd19f39dd5cabd9581d2cb3ebf53','qp':'','host':'geo.captcha-delivery.com','cookie':'nIQbAOMERnQwcCnUbPCdPKS6MmDO8JGgWI3_ZnbswlzHqqreo7U65W1mrMM5S7"
+ },
+ "gef": {
+  "status": 200,
+  "len": 1752,
+  "ctype": "text/plain; charset=UTF-8",
+  "note": "",
+  "head": "#\r # robots.txt\r #\r # This file is to prevent the crawling and indexing of certain parts\r # of your site by web crawlers and spiders run by sites like Yahoo!\r # and Google. By telling these \"robots\" where not to go on your site,\r # you save bandwidth and server resources.\r #\r # This file will be ignored unless it is at the root of your host:\r # Used:    http://example.com/robots.txt\r # Ignored: http://example.com/site/robots.txt\r #\r # For more information about the robots.txt standard, see:\r # http://www.robotstxt.org/robotstxt.html\r \r User-agent: *\r # CSS, JS, Images\r Allow: /core/*.css$\r All"
+ }
+}

@@ -1,6 +1,13 @@
-LISTS {'ofac': 11955, 'un': 831, 'eu': 4467}
-INFO sanctions hit: EMPRESA DE ENERGIA ELECTRICA DEL DEPARTAMENTO DEL VICHADA (COL) ~ OFAC SDN CUBA-EO14404
-INFO sanctions screen: {'country_block': 43, 'country_restricted': 57, 'entity': 1, 'listed_names': 14786}
-SCREEN {'country_block': 43, 'country_restricted': 57, 'entity': 1, 'listed_names': 14786}
-DECISIONS CHANGED 19
-   COL Watch -> Ignore | EMPRESA DE ENERGIA ELECTRICA DEL DEPARTAMENTO DEL  | SANCTIONS: buyer matches OFAC SDN CUBA-EO14404 - check before any contact; EV $4,243 = 4% x GP $193,157 - cost
+grants_gov 200 24914 application/json
+eu_ft 500 82 application/json
+wgi_CC 200 128 application/json;charset=utf-8
+wgi_RQ 200 128 application/json;charset=utf-8
+wgi_GE 200 128 application/json;charset=utf-8
+wgi_RL 200 128 application/json;charset=utf-8
+datagov_search 200 13282 application/json;charset=utf-8
+datagov_search2 200 199 application/json;charset=utf-8
+datagov_grants 200 78865 application/json;charset=utf-8
+ungm_api 404 82599 text/html; charset=utf-8
+devex_robots 403 772 text/html;charset=utf-8
+gef 200 1752 text/plain; charset=UTF-8
+DONE
