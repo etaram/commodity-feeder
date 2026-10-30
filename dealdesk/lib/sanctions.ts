@@ -37,6 +37,6 @@ export async function sanctionsFacts(name: string): Promise<string> {
     if (best) hits.push({ strength: best, line: `- ${best === 3 ? "STRONG name match" : best === 2 ? "Close name match" : "Partial name match"}: "${via}" on ${e[1]} (${e[3]}${e[2] ? ", program " + e[2] : ""}, ref ${e[4]})` });
   });
   hits.sort((a, b) => b.strength - a.strength);
-  const head = `Sanctions screening (OFAC SDN and consolidated, UN Security Council, EU consolidated; index updated ${m.updated} UTC; name matching only, verify identity, address and registration number before concluding):`;
-  return hits.length ? [head, ...hits.slice(0, 6).map((h) => h.line)].join("\n") : `${head}\n- No name match found for "${name}" in those lists. This does not cover the UK, Swiss, Canadian or Israeli lists, nor aliases not published.`;
+  const head = `Sanctions screening (OFAC SDN and consolidated, UN Security Council, EU and UK consolidated; index updated ${m.updated} UTC; name matching only, verify identity, address and registration number before concluding):`;
+  return hits.length ? [head, ...hits.slice(0, 6).map((h) => h.line)].join("\n") : `${head}\n- No name match found for "${name}" in those lists. This does not cover the Swiss, Canadian or Israeli lists, nor aliases not published.`;
 }

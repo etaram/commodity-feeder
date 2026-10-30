@@ -14,6 +14,7 @@ from .common import LEADS, log, session
 
 OFAC = "https://www.treasury.gov/ofac/downloads/"
 UN = "https://scsanctions.un.org/resources/xml/en/consolidated.xml"
+UK = "https://sanctionslist.fcdo.gov.uk/docs/UK-Sanctions-List.csv"
 EU = "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw"
 
 
@@ -75,10 +76,31 @@ def eu(s):
     return list(out.values())
 
 
+def uk(s):
+    rd = csv.reader(io.StringIO(get(s, UK)))
+    hdr = None
+    out = {}
+    for ln in rd:
+        if hdr is None:
+            if "Unique ID" in ln:
+                hdr = {h.strip(): i for i, h in enumerate(ln)}
+            continue
+        g = lambda k: ln[hdr[k]].strip() if k in hdr and hdr[k] < len(ln) else ""  # noqa: E731
+        uid = g("Unique ID")
+        nm = " ".join(g(f"Name {i}") for i in range(1, 7) if g(f"Name {i}"))
+        if not uid or not nm:
+            continue
+        if uid not in out:
+            out[uid] = [[], "UK sanctions list", g("Regime Name"), (g("Designation Type") or g("Group Type") or "entity").lower(), uid]
+        if nm not in out[uid][0]:
+            out[uid][0].append(nm)
+    return list(out.values())
+
+
 def main():
     s = session()
     ent, counts = [], {}
-    for name, fn in (("ofac", ofac), ("un", un), ("eu", eu)):
+    for name, fn in (("ofac", ofac), ("un", un), ("eu", eu), ("uk", uk)):
         try:
             rows = fn(s)
             counts[name] = len(rows); ent += rows

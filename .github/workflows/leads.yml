@@ -19,6 +19,7 @@ jobs:
     timeout-minutes: 160
     env:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      CHILE_TICKET: ${{ secrets.CHILE_TICKET }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -106,6 +107,11 @@ jobs:
       - name: iadb
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',iadb,') }}
         run: set -o pipefail; python -m leads.run --source iadb 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 4
+        continue-on-error: true
+      - name: chile
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',chile,') }}
+        run: set -o pipefail; python -m leads.run --source chile 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 4
         continue-on-error: true
       - name: grants
