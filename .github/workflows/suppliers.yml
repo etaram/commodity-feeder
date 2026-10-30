@@ -59,6 +59,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --source ocdr_tenders 2>&1 | tee -a data/leads/run_suppliers.log
         timeout-minutes: 30
         continue-on-error: true
+      - name: il_exemptions
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',il_exemptions,') }}
+        run: set -o pipefail; python -m leads.run --source il_exemptions 2>&1 | tee -a data/leads/run_suppliers.log
+        timeout-minutes: 15
+        continue-on-error: true
       - name: ext_awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ext_awards,') }}
         run: set -o pipefail; python -m leads.run --source ext_awards 2>&1 | tee -a data/leads/run_suppliers.log
@@ -96,6 +101,6 @@ jobs:
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
           mkdir -p data/web
-          git add -A data/leads/awards data/leads/companies data/leads/run_suppliers.log data/web data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json
+          git add -A data/leads/awards data/leads/companies data/leads/run_suppliers.log data/web data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv
           git diff --cached --quiet || git commit -m "suppliers: $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done
