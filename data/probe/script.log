@@ -1,31 +1,41 @@
-WARNING:leads:AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
-WARNING:leads:AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
-WARNING:leads:AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING:leads:Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+[2026-10-30 19:46:23] INFO: Fetched (200) <GET https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/procedimientos_contratacion.csv> (referer: https://www.google.com/)
+### mexico csv Fetcher: status=200 len=1825
+<html><body>consecutivo,tipo_procedimiento_contratacion,tipo_contratacion,descripcion_contratacion,proveedor,monto_contrato,autor,fecha_generacion,temporalidad 1,Adjudicación directa,Servicios,Festejo Día de Las Madres 2025,"Viajes Premier, S.A.",171192.8,Dirección de Recursos Materiales y Servicios del Tecnológico Nacional de México,2025-12-31,Trimestral 2,Adjudicación directa,Servicios,Servicio de Mensajería y Paquetería Nacional E Internacional Para la Secretaría de Educación Pública y Sus Órganos Administrativos Desconcentrados y Organismos Descentralizados,Servicio Postal Mexicano,180000.0,Dirección de Recursos Materiales y Servicios del Tecnológico Nacional de México,2025-12-31,Trimestral 3,Adjudicación directa,Servicios,Festejo Día del Niño 2025,"Viajes Premier, S.A.",238514.56,Dirección de Recursos Materiales y Servicios del Tecnológico Nacional de México,2025-12-31,Trimestral 4,
+
+[2026-10-30 19:46:24] WARNING: Attempt 1 failed: Page.goto: Download is starting
+Call log:
+  - navigating to "https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/procedimientos_contratacion.csv", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:46:25] WARNING: Attempt 2 failed: Page.goto: Download is starting
+Call log:
+  - navigating to "https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/procedimientos_contratacion.csv", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:46:27] ERROR: Failed after 3 attempts: Page.goto: Download is starting
+Call log:
+  - navigating to "https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/procedimientos_contratacion.csv", waiting until "load"
+
+mexico Stealthy ERR Page.goto: Download is starting
+Call log:
+  - navigating to "https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/procedimientos_contratac
+[2026-10-30 19:46:28] INFO: Fetched (200) <GET https://pcc-api.openfun.app/> (referer: https://www.google.com/)
+### taiwan 0v.ronny.tw/api/listbydate?date=20261028: status=200 len=3307
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>標案瀏覽</title><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css"></head><body> <div class="navbar"> <div class="navbar-inner"> <a class="brand" href="/">標案瀏覽</a> <ul class="nav"><li> <a href="/">首頁</a> </li> </ul></div> </div> <div class="container-fluid"> <div class="row-fluid"> <h1>標案資料API</h1> <p> 這邊是收集 <a href="https://web.pcc.gov.tw">中華民國政府電子採購網</a> 的資料所做的 API ，您可以至 <a href="https://ronnywang.github.io/pcc-viewer/index.html">https://ronnywang.github.io/pcc-viewer/index.html</a> 使用閱覽器 </p> <h1>程式碼及授權</h1> <ul><li>後端API程式碼：<a href="https://github.com/ronnywang/pcc.g0v.ronny.tw">https://github.com/ronnywang/pcc.g0v.ronny.tw</a></li> <li>前端展示程式碼：<a href="https://github.com/ronnywang/pcc-viewer">https://github.com/ronnywang/pcc-viewer</a></li> <li>API 
+
+[2026-10-30 19:46:29] INFO: Fetched (200) <GET https://pcc-api.openfun.app/> (referer: https://www.google.com/)
+### taiwan chbycompanyname?query=%E9%9B%BB%E5%8A%9B: status=200 len=3307
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>標案瀏覽</title><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css"></head><body> <div class="navbar"> <div class="navbar-inner"> <a class="brand" href="/">標案瀏覽</a> <ul class="nav"><li> <a href="/">首頁</a> </li> </ul></div> </div> <div class="container-fluid"> <div class="row-fluid"> <h1>標案資料API</h1> <p> 這邊是收集 <a href="https://web.pcc.gov.tw">中華民國政府電子採購網</a> 的資料所做的 API ，您可以至 <a href="https://ronnywang.github.io/pcc-viewer/index.html">https://ronnywang.github.io/pcc-viewer/index.html</a> 使用閱覽器 </p> <h1>程式碼及授權</h1> <ul><li>後端API程式碼：<a href="https://github.com/ronnywang/pcc.g0v.ronny.tw">https://github.com/ronnywang/pcc.g0v.ronny.tw</a></li> <li>前端展示程式碼：<a href="https://github.com/ronnywang/pcc-viewer">https://github.com/ronnywang/pcc-viewer</a></li> <li>API 
+
+[2026-10-30 19:46:30] INFO: Fetched (200) <GET https://pcc-api.openfun.app/> (referer: https://www.google.com/)
+### taiwan https://pcc.g0v.ronny.tw/: status=200 len=3307
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>標案瀏覽</title><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css"></head><body> <div class="navbar"> <div class="navbar-inner"> <a class="brand" href="/">標案瀏覽</a> <ul class="nav"><li> <a href="/">首頁</a> </li> </ul></div> </div> <div class="container-fluid"> <div class="row-fluid"> <h1>標案資料API</h1> <p> 這邊是收集 <a href="https://web.pcc.gov.tw">中華民國政府電子採購網</a> 的資料所做的 API ，您可以至 <a href="https://ronnywang.github.io/pcc-viewer/index.html">https://ronnywang.github.io/pcc-viewer/index.html</a> 使用閱覽器 </p> <h1>程式碼及授權</h1> <ul><li>後端API程式碼：<a href="https://github.com/ronnywang/pcc.g0v.ronny.tw">https://github.com/ronnywang/pcc.g0v.ronny.tw</a></li> <li>前端展示程式碼：<a href="https://github.com/ronnywang/pcc-viewer">https://github.com/ronnywang/pcc-viewer</a></li> <li>API 
+
+[2026-10-30 19:48:31] INFO: Fetched (307) <GET https://inaproc.id/> (referer: https://www.google.com/)
+[2026-10-30 19:48:31] INFO: Fetched (403) <GET https://inaproc.id/> (referer: https://www.google.com/)
+### inaproc links: []
+### inaproc api hints: []
+[2026-10-30 19:48:31] INFO: Fetched (404) <GET https://data.gov.sg/api/action/package_search?q=gebiz> (referer: https://www.google.com/)
+### sg ckan: status=404 len=28
+<html><body>{}</body></html>
+
+[2026-10-30 19:48:32] INFO: Fetched (200) <GET https://api-production.data.gov.sg/v2/public/api/datasets?page=1> (referer: https://www.google.com/)
+### sg datasets matching: []
