@@ -1,14 +1,14 @@
-"""Malaysia: MyProcurement (Ministry of Finance) tender advertisements. Needs a real browser; newest pages only."""
+"""Malaysia: MyProcurement (Ministry of Finance) tender advertisements, via the portal's own JSON listing (100 per page)."""
 import datetime as dt
 import html as H
 import re
 
 from .common import clean, log, polite, rolling, today
 from .sectors import classify
-from .stealth import pages
 
 URL = "https://myprocurement.treasury.gov.my/advertisements/tender"
-PAGES = 25
+API = "https://myprocurement.treasury.gov.my/procurements/fetch"
+PAGES = 20
 
 
 def _d(s):
@@ -18,7 +18,17 @@ def _d(s):
 
 def fetch():
     t, new, seen = today(), [], set()
-    for page, b in enumerate(pages(URL, PAGES), 1):
+    from curl_cffi import requests as cr
+    for page in range(1, PAGES + 1):
+        try:
+            r = cr.get(API, params={"type": "advertisements", "category": "tender", "itemsPerPage": 100, "page": page}, impersonate="chrome", timeout=90,
+                       headers={"X-Requested-With": "XMLHttpRequest", "Accept": "application/json, text/html"})
+            b = r.json().get("html", "") if r.status_code == 200 else ""
+        except Exception as e:  # noqa: BLE001
+            log.warning("Malaysia page %d: %s", page, str(e)[:80]); b = ""
+        if not b:
+            break
+        polite(1)
         txt = H.unescape(re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<style.*?</style>|<[^>]+>", " | ", b, flags=re.S)))
         blocks = re.split(r"Tarikh Pelawaan\s*:", txt)[1:]
         if not blocks:

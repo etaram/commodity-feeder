@@ -43,8 +43,8 @@ jobs:
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: plan
         run: |
-          LIGHT="ted,fts,sam,canadabuys,ungm,undp,ebrd,aiib,isdb,afdb,iadb,simap,gets,etimad,prozorro,pncp,secop,contractsfinder,austender,oman,qatar,kenya,moldova,uruguay,merge,push,webpanel"
-          HEAVY="bahrain,malaysia,nyc,us_cities,za,chile,india,grants,germany,paraguay,dominican,france,spain,awards,wb_pipeline,worldbank,mrgov,importyeti,markets,enrich,us_awards,merge,push,webpanel"
+          LIGHT="ted,fts,sam,canadabuys,ungm,undp,ebrd,aiib,isdb,afdb,iadb,simap,gets,etimad,prozorro,pncp,secop,contractsfinder,austender,oman,qatar,kenya,moldova,uruguay,malaysia,merge,push,webpanel"
+          HEAVY="bahrain,nyc,us_cities,za,chile,india,grants,germany,paraguay,dominican,france,spain,awards,wb_pipeline,worldbank,mrgov,importyeti,markets,enrich,us_awards,merge,push,webpanel"
           if [ "${{ github.event_name }}" = "schedule" ]; then
             if [ "${{ github.event.schedule }}" = "10 */2 * * *" ]; then echo "ONLY=$LIGHT" >> $GITHUB_ENV; else echo "ONLY=$HEAVY" >> $GITHUB_ENV; fi
           fi
