@@ -1,4 +1,5 @@
 import { logEvent } from "@/lib/log";
+import { sanctionsFacts } from "@/lib/sanctions";
 // Verified registry checks for the business-intelligence report. Official open data only.
 // Israel: data.gov.il (Registrar of Companies, Official Receiver liquidation file).
 // UK: Companies House API, only if COMPANIES_HOUSE_KEY is set (free key from Companies House).
@@ -51,11 +52,58 @@ async function uk(name: string): Promise<string[]> {
   return out;
 }
 
+
+const strip = (n: string) => n.replace(/\b(ltd|limited|inc|llc|gmbh|plc|s\.?a\.?|co\.?)\b\.?/gi, "").replace(/\s+/g, " ").trim();
+const isC = (c: string, ...k: string[]) => k.some((x) => c === x || c.startsWith(x + " "));
+
+// Global legal-entity identifier (GLEIF): official LEI record, legal address, status and parent links. No key needed.
+async function gleif(name: string): Promise<string[]> {
+  const d = await j("https://api.gleif.org/api/v1/lei-records?page%5Bsize%5D=3&filter%5Bentity.legalName%5D=" + encodeURIComponent(name));
+  const rs = d.data || [];
+  if (!rs.length) return ["GLEIF (global LEI register): no exact legal-name match (many companies have no LEI)."];
+  return ["GLEIF (global LEI register), exact legal-name matches, verify identity:", ...rs.map((r: any) => {
+    const e = r.attributes?.entity || {}, a = e.legalAddress || {};
+    return `- ${e.legalName?.name}, LEI ${r.attributes?.lei}, status ${e.status}, registration ${r.attributes?.registration?.status || "n/a"}, jurisdiction ${e.jurisdiction || "n/a"}, registered no. ${e.registeredAs || "n/a"}, address ${[a.addressLines?.[0], a.city, a.country].filter(Boolean).join(", ")}.`;
+  })];
+}
+async function norway(name: string): Promise<string[]> {
+  const d = await j("https://data.brreg.no/enhetsregisteret/api/enheter?size=3&navn=" + encodeURIComponent(strip(name)));
+  const rs = d._embedded?.enheter || [];
+  if (!rs.length) return ["Norway Bronnoysund Register: no match."];
+  return ["Norway Bronnoysund Register (best matches by name, verify):", ...rs.map((r: any) => `- ${r.navn}, org no. ${r.organisasjonsnummer}, ${r.organisasjonsform?.beskrivelse || ""}, registered ${r.registreringsdatoEnhetsregisteret || "n/a"}, employees ${r.antallAnsatte ?? "n/a"}, bankrupt: ${r.konkurs ? "YES" : "no"}, under liquidation: ${r.underAvvikling || r.underTvangsavviklingEllerTvangsopplosning ? "YES" : "no"}, ${r.forretningsadresse?.kommune || ""}.`)];
+}
+async function france(name: string): Promise<string[]> {
+  const d = await j("https://recherche-entreprises.api.gouv.fr/search?per_page=3&q=" + encodeURIComponent(strip(name)));
+  const rs = d.results || [];
+  if (!rs.length) return ["France Recherche Entreprises: no match."];
+  return ["France Recherche Entreprises (best matches by name, verify):", ...rs.map((r: any) => `- ${r.nom_complet}, SIREN ${r.siren}, status ${r.etat_administratif === "A" ? "active" : "ceased"}, created ${r.date_creation || "n/a"}, staff band ${r.tranche_effectif_salarie || "n/a"}, ${r.siege?.libelle_commune || ""}; directors: ${(r.dirigeants || []).slice(0, 3).map((x: any) => x.nom ? `${x.prenoms || ""} ${x.nom}`.trim() : x.denomination).filter(Boolean).join(", ") || "n/a"}.`)];
+}
+async function finland(name: string): Promise<string[]> {
+  const d = await j("https://avoindata.prh.fi/opendata-ytj-api/v3/companies?name=" + encodeURIComponent(strip(name)));
+  const rs = (d.companies || []).slice(0, 3);
+  if (!rs.length) return ["Finland PRH register: no match."];
+  return ["Finland PRH register (best matches by name, verify):", ...rs.map((r: any) => `- ${r.names?.[0]?.name || "?"}, business ID ${r.businessId?.value}, registered ${r.businessId?.registrationDate || "n/a"}, status ${r.status || "n/a"}, form ${r.companyForms?.[0]?.descriptions?.find((x: any) => x.languageCode === "3")?.description || "n/a"}.`)];
+}
+async function czech(name: string): Promise<string[]> {
+  const d = await j("https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/vyhledat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ obchodniJmeno: strip(name), pocet: 3, start: 0 }) });
+  const rs = d.ekonomickeSubjekty || [];
+  if (!rs.length) return ["Czech ARES register: no match."];
+  return ["Czech ARES register (best matches by name, verify):", ...rs.map((r: any) => `- ${r.obchodniJmeno}, IC ${r.ico}, ${r.sidlo?.textovaAdresa || ""}, founded ${r.datumVzniku || "n/a"}.`)];
+}
+
 export async function registryFacts(name: string, country: string, legalId: string): Promise<string> {
   const c = (country || "").toLowerCase();
   const jobs: Promise<string[]>[] = [];
   if (c === "israel" || c === "ישראל" || /^5\d{8}$/.test(String(legalId || "").replace(/\D/g, ""))) jobs.push(israel(name, legalId));
   if (c.includes("united kingdom") || c === "uk" || c === "gb") jobs.push(uk(name));
+  if (name) {
+    jobs.push(gleif(name));
+    jobs.push(sanctionsFacts(name).then((x) => (x ? [x] : [])));
+    if (isC(c, "norway", "nor", "no")) jobs.push(norway(name));
+    if (isC(c, "france", "fra", "fr")) jobs.push(france(name));
+    if (isC(c, "finland", "fin", "fi")) jobs.push(finland(name));
+    if (isC(c, "czechia", "czech republic", "cze", "cz")) jobs.push(czech(name));
+  }
   const res = await Promise.allSettled(jobs);
   return res.flatMap((r) => { if (r.status === "fulfilled") return r.value; void logEvent("warn", "registry", "registry check failed", String(r.reason).slice(0, 300)); return ["A registry check failed and was skipped."]; }).join("\n");
 }

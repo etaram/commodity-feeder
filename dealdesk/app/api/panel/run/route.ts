@@ -26,7 +26,7 @@ const GUIDE: Record<string, string> = {
 3. History: founding, key events, name changes, mergers and acquisitions.
 4. Activity volume: revenue, profit, employees (with year), main markets, exports, public contracts won (use our data in the JSON).
 5. Credit rating and payment behaviour: public ratings (S&P, Moody's, Fitch or local agencies) if any; public signals such as late-payment reports, insolvency or bankruptcy notices, tax liens, bounced-cheque or restricted-account lists. Say clearly that a full credit report and payment history need a paid provider (for example Dun & Bradstreet, Creditsafe or Coface).
-6. Legal and compliance: court cases, arbitration, regulatory fines, debarment (World Bank and other development bank debarment lists), sanctions (OFAC, EU, UN, UK), criminal or corruption investigations.
+6. Legal and compliance: court cases, arbitration, regulatory fines, debarment (World Bank and other development bank debarment lists), sanctions (OFAC, EU, UN, UK; use the sanctions screening lines in the verified facts, a name match is a lead to verify and not a verdict), criminal or corruption investigations.
 7. Reputation: recent news, controversies.
 8. Red flags and a bottom line for Sinder: low / medium / high risk, and what to verify before signing.
 Mark every fact with its source; never guess; write "not found in public sources" where nothing was found.`,
