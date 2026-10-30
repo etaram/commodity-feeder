@@ -29,7 +29,7 @@ def fetch():
         got = 0
         for blk in blocks:
             def f(label):
-                m = re.search(label + r"\s*:?\s*\|*\s*([^|]*)", blk)
+                m = re.search(label + r"[\s|:]*([^|]*)", blk)
                 return clean(m.group(1)) if m else ""
             no = f("No\\. Tender")
             title = clean(re.sub(r"\s*\|\s*", " ", blk.split("Kementerian", 1)[0].split(no, 1)[-1]).strip(" :|"))[:300] if no else ""
@@ -37,7 +37,7 @@ def fetch():
             if not no or no in seen or (close and close < t):
                 continue
             seen.add(no); got += 1
-            val = re.search(r"Harga Indikatif Jabatan\s*:?\s*\|*\s*RM\s*([\d,\.]+)", blk)
+            val = re.search(r"Harga Indikatif Jabatan[\s|:]*RM\s*([\d,\.]+)", blk)
             try:
                 v = float(val.group(1).replace(",", "")) if val else ""
             except ValueError:
@@ -47,7 +47,7 @@ def fetch():
                         "cpv": "", "classification": f("Kod Bidang")[:60], "country": "MYS", "buyer": (f("Agensi") or f("Kementerian"))[:120], "title": title,
                         "notice_type": "Tender", "stage": "tender", "access": "National (local registration / MOF code)", "published": str(_d(blk[:30]) or ""),
                         "deadline": str(close or ""), "value": v, "currency": "MYR" if v else "", "link": URL, "contact": "", "lang": "ms"})
-        log.info("Malaysia page %d: %d new", page, got)
+        log.info("Malaysia page %d: %d blocks, %d new, first %s", page, len(blocks), got, (re.search(r"No\. Tender[\s|:]*([^|]*)", blocks[0]) or [0, ""])[1])
         polite(1)
     rows, _ = rolling("malaysia", new)
     log.info("Malaysia new %d, open %d", len(new), len(rows))
