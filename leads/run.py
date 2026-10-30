@@ -20,9 +20,9 @@ from .taxonomy import BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
-                  "kenya", "moldova", "uruguay", "qatar", "israel", "nyc", "us_cities", "wb_pipeline", "ocdr_tenders", "afdb", "iadb", "chile", "simap", "gets", "india"]
+                  "kenya", "moldova", "uruguay", "bahrain", "malaysia", "qatar", "israel", "nyc", "us_cities", "wb_pipeline", "ocdr_tenders", "afdb", "iadb", "chile", "simap", "gets", "india"]
 NEW_MODULES = {"grants", "il_exemptions", "afdb", "iadb", "chile", "simap", "gets", "india", "ocdr_tenders", "israel", "nyc", "us_cities", "wb_pipeline", "ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
-               "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "uruguay", "nigeria", "kenya", "ecuador", "france", "spain", "tanzania",
+               "paraguay", "dominican", "oman", "austender", "georgia", "moldova", "uruguay", "bahrain", "malaysia", "nigeria", "kenya", "ecuador", "france", "spain", "tanzania",
                "ghana", "zambia", "latam_awards", "wikidata_companies", "web_contacts", "ext_awards", "prozorro_awards", "ocdr", "commodity_producers"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
         "articles", "prepared", "preserved", "fresh", "chilled", "frozen", "similar", "suitable", "kind", "used"}
