@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-30T11:06:19",
+  "finished_utc": "2026-10-30T11:41:48",
   "fx_source": "ECB via Frankfurter 2026-10-29",
   "fx": {
     "EUR": 1.113003216579296,
@@ -41,7 +41,7 @@
     "em_global": {
       "ok": true,
       "prices": 22,
-      "sec": 32,
+      "sec": 42,
       "newest_date": "2026-10-30",
       "log": [
         "INFO em_global board: 640 rows",
@@ -60,7 +60,7 @@
     "eu_agri": {
       "ok": true,
       "prices": 63,
-      "sec": 16,
+      "sec": 24,
       "newest_date": "2026-10-31",
       "log": [
         "INFO eu_agri: 63 prices"
@@ -87,7 +87,7 @@
     "scrapmonster": {
       "ok": true,
       "prices": 34,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-09-21",
       "log": [
         "INFO scrapmonster: 34 prices, 221 unmapped items"
@@ -135,17 +135,18 @@
     "comext": {
       "ok": true,
       "prices": 1918,
-      "sec": 61,
+      "sec": 64,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
+        "WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'RemoteDisconnected('Remote end closed connection without response')': /eurostat/api/comext/dissemination/statistics/1.0/data/DS-045409?format=JSON&lang=en&freq=M&reporter=EU&partner=EXT",
         "INFO comext: 1918 prices"
       ]
     },
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 20,
+      "sec": 9,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 25 HS codes still missing",
@@ -156,7 +157,7 @@
   },
   "rows_with_price": 1962,
   "candidates": 2197,
-  "flagged": 226,
+  "flagged": 225,
   "by_source_selected": {
     "yahoo": 31,
     "westmetall": 6,

@@ -1,80 +1,30 @@
 ts,id,name,price_usd,orig,ccy,date,source
-2026-10-30 13:06,L0001,Crude oil Brent - ICE futures,113.6,113.6,USD,2026-10-30,Yahoo Finance BZ=F (NYM)
-2026-10-30 13:06,L0002,Crude oil WTI - NYMEX futures,104.27,104.27,USD,2026-10-30,Yahoo Finance CL=F (NYM)
-2026-10-30 13:06,L0004,Natural gas Henry Hub - NYMEX futures,2.905,2.905,USD,2026-10-30,Yahoo Finance NG=F (NYM)
-2026-10-30 13:06,L0005,Natural gas TTF - ICE Endex futures,114.4056,102.79,EUR,2026-10-30,Yahoo Finance TTF=F (NYM)
-2026-10-30 13:06,L0007,Gasoline RBOB - NYMEX futures,3.138,3.138,USD,2026-10-30,Yahoo Finance RB=F (NYM)
-2026-10-30 13:06,L0008,Heating oil / ULSD - NYMEX futures,4.666,4.666,USD,2026-10-30,Yahoo Finance HO=F (NYM)
-2026-10-30 13:06,L0009,Gasoil - ICE futures,1404.75,1404.75,USD,2026-10-30,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney
-2026-10-30 13:06,L0010,Coal Newcastle - ICE futures,153.0,153.0,USD,2026-10-30,ICE Newcastle coal NCF26X (纽卡斯尔煤炭2611) via Eastmoney
-2026-10-30 13:06,L0016,Gold - COMEX/LBMA futures,3985.2,3985.2,USD,2026-10-30,Yahoo Finance GC=F (CMX)
-2026-10-30 13:06,L0017,Silver - COMEX/LBMA futures,50.505,50.505,USD,2026-10-30,Yahoo Finance SI=F (CMX)
-2026-10-30 13:06,L0018,Platinum - NYMEX/LPPM futures,1439.2,1439.2,USD,2026-10-30,Yahoo Finance PL=F (NYM)
-2026-10-30 13:06,L0019,Palladium - NYMEX/LPPM futures,974.5,974.5,USD,2026-10-30,Yahoo Finance PA=F (NYM)
-2026-10-30 13:06,L0032,Wheat (SRW) - CBOT futures,6.0575,605.75,USc,2026-10-30,Yahoo Finance ZW=F (CBT)
-2026-10-30 13:06,L0033,Wheat (HRW) - KCBT futures,6.4575,645.75,USc,2026-10-30,Yahoo Finance KE=F (CBT)
-2026-10-30 13:06,L0035,Corn - CBOT futures,4.495,449.5,USc,2026-10-30,Yahoo Finance ZC=F (CBT)
-2026-10-30 13:06,L0036,Soybeans - CBOT futures,12.335,1233.5,USc,2026-10-30,Yahoo Finance ZS=F (CBT)
-2026-10-30 13:06,L0037,Soybean meal - CBOT futures,328.5,328.5,USD,2026-10-30,Yahoo Finance ZM=F (CBT)
-2026-10-30 13:06,L0038,Soybean oil - CBOT futures,0.6606,66.06,USc,2026-10-30,Yahoo Finance ZL=F (CBT)
-2026-10-30 13:06,L0039,Rough rice - CBOT futures,17.86,17.86,USD,2026-10-30,Yahoo Finance ZR=F (CBT)
-2026-10-30 13:06,L0040,Oats - CBOT futures,3.435,343.5,USc,2026-10-30,Yahoo Finance ZO=F (CBT)
-2026-10-30 13:06,L0043,Crude palm oil - Bursa Malaysia futures,1153.344,4682.0,MYR,2026-10-30,Bursa crude palm oil MPM00Y (棕榈油当月连续) via Eastmoney
-2026-10-30 13:06,L0044,Coffee Arabica - ICE futures,2.869,286.9,USc,2026-10-30,Yahoo Finance KC=F (NYB)
-2026-10-30 13:06,L0046,Cocoa - ICE futures,5445.0,5445.0,USD,2026-10-30,Yahoo Finance CC=F (NYB)
-2026-10-30 13:06,L0047,Sugar No.11 - ICE futures,0.1939,19.39,USc,2026-10-30,Yahoo Finance SB=F (NYB)
-2026-10-30 13:06,L0049,Cotton No.2 - ICE futures,0.7839,78.39,USc,2026-10-30,Yahoo Finance CT=F (NYM)
-2026-10-30 13:06,L0050,Orange juice FCOJ - ICE futures,1.2855,128.55,USc,2026-10-29,Yahoo Finance OJ=F (NYB)
-2026-10-30 13:06,L0051,Lumber - CME futures,516.5,516.5,USD,2026-10-29,Yahoo Finance LBR=F (CME)
-2026-10-30 13:06,L0053,Feeder cattle - CME futures,3.4607,346.075,USc,2026-10-29,Yahoo Finance GF=F (CME)
-2026-10-30 13:06,L0055,Class III milk - CME futures,15.2,15.2,USD,2026-10-30,Yahoo Finance DC=F (CME)
-2026-10-30 13:06,L0056,Natural rubber RSS3 - OSE/SGX futures,2.7901,441.0,JPY,2026-10-30,OSE RSS3 rubber JRU27J (日橡胶2704) via Eastmoney
-2026-10-30 13:06,H0104,"Meat; of sheep, lamb carcasses and half-carcasses, fresh or chilled",10.4785,941.46,EUR,2026-10-25,European Commission Agri-food Data Portal - Heavy lamb carcass (Commission EU average)
-2026-10-30 13:06,H0123,"Meat and edible offal; of fowls of the species Gallus domesticus, not cut in pieces,...",3.1507,283.08,EUR,2026-10-25,European Commission Agri-food Data Portal - Whole broiler 65% (Commission EU average)
-2026-10-30 13:06,H0125,"Meat and edible offal; of fowls of the species Gallus domesticus, cuts and offal,...",6.7702,608.28,EUR,2026-10-25,European Commission Agri-food Data Portal - Chicken breast fillet (Commission EU average)
-2026-10-30 13:06,H0340,"Birds' eggs, in shell; fresh, not for incubation, of fowls of the species Gallus...",2974.2785,267.23,EUR,2026-10-25,"European Commission Agri-food Data Portal - Eggs, barn (class A) (Commission EU average)"
-2026-10-30 13:06,H0356,"Vegetables, brassica; cauliflowers and broccoli, fresh or chilled",1.0776,96.81,EUR,2026-10-25,"European Commission Agri-food Data Portal - Cauliflowers (ex-packaging station) (8 Member States: BE,DE,EL,ES,FR,IT,NL,PT)"
-2026-10-30 13:06,H0365,"Vegetables; cucumbers and gherkins, fresh or chilled",1.2619,113.37,EUR,2026-10-25,"European Commission Agri-food Data Portal - Cucumbers (ex-packaging station) (7 Member States: BG,DE,EL,ES,FR,IT,NL)"
-2026-10-30 13:06,H0370,"Vegetables; aubergines, (e.g. plants), fresh or chilled",1.2013,107.94,EUR,2026-10-25,"European Commission Agri-food Data Portal - Aubergines (ex-packaging station) (6 Member States: BG,EL,ES,FR,IT,NL)"
-2026-10-30 13:06,H0454,"Fruit, edible; oranges, fresh or dried",0.881832,79.23,EUR,2026-10-25,"European Commission Agri-food Data Portal - Oranges (ex-packaging station) (3 Member States: EL,ES,PT)"
-2026-10-30 13:06,H0466,"Fruit, edible; apples, fresh",1.1458,102.95,EUR,2026-10-25,"European Commission Agri-food Data Portal - Apples (ex-packaging station) (10 Member States: BE,BG,DE,EL,ES,FR,HR,IT)"
-2026-10-30 13:06,H0467,"Fruit, edible; pears, fresh",1.7436,156.66,EUR,2026-10-25,"European Commission Agri-food Data Portal - Pears (ex-packaging station) (7 Member States: BE,EL,ES,FR,IT,NL,PT)"
-2026-10-30 13:06,H0493,Coffee; not roasted or decaffeinated,6.3251,286.9,USc,2026-10-30,Yahoo Finance KC=F (NYB) [benchmark for this HS code]
-2026-10-30 13:06,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",222.575,605.75,USc,2026-10-30,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0541,"Cereals; oats, other than seed",236.6509,343.5,USc,2026-10-30,Yahoo Finance ZO=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0543,"Cereals; maize (corn), other than seed",176.9605,449.5,USc,2026-10-30,Yahoo Finance ZC=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0544,Cereals; rice in the husk (paddy or rough),393.7451,17.86,USD,2026-10-30,Yahoo Finance ZR=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0586,"Soya beans; other than seed, whether or not broken",453.2335,1233.5,USc,2026-10-30,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0646,"Vegetable oils; soya-bean oil and its fractions, crude, whether or not degummed, not...",1456.372,66.06,USc,2026-10-30,Yahoo Finance ZL=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0656,"Vegetable oils; palm oil and its fractions, crude, not chemically modified",1153.344,4682.0,MYR,2026-10-30,Bursa crude palm oil MPM00Y (棕榈油当月连续) via Eastmoney [benchmark for this HS code]
-2026-10-30 13:06,H0657,"Vegetable oils; palm oil and its fractions, other than crude, whether or not refined,...",1258.7548,9140.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Palm olein 24 [P]
-2026-10-30 13:06,H0667,"Vegetable oils; low erucic acid rape or colza oil and its fractions, other than crude,...",1494.2549,10850.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Rapeseed oil [OI]
-2026-10-30 13:06,H0690,"Sugars; cane sugar, raw, in solid form, other than as specified in Subheading Note 2...",427.4758,19.39,USc,2026-10-30,Yahoo Finance SB=F (NYB) [benchmark for this HS code]
-2026-10-30 13:06,H0705,"Cocoa beans; whole or broken, raw or roasted",5445.0,5445.0,USD,2026-10-30,Yahoo Finance CC=F (NYB) [benchmark for this HS code]
-2026-10-30 13:06,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",362.1092,328.5,USD,2026-10-30,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
-2026-10-30 13:06,H0732,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",278.1729,249.93,EUR,2026-10-25,"European Commission Agri-food Data Portal - Sunflower seed meal (5 Member States: AT,BG,ES,IT,NL)"
-2026-10-30 13:06,H0733,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",335.7085,301.62,EUR,2026-10-25,"European Commission Agri-food Data Portal - Rapeseed meal (5 Member States: AT,DE,IT,LT,NL)"
-2026-10-30 13:06,H0863,"Coal; bituminous, whether or not pulverised, but not agglomerated",153.0,153.0,USD,2026-10-30,ICE Newcastle coal NCF26X (纽卡斯尔煤炭2611) via Eastmoney [benchmark for this HS code]
-2026-10-30 13:06,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",113.6,113.6,USD,2026-10-30,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
-2026-10-30 13:06,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",3.138,3.138,USD,2026-10-30,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
-2026-10-30 13:06,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1404.75,1404.75,USD,2026-10-30,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney [benchmark for this HS code]
-2026-10-30 13:06,H0888,"Petroleum gases and other gaseous hydrocarbons; liquefied, propane",1057.1087,7957.5,CNY,2026-10-30,100ppi (生意社) spot via AKShare - LPG [PG]
-2026-10-30 13:06,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",2.905,2.905,USD,2026-10-30,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
-2026-10-30 13:06,H0899,Petroleum bitumen; obtained from bituminous minerals,835.9229,6292.5,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Bitumen [BU]
-2026-10-30 13:06,H0980,"Acyclic hydrocarbons; unsaturated, propene (propylene)",1594.2647,12001.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Propylene [PL]
-2026-10-30 13:06,H0990,Cyclic hydrocarbons; p-xylene,1394.8654,10500.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Paraxylene [PX]
-2026-10-30 13:06,H0996,"Alcohols; saturated monohydric, methanol (methyl alcohol)",518.7571,3905.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Methanol [MA]
-2026-10-30 13:06,H1005,"Alcohols; acyclic, diols; ethylene glycol (ethanediol)",768.2826,5783.33,CNY,2026-10-30,100ppi (生意社) spot via AKShare - MEG [EG]
-2026-10-30 13:06,H1073,Acids; aromatic polycarboxylic acids; terephthalic acid and its salts,968.3687,7289.5,CNY,2026-10-30,100ppi (生意社) spot via AKShare - PTA [TA]
-2026-10-30 13:06,H1185,"Poly(ethylene terephthalate); in primary forms, having a viscosity of 78ml/g or higher",1193.8826,8987.08,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Bottle-grade PET chips [PR]
-2026-10-30 13:06,H1216,"Rubber; natural (excluding latex), in smoked sheets",2.7901,441.0,JPY,2026-10-30,OSE RSS3 rubber JRU27J (日橡胶2704) via Eastmoney [benchmark for this HS code]
-2026-10-30 13:06,H1316,"Wood; coniferous species, of fir (Abies spp.) and spruce (Picea spp.), sawn or chipped...",218.88,516.5,USD,2026-10-29,Yahoo Finance LBR=F (CME) [benchmark for this HS code]
-2026-10-30 13:06,H1481,Cotton; not carded or combed,1728.2016,78.39,USc,2026-10-30,Yahoo Finance CT=F (NYM) [benchmark for this HS code]
-2026-10-30 13:06,H1606,"Fibres; synthetic staple fibres, of polyesters, not carded, combed or otherwise...",1220.5179,9187.58,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Polyester staple fibre [PF]
-2026-10-30 13:06,H1674,"Metals; silver, unwrought, (but not powder)",1623.7735,50.505,USD,2026-10-30,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
-2026-10-30 13:06,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",128127.1554,3985.2,USD,2026-10-30,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
-2026-10-30 13:06,H1682,"Metals; platinum, unwrought or in powder form",46271.3545,1439.2,USD,2026-10-30,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
-2026-10-30 13:06,H1684,"Metals; palladium, unwrought or in powder form",31330.9026,974.5,USD,2026-10-30,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
-2026-10-30 13:06,H1715,"Ferro-alloys; ferro-silicon, containing by weight more than 55% of silicon",741.4613,5581.43,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Ferrosilicon [SF]
-2026-10-30 13:06,H1717,Ferro-alloys; ferro-silico-manganese,757.744,5704.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Silicomanganese [SM]
-2026-10-30 13:06,H1810,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness...",1.8465,13900.0,CNY,2026-10-30,100ppi (生意社) spot via AKShare - Stainless steel 304 CR [SS]
+2026-10-30 13:41,L0001,Crude oil Brent - ICE futures,113.29,113.29,USD,2026-10-30,Yahoo Finance BZ=F (NYM)
+2026-10-30 13:41,L0002,Crude oil WTI - NYMEX futures,104.06,104.06,USD,2026-10-30,Yahoo Finance CL=F (NYM)
+2026-10-30 13:41,L0004,Natural gas Henry Hub - NYMEX futures,2.897,2.897,USD,2026-10-30,Yahoo Finance NG=F (NYM)
+2026-10-30 13:41,L0007,Gasoline RBOB - NYMEX futures,3.1351,3.1351,USD,2026-10-30,Yahoo Finance RB=F (NYM)
+2026-10-30 13:41,L0008,Heating oil / ULSD - NYMEX futures,4.6588,4.6588,USD,2026-10-30,Yahoo Finance HO=F (NYM)
+2026-10-30 13:41,L0009,Gasoil - ICE futures,1402.5,1402.5,USD,2026-10-30,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney
+2026-10-30 13:41,L0016,Gold - COMEX/LBMA futures,3983.0,3983.0,USD,2026-10-30,Yahoo Finance GC=F (CMX)
+2026-10-30 13:41,L0017,Silver - COMEX/LBMA futures,50.46,50.46,USD,2026-10-30,Yahoo Finance SI=F (CMX)
+2026-10-30 13:41,L0018,Platinum - NYMEX/LPPM futures,1441.1,1441.1,USD,2026-10-30,Yahoo Finance PL=F (NYM)
+2026-10-30 13:41,L0019,Palladium - NYMEX/LPPM futures,974.0,974.0,USD,2026-10-30,Yahoo Finance PA=F (NYM)
+2026-10-30 13:41,L0032,Wheat (SRW) - CBOT futures,6.045,604.5,USc,2026-10-30,Yahoo Finance ZW=F (CBT)
+2026-10-30 13:41,L0033,Wheat (HRW) - KCBT futures,6.445,644.5,USc,2026-10-30,Yahoo Finance KE=F (CBT)
+2026-10-30 13:41,L0036,Soybeans - CBOT futures,12.325,1232.5,USc,2026-10-30,Yahoo Finance ZS=F (CBT)
+2026-10-30 13:41,L0037,Soybean meal - CBOT futures,327.2,327.2,USD,2026-10-30,Yahoo Finance ZM=F (CBT)
+2026-10-30 13:41,L0044,Coffee Arabica - ICE futures,2.885,288.5,USc,2026-10-30,Yahoo Finance KC=F (NYB)
+2026-10-30 13:41,L0046,Cocoa - ICE futures,5497.0,5497.0,USD,2026-10-30,Yahoo Finance CC=F (NYB)
+2026-10-30 13:41,H0493,Coffee; not roasted or decaffeinated,6.3603,288.5,USc,2026-10-30,Yahoo Finance KC=F (NYB) [benchmark for this HS code]
+2026-10-30 13:41,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",222.1157,604.5,USc,2026-10-30,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
+2026-10-30 13:41,H0586,"Soya beans; other than seed, whether or not broken",452.8661,1232.5,USc,2026-10-30,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
+2026-10-30 13:41,H0705,"Cocoa beans; whole or broken, raw or roasted",5497.0,5497.0,USD,2026-10-30,Yahoo Finance CC=F (NYB) [benchmark for this HS code]
+2026-10-30 13:41,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",360.6762,327.2,USD,2026-10-30,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
+2026-10-30 13:41,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",113.29,113.29,USD,2026-10-30,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
+2026-10-30 13:41,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",3.1351,3.1351,USD,2026-10-30,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
+2026-10-30 13:41,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1402.5,1402.5,USD,2026-10-30,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney [benchmark for this HS code]
+2026-10-30 13:41,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",2.897,2.897,USD,2026-10-30,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
+2026-10-30 13:41,H1674,"Metals; silver, unwrought, (but not powder)",1622.3267,50.46,USD,2026-10-30,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
+2026-10-30 13:41,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",128056.4237,3983.0,USD,2026-10-30,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
+2026-10-30 13:41,H1682,"Metals; platinum, unwrought or in powder form",46332.4409,1441.1,USD,2026-10-30,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
+2026-10-30 13:41,H1684,"Metals; palladium, unwrought or in powder form",31314.8272,974.0,USD,2026-10-30,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
