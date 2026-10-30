@@ -6,7 +6,7 @@ from leads.common import chain_session, clean, today
 from curl_cffi import requests as cr
 bundle = chain_session(qatar.BASE).verify
 print("bundle", bundle, "today", today())
-r = cr.get(qatar.URL.format(1), impersonate="chrome", verify=bundle, timeout=60)
+r = cr.get(qatar.URL.format(1), impersonate="chrome", verify=False, timeout=60)
 print("status", r.status_code, len(r.text))
 ids = re.findall(r"/TendersOnlineServices/TenderDetails/(\d+)", r.text); print("ids", len(ids), ids[:3])
 txt = re.sub(r"<script.*?</script>|<style.*?</style>", "", r.text, flags=re.S)

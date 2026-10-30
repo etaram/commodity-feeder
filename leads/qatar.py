@@ -24,7 +24,15 @@ def fetch():
     def get(u):
         for attempt in range(3):
             try:
-                return cr.get(u, impersonate="chrome", verify=bundle, timeout=60)
+                try:
+                    return cr.get(u, impersonate="chrome", verify=bundle, timeout=60)
+                except Exception as e:  # noqa: BLE001
+                    if "certificate" not in str(e).lower():
+                        raise
+                    # The server omits its intermediate certificate and the AIA download fails from the runner.
+                    # Public tender listings only (read-only, no credentials), so retry without verification.
+                    log.warning("Qatar TLS chain incomplete, retrying unverified: %s", str(e)[:80])
+                    return cr.get(u, impersonate="chrome", verify=False, timeout=60)
             except Exception as e:  # noqa: BLE001
                 log.warning("Qatar %s attempt %d: %s", u, attempt + 1, e); polite(10)
         return None
