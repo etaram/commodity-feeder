@@ -1,74 +1,142 @@
-## mexico https://datos.gob.mx
-  licitaciones: count=7
-    - contratos_asiponasc | mod 2026-08-07 | ['CSV'] | Concesiones, contratos y convenios en ASIPONA Salina Cruz
-    - concesiones_autorizaciones_permisos | mod 2026-04-23 | ['CSV'] | Concesiones, Autorizaciones y Permisos
-    - padron_personas_proveedoras_contratistas | mod 2026-04-08 | ['CSV'] | Padrón de personas proveedoras y contratistas
-    - resultados_procedimientos_adjudicacion_directa_lic | mod 2026-04-08 | ['CSV'] | Resultados de procedimientos de adjudicación directa, licitación públi
-  contrataciones: count=30
-    - servidores_publicos_sancionados_vigentes | mod 2026-10-19 | ['CSV'] | Servidores públicos sancionados vigentes
-    - procedimientos_contratacion | mod 2026-10-01 | ['CSV'] | Procedimientos de contratación
-    - publicaciones_indetec | mod 2026-10-01 | ['CSV'] | Publicaciones INDETEC
-    - indicadores_sistema_nacional_anticorrupcion | mod 2026-09-30 | ['CSV'] | Indicadores del Sistema Nacional Anticorrupción
-  tender: count=0
-  procurement: count=0
-  lelang: count=0
-  anbud: count=0
-## peru https://www.datosabiertos.gob.pe
-  licitaciones: HTTP 404
-  contrataciones: HTTP 404
-  tender: HTTP 404
-  procurement: HTTP 404
-  lelang: HTTP 404
-  anbud: HTTP 404
-## argentina https://datos.gob.ar
-  licitaciones: count=5
-    - energia-exploracion-hidrocarburos---permisos-explo | mod 2026-07-02 | ['CSV', 'SHP'] | Exploración de hidrocarburos - Permisos de Exploración
-    - salud-contrataciones-compras-licitaciones-superint | mod 2025-02-04 | ['CSV', 'JSON', 'XLS'] | Contrataciones, Compras y Licitaciones de la Superintendencia de Servi
-    - arsat-finanzas | mod 2025-02-04 | ['CSV', 'PDF'] | Finanzas
-    - jgm-contratar-historico | mod 2025-02-04 | ['CSV', 'HTML', 'XLSX'] | Contratar (histórico)
-  contrataciones: count=19
-    - acumar-regimen-especial-compras-contrataciones-pro | mod 2026-02-20 | ['CSV'] | Régimen Especial de Compras y Contrataciones a Proveedores Sociales y 
-    - acumar-compras-contrataciones-acumar | mod 2025-10-24 | ['CSV'] | Compras y Contrataciones de ACUMAR
-    - defensa-compras-contrataciones-ministerio-defensa | mod 2025-02-04 | ['.XLSX'] | Compras y contrataciones Ministerio de Defensa
-    - transporte-covid-19 | mod 2025-02-04 | ['XLSX'] | COVID-19
-  tender: HTTP 500
-  procurement: HTTP 500
-  lelang: count=0
-  anbud: HTTP 500
-## indonesia https://data.go.id
-  licitaciones: HTTP 404
-  contrataciones: HTTP 404
-  tender: HTTP 404
-  procurement: HTTP 404
-  lelang: HTTP 404
-  anbud: HTTP 404
-## colombia https://www.datos.gov.co
-  licitaciones: HTTP 404
-  contrataciones: HTTP 404
-  tender: HTTP 404
-  procurement: HTTP 404
-  lelang: HTTP 404
-  anbud: HTTP 404
-## norway https://data.norge.no
-  licitaciones: HTTP 404
-  contrataciones: HTTP 404
-  tender: HTTP 404
-  procurement: HTTP 404
-  lelang: HTTP 404
-  anbud: HTTP 404
-## taiwan pcc (g0v)
-  403 <!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="content-security-policy" content="default-src &#39;none&#39;; script-src &#39
-## singapore data.gov.sg
-  200 {"code":0,"data":{"datasets":[{"datasetId":"d_000598f9f69718ffd6c77ae367a5d84f","createdAt":"2024-10-27T23:35:58+08:00","name":"Primary Inputs By Final Demand (Supply, Use and Input-Output Tables 2017
-  404 {}
-## tenders.guru
-  ERR https://tenders.guru/pl/api/tenders ConnectTimeout HTTPSConnectionPool(host='tenders.guru', port=443): Max retries exceeded with url: /pl/api/tenders?p
-  ERR https://tenders.guru/hu/api/tenders ConnectTimeout HTTPSConnectionPool(host='tenders.guru', port=443): Max retries exceeded with url: /hu/api/tenders?p
-  ERR https://tenders.guru/ro/api/tenders ConnectTimeout HTTPSConnectionPool(host='tenders.guru', port=443): Max retries exceeded with url: /ro/api/tenders?p
-## mexico comprasmx / peru seace / argentina contrataciones
-  https://comprasmx.buengobierno.gob.mx/ 200
-  ERR https://contratacionesabiertas.osce.gob.pe/ ConnectionError HTTPSConnectionPool(host='contratacionesabiertas.osce.gob.pe', port=443): Max retries exceeded with 
-  https://contratacionesabiertas.osce.gob.pe/ -
-  ERR https://contrataciones.gob.ar/ ConnectionError HTTPSConnectionPool(host='contrataciones.gob.ar', port=443): Max retries exceeded with url: / (Cause
-  https://contrataciones.gob.ar/ -
-  https://www.doffin.no/ 200
+[2026-10-30 19:04:31] INFO: Fetched (200) <GET https://pcc-api.openfun.app/> (referer: https://www.google.com/)
+[2026-10-30 19:04:40] INFO: No Cloudflare challenge found.
+[2026-10-30 19:04:40] INFO: Fetched (301) <GET https://pcc.g0v.ronny.tw/api/listbydate?date=20261028> (referer: https://www.google.com/)
+[2026-10-30 19:04:40] INFO: Fetched (200) <GET https://pcc-api.openfun.app/> (referer: https://www.google.com/)
+[2026-10-30 19:05:20] WARNING: Attempt 1 failed: Failed to perform, curl: (28) Connection timeout after 39999 ms. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-10-30 19:06:01] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
+[2026-10-30 19:06:42] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-10-30 19:08:13] WARNING: Attempt 1 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://web.pcc.gov.tw/prkms/tender/common/basic/indexTenderBasic", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:09:44] WARNING: Attempt 2 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://web.pcc.gov.tw/prkms/tender/common/basic/indexTenderBasic", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:09:56] ERROR: Failed after 3 attempts: Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://web.pcc.gov.tw/prkms/tender/common/basic/indexTenderBasic
+Call log:
+  - navigating to "https://web.pcc.gov.tw/prkms/tender/common/basic/indexTenderBasic", waiting until "load"
+
+[2026-10-30 19:10:36] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
+[2026-10-30 19:11:17] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
+[2026-10-30 19:11:58] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-10-30 19:13:29] WARNING: Attempt 1 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://tenders.guru/pl/api/tenders?page=1", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:15:00] WARNING: Attempt 2 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://tenders.guru/pl/api/tenders?page=1", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:15:11] ERROR: Failed after 3 attempts: Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://tenders.guru/pl/api/tenders?page=1
+Call log:
+  - navigating to "https://tenders.guru/pl/api/tenders?page=1", waiting until "load"
+
+[2026-10-30 19:15:52] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
+[2026-10-30 19:16:33] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
+[2026-10-30 19:17:14] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-10-30 19:18:44] WARNING: Attempt 1 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://tenders.guru/hu/api/tenders?page=1", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:20:15] WARNING: Attempt 2 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://tenders.guru/hu/api/tenders?page=1", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:20:27] ERROR: Failed after 3 attempts: Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://tenders.guru/hu/api/tenders?page=1
+Call log:
+  - navigating to "https://tenders.guru/hu/api/tenders?page=1", waiting until "load"
+
+[2026-10-30 19:20:27] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: contratacionesabiertas.osce.gob.pe (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-10-30 19:20:28] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: contratacionesabiertas.osce.gob.pe. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-10-30 19:20:29] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: contratacionesabiertas.osce.gob.pe. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-10-30 19:20:31] WARNING: Attempt 1 failed: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contratacionesabiertas.osce.gob.pe/
+Call log:
+  - navigating to "https://contratacionesabiertas.osce.gob.pe/", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:20:33] WARNING: Attempt 2 failed: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contratacionesabiertas.osce.gob.pe/
+Call log:
+  - navigating to "https://contratacionesabiertas.osce.gob.pe/", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:20:35] ERROR: Failed after 3 attempts: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contratacionesabiertas.osce.gob.pe/
+Call log:
+  - navigating to "https://contratacionesabiertas.osce.gob.pe/", waiting until "load"
+
+[2026-10-30 19:20:36] INFO: Fetched (200) <GET https://www.datosabiertos.gob.pe/> (referer: https://www.google.com/)
+[2026-10-30 19:20:45] INFO: No Cloudflare challenge found.
+[2026-10-30 19:20:45] INFO: Fetched (200) <GET https://www.datosabiertos.gob.pe/> (referer: https://www.google.com/)
+[2026-10-30 19:20:45] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: contrataciones.gob.ar (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-10-30 19:20:46] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: contrataciones.gob.ar. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
+[2026-10-30 19:20:47] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: contrataciones.gob.ar. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-10-30 19:20:49] WARNING: Attempt 1 failed: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contrataciones.gob.ar/
+Call log:
+  - navigating to "https://contrataciones.gob.ar/", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:20:51] WARNING: Attempt 2 failed: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contrataciones.gob.ar/
+Call log:
+  - navigating to "https://contrataciones.gob.ar/", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:20:52] ERROR: Failed after 3 attempts: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contrataciones.gob.ar/
+Call log:
+  - navigating to "https://contrataciones.gob.ar/", waiting until "load"
+
+[2026-10-30 19:21:32] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
+[2026-10-30 19:22:13] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
+[2026-10-30 19:22:54] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+[2026-10-30 19:24:25] WARNING: Attempt 1 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://comprar.gob.ar/", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:25:56] WARNING: Attempt 2 failed: Page.goto: Timeout 90000ms exceeded.
+Call log:
+  - navigating to "https://comprar.gob.ar/", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 19:26:11] ERROR: Failed after 3 attempts: Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://comprar.gob.ar/
+Call log:
+  - navigating to "https://comprar.gob.ar/", waiting until "load"
+
+[2026-10-30 19:26:11] INFO: Fetched (403) <GET https://inaproc.id/> (referer: https://www.google.com/)
+[2026-10-30 19:27:42] INFO: The turnstile version discovered is "managed"
+[2026-10-30 19:27:45] INFO: Cloudflare captcha is solved
+[2026-10-30 19:27:45] INFO: Fetched (307) <GET https://inaproc.id/> (referer: https://www.google.com/)
+[2026-10-30 19:27:45] INFO: Fetched (200) <GET https://inaproc.id/> (referer: https://www.google.com/)
+[2026-10-30 19:27:47] INFO: Fetched (200) <GET https://www.gebiz.gov.sg/> (referer: https://www.google.com/)
+[2026-10-30 19:27:57] INFO: No Cloudflare challenge found.
+[2026-10-30 19:27:57] INFO: Fetched (200) <GET https://www.gebiz.gov.sg/> (referer: https://www.google.com/)
+## MEXICO datos.gob.mx procedimientos_contratacion
+ res CSV None None https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/b4_procedimientos_contratacion.csv
+ res CSV None None https://repodatos.atdt.gob.mx/api_update/tecnm/procedimientos_contratacion/procedimientos_contratacion.csv
+ status 403 bytes read 490
+ header: ['<HTML><HEAD>']
+ sample: ['<TITLE>Access Denied</TITLE>']
+taiwan_g0v_api Fetcher: status=200 len=3307 cloudflare_page=False 2s | '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>標案瀏覽</title><script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jque'
+taiwan_g0v_api Stealthy: status=200 len=3506 cloudflare_page=False 9s | '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><title>標案瀏覽</title><script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jque'
+taiwan_pcc Fetcher: ERR Timeout Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/lib
+taiwan_pcc Stealthy: ERR Error Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://web.pcc.gov.tw/prkms/tender/common/basic/indexTenderBasic
+
+tenders_guru_pl Fetcher: ERR Timeout Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/lib
+tenders_guru_pl Stealthy: ERR Error Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://tenders.guru/pl/api/tenders?page=1
+Call log:
+  - navigatin
+tenders_guru_hu Fetcher: ERR Timeout Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/lib
+tenders_guru_hu Stealthy: ERR Error Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://tenders.guru/hu/api/tenders?page=1
+Call log:
+  - navigatin
+peru_osce_ocds Fetcher: ERR DNSError Failed to perform, curl: (6) Could not resolve host: contratacionesabiertas.osce.gob.pe. See https://curl.se/l
+peru_osce_ocds Stealthy: ERR Error Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contratacionesabiertas.osce.gob.pe/
+Call log:
+  - navigating 
+peru_datos Fetcher: status=200 len=83033 cloudflare_page=False 1s | '<html lang="es" dir="ltr" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" '
+peru_datos Stealthy: status=200 len=84821 cloudflare_page=False 10s | '<html lang="es" dir="ltr" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" '
+argentina_contrataciones Fetcher: ERR DNSError Failed to perform, curl: (6) Could not resolve host: contrataciones.gob.ar. See https://curl.se/libcurl/c/libc
+argentina_contrataciones Stealthy: ERR Error Page.goto: net::ERR_NAME_NOT_RESOLVED at https://contrataciones.gob.ar/
+Call log:
+  - navigating to "https://c
+argentina_comprar Fetcher: ERR Timeout Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/lib
+argentina_comprar Stealthy: ERR Error Page.goto: net::ERR_CONNECTION_TIMED_OUT at https://comprar.gob.ar/
+Call log:
+  - navigating to "https://compr
+indonesia_inaproc Fetcher: status=403 len=34738 cloudflare_page=False 0s | '<html><head><style>*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n* {\n  margin: 0;\n}\nbody {\n  line-height: 1.5;\n  -webkit-font-smoothing: antialiased;\n}\ni'
+indonesia_inaproc Stealthy: status=200 len=440678 cloudflare_page=False 94s | '<html lang="id" data-scroll-behavior="smooth" class="opensans_f4b0d3d8-module__z2VBHW__variable inter_5bd232a6-module__I67VGa__variable"><head><meta charset="ut'
+singapore_gebiz Fetcher: status=200 len=87431 cloudflare_page=False 1s | '<html lang="en" xmlns="http://www.w3.org/1999/xhtml" style="overflow: auto;"><head><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" co'
+singapore_gebiz Stealthy: status=200 len=86982 cloudflare_page=False 11s | '<html lang="en" xmlns="http://www.w3.org/1999/xhtml" style=\'overflow: auto; --vica-color-primary: #444444; --vica-color-primary-dark: #4e4e4e; --vica-color-prim'
