@@ -1,134 +1,100 @@
-"""Sanctions and country-risk screen for tenders (runs in the merge, after the deal engine).
-
-Country level: data/leads/country_risk.csv (block = no Pursue/Watch; restricted = at most Watch, with the reason).
-Entity level: buyers matched against official lists of sanctioned entities (not individuals):
-  OFAC SDN (US Treasury), UN Security Council consolidated list, EU financial sanctions list.
-Lists are downloaded once a day (cache data/leads/cache/sanctions.json). Matching is conservative (exact normalised
-name, or a long listed name contained in the buyer name) and a match is a flag to check, not a legal finding.
-"""
+"""Builds a compact name index of official sanctions lists (OFAC SDN + consolidated, UN Security Council, EU consolidated)
+for the Deal Desk business-intelligence screening. Names only; no personal data beyond what the lists publish.
+Output: data/leads/sanctions.json  {updated, counts, e: [[names...], list, program, type, ref], ...}"""
 import csv
+import datetime as dt
 import io
 import json
 import re
+import sys
 import xml.etree.ElementTree as ET
 
-from .common import LEADS, log, session, today
+from .common import LEADS, log, session
 
-CACHE = LEADS / "cache" / "sanctions.json"
-RISK = LEADS / "country_risk.csv"
-OFAC = "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV"
+OFAC = "https://www.treasury.gov/ofac/downloads/"
 UN = "https://scsanctions.un.org/resources/xml/en/consolidated.xml"
 EU = "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw"
-SUFFIX = r"\b(the|ltd|llc|limited|co|company|corp|corporation|inc|jsc|ojsc|pjsc|cjsc|sa|s a|gmbh|plc|fze|fzco|llp|ooo|zao|oao)\b"
 
 
-GENERIC = re.compile(r"^(ministry|department|government|state|national|central|federal|office|agency|bank|committee|council|directorate|general|empresa|compa[nñ]ia|sociedad|ministerio|minist[eè]re|ministero|ministerstvo|corporaci[oó]n|instituto|servicio)\b")
+def get(s, url):
+    r = s.get(url, timeout=180)
+    r.raise_for_status()
+    return r.content.decode("utf-8-sig", errors="replace")
 
 
-HOME_OF_LISTS = {"AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "IRL", "ITA", "LVA",
-                 "LTU", "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE", "NOR", "ISL", "LIE", "CHE",
-                 "GBR", "USA", "CAN", "AUS", "NZL", "JPN", "KOR", "ISR"}
+def ofac(s):
+    out = {}
+    for ln in csv.reader(io.StringIO(get(s, OFAC + "sdn.csv"))):
+        if len(ln) < 4 or not ln[0].strip().isdigit():
+            continue
+        t = ln[2].strip().strip("-0 ") or "entity"
+        out[ln[0]] = [[ln[1].strip()], "OFAC SDN", ln[3].strip(), t, ln[0]]
+    try:
+        for ln in csv.reader(io.StringIO(get(s, OFAC + "alt.csv"))):
+            if len(ln) >= 4 and ln[0] in out and ln[3].strip():
+                out[ln[0]][0].append(ln[3].strip())
+    except Exception as e:  # noqa: BLE001
+        log.warning("OFAC alt: %s", e)
+    try:  # non-SDN consolidated lists (SSI, NS-MBS, FSE ...)
+        for ln in csv.reader(io.StringIO(get(s, OFAC + "consolidated/cons_prim.csv"))):
+            if len(ln) >= 4 and ln[0].strip().isdigit() and ln[0] not in out:
+                out["c" + ln[0]] = [[ln[1].strip()], "OFAC consolidated", ln[3].strip(), ln[2].strip().strip("-0 ") or "entity", ln[0]]
+    except Exception as e:  # noqa: BLE001
+        log.warning("OFAC cons: %s", e)
+    return list(out.values())
 
 
-def norm(s):
-    s = re.sub(r"[^a-z0-9Ѐ-ӿ؀-ۿ ]+", " ", (s or "").lower())
-    return re.sub(r"\s+", " ", re.sub(SUFFIX, " ", s)).strip()
+def un(s):
+    root = ET.fromstring(get(s, UN).encode("utf-8"))
+    rows = []
+    for kind, tag in (("individual", "INDIVIDUAL"), ("entity", "ENTITY")):
+        for e in root.iter(tag):
+            g = lambda k: (e.findtext(k) or "").strip()  # noqa: E731
+            name = " ".join(x for x in (g("FIRST_NAME"), g("SECOND_NAME"), g("THIRD_NAME"), g("FOURTH_NAME")) if x)
+            names = [name] + [(a.findtext("ALIAS_NAME") or "").strip() for a in e.iter(f"{tag}_ALIAS")]
+            names = [n for n in names if n]
+            if names:
+                rows.append([names, "UN Security Council", g("UN_LIST_TYPE"), kind, g("REFERENCE_NUMBER")])
+    return rows
 
 
-def _ofac(s):
-    r = s.get(OFAC, timeout=120); r.raise_for_status()
-    out = []
-    for row in csv.reader(io.StringIO(r.content.decode("latin-1"))):
-        if len(row) > 3 and row[2].strip().strip('"').lower() != "individual":
-            out.append([row[1].strip(), "OFAC SDN " + row[3].strip()[:40]])
-    return out
+def eu(s):
+    txt = get(s, EU)
+    rd = csv.DictReader(io.StringIO(txt), delimiter=";")
+    out = {}
+    for r in rd:
+        ref = (r.get("Entity_LogicalId") or "").strip()
+        nm = (r.get("NameAlias_WholeName") or "").strip()
+        if not ref or not nm:
+            continue
+        if ref not in out:
+            out[ref] = [[], "EU consolidated", (r.get("Entity_Regulation_Programme") or "").strip(), (r.get("Entity_SubjectType") or "").strip() or "entity", (r.get("Entity_EU_ReferenceNumber") or ref).strip()]
+        if nm not in out[ref][0]:
+            out[ref][0].append(nm)
+    return list(out.values())
 
 
-def _un(s):
-    r = s.get(UN, timeout=120); r.raise_for_status()
-    root = ET.fromstring(r.content)
-    out = []
-    for e in root.iter("ENTITY"):
-        name = (e.findtext("FIRST_NAME") or "").strip()
-        ref = (e.findtext("REFERENCE_NUMBER") or "").strip()
-        if name:
-            out.append([name, "UN " + ref])
-        for a in e.iter("ENTITY_ALIAS"):
-            an = (a.findtext("ALIAS_NAME") or "").strip()
-            if an and len(an) > 6:
-                out.append([an, "UN " + ref])
-    return out
-
-
-def _eu(s):
-    r = s.get(EU, timeout=120); r.raise_for_status()
-    rows = csv.DictReader(io.StringIO(r.content.decode("utf-8-sig", "replace")), delimiter=";")
-    out = []
-    for x in rows:
-        if (x.get("Entity_SubjectType") or x.get("Entity_SubjectType_Code") or "").lower().startswith("e"):
-            n = x.get("NameAlias_WholeName") or ""
-            lang = (x.get("NameAlias_NameLanguage") or "").upper()
-            if n and lang in ("", "EN"):  # the EU list repeats names in every EU language ("Ministry of Defence" ...)
-                out.append([n, "EU " + (x.get("Entity_Programme") or "")[:20]])
-    return out
-
-
-def load_lists():
-    c = json.loads(CACHE.read_text()) if CACHE.exists() else {}
-    if c.get("date") == str(today()):
-        return c
+def main():
     s = session()
-    for name, fn in (("ofac", _ofac), ("un", _un), ("eu", _eu)):
+    ent, counts = [], {}
+    for name, fn in (("ofac", ofac), ("un", un), ("eu", eu)):
         try:
-            c[name] = fn(s)
-        except Exception as e:  # noqa: BLE001 - keep yesterday's copy of a list that fails today
-            log.warning("sanctions %s: %s", name, str(e)[:160])
-    c["date"] = str(today())
-    CACHE.parent.mkdir(parents=True, exist_ok=True)
-    CACHE.write_text(json.dumps(c, ensure_ascii=False))
-    return c
+            rows = fn(s)
+            counts[name] = len(rows); ent += rows
+            log.info("sanctions %s: %d", name, len(rows))
+        except Exception as e:  # noqa: BLE001
+            log.warning("sanctions %s failed: %s", name, str(e)[:200]); counts[name] = -1
+    if not ent:
+        sys.exit("no sanctions data")
+    for r in ent:
+        r[0] = list(dict.fromkeys(re.sub(r"\s+", " ", n)[:120] for n in r[0]))[:12]
+    out = LEADS / "sanctions.json"
+    old = json.loads(out.read_text()) if out.exists() else {}
+    if counts.get("ofac", 0) < 0 and old.get("e"):  # keep the previous list if a source failed
+        log.warning("keeping previous sanctions data"); return
+    out.write_text(json.dumps({"updated": dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M"), "counts": counts, "e": ent}, ensure_ascii=False, separators=(",", ":")))
 
 
-def screen(tenders):
-    risk = {r["iso3"]: r for r in csv.DictReader(open(RISK, encoding="utf-8"))} if RISK.exists() else {}
-    lists = load_lists()
-    exact, long_names = {}, []
-    for k in ("ofac", "un", "eu"):
-        for name, src in lists.get(k) or []:
-            n = norm(name)
-            if len(n) < 6 or (GENERIC.match(n) and len(n.split()) <= 5):
-                continue  # "ministry of defence" alone would flag every country's ministry
-            exact.setdefault(n, src)
-            if len(n) >= 15 and len(n.split()) >= 2 and not GENERIC.match(n):  # generic starts only on exact match
-                long_names.append((n, src))
-    by_tok = {}  # long listed names indexed by their first word, so each buyer is compared with a handful only
-    for n, src in long_names:
-        by_tok.setdefault(n.split()[0], []).append((n, src))
-    stats = {"country_block": 0, "country_restricted": 0, "entity": 0, "listed_names": len(exact)}
-    for t in tenders:
-        note = ""
-        rk = risk.get(t.get("country", ""))
-        b = norm(t.get("buyer"))
-        hit = exact.get(b) if b else None
-        if not hit and b and len(b) >= 15:
-            pb = f" {b} "
-            hit = next((src for tok in set(b.split()) for n, src in by_tok.get(tok, ()) if f" {n} " in pb), None)
-        if hit and t.get("country") in HOME_OF_LISTS:
-            hit = None  # a public body of an EU/G7/allied state is not on these lists: same-name false match
-        if hit:
-            t["decision"] = "Ignore"; note = f"SANCTIONS: buyer matches {hit} - check before any contact"
-            stats["entity"] += 1
-            if stats["entity"] <= 15:
-                log.info("sanctions hit: %s (%s) ~ %s", t.get("buyer"), t.get("country"), hit)
-        elif rk and rk["level"] == "block":
-            t["decision"] = "Ignore"; note = f"BLOCKED: {rk['reason']}"
-            stats["country_block"] += 1
-        elif rk and rk["level"] == "restricted":
-            if t.get("decision") == "Pursue":
-                t["decision"] = "Watch"
-            note = f"RESTRICTED: {rk['reason']}"
-            stats["country_restricted"] += 1
-        if note:
-            t["why"] = (note + "; " + (t.get("why") or ""))[:300]
-    log.info("sanctions screen: %s", stats)
-    return stats
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO) if (logging := __import__("logging")) else None
+    main()
