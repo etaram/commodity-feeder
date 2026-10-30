@@ -1,4 +1,12 @@
-### 10 200 application/json 59080
-{"html":"<div>\n            <div x-data=\"{ selected: false, open: true }\" \n        x-on:clear-selection.window=\"selected = false\"\n        class=\"flex flex-col sm:flex-row gap-4 p-4 mt-4 shadow-md bg-background border-2 rounded-xl border-gray-200\">\n        <div class=\"flex\">\n            <button x-on:click=\"selected = !selected; $dispatch('select-procurement', { id: 832217 })\"\n                x-on:select-all.window=\"selected = true; $dispatch('select-procurement', { id: 832217, all: true })\"\n                x-bind:class=\"selected ? 'bg-primary' : 'bg-white'\"\n                class=\"relative w-6 h-6 aspect-square rounded-md border-2 border-gray-200 hover:border-blue-300 duration-100 transition-colors\">\n                <i  x-show=\"selected\" \n                    class=\"absolute top-1\/2 left-1\/2 transform -translate-x-1\/2 -translate-y-1\/2 fa-solid fa-check text-white\"><\/i>\n            <\/button>\n            <button class=\"flex-grow flex justify-end md:hidden\" x-on:click=\"open = !open\" type=\"button\">\n                <i class=\"fa-solid fa-chevron-down\" x-show=\"open\"><\/i>\n                <i class=\"fa-solid fa-chevron-up\" x-show=\"!open\"><\/
-### 100 200 application/json 680342
-{"html":"<div>\n            <div x-data=\"{ selected: false, open: true }\" \n        x-on:clear-selection.window=\"selected = false\"\n        class=\"flex flex-col sm:flex-row gap-4 p-4 mt-4 shadow-md bg-background border-2 rounded-xl border-gray-200\">\n        <div class=\"flex\">\n            <button x-on:click=\"selected = !selected; $dispatch('select-procurement', { id: 830244 })\"\n                x-on:select-all.window=\"selected = true; $dispatch('select-procurement', { id: 830244, all: true })\"\n                x-bind:class=\"selected ? 'bg-primary' : 'bg-white'\"\n                class=\"relative w-6 h-6 aspect-square rounded-md border-2 border-gray-200 hover:border-blue-300 duration-100 transition-colors\">\n                <i  x-show=\"selected\" \n                    class=\"absolute top-1\/2 left-1\/2 transform -translate-x-1\/2 -translate-y-1\/2 fa-solid fa-check text-white\"><\/i>\n            <\/button>\n            <button class=\"flex-grow flex justify-end md:hidden\" x-on:click=\"open = !open\" type=\"button\">\n                <i class=\"fa-solid fa-chevron-down\" x-show=\"open\"><\/i>\n                <i class=\"fa-solid fa-chevron-up\" x-show=\"!open\"><\/
+INFO Malaysia page 1: 100 blocks, 100 new, first T/572/10/2026 
+INFO Malaysia page 2: 100 blocks, 100 new, first LPP.SEL.TENDER.BIL: 02/2026 
+INFO Malaysia page 3: 100 blocks, 97 new, first QT260000000029892 
+INFO Malaysia page 4: 100 blocks, 61 new, first UM.FC/FSD/PC/612/16/2026/49 
+INFO Malaysia page 5: 100 blocks, 33 new, first QT260000000021077 
+INFO Malaysia page 6: 100 blocks, 44 new, first QT260000000025069 
+INFO Malaysia page 7: 100 blocks, 15 new, first QT260000000022208 
+INFO Malaysia page 8: 100 blocks, 10 new, first QT260000000020167 
+INFO Malaysia page 9: 100 blocks, 5 new, first QT260000000025522 
+INFO Malaysia page 10: 73 blocks, 3 new, first QT260000000023196 
+INFO Malaysia new 468, open 467
+INFO malaysia: 467 rows
