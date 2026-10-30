@@ -53,9 +53,14 @@
   };
 
   let aiOn = null;
+  // Browser cache: the same question is not paid for twice within a day.
   async function ai(prompt, opts) {
+    let k = "";
+    try { const b = new TextEncoder().encode(prompt); const d = await crypto.subtle.digest("SHA-256", b); k = "ai:" + Array.from(new Uint8Array(d)).map((x) => x.toString(16).padStart(2, "0")).join(""); const c = JSON.parse(localStorage.getItem(k) || "null"); if (c && Date.now() - c.at < 86400000) return c.text; } catch (e) {}
     const j = await post("/api/panel/ai", { prompt, tier: opts && opts.modelTier });
-    return j.text || "";
+    const text = j.text || "";
+    try { if (k && text) localStorage.setItem(k, JSON.stringify({ text, at: Date.now() })); } catch (e) {}
+    return text;
   }
   const sample = async (prompt, opts) => {
     const text = await ai(prompt, opts);
