@@ -12,18 +12,18 @@ RSS = "https://www.comprasestatales.gub.uy/ocds/rss/{y}/{m:02d}"
 REL = "https://www.comprasestatales.gub.uy/ocds/release/{}"
 
 
-def _one(s, rid, t):
+def _one(s, item, t):
+    rid, idc = item
     try:
         r = s.get(REL.format(rid), timeout=60)
         if r.status_code != 200:
             return None
         j = r.json(); best = None
         for rel in (releases_of(j) or ([j] if isinstance(j, dict) and "tender" in j else [])):
-            idc = re.search(r"-(\d+)$", rid)
             row = tender_row(rel, source="ARCE (Uruguay)", prefix="UY", country="URY", lang="es", access="National (foreign firms may bid)", today_s=str(t),
-                             link=f"https://www.comprasestatales.gub.uy/consultas/detalle/id/{idc.group(1) if idc else ''}")
-            if row:
-                row["id"] = f"UY-{rid}"; best = row
+                             link=f"https://www.comprasestatales.gub.uy/consultas/detalle/id/{idc}")
+            if row and row["title"] and (row["deadline"] or row["stage"] == "planned"):
+                row["id"] = f"UY-{idc}"; best = row
         return best
     except Exception:  # noqa: BLE001
         return None
@@ -45,11 +45,17 @@ def fetch():
             log.warning("UY rss %s", r.status_code); continue
         for it in re.findall(r"<item>(.*?)</item>", r.text, flags=re.S):
             g = re.search(r"<guid>(.*?)</guid>", it); c = re.search(r"<category>(.*?)</category>", it)
-            if g:
-                cats[c.group(1) if c else ""] += 1
-                if (c.group(1) if c else "") != "award" and not g.group(1).startswith("adjudicacion"):
-                    items.append(g.group(1))
-    todo = [i for i in dict.fromkeys(items) if f"UY-{i}" not in known][:700]
+            ti = re.search(r"id_compra:(\d+)", it)
+            if g and ti:
+                cat = c.group(1) if c else ""
+                cats[cat] += 1
+                if cat == "tender":  # the call itself; updates, amendments, clarifications and awards are skipped
+                    items.append((g.group(1), ti.group(1)))
+    seen_c = set(); todo = []
+    for rid, idc in items:
+        if idc not in seen_c and f"UY-{idc}" not in known:
+            seen_c.add(idc); todo.append((rid, idc))
+    todo = todo[:700]
     with cf.ThreadPoolExecutor(8) as ex:
         res = list(ex.map(lambda i: _one(s, i, t), todo))
     new = [x for x in res if x]
