@@ -1,3 +1,4 @@
+import sys, os; sys.path.insert(0, os.getcwd())
 import re, html, logging
 logging.basicConfig(level=logging.INFO)
 from leads import qatar
