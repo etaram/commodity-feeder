@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getDeal, getPress, getAwards, getGovernance, num, usd, pct, ROUTE_LABEL, type Row } from "@/lib/data";
 import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
+import ContactFinder from "@/components/ContactFinder";
 import BottomLine from "@/components/BottomLine";
 import { verdict } from "@/lib/verdict";
 import { tenders, isClosed } from "@/lib/index";
@@ -193,6 +194,7 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
           <JobButton type="quote" deal={deal} label="Build a price quote" />
           <JobButton type="logistics" deal={deal} label="Logistics plan" />
           <JobButton type="supplier_search" deal={deal} label="Find suppliers" />
+          <ContactFinder deal={deal} />
         </div>
       </section>
     </div>

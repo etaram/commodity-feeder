@@ -30,6 +30,9 @@ const GUIDE: Record<string, string> = {
 7. Reputation: recent news, controversies.
 8. Red flags and a bottom line for Sinder: low / medium / high risk, and what to verify before signing.
 Mark every fact with its source; never guess; write "not found in public sources" where nothing was found.`,
+  find_contact: `Find the best OFFICIAL public contact route to reach the organisation in the subject (a buyer, procurement unit, or supplier), so a trader can send a business inquiry. Look, in order, at: the contact or procurement person named in the tender notice or in the data given; the organisation's own website (procurement / tenders / supplier registration / sales / export pages, "contact us"); official procurement portals and registers; the organisation's public directories. For a buyer with no open tender (direct award), find the procurement or purchasing department and the person or role responsible.
+Return JSON ONLY (no prose, no code fences): {"organisation": "...", "website": "...", "contacts": [{"name": "person name or empty", "role": "role or department", "email": "...", "phone": "...", "channel": "where to send (email, portal form, registration page)", "kind": "personal" or "department" or "generic", "source": "URL where you saw it", "confidence": "high" or "medium" or "low"}], "notes": "one short line: what to do if no email was found, e.g. register on the supplier portal"}.
+Rules: only details actually seen on a page; copy emails exactly; never guess or construct an email from a name pattern; if only a contact form or portal exists, put it in channel and leave email empty. Prefer department emails (procurement@, tenders@) over generic info@ ones, and list at most 5 contacts, best first.`,
   other: "Answer the request practically.",
 };
 
@@ -55,18 +58,22 @@ Task type: ${type || "other"}. ${GUIDE[type] || GUIDE.other}
 Subject: ${String(target || "").slice(0, 400)}
 ${verified ? `VERIFIED REGISTRY FACTS (official open data, fetched just now; treat as authoritative, quote them under Identity and Legal, and say if a match was by name only):\n${verified}\n` : ""}${request ? `Specific request: ${String(request).slice(0, 1500)}\n` : ""}Data we already have (JSON): ${JSON.stringify(context || {}).slice(0, 6000)}
 
-Use web search to check current facts. Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" ? 600 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
+Use web search to check current facts. ${type === "find_contact" ? "Return only the JSON object described above." : ""}Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" ? 600 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
 Never invent people, emails, phone numbers or companies; if a fact was not found, say so. Never suggest paying or doing favours for officials.
-End with one line "Next step:" saying the single most useful action.`;
+${type === "find_contact" ? "" : 'End with one line "Next step:" saying the single most useful action.'}`;
 
   try {
     const { text, sources } = await claude({
       max_tokens: 4000,
-      tools: [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" ? 6 : 3 }],
+      tools: [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" || type === "find_contact" ? 6 : 3 }],
       messages: [{ role: "user", content: prompt }],
     });
     const src = sources.slice(0, 8).map((s) => `- ${s.title}: ${s.url}`).join("\n");
     const result = (text + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 45000);
+    let contacts: unknown = undefined;
+    if (type === "find_contact") {
+      try { const m = text.match(/\{[\s\S]*\}/); contacts = m ? JSON.parse(m[0]) : undefined; } catch { contacts = undefined; }
+    }
     const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
     if (sheetsEnabled()) {
       try {
@@ -74,7 +81,7 @@ End with one line "Next step:" saying the single most useful action.`;
           JSON.stringify(context || {}).slice(0, 4000), String(request || "").slice(0, 2000), "done", result.slice(0, 20000), sources[0]?.url || "", stamp, `web instant; ${session.email || ""}`]);
       } catch (e) { await logEvent("error", "run", "sheet write failed", String(e).slice(0, 300), session.email); }
     }
-    return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp });
+    return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp, contacts });
   } catch (e) {
     await logEvent("error", "run", `${type || "job"} failed`, String((e as Error).message || e), session.email);
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });

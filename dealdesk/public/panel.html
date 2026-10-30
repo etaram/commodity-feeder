@@ -445,6 +445,7 @@ const L = {
     dscope_bd: "Opportunities the BD agent researched on the web: a market, a buyer and a reason to act now, with sources. Ranked by date and priority.",
     dscope_rep: "Public buyers that bought the same goods several times in the last 12 months. The expected date is projected from their buying months, so you can prepare before the tender appears.",
     dscope_mkt: "Customs import data per product and country: import value, growth and the import unit price against a world benchmark. A high premium means the market pays more than the benchmark, which is room for a trading margin.",
+    a_contact: "Get contact details", fc_h: "Contact details (official public sources)", fc_wait: "Searching official sources...", fc_none: "No public email found.", fc_use: "Draft outreach to this", fc_copy: "Copy email", fc_copied: "Copied", fc_src: "Source", fc_conf: "confidence", fc_again: "Search again", fc_found: "Email found and added to recipients", fc_notfound: "No email found - add one manually", fc_auto: "Looking up an official email...", fc_err: "Contact search failed", fc_known: "From the notice / database",
     a_log: "Logistics", jt_logistics: "Logistics options", jt_quote: "Price quote",
     upd_t: "tenders updated {d}", upd_s: "suppliers {d}", upd_note: "Tenders refresh every 4 hours, suppliers twice a day, the BD agent every morning. Refresh reloads the latest data now.",
     tab_grants: "Grants", gq_ph: "Search: solar, water, Africa, hydrogen...", all_sources: "All sources", closes_within: "Closes within (days)", g_pick: "Pick a call to see who can apply and what it funds.",
@@ -550,6 +551,7 @@ const L = {
     dscope_bd: "הזדמנויות שסוכן ה-BD חקר ברשת: שוק, קונה וסיבה לפעול עכשיו, עם מקורות. ממוין לפי תאריך ועדיפות.",
     dscope_rep: "גופים ציבוריים שקנו את אותה סחורה כמה פעמים ב-12 החודשים האחרונים. התאריך הצפוי מחושב מחודשי הרכש שלהם, כדי להתכונן לפני שהמכרז מתפרסם.",
     dscope_mkt: "נתוני יבוא מהמכס לפי מוצר ומדינה: ערך יבוא, צמיחה ומחיר יבוא ליחידה מול מחיר עולמי. פרמיה גבוהה אומרת שהשוק משלם יותר מהבנצ'מרק, כלומר יש מקום למרווח סחר.",
+    a_contact: "השג פרטי קשר", fc_h: "פרטי קשר (מקורות רשמיים וציבוריים)", fc_wait: "מחפש במקורות רשמיים...", fc_none: "לא נמצא מייל ציבורי.", fc_use: "הכן פנייה לאיש הקשר", fc_copy: "העתק מייל", fc_copied: "הועתק", fc_src: "מקור", fc_conf: "רמת ביטחון", fc_again: "חפש שוב", fc_found: "נמצא מייל והוסף לנמענים", fc_notfound: "לא נמצא מייל - הוסף ידנית", fc_auto: "מאתר מייל רשמי...", fc_err: "חיפוש פרטי הקשר נכשל", fc_known: "מההודעה / מהמאגר",
     a_log: "לוגיסטיקה", jt_logistics: "אפשרויות לוגיסטיקה", jt_quote: "הצעת מחיר",
     upd_t: "מכרזים עודכנו {d}", upd_s: "ספקים {d}", upd_note: "מכרזים מתעדכנים כל 4 שעות, ספקים פעמיים ביום, סוכן ה-BD כל בוקר. רענון טוען עכשיו את הנתונים האחרונים.",
     tab_grants: "קולות קוראים", gq_ph: "חיפוש: סולארי, מים, אפריקה, מימן...", all_sources: "כל המקורות", closes_within: "נסגר בתוך (ימים)", g_pick: "בחר קול קורא כדי לראות מי יכול להגיש ומה הוא מממן.",
@@ -920,6 +922,7 @@ function openTender(r, keep) {
       <button type="button" id="a-log">${esc(t("a_log"))}</button>
       <button type="button" id="a-epc">${esc(t("a_epc"))}</button>
       <button type="button" id="a-sup">${esc(t("a_sup"))}</button>
+      <button type="button" id="a-contact">${esc(t("a_contact"))}</button>
       <button type="button" id="a-pur" ${inP ? "disabled" : ""}>${esc(inP ? t("tracked") : t("a_track"))}</button>
       ${shareHtml(tenderShare(r))}
     </div>
@@ -938,6 +941,8 @@ function openTender(r, keep) {
   $("#a-quote").onclick = e => moreInfo({ type: "quote", target_id: "Q:" + r.id, target: "Quote: " + (r.title_en || "").slice(0, 200), context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "est_bidders", "buyer_median_award_usd", "why"]), title_he: he } }, e.currentTarget, "#more-q");
   $("#a-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + r.id, target: "Logistics: " + (r.title_en || "").slice(0, 200), context: { ...pick(r, ["id", "title_en", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "link", "access"]), title_he: he } }, e.currentTarget, "#more-l");
   $("#a-epc").onclick = () => showEPC(r, "#t-out");
+  $("#a-contact").onclick = () => findContacts(tr(r.buyer) || r.buyer, { buyer: r.buyer, title: r.title_en, notice_type: r.notice_type, contact: r.contact, link: r.link, source: r.source, access: r.access }, r.country, "#t-out",
+    { compose: x => compose({ kind: "buyer", ctx: { r }, to: [{ name: x.name || r.buyer, email: x.email }] }, "#t-out") });
   wireEstimate(r);
   $("#a-pur").onclick = e => addPursuit(r, e.currentTarget, "#t-out");
 }
@@ -1016,6 +1021,38 @@ function showEPC(r, outSel) {
   $("#epc-web").onclick = e => queueJob({ type: "supplier_search", target_id: "EPC:" + r.id, target: "EPC contractors for: " + (r.title_en || "").slice(0, 160), context: pick(r, ["title_en", "buyer", "country", "region", "sector", "est_value_usd", "link"]), request: "Find the EPC and main contractors active in this country and sector (who won similar projects in the last 3 years, who is likely to bid), with their procurement departments and supplier registration pages. Add them to Research Suppliers with type epc." }, e.currentTarget, "#epc-flash");
 }
 
+
+/* ---------- find contact details (web search in official public sources; never guessed) ---------- */
+S.fc = S.fc || {};
+async function fetchContacts(subject, ctx, country, force) {
+  const key = (subject + "|" + (country || "")).toLowerCase();
+  if (!force && S.fc[key]) return S.fc[key];
+  if (!window.DD_INSTANT) throw new Error("web only");
+  const r = await window.DD_INSTANT({ id: "C" + Date.now().toString(36).toUpperCase(), type: "find_contact", target_id: "FC:" + key.slice(0, 120), target: String(subject).slice(0, 300), context: { ...ctx, country }, request: "", lang: LANG });
+  const c = r.contacts && Array.isArray(r.contacts.contacts) ? r.contacts : { contacts: [], notes: "" };
+  c.contacts = c.contacts.filter(x => x && (x.email || x.phone || x.channel || x.name));
+  S.fc[key] = c; return c;
+}
+const firstMail = c => (c?.contacts || []).map(x => String(x.email || "").trim()).find(e => /@/.test(e)) || "";
+async function findContacts(subject, ctx, country, outSel, opts = {}) {
+  const out = $(outSel); if (!out) return;
+  out.innerHTML = `<div class="section"><h3>${esc(t("fc_h"))}</h3><div class="note"><span class="spin"></span> ${esc(t("fc_wait"))}</div></div>`;
+  let c;
+  try { c = await fetchContacts(subject, ctx, country, opts.force); }
+  catch (e) { out.innerHTML = `<div class="flash err">${esc(t("fc_err"))} ${esc(e.message || "")}</div>`; return; }
+  const known = ctx && ctx.contact ? `<div class="note">${esc(t("fc_known"))}: <span dir="ltr">${esc(ctx.contact)}</span></div>` : "";
+  const rows = c.contacts.map((x, i) => `<div class="card" style="margin:8px 0"><div class="t">${esc(x.name || x.role || subject)}${x.name && x.role ? ` <span class="sub">· ${esc(x.role)}</span>` : ""}</div>
+      <dl class="kv"><dt>Email</dt><dd dir="ltr">${esc(x.email) || "-"}</dd>${x.phone ? `<dt>Tel</dt><dd dir="ltr">${esc(x.phone)}</dd>` : ""}${x.channel ? `<dt>Channel</dt><dd dir="auto">${esc(x.channel)}</dd>` : ""}<dt>${esc(t("fc_src"))}</dt><dd>${link(x.source, x.source)} <span class="sub">(${esc(t("fc_conf"))}: ${esc(x.confidence || "?")})</span></dd></dl>
+      <div class="actions">${x.email ? `<button type="button" data-fc="mail" data-i="${i}" class="primary">${esc(t("fc_use"))}</button><button type="button" data-fc="copy" data-i="${i}">${esc(t("fc_copy"))}</button>` : ""}</div></div>`).join("");
+  out.innerHTML = `<div class="section"><h3>${esc(t("fc_h"))}</h3>${known}${rows || `<div class="empty" style="padding:10px">${esc(t("fc_none"))}</div>`}${c.website ? `<div class="note">${link(c.website, c.website)}</div>` : ""}${c.notes ? `<div class="note" dir="auto">${esc(c.notes)}</div>` : ""}<div class="actions"><button type="button" id="fc-again">${esc(t("fc_again"))}</button></div><div id="fc-out"></div></div>`;
+  $("#fc-again").onclick = () => findContacts(subject, ctx, country, outSel, { ...opts, force: true });
+  out.querySelectorAll("[data-fc]").forEach(b => b.onclick = () => {
+    const x = c.contacts[+b.dataset.i];
+    if (b.dataset.fc === "copy") { try { navigator.clipboard.writeText(x.email); b.textContent = t("fc_copied"); } catch (e) {} return; }
+    if (opts.compose) opts.compose(x);
+  });
+}
+
 /* ---------- outreach (Claude writes, you edit, Gmail stores a draft) ---------- */
 async function compose({ kind, ctx, to }, outSel) {
   const out = $(outSel);
@@ -1026,6 +1063,15 @@ async function compose({ kind, ctx, to }, outSel) {
     <div class="field"><label for="m-body">${esc(t("body"))}</label><textarea id="m-body" dir="auto">${esc(t("writing"))}</textarea></div>
     <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t("create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
     <div class="note">${esc(t("draft_note"))}</div><div id="m-flash"></div></div>`;
+  if (!recips.some(x => x.email) && window.DD_INSTANT && (ctx?.find || recips[0]?.name)) {
+    const subj = ctx?.find?.subject || recips[0].name, fctx = ctx?.find?.ctx || {}, fcty = ctx?.find?.country || "";
+    $("#m-flash").innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("fc_auto"))}</div>`;
+    fetchContacts(subj, fctx, fcty).then(c => {
+      const m = firstMail(c), box = $("#m-to");
+      if (m && box && !box.value.trim()) { box.value = m; const x = c.contacts.find(y => y.email === m); $("#m-flash").innerHTML = `<div class="flash ok">${esc(t("fc_found"))}: <span dir="ltr">${esc(m)}</span> ${x?.source ? link(x.source, t("fc_src")) : ""}</div>`; }
+      else if ($("#m-flash")) $("#m-flash").innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`;
+    }).catch(() => { if ($("#m-flash")) $("#m-flash").innerHTML = ""; });
+  }
   const write = async (fresh) => {
     if (!sample) { $("#m-body").value = ""; $("#m-flash").innerHTML = `<div class="flash info">${esc(t("hand_write"))}</div>`; $("#m-draft").disabled = false; return; }
     $("#m-draft").disabled = $("#m-again").disabled = true;
@@ -1269,7 +1315,7 @@ function openSupplier(s) {
       ["website", (link(s.website, s.website) || "-") + (s.website_source ? ` <span class="sub">(${esc(s.website_source)})</span>` : ""), true],
       ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span>`, true],
       ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
-    <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-bi">${esc(t("c_intel"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
+    <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-bi">${esc(t("c_intel"))}</button><button type="button" id="c-contact">${esc(t("a_contact"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
     <div id="more-c" data-jobcard="${esc(s.legal_id || s.supplier)}">${cardHtml(s.legal_id || s.supplier)}</div><div id="more-c-flash"></div>
     <div id="more-ci" data-jobcard="${esc("BI:" + (s.legal_id || s.supplier))}">${cardHtml("BI:" + (s.legal_id || s.supplier))}</div><div id="more-ci-flash"></div>
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
@@ -1284,7 +1330,9 @@ function openSupplier(s) {
     }).catch(() => {});
   }
   $("#c-deep").onclick = e => moreInfo({ type: "company_research", target_id: s.legal_id || s.supplier, target: `${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "main_sector", "products", "supplied", "commodities", "website", "email", "phone", "address", "legal_id", "sources"]) }, e.currentTarget, "#more-c");
-  $("#c-mail").onclick = () => compose({ kind: "supplier", ctx: { r: s }, to: [s] }, "#c-out");
+  $("#c-mail").onclick = () => compose({ kind: "supplier", ctx: { r: s, find: { subject: s.supplier, country: s.country, ctx: { website: s.website, address: s.address, legal_id: s.legal_id } } }, to: [s] }, "#c-out");
+  $("#c-contact").onclick = () => findContacts(s.supplier, { website: s.website, address: s.address, legal_id: s.legal_id, products: s.products, email: s.email, phone: s.phone, contact: [s.email, s.phone].filter(Boolean).join(" / ") }, s.country, "#c-out",
+    { compose: x => compose({ kind: "supplier", ctx: { r: s }, to: [{ supplier: s.supplier, email: x.email }] }, "#c-out") });
   $("#c-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + (s.legal_id || s.supplier), target: `Logistics from ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "address", "products", "supplied", "commodities", "main_sector"]), request: "Shipping options from this supplier's country to Israel, the Gulf and Europe for its main products." }, e.currentTarget, "#more-cl");
   $("#c-similar").onclick = () => showSuppliers(s.main_sector, `${s.products} ${s.commodities} ${s.supplied}`, "#c-out", { kind: "similar", r: s });
 }
@@ -1299,13 +1347,15 @@ function openAccount(a) {
       ["channel", a["Procurement channel"]], ["verified_page", link(a["verified procurement page"], a["verified procurement page"]) || esc(t("not_checked")), true],
       ["latest_signal", tr(a["latest signal"]) || "-"], ["next_step", tr(a["next step"]) || "-"], ["sup_in_db", a["suppliers in DB"]]])}</dl>
     ${open.length ? `<div class="section"><h3>${esc(t("open_from_buyer"))}</h3>${open.map((r, i) => `<div class="sup"><span class="score">${esc(r.fit || r.score)}</span><div><a href="#" data-ot="${i}">${txt(tTitle(r))}</a><div class="sub">${money(r.est_value_usd)} · ${esc(r.deadline)}</div></div></div>`).join("")}</div>` : ""}
-    <div class="actions"><button class="primary" type="button" id="a-deep">${esc(t("more_info"))}</button><button type="button" id="a-intel">${esc(t("c_intel"))}</button><button type="button" id="a-mail">${esc(t("acc_mail"))}</button><button type="button" id="a-sup">${esc(t("acc_sup"))}</button></div>
+    <div class="actions"><button class="primary" type="button" id="a-deep">${esc(t("more_info"))}</button><button type="button" id="a-intel">${esc(t("c_intel"))}</button><button type="button" id="a-contact">${esc(t("a_contact"))}</button><button type="button" id="a-mail">${esc(t("acc_mail"))}</button><button type="button" id="a-sup">${esc(t("acc_sup"))}</button></div>
     <div id="more-c" data-jobcard="${esc(a.Account)}">${cardHtml(a.Account)}</div><div id="more-c-flash"></div>
     <div id="more-ai" data-jobcard="${esc("BI:" + a.Account)}">${cardHtml("BI:" + a.Account)}</div><div id="more-ai-flash"></div>
     <div id="c-out"></div>`;
   $("#cdetail").querySelectorAll("[data-ot]").forEach(n => n.onclick = e => { e.preventDefault(); openTender(open[+n.dataset.ot]); });
   $("#a-deep").onclick = e => moreInfo({ type: "deal_research", target_id: a.Account, target: `Key account: ${a.Account} (${a.Country})`, context: a, request: "Find current procurement plans, open and upcoming tenders, supplier registration steps and the best entry point for Sinder." }, e.currentTarget, "#more-c");
-  $("#a-mail").onclick = () => compose({ kind: "buyer", ctx: { r: a }, to: [] }, "#c-out");
+  $("#a-mail").onclick = () => compose({ kind: "buyer", ctx: { r: a, find: { subject: a.Account, country: a.Country, ctx: { page: a["verified procurement page"], channel: a["Procurement channel"] } } }, to: [{ name: a.Account, email: "" }] }, "#c-out");
+  $("#a-contact").onclick = () => findContacts(a.Account, { page: a["verified procurement page"], channel: a["Procurement channel"], sector: a.Sector }, a.Country, "#c-out",
+    { compose: x => compose({ kind: "buyer", ctx: { r: a }, to: [{ name: x.name || a.Account, email: x.email }] }, "#c-out") });
   $("#a-intel").onclick = e => moreInfo({ type: "company_intel", target_id: "BI:" + a.Account, target: `Business intelligence: ${a.Account} (${a.Country})`, context: a }, e.currentTarget, "#more-ai");
   $("#a-sup").onclick = () => showSuppliers("", `${a["Primary commodity group"]} ${a["Also buys"]}`, "#c-out", { kind: "account", r: a });
 }
@@ -1382,14 +1432,18 @@ function openDeal(mode, r) {
   }
   $("#ddetail").innerHTML = `<h2>${flag(mode === "bd" ? r.market : r.country)}${txt(head)}</h2><dl class="kv">${kvRows(kv)}</dl>
     <div class="actions">${shareHtml(dealShare(head, kv))}</div>
-    <div class="actions"><button class="primary" type="button" id="d-quick">${esc(t("a_quick"))}</button><button type="button" id="d-deep">${esc(t("more_info"))}</button><button type="button" id="d-log">${esc(t("a_log"))}</button><button type="button" id="d-sup">${esc(t("a_sup"))}</button><button type="button" id="d-mail">${esc(t("c_mail"))}</button></div>
+    <div class="actions"><button class="primary" type="button" id="d-quick">${esc(t("a_quick"))}</button><button type="button" id="d-deep">${esc(t("more_info"))}</button><button type="button" id="d-log">${esc(t("a_log"))}</button><button type="button" id="d-sup">${esc(t("a_sup"))}</button><button type="button" id="d-contact">${esc(t("a_contact"))}</button><button type="button" id="d-mail">${esc(t("c_mail"))}</button></div>
     <div id="more-d" data-jobcard="${esc(dealId(mode, r))}">${cardHtml(dealId(mode, r))}</div><div id="more-d-flash"></div>
     <div id="more-dl" data-jobcard="${esc("L:" + dealId(mode, r))}">${cardHtml("L:" + dealId(mode, r))}</div><div id="more-dl-flash"></div><div id="d-out"></div>`;
   $("#d-log").onclick = e => moreInfo({ type: "logistics", target_id: "L:" + dealId(mode, r), target: "Logistics: " + String(head).slice(0, 200), context: r }, e.currentTarget, "#more-dl");
   $("#d-deep").onclick = e => moreInfo({ type: "deal_research", target_id: dealId(mode, r), target: String(head).slice(0, 200), context: r }, e.currentTarget, "#more-d");
   $("#d-sup").onclick = () => showSuppliers("", text, "#d-out", { kind: "deal", r });
   $("#d-quick").onclick = () => quickDeal(mode, r);
-  $("#d-mail").onclick = () => compose({ kind: mode === "rep" ? "buyer" : "rfq", ctx: { r }, to: mode === "rep" && r.buyer_email ? [{ name: r.buyer, email: r.buyer_email }] : [] }, "#d-out");
+  const dsub = mode === "ex" || mode === "rep" ? tr(r.buyer) : mode === "ilx" ? `${r.office} ${r.unit || ""}`.trim() : mode === "bd" ? tr(r.opportunity) : `${r.product} importers ${r.country}`;
+  const dcty = r.country || r.market || (mode === "ilx" ? "Israel" : "");
+  const dctx = { kind: mode, title: head, buyer: r.buyer || r.office || "", supplier_now: r.supplier || "", link: r.link || "", contact: r.contact || r.buyer_email || "", examples: r["example suppliers"] || "", notice_type: r.notice_type || "", access: r.access || "" };
+  $("#d-contact").onclick = () => findContacts(dsub, dctx, dcty, "#d-out", { compose: x => compose({ kind: mode === "rep" || mode === "ex" ? "buyer" : "rfq", ctx: { r }, to: [{ name: x.name || dsub, email: x.email }] }, "#d-out") });
+  $("#d-mail").onclick = () => compose({ kind: mode === "rep" ? "buyer" : "rfq", ctx: { r, find: { subject: dsub, country: dcty, ctx: dctx } }, to: mode === "rep" && r.buyer_email ? [{ name: r.buyer, email: r.buyer_email }] : [{ name: dsub, email: r.contact && /@/.test(r.contact) ? (r.contact.match(/[\w.+-]+@[\w.-]+/) || [""])[0] : "" }] }, "#d-out");
 }
 
 /* ---------- INTELLIGENCE: verified signals from the market intelligence agent (official, tier-1 and industry
