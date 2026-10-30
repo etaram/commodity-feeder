@@ -11,7 +11,10 @@ export async function claude(body: Record<string, unknown>): Promise<{ text: str
   for (let turn = 0; turn < 3; turn++) {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      headers: {
+        "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json",
+        ...(process.env.ANTHROPIC_WORKSPACE_ID ? { "anthropic-workspace-id": process.env.ANTHROPIC_WORKSPACE_ID } : {}),
+      },
       body: JSON.stringify({ model: MODEL, ...body, messages }),
     });
     const j = await r.json().catch(() => ({}));
