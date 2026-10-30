@@ -11,47 +11,55 @@ No user sessions are running outdated binaries.
 No VM guests are running outdated hypervisor (qemu) binaries on this host.
 Installing Installing browsers...
 Installing Installing browsers dependencies...
-[2026-10-30 20:48:36] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
+[2026-10-30 20:52:52] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
-INFO Malaysia page 1: 10 new
-[2026-10-30 20:48:45] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=2> (referer: https://www.google.com/)
+INFO Malaysia page 1: 10 blocks, 10 new, first T/572/10/2026 
+[2026-10-30 20:53:01] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=2> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=2> (referer: https://www.google.com/)
-INFO Malaysia page 2: 0 new
-[2026-10-30 20:48:59] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=3> (referer: https://www.google.com/)
+INFO Malaysia page 2: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:53:16] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=3> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=3> (referer: https://www.google.com/)
-INFO Malaysia page 3: 0 new
-[2026-10-30 20:49:09] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=4> (referer: https://www.google.com/)
+INFO Malaysia page 3: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:53:23] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=4> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=4> (referer: https://www.google.com/)
-INFO Malaysia page 4: 0 new
-[2026-10-30 20:49:24] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=5> (referer: https://www.google.com/)
+INFO Malaysia page 4: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:53:37] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=5> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=5> (referer: https://www.google.com/)
-INFO Malaysia page 5: 0 new
-[2026-10-30 20:49:33] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=6> (referer: https://www.google.com/)
+INFO Malaysia page 5: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:54:09] WARNING: Attempt 1 failed: Page.goto: net::ERR_TIMED_OUT at https://myprocurement.treasury.gov.my/advertisements/tender?page=6
+Call log:
+  - navigating to "https://myprocurement.treasury.gov.my/advertisements/tender?page=6", waiting until "load"
+. Retrying in 1s...
+WARNING Attempt 1 failed: Page.goto: net::ERR_TIMED_OUT at https://myprocurement.treasury.gov.my/advertisements/tender?page=6
+Call log:
+  - navigating to "https://myprocurement.treasury.gov.my/advertisements/tender?page=6", waiting until "load"
+. Retrying in 1s...
+[2026-10-30 20:54:16] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=6> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=6> (referer: https://www.google.com/)
-INFO Malaysia page 6: 0 new
-[2026-10-30 20:49:46] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=7> (referer: https://www.google.com/)
+INFO Malaysia page 6: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:54:25] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=7> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=7> (referer: https://www.google.com/)
-INFO Malaysia page 7: 0 new
-[2026-10-30 20:49:56] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=8> (referer: https://www.google.com/)
+INFO Malaysia page 7: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:54:43] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=8> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=8> (referer: https://www.google.com/)
-INFO Malaysia page 8: 0 new
-[2026-10-30 20:50:11] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=9> (referer: https://www.google.com/)
+INFO Malaysia page 8: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:54:51] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=9> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=9> (referer: https://www.google.com/)
-INFO Malaysia page 9: 0 new
-[2026-10-30 20:50:18] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=10> (referer: https://www.google.com/)
+INFO Malaysia page 9: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:55:10] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=10> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=10> (referer: https://www.google.com/)
-INFO Malaysia page 10: 0 new
-[2026-10-30 20:50:36] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=11> (referer: https://www.google.com/)
+INFO Malaysia page 10: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:55:17] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=11> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=11> (referer: https://www.google.com/)
-INFO Malaysia page 11: 0 new
-[2026-10-30 20:50:45] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=12> (referer: https://www.google.com/)
+INFO Malaysia page 11: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:55:37] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=12> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=12> (referer: https://www.google.com/)
-INFO Malaysia page 12: 0 new
-[2026-10-30 20:51:02] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=13> (referer: https://www.google.com/)
+INFO Malaysia page 12: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:55:45] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=13> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=13> (referer: https://www.google.com/)
-INFO Malaysia page 13: 0 new
-[2026-10-30 20:51:10] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=14> (referer: https://www.google.com/)
+INFO Malaysia page 13: 10 blocks, 0 new, first T/572/10/2026 
+[2026-10-30 20:56:01] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=14> (referer: https://www.google.com/)
 INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender?page=14> (referer: https://www.google.com/)
-INFO Malaysia page 14: 0 new
+INFO Malaysia page 14: 10 blocks, 0 new, first T/572/10/2026 
 INFO Malaysia new 10, open 10
 INFO malaysia: 10 rows
