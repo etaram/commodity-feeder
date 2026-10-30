@@ -1,60 +1,37 @@
-[2026-10-30 20:42:52] INFO: Fetched (200) <GET https://tenderboard.gov.bh/Tenders/PublicTenders/> (referer: https://www.google.com/)
-### BH public https://tenderboard.gov.bh/Tenders/PublicTenders/ st=200 len=117241 tr=26
-ROW ['', '30 October 2026', ''] []
-ROW ['20:00 20:05 20:10 20:15 20:20 20:25 20:30 20:35 20:40 20:45 20:50 20:55'] []
-ROW ['Today'] []
-ROW ['Clear'] []
-ROW ['', '30 October 2026', ''] []
-ROW ['0:00 1:00 2:00 3:00 4:00 5:00 6:00 7:00 8:00 9:00 10:00 11:00 12:00 13:00 14:00 15:00 16:0'] []
-ROW ['Today'] []
-ROW ['Clear'] []
-PAGER []
-[2026-10-30 20:42:54] INFO: Fetched (200) <GET https://tenderboard.gov.bh/Tenders/PublicTenders/> (referer: https://www.google.com/)
-### BH public fetcher https://tenderboard.gov.bh/Tenders/PublicTenders/ st=200 len=81318 tr=0
-TEXT  Tender Board - Kingdom of Bahrain About Overview Vision &amp; Mission Board Members Secretary General Organisation Structure Quality Policy Sustainable Development Goals Digital Transformation Legislation Laws Decisions Circulars PA Guide Guideline for Suppliers &amp; Contractors in Government Procurement Guide Regulating Partnerships Between Public and Private Sectors Tenders Published Tenders To be Opened This Week Tender Opening Results Live Opening Awarded Tenders Prequalified Vendors Procurement Plans Archived Tenders Services Process eForms Training Courses Standard Electronic Request Template Standard Electronic Report Media News Annual Reports FAQ Supplier FAQ General FAQ eTendering Login Create an Account in eTendering عربي About Overview Vision &amp; Mission Board Members Secretary General Organisation Structure Quality Policy Sustainable Development Goals Digital Transformati
-PAGER []
-[2026-10-30 20:42:58] INFO: Fetched (200) <GET https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR> (referer: https://www.google.com/)
-### BH publicDash https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR st=200 len=178116 tr=14
-ROW ['PQ Invitation No.', 'Purchasing Authority', 'Category', 'Sub Category', 'PQ Document Fee'] []
-ROW ['Tender (PA Ref.) No.', 'Purchasing Authority', 'Time Left'] []
-ROW ['502/2026/BTB (2026-140-PP-WT..... (Provision of Planned Prevent.....)', 'Bahrain Tender Board', '15 Days -13 Hours'] []
-ROW ['512/2026/BTB (2026-091-PP-ET..... (REPLACEMENT OF EXISTING CABL.....)', 'Bahrain Tender Board', '32 Days -13 Hours'] []
-ROW ['479/2026/BTB (REHC – 26/007) (Social Media Management, Con.....)', 'Bahrain Tender Board', '8 Days -13 Hours'] []
-ROW ['487/2026/BTB (PHC/133/2026) (renovation Works at Zallaq HC)', 'Bahrain Tender Board', '57 Days -13 Hours'] []
-ROW ['516/2026/BTB (RFP/04-2026/00..... (Procurement of Main and back.....)', 'Bahrain Tender Board', '25 Days -13 Hours'] []
-ROW ['522/2026/BTB (QBR2630001998) (Procurement of Tubes for Var.....)', 'Bahrain Tender Board', '18 Days -13 Hours'] []
-PAGER []
-[2026-10-30 20:43:04] INFO: Fetched (307) <GET https://www.capt.gov.kw/en/tenders/pre-tenders/> (referer: https://www.google.com/)
-[2026-10-30 20:43:04] INFO: Fetched (200) <GET https://www.capt.gov.kw/en/tenders/pre-tenders/> (referer: https://www.google.com/)
-### KW pre-tenders https://www.capt.gov.kw/en/tenders/pre-tenders/ st=200 len=77291 tr=0
-TEXT  CAPT | Pre-Tenders About US Registration Bidders Registration Contractors Registration Consultant Company Registration Bidders Renewal Contractors Renewal Consultant Company Renewal Changing Company Data/Entity Changing Contractors Data/Entity Changing Consultant Data/Entity To Whom It May Concern Certificate Issuing To Whom It May Concern Certificate Email Services Website Sign Up Services Contractors Consultant Companies Email Change Services Contractors Change Email Consultacy Companies Change Email Classification Required documents Classified companies Classification Template Tenders Pre-Tenders Opening Tenders Closing Tenders Warranties Winning Bids Postponement of Tenders Company Qualifications Laws and regulations Tenders laws Bidders instructions Prohibited Companies Standard Contracts Conditions Generalizations Governance About Governance Media and Communication Work Plan Gover
-PAGER []
-[2026-10-30 20:43:12] INFO: Fetched (307) <GET https://www.capt.gov.kw/en/tenders/opening-tenders/> (referer: https://www.google.com/)
-[2026-10-30 20:43:12] INFO: Fetched (200) <GET https://www.capt.gov.kw/en/tenders/opening-tenders/> (referer: https://www.google.com/)
-### KW opening-tenders https://www.capt.gov.kw/en/tenders/opening-tenders/ st=200 len=129592 tr=5
-ROW ['No.', 'Item Description', 'Quantity', 'Warranties Value'] []
-ROW [] []
-ROW ['', '', 'Total Warranties Value', 'K.D'] []
-ROW ["' + 'There is no items' + '"] []
-ROW ["' + order + '", "' + data[i].line_desc + '", "' + quantityValue + '", '\' + \' \' + currencyFormat(Number(data[i].warranties_value)) + \' \' + \' \' + \' \' + "K.D" + \' \''] []
-PAGER ['page=1', 'page=1', 'page=2', 'page=3', 'page=4', 'page=5']
-[2026-10-30 20:43:17] INFO: Fetched (307) <GET https://www.capt.gov.kw/en/tenders/closing-tenders/> (referer: https://www.google.com/)
-[2026-10-30 20:43:17] INFO: Fetched (200) <GET https://www.capt.gov.kw/en/tenders/closing-tenders/> (referer: https://www.google.com/)
-### KW closing-tenders https://www.capt.gov.kw/en/tenders/closing-tenders/ st=200 len=87042 tr=0
-TEXT  CAPT | Closing Tenders About US Registration Bidders Registration Contractors Registration Consultant Company Registration Bidders Renewal Contractors Renewal Consultant Company Renewal Changing Company Data/Entity Changing Contractors Data/Entity Changing Consultant Data/Entity To Whom It May Concern Certificate Issuing To Whom It May Concern Certificate Email Services Website Sign Up Services Contractors Consultant Companies Email Change Services Contractors Change Email Consultacy Companies Change Email Classification Required documents Classified companies Classification Template Tenders Pre-Tenders Opening Tenders Closing Tenders Warranties Winning Bids Postponement of Tenders Company Qualifications Laws and regulations Tenders laws Bidders instructions Prohibited Companies Standard Contracts Conditions Generalizations Governance About Governance Media and Communication Work Plan G
-PAGER []
-[2026-10-30 20:43:20] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
-### MY adv https://myprocurement.treasury.gov.my/advertisements/tender st=200 len=71966 tr=0
-TEXT  MYPROCUREMENT Greyscale Saiz Teks Tambah Kurang Set Semula MyPROCUREMENT Kementerian Kewangan Utama Perancangan Perolehan Iklan Sebut Harga Tender Requisition Keputusan Sebut Harga Tender Arkib Iklan Sebut Harga Iklan Tender Iklan Requisition Keputusan Sebut Harga Keputusan Tender Rundingan Terus Makluman Garis Panduan Borang Tentang Portal Keterangan Portal Soalan Lazim Sistem Perolehan Themes EN | BM Halaman Iklan Tiada maklumat Keputusan Tiada maklumat MyPROCUREMENT Pusat Maklumat Perolehan Kerajaan Malaysia Kementerian Kewangan Tawaran Perolehan Kerajaan Laman Utama Iklan Tender Carian Tajuk Perolehan Kategori Perolehan No. Tender Kementerian Agensi Kod Bidang Tarikh Pelawaan Dari Hingga Carian Set Semula Senarai Hasil Carian Maklumat iklan bagi perolehan bekalan dan perkhidmatan akan dipaparkan lewat dari tarikh asal pelawaan dikeluarkan. Untuk mengetahui maklumat terkini sila ruju
-PAGER []
-[2026-10-30 20:43:29] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
-### MY adv stealth https://myprocurement.treasury.gov.my/advertisements/tender st=200 len=152974 tr=20
-ROW ['Bil.', 'Perkara', 'Tarikh', 'Alamat'] []
-ROW ['1.', 'Taklimat', '05/11/2026', 'JABATAN KERJA RAYA BAHAGIAN LIMBANG'] []
-ROW ['2.', 'Lawatan Tapak', '05/11/2026', 'JABATAN KERJA RAYA BAHAGIAN LIMBANG'] []
-ROW ['Bil.', 'Perkara', 'Tarikh', 'Alamat'] []
-ROW ['1.', 'Lawatan Tapak', '13/11/2026', 'BILIK RUSUKAN'] []
-ROW ['2.', 'Taklimat', '13/11/2026', 'BILIK RUSUKAN'] []
-ROW ['Bil.', 'Perkara', 'Tarikh', 'Alamat'] []
-ROW ['1.', 'Lawatan Tapak', '17/11/2026', 'BILIK TANJUNG, RUMAH REHAT TELUK INTAN, BANDAR BARU TELUK INTAN'] []
-PAGER ['page=98', 'page=2']
+[2026-10-30 20:45:01] INFO: Fetched (200) <GET https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR> (referer: https://www.google.com/)
+### BH ROW HTML
+      <div class="col-sm-12">
+                                    
+		                  <div style="display: table-row; ">
+		                    	
+		                        </div><table class="table  table-striped table-hover"><thead class="thead_color" style="    background-color: #cecece; color:#666;"><tr><th class="table_th" style="width:30%;">Tender (PA Ref.) No.</th>
+		                            <th class="table_th" style="width:15%;">Purchasing Authority</th>
+		                            
+		                            <th class=" table_th tdwdth1" style="width:15%;">Time Left</th>
+		                        </tr></thead><tbody><tr><td class="table_td">
+		                            <i class="fa fa-hand-o-right " style="color: #efa844;"></i>
+		                            <span class="btb_text textmarqueehover2" onclick="getNit('11754')" style="cursor:pointer; text-decoration: none;">502/2026/BTB (2026-140-PP-WT.....</span><br><span class="testnew" nowrap rel="tooltip" data-placement="top" title="" data-original-title="Provision of Planned Preventive Maintenance for Nine (9) Water Transmission Stations">(Provision of Planned Prevent.....)</span>
+		                            </td>
+		                            <td class="table_td"><span class="testnew" nowrap rel="tooltip" data-placement="top" title="" data-original-title="Bahrain Tender Board">Bahrain Tender Board</span></td>
+		                            
+		                            <td class="table_td red_color">15 Days -13 Hours </td> 
+		                        </tr><tr><td class="table_td">
+		                            <i class="fa fa-hand-o-right " style="color: #efa844;"></i>
+		                            <span class="btb_text textmarqueehover2" onclick="getNit('11763')" style="cursor:pointer; text-decoration: none;">512/2026/BTB (2026-091-PP-ET.....</span><br><span class="testnew" nowrap rel="tooltip" data-placement="top" title="" data-original-title="REPLACEMENT OF EXISTING CABLE DUCT SEALING">(REPLAC
+### BH any headers: ['Published (<span id="publishedten" class="blink">71</span>)', ' Last Tender Published By <span class="btb_text testnew" rel="tooltip" data-placement="top" title="" data-original-title="Telecommunication Regulatory Authority">TRA</span>', 'On 29-10-2026 04:17:30 PM', 'To Be Opened (<span id="tobeopenedten" class="blink">1357</span>)', 'Next Tender To Be Opened  By <span class="btb_text testnew" rel="tooltip" data-placement="top" title="" data-original-title="Aldana Amphitheatre B.S.C. (c)">AABSC</span> ', 'On 29-10-2026 08:00:00 AM', 'Opened (<span id="openedten" class="blink">3282</span>)', 'Last Tender Opened By  <span class="btb_text testnew" rel="tooltip" data-placement="top" title="" data-original-title="Bahrain Tender Board">BTB</span>', 'On 29-10-2026 12:38:22 PM', 'Cancelled (<span id="cancelledten" class="blink">1028</span>)']
+[2026-10-30 20:45:07] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
+### MY AFTER SEARCH
+ Tarikh Pelawaan</label> <div x-data="{ start: '', end: ''}" class="md:w-1/2 flex flex-col md:flex-row md:items-center gap-4"> <div c
+### MY labels ['Tajuk Perolehan', 'No. Tender', 'No. Tender', 'Tarikh Tutup Pelawaan:', 'No. Tender', 'Tarikh Tutup Pelawaan:', 'No. Tender', 'Tarikh Tutup Pelawaan:', 'No. Tender', 'Tarikh Tutup Pelawaan:', 'No. Tender', 'Tarikh Tutup Pelawaan:']
+### MY CONTEXT
+ "!open" style="display: none;"> | | | | | | Tarikh Pelawaan: 31/10/2026 | | | No. Tender | : T/572/10/2026 | | | MENGGANTI JAMBATAN SG. SELIDONG, SARAWAK | | | | | Kementerian: | | SETIAUSAHA KERAJAAN NEGERI | | | | Agensi: | | NEGERI SARAWAK | | | | Kategori Perolehan: | | Kerja | | | | Kod Bidang: | | CE01, CE02, CE21, CE36 | | | | Tarikh Tutup Pelawaan: | | 30/11/2026 | | | | Harga Indikatif Jabatan: | | RM 4,800,000.00 | | | | | | | | 1. | | Taklimat | | 05/11/2026 | | | | Alamat | JABATAN KERJA RAYA BAHAGIAN LIMBANG | | | | | 2. | | Lawatan Tapak | | 05/11/2026 | | | | Alamat | 
+[2026-10-30 20:45:14] INFO: Fetched (307) <GET https://www.capt.gov.kw/en/tenders/opening-tenders/> (referer: https://www.google.com/)
+[2026-10-30 20:45:14] INFO: Fetched (200) <GET https://www.capt.gov.kw/en/tenders/opening-tenders/> (referer: https://www.google.com/)
+### KW has JSON api: []
+KW url https://files.capt.gov.kw/static/favicon-new/manifest.json
+KW url https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&amp;display=swap
+KW url https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&amp;display=swap
+KW url https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700;900&amp;display=swap
+KW url https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,700&amp;display=swap
+### KW TEXT
+ Opening Tenders Closing Tenders Warranties Winning Bids Postponement of Tenders Company Qualifications Laws and regulations Tenders laws Bidders instructions Prohibited Companies Standard Contracts Conditions Generalizations Governance About Governance Media and Communication Work Plan Governance Resource Center Announcements Queries Qualification Queries Registration/Renewal inquiries (Local) Registration/Renewal inquiries (Foreign) Strategic Plan Annual Projects العربية Log In Sign In LOGIN Forgot Password? Important Are you sure you want to delete? Yes Cancel × Close - Electronic Archive Service Scope under Ministerial Decision No. 113/2017 In accordance with Ministerial Decision No. (113) of 2017 determining the fees for services provided by the Central Agency for Public Tenders and the fees for providing tender documents, the electronic archive service for companies registered with the Central Agency for Public Tenders has been set at 250 KWD, which includes the following services: Purchase of tenders. Registration services. Tenders awards. Bidder guarantees. Tender tracking. Complaints. Purchased tenders. Other services to be added according to the study. I Agree × تعميم رقم (22) لسنة 2021 بشأن أسماء المناقصين المحليين والأجانب ومبرمي العقود مع الجهات العامة Read more تنويه للسادة المناقصين باوقات تسليم المظاريف Read more جلسة تفاوض إدارة العامة للطيران المدني Read more قانون رقم (94) لسنة 2026 بتعديل بعض احكام القانون رقم (49) لسنة 2016 بشأن المناقصات العامة Read more نموذج تفويض حضور اجتماع فض مظاريف المناقصات/ الممارسات Read more الخطة السنوية للشراء للسنة المالية 2027/2026 Read more Bidders instructions for submitting bids Read more تنويــه عــام بشأن تمديد التأمين الأولي واشعارات الترسية وتقديم الشكاوي الصادر بتاريخ 2024/9/10 Read more تعميم خارجي رقم (1) لسن
