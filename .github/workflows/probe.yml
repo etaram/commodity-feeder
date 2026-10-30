@@ -34,9 +34,18 @@ jobs:
           mk_esjn https://e-nabavki.gov.mk/
           ge_spa https://tenders.procurement.gov.ge/
           LIST
+          mkdir -p data/leads/probe_html
+          UA2="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+          curl -s -m 30 -L -A "$UA2" "https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page" -o data/leads/probe_html/cppp.html || true
+          curl -s -m 30 -L -A "$UA2" "https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata" -o data/leads/probe_html/cppp_data.html || true
+          curl -s -m 30 -L -A "$UA2" "https://www.gets.govt.nz/ExternalIndex.htm" -o data/leads/probe_html/gets.html || true
+          curl -s -m 30 -L -A "$UA2" "https://etenders.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page" -o data/leads/probe_html/etenders.html || true
+          curl -s -m 30 -L -A "$UA2" "https://mahatenders.gov.in/nicgep/app?page=FrontEndLatestActiveTenders&service=page" -o data/leads/probe_html/maha.html || true
+          curl -s -m 30 -L -A "$UA2" "https://tenders.gov.in/" -o data/leads/probe_html/tenders_gov.html || true
+          ls -la data/leads/probe_html
           cat data/leads/probe.txt
       - name: commit
         run: |
           git config user.name github-actions; git config user.email actions@github.com
-          git add data/leads/probe.txt; git commit -qm "probe results" || true
+          git add data/leads/probe.txt data/leads/probe_html; git commit -qm "probe results" || true
           git pull -q --rebase origin main; git push -q origin HEAD:main || true
