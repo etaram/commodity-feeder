@@ -25,7 +25,9 @@ def fetch():
         except Exception as e:  # noqa: BLE001
             log.warning("IDB page %d: %s", page, str(e)[:120]); break
         if not recs:
-            break
+            log.warning("IDB page %d empty; response head: %s", page, str(r.text)[:300]); break
+        if page == 0:
+            log.info("IDB sample keys=%s first=%s", sorted(recs[0].keys()), {k: str(v)[:40] for k, v in list(recs[0].items())[:14]})
         old = 0
         for x in recs:
             pub = (x.get("publicationdate") or "")[:10]
@@ -55,6 +57,7 @@ def fetch():
                 "published": pub, "deadline": dl, "value": "", "currency": "", "link": x.get("documenturl") or x.get("proyecturl") or "",
                 "contact": "", "lang": "es" if any(c in title for c in "ñáéíóú") else "",
             })
+        log.info("IDB page %d: %d recs, %d old, kept so far %d", page, len(recs), old, len(new))
         if old > len(recs) * 0.6:
             break
         polite(1)
