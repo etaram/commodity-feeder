@@ -1,244 +1,50 @@
-[2026-10-30 19:52:46] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.eprocure.gov.bd (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:46] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.nprocurement.gov.lk (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:46] INFO: Fetched (200) <GET https://www.g2b.go.kr/> (referer: https://www.google.com/)
-[2026-10-30 19:52:46] INFO: Fetched (200) <GET https://eprocure.gov.pk/> (referer: https://www.google.com/)
-[2026-10-30 19:52:46] INFO: Fetched (200) <GET https://www.p-portal.go.jp/pps-web-biz/UAB01/OAB0101> (referer: https://www.google.com/)
-[2026-10-30 19:52:46] INFO: Fetched (200) <GET https://bolpatra.gov.np/egp/> (referer: https://www.google.com/)
-[2026-10-30 19:52:46] INFO: Fetched (403) <GET https://www.capt.gov.kw/> (referer: https://www.google.com/)
-[2026-10-30 19:52:46] INFO: Fetched (403) <GET https://www.tender.gov.mn/> (referer: https://www.google.com/)
-[2026-10-30 19:52:47] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: www.eprocure.gov.bd. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:47] INFO: Fetched (200) <GET https://www.gprocurement.go.th/> (referer: https://www.google.com/)
-[2026-10-30 19:52:47] INFO: Fetched (200) <GET https://notices.philgeps.gov.ph/GEPSNONPILOT/Tender/SplashOpenOpportunitiesUI.aspx?menuIndex=3&ClickFrom=OpenOpp&Result=3> (referer: https://www.google.com/)
-[2026-10-30 19:52:47] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: www.nprocurement.gov.lk. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:48] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: www.eprocure.gov.bd. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:52:48] INFO: Fetched (200) <GET https://zakup.gov.kz/> (referer: https://www.google.com/)
-[2026-10-30 19:52:48] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/> (referer: https://www.google.com/)
-[2026-10-30 19:52:48] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: www.nprocurement.gov.lk. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:52:48] INFO: Fetched (200) <GET https://muasamcong.mof.gov.vn/> (referer: https://www.google.com/)
-[2026-10-30 19:52:48] INFO: Fetched (200) <GET https://tenderboard.gov.bh/Tenders/Tenders> (referer: https://www.google.com/)
-[2026-10-30 19:52:49] INFO: Fetched (200) <GET https://ekapv2.kik.gov.tr/> (referer: https://www.google.com/)
-[2026-10-30 19:52:49] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.ppa.gov.gh (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:49] INFO: Fetched (200) <GET https://gpp.ppda.go.ug/> (referer: https://www.google.com/)
-[2026-10-30 19:52:49] INFO: Fetched (200) <GET https://www.tuneps.tn/> (referer: https://www.google.com/)
-[2026-10-30 19:52:49] INFO: Fetched (200) <GET https://nest.go.tz/> (referer: https://www.google.com/)
-[2026-10-30 19:52:49] INFO: Fetched (200) <GET https://comprasmx.buengobierno.gob.mx/sitiopublico/#/> (referer: https://www.google.com/)
-[2026-10-30 19:52:50] INFO: Fetched (403) <GET https://prod2.seace.gob.pe/seacebus-uiwd-pub/buscadorPublico/buscadorPublico.xhtml> (referer: https://www.google.com/)
-[2026-10-30 19:52:50] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: www.ppa.gov.gh. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:50] INFO: Fetched (200) <GET https://mof.gov.ae/ar/home/> (referer: https://www.google.com/)
-[2026-10-30 19:52:50] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw (DNS server returned answer with no data). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:51] INFO: Fetched (200) <GET https://www.marchespublics.gov.ma/pmmp/> (referer: https://www.google.com/)
-[2026-10-30 19:52:51] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: www.ppa.gov.gh. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:52:51] INFO: Fetched (200) <GET https://www.sicop.go.cr:443/app> (referer: https://www.google.com/)
-[2026-10-30 19:52:51] INFO: Fetched (200) <GET https://comprar.gob.ar/BuscarAvanzado.aspx?AspxAutoDetectCookieSupport=1> (referer: https://www.google.com/)
-[2026-10-30 19:52:51] INFO: Fetched (200) <GET https://www.panamacompra.gob.pa/> (referer: https://www.google.com/)
-[2026-10-30 19:52:51] INFO: Fetched (404) <GET https://egp.ppa.gov.et/> (referer: https://www.google.com/)
-[2026-10-30 19:52:51] INFO: Fetched (403) <GET https://www.guatecompras.gt/> (referer: https://www.google.com/)
-[2026-10-30 19:52:51] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:52] INFO: Fetched (200) <GET https://www.comprasestatales.gub.uy/consultas/> (referer: https://www.google.com/)
-[2026-10-30 19:52:52] INFO: Fetched (200) <GET https://www.ejn.gov.ba/> (referer: https://www.google.com/)
-[2026-10-30 19:52:52] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:52:53] INFO: Fetched (200) <GET https://honducompras.gob.hn/> (referer: https://www.google.com/)
-[2026-10-30 19:52:53] INFO: Fetched (200) <GET https://www.e-nabavki.gov.mk/PublicAccess/Home.aspx> (referer: https://www.google.com/)
-[2026-10-30 19:52:53] INFO: Fetched (200) <GET https://www.app.gov.al/> (referer: https://www.google.com/)
-[2026-10-30 19:52:53] INFO: Fetched (200) <GET https://mtender.gov.md/> (referer: https://www.google.com/)
-[2026-10-30 19:52:54] INFO: Fetched (200) <GET https://tenders.procurement.gov.ge/login.php> (referer: https://www.google.com/)
-[2026-10-30 19:52:54] INFO: Fetched (200) <GET https://www.doffin.no/> (referer: https://www.google.com/)
-[2026-10-30 19:52:54] INFO: Fetched (200) <GET https://www.gnumner.am/> (referer: https://www.google.com/)
-[2026-10-30 19:52:54] INFO: Fetched (200) <GET https://utbodsvefur.is/> (referer: https://www.google.com/)
-[2026-10-30 19:52:54] INFO: Fetched (403) <GET https://inaproc.id/> (referer: https://www.google.com/)
-[2026-10-30 19:52:54] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: xarid.uz (DNS server returned answer with no data). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:55] INFO: Fetched (200) <GET https://www.gebiz.gov.sg/> (referer: https://www.google.com/)
-[2026-10-30 19:52:55] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: xarid.uz. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:56] INFO: Fetched (200) <GET https://www.zppa.org.zm/> (referer: https://www.google.com/)
-[2026-10-30 19:52:57] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: xarid.uz. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:52:58] INFO: Fetched (200) <GET https://egazette.gld.gov.hk/> (referer: https://www.google.com/)
-[2026-10-30 19:52:58] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.cpb.com.na (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:58] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.ppra.org.bw (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:59] WARNING: Attempt 1 failed: Failed to perform, curl: (6) Could not resolve host: www.bpp.gov.ng (Timeout while contacting DNS servers). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:59] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: www.cpb.com.na. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:52:59] WARNING: Attempt 2 failed: Failed to perform, curl: (6) Could not resolve host: www.ppra.org.bw. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.. Retrying in 1 seconds...
-[2026-10-30 19:53:00] INFO: Fetched (200) <GET https://publicprocurement.govmu.org/publicprocurement/> (referer: https://www.google.com/)
-[2026-10-30 19:53:00] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: www.cpb.com.na. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:53:00] ERROR: Failed after 3 attempts: Failed to perform, curl: (6) Could not resolve host: www.ppra.org.bw. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:53:01] INFO: Fetched (200) <GET https://www.armp.sn/> (referer: https://www.google.com/)
-[2026-10-30 19:53:01] INFO: Fetched (200) <GET https://tenders.go.ke/> (referer: https://www.google.com/)
-[2026-10-30 19:53:02] INFO: Fetched (200) <GET http://marchespublics.ci/accueil/index_intro> (referer: https://www.google.com/)
-[2026-10-30 19:53:11] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
-[2026-10-30 19:53:12] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
-[2026-10-30 19:53:15] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
-[2026-10-30 19:53:15] INFO: Fetched (200) <GET https://bpp.gov.ng/> (referer: https://www.google.com/)
-[2026-10-30 19:53:16] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
-[2026-10-30 19:53:18] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
-[2026-10-30 19:53:19] WARNING: Proxy 'None' failed (attempt 1) | Retrying in 1 seconds...
-[2026-10-30 19:53:37] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
-[2026-10-30 19:53:38] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
-[2026-10-30 19:53:41] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
-[2026-10-30 19:53:42] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
-[2026-10-30 19:53:44] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
-[2026-10-30 19:53:45] WARNING: Proxy 'None' failed (attempt 2) | Retrying in 1 seconds...
-[2026-10-30 19:54:03] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 25001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:54:04] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 25001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:54:07] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 25001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:54:08] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 25001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:54:10] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 25000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-[2026-10-30 19:54:11] ERROR: Failed after 3 attempts: Failed to perform, curl: (28) Connection timed out after 25000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-== FETCHER ==
-JPN japan p-portal     st=200 len=165778 kw=3 1s 
-KOR g2b                st=200 len=1429 kw=0 1s 
-THA egp                st=200 len=645 kw=0 1s 
-VNM muasamcong         st=200 len=547948 kw=19 3s 
-PHL philgeps           st=200 len=49484 kw=2 1s 
-MYS myprocurement      st=200 len=70116 kw=47 3s 
-BGD eprocure           st=0 len=0 kw=0 2s DNSError:Failed to perform, curl: (6) Could not resolve host: www.epr
-PAK eprocure           st=200 len=6111 kw=0 1s 
-LKA procurement        st=0 len=0 kw=0 3s DNSError:Failed to perform, curl: (6) Could not resolve host: www.npr
-NPL bolpatra           st=200 len=517 kw=0 1s 
-KAZ goszakup           st=200 len=7067 kw=0 2s 
-MNG tender             st=403 len=4574 kw=1 0s 
-ARE uae                st=200 len=470144 kw=0 4s 
-KWT capt               st=403 len=5819 kw=0 0s 
-BHR tenderboard        st=200 len=38774 kw=88 2s 
-JOR joneps             st=0 len=0 kw=0 77s Timeout:Failed to perform, curl: (28) Connection timed out after 250
-EGY etenders           st=0 len=0 kw=0 77s Timeout:Failed to perform, curl: (28) Connection timed out after 250
-TUR ekap               st=200 len=16254 kw=0 2s 
-NGA bpp                st=200 len=176921 kw=0 27s 
-GHA ppa                st=0 len=0 kw=0 3s DNSError:Failed to perform, curl: (6) Could not resolve host: www.ppa
-TZA nest               st=200 len=74382 kw=5 1s 
-UGA gpp                st=200 len=39834 kw=0 1s 
-ETH egp                st=404 len=38 kw=0 3s 
-MAR marches            st=200 len=1332678 kw=0 2s 
-TUN tuneps             st=200 len=1152 kw=0 0s 
-RWA umucyo             st=0 len=0 kw=0 4s DNSError:Failed to perform, curl: (6) Could not resolve host: www.umu
-ZMB zppa               st=200 len=3000758 kw=2 8s 
-MEX comprasmx          st=200 len=3622 kw=0 0s 
-PER seace              st=403 len=109 kw=0 0s 
-ARG comprar            st=200 len=157009 kw=10 2s 
-ECU sercop             st=0 len=0 kw=0 77s Timeout:Failed to perform, curl: (28) Connection timed out after 250
-CRI sicop              st=200 len=7211 kw=0 0s 
-PAN panamacompra       st=200 len=34734 kw=2 1s 
-URY compras            st=200 len=53486 kw=10 1s 
-GTM guatecompras       st=403 len=5819 kw=0 0s 
-HND honducompras       st=200 len=197060 kw=0 1s 
-SRB portal             st=0 len=0 kw=0 77s Timeout:Failed to perform, curl: (28) Connection timed out after 250
-BIH ejn                st=200 len=15996 kw=0 1s 
-ALB app                st=200 len=273013 kw=26 1s 
-MKD esjn               st=200 len=30125 kw=3 1s 
-GEO tenders            st=200 len=8039 kw=0 1s 
-ARM gnumner            st=200 len=31 kw=0 1s 
-AZE etender            st=0 len=0 kw=0 77s Timeout:Failed to perform, curl: (28) Connection timed out after 250
-MDA mtender            st=200 len=27487 kw=102 0s 
-NOR doffin             st=200 len=1680 kw=0 0s 
-ISL utbod              st=200 len=101065 kw=2 1s 
-UZB xarid              st=0 len=0 kw=0 3s DNSError:Failed to perform, curl: (6) Could not resolve host: xarid.u
-TWN pcc                st=0 len=0 kw=0 77s Timeout:Failed to perform, curl: (28) Connection timed out after 250
-IDN inaproc            st=403 len=34738 kw=0 0s 
-SGP gebiz              st=200 len=87433 kw=1 1s 
-HKG ctb                st=200 len=39266 kw=1 3s 
-MUS cpb                st=200 len=83418 kw=0 3s 
-NAM cpb                st=0 len=0 kw=0 4s DNSError:Failed to perform, curl: (6) Could not resolve host: www.cpb
-BWA ppra               st=0 len=0 kw=0 2s DNSError:Failed to perform, curl: (6) Could not resolve host: www.ppr
-KEN tenders            st=200 len=1217 kw=6 1s 
-SEN armp               st=200 len=76 kw=0 1s 
-CIV dgmp               st=200 len=10601 kw=1 1s 
-== STEALTHY retries: ['KOR g2b', 'THA egp', 'NPL bolpatra', 'MNG tender', 'KWT capt', 'JOR joneps', 'EGY etenders', 'TUN tuneps', 'PER seace', 'ECU sercop', 'GTM guatecompras', 'SRB portal', 'ARM gnumner', 'AZE etender', 'NOR doffin', 'TWN pcc', 'IDN inaproc', 'KEN tenders', 'SEN armp']
-[2026-10-30 19:54:20] INFO: No Cloudflare challenge found.
-[2026-10-30 19:54:20] INFO: Fetched (200) <GET https://www.g2b.go.kr/> (referer: https://www.google.com/)
-KOR g2b                STEALTHY st=200 len=1349 kw=0 9s
-[2026-10-30 19:54:27] INFO: No Cloudflare challenge found.
-[2026-10-30 19:54:56] INFO: Fetched (200) <GET https://www.gprocurement.go.th/new_index.html> (referer: https://www.google.com/)
-THA egp                STEALTHY st=200 len=612412 kw=0 36s
-[2026-10-30 19:55:05] INFO: No Cloudflare challenge found.
-[2026-10-30 19:55:05] INFO: Fetched (200) <GET https://bolpatra.gov.np/egp/> (referer: https://www.google.com/)
-NPL bolpatra           STEALTHY st=200 len=49763 kw=0 9s
-[2026-10-30 19:55:11] INFO: No Cloudflare challenge found.
-[2026-10-30 19:55:11] INFO: Fetched (403) <GET https://www.tender.gov.mn/> (referer: https://www.google.com/)
-MNG tender             STEALTHY st=403 len=4690 kw=2 6s
-[2026-10-30 19:55:12] INFO: The turnstile version discovered is "non-interactive"
-[2026-10-30 19:55:12] INFO: Waiting for Cloudflare wait page to disappear.
-[2026-10-30 19:55:13] INFO: Waiting for Cloudflare wait page to disappear.
-[2026-10-30 19:55:15] INFO: Cloudflare captcha is solved
-[2026-10-30 19:55:15] INFO: Fetched (307) <GET https://www.capt.gov.kw/> (referer: https://www.google.com/)
-[2026-10-30 19:55:15] INFO: Fetched (200) <GET https://www.capt.gov.kw/ar/> (referer: https://www.google.com/)
-KWT capt               STEALTHY st=200 len=929266 kw=74 4s
-[2026-10-30 19:56:16] WARNING: Attempt 1 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://portal.jordan.gov.jo/wps/portal/Home/JONEPS", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 19:57:17] WARNING: Attempt 2 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://portal.jordan.gov.jo/wps/portal/Home/JONEPS", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 19:58:18] ERROR: Failed after 3 attempts: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://portal.jordan.gov.jo/wps/portal/Home/JONEPS", waiting until "load"
+## https://public.mtender.gov.md/tenders/?offset=2026-10-20T00:00:00.000Z -> 200 application/json;charset=UTF-8 len=7046
+{"data":[{"ocid":"ocds-b3wdp1-MD-1791814255242","date":"2026-10-20T04:26:21Z"},{"ocid":"ocds-b3wdp1-MD-1790622599412","date":"2026-10-20T04:36:10Z"},{"ocid":"ocds-b3wdp1-MD-1791460316787","date":"2026-10-20T04:45:02Z"},{"ocid":"ocds-b3wdp1-MD-1785735909547","date":"2026-10-20T04:52:25Z"},{"ocid":"ocds-b3wdp1-MD-1792472081249","date":"2026-10-20T04:57:10Z"},{"ocid":"ocds-b3wdp1-MD-1791899972510","date":"2026-10-20T05:00:00Z"},{"ocid":"ocds-b3wdp1-MD-1792472530672","date":"2026-10-20T05:02:37Z"},{"ocid":"ocds-b3wdp1-MD-1792472633779","date":"2026-10-20T05:05:42Z"},{"ocid":"ocds-b3wdp1-MD-1792472
 
-JOR joneps             STEALTHY ERR 'Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to "http'
-[2026-10-30 19:59:19] WARNING: Attempt 1 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://etenders.gov.eg/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:00:20] WARNING: Attempt 2 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://etenders.gov.eg/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:01:21] ERROR: Failed after 3 attempts: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://etenders.gov.eg/", waiting until "load"
+MD keys ['data', 'offset'] n 100 next 2026-10-20T06:32:31.641Z
+## https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791814255242 -> 200 application/json;charset=UTF-8 len=10966
+{"uri":"http://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791814255242","version":"1.1","extensions":["https://raw.githubusercontent.com/open-contracting/ocds_bid_extension/v1.1.1/extension.json","https://raw.githubusercontent.com/open-contracting/ocds_enquiry_extension/v1.1.1/extension.json"],"publisher":{"name":"M-Tender","uri":"https://www.mtender.gov.md"},"license":"http://opendefinition.org/licenses/","publicationPolicy":"http://opendefinition.org/licenses/","publishedDate":"2026-10-12T14:10:55Z","packages":["http://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791814255242/ocds-b3wdp1-MD-1791814255242-PN-1791814255242","http://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791814255242/ocds-b3wdp1-MD-1791814255242","http://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791814255242/ocds-b3wdp1-MD-1791814255242-EV-1791814505059"],"records":[{"ocid":"ocds-b3wdp1-MD-1791814255242-PN-1791814255242","compiledRelease":{"ocid":"ocds-b3wdp1-MD-1791814255242-PN-1791814255242","id":"ocds-b3wdp1-MD-1791814255242-PN-1791814255242-1791814505202","date":"2026-10-12T14:15:04Z","tag":["planningUpdate"],"language":"ro","initiationType":"tender","tender":{"id":"59b41948-aa9d-44cf-b672-342ee61ef680","status":"complete","statusDetails":"empty","lotGroups":[{"optionToCombine":false}],"tenderPeriod":{"startDate":"2026-10-01T00:00:00Z"},"hasEnquiries":false,"submissionMethod":["electronicSubmission"],"submissionMethodDetails":"Lista platformelor: achizitii, ebs, licitatie, yptender","submiss
 
-EGY etenders           STEALTHY ERR 'Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to "http'
-[2026-10-30 20:01:36] INFO: No Cloudflare challenge found.
-[2026-10-30 20:01:36] INFO: Fetched (200) <GET https://www.tuneps.tn/portail> (referer: https://www.google.com/)
-TUN tuneps             STEALTHY st=200 len=3012628 kw=0 15s
-[2026-10-30 20:01:41] INFO: No Cloudflare challenge found.
-[2026-10-30 20:01:41] INFO: Fetched (403) <GET https://prod2.seace.gob.pe/seacebus-uiwd-pub/buscadorPublico/buscadorPublico.xhtml> (referer: https://www.google.com/)
-PER seace              STEALTHY st=403 len=109 kw=0 6s
-[2026-10-30 20:02:42] WARNING: Attempt 1 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://www.compraspublicas.gob.ec/ProcesoContratacion/compras/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:03:43] WARNING: Attempt 2 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://www.compraspublicas.gob.ec/ProcesoContratacion/compras/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:04:44] ERROR: Failed after 3 attempts: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://www.compraspublicas.gob.ec/ProcesoContratacion/compras/", waiting until "load"
+## https://www.comprasestatales.gub.uy/ocds/rss/2026/10 -> 200 application/atom+xml len=3354887
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+        <title>Consulta de releases OCDS</title>
+        <link>http://www.comprasestatales.gub.uy/ocds/rss/2026/10</link>
+        <pubDate>Thu, 22 Oct 2026 18:30:09</pubDate>
+        <generator>Agencia Reguladora de Compras Estatales</generator>
+                    <item>
+                <title>id_compra:1378281,release_id:adjudicacion-1378281</title>
+                <pubDate>Thu, 22 Oct 2026 18:30:09</pubDate>
+                <link>http://www.comprasestatales.gub.uy/ocds/release/adjudicacion-1378281</link>
+                <guid>adjudicacion-1378281</guid>
+                <category>award</category>
+            </item>
 
-ECU sercop             STEALTHY ERR 'Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to "http'
-[2026-10-30 20:04:45] INFO: The turnstile version discovered is "interactive"
-[2026-10-30 20:05:56] INFO: Cloudflare page didn't disappear after 10s, continuing...
-[2026-10-30 20:05:56] INFO: Looks like Cloudflare captcha is still present, solving again
-[2026-10-30 20:06:01] INFO: The turnstile version discovered is "interactive"
-[2026-10-30 20:06:04] INFO: Cloudflare captcha is solved
-[2026-10-30 20:06:04] INFO: Fetched (307) <GET https://www.guatecompras.gt/> (referer: https://www.google.com/)
-[2026-10-30 20:06:04] INFO: Fetched (200) <GET https://www.guatecompras.gt/> (referer: https://www.google.com/)
-GTM guatecompras       STEALTHY st=200 len=127931 kw=1 80s
-[2026-10-30 20:07:05] WARNING: Attempt 1 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://portal.ujn.gov.rs/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:08:06] WARNING: Attempt 2 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://portal.ujn.gov.rs/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:09:07] ERROR: Failed after 3 attempts: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://portal.ujn.gov.rs/", waiting until "load"
 
-SRB portal             STEALTHY ERR 'Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to "http'
-[2026-10-30 20:09:15] INFO: No Cloudflare challenge found.
-[2026-10-30 20:09:15] INFO: Fetched (200) <GET https://www.gnumner.am/> (referer: https://www.google.com/)
-ARM gnumner            STEALTHY st=200 len=44 kw=0 8s
-[2026-10-30 20:10:15] WARNING: Attempt 1 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://etender.gov.az/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:11:16] WARNING: Attempt 2 failed: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://etender.gov.az/", waiting until "load"
-. Retrying in 1s...
-[2026-10-30 20:12:17] ERROR: Failed after 3 attempts: Page.goto: Timeout 60000ms exceeded.
-Call log:
-  - navigating to "https://etender.gov.az/", waiting until "load"
+## https://www.comprasestatales.gub.uy/ocds/rss -> 200 application/atom+xml len=191313
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+        <title>Consulta de releases OCDS</title>
+        <link>http://www.comprasestatales.gub.uy/ocds/rss</link>
+        <pubDate>Thu, 22 Oct 2026 18:30:09</pubDate>
+        <generator>Agencia Reguladora de Compras Estatales</generator>
+                    <item>
+                <title>id_compra:1378281,release_id:adjudicac
 
-AZE etender            STEALTHY ERR 'Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to "http'
+## https://tenderboard.gov.bh/Tenders/Tenders -> 200 text/html; charset=utf-8 len=42007
+
+<!DOCTYPE html>
+<html lang="en">
+<head id="Head1"><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1"
+
+BH TEXT 9J2h0dHA6Ly93d3cudGVuZGVyYm9hcmQuZ292LmJoL0Fib3V0VXMvT3ZlcnZpZXcvJyBhcmlhLWxhYmVsPSdPdmVydmlldyc+T3ZlcnZpZXc8L2E+PC9saT48bGk+PGEgaHJlZj0naHR0cDovL3d3dy50ZW5kZXJib2FyZC5nb3YuYmgvQWJvdXRVcy9WaXNpb24vJyBhcmlhLWxhYmVsPSdWaXNpb24gJiBNaXNzaW9uJz5WaXNpb24gJiBNaXNzaW9uPC9hPjwvbGk+PGxpPjxhIGhyZWY9J2h0dHA6Ly93d3cudGVuZGVyYm9hcmQuZ292LmJoL0Fib3V0VXMvQm9hcmRNZW1iZXJzLycgYXJpYS1sYWJlbD0nQm9hcmQgTWVtYmVycyc+Qm9hcmQgTWVtYmVyczwvYT48L2xpPjxsaT48YSBocmVmPSdodHRwOi8vd3d3LnRlbmRlcmJvYXJkLmdvdi5iaC9BYm91dFVzL1NlY3JldGFyeS8nIGFyaWEtbGFiZWw9J1NlY3JldGFyeSBHZW5lcmFsJz5TZWNyZXRhcnkgR2VuZXJhbDwvYT48L2xpPjxsaT48YSBocmVmPSdodHRwOi8vd3d3LnRlbmRlcmJvYXJkLmdvdi5iaC9BYm91dFVzL1N0cnVjdHVyZS8nIGFyaWEtbGFiZWw9J09yZ2FuaXNhdGlvbiBTdHJ1Y3R1cmUnPk9yZ2FuaXNhdGlvbiBTdHJ1Y3R1cmU8L2E+PC9saT48bGk+PGEgaHJlZj0naHR0cDovL3d3dy50ZW5kZXJib2FyZC5nb3YuYmgvQWJvdXRVcy9RdWFsaXR5UG9saWN5LycgYXJpYS1sYWJlbD0nUXVhbGl0eSBQb2xpY3knPlF1YWxpdHkgUG9saWN5PC9hPjwvbGk+PGxpPjxhIGhyZWY9J2h0dHA6Ly93d3cudGVuZGVyYm9hcmQuZ292LmJoL0Fib3V0VXMvU0RHLycgYXJpYS1sYWJlbD0nU3VzdGFpbmFibGUgRGV2ZWxvcG1lbnQgR29hbHMnPlN1c3RhaW5hYmxlIERldmVsb3BtZW50IEdvYWxzPC9hPjwvbGk+PGxpPjxhIGhyZWY9J2h0dHA6Ly93d3cudGVuZGVyYm9hcmQuZ292LmJoL0Fib3V0VXMvRGlnaXRhbFRyYW5zZm9ybWF0aW9uLycgYXJpYS1sYWJlbD0nRGlnaXRhbCBUcmFuc2Zvcm1hdGlvbic+RGlnaXRhbCBUcmFuc2Zvcm1hdGlvbjwvYT48L2xpPjwvdWw+PC9saT48bGk+PHNwYW4+TGVnaXNsYXRpb248L3NwYW4+PHVsIGlkPSdzaXRlTmF2MicgY2xhc3M9IiI+PGxpPjxhIGhyZWY9J2h0dHA6Ly93d3cudGVuZGVyYm9hcmQuZ292LmJoL0xlZ2lzbGF0aW9uL0xhd3MvJyBhcmlhLWxhYmVsPSdMYXdzJz5MYXdzPC9hPjwvbGk+PGxpPjxhIGhyZWY9J2h0dHA6Ly93d3cudGVuZGVyYm9hcmQuZ292LmJoL0xlZ2lzbGF0aW9uL0RlY2lzaW9ucy8nIGFyaWEtbGF
+BH links ['https://etendering.tenderboard.gov.bh/', 'https://etendering.tenderboard.gov.bh/Tenders/registerUser?CTRL_STRDIRECTION=LTR&amp;CTRL_STRDIRECTION=LTR&amp;encparam=CTRL_STRDIRECTION,CTRL_STRDIRECTION,randomno&amp;hashval=e686368b49f9772805b8db6a0ad7961a4954ec001ddfd571e8cacd828174541e', '/Ar/Tenders/Tenders', 'https://twitter.com/tenderboard_bh/', 'https://www.linkedin.com/company/tenderboard-bh/', 'https://www.instagram.com/tenderboard_bh/', 'mailto:info@tenderboard.gov.bh']
+## https://myprocurement.treasury.gov.my/ -> 200 text/html; charset=UTF-8 len=75637
+<!DOCTYPE html>
+<html lang="ms" class="theme-default">
+    <head>
+        <meta charset="utf-8">
+   
+
