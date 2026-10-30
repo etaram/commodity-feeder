@@ -16,32 +16,23 @@ jobs:
             code=$(curl -s -m 25 -L -o /tmp/o -w '%{http_code} %{size_download}' -A "$UA" "$url" || echo "ERR")
             echo "$name | $code | $(head -c 90 /tmp/o | tr '\n\r' '  ')" >> data/leads/probe.txt
           done <<'LIST'
-          gleif https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=Equinor&page%5Bsize%5D=1
-          brreg https://data.brreg.no/enhetsregisteret/api/enheter?navn=equinor&size=1
-          france https://recherche-entreprises.api.gouv.fr/search?q=airbus&per_page=1
-          prh https://avoindata.prh.fi/opendata-ytj-api/v3/companies?name=nokia
-          ares https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/27082440
-          edgar https://data.sec.gov/submissions/CIK0000320193.json
-          wikidata https://www.wikidata.org/w/api.php?action=wbsearchentities&search=Siemens&language=en&format=json
-          ofac_sdn https://www.treasury.gov/ofac/downloads/sdn.csv
-          ofac_cons https://www.treasury.gov/ofac/downloads/consolidated/cons_prim.csv
-          uk_sanctions https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv
-          un_sanctions https://scsanctions.un.org/resources/xml/en/consolidated.xml
-          eu_sanctions https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw
-          opensanctions https://data.opensanctions.org/datasets/latest/default/targets.simple.csv
-          worldbank_debar https://apigwext.worldbank.org/dvsvc/v1.0/json/APPLICATION/ADOBE_EXPRESS/FIRM/SANCTIONED_FIRM
-          comprasgov https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133?pagina=1&tamanhoPagina=10&dataPublicacaoPncpInicial=2026-10-01&dataPublicacaoPncpFinal=2026-10-30&codigoModalidade=6
+          simap https://www.simap.ch/api/publications/v2/project/project-search?processTypes=tender&orderAddressCantons=&lang=en&pageSize=3
+          simap2 https://www.simap.ch/api/publications/v2/project/project-search?pageSize=3
+          gets_rss https://www.gets.govt.nz/rss/rss.xml
+          gets_ext https://www.gets.govt.nz/ExternalIndex.htm
+          edgar_tickers https://www.sec.gov/files/company_tickers.json
+          edgar_search https://efts.sec.gov/LatestSearch/rest/search-index?q=%22Boeing%22&forms=10-K
           chile https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?estado=activas&ticket=F8537A18-6766-4DEF-9E59-426B4FEE2844
-          wto https://apiportal.wto.org/
-          gets https://www.gets.govt.nz/ExternalIndex.htm
-          kbo https://kbopub.economie.fgov.be/kbopub/zoeknaamfonetischform.html
-          cvrapi https://cvrapi.dk/api?search=novo&country=dk
-          zefix https://www.zefix.ch/en/search/entity/welcome
-          sirene https://api.insee.fr/entreprises/sirene/V3.11/siret/55208131766522
-          abn https://abr.business.gov.au/
-          kenya_open https://tenders.go.ke/
-          eu_ftp https://ec.europa.eu/info/funding-tenders/opportunities/data/referenceData/grantsTenders.json
-          tendfeed https://github.com/tendfeed-eu/tendfeed-mcp
+          comprasgov_lic https://dadosabertos.compras.gov.br/modulo-legado/1_consultarLicitacao?pagina=1&tamanhoPagina=10&data_publicacao_inicial=2026-10-01&data_publicacao_final=2026-10-30
+          korea https://www.g2b.go.kr/
+          india https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page
+          doffin https://betaapi.doffin.no/public/v2/search?searchString=steel&numHitsPerPage=2
+          boamp https://boamp-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/boamp/records?limit=2
+          ted_v3 https://api.ted.europa.eu/v3/notices/search
+          uk_sanc https://sanctionslist.fcdo.gov.uk/docs/UK-Sanctions-List.csv
+          uk_sanc2 https://assets.publishing.service.gov.uk/media/UK-Sanctions-List.xml
+          canada_sanc https://www.international.gc.ca/world-monde/assets/office_docs/international_relations-relations_internationales/sanctions/sema-lmes.xml
+          swiss_sanc https://www.sesam.search.admin.ch/sesam-search-web/pages/search.xhtml
           LIST
           cat data/leads/probe.txt
       - name: commit
