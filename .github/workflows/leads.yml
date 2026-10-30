@@ -127,7 +127,7 @@ jobs:
       - name: india
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',india,') }}
         run: set -o pipefail; python -m leads.run --source india 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 25
+        timeout-minutes: 45
         continue-on-error: true
       - name: grants
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',grants,') }}

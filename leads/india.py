@@ -41,7 +41,7 @@ PORTALS = [
     ("PMGSY rural roads", "https://pmgsytenders.gov.in/nicgep/app"),
 ]
 ORG_ROW = re.compile(r'<tr class="(?:even|odd)" id="informal_\d+">(.*?)</tr>', re.S)
-BUDGET = 1500  # seconds for the whole module
+BUDGET = 2400  # seconds for the whole module
 
 
 def _dt(txt):
@@ -113,7 +113,7 @@ def fetch():
         if time.time() > t_end:
             break
         try:
-            rows = _portal(s, name, base, min(t_end, time.time() + 240), str(t))
+            rows = _portal(s, name, base, min(t_end, time.time() + 150), str(t))
             log.info("India %s: %d open tenders", name, len(rows)); new += rows
         except Exception as e:  # noqa: BLE001
             log.warning("India portal %s failed: %s", name, str(e)[:120])
