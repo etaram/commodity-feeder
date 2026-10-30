@@ -1,4 +1,3 @@
-INFO installing scrapling
 
 Running kernel seems to be up-to-date.
 
@@ -11,11 +10,8 @@ No user sessions are running outdated binaries.
 No VM guests are running outdated hypervisor (qemu) binaries on this host.
 Installing Installing browsers...
 Installing Installing browsers dependencies...
-WARNING pager stopped at 1: Locator.click: Timeout 8000ms exceeded.
-Call log:
-  - waiting for locator("[rel=
-[2026-10-30 20:57:47] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
-INFO Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
-INFO Malaysia page 1: 10 blocks, 10 new, first T/572/10/2026 
-INFO Malaysia new 10, open 10
-INFO malaysia: 10 rows
+[2026-10-30 20:59:18] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
+CTX  daripada </span> <span class="sm:hidden">/</span> </div> <a href="https://myprocurement.treasury.gov.my/procurements/fetch?type=advertisements&amp;category=tender&amp;itemsPerPage=10&amp;page=98" class="flex items-center p-3 aspect-square"> 98 </a> <a href="https://myprocurement.treasury.gov.my/procurements/fetch?type=advertisements&amp;category=tender&amp;itemsPerPage=10&amp;page=2" class="flex items-center p-3 aspect-square"> <i class="fa-solid fa-chevron-right"></i> </a> </form> </div> </div></div> </div> </div> </div> <script> function procurements() { return { ids: [], selected: [], truncated: true,  
+
+WIRE []
+XDATA ['x-on:click="window.scrollTo({ top: 0, behavior: \'smooth\' });"', 'x-on:click="menu = true"', 'x-on:click="menu = false"', 'x-on:click="setGreyscale()"', 'x-on:click="increaseFont()"', 'x-on:click="decreaseFont()"', 'x-on:click="resetFont()"', 'x-on:click="menu = !menu"']
