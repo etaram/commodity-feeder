@@ -5,10 +5,10 @@ import re
 
 from .common import clean, log, polite, rolling, today
 from .sectors import classify
-from .stealth import html
+from .stealth import pages
 
 URL = "https://myprocurement.treasury.gov.my/advertisements/tender"
-PAGES = 14
+PAGES = 25
 
 
 def _d(s):
@@ -18,10 +18,7 @@ def _d(s):
 
 def fetch():
     t, new, seen = today(), [], set()
-    for page in range(1, PAGES + 1):
-        b = html(URL if page == 1 else f"{URL}?page={page}")
-        if not b:
-            break
+    for page, b in enumerate(pages(URL, PAGES), 1):
         txt = H.unescape(re.sub(r"\s+", " ", re.sub(r"<script.*?</script>|<style.*?</style>|<[^>]+>", " | ", b, flags=re.S)))
         blocks = re.split(r"Tarikh Pelawaan\s*:", txt)[1:]
         if not blocks:
@@ -48,7 +45,6 @@ def fetch():
                         "notice_type": "Tender", "stage": "tender", "access": "National (local registration / MOF code)", "published": str(_d(blk[:30]) or ""),
                         "deadline": str(close or ""), "value": v, "currency": "MYR" if v else "", "link": URL, "contact": "", "lang": "ms"})
         log.info("Malaysia page %d: %d blocks, %d new, first %s", page, len(blocks), got, (re.search(r"No\. Tender[\s|:]*([^|]*)", blocks[0]) or [0, ""])[1])
-        polite(1)
     rows, _ = rolling("malaysia", new)
     log.info("Malaysia new %d, open %d", len(new), len(rows))
     return rows, {"new": len(new)}
