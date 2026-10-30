@@ -14,11 +14,14 @@ KEEP = ("-LE", "-LP", "-LQ", "-LR")
 DETAIL_PER_RUN = 120
 
 
-def _get(s, params, tries=4):
+def _get(s, params, tries=6):
     for i in range(tries):
         r = s.get(API, params=params, timeout=90)
         if r.status_code == 200:
-            return r.json()
+            j = r.json()
+            if isinstance(j, dict) and j.get("Codigo") and "Listado" not in j:  # API-level error such as "simultaneous requests"
+                log.info("Chile API said: %s", str(j.get("Mensaje"))[:120]); polite(8 * (i + 1)); continue
+            return j
         if r.status_code == 429 or "peticiones simult" in r.text:
             polite(5 * (i + 1)); continue
         r.raise_for_status()
