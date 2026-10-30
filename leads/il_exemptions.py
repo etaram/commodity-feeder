@@ -10,6 +10,7 @@ Note: the publisher updates this dataset irregularly; the 'published' column sho
 """
 import csv
 import datetime as dt
+import re
 import time
 
 from .common import LEADS, log, session, today
@@ -21,6 +22,9 @@ F = {"office": "שם המשרד", "unit": "שם יחידה מפרסמת", "kind"
      "decision": "מהות החלטה", "published": "תאריך פרסום", "objection_until": "תאריך אחרון להגשת השגות",
      "supplier": "שם ספק", "supplier_id": "מספר חפ ספק", "amount": "היקף כספי", "currency": "מטבע",
      "start": "תאריך תחילת תקופת התקשרות", "end": "תאריך סיום תקופת התקשרות", "number": "מספר פרסום"}
+
+
+REAL_ESTATE = re.compile(r"מקרקעין|שכירות|שכירת|חכירה|חכר|דיור|רשות מקרקעי|נכס|מגורים")
 
 
 def _d(s):
@@ -60,6 +64,8 @@ def fetch(page=5000):
             amt = _amt(x.get(F["amount"]))
             if amt < 100_000:
                 continue
+            if REAL_ESTATE.search(f"{x.get(F['clause']) or ''} {x.get(F['title']) or ''} {x.get(F['office']) or ''}"):
+                continue  # land rights and rentals are not something Sinder supplies
             months = round((end - t).days / 30.4, 1)
             rows.append({
                 "office": x.get(F["office"]) or "", "unit": x.get(F["unit"]) or "", "title": (x.get(F["title"]) or "")[:200],
