@@ -1,3 +1,4 @@
+import { logEvent } from "@/lib/log";
 // Shared Anthropic API client for the web app. Cheapest model by default (Claude Haiku 5.5).
 export const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
 
@@ -20,7 +21,7 @@ export async function claude(body: Record<string, unknown>): Promise<{ text: str
     const j = await r.json().catch(() => ({}));
     if (!r.ok) {
       const msg = `Anthropic ${r.status}: ${String(j?.error?.message || j?.error?.type || "").slice(0, 300)}`;
-      console.error("[ai]", msg);
+      void logEvent("error", "ai", msg);
       throw new Error(msg);
     }
     out.push(...((j.content || []) as Block[]));

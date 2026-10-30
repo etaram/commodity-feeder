@@ -1,3 +1,4 @@
+import { logEvent } from "@/lib/log";
 // Verified registry checks for the business-intelligence report. Official open data only.
 // Israel: data.gov.il (Registrar of Companies, Official Receiver liquidation file).
 // UK: Companies House API, only if COMPANIES_HOUSE_KEY is set (free key from Companies House).
@@ -56,5 +57,5 @@ export async function registryFacts(name: string, country: string, legalId: stri
   if (c === "israel" || c === "ישראל" || /^5\d{8}$/.test(String(legalId || "").replace(/\D/g, ""))) jobs.push(israel(name, legalId));
   if (c.includes("united kingdom") || c === "uk" || c === "gb") jobs.push(uk(name));
   const res = await Promise.allSettled(jobs);
-  return res.flatMap((r) => (r.status === "fulfilled" ? r.value : ["A registry check failed and was skipped."])).join("\n");
+  return res.flatMap((r) => { if (r.status === "fulfilled") return r.value; void logEvent("warn", "registry", "registry check failed", String(r.reason).slice(0, 300)); return ["A registry check failed and was skipped."]; }).join("\n");
 }

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
 import { claude } from "@/lib/anthropic";
 import { appendRow, sheetsEnabled } from "@/lib/sheets";
+import { logEvent } from "@/lib/log";
 import { registryFacts } from "@/lib/registry";
 
 // Runs a panel job (research, supplier search, eligibility, logistics, quote...) immediately on the server
@@ -71,10 +72,11 @@ End with one line "Next step:" saying the single most useful action.`;
       try {
         await appendRow("Panel Jobs", [id || "J" + Date.now().toString(36).toUpperCase(), stamp, type || "other", target_id || "", String(target || "").slice(0, 300),
           JSON.stringify(context || {}).slice(0, 4000), String(request || "").slice(0, 2000), "done", result.slice(0, 20000), sources[0]?.url || "", stamp, `web instant; ${session.email || ""}`]);
-      } catch (e) { console.error("[run] sheet write failed", String(e).slice(0, 200)); }
+      } catch (e) { await logEvent("error", "run", "sheet write failed", String(e).slice(0, 300), session.email); }
     }
     return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp });
   } catch (e) {
+    await logEvent("error", "run", `${type || "job"} failed`, String((e as Error).message || e), session.email);
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });
   }
 }

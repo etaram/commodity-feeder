@@ -1,5 +1,10 @@
 (() => {
   "use strict";
+  // Report browser errors to the hidden ops log (a few per page load).
+  let sent = 0;
+  const report = (message, where) => { if (sent >= 5) return; sent++; try { fetch("/api/panel/log", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ message: String(message).slice(0, 300), where: String(where || "").slice(0, 200), ua: navigator.userAgent.slice(0, 120) }) }).catch(() => {}); } catch (e) {} };
+  window.addEventListener("error", e => report(e.message, (e.filename || "") + ":" + (e.lineno || "")));
+  window.addEventListener("unhandledrejection", e => report("unhandled: " + (e.reason && e.reason.message || e.reason), location.pathname));
   const RANGE_KEY = {
     "'My Leads'!A1:AE1500": "tenders", "'Titles HE'!A1:B20000": "titles", "'BD Agent'!A1:M600": "bd",
     "'Key Accounts'!A1:S400": "accounts", "'Repeat Buyers'!A1:O5600": "repeat", "'Market Signals'!A1:O3200": "markets",
