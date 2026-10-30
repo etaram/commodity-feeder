@@ -28,6 +28,6 @@ jobs:
       - run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add -A data/probe data/israel data/leads/partial 2>/dev/null; git add -A data/probe; git add -A data/israel || true
+          git add -A data/probe data/israel data/leads/partial data/leads/il_exempt.csv data/leads/grants.csv 2>/dev/null; git add -A data/probe; git add -A data/israel || true
           git diff --cached --quiet || git commit -m "script: ${{ inputs.script }} $(date -u +%H:%MZ)"
           for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 5; done
