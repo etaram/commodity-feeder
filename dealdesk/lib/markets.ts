@@ -20,7 +20,8 @@ async function json(path: string) { try { const r = await fetch(`${RAW}/${path}`
 type Chg = Record<string, number | null>;
 export async function markets() {
   if (memo && Date.now() - memo.at < 180_000) return memo.data;
-  const [pc, trends, deals, press] = await Promise.all([json("leads/price_changes.json"), csv("leads/price_trends.csv"), csv("leads/deal_calc.csv"), csv("leads/press.csv")]);
+  const [pc, trends, deals, press, ptj] = await Promise.all([json("leads/price_changes.json"), csv("leads/price_trends.csv"), csv("leads/deal_calc.csv"), csv("leads/press.csv"), json("leads/price_trends.json")]);
+  const pser: { series: string; unit: string; month: string; price: number; chg_1m_pct: number | null; chg_3m_pct: number | null; chg_12m_pct: number | null }[] = ptj?.series || [];
   const byId = new Map<string, { chg: Chg }>((pc?.items || []).map((i: { id: string; chg: Chg }) => [i.id, i]));
 
   // Live read of the Commodities Tracker (includes the manual prices that only the sheet has). Falls back to the GitHub feed.
@@ -52,7 +53,8 @@ export async function markets() {
   const data = {
     from, sheet_updated: sheetAt, feed_finished_utc: pc?.feed_finished_utc || "", changes_utc: pc?.updated_utc || "",
     items, worldbank: pc?.worldbank || [],
-    trends: trends.filter((t) => t.group).map((t) => ({ group: t.group, signal: t.signal, m1: n(t.chg_1m_pct), m3: n(t.chg_3m_pct), y1: n(t.chg_12m_pct) })),
+    trends: trends.filter((t) => t.group).map((t) => ({ group: t.group, signal: t.signal, m1: n(t.chg_1m_pct), m3: n(t.chg_3m_pct), y1: n(t.chg_12m_pct), basis: t.series || "",
+      series: pser.filter((x) => (t.series || "").includes(x.series)).map((x) => ({ name: x.series, unit: x.unit, month: x.month, price: x.price, m1: x.chg_1m_pct, m3: x.chg_3m_pct, y1: x.chg_12m_pct })) })),
     deals: { count: pl.count, ev: pl.ev, urgent: pl.urgent, partner: pl.partner, regions: pl.regions, top },
     press: press.slice(0, 8).map((p) => ({ buyer: p.buyer, country: p.country, date: p.date, headline: p.headline, link: p.link })),
   };

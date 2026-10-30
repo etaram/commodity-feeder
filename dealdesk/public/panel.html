@@ -1455,7 +1455,7 @@ function openDeal(mode, r) {
 /* ---------- INTELLIGENCE: verified signals from the market intelligence agent (official, tier-1 and industry
    sources only) next to what our own official data shows: planned tenders, repeat buyers and import growth ---------- */
 const tierPill = s => /official/i.test(s) ? `<span class="pill good">${esc(t("tier_off"))}</span>` : /tier/i.test(s) ? `<span class="pill info">${esc(t("tier_1"))}</span>` : s ? `<span class="pill">${esc(s)}</span>` : "";
-const sigPill = s => /high/i.test(s) ? `<span class="pill acc">High</span>` : s ? `<span class="pill">${esc(s)}</span>` : "";
+const trendSig = s => /high/i.test(s) ? `<span class="pill acc">High</span>` : s ? `<span class="pill">${esc(s)}</span>` : "";
 function renderIntel() {
   const all = (S.data.intel || []).filter(x => !x.valid_until || x.valid_until >= today()).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || (/high/i.test(b.signal) ? 1 : 0) - (/high/i.test(a.signal) ? 1 : 0));
   fillSelect($("#icat"), all.map(x => x.category)); fillSelect($("#iregion"), all.map(x => x.region));
@@ -1468,7 +1468,7 @@ function renderIntel() {
   const el = $("#ilist");
   if (!rows.length) el.innerHTML = `<div class="empty" style="padding:14px">${esc(S.err.intel ? errText(S.err.intel, SHEETS) : t("e_intel"))}</div>`;
   else el.innerHTML = rows.slice(0, 200).map((x, i) => `<div class="row" style="cursor:default;grid-template-columns:minmax(0,1fr)"><div style="min-width:0">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">${sigPill(x.signal)}<span class="pill">${esc(x.category)}</span>${tierPill(x.source_tier)}<span class="sub num">${esc(x.date)}${x.event_date ? " · " + esc(t("event")) + " " + esc(x.event_date) : ""}</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">${trendSig(x.signal)}<span class="pill">${esc(x.category)}</span>${tierPill(x.source_tier)}<span class="sub num">${esc(x.date)}${x.event_date ? " · " + esc(t("event")) + " " + esc(x.event_date) : ""}</span></div>
       <div class="t">${flag(x.country)}${txt(H(x))}</div>
       <div class="sub" style="margin-top:3px">${txt(W(x))}</div>
       <div class="sub" style="margin-top:3px">${esc(x.country)}${x.commodity_group ? " · " + esc(x.commodity_group) : ""} · ${link(x.url, x.source_name || x.url)}</div>
@@ -1552,6 +1552,36 @@ function renderMkToday() {
   $("#t-mk-upd").textContent = mt("updated ", "עודכן ") + mkUpdated();
   mini("#t-markets", rows, r => [`<span class="pill ${moveOf(r) > 0 ? "bad" : "good"}">${moveOf(r) > 0 ? mt("up", "עלייה") : mt("down", "ירידה")}</span>`, `<div class="t">${esc(shortName(r))}</div><div class="sub num">${esc(px(r.price))} ${esc(r.unit)}</div>`, `<div>${chgTxt(moveOf(r))}</div>`], () => go("markets"), mt("No moves yet.", "אין תנודות עדיין."));
 }
+const TSIG = { "rising fast": ["rising fast", "עולה מהר"], rising: ["rising", "עולה"], stable: ["stable", "יציב"], falling: ["falling", "יורד"], "falling fast": ["falling fast", "יורד מהר"] };
+const trendSig = sg => `<span class="pill ${/^rising/.test(sg) ? "bad" : /^falling/.test(sg) ? "good" : "info"}">${esc((TSIG[sg] || [sg, sg])[LANG === "he" ? 1 : 0])}</span>`;
+function whyData(g) {
+  const rows = (g.series || []).map(x => `<tr><td>${esc(x.name)}</td><td class="num">${esc(String(x.price))} <span class="fl">${esc(x.unit)}</span></td><td>${chgTxt(x.m1)}</td><td>${chgTxt(x.m3)}</td><td>${chgTxt(x.y1)}</td></tr>`).join("");
+  return `<div class="sub" style="margin-bottom:6px">${esc(mt("What the group is based on (World Bank monthly prices, latest month ", "על מה הקבוצה מבוססת (מחירי הבנק העולמי החודשיים, החודש האחרון "))}${esc((g.series[0] || {}).month || "")})</div>`
+    + (rows ? `<table class="mk" style="margin-bottom:10px"><thead><tr><th>${esc(mt("Component", "רכיב"))}</th><th>${esc(mt("Price", "מחיר"))}</th><th>${esc(mt("1 month", "חודש"))}</th><th>${esc(mt("3 months", "3 חודשים"))}</th><th>${esc(mt("12 months", "שנה"))}</th></tr></thead><tbody>${rows}</tbody></table>` : "");
+}
+function renderTrends() {
+  const m = S.mk, list = (m.trends || []).slice().sort((a, b) => Math.abs(b.m3 || 0) - Math.abs(a.m3 || 0));
+  S.whyOpen = S.whyOpen || {}; S.why = S.why || {};
+  $("#mk-groups").innerHTML = `<div class="mk-wrap"><table class="mk"><thead><tr><th>${esc(mt("Commodity group", "קבוצת סחורות"))}</th><th>${esc(mt("Signal", "מגמה"))}</th><th>${esc(mt("1 month", "חודש"))}</th><th>${esc(mt("3 months", "3 חודשים"))}</th><th>${esc(mt("12 months", "שנה"))}</th><th></th></tr></thead><tbody>${list.map((g, i) => {
+    const open = !!S.whyOpen[g.group], w = S.why[g.group];
+    const body = w ? (w.err ? `<span style="color:var(--bad)">${esc(w.err)}</span>` : `<div style="white-space:pre-wrap">${txt ? txt(w.text) : esc(w.text)}</div>`) : `<span class="sub">${esc(mt("Looking up what is driving this...", "בודק מה מניע את זה..."))}</span>`;
+    return `<tr><td><b>${esc(g.group)}</b></td><td>${trendSig(g.signal)}</td><td>${chgTxt(g.m1)}</td><td>${chgTxt(g.m3)}</td><td>${chgTxt(g.y1)}</td><td><button type="button" data-why="${i}" aria-expanded="${open}">${esc(open ? mt("Hide", "הסתר") : mt("Why?", "למה?"))}</button></td></tr>`
+      + (open ? `<tr><td colspan="6" style="white-space:normal;max-width:none;background:var(--soft)">${whyData(g)}<div class="sub" style="font-weight:700;margin-bottom:4px">${esc(mt("Why this is happening", "למה זה קורה"))}</div>${body}<div class="sub" style="margin-top:6px">${esc(mt("The numbers are our data. The explanation is an AI summary of web sources and may be incomplete; verify before relying on it.", "המספרים הם הנתונים שלנו. ההסבר הוא סיכום AI של מקורות באינטרנט ועלול להיות חלקי; כדאי לאמת לפני שנשענים עליו."))}</div></td></tr>` : "");
+  }).join("")}</tbody></table></div>`;
+  $("#mk-groups").onclick = async e => {
+    const b = e.target.closest("[data-why]"); if (!b) return;
+    const g = list[+b.dataset.why]; S.whyOpen[g.group] = !S.whyOpen[g.group];
+    renderTrends();
+    if (S.whyOpen[g.group] && !S.why[g.group]) {
+      try {
+        const r = await fetch("/api/panel/why", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ group: g.group, lang: LANG }) });
+        if (r.status === 401) { location.href = "/login"; return; }
+        const j = await r.json(); S.why[g.group] = j.ok ? { text: j.text } : { err: j.error || mt("Could not load the explanation.", "לא הצלחתי לטעון את ההסבר.") };
+      } catch { S.why[g.group] = { err: mt("Could not load the explanation.", "לא הצלחתי לטעון את ההסבר.") }; }
+      renderTrends();
+    }
+  };
+}
 function renderMarkets() {
   const m = S.mk;
   if (!m) { $("#mk-table").innerHTML = `<div class="empty" style="padding:14px">${esc(S.mkErr ? mt("Prices are not available right now: ", "המחירים אינם זמינים כרגע: ") + S.mkErr : mt("Loading prices...", "טוען מחירים..."))}</div>`; return; }
@@ -1560,7 +1590,7 @@ function renderMarkets() {
   $("#mk-health").innerHTML = `<span class="pill good">${m.items.length.toLocaleString("en-US")} ${esc(mt("tracked", "במעקב"))}</span><span class="pill info">${live.length} ${esc(mt("live market prices", "מחירי שוק חיים"))}</span>${stale ? `<span class="pill warn">${stale} ${esc(mt("stale", "מיושנים"))}</span>` : ""}`;
   const mv = mkMovers(["T1", "T2"]), box = (title, rows) => `<div class="box"><div class="box-head"><h2>${esc(title)}</h2><span class="muted">${esc(mt("1 day, live prices", "יום אחד, מחירי שוק"))}</span></div><div class="mini">${rows.map(r => `<div class="it" style="cursor:default"><span></span><div style="min-width:0"><div class="t">${esc(shortName(r))}</div><div class="sub num">${esc(px(r.price))} ${esc(r.unit)}</div></div><div>${chgTxt(moveOf(r))}</div></div>`).join("") || `<div class="empty">-</div>`}</div></div>`;
   $("#mk-movers").innerHTML = box(mt("Biggest rises", "העליות הגדולות"), mv.up) + box(mt("Biggest falls", "הירידות הגדולות"), mv.dn);
-  $("#mk-groups").innerHTML = (m.trends || []).sort((a, b) => Math.abs(b.m3 || 0) - Math.abs(a.m3 || 0)).map(g => `<div class="mk-g"><b>${esc(g.group)}</b><span>${chgTxt(g.m3)} <span class="fl">3m</span> · ${chgTxt(g.y1)} <span class="fl">12m</span></span></div>`).join("");
+  renderTrends();
   const cats = [...new Set(m.items.map(r => r.cat).filter(Boolean))].sort();
   const cs = $("#mcat"); if (cs.options.length <= 1) { cats.forEach(c => cs.add(new Option(c, c))); if (LANG !== "he") cs.hidden = true; }
   const q = $("#mq").value.trim().toLowerCase(), tier = $("#mtier").value, cat = cs.value, sort = $("#msort").value;
