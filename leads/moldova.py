@@ -19,7 +19,9 @@ def _one(s, ocid, t):
         for rel in releases_of(r.json()):
             row = tender_row(rel, source="MTender (Moldova)", prefix="MD", country="MDA", lang="ro",
                              access="National (foreign firms may bid)", today_s=str(t), link=f"https://mtender.gov.md/tenders/{ocid}")
-            if row and (best is None or (row["deadline"] and not best["deadline"])):
+            # only notices with a submission deadline (open tenders) or true planning notices; bare "active" planning
+            # records carry no deadline and are mostly tenders that already ran
+            if row and (row["deadline"] or row["stage"] == "planned") and (best is None or (row["deadline"] and not best["deadline"])):
                 best = row
         if best:
             best["id"] = f"MD-{ocid}"
