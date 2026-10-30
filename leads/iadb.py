@@ -20,7 +20,7 @@ def fetch():
     cutoff = str(t - dt.timedelta(days=150))
     for page in range(MAX_PAGES):
         try:
-            r = s.get(API, params={"resource_id": RESOURCE, "limit": PAGE, "offset": page * PAGE, "sort": "_id desc"}, timeout=90)
+            r = s.get(API, params={"resource_id": RESOURCE, "limit": PAGE, "offset": page * PAGE, "sort": "publicationdate desc"}, timeout=90)
             recs = r.json()["result"]["records"]
         except Exception as e:  # noqa: BLE001
             log.warning("IDB page %d: %s", page, str(e)[:120]); break
