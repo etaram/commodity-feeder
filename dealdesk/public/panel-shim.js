@@ -57,7 +57,9 @@
   async function ai(prompt, opts) {
     let k = "";
     try { const b = new TextEncoder().encode(prompt); const d = await crypto.subtle.digest("SHA-256", b); k = "ai:" + Array.from(new Uint8Array(d)).map((x) => x.toString(16).padStart(2, "0")).join(""); const c = JSON.parse(localStorage.getItem(k) || "null"); if (c && Date.now() - c.at < 86400000) return c.text; } catch (e) {}
-    const j = await post("/api/panel/ai", { prompt, tier: opts && opts.modelTier });
+    let j;
+    try { j = await post("/api/panel/ai", { prompt, tier: opts && opts.modelTier }); }
+    catch (e) { e.text = "AI: " + (e.message || e.code || "error"); throw e; }
     const text = j.text || "";
     try { if (k && text) localStorage.setItem(k, JSON.stringify({ text, at: Date.now() })); } catch (e) {}
     return text;
@@ -72,6 +74,9 @@
     const m = text.match(/[\[{][\s\S]*[\]}]/);
     return JSON.parse(m ? m[0] : text);
   };
+
+  // Instant jobs on the web: the server researches now (Claude Haiku 5.5 with web search) instead of queueing for the worker.
+  window.DD_INSTANT = async (job) => post("/api/panel/run", job, "Deal Desk AI");
 
   window.claude = {
     async use(name) {

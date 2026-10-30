@@ -387,7 +387,7 @@ const L = {
     ask_ph_c: "Ask in your own words: e.g. canned tuna exporters in Ecuador with an e-mail",
     ask_ph_d: "Ask in your own words: e.g. wheat buyers in the Gulf, or steel demand in Saudi Arabia",
     nl_thinking: "Understanding your request...", nl_as: "Searching for:", nl_clear: "Clear", nl_fail: "Could not interpret the request; searching the words as typed.",
-    more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
+    instant_wait: "Researching now on the web (usually under a minute)...", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
     more_wait: "Researching... the answer will appear here.", more_done: "Research result", more_again: "Research again", more_err: "The research failed:",
     a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
     est_ptw: "Estimated price to win: {lo} to {mid} (from {src}, about {n} bidders). The worker's price quote checks this against real prices.",
@@ -492,7 +492,7 @@ const L = {
     ask_ph_c: "חפש במילים שלך: למשל יצואני טונה משומרת מאקוודור עם מייל",
     ask_ph_d: "חפש במילים שלך: למשל קוני חיטה במפרץ, או ביקוש לפלדה בסעודיה",
     nl_thinking: "מבין את הבקשה...", nl_as: "מחפש:", nl_clear: "נקה", nl_fail: "לא הצלחתי לפרש את הבקשה, מחפש את המילים כפי שנכתבו.",
-    more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
+    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)...", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
     more_wait: "בתהליך מחקר... התשובה תופיע כאן.", more_done: "תוצאת המחקר", more_again: "חקור שוב", more_err: "המחקר נכשל:",
     a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
     est_ptw: "מחיר משוער לזכייה: {lo} עד {mid} (לפי {src}, כ-{n} מציעים). הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
@@ -980,6 +980,24 @@ let lastFire = 0;
 async function queueJob(job, btn, outSel) {
   const out = $(outSel); if (btn) btn.disabled = true;
   const id = "J" + Date.now().toString(36).toUpperCase();
+  if (window.DD_INSTANT) {
+    const rec = { job_id: id, created: nowStamp(), type: job.type, target_id: job.target_id || "", target: String(job.target || "").slice(0, 300), status: "running", updated: nowStamp() };
+    (S.data.jobs = S.data.jobs || []).push(rec); renderJobsCount(); renderCards();
+    const hasCard = !!rec.target_id && !!document.querySelector(`[data-jobcard="${CSS.escape(rec.target_id)}"]`);
+    const box = document.createElement("div");
+    if (!hasCard) { box.innerHTML = `<div class="card"><span class="spin"></span> ${esc(t("instant_wait"))}</div>`; out.appendChild(box); }
+    try {
+      const r = await window.DD_INSTANT({ id, type: job.type, target_id: rec.target_id, target: job.target, context: job.context || {}, request: job.request || "", lang: LANG });
+      Object.assign(rec, { status: "done", result: r.text, result_link: r.link || "", updated: r.updated || nowStamp() });
+      if (!hasCard) box.innerHTML = `<div class="card"><h3>${esc(t("jt_" + job.type))}</h3><div class="result" dir="auto">${linkify(r.text)}</div></div>`;
+    } catch (e) {
+      Object.assign(rec, { status: "error", notes: e.message || "" });
+      if (!hasCard) box.innerHTML = `<div class="flash err">${esc(t("more_err"))} ${esc(e.message || "")}</div>`;
+    }
+    if (btn) btn.disabled = false;
+    renderJobsCount(); renderCards(); if (S.view === "jobs") renderJobs(id);
+    return;
+  }
   const row = [id, nowStamp(), job.type, job.target_id || "", String(job.target || "").slice(0, 300), JSON.stringify(job.context || {}).slice(0, 45000), job.request || "", "queued", "", "", nowStamp(), "panel; lang=" + LANG];
   try { await mcp.callTool(SHEETS, "append_values", { spreadsheetId: LE, range: "'Panel Jobs'!A1", values: [row] }); }
   catch (e) { out.innerHTML = `<div class="flash err">${esc(t("job_not_saved") + errText(e, SHEETS))}${["server_unavailable", "upstream_error"].includes(e?.code) ? esc(t("maybe_saved")) : ""}</div>`; if (btn) btn.disabled = false; return; }
@@ -1093,11 +1111,12 @@ function clearNL(key) {
 
 /* ---------- "More info": a research job whose answer appears inside the item's own card ---------- */
 const latestJob = tid => (S.data.jobs || []).filter(j => j.target_id === tid).sort((a, b) => String(b.created).localeCompare(String(a.created)))[0];
+const linkify = x => esc(x).replace(/https?:\/\/[^\s<)"]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
 function cardHtml(tid) {
   const j = latestJob(tid); if (!j) return "";
-  if (j.status === "queued" || j.status === "running") return `<div class="card"><b>${esc(t({ logistics: "a_log", quote: "a_quote", eligibility: "a_elig" }[j.type] || "more_info"))}</b> <span class="spin"></span> ${esc(t("more_wait"))}<div class="note">${esc(t("more_note"))}</div></div>`;
+  if (j.status === "queued" || j.status === "running") return `<div class="card"><b>${esc(t({ logistics: "a_log", quote: "a_quote", eligibility: "a_elig" }[j.type] || "more_info"))}</b> <span class="spin"></span> ${esc(t("more_wait"))}<div class="note">${esc(t(window.DD_INSTANT ? "instant_wait" : "more_note"))}</div></div>`;
   if (j.status === "error") return `<div class="card"><b>${esc(t("more_err"))}</b> ${esc(j.notes || "")}</div>`;
-  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${esc(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
+  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${linkify(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
   return "";
 }
 function renderCards() { document.querySelectorAll("[data-jobcard]").forEach(el => { el.innerHTML = cardHtml(el.dataset.jobcard); }); }
