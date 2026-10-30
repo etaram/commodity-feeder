@@ -1,4 +1,31 @@
+WARNING:leads:AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING:leads:AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+WARNING:leads:AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1010)
+bundle /tmp/tmp76kzxi6b.pem today 2026-10-30
 Traceback (most recent call last):
-  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/qatar_debug.py", line 3, in <module>
-    from leads import qatar
-ModuleNotFoundError: No module named 'leads'
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1043, in _request_once
+    c.perform()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 633, in perform
+    self._check_error(ret, "perform")
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 353, in _check_error
+    raise error
+curl_cffi.curl.CurlError: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (20). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/qatar_debug.py", line 9, in <module>
+    r = cr.get(qatar.URL.format(1), impersonate="chrome", verify=bundle, timeout=60)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 154, in get
+    return request(method="GET", url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 146, in request
+    return s.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1117, in request
+    return self._request_once(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1050, in _request_once
+    raise error(str(e), e.code, rsp) from e
+curl_cffi.requests.exceptions.CertificateVerifyError: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (20). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
