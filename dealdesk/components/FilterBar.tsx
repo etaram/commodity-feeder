@@ -6,13 +6,14 @@ export type Field =
   | { kind: "number"; name: string; label: string; placeholder?: string }
   | { kind: "check"; name: string; label: string };
 
-export default function FilterBar({ fields, values, action, sort, sortOptions, sortName = "sort", sortLabel = "Sort by" }: {
+export default function FilterBar({ fields, values, action, sort, sortOptions, sortName = "sort", sortLabel = "Sort by", hidden }: {
   fields: Field[]; values: Record<string, string | undefined>; action: string;
-  sort?: string; sortOptions?: [string, string][]; sortName?: string; sortLabel?: string;
+  sort?: string; sortOptions?: [string, string][]; sortName?: string; sortLabel?: string; hidden?: Record<string, string>;
 }) {
   const active = fields.filter((f) => values[f.name]).length;
   return (
     <form method="get" action={action} className="rounded-xl border border-line bg-white p-4 shadow-sm">
+      {hidden && Object.entries(hidden).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
         {fields.map((f) => (
           <label key={f.name} className={`block ${f.kind === "text" ? "col-span-2" : ""}`}>
@@ -48,7 +49,7 @@ export default function FilterBar({ fields, values, action, sort, sortOptions, s
       </div>
       <div className="mt-3 flex items-center gap-3">
         <button className="rounded-md bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-blue">Apply filters</button>
-        {active > 0 && <Link href={action} className="text-sm font-semibold text-muted hover:text-ink">Clear all ({active})</Link>}
+        {active > 0 && <Link href={action + (hidden ? "?" + new URLSearchParams(hidden).toString() : "")} className="text-sm font-semibold text-muted hover:text-ink">Clear all ({active})</Link>}
       </div>
     </form>
   );

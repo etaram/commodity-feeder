@@ -31,6 +31,7 @@ function apply(all: Tender[], p: SP) {
     (!p.decision || r.d === p.decision) &&
     (!p.source || r.src === p.source) &&
     (!p.stage || r.st === p.stage) &&
+    (!p.integrity || r.if === p.integrity) &&
     (!p.size || inSize(r.v, p.size)) &&
     (!minV || (r.v ?? -1) >= minV) &&
     (!maxV || (r.v != null && r.v <= maxV)) &&
@@ -82,6 +83,7 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
     { kind: "select", name: "decision", label: "Engine decision", options: facet(all, (r) => r.d) },
     { kind: "select", name: "stage", label: "Stage", options: facet(all, (r) => r.st) },
     { kind: "select", name: "source", label: "Source", options: facet(all, (r) => r.src) },
+    { kind: "select", name: "integrity", label: "Integrity verdict", options: facet(all, (r) => r.if) },
     { kind: "check", name: "valued", label: "Has a stated value" },
     { kind: "check", name: "nosetaside", label: "Hide US set-asides" },
     { kind: "check", name: "newonly", label: "New (48h) only" },
@@ -107,7 +109,7 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
         <table className="w-full text-sm">
           <thead><tr className="border-b border-line text-left text-[11px] uppercase text-muted">
             <th className="px-3 py-2">Country</th><th className="px-3 py-2">Tender</th><th className="px-3 py-2">Sector</th>
-            <th className="px-3 py-2 text-right">Value</th><th className="px-3 py-2">Deadline</th><th className="px-3 py-2">Decision</th><th className="px-3 py-2 text-right">EV</th><th className="px-3 py-2"></th>
+            <th className="px-3 py-2 text-right">Value</th><th className="px-3 py-2">Deadline</th><th className="px-3 py-2">Decision</th><th className="px-3 py-2">Integrity</th><th className="px-3 py-2 text-right">EV</th><th className="px-3 py-2"></th>
           </tr></thead>
           <tbody>
             {shown.map((r) => (
@@ -121,11 +123,12 @@ export default async function TendersPage({ searchParams }: { searchParams: Prom
                 <td className="px-3 py-2 text-right tabular-nums">{r.v != null ? usd(r.v) : "-"}</td>
                 <td className={`px-3 py-2 whitespace-nowrap ${r.dd != null && r.dd >= 0 && r.dd <= 7 ? "font-semibold text-no" : ""}`}>{r.dl || "-"}{r.dd != null ? <span className="text-xs text-muted"> ({r.dd}d)</span> : null}</td>
                 <td className="px-3 py-2"><span className={`rounded-full px-2 py-0.5 text-xs font-bold ${chip(r.d)}`}>{r.d || "-"}</span></td>
+                <td className="px-3 py-2">{r.if ? <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${r.if === "open" ? "bg-gobg text-go" : r.if === "caution" ? "bg-watchbg text-watch" : "bg-nobg text-no"}`}>{r.if}</span> : <span className="text-xs text-muted">-</span>}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{r.ev != null && r.ev > 0 ? usd(r.ev) : "-"}</td>
                 <td className="px-3 py-2">{r.l && <a href={r.l} target="_blank" className="text-xs font-semibold text-accent hover:underline">Notice</a>}</td>
               </tr>
             ))}
-            {!shown.length && <tr><td colSpan={8} className="px-3 py-8 text-center text-sm text-muted">No tenders match these filters.</td></tr>}
+            {!shown.length && <tr><td colSpan={9} className="px-3 py-8 text-center text-sm text-muted">No tenders match these filters.</td></tr>}
           </tbody>
         </table>
       </div>

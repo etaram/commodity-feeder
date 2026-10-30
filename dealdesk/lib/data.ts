@@ -39,6 +39,10 @@ export const getSources = () => csv("data/leads/status.csv");
 export const getTrends = () => csv("data/leads/price_trends.csv");
 export const getBuyers = () => csv("data/leads/buyers.csv");
 export const getAwards = () => csv("data/leads/awards.csv");
+export const getGrants = () => csv("data/leads/grants.csv");
+export const getExempt = () => csv("data/leads/exempt.csv");
+export const getIlExempt = () => csv("data/leads/il_exempt.csv");
+export const getGovernance = () => csv("data/leads/governance.csv");
 
 export async function getDeal(id: string): Promise<Row | undefined> {
   const deals = await getDeals();

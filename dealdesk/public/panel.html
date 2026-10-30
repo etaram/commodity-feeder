@@ -140,6 +140,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <button role="tab" data-v="tenders" aria-selected="false"><span data-i="tab_tenders">Tenders</span><span class="count" id="c-tenders"></span></button>
       <button role="tab" data-v="companies" aria-selected="false"><span data-i="tab_companies">Companies</span><span class="count" id="c-companies"></span></button>
       <button role="tab" data-v="deals" aria-selected="false"><span data-i="tab_deals">Deals</span><span class="count" id="c-deals"></span></button>
+      <button role="tab" data-v="grants" aria-selected="false"><span data-i="tab_grants">Grants</span><span class="count" id="c-grants"></span></button>
       <button role="tab" data-v="intel" aria-selected="false"><span data-i="tab_intel">Intelligence</span><span class="count" id="c-intel"></span></button>
       <button role="tab" data-v="jobs" aria-selected="false"><span data-i="tab_jobs">Jobs</span><span class="count" id="c-jobs"></span></button>
     </nav>
@@ -217,6 +218,8 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
             <button type="button" id="ds-bd" aria-pressed="true" data-i="ds_bd">Trade opportunities</button>
             <button type="button" id="ds-rep" aria-pressed="false" data-i="ds_rep">Repeat buyers</button>
             <button type="button" id="ds-mkt" aria-pressed="false" data-i="ds_mkt">Market signals</button>
+            <button type="button" id="ds-ex" aria-pressed="false" data-i="ds_ex">No-tender buys</button>
+            <button type="button" id="ds-ilx" aria-pressed="false" data-i="ds_ilx">IL exemption contracts</button>
           </div>
           <input type="search" id="dq" data-ph="dq_ph">
         </div>
@@ -224,6 +227,22 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
         <div class="list" id="dlist"></div>
       </div>
       <aside class="detail" id="ddetail"><div class="empty" data-i="d_pick">Pick an opportunity.</div></aside>
+    </div>
+  </section>
+
+  <section class="view" id="v-grants" hidden>
+    <div class="split">
+      <div>
+        <div class="filters">
+          <input type="search" id="gq" data-ph="gq_ph">
+          <select id="gsource"><option value="" data-i="all_sources">All sources</option></select>
+          <select id="gsector"><option value="" data-i="all_sectors">All sectors</option></select>
+          <label><span data-i="closes_within">Closes within (days)</span> <input type="number" id="gdays" min="0" style="width:64px"></label>
+        </div>
+        <div class="note" id="gscope" style="margin:0 2px 8px"></div>
+        <div class="list" id="glist"></div>
+      </div>
+      <aside class="detail" id="gdetail"><div class="empty" data-i="g_pick">Pick a call.</div></aside>
     </div>
   </section>
 
@@ -292,12 +311,16 @@ const RANGES = {
   tot_s: [SU, "'Panel Search'!D1:E1"],
   pursuits: [LE, "'Pursuits'!A1:V600"],
   jobs: [LE, "'Panel Jobs'!A1:L800"],
+  grants: [LE, "'Grants'!A1:L1500"],
+  exempt: [LE, "'Exempt Buys'!A1:Q4001"],
+  ilex: [LE, "'IL Exemption Contracts'!A1:R3000"],
+  integrity: [LE, "'Integrity'!A1:N300"],
   suppliers: [SU, "'Suppliers'!A1:AJ6001"],
 };
-const OPTIONAL = new Set(["titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming"]);
+const OPTIONAL = new Set(["grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming"]);
 const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
 const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
-const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60 }, he: new Map() };
+const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60, g: 60 }, he: new Map() };
 let mcp = null, sample = null, LANG = "en";
 
 /* ---------- language ---------- */
@@ -371,6 +394,19 @@ const L = {
     dscope_mkt: "Customs import data per product and country: import value, growth and the import unit price against a world benchmark. A high premium means the market pays more than the benchmark, which is room for a trading margin.",
     a_log: "Logistics", jt_logistics: "Logistics options", jt_quote: "Price quote",
     upd_t: "tenders updated {d}", upd_s: "suppliers {d}", upd_note: "Tenders refresh every 4 hours, suppliers twice a day, the BD agent every morning. Refresh reloads the latest data now.",
+    tab_grants: "Grants", gq_ph: "Search: solar, water, Africa, hydrogen...", all_sources: "All sources", closes_within: "Closes within (days)", g_pick: "Pick a call to see who can apply and what it funds.",
+    gscope: "Calls for proposals and incentive programmes from grants.gov, the EU Funding & Tenders portal and Israeli ministries. Two ways to profit: apply with a partner, or supply the winners, who must spend the grant.",
+    e_grants: "No calls yet - the collection runs with the next data refresh.", open_ended: "open", open_call: "Open the call", g_note: "More info asks the worker to check eligibility and what the winners will need to buy.",
+    funder: "Funder", program: "Programme", opens: "Opens", closes: "Closes", eligibility: "Eligibility", status: "Status",
+    ds_ex: "No-tender buys", ds_ilx: "IL exemption contracts", no_tender: "No tender",
+    dscope_ex: "Purchases made without an open tender (exemptions, direct awards). There is no bid to submit, but the buyer is buying now: contact it directly; in Israel an alternative supplier may object within the published window.",
+    dscope_ilx: "Israeli government contracts signed under a tender exemption that are still running (data.gov.il). When one ends the ministry must renew or re-procure - offer an alternative before that date.",
+    e_ex: "No exemption or direct-award notices yet.", e_ilx: "No exemption contracts loaded yet.",
+    notice_t: "Notice type", published: "Published", office: "Ministry / body", supplier_now: "Supplier today", amount_ils: "Value", period: "Contract period", renewal: "Renewal window", clause: "Exemption clause",
+    integrity_t: "Regulation and integrity", ig_open: "open market", ig_caution: "caution", ig_high_risk: "high risk", ig_cc: "Control of corruption", ig_single: "single-bid share", ig_foreign: "foreign wins",
+    ig_adv_open: "Bid on the merits. Questions to the procurement office before the deadline, and market consultation where allowed, are lawful - keep them in writing.",
+    ig_adv_caution: "Workable, but verify before spending: eligibility and local-content rules, who won the last comparable contracts, payment terms. Use local counsel for the contract. Early written contact with the procurement office is lawful and useful.",
+    ig_adv_high_risk: "Few firms bid here and awards repeat to the same suppliers, so a cold bid rarely wins on price alone. Treat it as a market-entry decision: vet a local partner (written agreement, no success fees to anyone with influence), run anti-bribery due diligence. If winning seems to need payments or favours to officials, decline - it is a crime under Israeli Penal Law 291A, the US FCPA and the UK Bribery Act.",
     tab_intel: "Intelligence", iq_ph: "Search: country, commodity, buyer...", all_cats: "All categories", high_only: "High signal only",
     iscope: "Verified market signals published every morning: only official sources (governments, state buyers, development banks, UN, statistics), tier-1 media (Reuters, Bloomberg, FT, Platts, Argus) and industry bodies. Each item links to its source.",
     e_intel: "The intelligence agent publishes its first items this morning; they will appear here.", tier_off: "Official source", tier_1: "Tier-1 media", event: "event",
@@ -463,6 +499,19 @@ const L = {
     dscope_mkt: "נתוני יבוא מהמכס לפי מוצר ומדינה: ערך יבוא, צמיחה ומחיר יבוא ליחידה מול מחיר עולמי. פרמיה גבוהה אומרת שהשוק משלם יותר מהבנצ'מרק, כלומר יש מקום למרווח סחר.",
     a_log: "לוגיסטיקה", jt_logistics: "אפשרויות לוגיסטיקה", jt_quote: "הצעת מחיר",
     upd_t: "מכרזים עודכנו {d}", upd_s: "ספקים {d}", upd_note: "מכרזים מתעדכנים כל 4 שעות, ספקים פעמיים ביום, סוכן ה-BD כל בוקר. רענון טוען עכשיו את הנתונים האחרונים.",
+    tab_grants: "קולות קוראים", gq_ph: "חיפוש: סולארי, מים, אפריקה, מימן...", all_sources: "כל המקורות", closes_within: "נסגר בתוך (ימים)", g_pick: "בחר קול קורא כדי לראות מי יכול להגיש ומה הוא מממן.",
+    gscope: "קולות קוראים ותוכניות תמריצים מ-grants.gov, מפורטל המימון של האיחוד האירופי וממשרדי ממשלה בישראל. שתי דרכים להרוויח: להגיש עם שותף, או לספק לזוכים, שחייבים להוציא את המענק על רכש.",
+    e_grants: "עוד אין קולות קוראים, האיסוף ירוץ בעדכון הנתונים הבא.", open_ended: "פתוח", open_call: "פתח את הקול הקורא", g_note: "מידע נוסף מבקש מהעובד לבדוק זכאות ומה הזוכים יצטרכו לקנות.",
+    funder: "גוף מממן", program: "תוכנית", opens: "נפתח", closes: "נסגר", eligibility: "זכאות", status: "סטטוס",
+    ds_ex: "רכש בלי מכרז", ds_ilx: "התקשרויות בפטור בישראל", no_tender: "ללא מכרז",
+    dscope_ex: "רכש שנעשה בלי מכרז פתוח (פטור, התקשרות ישירה). אין הצעה להגיש, אבל הגוף קונה עכשיו: פנה אליו ישירות. בישראל ספק חלופי יכול להגיש השגה בחלון שפורסם.",
+    dscope_ilx: "התקשרויות ממשלתיות בפטור ממכרז שעדיין בתוקף (data.gov.il). כשהן מסתיימות המשרד חייב לחדש או לצאת להליך - זה הזמן להציע חלופה.",
+    e_ex: "עוד אין הודעות פטור או התקשרות ישירה.", e_ilx: "עוד לא נטענו התקשרויות בפטור.",
+    notice_t: "סוג הודעה", published: "פורסם", office: "משרד / גוף", supplier_now: "הספק היום", amount_ils: "היקף", period: "תקופת ההתקשרות", renewal: "חלון חידוש", clause: "תקנת הפטור",
+    integrity_t: "רגולציה ושקיפות", ig_open: "שוק פתוח", ig_caution: "זהירות", ig_high_risk: "סיכון גבוה", ig_cc: "שליטה בשחיתות", ig_single: "זכייה של מציע יחיד", ig_foreign: "זכיות זרים",
+    ig_adv_open: "להגיש לגופו של עניין. שאלות לגוף הרוכש לפני המועד, והתייעצות שוק היכן שמותר, הן חוקיות - לשמור הכול בכתב.",
+    ig_adv_caution: "אפשרי, אבל לבדוק לפני שמשקיעים: תנאי סף ותוכן מקומי, מי זכה בחוזים דומים, תנאי תשלום. עורך דין מקומי לחוזה. פנייה מוקדמת בכתב לגוף הרוכש חוקית ומועילה.",
+    ig_adv_high_risk: "מעט חברות ניגשות כאן והזכיות חוזרות לאותם ספקים, כך שהצעה קרה כמעט לא זוכה על מחיר. להתייחס לזה כהחלטת כניסה לשוק: לבדוק שותף מקומי (הסכם כתוב, בלי עמלות הצלחה למי שיש לו השפעה), לבצע בדיקת נאותות נגד שוחד. אם נראה שזכייה דורשת תשלום או טובה לעובד ציבור - לוותר. זו עבירה לפי סעיף 291א לחוק העונשין, ה-FCPA האמריקאי וחוק השוחד הבריטי.",
     tab_intel: "מודיעין", iq_ph: "חיפוש: מדינה, סחורה, קונה...", all_cats: "כל הקטגוריות", high_only: "רק אות חזק",
     iscope: "אותות שוק מאומתים שמתפרסמים כל בוקר: רק ממקורות רשמיים (ממשלות, קונים ממלכתיים, בנקי פיתוח, האו\"ם, לשכות סטטיסטיקה), מדיה מהשורה הראשונה (Reuters, Bloomberg, FT, Platts, Argus) וגופי תעשייה. כל פריט מקושר למקור שלו.",
     e_intel: "סוכן המודיעין מפרסם את הפריטים הראשונים הבוקר, והם יופיעו כאן.", tier_off: "מקור רשמי", tier_1: "מדיה מובילה", event: "מועד",
@@ -748,6 +797,15 @@ function flag(c) {
   return `<span class="flag" title="${esc(s)}" aria-label="${esc(s)}">${String.fromCodePoint(...[...a2].map(ch => 127397 + ch.charCodeAt(0)))}</span>`;
 }
 const pick = (o, ks) => Object.fromEntries(ks.filter(k => o[k] !== undefined && o[k] !== "").map(k => [k, o[k]]));
+function integrityHtml(r) {
+  const g = (S.data.integrity || []).find(x => x.country === r.country);
+  if (!g) return "";
+  const cls = g.flag === "open" ? "good" : g.flag === "caution" ? "warn" : "bad";
+  const pc = v => v === "" || v == null ? "-" : Math.round(num(v) * 100) + "%";
+  return `<div class="card"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b>${esc(t("integrity_t"))}</b><span class="pill ${cls}">${esc(t("ig_" + g.flag.replace(" ", "_")))} · ${esc(g.integrity_score)}/100</span></div>
+    <div class="sub" style="margin-top:4px">${esc(t("ig_cc"))} ${esc(g.control_of_corruption || "-")} · ${esc(t("ig_single"))} ${pc(g.single_bid_share)} · ${esc(t("ig_foreign"))} ${pc(g.foreign_win_rate)}</div>
+    <div class="result" dir="auto">${esc(t("ig_adv_" + g.flag.replace(" ", "_")))}</div></div>`;
+}
 function openTender(r, keep) {
   S.sel.t = r; if (S.view !== "tenders") { go("tenders"); renderTenders(); }
   const inP = (S.data.pursuits || []).some(p => p["Opportunity ID"] === r.id);
@@ -756,6 +814,7 @@ function openTender(r, keep) {
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">${decisionPill(r.decision)}${r.new === "NEW" ? `<span class="pill acc">${esc(t("new_"))}</span>` : ""}${daysPill(r.days_left)}<span class="pill">${esc(r.source)}</span></div>
     <h2>${flag(r.country)}${txt(tTitle(r))}</h2>
     ${compHtml(r)}
+    ${integrityHtml(r)}
     <dl class="kv">
       ${he && r.title_en ? `<dt>${esc(t("title_en"))}</dt><dd>${txt(r.title_en)}</dd>` : ""}
       ${r.title_original && r.title_original !== r.title_en && r.title_original !== he ? `<dt>${esc(t("title_orig"))}</dt><dd>${txt(r.title_original)}</dd>` : ""}
@@ -1044,7 +1103,7 @@ async function moreInfo(job, btn, cardSel, force) {
 /* ---------- COMPANIES ---------- */
 function setSeg() {
   $("#cs-sup").setAttribute("aria-pressed", S.compMode === "sup"); $("#cs-acc").setAttribute("aria-pressed", S.compMode === "acc");
-  ["bd", "rep", "mkt"].forEach(m => $("#ds-" + m).setAttribute("aria-pressed", S.dealMode === m));
+  ["bd", "rep", "mkt", "ex", "ilx"].forEach(m => $("#ds-" + m).setAttribute("aria-pressed", S.dealMode === m));
 }
 const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;
 function renderCompanies() {
@@ -1157,6 +1216,16 @@ function renderDeals() {
   const q = $("#dq").value.trim().toLowerCase(); let rows;
   $("#c-deals").textContent = (S.data.bd || []).length || "";
   scopeNote("#dscope", esc(t("dscope_" + S.dealMode)));
+  if (S.dealMode === "ex") {
+    rows = (S.data.exempt || []).filter(r => dealMatch(r) && (!q || Object.values(r).join(" ").toLowerCase().includes(q)));
+    listInto("#dlist", rows, "d", r => `<span class="pill warn">${esc(t("no_tender"))}</span><div style="min-width:0"><div class="t">${flag(r.country)}${txt(tr(r.title_en))}</div><div class="sub">${txt(tr(r.buyer))} · ${esc(r.country)} · ${esc(r.notice_type)}</div></div><div class="right"><span class="num">${money(r.est_value_usd)}</span><span class="sub num">${esc(r.published)}</span></div>`, r => openDeal("ex", r), S.err.exempt ? errText(S.err.exempt, SHEETS) : t("e_ex"), r => r === S.sel.d);
+    return;
+  }
+  if (S.dealMode === "ilx") {
+    rows = (S.data.ilex || []).filter(r => !q || Object.values(r).join(" ").toLowerCase().includes(q));
+    listInto("#dlist", rows, "d", r => `<span class="pill ${r.renewal_window === "next 6 months" ? "bad" : "info"}">${esc(r.end)}</span><div style="min-width:0"><div class="t he" dir="auto">${txt(r.title)}</div><div class="sub he" dir="auto">${txt(r.office)} · ${txt(r.supplier || "-")}</div></div><div class="right"><span class="num">${Number(r.amount || 0).toLocaleString("en-US")} ₪</span><span class="sub">${esc(r.renewal_window)}</span></div>`, r => openDeal("ilx", r), S.err.ilex ? errText(S.err.ilex, SHEETS) : t("e_ilx"), r => r === S.sel.d);
+    return;
+  }
   if (S.dealMode === "bd") {
     rows = BD().filter(r => dealMatch(r) && (!q || Object.values(r).join(" ").toLowerCase().includes(q)));
     listInto("#dlist", rows, "d", r => `${prioPill(r.priority)}<div style="min-width:0"><div class="t">${flag(r.market)}${txt(tr(String(r.opportunity)).slice(0, 180))}</div><div class="sub">${esc(r.market)} · ${esc(r["commodity group"])}</div></div><div class="right"><span class="sub num">${esc(r.date)}</span><span class="pill">${esc(r.status || "new")}</span></div>`, r => openDeal("bd", r), S.err.bd ? errText(S.err.bd, SHEETS) : t("e_bd_all"), r => r === S.sel.d);
@@ -1181,7 +1250,13 @@ async function quickDeal(mode, r) {
 function gotoDeal(mode, r) { S.dealMode = mode; setSeg(); go("deals"); renderDeals(); openDeal(mode, r); }
 function openDeal(mode, r) {
   S.sel.d = r; S.sel.dmode = mode; let head, kv, text;
-  if (mode === "bd") {
+  if (mode === "ex") {
+    head = tr(r.title_en); text = `${r.sector} ${r.title_en}`;
+    kv = [["buyer", tr(r.buyer)], ["country", r.country], ["sector", r.sector], ["est_value", money(r.est_value_usd) || "-"], ["notice_t", r.notice_type], ["access", r.access], ["published", r.published], ["integrity_t", r.integrity_flag ? `${r.integrity_flag} (${r.integrity_score}/100)` : "-"], ["contact", r.contact || "-"], ["notice", link(r.link, t("open_notice")), true]];
+  } else if (mode === "ilx") {
+    head = r.title; text = r.title;
+    kv = [["office", `${r.office} · ${r.unit}`], ["supplier_now", r.supplier || "-"], ["amount_ils", Number(r.amount || 0).toLocaleString("en-US") + " ILS"], ["period", `${r.start} - ${r.end}`], ["renewal", r.renewal_window], ["clause", r.clause], ["published", r.published], ["source", link(r.link, "data.gov.il"), true]];
+  } else if (mode === "bd") {
     head = tr(r.opportunity); text = `${r["commodity group"]} ${r.opportunity}`;
     kv = [["market", r.market], ["commodity", r["commodity group"]], ["why_now", tr(r["why now (evidence)"])], ["demand", tr(r["demand data"])], ["sup_in_db", r["suppliers in DB"]], ["examples", r["example suppliers"]], ["next_step", tr(r["suggested next step"])], ["sources", (r.sources || "").split("|").map(u => link(u.trim(), u.trim().replace(/^https?:\/\//, "").slice(0, 60))).join("<br>"), true]];
   } else if (mode === "rep") {
@@ -1240,6 +1315,29 @@ function renderIntel() {
   mini("#i-grow", grow, r => [`<span class="pill good num">+${esc(Math.round(num(r.growth_pct)))}%</span>`, `<div class="t">${flag(r.country)}${esc(r.product)}</div><div class="sub">${esc(r.country)} · ${money(r.imports_usd)} (${esc(r.year)})</div>`, ``], r => gotoDeal("mkt", r), t("e_mkt"));
 }
 
+/* ---------- GRANTS: calls for proposals and incentive programmes ---------- */
+function renderGrants() {
+  const all = (S.data.grants || []).filter(g => g.title);
+  fillSelect($("#gsource"), all.map(g => g.source)); fillSelect($("#gsector"), all.map(g => g.sector));
+  $("#c-grants").textContent = all.length || "";
+  const q = $("#gq").value.trim().toLowerCase(), src = $("#gsource").value, sec = $("#gsector").value, wd = num($("#gdays").value);
+  const rows = all.filter(g => (!src || g.source === src) && (!sec || g.sector === sec) && (!q || Object.values(g).join(" ").toLowerCase().includes(q))
+    && (!isFinite(wd) || !wd || (g.closes && daysBetween(today(), g.closes) >= 0 && daysBetween(today(), g.closes) <= wd)))
+    .sort((a, b) => String(a.closes || "9999").localeCompare(String(b.closes || "9999")));
+  scopeNote("#gscope", esc(t("gscope")));
+  listInto("#glist", rows, "g", g => `<span class="pill ${/open|posted/.test(g.status) ? "good" : "warn"}">${esc(g.status)}</span><div style="min-width:0"><div class="t">${txt(tr(g.title))}</div><div class="sub">${esc(g.funder)} · ${esc(g.source)} · ${esc(g.sector)}</div></div><div class="right"><span class="sub num">${esc(g.closes || t("open_ended"))}</span></div>`,
+    g => openGrant(g), S.err.grants ? errText(S.err.grants, SHEETS) : t("e_grants"), g => g === S.sel.g);
+}
+function openGrant(g) {
+  S.sel.g = g;
+  $("#gdetail").innerHTML = `<h2>${txt(tr(g.title))}</h2><dl class="kv">${kvRows([["funder", g.funder], ["source", g.source], ["program", g.program || "-"], ["region", g.region], ["sector", g.sector], ["status", g.status], ["opens", g.opens || "-"], ["closes", g.closes || "-"], ["eligibility", g.eligibility], ["notice", link(g.link, t("open_call")), true]])}</dl>
+    <div class="actions"><button class="primary" type="button" id="g-deep">${esc(t("more_info"))}</button><button type="button" id="g-sup">${esc(t("a_sup"))}</button></div>
+    <div class="note">${esc(t("g_note"))}</div>
+    <div id="more-g" data-jobcard="${esc("G:" + g.id)}">${cardHtml("G:" + g.id)}</div><div id="more-g-flash"></div><div id="g-out"></div>`;
+  $("#g-deep").onclick = e => moreInfo({ type: "deal_research", target_id: "G:" + g.id, target: "Call: " + String(g.title).slice(0, 180), context: g, request: "Is Sinder (Israeli procurement and trading firm) or a partner eligible? What would the winners need to buy, and how could Sinder supply it? Deadlines and required documents." }, e.currentTarget, "#more-g");
+  $("#g-sup").onclick = () => showSuppliers(g.sector === "Other" ? "" : g.sector, g.title, "#g-out", { kind: "deal", r: g });
+}
+
 /* ---------- JOBS ---------- */
 const statusPill = s => s === "done" ? `<span class="pill good">${esc(t("ready"))}</span>` : s === "running" ? `<span class="pill info">${esc(t("running"))}</span>` : s === "queued" ? `<span class="pill warn">${esc(t("queued"))}</span>` : s === "error" ? `<span class="pill bad">${esc(t("error"))}</span>` : `<span class="pill">${esc(s)}</span>`;
 function renderJobsCount() { const n = (S.data.jobs || []).filter(j => j.status === "queued" || j.status === "running").length; $("#c-jobs").textContent = n ? n : ""; }
@@ -1254,7 +1352,7 @@ function renderJobs(openId) {
 }
 
 /* ---------- navigation and wiring ---------- */
-const VIEWS = ["today", "tenders", "companies", "deals", "intel", "jobs"];
+const VIEWS = ["today", "tenders", "companies", "deals", "grants", "intel", "jobs"];
 function go(v) {
   S.view = v; document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v));
   document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== "v-" + v);
@@ -1262,16 +1360,17 @@ function go(v) {
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
 }
 function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => { go(b.dataset.goto); renderJobs(); }); }
-function renderAll() { renderStatus(); renderToday(); renderTenders(); renderCompanies(); renderDeals(); renderIntel(); renderJobs(); wireGoto(document); }
+function renderAll() { renderStatus(); renderToday(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderJobs(); wireGoto(document); }
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
 ["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
 ["#cq", "#cregion", "#ccountry", "#csector", "#crole", "#ccontact", "#ctier"].forEach(s => $(s).addEventListener("input", () => { S.limit.c = 60; renderCompanies(); }));
 $("#dq").addEventListener("input", () => { S.limit.d = 60; renderDeals(); });
+["#gq", "#gsource", "#gsector", "#gdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.g = 60; renderGrants(); }));
 ["#iq", "#icat", "#iregion", "#ihigh"].forEach(s_ => $(s_).addEventListener("input", renderIntel));
 $("#cs-sup").onclick = () => { S.compMode = "sup"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
 $("#cs-acc").onclick = () => { S.compMode = "acc"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
-["bd", "rep", "mkt"].forEach(m => $("#ds-" + m).onclick = () => { S.dealMode = m; setSeg(); S.limit.d = 60; renderDeals(); });
+["bd", "rep", "mkt", "ex", "ilx"].forEach(m => $("#ds-" + m).onclick = () => { S.dealMode = m; setSeg(); S.limit.d = 60; renderDeals(); });
 ["t", "c", "d"].forEach(k => $("#ask-" + k).addEventListener("submit", e => { e.preventDefault(); askSubmit(k); }));
 $("#tq").addEventListener("input", () => { if (S.nl.t) { S.nl.t = null; $("#nl-t").hidden = true; } });
 $("#cq").addEventListener("input", () => { if (S.nl.c) { S.nl.c = null; $("#nl-c").hidden = true; } });

@@ -76,7 +76,18 @@ const toRe = (p: string) => {
   try { return new RegExp(p.replace(/\\x\{([0-9a-fA-F]+)\}/g, "\\u{$1}"), "iu"); } catch { return null; }
 };
 
+const PUBLIC_CSV: Record<string, string> = { grants: "leads/grants.csv", exempt: "leads/exempt.csv", ilex: "leads/il_exempt.csv", integrity: "leads/governance.csv" };
+
+async function csvGrid(path: string): Promise<Grid> {
+  return cached(`csv-${path}`, 600_000, async () => {
+    const r = await fetch(`${RAW}/${path}`, { cache: "no-store" });
+    if (!r.ok) return [];
+    return (Papa.parse<string[]>(await r.text(), { skipEmptyLines: true }).data || []) as Grid;
+  });
+}
+
 export async function getRange(key: string): Promise<Grid> {
+  if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);
   if (["tenders", "titles", "repeat", "markets", "meta", "upcoming", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
   if (["bd", "accounts", "intel", "pursuits", "jobs", "stats"].includes(key)) return ((await snapshot("live"))[key] as Grid) || [];
   if (key === "suppliers") return [SUP_HEAD, ...(await allSuppliers()).slice(0, 6000).map(supRow)];

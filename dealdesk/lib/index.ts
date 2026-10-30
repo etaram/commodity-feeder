@@ -7,7 +7,7 @@ const TTL_MS = 15 * 60 * 1000;
 export type Tender = {
   id: string; c: string; rg: string; s: string; g: string; t: string; b: string; v: number | null; dl: string;
   dd: number | null; d: string; ev: number | null; sc: number | null; src: string; st: string; l: string; n: number;
-  acc: string; rt: string;
+  acc: string; rt: string; ig?: number | null; if?: string;
 };
 export type Supplier = {
   q?: number; n: string; c?: string; rg?: string; tr?: string; s?: string; s2?: string; ty?: string; td?: string;

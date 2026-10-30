@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getDeal, getPress, getAwards, num, usd, pct, ROUTE_LABEL } from "@/lib/data";
+import { getDeal, getPress, getAwards, getGovernance, num, usd, pct, ROUTE_LABEL, type Row } from "@/lib/data";
 import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
 import BottomLine from "@/components/BottomLine";
@@ -7,6 +7,32 @@ import { verdict } from "@/lib/verdict";
 import { tenders } from "@/lib/index";
 
 export const revalidate = 900;
+
+const IG_CHIP: Record<string, string> = { open: "bg-gobg text-go", caution: "bg-watchbg text-watch", "high risk": "bg-nobg text-no" };
+
+function Advisor({ flag, score, note, gov }: { flag?: string; score?: string; note?: string; gov?: Row }) {
+  const f = flag || gov?.flag || "";
+  return (
+    <section className="rounded-xl border border-line bg-white p-5 shadow-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-muted">Regulation and integrity advisor</h2>
+        {f ? <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${IG_CHIP[f] || "bg-paper text-muted"}`}>{f}{score || gov?.integrity_score ? ` · ${score || gov?.integrity_score}/100` : ""}</span> : null}
+      </div>
+      {f ? (
+        <>
+          <p className="mt-2 text-sm leading-6">{note || gov?.advice}</p>
+          {gov && <div className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-muted md:grid-cols-4">
+            <div>Control of corruption: <b className="text-ink">{gov.control_of_corruption || "-"}</b></div>
+            <div>Rule of law: <b className="text-ink">{gov.rule_of_law || "-"}</b></div>
+            <div>Single-bid share: <b className="text-ink">{gov.single_bid_share ? `${Math.round(num(gov.single_bid_share) * 100)}%` : "-"}</b></div>
+            <div>Foreign wins: <b className="text-ink">{gov.foreign_win_rate ? `${Math.round(num(gov.foreign_win_rate) * 100)}%` : "-"}</b></div>
+          </div>}
+          <p className="mt-2 text-xs text-muted">Early, documented contact with the procurement office is lawful and recommended. Payments or favours to officials are never an option (Israeli Penal Law 291A, US FCPA, UK Bribery Act). <a href="/integrity" className="font-semibold text-accent hover:underline">All countries</a></p>
+        </>
+      ) : <p className="mt-2 text-sm text-muted">No governance or award data for this country yet.</p>}
+    </section>
+  );
+}
 
 function Fact({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
@@ -19,9 +45,10 @@ function Fact({ label, value, strong }: { label: string; value: string; strong?:
 
 export default async function DealPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const deal = await getDeal(decodeURIComponent(id));
+  const [deal, govAll] = await Promise.all([getDeal(decodeURIComponent(id)), getGovernance()]);
   if (!deal) {
     const t = (await tenders()).find((r) => r.id === decodeURIComponent(id));
+    const gv = t ? govAll.find((g) => g.country === t.c) : undefined;
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2 text-xs text-muted"><Link href="/tenders" className="font-semibold text-accent hover:underline">Tenders</Link><span>/</span><span>{decodeURIComponent(id)}</span></div>
@@ -33,6 +60,9 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
             <p className="mt-3 text-sm text-muted">This notice is outside the top 8,000 deals, so it has no full deal file. Open the official notice for the details.</p>
             {t.l && <a href={t.l} target="_blank" className="mt-3 inline-block rounded-full bg-accent px-3 py-1 text-xs font-bold text-white">Open the official notice</a>}
           </div>
+        ) : null}
+        {t ? (
+          <Advisor gov={gv} />
         ) : (
           <div className="rounded-xl border border-line bg-white p-8 text-sm text-muted">This notice has closed or is no longer in the data. <Link href="/tenders" className="text-accent font-semibold">Back to search</Link></div>
         )}
@@ -64,6 +94,8 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
       </div>
 
       <BottomLine v={verdict(deal)} />
+
+      <Advisor flag={deal.integrity_flag} score={deal.integrity_score} note={deal.integrity_note} gov={govAll.find((g) => g.country === deal.country)} />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Fact label="Expected value" value={usd(num(deal.ev_usd))} strong />
