@@ -1,17 +1,4 @@
-
-Running kernel seems to be up-to-date.
-
-No services need to be restarted.
-
-No containers need to be restarted.
-
-No user sessions are running outdated binaries.
-
-No VM guests are running outdated hypervisor (qemu) binaries on this host.
-Installing Installing browsers...
-Installing Installing browsers dependencies...
-[2026-10-30 20:59:18] INFO: Fetched (200) <GET https://myprocurement.treasury.gov.my/advertisements/tender> (referer: https://www.google.com/)
-CTX  daripada </span> <span class="sm:hidden">/</span> </div> <a href="https://myprocurement.treasury.gov.my/procurements/fetch?type=advertisements&amp;category=tender&amp;itemsPerPage=10&amp;page=98" class="flex items-center p-3 aspect-square"> 98 </a> <a href="https://myprocurement.treasury.gov.my/procurements/fetch?type=advertisements&amp;category=tender&amp;itemsPerPage=10&amp;page=2" class="flex items-center p-3 aspect-square"> <i class="fa-solid fa-chevron-right"></i> </a> </form> </div> </div></div> </div> </div> </div> <script> function procurements() { return { ids: [], selected: [], truncated: true,  
-
-WIRE []
-XDATA ['x-on:click="window.scrollTo({ top: 0, behavior: \'smooth\' });"', 'x-on:click="menu = true"', 'x-on:click="menu = false"', 'x-on:click="setGreyscale()"', 'x-on:click="increaseFont()"', 'x-on:click="decreaseFont()"', 'x-on:click="resetFont()"', 'x-on:click="menu = !menu"']
+### 10 200 application/json 59080
+{"html":"<div>\n            <div x-data=\"{ selected: false, open: true }\" \n        x-on:clear-selection.window=\"selected = false\"\n        class=\"flex flex-col sm:flex-row gap-4 p-4 mt-4 shadow-md bg-background border-2 rounded-xl border-gray-200\">\n        <div class=\"flex\">\n            <button x-on:click=\"selected = !selected; $dispatch('select-procurement', { id: 832217 })\"\n                x-on:select-all.window=\"selected = true; $dispatch('select-procurement', { id: 832217, all: true })\"\n                x-bind:class=\"selected ? 'bg-primary' : 'bg-white'\"\n                class=\"relative w-6 h-6 aspect-square rounded-md border-2 border-gray-200 hover:border-blue-300 duration-100 transition-colors\">\n                <i  x-show=\"selected\" \n                    class=\"absolute top-1\/2 left-1\/2 transform -translate-x-1\/2 -translate-y-1\/2 fa-solid fa-check text-white\"><\/i>\n            <\/button>\n            <button class=\"flex-grow flex justify-end md:hidden\" x-on:click=\"open = !open\" type=\"button\">\n                <i class=\"fa-solid fa-chevron-down\" x-show=\"open\"><\/i>\n                <i class=\"fa-solid fa-chevron-up\" x-show=\"!open\"><\/
+### 100 200 application/json 680342
+{"html":"<div>\n            <div x-data=\"{ selected: false, open: true }\" \n        x-on:clear-selection.window=\"selected = false\"\n        class=\"flex flex-col sm:flex-row gap-4 p-4 mt-4 shadow-md bg-background border-2 rounded-xl border-gray-200\">\n        <div class=\"flex\">\n            <button x-on:click=\"selected = !selected; $dispatch('select-procurement', { id: 830244 })\"\n                x-on:select-all.window=\"selected = true; $dispatch('select-procurement', { id: 830244, all: true })\"\n                x-bind:class=\"selected ? 'bg-primary' : 'bg-white'\"\n                class=\"relative w-6 h-6 aspect-square rounded-md border-2 border-gray-200 hover:border-blue-300 duration-100 transition-colors\">\n                <i  x-show=\"selected\" \n                    class=\"absolute top-1\/2 left-1\/2 transform -translate-x-1\/2 -translate-y-1\/2 fa-solid fa-check text-white\"><\/i>\n            <\/button>\n            <button class=\"flex-grow flex justify-end md:hidden\" x-on:click=\"open = !open\" type=\"button\">\n                <i class=\"fa-solid fa-chevron-down\" x-show=\"open\"><\/i>\n                <i class=\"fa-solid fa-chevron-up\" x-show=\"!open\"><\/
