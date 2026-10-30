@@ -5,6 +5,7 @@ import csv
 import datetime as dt
 import io
 import json
+import logging
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -96,5 +97,5 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO) if (logging := __import__("logging")) else None
+    logging.basicConfig(level=logging.INFO)
     main()
