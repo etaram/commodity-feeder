@@ -33,6 +33,13 @@ SECTOR = [("Energy, fuels & utilities", r"energy|solar|power|grid|electric|renew
           ("Industrial & construction machinery", r"manufactur|industr|equipment|machinery")]
 
 
+DOMESTIC = re.compile(r"crime|violen|justice|police|tribal|indian|native american|k-12|school|student|youth|"
+                      r"housing|homeless|veteran|opioid|substance|mental|juvenile|museum|librar|arts|humanities|"
+                      r"historic|appalach|rural community|faith|child|elder|aging|disabilit|prison|court", re.I)
+ABROAD = re.compile(r"international|global|foreign|africa|asia|latin america|middle east|israel|overseas|export|"
+                    r"usaid|development|humanitarian|bilateral", re.I)
+
+
 def _sector(text):
     return next((n for n, rx in SECTOR if re.search(rx, text, re.I)), "Other")
 
@@ -59,6 +66,8 @@ def grants_gov(s):
                     continue
                 seen.add(h["id"])
                 title = clean(h.get("title") or "", 250)
+                if DOMESTIC.search(title) or _sector(title) == "Other" and not ABROAD.search(title):
+                    continue  # US domestic social programmes and topics Sinder cannot supply
                 out.append({
                     "source": "grants.gov (US)", "program": h.get("number", ""), "title": title,
                     "funder": clean(h.get("agency") or h.get("agencyCode") or "", 120), "region": "United States / worldwide",

@@ -37,12 +37,15 @@ def _amt(s):
         return 0.0
 
 
-def fetch(page=32000):
+def fetch(page=5000):
     s, t = session(), today()
     rows, offset, total = [], 0, None
     while total is None or offset < total:
         try:
             r = s.get(API, params={"resource_id": RESOURCE, "limit": page, "offset": offset}, timeout=180)
+            if r.status_code != 200 or not r.text.lstrip().startswith("{"):
+                log.warning("IL exemptions offset %d: HTTP %s %s", offset, r.status_code, r.text[:160].replace("\n", " "))
+                break
             j = r.json()["result"]
         except Exception as e:  # noqa: BLE001
             log.warning("IL exemptions offset %d: %s", offset, str(e)[:160]); break

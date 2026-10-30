@@ -13,7 +13,8 @@ g = list(csv.DictReader(open("data/leads/grants.csv", encoding="utf-8")))
 for r in g[:6]:
     print("  ", r["source"], "|", r["closes"], "|", r["title"][:80])
 print("IL_EXEMPT", il_exemptions.fetch()[1])
-e = list(csv.DictReader(open("data/leads/il_exempt.csv", encoding="utf-8")))
+import os  # noqa: E402
+e = list(csv.DictReader(open("data/leads/il_exempt.csv", encoding="utf-8"))) if os.path.exists("data/leads/il_exempt.csv") else []
 for r in e[:6]:
     print("  ", r["renewal_window"], "|", r["office"][:30], "|", r["title"][:50], "|", r["supplier"][:30], "|", r["amount"], "|", r["end"])
 run.merge_awards()
