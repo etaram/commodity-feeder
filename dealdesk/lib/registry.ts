@@ -1,5 +1,5 @@
 import { logEvent } from "@/lib/log";
-import { sanctionsFacts } from "@/lib/sanctions";
+import { sanctionsFacts, norm } from "@/lib/sanctions";
 // Verified registry checks for the business-intelligence report. Official open data only.
 // Israel: data.gov.il (Registrar of Companies, Official Receiver liquidation file).
 // UK: Companies House API, only if COMPANIES_HOUSE_KEY is set (free key from Companies House).
@@ -91,6 +91,24 @@ async function czech(name: string): Promise<string[]> {
   return ["Czech ARES register (best matches by name, verify):", ...rs.map((r: any) => `- ${r.obchodniJmeno}, IC ${r.ico}, ${r.sidlo?.textovaAdresa || ""}, founded ${r.datumVzniku || "n/a"}.`)];
 }
 
+// US listed companies: SEC EDGAR (no key; the SEC asks for a contact in the User-Agent).
+const SEC_UA = { headers: { "User-Agent": "Sinder Deal Desk research etamar.ramot@gmail.com", Accept: "application/json" } };
+let secTickers: { at: number; rows: { cik: number; title: string; ticker: string; n: string }[] } | null = null;
+async function edgar(name: string): Promise<string[]> {
+  if (!secTickers || Date.now() - secTickers.at > 24 * 3600_000) {
+    const d = await j("https://www.sec.gov/files/company_tickers.json", SEC_UA);
+    secTickers = { at: Date.now(), rows: Object.values(d).map((x: any) => ({ cik: x.cik_str, title: x.title, ticker: x.ticker, n: norm(x.title).replace(/\b(inc|corp|corporation|co|company|ltd|plc|holdings|group|the)\b/g, "").replace(/\s+/g, " ").trim() })) };
+  }
+  const q = norm(name).replace(/\b(inc|corp|corporation|co|company|ltd|plc|holdings|group|the)\b/g, "").replace(/\s+/g, " ").trim();
+  if (q.length < 3) return [];
+  const hit = secTickers.rows.find((r) => r.n === q) || secTickers.rows.find((r) => r.n.startsWith(q + " ") || q.startsWith(r.n + " "));
+  if (!hit) return ["SEC EDGAR: no listed US company with this name (private and non-US companies are not in EDGAR)."];
+  const sub = await j(`https://data.sec.gov/submissions/CIK${String(hit.cik).padStart(10, "0")}.json`, SEC_UA);
+  const f = sub.filings?.recent || {};
+  const i10 = (f.form || []).findIndex((x: string) => x === "10-K" || x === "20-F" || x === "40-F");
+  return [`SEC EDGAR, name match (verify): ${sub.name}, ticker ${hit.ticker}, CIK ${hit.cik}, SIC ${sub.sic} ${sub.sicDescription || ""}, state of incorporation ${sub.stateOfIncorporation || "n/a"}, fiscal year end ${sub.fiscalYearEnd || "n/a"}; former names: ${(sub.formerNames || []).map((x: any) => x.name).slice(0, 3).join("; ") || "none"}; latest annual report: ${i10 >= 0 ? `${f.form[i10]} filed ${f.filingDate[i10]}` : "n/a"}. Filings: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${hit.cik}`];
+}
+
 export async function registryFacts(name: string, country: string, legalId: string): Promise<string> {
   const c = (country || "").toLowerCase();
   const jobs: Promise<string[]>[] = [];
@@ -99,6 +117,7 @@ export async function registryFacts(name: string, country: string, legalId: stri
   if (name) {
     jobs.push(gleif(name));
     jobs.push(sanctionsFacts(name).then((x) => (x ? [x] : [])));
+    if (isC(c, "united states", "usa", "us", "united states of america")) jobs.push(edgar(name));
     if (isC(c, "norway", "nor", "no")) jobs.push(norway(name));
     if (isC(c, "france", "fra", "fr")) jobs.push(france(name));
     if (isC(c, "finland", "fin", "fi")) jobs.push(finland(name));
