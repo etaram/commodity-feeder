@@ -14,25 +14,25 @@ jobs:
           : > data/leads/probe.txt
           while read -r name url; do
             code=$(curl -s -m 25 -L -o /tmp/o -w '%{http_code} %{size_download}' -A "$UA" "$url" || echo "ERR")
-            echo "$name | $code | $(head -c 90 /tmp/o | tr '\n\r' '  ')" >> data/leads/probe.txt
+            echo "$name | $code | $(head -c 700 /tmp/o | tr '\n\r' '  ')" >> data/leads/probe.txt
           done <<'LIST'
-          simap https://www.simap.ch/api/publications/v2/project/project-search?processTypes=tender&orderAddressCantons=&lang=en&pageSize=3
-          simap2 https://www.simap.ch/api/publications/v2/project/project-search?pageSize=3
-          gets_rss https://www.gets.govt.nz/rss/rss.xml
-          gets_ext https://www.gets.govt.nz/ExternalIndex.htm
-          edgar_tickers https://www.sec.gov/files/company_tickers.json
-          edgar_search https://efts.sec.gov/LatestSearch/rest/search-index?q=%22Boeing%22&forms=10-K
-          chile https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?estado=activas&ticket=F8537A18-6766-4DEF-9E59-426B4FEE2844
-          comprasgov_lic https://dadosabertos.compras.gov.br/modulo-legado/1_consultarLicitacao?pagina=1&tamanhoPagina=10&data_publicacao_inicial=2026-10-01&data_publicacao_final=2026-10-30
-          korea https://www.g2b.go.kr/
-          india https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page
-          doffin https://betaapi.doffin.no/public/v2/search?searchString=steel&numHitsPerPage=2
-          boamp https://boamp-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/boamp/records?limit=2
-          ted_v3 https://api.ted.europa.eu/v3/notices/search
-          uk_sanc https://sanctionslist.fcdo.gov.uk/docs/UK-Sanctions-List.csv
-          uk_sanc2 https://assets.publishing.service.gov.uk/media/UK-Sanctions-List.xml
-          canada_sanc https://www.international.gc.ca/world-monde/assets/office_docs/international_relations-relations_internationales/sanctions/sema-lmes.xml
-          swiss_sanc https://www.sesam.search.admin.ch/sesam-search-web/pages/search.xhtml
+          simap_a https://www.simap.ch/api/publications/v2/project/project-search?lang=en&processTypes=tender&pageSize=3
+          simap_b https://www.simap.ch/api/publications/v2/project/project-search?lang=en&pubTypes=tender&pageSize=3
+          simap_c https://www.simap.ch/api/publications/v2/project/project-search?pageSize=3&lang=de&search=
+          simap_d https://www.simap.ch/api/publications/v1/publication/search
+          gets_list https://www.gets.govt.nz/ExternalIndex.htm
+          cppp https://eprocure.gov.in/eprocure/app?page=FrontEndLatestActiveTenders&service=page
+          cg_a https://dadosabertos.compras.gov.br/modulo-contratacoes/1_consultarContratacoes_PNCP_14133?pagina=1&tamanhoPagina=10&dataPublicacaoPncpInicial=2026-10-20&dataPublicacaoPncpFinal=2026-10-30&codigoModalidade=8
+          cg_b https://dadosabertos.compras.gov.br/modulo-contratacoes/2_consultarItensContratacoes_PNCP_14133?pagina=1&tamanhoPagina=10&dataInclusaoPncpInicial=2026-10-25&dataInclusaoPncpFinal=2026-10-30
+          comprasmx https://comprasmx.buengobierno.gob.mx/sitiopublico/
+          nz_gets_atom https://www.gets.govt.nz/Rss.htm
+          sg_gebiz https://www.gebiz.gov.sg/
+          ph_philgeps https://notices.philgeps.gov.ph/
+          bd_cptu https://eprocure.gov.bd/
+          ke_open https://tenders.go.ke/api/tenders?per_page=2
+          rs_javne https://jnportal.ujn.gov.rs/
+          mk_esjn https://e-nabavki.gov.mk/
+          ge_spa https://tenders.procurement.gov.ge/
           LIST
           cat data/leads/probe.txt
       - name: commit
