@@ -40,7 +40,9 @@ const UNIVERSE = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";
 export async function lookupContact(name: string, country: string): Promise<Record<string, string> | null> {
   const jwt = await client();
   if (!jwt || !name) return null;
-  const lit = (v: string) => (v.includes("'") ? `"${v.replace(/"/g, "")}"` : `'${v}'`);
+  if (name.length > 200 || country.length > 80) return null;
+  const clean = (v: string) => v.replace(/[\\\r\n\t]/g, " ");
+  const lit = (v: string) => (clean(v).includes("'") ? `"${clean(v).replace(/"/g, "")}"` : `'${clean(v)}'`);
   const tq = `select B,C,AA,AB,AC,AD,AE,AF where B = ${lit(name)}${country ? ` and C = ${lit(country)}` : ""} limit 1`;
   const { token } = await jwt.getAccessToken();
   const url = `https://docs.google.com/spreadsheets/d/${UNIVERSE}/gviz/tq?sheet=Suppliers&tqx=out:json&tq=${encodeURIComponent(tq)}`;
@@ -58,11 +60,13 @@ export async function appendRow(tab: string, row: (string | number)[]) {
   return append(tab, row);
 }
 
+// RAW: a cell typed by a user is stored as text and never evaluated as a formula (=, +, -, @ at the start are harmless).
 async function append(tab: string, row: (string | number)[]) {
+  if (row.length > 40) row = row.slice(0, 40);
   const jwt = await client();
   if (!jwt) throw new Error("Sheets is not configured");
   const range = encodeURIComponent(`'${tab}'!A1`);
-  const url = `${API}/${SHEET}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const url = `${API}/${SHEET}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
   try {
     await call(jwt, "POST", url, { values: [row] });
   } catch (e: unknown) {
@@ -83,4 +87,15 @@ export async function queueJob(type: string, targetId: string, target: string, c
   const jobId = `WEB-${Date.now().toString(36).toUpperCase()}`;
   await append("Panel Jobs", [jobId, now(), type, targetId, target.slice(0, 200), context.slice(0, 1500), request.slice(0, 1000), "queued", "", "", now(), `from ${email}`]);
   return jobId;
+}
+
+// Research runs already logged today (UTC) in the 'Panel Jobs' tab: a limit shared by every server instance, unlike a counter in memory.
+let jt: { at: number; n: number } | null = null;
+export async function jobsToday(): Promise<number> {
+  if (jt && Date.now() - jt.at < 20_000) return jt.n;
+  const v = (await readRanges(SHEET, ["'Panel Jobs'!B2:B5000"]))?.[0] || [];
+  const d = new Date().toISOString().slice(0, 10);
+  const n = v.filter((r) => String(r[0] || "").startsWith(d)).length;
+  jt = { at: Date.now(), n };
+  return n;
 }

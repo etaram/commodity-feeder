@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
 import { claude } from "@/lib/anthropic";
-import { appendRow, sheetsEnabled } from "@/lib/sheets";
+import { appendRow, jobsToday, sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
 import { registryFacts } from "@/lib/registry";
 
@@ -45,6 +45,11 @@ export async function POST(req: NextRequest) {
   if (today !== day) { day = today; used = 0; }
   if (used >= DAILY_LIMIT) return NextResponse.json({ ok: false, error: "Daily research limit reached. It resets at midnight UTC." }, { status: 429 });
   used++;
+  // Shared limit: runs already written to the sheet today count too, whichever server instance ran them.
+  if (sheetsEnabled()) {
+    const n = await jobsToday().catch(() => 0);
+    if (n >= DAILY_LIMIT) return NextResponse.json({ ok: false, error: "Daily research limit reached. It resets at midnight UTC." }, { status: 429 });
+  }
 
   const he = lang === "he";
   let verified = "";

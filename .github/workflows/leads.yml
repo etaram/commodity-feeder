@@ -278,7 +278,11 @@ jobs:
         run: set -o pipefail; python -m leads.webpanel static live 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
+      - name: health
+        if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
+        run: set -o pipefail; python -m leads.health 2>&1 | tee -a data/leads/run.log
       - name: commit
+        if: ${{ always() }}
         run: |
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"

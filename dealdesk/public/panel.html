@@ -401,7 +401,7 @@ const L = {
     sup_h: "Matching suppliers from the database", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
     e_sup_match: "No matching suppliers in the loaded set. Send a supplier search to the worker.", draft_sel: "Draft outreach to selected", deep_sup: "Deep supplier search on the web",
     tick_one: "Tick at least one supplier with an e-mail address.", sup_not_loaded: "The supplier database has not loaded yet.", select: "Select",
-    out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft...", create_draft: "Create Gmail draft", rewrite: "Rewrite",
+    out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft...", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite",
     draft_note: "The draft is saved in your Gmail and not sent. With several recipients, each gets a separate draft.", hand_write: "Automatic drafting works inside Claude. You can write here by hand.",
     add_email: "Add at least one e-mail address.", open_draft: "open draft", unclear_draft: "unclear whether it was created, check Gmail before trying again", drafts: "Gmail drafts:",
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
@@ -507,7 +507,7 @@ const L = {
     sup_h: "ספקים מתאימים מהמאגר", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
     e_sup_match: "לא נמצאו ספקים מתאימים בטעינה הנוכחית. שלח איתור ספקים לעובד.", draft_sel: "נסח פנייה לספקים המסומנים", deep_sup: "איתור ספקים מעמיק ברשת",
     tick_one: "סמן לפחות ספק אחד עם כתובת מייל.", sup_not_loaded: "מאגר הספקים עוד לא נטען.", select: "בחר",
-    out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה...", create_draft: "צור טיוטה ב-Gmail", rewrite: "נסח מחדש",
+    out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה...", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש",
     draft_note: "הטיוטה נשמרת ב-Gmail שלך ולא נשלחת. אם יש כמה נמענים, נוצרת טיוטה נפרדת לכל אחד.", hand_write: "ניסוח אוטומטי זמין בתוך Claude. אפשר לכתוב כאן ידנית.",
     add_email: "הוסף לפחות כתובת מייל אחת.", open_draft: "פתח טיוטה", unclear_draft: "לא ברור אם נוצרה, בדוק ב-Gmail לפני שתנסה שוב", drafts: "טיוטות ב-Gmail:",
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
@@ -1061,8 +1061,8 @@ async function compose({ kind, ctx, to }, outSel) {
     <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
     <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
     <div class="field"><label for="m-body">${esc(t("body"))}</label><textarea id="m-body" dir="auto">${esc(t("writing"))}</textarea></div>
-    <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t("create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
-    <div class="note">${esc(t("draft_note"))}</div><div id="m-flash"></div></div>`;
+    <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
+    <div class="note">${esc(t(window.DD_INSTANT ? "web_note" : "draft_note"))}</div><div id="m-flash"></div></div>`;
   if (!recips.some(x => x.email) && window.DD_INSTANT && (ctx?.find || recips[0]?.name)) {
     const subj = ctx?.find?.subject || recips[0].name, fctx = ctx?.find?.ctx || {}, fcty = ctx?.find?.country || "";
     $("#m-flash").innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("fc_auto"))}</div>`;
@@ -1087,6 +1087,12 @@ Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", 
   $("#m-draft").onclick = async e => {
     const btn = e.currentTarget, list = $("#m-to").value.split(/[,;\s]+/).filter(x => /@/.test(x));
     if (!list.length) { $("#m-flash").innerHTML = `<div class="flash err">${esc(t("add_email"))}</div>`; return; }
+    if (window.DD_INSTANT) {
+      const subj = $("#m-sub").value, body = $("#m-body").value;
+      try { await navigator.clipboard.writeText(subj + "\n\n" + body); } catch (e) {}
+      window.location.href = "mailto:" + list.map(encodeURIComponent).join(",") + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+      return;
+    }
     btn.disabled = true; const done = [];
     for (const addr of list) {
       try { const r = await mcp.callTool(GMAIL, "create_draft", { to: [addr], subject: $("#m-sub").value, body: $("#m-body").value }); const p = r.payload || {}; done.push(`${esc(addr)} ${p.viewUrl ? link(p.viewUrl, t("open_draft")) : ""}`); }

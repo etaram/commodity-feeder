@@ -724,6 +724,7 @@ def main():
             run_source(a.source)
         if a.merge:
             merge()
+            (LEADS / "error_merge.txt").unlink(missing_ok=True)  # a successful merge clears an old failure
     except Exception:  # noqa: BLE001
         LEADS.mkdir(parents=True, exist_ok=True)
         (LEADS / f"error_{a.source or 'merge'}.txt").write_text(traceback.format_exc())

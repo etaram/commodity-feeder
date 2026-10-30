@@ -82,8 +82,12 @@ async function allTenders(): Promise<{ head: string[]; rows: Record<string, stri
 }
 
 const num = (v: unknown) => { const n = parseFloat(String(v ?? "").replace(/,/g, "")); return Number.isFinite(n) ? n : NaN; };
+// Search text is a regular expression only when it is short and has no nested repetition; otherwise it is searched as plain text.
+const escRe = (p: string) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const toRe = (p: string) => {
   if (!p) return null;
+  p = p.slice(0, 120);
+  if (/\([^)]*[+*][^)]*\)\s*[+*{]/.test(p) || /(\.\*){3,}/.test(p)) p = escRe(p);
   try { return new RegExp(p.replace(/\\x\{([0-9a-fA-F]+)\}/g, "\\u{$1}"), "iu"); } catch { return null; }
 };
 
