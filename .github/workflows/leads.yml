@@ -43,7 +43,7 @@ jobs:
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: plan
         run: |
-          LIGHT="ted,fts,sam,canadabuys,ungm,undp,ebrd,aiib,isdb,afdb,iadb,simap,gets,etimad,prozorro,pncp,secop,contractsfinder,austender,oman,qatar,kenya,merge,push,webpanel"
+          LIGHT="ted,fts,sam,canadabuys,ungm,undp,ebrd,aiib,isdb,afdb,iadb,simap,gets,etimad,prozorro,pncp,secop,contractsfinder,austender,oman,qatar,kenya,moldova,uruguay,merge,push,webpanel"
           HEAVY="nyc,us_cities,za,chile,india,grants,germany,paraguay,dominican,france,spain,awards,wb_pipeline,worldbank,mrgov,importyeti,markets,enrich,us_awards,merge,push,webpanel"
           if [ "${{ github.event_name }}" = "schedule" ]; then
             if [ "${{ github.event.schedule }}" = "10 */2 * * *" ]; then echo "ONLY=$LIGHT" >> $GITHUB_ENV; else echo "ONLY=$HEAVY" >> $GITHUB_ENV; fi
@@ -173,6 +173,18 @@ jobs:
         run: set -o pipefail; python -m leads.run --source contractsfinder 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 8
         continue-on-error: true
+      - name: moldova
+        if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',moldova,') }}
+        run: set -o pipefail; python -m leads.run --source moldova 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 15
+        continue-on-error: true
+
+      - name: uruguay
+        if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',uruguay,') }}
+        run: set -o pipefail; python -m leads.run --source uruguay 2>&1 | tee -a data/leads/run.log
+        timeout-minutes: 15
+        continue-on-error: true
+
       - name: paraguay
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',paraguay,') }}
         run: set -o pipefail; python -m leads.run --source paraguay 2>&1 | tee -a data/leads/run.log
