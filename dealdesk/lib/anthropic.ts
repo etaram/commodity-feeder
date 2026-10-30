@@ -24,8 +24,13 @@ export async function claude(body: Record<string, unknown>): Promise<{ text: str
       throw new Error(msg);
     }
     out.push(...((j.content || []) as Block[]));
-    if (j.stop_reason !== "pause_turn") break;
-    messages = [...messages, { role: "assistant", content: j.content }];
+    if (j.stop_reason === "pause_turn") { messages = [...messages, { role: "assistant", content: j.content }]; continue; }
+    if (j.stop_reason === "max_tokens") {
+      // Ran out of room: ask once more to finish from where it stopped, so answers never end mid-sentence.
+      messages = [...messages, { role: "assistant", content: j.content }, { role: "user", content: "Continue exactly where you stopped and finish the answer briefly. Do not repeat anything." }];
+      continue;
+    }
+    break;
   }
   const text = out.filter((b) => b.type === "text").map((b) => b.text || "").join("").trim();
   const seen = new Set<string>(), sources: { url: string; title: string }[] = [];

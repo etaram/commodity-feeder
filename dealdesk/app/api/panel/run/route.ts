@@ -6,7 +6,7 @@ import { appendRow, sheetsEnabled } from "@/lib/sheets";
 
 // Runs a panel job (research, supplier search, eligibility, logistics, quote...) immediately on the server
 // with Claude Haiku 5.5 and web search, writes the finished job to 'Panel Jobs', and returns the answer.
-export const maxDuration = 60;
+export const maxDuration = 120;
 const DAILY_LIMIT = Number(process.env.AI_RUN_DAILY_LIMIT || 80);
 let day = "", used = 0;
 
@@ -43,7 +43,7 @@ End with one line "Next step:" saying the single most useful action.`;
 
   try {
     const { text, sources } = await claude({
-      max_tokens: 1800,
+      max_tokens: 4000,
       tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
       messages: [{ role: "user", content: prompt }],
     });

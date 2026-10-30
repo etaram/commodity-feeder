@@ -5,7 +5,7 @@ import { claude, MODEL } from "@/lib/anthropic";
 // The panel's quick AI features on the web (quick summary, drafts, free-language search, Hebrew translation).
 // Cost controls: cheapest model (Haiku 5.5), capped answer length, cached repeats, daily cap.
 export const maxDuration = 60;
-const MAX_OUT = Number(process.env.AI_MAX_TOKENS || 1200);
+const MAX_OUT = Number(process.env.AI_MAX_TOKENS || 3000);
 const DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT || 300);
 const cache = new Map<string, { text: string; at: number }>();
 let day = "", used = 0;
