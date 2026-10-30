@@ -478,6 +478,13 @@ SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "count
 CHUNK, CHUNKS = 2500, 16
 
 
+def _num(v):
+    try:
+        return float(str(v).replace(",", ""))
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def write_sheet_chunks(tenders):
     """The Google Sheet imports tenders in fixed-size chunks (IMPORTDATA has a per-file size limit); every chunk file
     always exists so the sheet formula never breaks. Highest score first."""
@@ -630,6 +637,11 @@ def merge():
             screen(tenders)
         except Exception as e:  # noqa: BLE001
             log.warning("sanctions screen: %s", e)
+        try:
+            from .integrity import apply as integrity_apply
+            integrity_apply(tenders, AWARD_ROWS)
+        except Exception as e:  # noqa: BLE001
+            log.warning("integrity advisor: %s", e)
         write("price_trends.csv", [{"group": BY_ID[g]["name"] if g in BY_ID else g, **v} for g, v in trends.items()],
               ["group", "signal", "chg_1m_pct", "chg_3m_pct", "chg_12m_pct", "series"])
         write("price_series.csv", series, ["group", "series", "unit", "month", "price", "chg_1m_pct", "chg_3m_pct",
@@ -653,16 +665,27 @@ def merge():
             "buyer", "title_en", "summary_en", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
             "classification", "contact", "benchmark", "link", "lang", "first_seen", "id", "decision", "ev_usd",
             "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent",
-            "margin_pct", "why"]
+            "margin_pct", "integrity_score", "integrity_flag", "integrity_note", "why"]
     write_digest(tenders, buyers or [])
     dcols = ["id", "decision", "ev_usd", "roi", "p_win_market", "deal_value_usd", "value_basis", "value_confidence",
              "addressable_share", "framework_split", "gross_margin_pct", "net_margin_pct", "gross_profit_usd",
              "pursuit_cost_usd", "payment_days", "est_bidders", "price_trend_3m_pct", "price_signal", "country",
              "sector", "commodity", "buyer", "title_en", "deadline", "link", "why", "days_left", "region", "route", "edge_weight", "priority_ev_usd",
-             "import_duty_pct", "fta_edge_pct", "fta_note"]
+             "import_duty_pct", "fta_edge_pct", "fta_note", "integrity_score", "integrity_flag", "integrity_note"]
     dc = sorted([t for t in tenders if t.get("ev_usd") not in ("", None)],
                 key=lambda t: -(t.get("priority_ev_usd") if t.get("priority_ev_usd") not in ("", None) else t["ev_usd"]))[:8000]
     write("deal_calc.csv", [{**t, "title_en": (t.get("title_en") or t.get("title") or "")[:160]} for t in dc], dcols)
+    # exemption / direct-award notices: no bid to submit, but the buyer is buying now - a direct-sales list
+    try:
+        from .brain import EXEMPT_RX
+        ex = [t for t in tenders if EXEMPT_RX.search(f"{t.get('notice_type', '')} {t.get('access', '')}")]
+        ex.sort(key=lambda t: (-(_num(t.get("est_value_usd")) or 0), t.get("deadline") or ""))
+        write("exempt.csv", [{**t, "title_en": (t.get("title_en") or t.get("title") or "")[:200]} for t in ex[:4000]],
+              ["country", "region", "buyer", "title_en", "sector", "commodity", "est_value_usd", "notice_type",
+               "access", "published", "deadline", "source", "integrity_flag", "integrity_score", "contact", "link", "id"])
+        log.info("exempt buys: %d notices", len(ex))
+    except Exception as e:  # noqa: BLE001
+        log.warning("exempt list: %s", e)
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
     try:

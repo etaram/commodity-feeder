@@ -299,6 +299,11 @@ def deal(r, st, trends, prefs=None, edge=None):
     }
 
 
+EXEMPT_RX = re.compile(r"פטור|exempt|direct award|contrataci[oó]n directa|compra directa|adjudicaci[oó]n directa|"
+                       r"sole source|single source|limited tender|negotiated without|sin licitaci|dispensa|"
+                       r"baja cuant[ií]a|[ií]nfima cuant", re.I)
+
+
 def enrich(tenders, awards, trends=None, prefs=None):
     """prefs: {"sector": {name: weight}, "region": {name: weight}, "partners": {iso3: strength}} from the sheet."""
     st = Stats(awards)
@@ -339,6 +344,10 @@ def enrich(tenders, awards, trends=None, prefs=None):
         elif d["route"] == "sub-supply to the winner" and (d["priority_ev"] or 0) >= 2_000:
             decision = "Watch"  # the opportunity opens at award: approach the winner then
             why.append("track the award, then offer materials to the winner")
+        elif EXEMPT_RX.search(f"{r.get('notice_type', '')} {r.get('access', '')}"):
+            # exemption / direct award: there is no bid to submit, but the buyer is buying this right now
+            decision = "Watch" if (ev == "" or ev >= 2_000 or r["score"] >= 45) else "Ignore"
+            why.append("exempt from tender: no bid to submit - approach the buyer directly")
         elif r.get("stage") == "planned":
             # announced projects and prior notices: no tender to bid yet - track them, never "Pursue"
             decision = "Watch" if (ev == "" or ev >= 2_000 or r["score"] >= 50) else "Ignore"

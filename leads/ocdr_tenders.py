@@ -29,9 +29,20 @@ NOT_OPEN = re.compile(r"direct|baja cuant|cotizaci|ínfima|infima|menor cuant|li
                       r"negociad|single source|sole source|shopping|request for quotation|\brfq\b", re.I)
 
 
+def is_exempt(row):
+    """Direct award / quotation / restricted: nobody can bid, but it shows what this body buys and from whom."""
+    return bool(NOT_OPEN.search(row.get("notice_type") or ""))
+
+
 def keep(row, today_s):
-    if NOT_OPEN.search(row.get("notice_type") or ""):
-        return False
+    if is_exempt(row):
+        # kept as a direct-sales lead, not as a tender: only recent ones with real money on them
+        v = row.get("value")
+        try:
+            big = float(v) >= 50_000
+        except (TypeError, ValueError):
+            big = False
+        return big and (row.get("published") or "") >= str(today() - dt.timedelta(days=45))
     if row.get("deadline"):
         return row["deadline"] >= today_s
     return (row.get("published") or "") >= str(today() - dt.timedelta(days=30))  # no deadline: recent notices only
@@ -65,6 +76,8 @@ def _read(s, pub, year, today_s, t_end):
             row = tender_row(rel, source=src, prefix=f"OCT{pub['id']}", country=pub["iso"], today_s=today_s)
             if not row or not (row["title"] or "").strip():
                 continue
+            if is_exempt(row):
+                row["access"] = "Direct award (no open competition) - sell to the buyer directly"
             if not keep(row, today_s):
                 continue
             if not row["link"]:

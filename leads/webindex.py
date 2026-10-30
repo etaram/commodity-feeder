@@ -32,6 +32,11 @@ def tenders():
     rows = []
     for f in sorted(glob.glob(str(LEADS / "sheet" / "tenders_[0-9][0-9].csv"))):
         rows += list(csv.DictReader(open(f, encoding="utf-8")))
+    gov = {}
+    gv = LEADS / "governance.csv"
+    if gv.exists():
+        for r in csv.DictReader(open(gv, encoding="utf-8")):
+            gov[r["country"]] = (r["integrity_score"], r["flag"])
     deal = {}
     dc = LEADS / "deal_calc.csv"
     if dc.exists():
@@ -51,6 +56,7 @@ def tenders():
             "src": r.get("source", ""), "st": r.get("stage", ""), "l": r.get("link", ""), "n": 1 if r.get("new") else 0,
             "acc": "set-aside" if "set-aside" in acc else "intl" if acc.startswith("international") else "",
             "rt": d.get("route", ""),
+            "ig": _f(gov.get(r.get("country", ""), ("", ""))[0]), "if": gov.get(r.get("country", ""), ("", ""))[1],
         })
     OUT.mkdir(parents=True, exist_ok=True)
     raw = json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode()
