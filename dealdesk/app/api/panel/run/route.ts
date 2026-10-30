@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
 import { claude } from "@/lib/anthropic";
 import { appendRow, sheetsEnabled } from "@/lib/sheets";
+import { registryFacts } from "@/lib/registry";
 
 // Runs a panel job (research, supplier search, eligibility, logistics, quote...) immediately on the server
 // with Claude Haiku 5.5 and web search, writes the finished job to 'Panel Jobs', and returns the answer.
@@ -42,10 +43,16 @@ export async function POST(req: NextRequest) {
   used++;
 
   const he = lang === "he";
+  let verified = "";
+  if (type === "company_intel") {
+    const cx = (context || {}) as Record<string, string>;
+    const nm = String(cx.supplier || cx.Account || "").trim();
+    verified = nm ? await registryFacts(nm, String(cx.country || cx.Country || ""), String(cx.legal_id || "")).catch(() => "") : "";
+  }
   const prompt = `You are the research analyst of Sinder, an Israeli international procurement and trading firm that supplies public tenders and large buyers worldwide.
 Task type: ${type || "other"}. ${GUIDE[type] || GUIDE.other}
 Subject: ${String(target || "").slice(0, 400)}
-${request ? `Specific request: ${String(request).slice(0, 1500)}\n` : ""}Data we already have (JSON): ${JSON.stringify(context || {}).slice(0, 6000)}
+${verified ? `VERIFIED REGISTRY FACTS (official open data, fetched just now; treat as authoritative, quote them under Identity and Legal, and say if a match was by name only):\n${verified}\n` : ""}${request ? `Specific request: ${String(request).slice(0, 1500)}\n` : ""}Data we already have (JSON): ${JSON.stringify(context || {}).slice(0, 6000)}
 
 Use web search to check current facts. Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" ? 600 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
 Never invent people, emails, phone numbers or companies; if a fact was not found, say so. Never suggest paying or doing favours for officials.
