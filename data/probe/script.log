@@ -1,2 +1,121 @@
-reset 85 objects
-layout applied: 179 ranges, 1042 requests
+package_list {} -> 200
+packages: 7014
+package_search {'q': 'tender', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## tender: count=25
+- contract-and-tenders-2015 | Code for Africa | mod 2023-11-30 | res 1 ['XLSX'] | Kenya Government Contracts and Tenders 2015
+- city-of-cape-town-tender-portal | Vulekamali | mod 2021-01-22 | res 1 [''] | City of Cape Town Tender Portal
+- etender-portal | Vulekamali | mod 2019-09-17 | res 3 ['', 'PNG'] | eTender Portal
+- gauteng-province-e-tenders | Vulekamali | mod 2019-09-17 | res 3 ['', 'PNG'] | Gauteng Province e-Tenders
+- 2016-2017-government-and-parastatal-awards-malawi | Malawi Data Liberation | mod 2019-08-08 | res 3 ['CSV'] | Malawi Government and Parastatal Tender Awards, 2016- 2017
+- 2017-2018-government-and-parastatal-awards-malawi | Malawi Data Liberation | mod 2019-08-08 | res 3 ['CSV'] | Malawi Government and Parastatal Tender Awards, 2017- 2018
+- 2015-2016-government-and-parastatal-awards-malawi | Malawi Data Liberation | mod 2019-08-08 | res 3 ['CSV'] | Malawi Government and Parastatal Tender Awards, 2015- 2016
+- 2014-2015-government-and-parastatal-awards-malawi | Malawi Data Liberation | mod 2019-08-08 | res 4 ['CSV'] | Malawi Government and Parastatal Tender Awards, 2014- 2015
+- kenya-government-tenders | The Elephant | mod 2019-04-08 | res 1 ['CSV'] | Kenya Government Tenders 2018
+- city-of-cape-town-tender-awards-july-dec-2014 |  | mod 2018-02-14 | res 4 ['CSV', 'JSON', 'RDF', 'XML'] | City of Cape Town - Tender Awards July - Dec 2014
+- tender-awards-2015-2016 |  | mod 2018-02-14 | res 4 ['CSV', 'JSON', 'RDF', 'XML'] | Tender Awards 2015-2016
+- contracts-awarded-by-government-institutions |  | mod 2016-11-07 | res 4 ['CSV', 'JSON', 'RDF', 'XML'] | Contracts awarded by government institutions
+- government-tenders-procurement |  | mod 2016-03-27 | res 1 ['HTML'] | Government Tenders & Procurement.
+- city-of-ekurhuleni-ekurhuleni-spending-reports | Open Data Durban | mod 2015-11-18 | res 3 ['XLSX'] | City of Ekurhuleni - Ekurhuleni Budgets and Tenders
+- ethekwini-municipality-awarded-tenders | Open Data Durban | mod 2015-11-09 | res 1 ['XLS'] | eThekwini Municipality - Awarded Tenders
+- ethekwini-municipality-tender-awards-2010 | Open Data Durban | mod 2015-11-03 | res 12 ['XLS'] | eThekwini Municipality Tender Awards 2010
+- ethekwini-municipality-tender-awards-2011 | Open Data Durban | mod 2015-11-03 | res 12 ['XLS'] | eThekwini Municipality Tender Awards 2011
+- ethekwini-municipality-tender-awards-2012 | Open Data Durban | mod 2015-11-03 | res 12 ['PDF', 'XLS', 'XLSX'] | eThekwini Municipality Tender Awards 2012
+- ethekwini-municipality-tender-awards-2013 | Open Data Durban | mod 2015-11-03 | res 12 ['PDF', 'XLS'] | eThekwini Municipality Tender Awards 2013
+- ethekwini-municipality-tender-awards-2014 | Open Data Durban | mod 2015-11-03 | res 13 ['PDF', 'XLS'] | eThekwini Municipality Tender Awards 2014
+- ethekwini-municiaplity-tender-awards | Open Data Durban | mod 2015-11-03 | res 9 ['PDF'] | eThekwini Municipality Tender Awards 2015
+- confiscation-and-forfeiture-orders-2013 | African Network of Centres for Investigative Reporting | mod 2015-09-28 | res 1 ['DOC'] | Confiscation and Forfeiture Orders 2013
+- government-tenders-ghana |  | mod 2015-08-19 | res 0 [] | Government Tenders Ghana
+- restricted-tender-contract-from-2008-2012 |  | mod 2015-08-17 | res 0 [] | Restricted Tender Contract from 2008-2012
+- open-tender-contracts-from-2007-2012 |  | mod 2015-08-16 | res 0 [] | Open Tender Contracts from 2007-2012
+package_search {'q': 'procurement', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## procurement: count=61
+- procurement-plans | Vulekamali | mod 2019-09-17 | res 3 ['', 'PNG'] | Procurement plans
+- deviations-from-procurement-processes | Vulekamali | mod 2019-09-17 | res 3 ['', 'PNG'] | Deviations from procurement processes
+- world-bank-contract-award-2010-2012-malawi |  l'Agence Nationale de la Statistique et de la Démographie du Sénégal | mod 2019-08-08 | res 0 [] | World Bank Contract Award 2010-2012 - Malawi
+- registered-government-suppliers-malawi | Malawi Data Liberation | mod 2019-08-08 | res 1 ['CSV'] | Malawi Registered Government Suppliers
+- kenya-government-awarded-contracts | The Elephant | mod 2019-04-08 | res 1 ['CSV'] | Kenya Government awarded contracts
+- registered-government-suppliers-kenya | The Elephant | mod 2019-03-06 | res 1 ['CSV'] | Registered Government Suppliers - Kenya
+- world-bank-major-contract-award-to-nigeria-2007-2013 |  | mod 2016-09-13 | res 1 ['CSV'] | World Bank Major Contract Award to Nigeria. 2007-2013
+- primary-health-care-centres-constructed-2001 | Public Private Development Centre | mod 2015-12-04 | res 1 ['CSV'] | Primary health care centres built in Nigeria in 2001
+- department-of-he | Open Data Durban | mod 2015-11-06 | res 1 ['XLSX'] | Department of Health - Master Procurement Catalogue
+- federal-staff-hospital-contracts-for-2012-and-2013 | Public Private Development Centre | mod 2015-10-27 | res 1 ['CSV'] | Federal Staff Hospital contracts for 2012 and 2013
+- expired-tax-clearance-certificates-report-06-march-2015 | African Network of Centres for Investigative Reporting | mod 2015-09-28 | res 1 ['XLS'] | Expired Tax Clearance Certificates Report (06 March 2015)
+- expired-tax-clearance-certificates-report-2015 | African Network of Centres for Investigative Reporting | mod 2015-09-28 | res 1 ['XLS'] | Expired Tax Clearance Certificates Report (19 March 2015)
+- expired-tax-clearance-certificates-report-16-nov-2014 | African Network of Centres for Investigative Reporting | mod 2015-09-28 | res 1 ['XLS'] | Expired Tax Clearance Certificates Report (16 Oct 2014)
+- expired-tax-clearance-certificates-report-2014 | African Network of Centres for Investigative Reporting | mod 2015-09-28 | res 1 ['XLS'] | Expired Tax Clearance Certificates Report (02 Oct 2014)
+- world-bank-contract-awards-2010-2012-burkina-faso |  | mod 2015-08-19 | res 0 [] | World Bank Contract Awards 2010-2012 - Burkina Faso
+- world-bank-contract-award-2010-2012-zimbabwe |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Zimbabwe
+- world-bank-contract-award-2010-2012-zambia |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Zambia
+- world-bank-contract-award-2010-2012-tz |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - TZ
+- world-bank-contract-award-2010-2012-tunisia |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Tunisia
+- world-bank-contract-award-2010-2012-togo |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Togo
+- world-bank-contract-award-2010-2012-swaziland |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Swaziland
+- world-bank-contract-award-2010-2012-sudan |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Sudan
+- world-bank-contract-award-2010-2012-south-sudan |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - South Sudan
+- world-bank-contract-award-2010-2012-sierra-leone |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Sierra Leone
+- world-bank-contract-award-2010-2012-senegal |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Senegal
+- world-bank-contract-award-2010-2012-sa |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - South Africa
+- world-bank-contract-award-2010-2012-rwanda |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Rwanda
+- world-bank-contract-award-2010-2012-nigeria |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Nigeria
+- world-bank-contract-award-2010-2012-niger |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Niger
+- world-bank-contract-award-2010-2012-mozambique |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Mozambique
+- world-bank-contract-award-2010-2012-morocco |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Morocco
+- world-bank-contract-award-2010-2012-mauritius |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Mauritius
+package_search {'q': 'contract', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## contract: count=84
+- the-worldwide-governance-indicators-wgi-project | The Charter Project | mod 2023-04-13 | res 72 ['CSV'] | The Worldwide Governance Indicators (WGI) project
+- expansions-and-extensions-of-contracts | Vulekamali | mod 2019-09-17 | res 3 ['', 'PNG'] | Expansions and extensions of contracts
+- utafiti-wa-kufuatilia-kaya-tanzania-wa-mwaka-2012-2013 | Tanzania National Bureau of Statistics | mod 2019-08-20 | res 1 ['CSV'] | NATIONAL PANEL SURVEY 2012-2013
+- madagscar-small-hydro-gis-atlas-2017 |  | mod 2018-03-11 | res 4 ['GEOJSON', 'ZIP'] | Madagscar - Small Hydro GIS Atlas (2017)
+- africa-water-bodies-2015 |  | mod 2018-03-11 | res 2 ['GEOJSON', 'SHAPEFILES'] | Africa - Water Bodies (2015)
+- list-of-projects-executed-by-the-ministry-of-works-from-2009-2013 |  | mod 2016-09-13 | res 1 ['CSV'] | List of Projects Executed by the Ministry of Works from 2009 - 2013
+- projects-awarded-and-stage-of-completion-as-at-30th-september-2015 |  | mod 2016-09-13 | res 1 ['CSV'] | Projects Awarded and Stage of Completion as at 30th September, 2015
+- list-of-projects-executed-by-the-ministry-of-health-from-2009-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | List of Projects Executed by the Ministry of Health from 2009 - 2014
+- edo-state-school-projects-from-november-2009-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | Edo State School Projects from November 2009 - 2013
+- list-of-projects-carried-out-in-ministry-of-arts-culture-and-tourism-from-2009-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | List of Projects Carried Out in Ministry of Arts, Culture and Tourism From 2009-
+- contracts-awarded-and-their-stage-of-completion-as-at-30th-september-2015 |  | mod 2016-09-13 | res 1 ['CSV'] | Contracts Awarded and their Stage of Completion as at 30th September, 2015
+- projects-carried-out-in-the-high-court-of-justice-from-2009-june-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | Projects Carried Out in the High Court of Justice from 2009 - June 2014
+- edo-saca-projects-from-2009-june-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | EDO-SACA Projects from 2009 - June 2014
+- projects-carried-out-in-esiec-from-2009-june-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | Projects Carried Out in ESIEC From 2009 - June 2014
+- list-of-mdgs-office-projects-from-2009-2014 |  | mod 2016-09-13 | res 1 ['CSV'] | List of MDGs Office Projects from 2009 - 2014
+- a-list-of-subeb-projects-from-2011-2012-in-edo-state |  | mod 2016-09-13 | res 1 ['CSV'] | List of SUBEB Projects From 2011-2012 in Edo State.
+- housing-and-public-building-projects-in-edo-state |  | mod 2016-09-13 | res 2 ['CSV'] | Housing and Public Building Projects in Edo State.
+- housing-projects-supervised-by-ministry-of-works |  | mod 2016-09-13 | res 1 ['CSV'] | Housing projects supervised by ministry of works
+- road-contracts-list-and-status-as-at-january-20132 |  | mod 2016-09-13 | res 1 ['CSV'] | Road Contracts List and Status as at January, 2013
+- number-of-signed-agreements-in-2013 |  | mod 2016-09-13 | res 1 ['CSV'] | Number of Signed Agreements in 2013
+- list-of-projects-carried-out-in-ministry-of-housing-and-urban-development-from-2009-2014 |  | mod 2016-09-13 | res 2 ['CSV', 'XLSX'] | List of Projects Carried Out in Ministry of Housing and Urban Development From 2
+- list-of-projects |  | mod 2016-09-13 | res 1 ['CSV'] | List of Projects
+- road-contracts-list-and-status-as-at-january-2013 |  | mod 2016-09-13 | res 1 ['CSV'] | Road Contracts List And Status As At January, 2013
+- kenya-state-corporations-budget-submission-to-national-assembly-kenya-fy-2016-17-annex | International Budget Partnership (Kenya) | mod 2016-08-13 | res 3 ['PDF', 'XLSX'] | Kenya State Corporations Budget Submission to National Assembly (Kenya FY 2016/1
+- county-budget-survey-june-2016 | International Budget Partnership (Kenya) | mod 2016-08-13 | res 3 ['PDF', 'XLSX'] | County Budget Survey (June 2016)
+- county-budget-survey-january-2016 | International Budget Partnership (Kenya) | mod 2016-08-13 | res 3 ['PDF', 'XLSX'] | County Budget Survey (January 2016)
+- county-budget-survey-january-2015 | International Budget Partnership (Kenya) | mod 2016-08-13 | res 3 ['PDF', 'XLSX'] | County Budget Survey (January 2015)
+- kenya-county-budget-survey-june-2015 | International Budget Partnership (Kenya) | mod 2016-08-13 | res 3 ['PDF', 'XLSX'] | County Budget Survey (June 2015)
+package_search {'q': 'bid', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## bid: count=3
+- the-council-of-governors-kenya-taita-taveta | The Council of Governors, Kenya | mod 2023-02-08 | res 80 ['CSV'] | Taita Taveta County Integrated Development Plan Datasets, 2018-2022
+package_search {'q': 'supplier', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## supplier: count=60
+- community-survey-south-africa-2016 | Statistics South Africa | mod 2020-05-27 | res 21 ['CSV'] | Community Survey, 2016 - South Africa
+- blacklisted-suppliers | Vulekamali | mod 2019-09-17 | res 4 ['', 'PDF', 'PNG'] | Blacklisted Suppliers
+- per-ruralspace-mafisa | Vulekamali | mod 2019-09-04 | res 5 ['PDF', 'XLSX'] | PER - MAFISA
+- crp37ethvchain-feedsupp | ILRI | mod 2019-08-20 | res 1 ['GETDATA'] | Livestock and Fish Feed Supplier Survey of Ethiopian small ruminants value chain
+- milkit-project-innovation-platforms-monitoring-and-evaluation-studies-2013-2014 | ILRI | mod 2019-08-17 | res 3 ['DOCX', 'XLS'] | MilkIT Project - Innovation Platforms monitoring and evaluation studies 2013-201
+- per-provincial-office-rental-accomodation | Vulekamali | mod 2019-08-17 | res 20 ['PDF', 'XLSM'] | PER - Provincial Office Rental Accommodation
+- database-of-restricted-suppliers |  | mod 2018-02-14 | res 4 ['CSV', 'JSON', 'RDF', 'XML'] | Database of Restricted Suppliers
+- overall-alkalinity |  | mod 2016-06-17 | res 1 [''] | Overall Alkalinity
+- satisfactory-operation-and-sales-status-of-chenglong-brand-sodium-hydrosulfite |  | mod 2016-06-02 | res 1 ['SODIUM HYDROSULFITE'] | Satisfactory operation and sales status of Chenglong Brand sodium hydrosulfite
+- national-treasury-reports-and-statistics | Open Data Durban | mod 2015-11-17 | res 2 ['PDF'] | National Treasury - Reports and Statistics
+- world-bank-contract-award-2010-2012-mauritania |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Mauritania
+package_search {'q': 'public procurement', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## public procurement: count=52
+- world-bank-contract-award-2010-2012-mali |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Mali
+- world-bank-contract-award-2010-2012-madagascar |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Madagascar
+- world-bank-contract-award-2010-2012-liberia |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Liberia
+- world-bank-contract-award-2010-2012-lesotho |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Lesotho
+- world-bank-contract-award-2010-2012-guinea |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Guinea
+- world-bank-contract-award-2010-2012-ghana |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Ghana
+- world-bank-contract-award-2010-2012-gambia |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Gambia
+- world-bank-contract-award-2010-2012-gabon |  | mod 2015-08-19 | res 0 [] | World Bank Contract Award 2010-2012 - Gabon
+package_search {'q': 'tenders', 'rows': 40, 'sort': 'metadata_modified desc'} -> 200
+## tenders: count=25
