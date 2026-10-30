@@ -93,7 +93,7 @@ def _portal(s, name, base, t_end, today_s):
                     "notice_type": "Tender", "stage": "tender",
                     "access": "Indian public tender: check whether it is a global tender or allows foreign bidders (Make in India preference and local registration usually apply)",
                     "published": pub or today_s, "deadline": close, "value": "", "currency": "",
-                    "link": base + "?page=FrontEndLatestActiveTenders&service=page", "contact": f"Tender ID {tid}; search it on {root}", "lang": "",
+                    "link": base + "?page=FrontEndLatestActiveTenders&service=page", "contact": f"Tender ID {tid}; search it on {root}", "lang": "en",
                 })
             nxt = re.search(r'id="(?:linkFwd|loopForward)[^"]*"[^>]*href="([^"]+)"|href="([^"]+)"[^>]*id="(?:linkFwd|loopForward)', rr.text)
             if not nxt or pages >= 40 or time.time() > t_end:

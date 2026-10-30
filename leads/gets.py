@@ -56,7 +56,7 @@ def fetch():
                 "country": "NZL", "buyer": txt[5], "title": txt[2][:300], "notice_type": TYPES.get(kind, kind), "stage": "tender",
                 "access": "Open (New Zealand Government Procurement Rules; overseas suppliers may respond)",
                 "published": str(t), "deadline": dl, "value": "", "currency": "",
-                "link": BASE + (href.group(1) if href else f"ExternalTenderDetails.htm?id={tid}"), "contact": "", "lang": "",
+                "link": BASE + (href.group(1) if href else f"ExternalTenderDetails.htm?id={tid}"), "contact": "", "lang": "en",
             })
         if not fresh:
             break

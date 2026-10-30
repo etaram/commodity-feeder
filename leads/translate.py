@@ -130,7 +130,7 @@ def _translate_batch(lang, texts, to="en"):
     return [sp.decode(r.hypotheses[0]).replace("\u2581", " ").strip() for r in res]
 
 
-def translate_rows(rows, field="title", budget_sec=1500):
+def translate_rows(rows, field="title", budget_sec=900):
     """Adds title_en to each row (in place), highest score first, until the time budget runs out."""
     cache = load(); t0 = time.time(); done = 0
     pending = {}
@@ -177,7 +177,7 @@ PHE = CACHE / "translations_he.jsonl"
 HEB = re.compile(r"[\u0590-\u05FF]")
 
 
-def to_hebrew(rows, limit=6000, budget_sec=900):
+def to_hebrew(rows, limit=6000, budget_sec=600):
     """Hebrew titles for the top `limit` tenders (rows already ranked) and for every Hebrew-language notice.
     English titles are translated offline (Argos en->he); results are cached by text. Returns {id: title_he}."""
     cache = {}

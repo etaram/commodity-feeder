@@ -255,7 +255,7 @@ jobs:
       - name: merge
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,') }}
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 45
+        timeout-minutes: 90
         continue-on-error: true
       - name: news
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',news,') || contains(format(',{0},', env.ONLY), ',merge,') }}
