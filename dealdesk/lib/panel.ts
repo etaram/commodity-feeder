@@ -2,6 +2,7 @@ import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
 import { suppliers as supplierIndex, type Supplier } from "@/lib/index";
+import { readRanges } from "@/lib/sheets";
 
 const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
 type Grid = string[][];
@@ -86,10 +87,33 @@ async function csvGrid(path: string): Promise<Grid> {
   });
 }
 
+// Live tabs straight from Google Sheets (refreshed every minute) when the service account is set in Vercel;
+// otherwise from the encrypted snapshot that GitHub exports (which can lag by hours).
+const LE = "1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y", SU = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";
+const LIVE: Record<string, [string, string]> = {
+  bd: [LE, "'BD Agent'!A1:M600"], accounts: [LE, "'Key Accounts'!A1:S400"], intel: [LE, "'Intel'!A1:P2000"],
+  pursuits: [LE, "'Pursuits'!A1:V600"], jobs: [LE, "'Panel Jobs'!A1:L800"], stats: [SU, "'Stats'!A1:B60"],
+};
+async function liveDirect(): Promise<Snap | null> {
+  try {
+    return await cached("live-direct", 60_000, async () => {
+      const keys = Object.keys(LIVE), out: Snap = {} as Snap;
+      for (const sid of [LE, SU]) {
+        const ks = keys.filter((k) => LIVE[k][0] === sid);
+        const vals = await readRanges(sid, ks.map((k) => LIVE[k][1]));
+        if (!vals) throw new Error("no service account");
+        ks.forEach((k, i) => { out[k] = vals[i]; });
+      }
+      return out;
+    });
+  } catch { return null; }
+}
+export async function liveSource(): Promise<"sheets" | "snapshot"> { return (await liveDirect()) ? "sheets" : "snapshot"; }
+
 export async function getRange(key: string): Promise<Grid> {
   if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);
   if (["tenders", "titles", "repeat", "markets", "meta", "upcoming", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
-  if (["bd", "accounts", "intel", "pursuits", "jobs", "stats"].includes(key)) return ((await snapshot("live"))[key] as Grid) || [];
+  if (key in LIVE) return (((await liveDirect()) || (await snapshot("live")))[key] as Grid) || [];
   if (key === "suppliers") return [SUP_HEAD, ...(await allSuppliers()).slice(0, 6000).map(supRow)];
   if (key === "tot_s") return [["suppliers", String((await allSuppliers()).length)]];
   throw new Error(`unknown range ${key}`);

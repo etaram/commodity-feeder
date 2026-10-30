@@ -25,6 +25,15 @@ async function call(jwt: JWT, method: string, url: string, body?: unknown) {
   return r.json();
 }
 
+// Reads several ranges at once (any spreadsheet the service account can open). Returns null when not configured.
+export async function readRanges(sid: string, ranges: string[]): Promise<string[][][] | null> {
+  const jwt = await client();
+  if (!jwt) return null;
+  const q = ranges.map((r) => "ranges=" + encodeURIComponent(r)).join("&");
+  const j = await call(jwt, "GET", `${API}/${sid}/values:batchGet?${q}&valueRenderOption=FORMATTED_VALUE`);
+  return (j.valueRanges || []).map((v: { values?: string[][] }) => v.values || []);
+}
+
 export async function appendRow(tab: string, row: (string | number)[]) {
   return append(tab, row);
 }
