@@ -1,13 +1,8 @@
-grants_gov 200 24914 application/json
-eu_ft 500 82 application/json
-wgi_CC 200 128 application/json;charset=utf-8
-wgi_RQ 200 128 application/json;charset=utf-8
-wgi_GE 200 128 application/json;charset=utf-8
-wgi_RL 200 128 application/json;charset=utf-8
-datagov_search 200 13282 application/json;charset=utf-8
-datagov_search2 200 199 application/json;charset=utf-8
-datagov_grants 200 78865 application/json;charset=utf-8
-ungm_api 404 82599 text/html; charset=utf-8
-devex_robots 403 772 text/html;charset=utf-8
-gef 200 1752 text/plain; charset=UTF-8
+wgi_src3 200 102 [{"message":[{"id":"120","key":"Invalid value","value":"The provided parameter value is not valid"}]}]
+wgi_plain 200 128 [{"message":[{"id":"175","key":"Invalid format","value":"The indicator was not found. It may have been deleted or archived."}]}]
+wgi_list 200 8106 [{"page":1,"pages":1,"per_page":"100","total":36},[{"id":"GOV_WGI_CC.EST","name":"Control of Corruption - Governance estimate (approx. -2.5 to +2.5)","unit":"",
+wgi_cpia 200 1517 [{"page":1,"pages":27,"per_page":5,"total":134,"sourceid":null,"lastupdated":"2026-10-08"},[{"indicator":{"id":"IQ.CPA.TRAN.XQ","value":"CPIA transparency, acco
+eu_a 500 82 {"apiVersion":"2.157.1","type":"throwable","message":"An internal error occurred"}
+eu_b 500 82 {"apiVersion":"2.157.1","type":"throwable","message":"An internal error occurred"}
+grants_detail 200 46098 {"errorcode":0,"msg":"Webservice Succeeds","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ImUrWGh3akRMdTkvT29EY21RdlB6aWxwUEIvSURTQ3Y0VjFKYTQ4L2M1RFE9Ig.iP_sg4Lc
 DONE
