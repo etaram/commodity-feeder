@@ -84,6 +84,10 @@ jobs:
       - name: merge
         run: python -m feeder.run --merge
         continue-on-error: true
+      - name: price changes
+        run: python -m leads.price_changes
+        timeout-minutes: 6
+        continue-on-error: true
       - name: monitor
         run: python -m feeder.monitor
         timeout-minutes: 8

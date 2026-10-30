@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = { title: "Sinder Deal Desk", description: "Tenders, deals and market context for Sinder's team" };
 
-const NAV = [["/", "Panel"], ["/today", "Today"], ["/tenders", "Tenders"], ["/tenders?country=USA&nosetaside=1", "USA"], ["/suppliers", "Suppliers"], ["/explore", "Explore"], ["/explore/israel", "Israel"], ["/explore/commodities", "Commodities"], ["/grants", "Grants"], ["/exempt", "No-tender buys"], ["/integrity", "Integrity"], ["/settings", "Status"]] as const;
+const NAV = [["/", "Panel"], ["/today", "Today"], ["/tenders", "Tenders"], ["/tenders?country=USA&nosetaside=1", "USA"], ["/suppliers", "Suppliers"], ["/explore", "Explore"], ["/explore/israel", "Israel"], ["/prices", "Prices"], ["/explore/commodities", "Trends"], ["/grants", "Grants"], ["/exempt", "No-tender buys"], ["/integrity", "Integrity"], ["/settings", "Status"]] as const;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const jar = await cookies();

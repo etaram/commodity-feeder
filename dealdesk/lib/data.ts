@@ -55,3 +55,12 @@ export const ROUTE_LABEL: Record<string, string> = {
   "needs local partner": "Needs a local partner",
   "sub-supply to the winner": "Sub-supply to the winner",
 };
+
+export type PriceItem = { id: string; name: string; hs6: string; price: number; unit: string; date: string; source: string; tier: string; link: string; chg: Record<string, number | null>; chg_src: string };
+export type PriceData = { updated_utc: string; feed_finished_utc: string; count: number; items: PriceItem[]; worldbank: { group: string; name: string; unit: string; month: string; price: number; chg: Record<string, number | null> }[] };
+export async function getPriceChanges(): Promise<PriceData | null> {
+  try {
+    const r = await fetch(`${RAW}/data/leads/price_changes.json`, { next: { revalidate: 300 } });
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+}

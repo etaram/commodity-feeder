@@ -140,7 +140,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
         <button type="button" id="lang-en" aria-pressed="true">English</button>
         <button type="button" id="lang-he" aria-pressed="false">עברית</button>
       </div>
-      <a class="btn" href="/today" data-i="deal_desk">Classic screens</a>
+      <a class="btn" href="/prices" data-i="cm_prices">Commodity prices</a> <a class="btn" href="/today" data-i="deal_desk">Classic screens</a>
       <button id="refresh" type="button" data-i="refresh">Refresh</button>
     </div>
     <nav class="tabs" role="tablist" id="tabs">
@@ -344,7 +344,7 @@ const L = {
     e_rep: "No repeat buyers are expected to tender in the next 60 days.", e_acc: "The agent has not found new signals in your key accounts yet.",
     e_comp: "The supplier database is still filling up.", e_jobs_today: "No results yet. Every deep check you start shows up here.",
     awards_year: "awards a year", ready: "Ready", running: "Running", queued: "Queued", error: "Error",
-    tq_ph: "Search: product, buyer, country...", all_sectors: "All sectors", all_regions: "All regions", all_countries: "All countries", any_size: "Any size", sheet_back: "← Back to list", deal_desk: "Classic screens", all_decisions: "All decisions", min_days: "Min. days to close",
+    tq_ph: "Search: product, buyer, country...", all_sectors: "All sectors", all_regions: "All regions", all_countries: "All countries", any_size: "Any size", sheet_back: "← Back to list", deal_desk: "Classic screens", cm_prices: "Commodity prices", all_decisions: "All decisions", min_days: "Min. days to close",
     t_pick: "Pick a tender to see its details and run an eligibility check, supplier matching or outreach.", no_value: "no value", planned: "planned", days: "days", new_: "new",
     e_tenders: "No tenders match these filters.", more: "Show more ({n} more)",
     buyer: "Buyer", sector: "Sector", est_value: "Estimated value", deadline: "Deadline", access: "Foreign access", ev: "Expected value", win_chance: "win chance", exp_bidders: "expected bidders",
@@ -449,7 +449,7 @@ const L = {
     e_rep: "אין קונים חוזרים שצפויים לצאת למכרז ב-60 הימים הקרובים.", e_acc: "הסוכן עוד לא מצא אותות חדשים בחשבונות המפתח.",
     e_comp: "מאגר הספקים עדיין מתמלא.", e_jobs_today: "עדיין אין תוצאות. כל בדיקה מעמיקה שתפעיל תופיע כאן.",
     awards_year: "זכיות בשנה", ready: "מוכן", running: "בעבודה", queued: "בתור", error: "שגיאה",
-    tq_ph: "חיפוש: מוצר, קונה, מדינה...", all_sectors: "כל הסקטורים", all_regions: "כל האזורים", all_countries: "כל המדינות", any_size: "כל גודל", sheet_back: "→ חזרה לרשימה", deal_desk: "מסכים קלאסיים", all_decisions: "כל ההחלטות", min_days: "ימים לסגירה לפחות",
+    tq_ph: "חיפוש: מוצר, קונה, מדינה...", all_sectors: "כל הסקטורים", all_regions: "כל האזורים", all_countries: "כל המדינות", any_size: "כל גודל", sheet_back: "→ חזרה לרשימה", deal_desk: "מסכים קלאסיים", cm_prices: "מחירי סחורות", all_decisions: "כל ההחלטות", min_days: "ימים לסגירה לפחות",
     t_pick: "בחר מכרז כדי לראות פרטים ולהפעיל בדיקת תנאי סף, התאמת ספקים ופנייה.", no_value: "ללא ערך", planned: "מתוכנן", days: "ימים", new_: "חדש",
     e_tenders: "אין מכרזים שמתאימים לסינון.", more: "הצג עוד ({n} נוספים)",
     buyer: "קונה", sector: "סקטור", est_value: "ערך משוער", deadline: "מועד אחרון", access: "גישה לספק זר", ev: "תוחלת רווח", win_chance: "סיכוי זכייה", exp_bidders: "מציעים צפויים",
