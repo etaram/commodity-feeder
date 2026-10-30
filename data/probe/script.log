@@ -1,19 +1,74 @@
-INFO grants.gov: 744 calls
+INFO grants.gov: 265 calls
 INFO EU calls: 257
 INFO Israel calls: 1
-INFO grants {'calls': 1002, 'grants.gov': 744, 'EU': 257, 'data.gov.il': 1}
-GRANTS {'calls': 1002, 'grants.gov': 744, 'EU': 257, 'data.gov.il': 1}
+INFO grants {'calls': 523, 'grants.gov': 265, 'EU': 257, 'data.gov.il': 1}
+GRANTS {'calls': 523, 'grants.gov': 265, 'EU': 257, 'data.gov.il': 1}
    EU Funding & Tenders | 2026-10-30 | EU-China Think Tank Engagement on Green Governance
    EU Funding & Tenders | 2026-10-30 | Strengthening NSA's knowledge, research and innovation partnerships
-   grants.gov (US) | 2026-10-30 | Cooperative Agreement for Affiliated Partner with the Southern Appalachian Coope
-   grants.gov (US) | 2026-10-30 | ONR FY27 NOFO for Young Investigator Program
-   grants.gov (US) | 2026-10-30 | Prioritization Process Pilot Program (PPPP) Competitive Grant Program
-   grants.gov (US) | 2026-10-30 | BJA FY 2026 Rural Violent Crime Reduction Initiative
-WARNING IL exemptions offset 0: Expecting value: line 1 column 1 (char 0)
-INFO IL exemptions {'read': 0, 'kept': 0, 'next 6 months': 0, 'ended - re-procurement due': 0, '6-18 months': 0, 'later': 0}
-IL_EXEMPT {'read': 0, 'kept': 0, 'next 6 months': 0, 'ended - re-procurement due': 0, '6-18 months': 0, 'later': 0}
-Traceback (most recent call last):
-  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/check_new.py", line 16, in <module>
-    e = list(csv.DictReader(open("data/leads/il_exempt.csv", encoding="utf-8")))
-                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'data/leads/il_exempt.csv'
+   grants.gov (US) | 2026-10-30 | GREGoRi Data Coordination and Outreach Center (U01, Clinical Trials Not Allowed)
+   grants.gov (US) | 2026-10-31 | Region 4 Small Business Transportation Technical Assistance Center (SBTTAC)
+   EU Funding & Tenders | 2026-11-03 | Inclusive approaches and stakeholder participation
+   EU Funding & Tenders | 2026-11-03 | Civil Society Organisation (CSO) Thematic Programme in Indonesia
+INFO IL exemptions: 5000/165705 read, 0 kept
+INFO IL exemptions: 10000/165705 read, 2 kept
+INFO IL exemptions: 15000/165705 read, 4 kept
+INFO IL exemptions: 20000/165705 read, 6 kept
+INFO IL exemptions: 25000/165705 read, 6 kept
+INFO IL exemptions: 30000/165705 read, 11 kept
+INFO IL exemptions: 35000/165705 read, 11 kept
+INFO IL exemptions: 40000/165705 read, 18 kept
+INFO IL exemptions: 45000/165705 read, 34 kept
+INFO IL exemptions: 50000/165705 read, 38 kept
+INFO IL exemptions: 55000/165705 read, 49 kept
+INFO IL exemptions: 60000/165705 read, 65 kept
+INFO IL exemptions: 65000/165705 read, 91 kept
+INFO IL exemptions: 70000/165705 read, 108 kept
+INFO IL exemptions: 75000/165705 read, 135 kept
+INFO IL exemptions: 80000/165705 read, 169 kept
+INFO IL exemptions: 85000/165705 read, 179 kept
+INFO IL exemptions: 90000/165705 read, 197 kept
+INFO IL exemptions: 95000/165705 read, 222 kept
+INFO IL exemptions: 100000/165705 read, 231 kept
+INFO IL exemptions: 105000/165705 read, 234 kept
+INFO IL exemptions: 110000/165705 read, 240 kept
+INFO IL exemptions: 115000/165705 read, 253 kept
+INFO IL exemptions: 120000/165705 read, 265 kept
+INFO IL exemptions: 125000/165705 read, 281 kept
+INFO IL exemptions: 130000/165705 read, 289 kept
+INFO IL exemptions: 135000/165705 read, 293 kept
+INFO IL exemptions: 140000/165705 read, 293 kept
+INFO IL exemptions: 145000/165705 read, 296 kept
+INFO IL exemptions: 150000/165705 read, 302 kept
+INFO IL exemptions: 155000/165705 read, 330 kept
+INFO IL exemptions: 160000/165705 read, 330 kept
+INFO IL exemptions: 165000/165705 read, 417 kept
+INFO IL exemptions: 165705/165705 read, 542 kept
+INFO IL exemptions {'read': 165705, 'kept': 542, 'next 6 months': 76, 'ended - re-procurement due': 7, '6-18 months': 53, 'later': 406}
+IL_EXEMPT {'read': 165705, 'kept': 542, 'next 6 months': 76, 'ended - re-procurement due': 7, '6-18 months': 53, 'later': 406}
+   next 6 months | משרד הבינוי והשיכון | פרוטוקול ועדה להסכם חדש עמיגור  מצ"ב לאחר תיקונים | עמיגור  רכוש מינהלי-מקבל הלואו | 971207000 | 01.01.2027
+   next 6 months | משרד הבינוי והשיכון | אישור הסכם ניהול נכסים עם ההסתדרות הציונית | ההסתדרות הציונית העולמית | 150000000 | 24.04.2027
+   next 6 months | משרד הבינוי והשיכון | הכנת תסכיר | נדב שדה | 70021415 | 30.12.2026
+   next 6 months | משרד הבינוי והשיכון | בית העמק -1479062 נוף רותי ארני | ארני רותי | 70021401 | 29.12.2026
+   next 6 months | החשב הכללי הדיור הממשלתי | התקשרות לצורך איתור דיור עבור משטרת ישראל מרחב דן | מנדו עססקים בע"מ + עזבון מולד  | 44884585 | 01.03.2027
+   next 6 months | החשב הכללי הדיור הממשלתי | משטרת ישראל מבקשת להאריך את תקופת השכירות לתקופה ק | ספרטון ייזום והשקעות (2006) בע | 42360589 | 31.12.2026
+INFO awards 284119 (12m), recent 3000, buyers 37869, competitors 228526
+INFO WGI GOV_WGI_CC.EST: 1296 countries
+INFO WGI GOV_WGI_RL.EST: 1296 countries
+INFO WGI GOV_WGI_RQ.EST: 1296 countries
+INFO WGI GOV_WGI_GE.EST: 1296 countries
+INTEGRITY countries 207
+   ISR 66 open | CC 0.957 | single-bid  | foreign  | governance data only
+   DEU 91 open | CC 1.676 | single-bid 0.231 | foreign 0.02 | governance + award records
+   GBR 89 open | CC 1.531 | single-bid 0.037 | foreign 0.025 | governance + award records
+   USA 67 open | CC 0.865 | single-bid  | foreign 0.007 | governance data only
+   KEN 37 high risk | CC -0.855 | single-bid  | foreign  | governance data only
+   ETH 37 high risk | CC -0.374 | single-bid  | foreign  | governance data only
+   UGA 32 high risk | CC -1.105 | single-bid  | foreign  | governance data only
+   NGA 30 high risk | CC -1.068 | single-bid  | foreign  | governance data only
+   IND 46 caution | CC -0.279 | single-bid  | foreign  | governance data only
+   BRA 41 caution | CC -0.381 | single-bid  | foreign 0.001 | governance data only
+   UKR 43 caution | CC -0.691 | single-bid 0.708 | foreign 0.001 | governance + award records
+   GTM 30 high risk | CC -0.924 | single-bid  | foreign  | governance data only
+   AZE 38 high risk | CC -0.778 | single-bid  | foreign  | governance data only
+   ARE 67 open | CC 1.152 | single-bid  | foreign  | governance data only
+   SAU 61 open | CC 0.806 | single-bid  | foreign  | governance data only
