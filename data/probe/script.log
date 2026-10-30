@@ -1,8 +1,19 @@
-wgi_src3 200 102 [{"message":[{"id":"120","key":"Invalid value","value":"The provided parameter value is not valid"}]}]
-wgi_plain 200 128 [{"message":[{"id":"175","key":"Invalid format","value":"The indicator was not found. It may have been deleted or archived."}]}]
-wgi_list 200 8106 [{"page":1,"pages":1,"per_page":"100","total":36},[{"id":"GOV_WGI_CC.EST","name":"Control of Corruption - Governance estimate (approx. -2.5 to +2.5)","unit":"",
-wgi_cpia 200 1517 [{"page":1,"pages":27,"per_page":5,"total":134,"sourceid":null,"lastupdated":"2026-10-08"},[{"indicator":{"id":"IQ.CPA.TRAN.XQ","value":"CPIA transparency, acco
-eu_a 500 82 {"apiVersion":"2.157.1","type":"throwable","message":"An internal error occurred"}
-eu_b 500 82 {"apiVersion":"2.157.1","type":"throwable","message":"An internal error occurred"}
-grants_detail 200 46098 {"errorcode":0,"msg":"Webservice Succeeds","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ImUrWGh3akRMdTkvT29EY21RdlB6aWxwUEIvSURTQ3Y0VjFKYTQ4L2M1RFE9Ig.iP_sg4Lc
-DONE
+INFO grants.gov: 744 calls
+INFO EU calls: 257
+INFO Israel calls: 1
+INFO grants {'calls': 1002, 'grants.gov': 744, 'EU': 257, 'data.gov.il': 1}
+GRANTS {'calls': 1002, 'grants.gov': 744, 'EU': 257, 'data.gov.il': 1}
+   EU Funding & Tenders | 2026-10-30 | EU-China Think Tank Engagement on Green Governance
+   EU Funding & Tenders | 2026-10-30 | Strengthening NSA's knowledge, research and innovation partnerships
+   grants.gov (US) | 2026-10-30 | Cooperative Agreement for Affiliated Partner with the Southern Appalachian Coope
+   grants.gov (US) | 2026-10-30 | ONR FY27 NOFO for Young Investigator Program
+   grants.gov (US) | 2026-10-30 | Prioritization Process Pilot Program (PPPP) Competitive Grant Program
+   grants.gov (US) | 2026-10-30 | BJA FY 2026 Rural Violent Crime Reduction Initiative
+WARNING IL exemptions offset 0: Expecting value: line 1 column 1 (char 0)
+INFO IL exemptions {'read': 0, 'kept': 0, 'next 6 months': 0, 'ended - re-procurement due': 0, '6-18 months': 0, 'later': 0}
+IL_EXEMPT {'read': 0, 'kept': 0, 'next 6 months': 0, 'ended - re-procurement due': 0, '6-18 months': 0, 'later': 0}
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/check_new.py", line 16, in <module>
+    e = list(csv.DictReader(open("data/leads/il_exempt.csv", encoding="utf-8")))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/leads/il_exempt.csv'
