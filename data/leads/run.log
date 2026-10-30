@@ -1,6 +1,6 @@
-Fri Oct 30 14:40:51 UTC 2026
+Fri Oct 30 15:05:48 UTC 2026
 INFO initializing identifier
-[0;93m2026-10-30 14:41:18.392193640 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/VMBUS:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-10-30 15:06:16.171344709 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['CONSTRUCCION DE LAS OBRAS CORRESPONDIENTES A LA INSTITUCION EDUCATIVA REPUBLICA DE ARGENTINA SEDE PRINCIPAL Y REPUBLICA DE ARGENTINA SEDE POLICARPA SALAVARRIETA - EJECUTAR POR EL SISTEMA DE PRECIOS UNITARIOS FIJOS, SIN FÓRMULA DE REAJUSTE, LA CONSTRUCCIÓN DE LAS OBRAS CORRESPONDIENTES A LA INSTITUCI'])
 INFO ('apply_packaged_translation', 'CONSTRUCCION DE LAS OBRAS CORRESPONDIENTES A LA INSTITUCION EDUCATIVA REPUBLICA DE ARGENTINA SEDE PRINCIPAL Y REPUBLICA DE ARGENTINA SEDE POLICARPA SALAVARRIETA - EJECUTAR POR EL SISTEMA DE PRECIOS UNITARIOS FIJOS, SIN FÓRMULA DE REAJUSTE, LA CONSTRUCCIÓN DE LAS OBRAS CORRESPONDIENTES A LA INSTITUCI')
@@ -1381,34 +1381,6 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['2@@', '6@@', 'P', '
 INFO ('value_hypotheses:', [('26P-596 _ 4500055555555555555555555555555555555555555005 Posture, which is the autocrates from 25 tons; Lot 2 - 4500050050050055500555555555005555555555555555555500555555555555555555555555555555555555555555555005555555555005555555555555555555555555555555555555550055555555555555555500500500500500500500500500500500500500500500@@', -86.03296661376953)])
 INFO ('translated_paragraphs:', [[('26P-596 _ 4500055555555555555555555555555555555555555005 Posture, which is the autocrates from 25 tons; Lot 2 - 4500050050050055500555555555005555555555555555555500555555555555555555555555555555555555555555555005555555555005555555555555555555555555555555555555550055555555555555555500500500500500500500500500500500500500500500@@', -86.03296661376953)]])
 INFO ('hypotheses_to_return:', [('26P-596 _ 4500055555555555555555555555555555555555555005 Posture, which is the autocrates from 25 tons; Lot 2 - 4500050050050055500555555555005555555555555555555500555555555555555555555555555555555555555555555005555555555005555555555555555555555555555555555555550055555555555555555500500500500500500500500500500500500500500500@@', -86.03296661376953)])
-INFO ('paragraphs:', ['ENMIENDA - Nro. 1 - ASFALTADO VIAL TRAMO EL ENO – NUEVA JUVENTUD, PARROQUIA EL ENO, CANTÓN LAGO AGRIO, PROVINCIA DE SUCUMBÍOS - EC-L1289-P00022'])
-INFO ('apply_packaged_translation', 'ENMIENDA - Nro. 1 - ASFALTADO VIAL TRAMO EL ENO – NUEVA JUVENTUD, PARROQUIA EL ENO, CANTÓN LAGO AGRIO, PROVINCIA DE SUCUMBÍOS - EC-L1289-P00022')
-INFO ('Splitting sentences using SBD Model: (cs) StanzaSentencizer',)
-WARNING Language cs package default expects mwt, which has been added
-INFO ('sentences', ['ENMIENDA - Nro. 1 - ASFALTADO VIAL TRAMO EL ENO – NUEVA JUVENTUD, PARROQUIA EL ENO, CANTÓN LAGO AGRIO, PROVINCIA DE SUCUMBÍOS - EC-L1289-P00022'])
-INFO ('tokenized', [['EN@@', 'MI@@', 'EN@@', 'DA', '-', 'N@@', 'ro', '.', '1', '-', 'A@@', 'SF@@', 'AL@@', 'TA@@', 'DO', 'VI@@', 'AL', 'TRA@@', 'M@@', 'O', 'EL', 'EN@@', 'O', '-', 'N@@', 'U@@', 'EV@@', 'A', 'J@@', 'U@@', 'V@@', 'EN@@', 'TU@@', 'D', ',', 'PAR@@', 'RO@@', 'QU@@', 'IA', 'EL', 'EN@@', 'O', ',', 'C@@', 'AN@@', 'T@@', 'Ó@@', 'N', 'LA@@', 'G@@', 'O', 'AG@@', 'RI@@', 'O', ',', 'PRO@@', 'V@@', 'IN@@', 'CIA', 'DE', 'SU@@', 'C@@', 'U@@', 'M@@', 'B@@', 'Í@@', 'OS', '-', 'EC@@', '-@@', 'L@@', '12@@', '89@@', '-@@', 'P@@', '000@@', '22']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['EN@@', 'MI@@', 'EN@@', 'DA', '-', 'NR@@', '.1', '-', 'AS@@', 'F@@', 'AL@@', 'T@@', 'AD@@', 'O', 'VI@@', 'AL', 'TR@@', 'AM@@', 'O', 'EL', 'EN@@', 'O', '-', 'NU@@', 'EV@@', 'A', 'JU@@', 'VEN@@', 'TU@@', 'D', ',', 'PAR@@', 'RO@@', 'QU@@', 'IA', 'EL', 'EN@@', 'O', ',', 'CAN@@', 'T@@', 'Ó@@', 'N', 'L@@', 'AG@@', 'O', 'AG@@', 'RI@@', 'O', ',', 'PROV@@', 'IN@@', 'CIA', 'DE', 'S@@', 'UC@@', 'U@@', 'MB@@', 'Í@@', 'OS', '-', 'EC@@', '-@@', 'L@@', '12@@', '89@@', '-@@', 'P@@', '000@@', '22']], scores=[-5.826931476593018], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('ENMIENDA - NR.1 - ASFALTADO VIAL TRAMO EL ENO - NUEVA JUVENTUD, PARROQUIA EL ENO, CANTÓN LAGO AGRIO, PROVINCIA DE SUCUMBÍOS - EC-L1289-P00022', -5.826931476593018)])
-INFO ('translated_paragraphs:', [[('ENMIENDA - NR.1 - ASFALTADO VIAL TRAMO EL ENO - NUEVA JUVENTUD, PARROQUIA EL ENO, CANTÓN LAGO AGRIO, PROVINCIA DE SUCUMBÍOS - EC-L1289-P00022', -5.826931476593018)]])
-INFO ('hypotheses_to_return:', [('ENMIENDA - NR.1 - ASFALTADO VIAL TRAMO EL ENO - NUEVA JUVENTUD, PARROQUIA EL ENO, CANTÓN LAGO AGRIO, PROVINCIA DE SUCUMBÍOS - EC-L1289-P00022', -5.826931476593018)])
-INFO ('paragraphs:', ['ENMIENDA - "FISCALIZACIÓN DE LA OBRA CONSTRUCCIÓN A NIVEL DE ASFALTO DE LA VÍA DESDE EL PUENTE DEL AMOR A LOS HACHOS, PARROQUIA YANTZAZA, CANTÓN YANTZAZA, PROVINCIA DE ZAMORA CHINCHIPE (TRAMO ABSC: 0+000-7+400)”'])
-INFO ('apply_packaged_translation', 'ENMIENDA - "FISCALIZACIÓN DE LA OBRA CONSTRUCCIÓN A NIVEL DE ASFALTO DE LA VÍA DESDE EL PUENTE DEL AMOR A LOS HACHOS, PARROQUIA YANTZAZA, CANTÓN YANTZAZA, PROVINCIA DE ZAMORA CHINCHIPE (TRAMO ABSC: 0+000-7+400)”')
-INFO ('Splitting sentences using SBD Model: (cs) StanzaSentencizer',)
-INFO ('sentences', ['ENMIENDA - "FISCALIZACIÓN DE LA OBRA CONSTRUCCIÓN A NIVEL DE ASFALTO DE LA VÍA DESDE EL PUENTE DEL AMOR A LOS HACHOS, PARROQUIA YANTZAZA, CANTÓN YANTZAZA, PROVINCIA DE ZAMORA CHINCHIPE (TRAMO ABSC: 0+000-7+400)”'])
-INFO ('tokenized', [['EN@@', 'MI@@', 'EN@@', 'DA', '-', '&quot;', 'F@@', 'IS@@', 'C@@', 'AL@@', 'I@@', 'ZA@@', 'CI@@', 'Ó@@', 'N', 'DE', 'LA', 'OB@@', 'RA', 'CO@@', 'N@@', 'ST@@', 'RU@@', 'C@@', 'CI@@', 'Ó@@', 'N', 'A', 'N@@', 'IV@@', 'EL', 'DE', 'A@@', 'SF@@', 'AL@@', 'TO', 'DE', 'LA', 'V@@', 'Í@@', 'A', 'D@@', 'ES@@', 'DE', 'EL', 'PU@@', 'EN@@', 'TE', 'DE@@', 'L', 'A@@', 'MO@@', 'R', 'A', 'LO@@', 'S', 'HA@@', 'CHO@@', 'S', ',', 'PAR@@', 'RO@@', 'QU@@', 'IA', 'Y@@', 'AN@@', 'T@@', 'ZA@@', 'ZA', ',', 'C@@', 'AN@@', 'T@@', 'Ó@@', 'N', 'Y@@', 'AN@@', 'T@@', 'ZA@@', 'ZA', ',', 'PRO@@', 'V@@', 'IN@@', 'CIA', 'DE', 'ZA@@', 'M@@', 'OR@@', 'A', 'CH@@', 'IN@@', 'CH@@', 'I@@', 'PE', '(', 'TRA@@', 'M@@', 'O', 'AB@@', 'SC', ':', '0', '+', '000@@', '-@@', '7', '+', '400', ')', '&quot;']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['EN@@', 'MI@@', 'EN@@', 'DA', '-', '&quot;', 'FIS@@', 'CAL@@', 'IZ@@', 'AC@@', 'I@@', 'Ó@@', 'N', 'DE', 'LA', 'OB@@', 'RA', 'CON@@', 'STRUC@@', 'CI@@', 'Ó@@', 'N', 'AND', 'N@@', 'IV@@', 'EL', 'DE', 'AS@@', 'F@@', 'AL@@', 'TO', 'DE', 'LA', 'V@@', 'Í@@', 'A', 'DES@@', 'DE', 'EL', 'PU@@', 'EN@@', 'TE', 'DE@@', 'L', 'AM@@', 'OR', 'A', 'LO@@', 'S', 'HA@@', 'CH@@', 'OS', ',', 'PAR@@', 'RO@@', 'QU@@', 'IA', 'Y@@', 'AN@@', 'T@@', 'Z@@', 'AZ@@', 'A', ',', 'CAN@@', 'T@@', 'Ó@@', 'N', 'Y@@', 'AN@@', 'T@@', 'Z@@', 'AZ@@', 'A', ',', 'PROV@@', 'IN@@', 'CIA', 'DE', 'Z@@', 'AM@@', 'OR@@', 'A', 'CH@@', 'IN@@', 'CH@@', 'IP@@', 'E', '(', 'TR@@', 'AM@@', 'O', 'AB@@', 'SC', ':', '0', '+', '000@@', '-@@', '7', '+', '400', ')', '&quot;']], scores=[-7.923044681549072], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('ENMIENDA - "FISCALIZACIÓN DE LA OBRA CONSTRUCCIÓN AND NIVEL DE ASFALTO DE LA VÍA DESDE EL PUENTE DEL AMOR A LOS HACHOS, PARROQUIA YANTZAZA, CANTÓN YANTZAZA, PROVINCIA DE ZAMORA CHINCHIPE (TRAMO ABSC: 0 + 000-7 + 400)"', -7.923044681549072)])
-INFO ('translated_paragraphs:', [[('ENMIENDA - "FISCALIZACIÓN DE LA OBRA CONSTRUCCIÓN AND NIVEL DE ASFALTO DE LA VÍA DESDE EL PUENTE DEL AMOR A LOS HACHOS, PARROQUIA YANTZAZA, CANTÓN YANTZAZA, PROVINCIA DE ZAMORA CHINCHIPE (TRAMO ABSC: 0 + 000-7 + 400)"', -7.923044681549072)]])
-INFO ('hypotheses_to_return:', [('ENMIENDA - "FISCALIZACIÓN DE LA OBRA CONSTRUCCIÓN AND NIVEL DE ASFALTO DE LA VÍA DESDE EL PUENTE DEL AMOR A LOS HACHOS, PARROQUIA YANTZAZA, CANTÓN YANTZAZA, PROVINCIA DE ZAMORA CHINCHIPE (TRAMO ABSC: 0 + 000-7 + 400)"', -7.923044681549072)])
-INFO ('paragraphs:', ['ENMIENDA - DIAGNOSTICO NACIONAL Y LÍNEA DE BASE DE LAS CUENCAS HIDROGRÁFICAS DE BOLIVIA PARA LA PLANIFICACIÓN INTEGRAL DE RECURSOS HÍDRICOS'])
-INFO ('apply_packaged_translation', 'ENMIENDA - DIAGNOSTICO NACIONAL Y LÍNEA DE BASE DE LAS CUENCAS HIDROGRÁFICAS DE BOLIVIA PARA LA PLANIFICACIÓN INTEGRAL DE RECURSOS HÍDRICOS')
-INFO ('Splitting sentences using SBD Model: (cs) StanzaSentencizer',)
-INFO ('sentences', ['ENMIENDA - DIAGNOSTICO NACIONAL Y LÍNEA DE BASE DE LAS CUENCAS HIDROGRÁFICAS DE BOLIVIA PARA LA PLANIFICACIÓN INTEGRAL DE RECURSOS HÍDRICOS'])
-INFO ('tokenized', [['EN@@', 'MI@@', 'EN@@', 'DA', '-', 'DI@@', 'AG@@', 'NO@@', 'ST@@', 'IC@@', 'O', 'NA@@', 'CI@@', 'O@@', 'NA@@', 'L', 'Y', 'L@@', 'Í@@', 'NE@@', 'A', 'DE', 'BA@@', 'SE', 'DE', 'LA@@', 'S', 'C@@', 'U@@', 'EN@@', 'CAS', 'H@@', 'ID@@', 'RO@@', 'G@@', 'RÁ@@', 'F@@', 'IC@@', 'AS', 'DE', 'BO@@', 'L@@', 'IV@@', 'IA', 'PAR@@', 'A', 'LA', 'PLA@@', 'NI@@', 'F@@', 'IC@@', 'A@@', 'CI@@', 'Ó@@', 'N', 'IN@@', 'TE@@', 'GRA@@', 'L', 'DE', 'R@@', 'EC@@', 'UR@@', 'SO@@', 'S', 'H@@', 'Í@@', 'DR@@', 'IC@@', 'OS']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['EN@@', 'MI@@', 'EN@@', 'DA', '-', 'DI@@', 'AG@@', 'NO@@', 'S@@', 'TIC', 'N@@', 'AC@@', 'I@@', 'ON@@', 'AL', 'Y', 'L@@', 'Í@@', 'NE@@', 'A', 'DE', 'BA@@', 'SE', 'DE', 'L@@', 'AS', 'CU@@', 'EN@@', 'CAS', 'H@@', 'ID@@', 'RO@@', 'GR@@', 'Á@@', 'F@@', 'IC@@', 'AS', 'DE', 'B@@', 'OL@@', 'IV@@', 'IA', 'PAR@@', 'A', 'LA', 'PL@@', 'AN@@', 'IF@@', 'IC@@', 'AC@@', 'I@@', 'Ó@@', 'N', 'INTE@@', 'GR@@', 'AL', 'DE', 'REC@@', 'UR@@', 'SO@@', 'S', 'H@@', 'Í@@', 'DR@@', 'IC@@', 'OS']], scores=[-6.463024139404297], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('ENMIENDA - DIAGNOSTIC NACIONAL Y LÍNEA DE BASE DE LAS CUENCAS HIDROGRÁFICAS DE BOLIVIA PARA LA PLANIFICACIÓN INTEGRAL DE RECURSOS HÍDRICOS', -6.463024139404297)])
-INFO ('translated_paragraphs:', [[('ENMIENDA - DIAGNOSTIC NACIONAL Y LÍNEA DE BASE DE LAS CUENCAS HIDROGRÁFICAS DE BOLIVIA PARA LA PLANIFICACIÓN INTEGRAL DE RECURSOS HÍDRICOS', -6.463024139404297)]])
-INFO ('hypotheses_to_return:', [('ENMIENDA - DIAGNOSTIC NACIONAL Y LÍNEA DE BASE DE LAS CUENCAS HIDROGRÁFICAS DE BOLIVIA PARA LA PLANIFICACIÓN INTEGRAL DE RECURSOS HÍDRICOS', -6.463024139404297)])
 INFO ('paragraphs:', ['Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona'])
 INFO ('apply_packaged_translation', 'Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona')
 INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
@@ -1418,35 +1390,7 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['Moldova', '-', 'D@@
 INFO ('value_hypotheses:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
 INFO ('translated_paragraphs:', [[('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)]])
 INFO ('hypotheses_to_return:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
-INFO ('paragraphs:', ['Submission Mobile Endgeräte'])
-INFO ('apply_packaged_translation', 'Submission Mobile Endgeräte')
-INFO ('Splitting sentences using SBD Model: (fi) StanzaSentencizer',)
-WARNING Language fi package default expects mwt, which has been added
-INFO ('sentences', ['Submission Mobile Endgeräte'])
-INFO ('tokenized', [['Sub@@', 'missi@@', 'on', 'Mo@@', 'b@@', 'ile', 'En@@', 'dg@@', 'erä@@', 'te']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Sub@@', 'mission', 'Mobile', 'En@@', 'd@@', 'ka@@', 'ute']], scores=[-1.7891209125518799], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Submission Mobile Endkaute', -1.7891209125518799)])
-INFO ('translated_paragraphs:', [[('Submission Mobile Endkaute', -1.7891209125518799)]])
-INFO ('hypotheses_to_return:', [('Submission Mobile Endkaute', -1.7891209125518799)])
-INFO ('paragraphs:', ['PL20260010 NUOVA SOTTOSTAZIONE GIS AET-AMB – PARTICELLA 156 RFD BELLINZONA-GIUBIASCO / OPERE DA IMPRESARIO COSTRUTTORE'])
-INFO ('apply_packaged_translation', 'PL20260010 NUOVA SOTTOSTAZIONE GIS AET-AMB – PARTICELLA 156 RFD BELLINZONA-GIUBIASCO / OPERE DA IMPRESARIO COSTRUTTORE')
-INFO ('Splitting sentences using SBD Model: (lt) StanzaSentencizer',)
-INFO ('sentences', ['PL20260010 NUOVA SOTTOSTAZIONE GIS AET-AMB – PARTICELLA 156 RFD BELLINZONA-GIUBIASCO / OPERE DA IMPRESARIO COSTRUTTORE'])
-INFO ('tokenized', [['PL@@', '20@@', '26@@', '00@@', '10', 'NUO@@', 'VA', 'SO@@', 'T@@', 'TO@@', 'ST@@', 'AZ@@', 'ION@@', 'E', 'G@@', 'IS', 'A@@', 'ET@@', '-@@', 'AM@@', 'B', '-', 'PAR@@', 'T@@', 'IC@@', 'EL@@', 'LA', '156', 'RF@@', 'D', 'BEL@@', 'LIN@@', 'Z@@', 'ON@@', 'A@@', '-@@', 'GI@@', 'U@@', 'BI@@', 'AS@@', 'CO', '/', 'O@@', 'PER@@', 'E', 'DA', 'IM@@', 'PRE@@', 'SA@@', 'RIO', 'CO@@', 'ST@@', 'R@@', 'UT@@', 'TO@@', 'RE']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['PL@@', '20@@', '26@@', '00@@', '10', 'REN@@', 'VA', 'SO@@', 'T@@', 'TO@@', 'ST@@', 'AZ@@', 'I@@', 'ONE', 'GIS', 'AE@@', 'T', '@-@', 'AM@@', 'B', '-', 'PART@@', 'KE@@', 'LL@@', 'A', '156', 'RF@@', 'D', 'BEL@@', 'LIN@@', 'Z@@', 'ON@@', 'A', '@-@', 'GI@@', 'U@@', 'BI@@', 'AS@@', 'CO', '/', 'O@@', 'PER@@', 'E', 'DA', 'IM@@', 'PRE@@', 'SO@@', 'DI@@', 'O', 'CO@@', 'STR@@', 'U@@', 'T@@', 'TOR@@', 'E']], scores=[-9.1444673538208], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('PL20260010 RENVA SOTTOSTAZIONE GIS AET-AMB - PARTKELLA 156 RFD BELLINZONA-GIUBIASCO / OPERE DA IMPRESODIO COSTRUTTORE', -9.1444673538208)])
-INFO ('translated_paragraphs:', [[('PL20260010 RENVA SOTTOSTAZIONE GIS AET-AMB - PARTKELLA 156 RFD BELLINZONA-GIUBIASCO / OPERE DA IMPRESODIO COSTRUTTORE', -9.1444673538208)]])
-INFO ('hypotheses_to_return:', [('PL20260010 RENVA SOTTOSTAZIONE GIS AET-AMB - PARTKELLA 156 RFD BELLINZONA-GIUBIASCO / OPERE DA IMPRESODIO COSTRUTTORE', -9.1444673538208)])
-INFO ('paragraphs:', ['MP 2025.11.814 - Frigos connectés'])
-INFO ('apply_packaged_translation', 'MP 2025.11.814 - Frigos connectés')
-INFO ('Splitting sentences using SBD Model: (hu) StanzaSentencizer',)
-INFO ('sentences', ['MP 2025.11.814 - Frigos connectés'])
-INFO ('tokenized', [['MP', '20@@', '25@@', '.1@@', '1.@@', '8@@', '14', '-', 'Fr@@', 'ig@@', 'os', 'con@@', 'n@@', 'ec@@', 'tés']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['MP', '20@@', '25.@@', '11.@@', '8@@', '14', '-', 'Fri@@', 'gos', 'connect']], scores=[-2.5485270023345947], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('MP 2025.11.814 - Frigos connect', -2.5485270023345947)])
-INFO ('translated_paragraphs:', [[('MP 2025.11.814 - Frigos connect', -2.5485270023345947)]])
-INFO ('hypotheses_to_return:', [('MP 2025.11.814 - Frigos connect', -2.5485270023345947)])
-INFO translations: 223 new, 0 pending, cache 31479, 481s
+INFO translations: 0 new, 0 pending, cache 31479, 448s
 INFO awards 320398 (12m), recent 3000, buyers 42474, competitors 253636
 WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/work/commodity-feeder/commodity-feeder/leads/sanctions.py)
 INFO integrity: 207 countries profiled, tenders {'open': 39280, 'no data': 204, 'high risk': 24107, 'caution': 7310}
@@ -1468,20 +1412,30 @@ INFO sheet/tenders_13.csv trimmed for the sheet: 2284 of 2500 rows
 INFO sheet/tenders_14.csv trimmed for the sheet: 2393 of 2500 rows
 INFO sheet/tenders_15.csv trimmed for the sheet: 2461 of 2500 rows
 INFO sheet/tenders_16.csv trimmed for the sheet: 2258 of 2500 rows
+INFO sheet/tenders_17.csv trimmed for the sheet: 2267 of 2500 rows
+INFO sheet/tenders_18.csv trimmed for the sheet: 2336 of 2500 rows
+INFO sheet/tenders_19.csv trimmed for the sheet: 2192 of 2500 rows
+INFO sheet/tenders_20.csv trimmed for the sheet: 2236 of 2500 rows
+INFO sheet/tenders_21.csv trimmed for the sheet: 2235 of 2500 rows
+INFO sheet/tenders_22.csv trimmed for the sheet: 2296 of 2500 rows
+INFO sheet/tenders_23.csv trimmed for the sheet: 2188 of 2500 rows
+INFO sheet/tenders_24.csv trimmed for the sheet: 2252 of 2500 rows
+INFO sheet/tenders_25.csv trimmed for the sheet: 2292 of 2500 rows
+INFO sheet/tenders_26.csv trimmed for the sheet: 2297 of 2500 rows
+INFO sheet/tenders_27.csv trimmed for the sheet: 2292 of 2500 rows
 INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 46 new, 6901 total, 4 pending, 8s
+INFO hebrew titles: 0 new, 6901 total, 4 pending, 4s
 INFO accounts 21877
 INFO importers.csv trimmed for the sheet: 3981 of 4620 rows
 INFO tenders 70901, importers 4620, suppliers 2772
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as P
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 690 deals checked, 6 GDELT queries, 25 linked articles
+INFO:leads:news: 690 deals checked, 3 GDELT queries, 25 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
-wrote 36798 rows x 28 cols to Tenders
+wrote 65082 rows x 28 cols to Tenders
 wrote 5001 rows x 13 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
 wrote 5001 rows x 7 cols to Competitors
@@ -1504,11 +1458,11 @@ wrote 429 rows x 17 cols to Exempt Buys
 wrote 524 rows x 12 cols to Grants
 wrote 144 rows x 16 cols to IL Exemption Contracts
 wrote 6902 rows x 2 cols to Titles HE
-wrote 2785 rows x 28 cols to Upcoming
+wrote 2786 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
-INFO:leads:web index: 36797 tenders, 18.4 MB raw, 3.4 MB gz
-INFO:leads:web panel static: tenders 1500, titles 6902, repeat 5001, markets 1710, meta 3, upcoming 1500, tot_t 1, fit 36797, 1.7 MB encrypted
+INFO:leads:web index: 65081 tenders, 32.6 MB raw, 5.8 MB gz
+INFO:leads:web panel static: tenders 1500, titles 6902, repeat 5001, markets 1710, meta 3, upcoming 1500, tot_t 1, fit 59999, 1.9 MB encrypted
 INFO:leads:web panel live: bd 12, accounts 51, intel 29, pursuits 6, jobs 15, stats 31, 0.1 MB encrypted
 HEALTH ALERT qatar: EMPTY, zero rows
 HEALTH ALERT chile: EMPTY, zero rows
