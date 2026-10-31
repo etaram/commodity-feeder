@@ -1,70 +1,70 @@
 {
- "generated": "2026-10-31T19:00Z",
+ "generated": "2026-10-31T20:03Z",
  "alerts": [
-  "ocdr_tenders: stale 46.8 h"
+  "ocdr_tenders: stale 47.8 h"
  ],
  "sources": [
   {
    "source": "ted",
    "rows": 14895,
    "prev_rows": 14895,
-   "age_h": 1.6,
+   "age_h": 1.0,
    "flags": []
   },
   {
    "source": "fts",
    "rows": 165,
    "prev_rows": 165,
-   "age_h": 1.6,
+   "age_h": 1.0,
    "flags": []
   },
   {
    "source": "sam",
    "rows": 6861,
    "prev_rows": 6858,
-   "age_h": 1.6,
+   "age_h": 1.0,
    "flags": []
   },
   {
    "source": "canadabuys",
    "rows": 826,
    "prev_rows": 826,
-   "age_h": 1.5,
+   "age_h": 1.0,
    "flags": []
   },
   {
    "source": "za",
    "rows": 524,
    "prev_rows": 523,
-   "age_h": 1.5,
+   "age_h": 9.3,
    "flags": []
   },
   {
    "source": "worldbank",
    "rows": 701,
    "prev_rows": 701,
-   "age_h": 0.6,
+   "age_h": 8.4,
    "flags": []
   },
   {
    "source": "ebrd",
    "rows": 41,
    "prev_rows": 41,
-   "age_h": 1.5,
+   "age_h": 1.0,
    "flags": []
   },
   {
    "source": "mrgov",
    "rows": 197,
    "prev_rows": 197,
-   "age_h": 0.6,
+   "age_h": 8.3,
    "flags": []
   },
   {
    "source": "ungm",
-   "rows": 839,
+   "rows": 840,
    "prev_rows": 835,
-   "age_h": 1.5,
+   "age_h": 0.9,
    "flags": []
   },
   {
@@ -92,96 +92,96 @@
    "source": "etimad",
    "rows": 344,
    "prev_rows": 344,
-   "age_h": 1.0,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "prozorro",
-   "rows": 732,
+   "rows": 733,
    "prev_rows": 730,
-   "age_h": 1.0,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "pncp",
    "rows": 3024,
    "prev_rows": 3024,
-   "age_h": 1.0,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "secop",
-   "rows": 651,
+   "rows": 716,
    "prev_rows": 651,
-   "age_h": 1.0,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "germany",
    "rows": 9051,
    "prev_rows": 9051,
-   "age_h": 1.0,
+   "age_h": 8.8,
    "flags": []
   },
   {
    "source": "contractsfinder",
    "rows": 84,
    "prev_rows": 84,
-   "age_h": 1.0,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "paraguay",
-   "rows": 314,
+   "rows": 288,
    "prev_rows": 288,
-   "age_h": 0.8,
+   "age_h": 8.7,
    "flags": []
   },
   {
    "source": "dominican",
    "rows": 536,
    "prev_rows": 536,
-   "age_h": 0.8,
+   "age_h": 8.6,
    "flags": []
   },
   {
    "source": "austender",
    "rows": 132,
    "prev_rows": 132,
-   "age_h": 0.8,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "oman",
    "rows": 196,
    "prev_rows": 195,
-   "age_h": 0.8,
+   "age_h": 0.9,
    "flags": []
   },
   {
    "source": "france",
-   "rows": 5965,
+   "rows": 5900,
    "prev_rows": 5900,
-   "age_h": 0.8,
+   "age_h": 8.6,
    "flags": []
   },
   {
    "source": "spain",
    "rows": 2328,
    "prev_rows": 2328,
-   "age_h": 0.7,
+   "age_h": 8.6,
    "flags": []
   },
   {
    "source": "kenya",
    "rows": 477,
    "prev_rows": 477,
-   "age_h": 0.7,
+   "age_h": 0.8,
    "flags": []
   },
   {
    "source": "moldova",
-   "rows": 753,
+   "rows": 752,
    "prev_rows": 746,
    "age_h": 0.9,
    "flags": []
@@ -197,7 +197,7 @@
    "source": "bahrain",
    "rows": 8,
    "prev_rows": 7,
-   "age_h": 0.9,
+   "age_h": 8.8,
    "flags": []
   },
   {
@@ -211,44 +211,44 @@
    "source": "qatar",
    "rows": 214,
    "prev_rows": 209,
-   "age_h": 0.5,
+   "age_h": 7.0,
    "flags": []
   },
   {
    "source": "israel",
    "rows": 960,
    "prev_rows": 960,
-   "age_h": 9.0,
+   "age_h": 10.1,
    "flags": []
   },
   {
    "source": "nyc",
    "rows": 193,
    "prev_rows": 193,
-   "age_h": 1.6,
+   "age_h": 9.4,
    "flags": []
   },
   {
    "source": "us_cities",
-   "rows": 289,
+   "rows": 286,
    "prev_rows": 287,
-   "age_h": 1.5,
+   "age_h": 9.3,
    "flags": []
   },
   {
    "source": "wb_pipeline",
    "rows": 930,
    "prev_rows": 930,
-   "age_h": 0.6,
+   "age_h": 8.4,
    "flags": []
   },
   {
    "source": "ocdr_tenders",
    "rows": 954,
    "prev_rows": 954,
-   "age_h": 46.8,
+   "age_h": 47.8,
    "flags": [
-    "stale 46.8 h"
+    "stale 47.8 h"
    ]
   },
   {
@@ -269,7 +269,7 @@
    "source": "chile",
    "rows": 4296,
    "prev_rows": 4290,
-   "age_h": 1.5,
+   "age_h": 9.3,
    "flags": []
   },
   {
@@ -288,16 +288,16 @@
   },
   {
    "source": "india",
-   "rows": 58912,
+   "rows": 57585,
    "prev_rows": 55427,
-   "age_h": 1.0,
+   "age_h": 8.8,
    "flags": []
   },
   {
    "source": "importyeti",
    "rows": 2,
    "prev_rows": 2,
-   "age_h": 0.6,
+   "age_h": 8.3,
    "flags": []
   }
  ]
