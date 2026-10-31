@@ -229,9 +229,22 @@ def merge() -> int:
                     for k in ("price_type", "price_usd", "orig_price", "orig_ccy", "price_date", "source", "link", "calc"):
                         d[k] = ""
                     d["quality"] = "OK"
+                elif r.get("designated_key") and d.get("source_key") != r["designated_key"]:
+                    # The designated benchmark has no price this run: never switch the row to another source.
+                    # Keep the sheet price; the fallback price is shown only as the check price.
+                    d["mode"] = "hold"
+                    d["check_source"] = d["source"][:160]
+                    d["check_price"] = d["price_usd"]
+                    d["deviation_pct"] = ""
+                    for k in ("price_type", "price_usd", "orig_price", "orig_ccy", "price_date", "source", "link", "calc"):
+                        d[k] = ""
+                    d["source_key"] = r["designated_key"]
+                    d["quality"] = "OK"
                 else:
                     d["mode"] = "feed"
-            if d.get("mode") != "manual":
+            if d.get("mode") == "hold":
+                d["benchmark_product"] = r["benchmark_product"]
+            elif d.get("mode") != "manual":
                 d["benchmark_product"] = product_from_feed(d, layer_a)
             w.writerow(d)
             written[row] = d

@@ -1,0 +1,25 @@
+name: agent-brief
+
+# Builds the compact "Agent Brief" tab every morning before the scheduled AI agents run (no AI, no tokens).
+on:
+  schedule:
+    - cron: "40 2 * * *"   # 04:40 Israel time (winter)
+  workflow_dispatch:
+
+concurrency:
+  group: agent-brief
+  cancel-in-progress: false
+
+jobs:
+  brief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests google-auth
+      - run: python -m leads.agent_brief
