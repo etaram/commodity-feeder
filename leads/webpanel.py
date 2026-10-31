@@ -40,6 +40,7 @@ PARTS = {
         "intel": (LE, "'Intel'!A1:P2000"),
         "pursuits": (LE, "'Pursuits'!A1:V600"),
         "jobs": (LE, "'Panel Jobs'!A1:L800"),
+        "contacts": (LE, "'Contacts'!A1:S1500"),
         "stats": (SU, "'Stats'!A1:B60"),
     },
 }

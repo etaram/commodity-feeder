@@ -106,7 +106,7 @@ async function csvGrid(path: string): Promise<Grid> {
 const LE = "1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y", SU = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";
 const LIVE: Record<string, [string, string]> = {
   bd: [LE, "'BD Agent'!A1:M600"], accounts: [LE, "'Key Accounts'!A1:S400"], intel: [LE, "'Intel'!A1:P2000"],
-  pursuits: [LE, "'Pursuits'!A1:V600"], jobs: [LE, "'Panel Jobs'!A1:L800"], stats: [SU, "'Stats'!A1:B60"],
+  pursuits: [LE, "'Pursuits'!A1:V600"], jobs: [LE, "'Panel Jobs'!A1:L800"], contacts: [LE, "'Contacts'!A1:S1500"], stats: [SU, "'Stats'!A1:B60"],
 };
 async function liveDirect(): Promise<Snap | null> {
   try {

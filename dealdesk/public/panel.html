@@ -171,6 +171,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <button role="tab" data-v="desk" aria-selected="false"><span data-i="tab_desk">Deal Desk</span></button>
       <button role="tab" data-v="grants" aria-selected="false"><span data-i="tab_grants">Grants</span><span class="count" id="c-grants"></span></button>
       <button role="tab" data-v="intel" aria-selected="false"><span data-i="tab_intel">Intelligence</span><span class="count" id="c-intel"></span></button>
+      <button role="tab" data-v="contacts" aria-selected="false"><span data-i="tab_contacts">Contacts</span><span class="count" id="c-contacts"></span></button>
       <button role="tab" data-v="jobs" aria-selected="false"><span data-i="tab_jobs">Jobs</span><span class="count" id="c-jobs"></span></button>
     </nav>
   </div>
@@ -319,6 +320,18 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     </div>
   </section>
 
+  <section class="view" id="v-contacts" hidden>
+    <div class="filters">
+      <input type="search" id="kq" data-ph="kq_ph">
+      <select id="kcountry"><option value="" data-i="all_countries">All countries</option></select>
+      <select id="kcat"><option value="" data-i="all_cats">All categories</option></select>
+      <select id="ksector"><option value="" data-i="all_sectors">All sectors</option></select>
+      <label><input type="checkbox" id="kmail"> <span data-i="k_with_contact">With email or phone</span></label>
+    </div>
+    <div class="note" id="kscope" style="margin:0 2px 8px"></div>
+    <div class="list" id="klist"></div>
+  </section>
+
   <section class="view" id="v-jobs" hidden>
     <div class="split">
       <div>
@@ -358,6 +371,7 @@ const RANGES = {
   markets: [LE, "'Market Signals'!A1:O3200"],
   meta: [LE, "'Meta'!A1:B5"],
   intel: [LE, "'Intel'!A1:P2000"],
+  contacts: [LE, "'Contacts'!A1:S1500"],
   upcoming: [LE, "'Upcoming'!A1:AE1500"],
   stats: [SU, "'Stats'!A1:B60"],
   tot_t: [LE, "'Panel Search'!A6:B6"],
@@ -370,7 +384,7 @@ const RANGES = {
   integrity: [LE, "'Integrity'!A1:N300"],
   suppliers: [SU, "'Suppliers'!A1:AJ6001"],
 };
-const OPTIONAL = new Set(["grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming"]);
+const OPTIONAL = new Set(["grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts"]);
 const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
 const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
 const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60, g: 60 }, he: new Map() };
@@ -461,6 +475,7 @@ const L = {
     ig_adv_open: "Bid on the merits. Questions to the procurement office before the deadline, and market consultation where allowed, are lawful - keep them in writing.",
     ig_adv_caution: "Workable, but verify before spending: eligibility and local-content rules, who won the last comparable contracts, payment terms. Use local counsel for the contract. Early written contact with the procurement office is lawful and useful.",
     ig_adv_high_risk: "Few firms bid here and awards repeat to the same suppliers, so a cold bid rarely wins on price alone. Treat it as a market-entry decision: vet a local partner (written agreement, no success fees to anyone with influence), run anti-bribery due diligence. If winning seems to need payments or favours to officials, decline - it is a crime under Israeli Penal Law 291A, the US FCPA and the UK Bribery Act.",
+    tab_contacts: "Contacts", kq_ph: "Search: name, organization, country...", k_with_contact: "With email or phone", kscope: "Senior people and official bodies with a documented link to Israel: chambers, embassies and trade attaches, investment agencies, finance bodies, associations and leading companies. Business roles and official channels only; every row links to its source. Check the verified date before you reach out.", e_contacts: "No contacts match these filters yet.", k_seniority: "Seniority", k_role: "Role", k_org: "Organization", k_israel: "Link to Israel", k_why: "Why relevant", k_channel: "Official channel", k_email: "Email", k_phone: "Phone", k_source: "Source", k_verified: "Verified", k_notes: "Notes", k_mail: "Draft outreach", k_research: "Research more", k_nf: "not found", jt_contact_research: "Contact research",
     tab_intel: "Intelligence", iq_ph: "Search: country, commodity, buyer...", all_cats: "All categories", high_only: "High signal only",
     iscope: "Verified market signals published every morning: only official sources (governments, state buyers, development banks, UN, statistics), tier-1 media (Reuters, Bloomberg, FT, Platts, Argus) and industry bodies. Each item links to its source.",
     e_intel: "The intelligence agent publishes its first items this morning; they will appear here.", tier_off: "Official source", tier_1: "Tier-1 media", event: "event",
@@ -567,6 +582,7 @@ const L = {
     ig_adv_open: "להגיש לגופו של עניין. שאלות לגוף הרוכש לפני המועד, והתייעצות שוק היכן שמותר, הן חוקיות - לשמור הכול בכתב.",
     ig_adv_caution: "אפשרי, אבל לבדוק לפני שמשקיעים: תנאי סף ותוכן מקומי, מי זכה בחוזים דומים, תנאי תשלום. עורך דין מקומי לחוזה. פנייה מוקדמת בכתב לגוף הרוכש חוקית ומועילה.",
     ig_adv_high_risk: "מעט חברות ניגשות כאן והזכיות חוזרות לאותם ספקים, כך שהצעה קרה כמעט לא זוכה על מחיר. להתייחס לזה כהחלטת כניסה לשוק: לבדוק שותף מקומי (הסכם כתוב, בלי עמלות הצלחה למי שיש לו השפעה), לבצע בדיקת נאותות נגד שוחד. אם נראה שזכייה דורשת תשלום או טובה לעובד ציבור - לוותר. זו עבירה לפי סעיף 291א לחוק העונשין, ה-FCPA האמריקאי וחוק השוחד הבריטי.",
+    tab_contacts: "אנשי קשר", kq_ph: "חיפוש: שם, ארגון, מדינה...", k_with_contact: "עם מייל או טלפון", kscope: "אנשים בכירים וגופים רשמיים עם קשר מתועד לישראל: לשכות מסחר, שגרירויות ונספחים, סוכנויות השקעה, גופי מימון, איגודים וחברות מובילות. תפקידים עסקיים וערוצים רשמיים בלבד; כל שורה מקושרת למקורה. בדוק את תאריך האימות לפני יצירת קשר.", e_contacts: "אין עדיין אנשי קשר שמתאימים לסינון.", k_seniority: "בכירות", k_role: "תפקיד", k_org: "ארגון", k_israel: "קשר לישראל", k_why: "למה רלוונטי", k_channel: "ערוץ רשמי", k_email: "מייל", k_phone: "טלפון", k_source: "מקור", k_verified: "אומת", k_notes: "הערות", k_mail: "נסח פנייה", k_research: "חקור עוד", k_nf: "לא נמצא", jt_contact_research: "מחקר איש קשר",
     tab_intel: "מודיעין", iq_ph: "חיפוש: מדינה, סחורה, קונה...", all_cats: "כל הקטגוריות", high_only: "רק אות חזק",
     iscope: "אותות שוק מאומתים שמתפרסמים כל בוקר: רק ממקורות רשמיים (ממשלות, קונים ממלכתיים, בנקי פיתוח, האו\"ם, לשכות סטטיסטיקה), מדיה מהשורה הראשונה (Reuters, Bloomberg, FT, Platts, Argus) וגופי תעשייה. כל פריט מקושר למקור שלו.",
     e_intel: "סוכן המודיעין מפרסם את הפריטים הראשונים הבוקר, והם יופיעו כאן.", tier_off: "מקור רשמי", tier_1: "מדיה מובילה", event: "מועד",
@@ -1490,6 +1506,39 @@ function renderIntel() {
   mini("#i-grow", grow, r => [`<span class="pill good num">+${esc(Math.round(num(r.growth_pct)))}%</span>`, `<div class="t">${flag(r.country)}${esc(r.product)}</div><div class="sub">${esc(r.country)} · ${money(r.imports_usd)} (${esc(r.year)})</div>`, ``], r => gotoDeal("mkt", r), t("e_mkt"));
 }
 
+
+/* ---------- CONTACTS: senior people and official bodies with a documented link to Israel ---------- */
+function renderContacts() {
+  const all = (S.data.contacts || []).filter(x => x.name || x.organization).filter(x => !/outdated|no israel link/i.test(x.status || ""))
+    .slice().sort((a, b) => (num(b.seniority_score) || 0) - (num(a.seniority_score) || 0));
+  $("#c-contacts").textContent = all.length || "";
+  fillSelect($("#kcountry"), all.map(x => x.country)); fillSelect($("#kcat"), all.map(x => x.category));
+  fillSelect($("#ksector"), all.flatMap(x => String(x.sectors || "").split(/;\s*/)).filter(Boolean));
+  const q = $("#kq").value.trim().toLowerCase(), co = $("#kcountry").value, cat = $("#kcat").value, sec = $("#ksector").value, m = $("#kmail").checked;
+  const has = v => v && !/^(לא נמצא|not found|-)$/i.test(String(v).trim());
+  const rows = all.filter(x => (!co || x.country === co) && (!cat || x.category === cat) && (!sec || String(x.sectors || "").includes(sec))
+    && (!m || has(x.email) || has(x.phone)) && (!q || Object.values(x).join(" ").toLowerCase().includes(q)));
+  scopeNote("#kscope", esc(t("kscope")));
+  const el = $("#klist");
+  if (!rows.length) { el.innerHTML = `<div class="empty" style="padding:14px">${esc(S.err.contacts ? errText(S.err.contacts, SHEETS) : t("e_contacts"))}</div>`; return; }
+  el.innerHTML = rows.slice(0, 150).map((x, i) => `<div class="row" style="cursor:default;grid-template-columns:minmax(0,1fr)"><div style="min-width:0">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px"><span class="score">${esc(x.seniority_score)}</span><span class="pill">${esc(x.category)}</span><span class="sub num">${esc(t("k_verified"))} ${esc(x.verified)}</span></div>
+      <div class="t">${flag(x.country)}${esc(x.name || x.organization)}</div>
+      <div class="sub" style="margin-top:3px">${esc([x.role, x.name ? x.organization : ""].filter(Boolean).join(" · "))}</div>
+      <div class="sub" style="margin-top:3px">${esc(x.country)}${x.sectors ? " · " + esc(x.sectors) : ""}</div>
+      ${x.why_relevant ? `<div class="sub" style="margin-top:3px">${txt(x.why_relevant)}</div>` : ""}
+      ${x.israel_link ? `<div class="sub" style="margin-top:3px"><b>${esc(t("k_israel"))}:</b> ${esc(x.israel_link)}</div>` : ""}
+      <div class="sub" style="margin-top:3px">${[has(x.contact_channel) ? esc(t("k_channel")) + ": " + esc(x.contact_channel) : "", has(x.email) ? `${esc(t("k_email"))}: <span dir="ltr">${esc(x.email)}</span>` : "", has(x.phone) ? `${esc(t("k_phone"))}: <span dir="ltr">${esc(x.phone)}</span>` : "", link(x.website, x.website), link(x.source_url, t("k_source"))].filter(Boolean).join(" · ")}</div>
+      <div class="actions" style="margin:8px 0 0"><button type="button" data-ki="${i}" data-act="mail">${esc(t("k_mail"))}</button><button type="button" data-ki="${i}" data-act="research">${esc(t("k_research"))}</button></div>
+      <div id="k-card-${i}" data-jobcard="${esc("K:" + x.id)}">${cardHtml("K:" + x.id)}</div><div id="k-card-${i}-flash"></div><div id="k-out-${i}"></div>
+    </div></div>`).join("");
+  el.querySelectorAll("[data-act]").forEach(b => b.onclick = e => {
+    const x = rows[+b.dataset.ki], i = b.dataset.ki;
+    if (b.dataset.act === "mail") compose({ kind: "buyer", ctx: { r: x, find: { subject: x.organization || x.name, country: x.country, ctx: { page: x.website || x.source_url, channel: x.contact_channel } } }, to: [{ name: x.name || x.organization, email: has(x.email) ? x.email : "" }] }, "#k-out-" + i);
+    else moreInfo({ type: "company_research", target_id: "K:" + x.id, target: `${x.name || ""} ${x.organization} (${x.country})`.trim().slice(0, 200), context: x, request: "Confirm the person's current role and the official contact channel from the organization's own site, find how Sinder (Israeli international procurement and trade) can work with them, and note any documented link to Israel. Business roles only." }, e.currentTarget, "#k-card-" + i);
+  });
+}
+
 /* ---------- GRANTS: calls for proposals and incentive programmes ---------- */
 function renderGrants() {
   const all = (S.data.grants || []).filter(g => g.title);
@@ -1626,7 +1675,7 @@ async function loadMarkets() {
 ["#mq", "#mtier", "#mcat", "#msort"].forEach(s_ => $(s_).addEventListener("input", () => { S.mkLimit = 80; renderMarkets(); }));
 
 /* ---------- navigation and wiring ---------- */
-const VIEWS = ["today", "tenders", "companies", "deals", "markets", "desk", "grants", "intel", "jobs"];
+const VIEWS = ["today", "tenders", "companies", "deals", "markets", "desk", "grants", "intel", "contacts", "jobs"];
 function go(v) {
   S.view = v; document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v));
   document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== "v-" + v);
@@ -1634,7 +1683,7 @@ function go(v) {
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
 }
 function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => { go(b.dataset.goto); renderJobs(); }); }
-function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderJobs(); wireGoto(document); }
+function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderContacts(); renderJobs(); wireGoto(document); }
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
 ["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
@@ -1642,6 +1691,7 @@ document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b
 $("#dq").addEventListener("input", () => { S.limit.d = 60; renderDeals(); });
 ["#gq", "#gsource", "#gsector", "#gdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.g = 60; renderGrants(); }));
 ["#iq", "#icat", "#iregion", "#ihigh"].forEach(s_ => $(s_).addEventListener("input", renderIntel));
+["#kq", "#kcountry", "#kcat", "#ksector", "#kmail"].forEach(s_ => $(s_).addEventListener("input", renderContacts));
 $("#cs-sup").onclick = () => { S.compMode = "sup"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
 $("#cs-acc").onclick = () => { S.compMode = "acc"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
 ["bd", "rep", "mkt", "ex", "ilx"].forEach(m => $("#ds-" + m).onclick = () => { S.dealMode = m; setSeg(); S.limit.d = 60; renderDeals(); });
