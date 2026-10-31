@@ -22,7 +22,8 @@ ROLE = re.compile(r"^(info|sales|export|exports|contact|contacto|contato|kontakt
                   r"vendas|ventas|enquiries|inquiries|hello|marketing|orders|business|bd|procurement|tender|tenders|"
                   r"admin|mail|general|customerservice|service|support|ventas1|info1)\b", re.I)
 PHONE = re.compile(r"(?:\+|00)\d[\d\s().-]{7,18}\d")
-PATHS = ["", "contact", "contact-us", "contacts", "contacto", "contato", "kontakt", "en/contact", "about", "about-us"]
+PATHS = ["", "contact", "contact-us", "contacts", "contacto", "contato", "kontakt", "en/contact", "contact-us.html", "contactus",
+         "about/contact", "company/contact", "investors", "investor-relations", "impressum", "about", "about-us"]
 FREE = re.compile(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|ukr|i\.ua|meta\.ua|bigmir|web\.de|"
                   r"orange|free|laposte|wanadoo|libero|terra|uol|bol|ig|rediffmail|qq|163|126|sina|naver|hanmail|"
                   r"proton|zoho|seznam|wp\.pl|o2|interia|abv|btinternet|sky|comcast|verizon|att|sbcglobal|"
@@ -37,7 +38,7 @@ SLD = {"ZAF": "co.za", "BRA": "com.br", "COL": "com.co", "MEX": "com.mx", "ARG":
        "PHL": "com.ph", "IDN": "co.id", "VNM": "com.vn", "THA": "co.th", "MYS": "com.my", "PAK": "com.pk",
        "BGD": "com.bd", "LKA": "lk", "NPL": "com.np", "AUS": "com.au", "NZL": "co.nz", "JPN": "co.jp",
        "KOR": "co.kr", "CHN": "com.cn", "UKR": "com.ua", "ISR": "co.il", "SAU": "com.sa", "ARE": "ae"}
-PER_RUN, DISCOVER = 1500, 700
+PER_RUN, DISCOVER = 3000, 1500
 LEGAL = re.compile(r"\b(s\.?a\.?s?|ltda|ltd|limited|llc|inc|gmbh|ag|srl|s\.?r\.?l|spa|bv|nv|plc|pty|cc|co|corp|company|"
                    r"cia|sociedad|anonima|eireli|me|epp|sac|eirl|de|del|la|el|y|and|the|of|group|grupo|holding|tov|"
                    r"llc|ооо|тов|пп|фоп|ltda)\b", re.I)
@@ -178,7 +179,12 @@ def fetch():
     tried_p = PRIVATE / "web_discover_tried.txt"
     tried = set(tried_p.read_text(encoding="utf-8").split("\n")) if tried_p.exists() else set()
     todo, disc = [], []
-    for r in csv.DictReader(open(src, encoding="utf-8")):  # sorted by quality
+    rows = list(csv.DictReader(open(src, encoding="utf-8")))  # sorted by tier and quality
+
+    def _prio(r):  # leading / listed companies first, then proven exporters, then the rest
+        return 0 if (r.get("notable") == "yes" or r.get("origin") == "B") else 1 if r.get("exports") else 2
+    rows.sort(key=_prio)  # stable: keeps the tier/quality order inside each group
+    for r in rows:
         w = (r.get("website") or "").strip()
         em = (r.get("email") or "").split(";")[0].strip()
         if not w and em and "@" in em and not FREE.search(em):
@@ -187,13 +193,13 @@ def fetch():
         if w:
             if key not in profiles and len(todo) < PER_RUN:
                 todo.append((key, w))
-        elif key not in tried and len(disc) < DISCOVER and int(r.get("quality") or 0) >= 35:
+        elif key not in tried and len(disc) < DISCOVER and (_prio(r) < 2 or int(r.get("quality") or 0) >= 35):
             disc.append((key, r["supplier"], r["country"]))
         if len(todo) >= PER_RUN and len(disc) >= DISCOVER:
             break
     found = 0
     disc_keys = {k for k, _, _ in disc}
-    with ThreadPoolExecutor(max_workers=24) as ex:
+    with ThreadPoolExecutor(max_workers=48) as ex:
         DEADLINE[0] = t_end - 900  # discovery gets at most ~9 minutes
         for (key, name, country), url in zip(disc, ex.map(lambda x: _safe(discover, x[1], x[2]), disc)):
             tried.add(key)

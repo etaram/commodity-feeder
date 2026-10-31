@@ -353,6 +353,8 @@ def build():
             "email": x["email"], "phone": x["phone"], "website": x["website"], "website_source": site_src, "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
             "tier_reason": "", "origin": "B" if x.get("tier_b") else "A",  # new columns stay at the end (sheet formulas)
+            "contact_level": ("email+phone" if x["email"] and x["phone"] else "email" if x["email"] else
+                              "phone" if x["phone"] else "website only" if x["website"] else "address only" if x["address"] else "none"),
         })
     for r in out:
         r["quality"] = quality(r)
@@ -370,6 +372,10 @@ def build():
              "tier_A": sum(1 for r in out if r["origin"] == "A"), "tier_B_notable": n_b,
              **{f"tier_{t}_{n.lower()}": sum(1 for r in out if r["tier"] == t) for t, n in TIER_NAMES.items()},
              "with_website": sum(1 for r in out if r["website"]),
+             "notable_total": sum(1 for r in out if r["notable"]),
+             "notable_with_email": sum(1 for r in out if r["notable"] and r["email"]),
+             "notable_with_phone": sum(1 for r in out if r["notable"] and r["phone"]),
+             "notable_with_website": sum(1 for r in out if r["notable"] and r["website"]),
              "quality_40_plus": sum(1 for r in out if r["quality"] >= 40),
              "with_any_contact": sum(1 for r in out if r["email"] or r["phone"] or r["website"] or r["address"])}
     by_region = defaultdict(int)
