@@ -106,6 +106,18 @@ jobs:
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
           mkdir -p data/web
-          git add -A data/leads/awards data/leads/companies data/leads/run_suppliers.log data/web data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv
-          git diff --cached --quiet || git commit -m "suppliers: $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done
+          P="data/leads/awards data/leads/companies data/leads/run_suppliers.log data/web data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv"
+          # keep a copy of what this workflow owns, then land it on top of the latest main (other workflows push meanwhile)
+          rm -rf /tmp/own && mkdir -p /tmp/own
+          for f in $P; do [ -e "$f" ] && cp -r --parents "$f" /tmp/own/; done
+          ok=0
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            cp -r /tmp/own/. .
+            git add -A $P
+            if git diff --cached --quiet; then ok=1; break; fi
+            git commit -q -m "suppliers: $(date -u +%Y-%m-%dT%H:%MZ)"
+            if git push -q origin HEAD:main; then ok=1; break; fi
+            sleep $((i * 10))
+          done
+          [ "$ok" = 1 ] || { echo "push failed after 5 attempts"; exit 1; }
