@@ -261,7 +261,8 @@ def build():
                     x[fld] = c[fld]
     # tier B: notable producers and traders (Wikidata), merged with award winners when the name matches
     notable = {}
-    for f in (LEADS / "companies" / "wikidata").glob("[A-Z][A-Z][A-Z].json"):
+    for f in [*(LEADS / "companies" / "wikidata").glob("[A-Z][A-Z][A-Z].json"),
+              *(LEADS / "companies" / "listed").glob("[A-Z][A-Z][A-Z].json")]:
         d = json.loads(f.read_text())
         for c in d.get("companies", []):
             notable[(norm(c["name"]), d["country"])] = c
@@ -273,7 +274,7 @@ def build():
             if c.get("sector"):
                 x["sectors"][c["sector"]] += 1
                 x["goods"] += 1 if c["sector"] in GOODS else 0
-            x["sources"].add("Wikidata")
+            x["sources"].add("Wikidata listed" if c.get("listed_on") else "Wikidata")
         x["website"] = x["website"] or c.get("website", "")
         x["industries"] = c.get("industries", ""); x["employees"] = c.get("employees", "")
         x["products"] = c.get("products", "")
