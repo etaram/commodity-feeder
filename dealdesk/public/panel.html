@@ -172,6 +172,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <button role="tab" data-v="grants" aria-selected="false"><span data-i="tab_grants">Grants</span><span class="count" id="c-grants"></span></button>
       <button role="tab" data-v="intel" aria-selected="false"><span data-i="tab_intel">Intelligence</span><span class="count" id="c-intel"></span></button>
       <button role="tab" data-v="contacts" aria-selected="false"><span data-i="tab_contacts">Contacts</span><span class="count" id="c-contacts"></span></button>
+      <button role="tab" data-v="projects" aria-selected="false"><span data-i="tab_projects">Projects</span><span class="count" id="c-projects"></span></button>
       <button role="tab" data-v="jobs" aria-selected="false"><span data-i="tab_jobs">Jobs</span><span class="count" id="c-jobs"></span></button>
     </nav>
   </div>
@@ -332,6 +333,16 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div class="list" id="klist"></div>
   </section>
 
+  <section class="view" id="v-projects" hidden>
+    <div class="filters">
+      <input type="search" id="pq" data-ph="pq_ph">
+      <select id="ptype"><option value="" data-i="all_types">All types</option></select>
+      <label><input type="checkbox" id="pappr"> <span data-i="p_only_appr">Waiting for my approval</span></label>
+    </div>
+    <div class="note" id="pscope" style="margin:0 2px 8px"></div>
+    <div class="list" id="plist"></div>
+  </section>
+
   <section class="view" id="v-jobs" hidden>
     <div class="split">
       <div>
@@ -372,6 +383,9 @@ const RANGES = {
   meta: [LE, "'Meta'!A1:B5"],
   intel: [LE, "'Intel'!A1:P2000"],
   contacts: [LE, "'Contacts'!A1:S1500"],
+  projects: [LE, "'Projects'!A1:V300"],
+  ptasks: [LE, "'Project Tasks'!A1:L3000"],
+  approvals: [LE, "'Approvals'!A1:M2000"],
   upcoming: [LE, "'Upcoming'!A1:AE1500"],
   stats: [SU, "'Stats'!A1:B60"],
   tot_t: [LE, "'Panel Search'!A6:B6"],
@@ -384,7 +398,7 @@ const RANGES = {
   integrity: [LE, "'Integrity'!A1:N300"],
   suppliers: [SU, "'Suppliers'!A1:AJ6001"],
 };
-const OPTIONAL = new Set(["grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts"]);
+const OPTIONAL = new Set(["grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
 const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
 const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
 const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60, g: 60 }, he: new Map() };
@@ -475,7 +489,7 @@ const L = {
     ig_adv_open: "Bid on the merits. Questions to the procurement office before the deadline, and market consultation where allowed, are lawful - keep them in writing.",
     ig_adv_caution: "Workable, but verify before spending: eligibility and local-content rules, who won the last comparable contracts, payment terms. Use local counsel for the contract. Early written contact with the procurement office is lawful and useful.",
     ig_adv_high_risk: "Few firms bid here and awards repeat to the same suppliers, so a cold bid rarely wins on price alone. Treat it as a market-entry decision: vet a local partner (written agreement, no success fees to anyone with influence), run anti-bribery due diligence. If winning seems to need payments or favours to officials, decline - it is a crime under Israeli Penal Law 291A, the US FCPA and the UK Bribery Act.",
-    tab_contacts: "Contacts", kq_ph: "Search: name, organization, country...", k_with_contact: "With email or phone", kscope: "Senior people and official bodies with a documented link to Israel: chambers, embassies and trade attaches, investment agencies, finance bodies, associations and leading companies. Business roles and official channels only; every row links to its source. Check the verified date before you reach out.", e_contacts: "No contacts match these filters yet.", k_seniority: "Seniority", k_role: "Role", k_org: "Organization", k_israel: "Link to Israel", k_why: "Why relevant", k_channel: "Official channel", k_email: "Email", k_phone: "Phone", k_source: "Source", k_verified: "Verified", k_notes: "Notes", k_mail: "Draft outreach", k_research: "Research more", k_nf: "not found", jt_contact_research: "Contact research",
+    tab_projects: "Projects", pq_ph: "Search: project, tender, buyer, country...", all_types: "All types", p_only_appr: "Waiting for my approval", pscope: "One project agent per tender you decided to pursue. The agent finds suppliers, writes blind RFQs (no buyer and no tender number), follows up, checks every tender condition and prepares the forms. Nothing is sent, committed or submitted without your approval here. When you close a project, all its data is archived.", e_projects: "No active projects. Open a tender and press Start bid project.", a_proj: "Start bid project", p_open_already: "Project open", p_confirm: "Start a bid project for this tender? The project agent will prepare everything and ask for your approval before any outside action.", p_queued: "Project request {id} saved. The project agent picks it up on its next run (every 2 hours).", p_days: "{n} days left", p_wait: "{n} waiting for approval", p_progress: "Progress", p_best: "Best quote", p_sup: "Suppliers", p_next: "Next step", p_missing: "Missing", p_appr: "Approval needed", p_to: "To", p_subj: "Subject", p_body: "Show the full text", p_note_ph: "Optional note or change for the agent", p_approve: "Approve", p_reject: "Reject", p_tasks: "{n} open tasks and conditions", p_outcome: "Outcome...", p_close: "Close and archive", p_close_confirm: "Close this project and archive all its data?", p_folder: "Project folder", tab_contacts: "Contacts", kq_ph: "Search: name, organization, country...", k_with_contact: "With email or phone", kscope: "Senior people and official bodies with a documented link to Israel: chambers, embassies and trade attaches, investment agencies, finance bodies, associations and leading companies. Business roles and official channels only; every row links to its source. Check the verified date before you reach out.", e_contacts: "No contacts match these filters yet.", k_seniority: "Seniority", k_role: "Role", k_org: "Organization", k_israel: "Link to Israel", k_why: "Why relevant", k_channel: "Official channel", k_email: "Email", k_phone: "Phone", k_source: "Source", k_verified: "Verified", k_notes: "Notes", k_mail: "Draft outreach", k_research: "Research more", k_nf: "not found", jt_contact_research: "Contact research",
     tab_intel: "Intelligence", iq_ph: "Search: country, commodity, buyer...", all_cats: "All categories", high_only: "High signal only",
     iscope: "Verified market signals published every morning: only official sources (governments, state buyers, development banks, UN, statistics), tier-1 media (Reuters, Bloomberg, FT, Platts, Argus) and industry bodies. Each item links to its source.",
     e_intel: "The intelligence agent publishes its first items this morning; they will appear here.", tier_off: "Official source", tier_1: "Tier-1 media", event: "event",
@@ -582,7 +596,7 @@ const L = {
     ig_adv_open: "להגיש לגופו של עניין. שאלות לגוף הרוכש לפני המועד, והתייעצות שוק היכן שמותר, הן חוקיות - לשמור הכול בכתב.",
     ig_adv_caution: "אפשרי, אבל לבדוק לפני שמשקיעים: תנאי סף ותוכן מקומי, מי זכה בחוזים דומים, תנאי תשלום. עורך דין מקומי לחוזה. פנייה מוקדמת בכתב לגוף הרוכש חוקית ומועילה.",
     ig_adv_high_risk: "מעט חברות ניגשות כאן והזכיות חוזרות לאותם ספקים, כך שהצעה קרה כמעט לא זוכה על מחיר. להתייחס לזה כהחלטת כניסה לשוק: לבדוק שותף מקומי (הסכם כתוב, בלי עמלות הצלחה למי שיש לו השפעה), לבצע בדיקת נאותות נגד שוחד. אם נראה שזכייה דורשת תשלום או טובה לעובד ציבור - לוותר. זו עבירה לפי סעיף 291א לחוק העונשין, ה-FCPA האמריקאי וחוק השוחד הבריטי.",
-    tab_contacts: "אנשי קשר", kq_ph: "חיפוש: שם, ארגון, מדינה...", k_with_contact: "עם מייל או טלפון", kscope: "אנשים בכירים וגופים רשמיים עם קשר מתועד לישראל: לשכות מסחר, שגרירויות ונספחים, סוכנויות השקעה, גופי מימון, איגודים וחברות מובילות. תפקידים עסקיים וערוצים רשמיים בלבד; כל שורה מקושרת למקורה. בדוק את תאריך האימות לפני יצירת קשר.", e_contacts: "אין עדיין אנשי קשר שמתאימים לסינון.", k_seniority: "בכירות", k_role: "תפקיד", k_org: "ארגון", k_israel: "קשר לישראל", k_why: "למה רלוונטי", k_channel: "ערוץ רשמי", k_email: "מייל", k_phone: "טלפון", k_source: "מקור", k_verified: "אומת", k_notes: "הערות", k_mail: "נסח פנייה", k_research: "חקור עוד", k_nf: "לא נמצא", jt_contact_research: "מחקר איש קשר",
+    tab_projects: "פרויקטים", pq_ph: "חיפוש: פרויקט, מכרז, קונה, מדינה...", all_types: "כל הסוגים", p_only_appr: "ממתין לאישור שלי", pscope: "סוכן פרויקט אחד לכל מכרז שהחלטת לגשת אליו. הסוכן מאתר ספקים, מנסח בקשות להצעת מחיר בלי לחשוף את הקונה ואת מספר המכרז, עוקב מולם, בודק כל תנאי במכרז ומכין את הטפסים. שום דבר לא נשלח, לא מתחייבים ולא מגישים בלי אישור שלך כאן. בסגירת פרויקט כל המידע שלו עובר לארכיון.", e_projects: "אין פרויקטים פעילים. פתח מכרז ולחץ על פתח פרויקט הגשה.", a_proj: "פתח פרויקט הגשה", p_open_already: "פרויקט פתוח", p_confirm: "לפתוח פרויקט הגשה למכרז הזה? סוכן הפרויקט יכין הכל ויבקש את אישורך לפני כל פעולה כלפי חוץ.", p_queued: "בקשת הפרויקט {id} נשמרה. סוכן הפרויקט יטפל בה בריצה הבאה (כל שעתיים).", p_days: "{n} ימים נותרו", p_wait: "{n} ממתינים לאישור", p_progress: "התקדמות", p_best: "הצעה מובילה", p_sup: "ספקים", p_next: "הצעד הבא", p_missing: "חסר", p_appr: "נדרש אישור", p_to: "אל", p_subj: "נושא", p_body: "הצג את הנוסח המלא", p_note_ph: "הערה או שינוי לסוכן (לא חובה)", p_approve: "אשר", p_reject: "דחה", p_tasks: "{n} משימות ותנאים פתוחים", p_outcome: "תוצאה...", p_close: "סגור והעבר לארכיון", p_close_confirm: "לסגור את הפרויקט ולהעביר את כל המידע שלו לארכיון?", p_folder: "תיקיית הפרויקט", tab_contacts: "אנשי קשר", kq_ph: "חיפוש: שם, ארגון, מדינה...", k_with_contact: "עם מייל או טלפון", kscope: "אנשים בכירים וגופים רשמיים עם קשר מתועד לישראל: לשכות מסחר, שגרירויות ונספחים, סוכנויות השקעה, גופי מימון, איגודים וחברות מובילות. תפקידים עסקיים וערוצים רשמיים בלבד; כל שורה מקושרת למקורה. בדוק את תאריך האימות לפני יצירת קשר.", e_contacts: "אין עדיין אנשי קשר שמתאימים לסינון.", k_seniority: "בכירות", k_role: "תפקיד", k_org: "ארגון", k_israel: "קשר לישראל", k_why: "למה רלוונטי", k_channel: "ערוץ רשמי", k_email: "מייל", k_phone: "טלפון", k_source: "מקור", k_verified: "אומת", k_notes: "הערות", k_mail: "נסח פנייה", k_research: "חקור עוד", k_nf: "לא נמצא", jt_contact_research: "מחקר איש קשר",
     tab_intel: "מודיעין", iq_ph: "חיפוש: מדינה, סחורה, קונה...", all_cats: "כל הקטגוריות", high_only: "רק אות חזק",
     iscope: "אותות שוק מאומתים שמתפרסמים כל בוקר: רק ממקורות רשמיים (ממשלות, קונים ממלכתיים, בנקי פיתוח, האו\"ם, לשכות סטטיסטיקה), מדיה מהשורה הראשונה (Reuters, Bloomberg, FT, Platts, Argus) וגופי תעשייה. כל פריט מקושר למקור שלו.",
     e_intel: "סוכן המודיעין מפרסם את הפריטים הראשונים הבוקר, והם יופיעו כאן.", tier_off: "מקור רשמי", tier_1: "מדיה מובילה", event: "מועד",
@@ -940,6 +954,7 @@ function openTender(r, keep) {
       <button type="button" id="a-sup">${esc(t("a_sup"))}</button>
       <button type="button" id="a-contact">${esc(t("a_contact"))}</button>
       <button type="button" id="a-pur" ${inP ? "disabled" : ""}>${esc(inP ? t("tracked") : t("a_track"))}</button>
+      <button type="button" id="a-proj" ${projOf(r.id) ? "disabled" : ""}>${esc(projOf(r.id) ? t("p_open_already") : t("a_proj"))}</button>
       ${shareHtml(tenderShare(r))}
     </div>
     <div class="note">${esc(t("t_note"))}</div>
@@ -961,6 +976,7 @@ function openTender(r, keep) {
     { compose: x => compose({ kind: "buyer", ctx: { r }, to: [{ name: x.name || r.buyer, email: x.email }] }, "#t-out") });
   wireEstimate(r);
   $("#a-pur").onclick = e => addPursuit(r, e.currentTarget, "#t-out");
+  $("#a-proj").onclick = e => { if (!confirm(t("p_confirm"))) return; projectJob({ type: "project_start", target_id: "P:" + r.id, target: r.title_en, context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "why"]), title_he: he } }, e.currentTarget, "#t-out"); };
 }
 const outLang = () => LANG === "he" ? "Hebrew" : "English";
 /* summary and threshold conditions: instant answers from the notice data; the threshold answer offers a full check of
@@ -1539,6 +1555,67 @@ function renderContacts() {
   });
 }
 
+/* ---------- PROJECTS: one bid-project agent per tender Etamar decided to pursue ---------- */
+const projOf = id => (S.data.projects || []).find(p => p.tender_id === id && !/archived/i.test(p.status || ""));
+// Project actions always go to the sheet queue (never the instant AI), so the project agent handles them with approval.
+async function projectJob(job, btn, outSel) {
+  const out = $(outSel); if (btn) btn.disabled = true;
+  const id = "J" + Date.now().toString(36).toUpperCase();
+  const row = [id, nowStamp(), job.type, job.target_id || "", String(job.target || "").slice(0, 300), JSON.stringify(job.context || {}).slice(0, 45000), job.request || "", "queued", "", "", nowStamp(), "panel; project; lang=" + LANG];
+  try { await mcp.callTool(SHEETS, "append_values", { spreadsheetId: LE, range: "'Panel Jobs'!A1", values: [row] }); }
+  catch (e) { if (out) out.insertAdjacentHTML("beforeend", `<div class="flash err">${esc(t("job_not_saved") + errText(e, SHEETS))}</div>`); if (btn) btn.disabled = false; return false; }
+  (S.data.jobs = S.data.jobs || []).push({ job_id: id, created: row[1], type: job.type, target_id: job.target_id || "", target: row[4], status: "queued", updated: row[10] });
+  if (out) out.insertAdjacentHTML("beforeend", `<div class="flash ok">${esc(t("p_queued", { id }))}</div>`);
+  return true;
+}
+const pendingJob = (type, tid) => (S.data.jobs || []).some(j => j.type === type && j.target_id === tid && /queued|running/.test(j.status || ""));
+function renderProjects() {
+  const all = (S.data.projects || []).filter(p => p.project_id && !/archived/i.test(p.status || ""));
+  const appr = (S.data.approvals || []).filter(a => a.approval_id), tasks = S.data.ptasks || [];
+  const waiting = id => appr.filter(a => a.project_id === id && /pending/i.test(a.status || "") && !pendingJob("approval", a.approval_id));
+  const nWait = all.reduce((n, p) => n + waiting(p.project_id).length, 0);
+  $("#c-projects").textContent = all.length ? (nWait ? `${all.length} · ${nWait}!` : all.length) : "";
+  fillSelect($("#ptype"), all.map(p => p.type));
+  const q = $("#pq").value.trim().toLowerCase(), ty = $("#ptype").value, onlyA = $("#pappr").checked;
+  const rows = all.filter(p => (!ty || p.type === ty) && (!onlyA || waiting(p.project_id).length) && (!q || Object.values(p).join(" ").toLowerCase().includes(q)))
+    .sort((a, b) => (waiting(b.project_id).length ? 1 : 0) - (waiting(a.project_id).length ? 1 : 0) || String(a.deadline || "9").localeCompare(String(b.deadline || "9")));
+  scopeNote("#pscope", esc(t("pscope")));
+  const el = $("#plist");
+  if (!rows.length) { el.innerHTML = `<div class="empty" style="padding:14px">${esc(S.err.projects ? errText(S.err.projects, SHEETS) : t("e_projects"))}</div>`; return; }
+  el.innerHTML = rows.map((p, i) => {
+    const w = waiting(p.project_id), pct = Math.max(0, Math.min(100, num(p.progress_pct) || 0));
+    const open = tasks.filter(x => x.project_id === p.project_id && !/done|n\/a/i.test(x.status || ""));
+    const dl = num(p.days_left);
+    return `<div class="row" style="cursor:default;grid-template-columns:minmax(0,1fr)"><div style="min-width:0">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;align-items:center"><span class="pill acc">${esc(p.type)}</span><span class="pill">${esc(p.agent_name || p.project_id)}</span><span class="pill ${isFinite(dl) && dl <= 7 ? "warn" : ""}">${esc(t("p_days", { n: isFinite(dl) ? dl : "-" }))}</span><span class="pill info">${esc(p.stage)}</span>${p.alert ? `<span class="pill warn">${esc(p.alert)}</span>` : ""}${w.length ? `<span class="pill warn">${esc(t("p_wait", { n: w.length }))}</span>` : ""}</div>
+      <div class="t">${flag(p.country)}${txt(p.title)}</div>
+      <div class="sub" style="margin-top:3px">${esc(p.buyer)} · ${esc(p.country)} · ${esc(t("deadline"))} ${esc(p.deadline)} · ${esc(p.tender_id)}</div>
+      <div style="margin:6px 0;height:8px;background:var(--line,#e5e7eb);border-radius:4px;overflow:hidden"><div style="width:${pct}%;height:100%;background:var(--accent,#2563eb)"></div></div>
+      <div class="sub">${esc(t("p_progress"))} ${pct}%${p.best_quote ? " · " + esc(t("p_best")) + ": " + esc(p.best_quote) : ""}${p.suppliers ? " · " + esc(t("p_sup")) + ": " + esc(p.suppliers) : ""}</div>
+      ${p.next_action ? `<div class="sub" style="margin-top:3px"><b>${esc(t("p_next"))}:</b> ${txt(p.next_action)}${p.next_action_due ? " (" + esc(p.next_action_due) + ")" : ""}</div>` : ""}
+      ${p.missing ? `<div class="sub" style="margin-top:3px"><b>${esc(t("p_missing"))}:</b> ${txt(p.missing)}</div>` : ""}
+      ${w.map((a, j) => `<div class="card" style="margin-top:8px"><div class="sub"><b>${esc(t("p_appr"))}:</b> ${esc(a.kind)} · ${esc(a.approval_id)}</div><div class="t" style="margin-top:2px">${txt(a.summary)}</div>
+        ${a.to ? `<div class="sub" dir="ltr">${esc(t("p_to"))}: ${esc(a.to)}</div>` : ""}${a.subject ? `<div class="sub" dir="auto">${esc(t("p_subj"))}: ${esc(a.subject)}</div>` : ""}
+        ${a.body ? `<details><summary class="sub">${esc(t("p_body"))}</summary><div class="result" dir="auto">${txt(a.body)}</div></details>` : ""}
+        <textarea id="pn-${i}-${j}" rows="2" style="width:100%;margin-top:6px" placeholder="${esc(t("p_note_ph"))}"></textarea>
+        <div class="actions" style="margin:6px 0 0"><button class="primary" type="button" data-pa="approve" data-aid="${esc(a.approval_id)}" data-n="pn-${i}-${j}">${esc(t("p_approve"))}</button><button type="button" data-pa="reject" data-aid="${esc(a.approval_id)}" data-n="pn-${i}-${j}">${esc(t("p_reject"))}</button></div><div id="pa-${esc(a.approval_id)}"></div></div>`).join("")}
+      ${open.length ? `<details style="margin-top:6px"><summary class="sub">${esc(t("p_tasks", { n: open.length }))}</summary>${open.slice(0, 60).map(x => `<div class="sub">- [${esc(x.status)}] ${esc(x.kind)}: ${txt(x.item)}${x.due ? " (" + esc(x.due) + ")" : ""}${x.supplier ? " · " + esc(x.supplier) : ""}</div>`).join("")}</details>` : ""}
+      <div class="actions" style="margin:8px 0 0"><select id="po-${i}"><option value="">${esc(t("p_outcome"))}</option><option>Won</option><option>Lost</option><option>Submitted - no award yet</option><option>Withdrawn</option><option>Cancelled by buyer</option></select><button type="button" data-pc="${i}">${esc(t("p_close"))}</button>${p.drive_folder ? link(p.drive_folder, t("p_folder")) : ""}</div><div id="pc-${i}"></div>
+    </div></div>`;
+  }).join("");
+  el.querySelectorAll("[data-pa]").forEach(b => b.onclick = async e => {
+    const aid = b.dataset.aid, note = ($("#" + b.dataset.n)?.value || "").trim();
+    const ok = await projectJob({ type: "approval", target_id: aid, target: `${b.dataset.pa} ${aid}`, request: b.dataset.pa + (note ? ": " + note : ""), context: { approval_id: aid, decision: b.dataset.pa, note } }, e.currentTarget, "#pa-" + CSS.escape(aid));
+    if (ok) b.parentElement.querySelectorAll("button").forEach(x => x.disabled = true);
+  });
+  el.querySelectorAll("[data-pc]").forEach(b => b.onclick = e => {
+    const p = rows[+b.dataset.pc], oc = $("#po-" + b.dataset.pc).value;
+    if (!oc) { $("#po-" + b.dataset.pc).focus(); return; }
+    if (!confirm(t("p_close_confirm"))) return;
+    projectJob({ type: "project_close", target_id: p.project_id, target: `${p.project_id} ${oc}`, request: oc, context: { project_id: p.project_id, outcome: oc } }, e.currentTarget, "#pc-" + b.dataset.pc);
+  });
+}
+
 /* ---------- GRANTS: calls for proposals and incentive programmes ---------- */
 function renderGrants() {
   const all = (S.data.grants || []).filter(g => g.title);
@@ -1675,7 +1752,7 @@ async function loadMarkets() {
 ["#mq", "#mtier", "#mcat", "#msort"].forEach(s_ => $(s_).addEventListener("input", () => { S.mkLimit = 80; renderMarkets(); }));
 
 /* ---------- navigation and wiring ---------- */
-const VIEWS = ["today", "tenders", "companies", "deals", "markets", "desk", "grants", "intel", "contacts", "jobs"];
+const VIEWS = ["today", "tenders", "companies", "deals", "markets", "desk", "grants", "intel", "contacts", "projects", "jobs"];
 function go(v) {
   S.view = v; document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v));
   document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== "v-" + v);
@@ -1683,7 +1760,7 @@ function go(v) {
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
 }
 function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => { go(b.dataset.goto); renderJobs(); }); }
-function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderContacts(); renderJobs(); wireGoto(document); }
+function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderContacts(); renderProjects(); renderJobs(); wireGoto(document); }
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
 ["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
@@ -1692,6 +1769,7 @@ $("#dq").addEventListener("input", () => { S.limit.d = 60; renderDeals(); });
 ["#gq", "#gsource", "#gsector", "#gdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.g = 60; renderGrants(); }));
 ["#iq", "#icat", "#iregion", "#ihigh"].forEach(s_ => $(s_).addEventListener("input", renderIntel));
 ["#kq", "#kcountry", "#kcat", "#ksector", "#kmail"].forEach(s_ => $(s_).addEventListener("input", renderContacts));
+["#pq", "#ptype", "#pappr"].forEach(s_ => $(s_).addEventListener("input", renderProjects));
 $("#cs-sup").onclick = () => { S.compMode = "sup"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
 $("#cs-acc").onclick = () => { S.compMode = "acc"; setSeg(); $("#cregion").value = $("#csector").value = ""; renderCompanies(); };
 ["bd", "rep", "mkt", "ex", "ilx"].forEach(m => $("#ds-" + m).onclick = () => { S.dealMode = m; setSeg(); S.limit.d = 60; renderDeals(); });

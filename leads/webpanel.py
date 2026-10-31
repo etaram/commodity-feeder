@@ -41,6 +41,9 @@ PARTS = {
         "pursuits": (LE, "'Pursuits'!A1:V600"),
         "jobs": (LE, "'Panel Jobs'!A1:L800"),
         "contacts": (LE, "'Contacts'!A1:S1500"),
+        "projects": (LE, "'Projects'!A1:V300"),
+        "ptasks": (LE, "'Project Tasks'!A1:L3000"),
+        "approvals": (LE, "'Approvals'!A1:M2000"),
         "stats": (SU, "'Stats'!A1:B60"),
     },
 }
