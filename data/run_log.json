@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-31T11:17:52",
+  "finished_utc": "2026-10-31T23:19:58",
   "fx_source": "ECB via Frankfurter 2026-10-30",
   "fx": {
     "EUR": 1.117206091007608,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 26,
+      "sec": 25,
       "newest_date": "2026-10-30",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -40,12 +40,12 @@
     },
     "em_global": {
       "ok": true,
-      "prices": 22,
-      "sec": 37,
+      "prices": 21,
+      "sec": 28,
       "newest_date": "2026-10-31",
       "log": [
-        "INFO em_global board: 640 rows",
-        "INFO em_global: 22 prices"
+        "INFO em_global board: 620 rows",
+        "INFO em_global: 21 prices"
       ]
     },
     "cn_spot": {
@@ -60,7 +60,7 @@
     "eu_agri": {
       "ok": true,
       "prices": 63,
-      "sec": 12,
+      "sec": 13,
       "newest_date": "2026-10-31",
       "log": [
         "INFO eu_agri: 63 prices"
@@ -105,7 +105,7 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 10,
+      "sec": 12,
       "newest_date": "2026-10-30",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -135,7 +135,7 @@
     "comext": {
       "ok": true,
       "prices": 1918,
-      "sec": 59,
+      "sec": 60,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -145,7 +145,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 24,
+      "sec": 9,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 25 HS codes still missing",
@@ -155,7 +155,7 @@
     }
   },
   "rows_with_price": 1962,
-  "candidates": 2197,
+  "candidates": 2196,
   "flagged": 223,
   "by_source_selected": {
     "yahoo": 31,
