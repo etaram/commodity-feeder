@@ -1,17 +1,17 @@
 source,last_run_utc,rows,note,detail
-ted,2026-10-30T06:05,15079,OK,fetched=7427; days=3; cache=15079
-fts,2026-10-30T06:05,160,OK,pages=1
-sam,2026-10-30T06:06,7311,OK,fetched=1899; set_aside=11942; open_to_foreign=5306; full=0
-canadabuys,2026-10-30T06:07,767,OK,
-za,2026-10-30T06:08,341,OK,
+ted,2026-10-31T04:43,14895,OK,fetched=5467; days=3; cache=14895
+fts,2026-10-31T04:43,165,OK,pages=1
+sam,2026-10-31T04:46,6822,OK,fetched=8103; set_aside=11751; open_to_foreign=4966; full=1
+canadabuys,2026-10-31T04:48,790,OK,
+za,2026-10-31T04:48,523,OK,
 worldbank,2026-10-30T06:41,676,OK,new=282; cache=676; days=10
-ebrd,2026-10-30T06:08,41,OK,
+ebrd,2026-10-31T04:48,41,OK,
 mrgov,2026-10-30T06:42,199,OK,
-ungm,2026-10-30T06:10,728,OK,new=628; total_active=1743; pages=47
-undp,2026-10-30T06:10,16,OK,new=23; cache=16
-aiib,2026-10-30T06:10,173,OK,new=174; awards=275
-isdb,2026-10-30T06:10,34,OK,new=35
-etimad,2026-10-30T06:11,344,OK,new=164; pages=15
+ungm,2026-10-31T04:50,823,OK,new=719; total_active=1759; pages=54
+undp,2026-10-31T04:50,15,OK,new=22; cache=15
+aiib,2026-10-31T04:50,172,OK,new=173; awards=275
+isdb,2026-10-31T04:50,33,OK,new=35
+etimad,2026-10-31T05:22,344,OK,new=75; pages=8
 prozorro,2026-10-30T06:12,592,OK,candidates=2759; fetched=60
 pncp,2026-10-30T06:13,2889,OK,new=250
 secop,2026-10-30T06:13,611,OK,new=56
@@ -28,16 +28,16 @@ moldova,2026-10-31T05:31,365,OK,new=365
 uruguay,2026-10-31T05:31,172,OK,new=172
 bahrain,2026-10-31T05:32,7,OK,new=7
 malaysia,2026-10-31T05:33,449,OK,new=450
-qatar,2026-10-30T06:34,0,EMPTY,new=0
-israel,2026-10-30T10:30,960,OK,bodies_scanned=909; open_notices=960
-nyc,2026-10-30T06:06,194,OK,open=194
-us_cities,2026-10-30T06:07,284,OK,Los_Angeles=201 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
+qatar,2026-10-31T06:04,209,OK,new=606
+israel,2026-10-31T09:59,960,OK,bodies_scanned=909; open_notices=960
+nyc,2026-10-31T04:46,193,OK,open=193
+us_cities,2026-10-31T04:48,287,OK,Los_Angeles=203 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-10-30T06:41,930,OK,projects=930
 ocdr_tenders,2026-10-29T20:14,954,OK,publications=32; read=32; releases=1125155; open_tenders=954; countries=6
-afdb,2026-10-30T06:10,35,OK,new=29
-iadb,2026-10-30T11:43,111,OK,new=111
-chile,2026-10-30T12:29,0,EMPTY,new=0
-simap,2026-10-30T12:22,240,OK,new=240
-gets,2026-10-30T12:37,396,OK,new=396
-india,2026-10-30T13:04,23265,OK,new=23780
+afdb,2026-10-31T04:50,42,OK,new=29
+iadb,2026-10-31T04:50,108,OK,new=108
+chile,2026-10-31T04:50,4290,OK,new=4290
+simap,2026-10-31T04:51,268,OK,new=240
+gets,2026-10-31T04:51,396,OK,new=396
+india,2026-10-31T05:21,55427,OK,new=50875
 importyeti,2026-10-30T06:42,2,OK,"2 HS headings cached; this run 0, due 2"
