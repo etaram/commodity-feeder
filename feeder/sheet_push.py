@@ -83,4 +83,18 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except Exception as e:  # noqa: BLE001
+        import traceback
+        msg = traceback.format_exc()[-900:]
+        print(msg)
+        try:
+            s = Sheets()
+            now = (dt.datetime.utcnow() + dt.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M")
+            s._req("POST", f"{API}/{SHEET}/values/{quote('Log!A:G')}:append",
+                   params={"valueInputOption": "RAW", "insertDataOption": "INSERT_ROWS"},
+                   json={"values": [[now, "ייבוא פיד אוטומטי - שגיאה", "", "", "", 1, msg]]})
+        except Exception:  # noqa: BLE001
+            pass
+        sys.exit(1)
