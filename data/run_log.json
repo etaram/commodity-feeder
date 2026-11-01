@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-10-31T23:19:58",
+  "finished_utc": "2026-11-01T00:07:02",
   "fx_source": "ECB via Frankfurter 2026-10-30",
   "fx": {
     "EUR": 1.117206091007608,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 25,
+      "sec": 26,
       "newest_date": "2026-10-30",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -41,8 +41,8 @@
     "em_global": {
       "ok": true,
       "prices": 21,
-      "sec": 28,
-      "newest_date": "2026-10-31",
+      "sec": 29,
+      "newest_date": "2026-11-01",
       "log": [
         "INFO em_global board: 620 rows",
         "INFO em_global: 21 prices"
@@ -120,43 +120,43 @@
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 1,
+      "sec": 0,
       "newest_date": null,
       "log": [
+        "WARNING census 2026-10: Expecting value: line 1 column 1 (char 0)",
         "WARNING census 2026-09: Expecting value: line 1 column 1 (char 0)",
         "WARNING census 2026-08: Expecting value: line 1 column 1 (char 0)",
         "WARNING census 2026-07: Expecting value: line 1 column 1 (char 0)",
         "WARNING census 2026-06: Expecting value: line 1 column 1 (char 0)",
         "WARNING census 2026-05: Expecting value: line 1 column 1 (char 0)",
-        "WARNING census 2026-04: Expecting value: line 1 column 1 (char 0)",
         "WARNING census: no data"
       ]
     },
     "comext": {
       "ok": true,
-      "prices": 1918,
-      "sec": 60,
+      "prices": 1913,
+      "sec": 139,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
-        "INFO comext: 1918 prices"
+        "INFO comext: 1913 prices"
       ]
     },
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 9,
+      "sec": 14,
       "newest_date": "2026-08-31",
       "log": [
-        "INFO comtrade: 25 HS codes still missing",
+        "INFO comtrade: 30 HS codes still missing",
         "INFO comtrade period 202608 (preview)",
-        "INFO comtrade: 3 prices, 3 calls"
+        "INFO comtrade: 3 prices, 4 calls"
       ]
     }
   },
-  "rows_with_price": 1962,
-  "candidates": 2196,
-  "flagged": 223,
+  "rows_with_price": 1957,
+  "candidates": 2191,
+  "flagged": 250,
   "by_source_selected": {
     "yahoo": 31,
     "westmetall": 6,
@@ -169,7 +169,7 @@
     "smi": 3,
     "usda": 29,
     "census": 0,
-    "comext": 1727,
+    "comext": 1722,
     "comtrade": 3,
     "derived": 31
   },
@@ -177,6 +177,6 @@
     "T1 Exchange benchmark": 80,
     "T2 Official market reporting": 81,
     "T3 Industry assessment": 71,
-    "T4 Trade statistics (unit value)": 1730
+    "T4 Trade statistics (unit value)": 1725
   }
 }
