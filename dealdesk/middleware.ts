@@ -8,11 +8,13 @@ async function valid(token: string | undefined): Promise<boolean> {
   const [b, sig] = token.split(".");
   if (!b || !sig) return false;
   try {
-    const body = atob(b.replace(/-/g, "+").replace(/_/g, "/"));
-    const exp = Number(body.split("|")[1]);
+    // atob gives one char per byte: sign those exact bytes (re-encoding as UTF-8 would break non-ASCII names, e.g. Hebrew).
+    const bin = atob(b.replace(/-/g, "+").replace(/_/g, "/"));
+    const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+    const exp = Number(bin.split("|")[1]);
     if (!Number.isFinite(exp) || exp < Date.now()) return false;
     const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(process.env.AUTH_SECRET || "dev-secret-change-me"), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-    const expect = b64url(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body)));
+    const expect = b64url(await crypto.subtle.sign("HMAC", key, bytes));
     if (expect.length !== sig.length) return false;
     let diff = 0;
     for (let i = 0; i < sig.length; i++) diff |= sig.charCodeAt(i) ^ expect.charCodeAt(i);
