@@ -60,6 +60,15 @@ export async function appendRow(tab: string, row: (string | number)[]) {
   return append(tab, row);
 }
 
+// Overwrites one range of the engine sheet (RAW, never evaluated as formulas). Used for the Users tab only.
+export async function writeRange(range: string, values: (string | number)[][]) {
+  const jwt = await client();
+  if (!jwt) throw new Error("Sheets is not configured");
+  await call(jwt, "PUT", `${API}/${SHEET}/values/${encodeURIComponent(range)}?valueInputOption=RAW`, { range, values });
+}
+
+export const ENGINE_SHEET = SHEET;
+
 // RAW: a cell typed by a user is stored as text and never evaluated as a formula (=, +, -, @ at the start are harmless).
 async function append(tab: string, row: (string | number)[]) {
   if (row.length > 40) row = row.slice(0, 40);

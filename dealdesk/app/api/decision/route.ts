@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
+import { gate } from "@/lib/gate";
 import { recordDecision } from "@/lib/sheets";
 
 export async function POST(req: NextRequest) {
-  const jar = await cookies();
-  const session = verifySession(jar.get("dd_session")?.value);
-  if (!session) return NextResponse.json({ ok: false }, { status: 401 });
+  const { s: session, res } = await gate("analyst");
+  if (!session) return res;
   const { id, decision, title = "", buyer = "", country = "", note = "" } = await req.json().catch(() => ({}));
   if (!id || !["Go", "Watch", "No"].includes(decision)) return NextResponse.json({ ok: false }, { status: 400 });
   try {

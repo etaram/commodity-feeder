@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
+import { gate } from "@/lib/gate";
 import { claude } from "@/lib/anthropic";
 import { appendRow, jobsToday, sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
@@ -37,8 +36,8 @@ Rules: only details actually seen on a page; copy emails exactly; never guess or
 };
 
 export async function POST(req: NextRequest) {
-  const session = verifySession((await cookies()).get("dd_session")?.value);
-  if (!session) return NextResponse.json({ ok: false }, { status: 401 });
+  const { s: session, res } = await gate("analyst");
+  if (!session) return res;
   const { id, type, target_id, target, context, request, lang } = await req.json().catch(() => ({}));
   if (!target && !request) return NextResponse.json({ ok: false, error: "empty job" }, { status: 400 });
   const today = new Date().toISOString().slice(0, 10);

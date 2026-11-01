@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 export default function Decide({ id, title, buyer, country }: { id: string; title: string; buyer: string; country: string }) {
-  const [state, setState] = useState<"idle" | "busy" | "done" | "error">("idle");
+  const [state, setState] = useState<"idle" | "busy" | "done" | "error" | "forbidden">("idle");
   const [picked, setPicked] = useState("");
 
   async function decide(decision: string) {
@@ -13,7 +13,7 @@ export default function Decide({ id, title, buyer, country }: { id: string; titl
       body: JSON.stringify({ id, decision, title, buyer, country }),
     });
     if (r.ok) { setPicked(decision); setState("done"); }
-    else setState("error");
+    else setState(r.status === 403 ? "forbidden" : "error");
   }
 
   if (state === "done")
@@ -25,6 +25,7 @@ export default function Decide({ id, title, buyer, country }: { id: string; titl
       <button onClick={() => decide("Watch")} disabled={state === "busy"} className="rounded-full bg-watchbg px-3 py-1 text-xs font-bold text-watch hover:ring-1 hover:ring-watch disabled:opacity-40">Watch</button>
       <button onClick={() => decide("No")} disabled={state === "busy"} className="rounded-full bg-nobg px-3 py-1 text-xs font-bold text-no hover:ring-1 hover:ring-no disabled:opacity-40">No</button>
       {state === "error" && <span className="text-xs text-no">Could not save (Sheets not connected)</span>}
+      {state === "forbidden" && <span className="text-xs text-no">View-only account: decisions need the analyst role</span>}
     </span>
   );
 }

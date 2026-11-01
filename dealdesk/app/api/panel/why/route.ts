@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
+import { gate } from "@/lib/gate";
 import { markets } from "@/lib/markets";
 import { claude } from "@/lib/anthropic";
 
@@ -13,7 +12,8 @@ const cache = new Map<string, { text: string; at: number }>();
 let day = "", used = 0;
 
 export async function POST(req: NextRequest) {
-  if (!verifySession((await cookies()).get("dd_session")?.value)) return NextResponse.json({ ok: false }, { status: 401 });
+  const auth = await gate("analyst");
+  if (!auth.s) return auth.res;
   if (!process.env.ANTHROPIC_API_KEY) return NextResponse.json({ ok: false, error: "AI is not configured" }, { status: 503 });
   const { group, lang } = await req.json().catch(() => ({}));
   const he = lang === "he";

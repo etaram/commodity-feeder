@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
+import SignOut from "@/components/SignOut";
 import "./globals.css";
 
 export const metadata: Metadata = { title: "Sinder Deal Desk", description: "Tenders, deals and market context for Sinder's team" };
@@ -22,7 +23,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {NAV.map(([href, label]) => (<a key={href} href={href} className="hover:text-white">{label}</a>))}
               </nav>
             )}
-            <div className="ml-auto text-xs text-[#9FBBDD]">{session ? session.email : ""}</div>
+            {session && (
+              <div className="ml-auto flex items-center gap-3 text-xs text-[#9FBBDD]">
+                <span>{session.name || session.email} <span className="rounded bg-[#2B4A72] px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-white">{session.role}</span></span>
+                {session.role === "admin" && <a href="/#users" className="hover:text-white">Users</a>}
+                <SignOut />
+              </div>
+            )}
           </div>
         </header>
         <main className="mx-auto max-w-6xl px-5 py-6">{children}</main>

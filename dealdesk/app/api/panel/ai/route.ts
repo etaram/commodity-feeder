@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { claude, MODEL } from "@/lib/anthropic";
+import { gate } from "@/lib/gate";
 
 // The panel's quick AI features on the web (quick summary, drafts, free-language search, Hebrew translation).
 // Cost controls: cheapest model (Haiku 5.5), capped answer length, cached repeats, daily cap.
@@ -15,6 +16,8 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const g = await gate("analyst");
+  if (!g.s) return g.res;
   if (!process.env.ANTHROPIC_API_KEY) return NextResponse.json({ ok: false, error: "AI is not configured" }, { status: 503 });
   const { prompt } = await req.json().catch(() => ({}));
   if (typeof prompt !== "string" || !prompt) return NextResponse.json({ ok: false }, { status: 400 });

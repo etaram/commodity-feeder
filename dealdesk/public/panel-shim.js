@@ -82,6 +82,14 @@
 
   // Instant jobs on the web: the server researches now (Claude Haiku 5.5 with web search) instead of queueing for the worker.
   window.DD_INSTANT = async (job) => post("/api/panel/run", job, "Deal Desk AI");
+  // The signed-in user ({email, name, role}); the panel shows a badge and hides what the role cannot do.
+  window.DD_ME = fetch("/api/me", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  window.DD_LOGOUT = async () => { await fetch("/api/logout", { method: "POST", credentials: "same-origin" }).catch(() => {}); location.href = "/login"; };
+  // Admin only: user accounts (list, approve, change role, disable).
+  window.DD_USERS = {
+    list: async () => { const r = await fetch("/api/users", { credentials: "same-origin" }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.users || []; },
+    set: async (email, patch) => post("/api/users", Object.assign({ email }, patch), "Deal Desk"),
+  };
   // Official contact details for one supplier, fetched only when its file is opened.
   window.DD_CONTACT = async (name, country) => (await post("/api/panel/contact", { name, country }, "Deal Desk")).contact || null;
 

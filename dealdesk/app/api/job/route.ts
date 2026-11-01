@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
+import { gate } from "@/lib/gate";
 import { queueJob } from "@/lib/sheets";
 
 const TYPES = ["eligibility", "quote", "logistics", "company_research", "deal_research", "supplier_search"];
 
 export async function POST(req: NextRequest) {
-  const jar = await cookies();
-  const session = verifySession(jar.get("dd_session")?.value);
-  if (!session) return NextResponse.json({ ok: false }, { status: 401 });
+  const { s: session, res } = await gate("analyst");
+  if (!session) return res;
   const { type, targetId = "", target = "", context = "", request = "" } = await req.json().catch(() => ({}));
   if (!TYPES.includes(type)) return NextResponse.json({ ok: false }, { status: 400 });
   try {

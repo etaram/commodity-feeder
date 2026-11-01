@@ -19,7 +19,7 @@ export default function JobButton({ type, deal, label }: { type: string; deal: R
     });
     const j = await r.json().catch(() => ({}));
     if (r.ok) { setMsg(j.jobId || ""); setState("done"); }
-    else { setMsg(j.error || ""); setState("error"); }
+    else { setMsg(r.status === 403 ? "view-only account" : j.error || ""); setState("error"); }
   }
 
   if (state === "done") return <span className="rounded-md bg-gobg px-3 py-1.5 text-xs font-bold text-go">Queued {msg}</span>;
@@ -28,7 +28,7 @@ export default function JobButton({ type, deal, label }: { type: string; deal: R
       <button onClick={queue} disabled={state === "busy"} className="rounded-md border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent hover:text-white disabled:opacity-40">
         {state === "busy" ? "Queueing..." : label}
       </button>
-      {state === "error" && <span className="ml-2 text-xs text-no">not connected</span>}
+      {state === "error" && <span className="ml-2 text-xs text-no">{msg === "view-only account" ? "view-only account" : "not connected"}</span>}
     </span>
   );
 }
