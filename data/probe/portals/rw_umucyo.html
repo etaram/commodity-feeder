@@ -1,0 +1,1294 @@
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<script type="text/javaScript" src="/js/common/font.js"></script>
+<script type="text/javaScript" src="/js/common/alert.js"></script>
+<script type="text/javaScript" language="javascript">
+    
+    // mask String
+    var validateTokenNumber="Number";
+    var validateTokenKorean="Korea language";
+    var validateTokenUpperEnglish="Upper english";
+    var validateTokenLowerEnglish="Lower English";
+    var validateTokenNewline="New Line";
+    var validateTokenUnderBar="Underbar";
+    var validateTokenComma="Comma";
+    var validateTokenDot="Dot";
+    var validateTokenDash="Dash";
+    var validateTokenSpace="Space";
+    var validateTokenParentheses ="Small bracket";
+
+    // required message
+    var requiredMessage="Please check the required field.";
+
+    // calrendar.js에서 사용 	
+    var systime ="November 2, 2026 12:28:15";
+    var systimeStr ="021120261228152815";
+    var today ="02112026";
+    // 공통메세지 	
+    var valiTelNoMsg ="It is invalid phone/fax type(10 digits).";
+    var valiDateMsg ="It is invalid date type.";
+    var valiNoMatchDateMsg ="Start date and end date is reversed.";
+    var todayStr ="02/11/2026";
+    // contextPath
+    var contextPath = "/";
+    // 현재언어
+    var langCode = "en";
+     // 날짜포맷
+    var dateFormat = "dd/MM/yyyy";
+     // 날짜구분타입
+    var dateSeparater = "/";
+     // 시간구분타입
+    var timeSeparater = ":";
+     // 화폐구분타입
+    var caliberSeparater = ",";
+     // 화폐구분단위
+    var caliberDigits = 3;
+     // 소수점 구분
+    var caliberPoint = ".";
+     // 입찰, 계약 자리수 구분 메세지
+     var invalidDigitMessage = "Please enter real number of {0} digit(s) and decimal number of {1} digit(s).";
+     // 금액 체크 메세지
+     var invalidMoneyMessage = "Invalid currency";
+     // 수량 체크 메세지
+     var invalidQuantityMessage = "It is invalid quantity type.";
+     // 소수점 체크 메세지
+     var invalidDecimalMessage = "You can enter either real numbers of X digit(s) or integer numbers of X digit(s).";
+     // 확인 메세지
+     var confirmStr = "Confirm";
+     // 취소 메세지
+     var cancelStr = "Cancel";
+     // close message
+     var closeStr = "Close";
+     // 정수 범위 메세지
+     var intRangeStr = "Please enter 14 digits maximum.";
+ 
+	function noEvent() {
+		if (event.keyCode == 116) {
+			event.keyCode= 2;
+			return false;
+		}
+	}
+	document.onkeydown = noEvent;
+	
+if(navigator.userAgent.indexOf("Safari") >-1) { 		
+	document.domain="umucyo.gov.rw";		
+} else {	
+	if( navigator.appName.indexOf("Microsoft") > -1 ) {	
+		document.domain="umucyo.gov.rw";		
+   } else {	
+		document.domain="umucyo.gov.rw";		
+   }		
+}	
+</script>
+
+<script type="text/javascript" src="/js/common/string.js"></script>
+<script type="text/javascript" src="/js/common/date.js"></script>
+<script type="text/javascript" src="/js/common/event.js"></script>
+<script type="text/javascript" src="/js/common/validation.js"></script>
+<script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script>
+<link href="/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="/js/jquery.validate.js"></script>
+
+<script type="text/javascript" src="/js/tytabs.jquery.min.js"></script>
+<script type="text/javascript" src="/js/pop.js" ></script>
+
+<script type="text/javascript" src="/js/eb/EB_addDelClear.js?v=1" ></script>
+
+<script type="text/javascript" src="/js/date_picker.js"></script>
+<script type="text/javascript" src="/js/eb_dateCalendar.js"></script>
+<script type="text/javascript" src="/js/common/ajaxUtil.js"></script>
+<script type="text/javascript" src="/js/eb/EB_numChangeWord.js" ></script>
+
+<script type="text/javascript" src="/js/common/pagination.js"></script>
+
+<script type="text/javascript" src="/js/common/format.js"></script>
+
+<script type="text/javascript" src="/js/eb/EB_submOpenCommonFunc.js?v=4" ></script>
+
+<script type="text/javascript" src="/js/eb/EB_procPlan.js" ></script>
+<script type="text/javascript" src="/js/eb/tenderManagement.js?v=2"></script>
+<link href="/css/ebcss/ebcom.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javaScript" language="javascript">
+	var validTodayAfterChk = "Please enter a date from this day onward.";
+	var elDocChkMSG = "This document has not been submitted.";
+	var INFO_EB_019 = "Please limit your total bid size to 30mb, very big sizes might cause failure.";
+	var rssbConfirmMessage = "Would you like to try to check again?";
+	var validWeekend = "Pick another day different from weekend days (Saturday and Sunday) ";
+	var validHolidays ="Pick another day different from public holiday";
+	var validWorkingHours="Pick working hours ( between 09:00  and 17:00)."
+	var bidOpeningSubmitionValidation = "Time between submission deadline and opening of bids must be less than or equal to 1 hour"
+	var OpeningSubmissionValidation = "Opening time should be after submission time."
+	//CR#184_V2 by Mariam on 26.08.2020
+	var validateFutureDt="Please enter a future date."
+	var validateNowAndAfter="Please enter a date from this day onward."
+	//end CR#184_V2	
+    function hideTenderFeeRow(){
+        $("#tenderFeeRow").hide();
+    }
+
+    function showTenderFeeRow(){
+        $("#tenderFeeRow").show();
+    }
+
+    function updateTenderFeeRow(method){
+        if (method === 'SS' || method === 'RFQ') {
+            hideTenderFeeRow();
+        } else {
+            showTenderFeeRow();
+        }
+    }
+</script>
+
+<!-- increase/reduce attachment file size setting from globals_cm.properties -->
+
+
+
+<html>
+<head>
+<title>UMUCYO</title>
+<script type="text/javascript">
+    var ebBaseUrl = "";
+</script>
+<style>
+.btn {
+	display: inline-block;
+	padding: 10px 10px;
+	font-size: 11px;
+	font-weight: bold;
+	text-decoration: none;
+	border-radius: 6px;
+	transition: background-color 0.3s ease;
+}
+
+.btn-blue {
+	background-color: #489cdd;
+	color: #fff;
+}
+
+.btn-blue:hover {
+	background-color: #0056b3;
+	color: #fff;
+}
+
+.btn-blue:active {
+	background-color: #004085;
+}
+
+.btn-yellow {
+	background-color: #fbf4cf;
+	color: #5a534d;
+}
+
+.btn-green-disabled {
+	background-color: #28a745;
+	color: #fff;
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.bid-expired-alert {
+    color: #a94442;                  /* muted red/pink text */
+    font-weight: bold;
+    background-color: #ffe6e6;      /* very light pink background */
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.status-no-payment {
+	color: #6c757d;
+	font-weight: bold;
+}
+</style>
+
+<script type="text/javascript">
+	this.window.name = 'main';
+	var newBidOpnDt = "";
+	$(document).ready(
+			function() {
+				util_initCompSearchConditionsCurrentFrame('frm_advSearch');
+
+				$('.tooltip').tooltip();
+				/* Start - adding open date on 1/2 stage by Eric */
+				$('.bidOpnCls').click(
+						function() {
+							var bidOpnId = this.id;
+							var idRmvd = bidOpnId.split("_")[1];
+							var time = idRmvd.split(" ")[1];
+							var dates = idRmvd.split(" ")[0];
+							var bidOpnDt = dates.split("/")[1] + "/"
+									+ dates.split("/")[0] + "/"
+									+ dates.split("/")[2];
+							newBidOpnDt = bidOpnDt + " " + time;
+						});
+				/* End - adding open date on 1/2 stage by Eric */
+			});
+	function fn_searchPe() {
+		window
+				.open(
+						"/eb/bpp/selectPagePeList.do",
+						"",
+						"width=600,height=600,top=50,left=300,history=no,resizable=no,status=no,addressbar=no,scrollbars=yes,menubar=no");
+	}
+	
+	function fn_DetailOfOpeningPop(tendReferNo,tendStageCd,flag,techOpen){		
+		if(flag == "T"){
+			if(techOpen == "N"){
+				/* Start adding open date on 1/2 stage by Eric */
+				if(tendStageCd != "F") {
+					return util_messageAlert("Technical proposal is not opened yet.");
+					//return false;
+				} else {					
+					if(new Date(newBidOpnDt) > new Date()) {
+						return util_messageAlert("EOI not opened yet");
+						//return false;
+					}
+				}
+				/* End - adding open date on 1/2 stage by Eric */
+			}
+		}
+		
+		var w = 800;
+        var h = 500;
+        var LeftPosition = (screen.width - w) / 2;
+        var TopPosition = (screen.height - h) / 2;
+        var retVal;
+        
+        var openParam = "toolbar=no,menubar=no,resizable=no,scrollbars=yes,copyhistory=no,location=no,z-lock=no, width=" + w + ",height=" + h + ", top=" + TopPosition + ", left=" + LeftPosition;
+        retVal = window.open('','InvitPop', openParam);
+        var form = document.frm_move;
+        form.tendReferNo.value=tendReferNo;
+        form.tendStageCd.value=tendStageCd;
+        form.flag.value=flag;
+        form.action = "/eb/bav/selectBidopenInfo.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1";
+        form.target = "InvitPop";
+        form.submit();
+        retVal.focus();
+		
+	}
+	
+	
+	function fn_Clear(){
+		document.getElementById("peCd").value="";
+		document.getElementById("peName").value="";
+	}
+	
+	function ViewDetail(tendReferNo,tendStageCd,tendTypeCd){
+		var form = document.frm_advSearch;
+		var moveform = document.frm_move;
+		moveform.tendReferNo.value=tendReferNo;
+		moveform.tendStageCd.value=tendStageCd;
+		moveform.tendTypeCd.value=tendTypeCd;
+		console.log("the search condition:: "+form.searchConditions.value);
+        moveform.currentPageNo.value=form.currentPageNo.value;
+        moveform.searchConditions.value="/eb/bav/selectListAdvertisingListForGU.do?"+form.searchConditions.value;
+
+        
+        moveform.action = "/eb/bav/selectAdvertisingDtlInfo.do";
+        moveform.target = "main";
+        moveform.submit();
+	}
+	
+	
+	
+	function movePage(type){
+		var form = document.frm_advSearchList;
+        var checked_items = 0;
+        
+        for (i=0;i<form.elements.length;i++)
+        {
+            if ((form.elements[i].name == "tenderNo") && (form.elements[i].checked))
+            checked_items++;
+        }
+        if (checked_items == 0) 
+        {   
+        	util_messageAlert('Please select only one tender.');
+        }else if (checked_items != 0 && type == 'clar') {
+        	var chkVal = $("[name='tenderNo']:checked").val().split('|');
+			form.tendReferNo.value=chkVal[0];
+			form.tendStageCd.value=chkVal[4];
+        	
+			form.action = "/eb/bav/selectListClarification.do";
+			form.target = "main";
+			form.submit();
+        }
+         else if (checked_items != 0 && type == 'comu') {
+        	var moveForm = document.frm_move;
+        	var tenderSplit = $("[name='tenderNo']:checked").val().split("|");
+        	moveForm.tendReferNo.value=tenderSplit[0];
+        	moveForm.tendStageCd.value=tenderSplit[4];
+        	if(tenderSplit[8] == 'C'){
+	        	util_messageAlert('Communication is allowed for the published tender.');
+        	}else{
+	        	moveForm.action = "/eb/bav/selectComunAdLst.do";
+	        	moveForm.target = "main";
+	        	moveForm.submit();
+        	}
+        } 
+	}
+	
+	function fn_AdvSearch(){
+		
+		var form = document.frm_advSearch;
+        form.currentPageNo.value = 1;
+        
+        form.action = "/eb/bav/selectListAdvertisingListForGU.do";
+        form.target = "main";
+        form.submit();
+	    	
+	}
+	
+	function fn_openHr(){
+		var form = document.frm_advSearch;
+		if(form.bidopenDt.value == null || form.bidopenDt.value == ""){
+			util_messageAlert('Value of (bidopenDt) is mandatory.', "");
+	        return false;
+		}else{
+       	    return true;
+		}
+	}
+	function fn_openMm(){
+		var form = document.frm_advSearch;
+		if((form.bidopenDt.value == null || form.bidopenDt.value == "") || (form.bidopenHr.value == null || form.bidopenHr.value == "")){
+              util_messageAlert('Value of (bidopenDt & bidopenHr) is mandatory.', "");
+              return false;
+        }else{
+			return true;
+		}
+	}
+	
+
+	 function fn_moveComun(tendReferNo, tendStageCd){
+        var form = document.frm_advSearch;
+        var moveform = document.frm_move;
+        moveform.tendReferNo.value=tendReferNo;
+        moveform.tendStageCd.value=tendStageCd;
+        moveform.currentPageNo.value=form.currentPageNo.value;
+
+        moveform.action = "/eb/bav/selectComunAdLst.do";
+        moveform.target = "main";
+        moveform.submit();
+        
+    }
+	 
+	 //CR# by Mariam on 31.01.2019
+	 	function fn_moveclari(tendReferNo, tendStageCd, tendReferNm){
+        var form = document.frm_advSearch;
+        var moveform = document.frm_move;
+        moveform.tendReferNo.value=tendReferNo;
+        moveform.tendReferNm.value=tendReferNm;
+        moveform.tendStageCd.value=tendStageCd;
+        moveform.currentPageNo.value=form.currentPageNo.value;
+
+        moveform.action = "/eb/bav/selectListClarification.do";
+        moveform.target = "main";
+        moveform.submit();
+        
+	}
+
+	// The IremboPay CR#428::Morigene
+	function fn_iremboPayInvoiceGeneration(tendReferNo, tendReferNm,		
+	   submDlineDt, tenderAmount, productCode,tendStageCd,tendTypeCd ) {
+
+		var form = document.frm_advSearch;
+		
+        const cleaned = submDlineDt.replace(/\.0$/, '');
+
+		var invoiceGeneration = document.frm_iremboPayInvoiceGeneration;
+		invoiceGeneration.tenderReferNo.value = tendReferNo;
+		invoiceGeneration.tendReferNm.value = tendReferNm;
+		invoiceGeneration.invoiceAmount.value = tenderAmount;
+		invoiceGeneration.expiryAt.value = cleaned;
+        invoiceGeneration.productCode.value = productCode;
+        invoiceGeneration.tendStageCd.value = tendStageCd;    
+        invoiceGeneration.tendTypeCd.value = tendTypeCd;
+        invoiceGeneration.currentPageNo.value=form.currentPageNo.value;
+        invoiceGeneration.searchConditions.value="/eb/bav/selectListAdvertisingListForGU.do?"+form.searchConditions.value;
+		//Transfer these data into controller.
+		//invoiceGeneration.action = "/eb/bav/generateInvoice.do";
+		invoiceGeneration.action = ebBaseUrl + "/eb/bav/generateInvoice.do";  // Dynamic!
+		invoiceGeneration.target = "main";
+		invoiceGeneration.submit();
+
+	}
+	
+
+	function fn_continueInvoicePendingPayment(tin, tendReferNo, tendReferNm,
+			invoiceNumber, transactionId, invoiceAmount, currency, productCode,
+			createdAt, updatedAt, expiryAt, submDlineDt, reprvEmail,
+			reprvNm, productName, supplierNm, tendStageCd,tendTypeCd) {
+
+		//search:: track the last page
+		var form = document.frm_advSearch;
+
+		//Clean the date
+		const cleaned = submDlineDt.replace(/\.0$/, '');
+		//Form :: For pending invoice
+		var invoicePendingPayment = document.frm_iremboPayInvoicePendingPayment;
+		invoicePendingPayment.transactionId.value = transactionId;
+		invoicePendingPayment.tenderReferNo.value = tendReferNo;
+		invoicePendingPayment.tendReferNm.value = tendReferNm;
+		invoicePendingPayment.invoiceNumber.value = invoiceNumber;
+		invoicePendingPayment.invoiceAmount.value = invoiceAmount;
+		invoicePendingPayment.currency.value = currency;
+		invoicePendingPayment.productCode.value = productCode;
+		invoicePendingPayment.productName.value = productName;
+		invoicePendingPayment.supplierTin.value = tin;
+		invoicePendingPayment.supplierNm.value = supplierNm;
+		invoicePendingPayment.createdAt.value = createdAt;
+		invoicePendingPayment.updatedAt.value = updatedAt;
+		invoicePendingPayment.expiryAt.value = expiryAt;
+		invoicePendingPayment.tenderSubmDlDt.value = cleaned;
+		invoicePendingPayment.reprvEmail.value = reprvEmail;
+		invoicePendingPayment.reprvNm.value = reprvNm;
+		invoicePendingPayment.tendStageCd.value = tendStageCd;    
+		invoicePendingPayment.tendTypeCd.value = tendTypeCd;
+		invoicePendingPayment.currentPageNo.value=form.currentPageNo.value;
+		invoicePendingPayment.searchConditions.value="/eb/bav/selectListAdvertisingListForGU.do?"+form.searchConditions.value;
+		
+
+		//Transfer these data into controller.
+		invoicePendingPayment.action = "/eb/bav/continueInvoicePendingPayment.do";
+		invoicePendingPayment.target = "main";
+		invoicePendingPayment.submit();
+
+	}
+	// END::The IremboPay CR#428::Morigene
+</script>
+</head>
+<body>
+	<div id="wrap">
+		<!-- Top Menu Start -->
+		<div id="header"><div class="header_top"> 
+<p class="logo"><a href="https://www.umucyo.gov.rw/pt/index.do" target="main">				
+<img src="/images/logo.png" alt=""></a></p>	
+<div class="util">                                        	
+<ul>														   	
+<li><a href="https://www.umucyo.gov.rw/um/lg/moveLogin.do" target="main">Login</a></li>
+<li><a href="https://www.umucyo.gov.rw/pt/pcm/moveAdminAnnouncementList.do?menuId=PT01010100" target="main">Help</a></li>	
+<li><a href="https://www.umucyo.gov.rw/sp/sgs/moveSpSgsMn.do?menuId=SP01000000" target="main">e-Shopping Mall</a></li>	
+<li><a href="https://www.umucyo.gov.rw/sp/sdm/SPSDMDspsLst.do?menuId=DP01030100" target="main">Disposal</a></li>	
+<li><a href="https://www.umucyo.gov.rw" target="_blank">RPPA</a></li>	
+</ul>													   	
+<a href="/setCmLocale.do?lang=fr" target="main"><img src="/images/fr.gif" alt=""></a>						
+<a href="/setCmLocale.do?lang=en" target="main"><img src="/images/en.gif" alt=""></a>						
+<a href="/setCmLocale.do?lang=rw" target="main"><img src="/images/rewanda.png" alt=""></a>						
+</div>													   	
+</div>													   	
+<div class="wrap_menu clearfix">						
+<ul class="cbp-hsmenu">				   	
+<li><a href="https://www.umucyo.gov.rw/pt/pcm/moveAdminAnnouncementList.do?menuId=PT01010100&amp;leftTopFlag=t" target="main">Help</a></li>
+<li><a href="https://www.umucyo.gov.rw/eb/bpp/selectPageProcurementPlan.do?menuId=EB01010100&amp;leftTopFlag=t" target="main">e-Bidding</a></li>
+<li><a href="https://www.umucyo.gov.rw/ca/main/CAKISSrchItemSrchCondtnFrm.do?menuId=CA01010100&amp;leftTopFlag=t" target="main">e-Catalog</a></li>
+<li><a href="https://www.umucyo.gov.rw/um/upe/reg/moveUMUPEPeRgt.do?menuId=UM01010100&amp;leftTopFlag=t" target="main">PE&nbsp;Registration</a></li>
+<li><a href="https://www.umucyo.gov.rw/um/usr/moveSupplierRequestInsert.do?menuId=UM02010100&amp;leftTopFlag=t" target="main">Supplier&nbsp;Registration</a></li>
+<li><a href="https://www.umucyo.gov.rw/pt/index.do?menuId=PT02090100&amp;leftTopFlag=t" target="main">My&nbsp;Page</a></li>
+</ul>														
+</div>														
+</div>
+		
+		<div id="contents" class="clearfix ">
+
+			<!-- Left Menu Start -->
+			<div id="contents_L"><script type="text/javascript">
+	alert("Your request time expired. Moving to the main page.");
+	location.href="https://www.umucyo.gov.rw/pt/index.do"</script>
+</div>
+			<!-- Left Menu End -->
+
+			<!-- Main Content Start -->
+			<div id="contents_R">
+				<h3 class="clearfix">
+					List of Advertising
+				</h3>
+				<form id="tendMstVO" name="frm_advSearch" action="/eb/bav/selectListAdvertisingListForGU.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1" method="post">
+
+					<input type="hidden" name="currentPageNo"
+						value="1">
+					<input type="hidden" name="searchConditions"
+						value="">				
+					<div class="searchBox mb30">
+						<table class="search_table">
+							<colgroup>
+								<col width="15%">
+								<col width="30%">
+								<col width="14%">
+								<col width="26%">
+								<col width="*" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th>Tender Type</th>
+									<td><select id="tendTypeCd" name="tendTypeCd" class="selectbox width98">
+											<option value="">
+												::: All
+											</option>
+											
+												<option value="G">Goods</option>
+											
+												<option value="C">Consultant Services</option>
+											
+												<option value="NC">Non Consultant Services</option>
+											
+												<option value="W">Works</option>
+											
+										</select></td>
+									<th>Tender Method</th>
+									<td><select id="tendMthodCd" name="tendMthodCd" class="selectbox width98">
+											<option value="">
+												::: All
+											</option>
+											
+												<option value="NCB">National Competitive Bidding</option>
+											
+												<option value="ICB">International Competitive Bidding</option>
+											
+										</select></td>
+									<td rowspan="8"><a href="javascript:void(0)"
+										class="search fR login-window"
+										onclick="javascript:fn_AdvSearch();">Search</a></td>
+								</tr>
+								<tr>
+								<tr>
+									<th>Tender Status</th>
+									<td><select id="tendStatCd" name="tendStatCd" class="selectbox width30">
+											<option value="">
+												::: All
+											</option>
+											
+												<option value="ADV">Advertised</option>
+											
+												<option value="OPE">Opened</option>
+											
+												<option value="EVA">Under Evaluation</option>
+											
+												<option value="SIG">Signed Contract</option>
+											
+												<option value="CAN">Cancelled</option>
+											
+												<option value="A">Amended</option>
+											
+										</select></td>
+									<!-- commented by Eric
+								<th>Status</th>
+
+								<td>
+								    <select id="adStatCd" name="adStatCd" class="selectbox width98">
+                                        <option value="">::: All</option>
+                                        
+                                            <option value="N">New</option>
+                                        
+                                            <option value="A">Amended</option>
+                                        
+                                            <option value="P">Published</option>
+                                        
+                                            <option value="E">Extended</option>
+                                        
+                                            <option value="V">Validity extended</option>
+                                        
+                                            <option value="C">Cancelled</option>
+                                        
+                                    </select>
+								</td>
+								-->
+
+									<th>Simplified Y/N </th>
+									<td><select id="simpldYn" name="simpldYn" class="selectbox width98">
+											<option value="">
+												::: All
+											</option>
+											<option value="Y">
+												Yes
+											</option>
+											<option value="N">
+												No
+											</option>
+										</select></td>
+								</tr>
+
+								<!-- tr>
+								<th>Tender Status</th>
+								<td colspan="3">
+								    <select id="tendStatCd" name="tendStatCd" class="selectbox width30">
+                                        <option value="">::: All</option>
+                                        
+                                            <option value="ADV">Advertised</option>
+                                        
+                                            <option value="OPE">Opened</option>
+                                        
+                                            <option value="EVA">Under Evaluation</option>
+                                        
+                                            <option value="SIG">Signed Contract</option>
+                                        
+                                            <option value="CAN">Cancelled</option>
+                                        
+                                            <option value="A">Amended</option>
+                                        
+                                    </select>
+								</td>
+
+							</tr-->
+								<tr>
+									<th>Procuring entity</th>
+									<td colspan="3"><input id="peCd" name="peCd" class="input_disabled width15" type="text" value=""/> <input id="peName" name="peCdNm" class="input_disabled width50" type="text" value=""/> <a href="javascript:fn_searchPe();"
+										class="btn_W">Search</a> <a
+										href="javascript:fn_Clear();" class="btn_W">Clear</a></td>
+								</tr>
+								<tr>
+									<th>Invitation Date</th>
+									<td><input id="pubcatFromDt" name="pubcatFromDt" class="dateInput input_disabled width35" onblur="javascript:util_checkStartEndDate(this,document.frm_advSearch.pubcatFromDt,&#39;before&#39;,valiNoMatchDateMsg);" type="text" value=""/>
+										~ <input id="pubcatToDt" name="pubcatToDt" class="dateInput input_disabled width35" onblur="javascript:util_checkStartEndDate(this,document.frm_advSearch.pubcatToDt,&#39;after&#39;,valiNoMatchDateMsg);" type="text" value=""/>
+									</td>
+									<th>Opening Date</th>
+									<td><input id="bidopenDt" name="bidopenDt" name="bidopenDt" class="dateInput input_disabled width35" type="text" value=""/> <input id="bidopenHr" name="bidopenHr" class="width15" onchange="javascript:fn_openHr();" type="text" value="" maxlength="2"/> : <input id="bidopenMm" name="bidopenMm" class="width15" onchange="javascript:fn_openMm();" type="text" value="" maxlength="2"/></td>
+								</tr>
+								<tr>
+
+								</tr>
+								<tr>
+									<th>Tender No</th>
+									<td colspan="3"><input id="tendReferNo" name="tendReferNo" type="text" class="width98" value="" maxlength="35"/></td>
+								</tr>
+								<tr>
+									<th>Tender Name</th>
+									<td colspan="3"><input id="tendNm" name="tendNm" type="text" class="width98" value=""/></td>
+								</tr>
+								<tr>
+									<th>
+										Tender Classification
+									</th>
+									<td colspan="3">
+										<select id="onOffLn" name="onOffLn">
+											<option value="">:::Select</option>
+											<option value="Y">Online</option>
+											<option value="N">Offline</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="titlealign">
+						<p class="list_R">
+							<select id="recordCountPerPage" name="recordCountPerPage" onchange="javascript:fn_AdvSearch();">
+								<option value="10" selected="selected">
+									10 records
+								</option>
+								<option value="20">
+									20 records
+								</option>
+								<option value="30">
+									30 records
+								</option>
+								<option value="50">
+									50 records
+								</option>
+							</select>
+						</p>
+					</div>
+				</form>
+
+				<form id="tendMstVO" name="frm_advSearchList" action="/eb/bav/selectListAdvertisingListForGU.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1" method="post">
+					<input type="hidden" name="comun" value="">
+					<input type="hidden" name="tendReferNo" value="">
+					<input type="hidden" name="tendStageCd" value="">
+					<table class="article_table mb10">
+						<colgroup>
+							<col width="4%">
+							<col width="20%">
+							<col width="20%">
+							<col width="11%">
+							<col width="11%">
+							<col width="11%">
+							<col width="12%">
+							<col width="11%">
+							
+							
+
+						</colgroup>
+						<thead>
+							<tr>
+								<th></th>
+								<th>Tender Name</th>
+								<th>Tender No</th>
+								<th>Status</th>
+								<th>Advertising Date
+								</th>
+								<th>Deadline of Submitting</th>
+								<th>Planed Open Date</th>
+								<th>Stage Type</th>
+								
+								
+
+							</tr>
+						</thead>
+						<tbody>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000001/W/ICB/2026/2027/1419000000|Construction works for the expansion of RP Kitabi College|1419000000|23/12/2026|O|ICB|W|23/12/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 --> 
+												<a
+													href="javascript:fn_moveclari('000001/W/ICB/2026/2027/1419000000','O','000001/W/ICB/2026/2027/RP');"
+													title="List of Clarification"> <img
+													src="/images/new.png" alt="new" />
+												</a>
+											 <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000001/W/ICB/2026/2027/1419000000','O','W');">
+												Construction works for the expansion of RP Kitabi College </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000001/W/ICB/2026/2027/1419000000"  />
+										
+											000001/W/ICB/2026/2027/RP
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">28/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            23/12/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	23/12/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000001/W/ICB/2026/2027/6300000000|construction and extansion of water supply system in Musanze sector( KIDENDEZI, CADI, CYABAGARURA AND MUTOBO BASE EXTENSION)|6300000000|01/12/2026|O|ICB|W|01/12/2026 10:00|A"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 -->  <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000001/W/ICB/2026/2027/6300000000','O','W');">
+												construction and extansion of water supply system in Musanze sector( KIDENDEZI, CADI, CYABAGARURA AND MUTOBO BASE EXTENSION) </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000001/W/ICB/2026/2027/6300000000"  />
+										
+											000001/W/ICB/2026/2027/Musanze District
+										
+										
+									</td>
+									<td class="tC">Amended</td>
+									<td class="tC">28/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            01/12/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	01/12/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000005/G/ICB/2026/2027/1903000000|Centralized procurement of Tablets on behalf of all Government Institutions|1903000000|30/11/2026|O|ICB|G|30/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 -->  <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000005/G/ICB/2026/2027/1903000000','O','G');">
+												Centralized procurement of Tablets on behalf of all Government Institutions </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000005/G/ICB/2026/2027/1903000000"  />
+										
+											000005/G/ICB/2026/2027/RISA
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">30/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            30/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	30/11/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000004/G/ICB/2026/2027/1903000000|Centralized procurement of high computing devices (Servers) on behalf of Government institutions|1903000000|30/11/2026|O|ICB|G|30/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 --> 
+												<a
+													href="javascript:fn_moveclari('000004/G/ICB/2026/2027/1903000000','O','000004/G/ICB/2026/2027/RISA');"
+													title="List of Clarification"> <img
+													src="/images/new.png" alt="new" />
+												</a>
+											 <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000004/G/ICB/2026/2027/1903000000','O','G');">
+												Centralized procurement of high computing devices (Servers) on behalf of Government institutions </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000004/G/ICB/2026/2027/1903000000"  />
+										
+											000004/G/ICB/2026/2027/RISA
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">30/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            30/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	30/11/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000003/G/ICB/2026/2027/1903000000|Centralized procurement of Desktops on behalf of Government Institutions|1903000000|30/11/2026|O|ICB|G|30/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 -->  <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000003/G/ICB/2026/2027/1903000000','O','G');">
+												Centralized procurement of Desktops on behalf of Government Institutions </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000003/G/ICB/2026/2027/1903000000"  />
+										
+											000003/G/ICB/2026/2027/RISA
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">30/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            30/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	30/11/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000004/G/ICB/2026/2027/1605000000|Supply and installation Hospital support equipment|1605000000|27/11/2026|O|ICB|G|27/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 --> 
+												<a
+													href="javascript:fn_moveclari('000004/G/ICB/2026/2027/1605000000','O','000004/G/ICB/2026/2027/RBC');"
+													title="List of Clarification"> <img
+													src="/images/new.png" alt="new" />
+												</a>
+											 <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000004/G/ICB/2026/2027/1605000000','O','G');">
+												Supply and installation Hospital support equipment </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000004/G/ICB/2026/2027/1605000000"  />
+										
+											000004/G/ICB/2026/2027/RBC
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">21/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            27/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	27/11/2026 11:00
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000001/G/NCB/2026/2027/5800003001|Purchase of Textures and Mattres|5800003001|24/11/2026|O|NCB|G|24/11/2026 11:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 -->  <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000001/G/NCB/2026/2027/5800003001','O','G');">
+												Purchase of Textures and Mattres </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000001/G/NCB/2026/2027/5800003001"  />
+										
+											000001/G/NCB/2026/2027/KABAYA DH
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">02/11/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            24/11/2026 11:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	24/11/2026 11:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000005/NC/NCB/2026/2027/4500000000|Hiring of companies for management of nyagatare district greenery space|4500000000|24/11/2026|O|NCB|NC|24/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 -->  <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000005/NC/NCB/2026/2027/4500000000','O','NC');">
+												Hiring of companies for management of nyagatare district greenery space </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000005/NC/NCB/2026/2027/4500000000"  />
+										
+											000005/NC/NCB/2026/2027/NYAGATARE DISTRICT
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">30/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            24/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	24/11/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000012/G/NCB/2026/2027/2315000000|Supply, Repair and Maintenance of Studio and Office Furniture|2315000000|24/11/2026|O|NCB|G|24/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 -->  <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000012/G/NCB/2026/2027/2315000000','O','G');">
+												Supply, Repair and Maintenance of Studio and Office Furniture </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000012/G/NCB/2026/2027/2315000000"  />
+										
+											000012/G/NCB/2026/2027/RBA
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">27/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            24/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	24/11/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+								
+								<tr>
+									<td class="tC"><input type="radio" name="tenderNo"
+										class="radio"
+										value="000002/NC/NCB/2026/2027/1002000000|Provision of cleaning and gardening services to RCA|1002000000|24/11/2026|O|NCB|NC|24/11/2026 10:00|P"></td>
+									<td><span> <!-- CR# by Mariam on 31.01.2019 --> 
+												<a
+													href="javascript:fn_moveclari('000002/NC/NCB/2026/2027/1002000000','O','000002/NC/NCB/2026/2027/RCA');"
+													title="List of Clarification"> <img
+													src="/images/new.png" alt="new" />
+												</a>
+											 <!-- end of CR# by Mariam 31.01.2019 --> 
+										
+										<a
+											href="javascript:ViewDetail('000002/NC/NCB/2026/2027/1002000000','O','NC');">
+												Provision of cleaning and gardening services to RCA </a>
+									</span></td>
+
+									<td>
+										<input type="hidden" value="000002/NC/NCB/2026/2027/1002000000"  />
+										
+											000002/NC/NCB/2026/2027/RCA
+										
+										
+									</td>
+									<td class="tC">Published</td>
+									<td class="tC">28/10/2026</td>
+									<td class="tC">
+										<!-- Start - adding open date on 1/2 stage by Eric --> 
+											
+											
+
+											
+                                            24/11/2026 10:00
+	                                   
+										 <!-- End - adding open date on 1/2 stage by Eric -->
+									</td>
+									<td class="tC"> 
+                                    	24/11/2026 10:30
+                                   </td>
+									<td class="tC">one stage</td>
+                                    
+								</tr>
+							
+							
+						</tbody>
+					</table>
+
+				</form>
+				<form id="command" name="frm_move" action="/eb/bav/selectListAdvertisingListForGU.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1" method="post">
+					<input type="hidden" name="tendReferNo" />
+					<input type="hidden" name="tendReferNm" />
+					<input type="hidden" name="tendStageCd" />
+					<input type="hidden" name="tendTypeCd" />
+					<input type="hidden" name="lotNoForCQS" value="">
+					<input type="hidden" name="tinForCQS" value="">
+					<input type="hidden" name="flag">
+					<input type="hidden" name="isBack" value="">
+					<input type="hidden" name="currentPageNo"
+						value="1">
+					<input type="hidden" name="searchConditions" value="">
+				</form>
+
+				<!-- The IremboPay CR#428::Morigene -->
+				<form id="iremboPayInvoiceVO" name="frm_iremboPayInvoiceGeneration" action="/eb/bav/selectListAdvertisingListForGU.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1" method="post">
+					<input type="hidden" name="tenderReferNo" />
+					<input type="hidden" name="tendReferNm" />
+					<input type="hidden" name="invoiceAmount" />
+					<input type="hidden" name="reprvEmail" />
+					<input type="hidden" name="reprvNm" />
+					<input type="hidden" name="reprvId" />
+					<input type="hidden" name="reprvTelno" />
+					<input type="hidden" name="reprvFaxno" />
+					<input type="hidden" name="reprvAddr" />
+					<input type="hidden" name="expiryAt" />
+					<input type="hidden" name="code" />
+					<input type="hidden" name="productCode" />
+					<input type="hidden" name="supplierTin" />
+					<input type="hidden" name="isBack" value="">
+					<input type="hidden" name="tendStageCd" />
+					<input type="hidden" name="tendTypeCd" />
+					<input type="hidden" name="currentPageNo"
+						value="1">
+						
+				  <input type="hidden" name="searchConditions" value="">
+					
+				</form>
+
+				<form id="iremboPayInvoiceVO" name="frm_iremboPayInvoicePendingPayment" action="/eb/bav/selectListAdvertisingListForGU.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1" method="post">
+					<input type="hidden" name="transactionId" />
+					<input type="hidden" name="tenderReferNo" />
+					<input type="hidden" name="tendReferNm" />
+					<input type="hidden" name="invoiceNumber" />
+					<input type="hidden" name="currency" />
+					<input type="hidden" name="invoiceAmount" />
+					<input type="hidden" name="productCode" />
+					<input type="hidden" name="productName" />
+					<input type="hidden" name="supplierTin" />
+					<input type="hidden" name="supplierNm" />
+					<input type="hidden" name="createdAt" />
+					<input type="hidden" name="updatedAt" />
+					<input type="hidden" name="expiryAt" />
+					<input type="hidden" name="tenderSubmDlDt" />
+					<input type="hidden" name="reprvEmail" />
+					<input type="hidden" name="reprvNm" />
+					<input type="hidden" name="isBack" value="">
+					<input type="hidden" name="tendStageCd" />
+					<input type="hidden" name="tendTypeCd" />
+					<input type="hidden" name="currentPageNo"
+						value="1">						
+				  <input type="hidden" name="searchConditions" value="">
+				</form>
+				<!-- End CR#428 -->
+
+				<div class="pagination mb20">
+					<ul>
+						
+
+
+
+
+
+
+
+
+ 
+<script type="text/javaScript" language="javascript">
+function fn_pageview(pageNo){
+	
+	util_checkSearchConditions("frm_advSearch");
+	
+	document.frm_advSearch.currentPageNo.value = pageNo;
+	document.frm_advSearch.action = "/eb/bav/selectListAdvertisingListForGU.do;jsessionid=0F2C22EEAB67BCF57D3745E4213D2B0D.eb1";
+	document.frm_advSearch.target = "main";
+	document.frm_advSearch.submit();
+}
+</script>
+<li>    <a href="#" onclick="fn_pageview(1);return false; " class="first_page"> << </a></li><li>    <a href="#" onclick="fn_pageview(1);return false; " class="prev_page"> < </a></li><li class="selected">
+<a href="#">1</a></li><li>    <a href="#" onclick="fn_pageview(2);return false; ">2</a></li><li>    <a href="#" onclick="fn_pageview(3);return false; ">3</a></li><li>    <a href="#" onclick="fn_pageview(4);return false; ">4</a></li><li>    <a href="#" onclick="fn_pageview(5);return false; ">5</a></li><li>    <a href="#" onclick="fn_pageview(6);return false; ">6</a></li><li>    <a href="#" onclick="fn_pageview(7);return false; ">7</a></li><li>    <a href="#" onclick="fn_pageview(8);return false; ">8</a></li><li>    <a href="#" onclick="fn_pageview(9);return false; ">9</a></li><li>    <a href="#" onclick="fn_pageview(10);return false; ">10</a></li><li>    <a href="#" onclick="fn_pageview(11);return false; " class="next_page"> > </a></li><li>    <a href="#" onclick="fn_pageview(3973);return false; " class="last_page"> >> </a></li>
+
+
+
+					</ul>
+					<p class="pagefuntion">
+						 <span class="point">39725</span> Results (page <span class="point">1</span>/3973)
+					</p>
+				</div>
+
+				<!-- Blue Button Start -->
+				<div class="alignwrap mb30">
+					<p class="fR">
+						<a href="javascript:movePage('clar');" class="button sky">Register Clarification</a>
+						<!-- I RENAMED THIS BUTTON, "REGISTER COMMUNICATION" TO "VIEW COMMUNICATION" AS THE CR#78 SUGGESTS, BY VICTOIRE CR#78, JULY 2018 -->
+						<a href="javascript:movePage('comu');" class="button sky">View Communication</a>
+					</p>
+				</div>
+				<!-- Blue Button End -->
+			</div>
+			<!-- Main Content End -->
+		</div>
+		<div id="footer">
+<div class="footerin">
+<span class="footLogo"><img src="/images/minecofin.png" alt=""></span>
+<div class="btmMenu">
+<p>  ©  2026  Ministry of Finance and Economic Planning 	& RPPA  </p>
+</div>
+</div>
+</div>
+<script type="text/javaScript" language="javascript">
+
+    if ((navigator.userAgent.indexOf('MSIE 6')>0) && (navigator.userAgent.indexOf('MSIE 7')==-1)){
+
+        util_messageAlertWithExec("This page can behave abnomally on IE 6 and 7. Therefore you should use other browsers or version upgrade such as IE 8 with compatibility option, Crome or Firefox.", "fn_moveMain()");
+
+		   function fn_moveMain(){
+		       location.href='https://www.umucyo.gov.rw/pt/index.do'
+		   }
+    }
+
+</script>
+
+	</div>
+	<!-- //wrap -->
+	<iframe name="ResultFrame" height="0" width="0" frameborder="0"></iframe>
+</body>
+</html>
