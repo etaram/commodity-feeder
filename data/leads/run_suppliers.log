@@ -1,15 +1,20 @@
-Sun Nov  1 08:11:21 UTC 2026
-INFO LatAm awards: Brazil 58 (4 days), Colombia 444
+Sun Nov  1 22:18:42 UTC 2026
+INFO LatAm awards: Brazil 58 (4 days), Colombia 565
 INFO latam_awards: 0 rows
-INFO Prozorro awards: 36763 candidates, 2540 read, 2543 awards
+INFO Prozorro awards: 36929 candidates, 2193 read, 2197 awards
 INFO prozorro_awards: 0 rows
-INFO OCDR 157 BRA 2025: 17870 releases, 26400 awards, 26400 contacts
-INFO OCDR 144 CHL 2025: 313524 releases, 306267 awards, 306267 contacts
-WARNING OCDR 22/2025: HTTPSConnectionPool(host='data.open-contracting.org', port=443): Read timed out. (read timeout=120)
-INFO OCDR 110 ECU 2025: 197502 releases, 191162 awards, 191162 contacts
-INFO OCDR 85 GHA 2025: 2792 releases, 2350 awards, 2350 contacts
-INFO OCDR 142 GTM 2025: 120395 releases, 105584 awards, 105584 contacts
-INFO OCDR {'files': 5, 'awards': 631763, 'contacts': 631763, 'pending': 156}
+INFO OCDR 122 HND 2025: 56521 releases, 26023 awards, 26288 contacts
+WARNING OCDR 123/2025: HTTPSConnectionPool(host='data.open-contracting.org', port=443): Read timed out. (read timeout=120)
+INFO OCDR 147 KEN 2025: 33258 releases, 11554 awards, 11509 contacts
+INFO OCDR 156 LBR 2025: 209 releases, 33 awards, 33 contacts
+INFO OCDR 127 NGA 2025: 3 releases, 3 awards, 3 contacts
+INFO OCDR 64 NGA 2025: 22353 releases, 4333 awards, 3735 contacts
+INFO OCDR 86 NGA 2025: 20 releases, 20 awards, 20 contacts
+INFO OCDR 118 NGA 2025: 315 releases, 314 awards, 309 contacts
+INFO OCDR 125 NGA 2025: 122 releases, 114 awards, 114 contacts
+INFO OCDR 63 PRY 2025: 10876 releases, 16545 awards, 16549 contacts
+INFO OCDR 135 PER 2025: 41681 releases, 33562 awards, 33562 contacts
+INFO OCDR {'files': 10, 'awards': 92501, 'contacts': 92122, 'pending': 145}
 INFO ocdr: 0 rows
 INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
 INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
@@ -84,11 +89,11 @@ INFO il_exemptions: 0 rows
 INFO external awards {}
 INFO ext_awards: 0 rows
 INFO commodity_producers: 0 rows
+WARNING wikidata 502
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
+WARNING wikidata 500
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
@@ -98,10 +103,199 @@ WARNING wikidata 504
 WARNING wikidata 504
 INFO wikidata companies: 0 countries refreshed (0 companies), 33 countries cached
 INFO wikidata_companies: 0 rows
-INFO listed companies: 40 countries refreshed (2266 companies), 120 cached
+INFO listed companies: 40 countries refreshed (40 companies), 160 cached
 INFO listed_companies: 0 rows
-INFO web profiles: 2470 read, 271 websites discovered of 1500 tried
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/robots.txt): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/fr): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contact-us): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/fr/contactez-nous): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contacts): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contacto): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contato): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/kontakt): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/en/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contact-us.html): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/error): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/contactus): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/about/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/company/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/investors): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/investor-relations): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/impressum): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/about): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/about-us): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
+INFO web profiles: 1001 read, 256 websites discovered of 1500 tried
 INFO web_contacts: 0 rows
-INFO:leads:universe {'awards': 1965188, 'suppliers': 432888, 'with_email': 113571, 'with_phone': 112866, 'exporters': 21615, 'goods': 146611, 'contacts_matched': 302386, 'tier_A': 422690, 'tier_B_notable': 8477, 'tier_1_strategic': 12570, 'tier_2_proven': 56071, 'tier_3_qualified': 62531, 'tier_4_unproven': 301716, 'with_website': 94503, 'notable_total': 10462, 'notable_with_email': 1947, 'notable_with_phone': 2423, 'notable_with_website': 7319, 'quality_40_plus': 98825, 'with_any_contact': 225358, 'region: Europe': 210163, 'region: Latin America': 149703, 'region: Sub-Saharan Africa': 37739, 'region: South Asia': 7742, 'region: Southeast Asia': 6087, 'region: North America': 5651, 'region: unknown': 4723, 'region: East Asia': 3638, 'region: Middle East & North Africa': 3277, 'region: CIS & Central Asia': 2267, 'region: Oceania': 710, 'region: Israel': 640, 'region: Other': 548}
+INFO:leads:universe {'awards': 2062322, 'suppliers': 461649, 'with_email': 162974, 'with_phone': 160158, 'exporters': 22108, 'goods': 152070, 'contacts_matched': 433947, 'tier_A': 451415, 'tier_B_notable': 8513, 'tier_1_strategic': 12740, 'tier_2_proven': 57517, 'tier_3_qualified': 91098, 'tier_4_unproven': 300294, 'with_website': 130581, 'notable_total': 10502, 'notable_with_email': 2161, 'notable_with_phone': 2744, 'notable_with_website': 7356, 'quality_40_plus': 107472, 'with_any_contact': 291690, 'region: Europe': 210792, 'region: Latin America': 167803, 'region: Sub-Saharan Africa': 47099, 'region: South Asia': 7751, 'region: Southeast Asia': 6087, 'region: North America': 5696, 'region: unknown': 5011, 'region: East Asia': 3647, 'region: Middle East & North Africa': 3278, 'region: CIS & Central Asia': 2270, 'region: Other': 857, 'region: Oceania': 717, 'region: Israel': 641}
 wrote 150001 rows to Supplier Universe
-INFO:leads:web index: 90000 suppliers, 3.8 MB encrypted
+INFO:leads:web index: 90000 suppliers, 3.9 MB encrypted
