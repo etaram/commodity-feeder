@@ -38,3 +38,9 @@ Google accounts never get a password here; they are matched by verified email to
 - `lib/gate.ts` checks the role in every API route that writes or spends tokens.
 - `/api/panel/append`: job types `approval` and `project_close` are admin only; every queued job records `by=<email>` in its notes.
 - `/api/users` (admin): list, approve, role, disable. Password hashes (scrypt) never leave the server.
+
+## Email on new access requests
+
+Every new request (password or Google) emails the admin through Resend.
+Vercel env: `RESEND_API_KEY` (required), `NOTIFY_EMAIL` (default: the owner), `NOTIFY_FROM` (optional).
+Without a verified domain in Resend, mail can only go to the email the Resend account was opened with.
