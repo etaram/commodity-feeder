@@ -1,12 +1,20 @@
-INFO Malaysia page 1: 100 blocks, 100 new, first T/572/10/2026 
-INFO Malaysia page 2: 100 blocks, 100 new, first LPP.SEL.TENDER.BIL: 02/2026 
-INFO Malaysia page 3: 100 blocks, 97 new, first QT260000000029892 
-INFO Malaysia page 4: 100 blocks, 61 new, first UM.FC/FSD/PC/612/16/2026/49 
-INFO Malaysia page 5: 100 blocks, 33 new, first QT260000000021077 
-INFO Malaysia page 6: 100 blocks, 44 new, first QT260000000025069 
-INFO Malaysia page 7: 100 blocks, 15 new, first QT260000000022208 
-INFO Malaysia page 8: 100 blocks, 10 new, first QT260000000020167 
-INFO Malaysia page 9: 100 blocks, 5 new, first QT260000000025522 
-INFO Malaysia page 10: 73 blocks, 3 new, first QT260000000023196 
-INFO Malaysia new 468, open 467
-INFO malaysia: 467 rows
+== 64 2026 200 68758
+64 releases 281 status {None: 211, 'active': 43, 'complete': 25, 'unsuccessful': 1, 'planned': 1} with_awards 54 with_contracts 31 deadline_future 0 no_deadline 231 latest_release 2026-10-13 latest_deadline 2025-11-07 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'parties', 'language', 'planning', 'initiationType'] sample None
+== 85 2026 200 105725
+85 releases 169 status {'complete': 109, 'active': 33, 'cancelled': 27} with_awards 126 with_contracts 76 deadline_future 0 no_deadline 0 latest_release 2026-06-15 latest_deadline 2025-12-22 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'tender', 'parties', 'language', 'planning', 'initiationType'] sample None
+== 145 2026 200 45963497
+145 releases 4144 status {'complete': 3083, 'active': 1034, 'cancelled': 26, None: 1} with_awards 3033 with_contracts 2738 deadline_future 0 no_deadline 1 latest_release 2026-04-30 latest_deadline 2026-06-17 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'awards', 'tender', 'parties', 'language', 'planning', 'contracts', 'initiationType'] sample None
+== 152 2026 200 31260557
+152 releases 62293 status {'active': 30126, None: 22295, 'complete': 9485, 'cancelled': 358, 'unsuccessful': 29} with_awards 20822 with_contracts 0 deadline_future 0 no_deadline 22295 latest_release 2026-02-09 latest_deadline 2026-02-23 keys ['id', 'tag', 'date', 'ocid', 'language', 'planning', 'initiationType'] sample None
+== 3 2026 200 13287234
+3 releases 26157 status {'active': 17965, 'cancelled': 3897, 'planned': 3715, 'complete': 580} with_awards 4925 with_contracts 0 deadline_future 1 no_deadline 0 latest_release 2026-05-29 latest_deadline 2026-12-02 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'tender', 'parties', 'language', 'planning', 'initiationType'] sample {'ocid': 'ocds-23g63a01-22535179', 'status': 'active', 'awards': False, 'method': 'limited', 'details': None, 'title': 'PROCUREMENT OF STRETCH COVERS FOR MOTOR VEHICLES ALB 2183 AND ALJ1518', 'dl': '2026-12-02'}
+== 130 2026 200 1426477
+130 releases 14162 status {None: 12183, 'complete': 1964, 'active': 15} with_awards 6548 with_contracts 6035 deadline_future 1 no_deadline 12183 latest_release 2026-10-23 latest_deadline 2026-11-03 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'initiationType'] sample {'ocid': 'ocds-rdvc92-851785418154', 'status': 'active', 'awards': False, 'method': 'open', 'details': None, 'title': 'Construction of Education Complex Building at MUBS', 'dl': '2026-11-03'}
+== 156 2026 200 574173
+156 releases 1227 status {'active': 1035, 'complete': 187, 'cancelled': 3, None: 2} with_awards 223 with_contracts 0 deadline_future 0 no_deadline 2 latest_release 2026-10-02 latest_deadline 2026-10-28 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'tender', 'parties', 'language', 'planning', 'initiationType'] sample None
+== 143 2026 200 977055
+143 releases 3056 status {'active': 1360, 'complete': 1245, 'cancelled': 437, 'planning': 14} with_awards 389 with_contracts 68 deadline_future 14 no_deadline 0 latest_release 2026-09-19 latest_deadline 2027-01-29 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'awards', 'tender', 'parties', 'language', 'planning', 'initiationType'] sample {'ocid': 'ocds-9t57fa-162667', 'status': 'active', 'awards': False, 'method': 'open', 'details': 'Request for Proposal', 'title': 'TNPA/2026/06/0004/114472/RFP', 'dl': '2027-01-29'}
+== 147 2026 200 2857009
+147 releases 23098 status {None: 23098} with_awards 3607 with_contracts 3607 deadline_future 23 no_deadline 0 latest_release 2026-09-30 latest_deadline 2027-07-13 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'tender', 'parties', 'language', 'initiationType'] sample {'ocid': 'ocds-5whusi-277945-NEG2100544', 'status': None, 'awards': False, 'method': 'open', 'details': None, 'title': 'INSTALLATION OF MODERN SOLAR POWERED FLOOD LIGHTS', 'dl': '2026-11-02'}
+== 118 2026 200 2345
+118 releases 3 status {'active': 3} with_awards 3 with_contracts 3 deadline_future 0 no_deadline 0 latest_release 2026-07-13 latest_deadline 2026-07-30 keys ['id', 'tag', 'date', 'ocid', 'buyer', 'awards', 'tender', 'parties', 'language', 'planning', 'contracts', 'initiationType'] sample None
