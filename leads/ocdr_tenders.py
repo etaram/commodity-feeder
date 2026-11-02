@@ -22,7 +22,7 @@ from .regions import region
 CACHE = LEADS / "cache" / "ocdr_tenders.json"
 EU = {"AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU",
       "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE"}
-COVERED = EU | {"UKR", "PRY", "DOM", "COL", "BRA", "GBR", "KEN", "ZAF", "CAN", "AUS", "USA", "ISR", "SAU", "OMN", "QAT", "RWA", "UGA", "GHA", "ZMB", "MWI", "MOZ", "ARE", "PHL"}
+COVERED = EU | {"UKR", "PRY", "DOM", "COL", "BRA", "GBR", "KEN", "ZAF", "CAN", "AUS", "USA", "ISR", "SAU", "OMN", "QAT", "RWA", "UGA", "GHA", "MWI", "MOZ", "ARE", "PHL"}
 CLOSED = {"complete", "cancelled", "unsuccessful", "withdrawn"}
 # direct awards, quotations and restricted procedures are not open to a foreign supplier
 NOT_OPEN = re.compile(r"direct|baja cuant|cotizaci|ínfima|infima|menor cuant|limited|restricted|privad|selectiva|"
