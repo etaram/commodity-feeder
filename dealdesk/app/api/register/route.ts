@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createUser, findUser, hashPassword, normEmail, validEmail } from "@/lib/users";
 import { sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
+import { notifyAccessRequest } from "@/lib/notify";
 
 // Access request: creates a pending account. Nothing is granted until an admin approves it in the panel.
 const recent = new Map<string, number[]>();
@@ -24,5 +25,6 @@ export async function POST(req: NextRequest) {
   if (await findUser(e, true)) return NextResponse.json({ ok: false, error: "This email already has an account (or a pending request)" }, { status: 409 });
   await createUser(e, n, "password", hashPassword(p));
   await logEvent("info", "users", "access request", `${e} (${n})`, e).catch(() => {});
+  await notifyAccessRequest(e, n, "password", req.nextUrl.origin);
   return NextResponse.json({ ok: true, status: "pending" });
 }
