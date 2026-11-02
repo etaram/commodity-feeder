@@ -1,17 +1,18 @@
 """US import buyers and their foreign suppliers per HS heading, from ImportYeti public HS pages
 (US Customs bills of lading). Rotates through the tracker's HS-4 headings, a slice per run, gently."""
+import csv
 import datetime as dt
 import html
 import json
 import re
 
-from .common import LEADS, cffi_get, clean, log, master_rows, polite, today
+from .common import DATA, LEADS, cffi_get, clean, log, master_rows, polite, today
 
 BASE = "https://www.importyeti.com"
 CACHE = LEADS / "importyeti"
 STATE = LEADS / "importyeti_state.json"
 PER_RUN = 60
-REFRESH_DAYS = 14
+REFRESH_DAYS = 30
 FORWARDER = re.compile(r"\b(logistic|shipping|freight|forward|cargo|express|lines?|transport|customs|broker|"
                        r"container|maritime|carrier|consolidat|courier|moving|movers|dachser|kuehne|dhl|schenker|"
                        r"expeditors|ceva|panalpina|agility|nippon express|translink)\w*", re.I)
@@ -54,13 +55,23 @@ def parse(page):
     return {"title": title, "total_shipments": tot.group(1) if tot else "", "records": out}
 
 
+# Manufactured goods first (where most foreign producers, many in Asia, ship to the US), then the rest
+MAKERS = ["84", "85", "39", "73", "94", "87", "90", "40", "72", "76", "29", "28", "38", "32", "34", "48", "44", "61", "62",
+          "63", "54", "55", "52", "60", "64", "69", "70", "68", "83", "82", "95", "96", "86", "89", "30", "33", "42", "56"]
+
+
 def headings():
+    """The tracker's HS-4 headings first, then every other heading (data/hs4.csv, HS nomenclature), manufactured
+    goods chapters first."""
     seen = []
     for r in master_rows():
         h = (r["hs6"] or "")[:4]
         if len(h) == 4 and h.isdigit() and h not in seen:
             seen.append(h)
-    return seen
+    allh = [r["hs4"] for r in csv.DictReader(open(DATA / "hs4.csv", encoding="utf-8"))] if (DATA / "hs4.csv").exists() else []
+    rank = {c: i for i, c in enumerate(MAKERS)}
+    rest = sorted((h for h in allh if h not in seen and not h.startswith(("98", "99"))), key=lambda h: (rank.get(h[:2], 99), h))
+    return seen + [h for h in rest if h not in seen]
 
 
 def fetch(per_run=PER_RUN):
@@ -69,7 +80,7 @@ def fetch(per_run=PER_RUN):
     t = today()
     due = [h for h in headings() if not state.get(h) or
            (t - dt.date.fromisoformat(state[h])).days >= REFRESH_DAYS]
-    due.sort(key=lambda h: state.get(h, ""))
+    due.sort(key=lambda h: state.get(h, ""))  # never-scanned headings ("") come first, then the oldest
     done, fails = 0, 0
     for h in due[:per_run]:
         try:

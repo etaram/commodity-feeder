@@ -230,6 +230,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
           <select id="tcountry"><option value="" data-i="all_countries">All countries</option></select>
           <select id="tsize"><option value="" data-i="any_size">Any size</option><option value="0-100000">&lt; $100K</option><option value="100000-1000000">$100K - $1M</option><option value="1000000-10000000">$1M - $10M</option><option value="10000000-50000000">$10M - $50M</option><option value="50000000-">&gt; $50M</option></select>
           <select id="tdec"><option value="" data-i="all_decisions">All decisions</option><option>Pursue</option><option>Watch</option><option>Ignore</option></select>
+          <label class="chk"><input type="checkbox" id="tintl"> <span data-i="intl_only">International only</span></label>
           <label><span data-i="min_days">Min. days to close</span> <input type="number" id="tdays" min="0" value="7" style="width:64px"></label>
         </div>
         <div class="note" id="tscope" style="margin:0 2px 8px"></div>
@@ -471,7 +472,7 @@ const L = {
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
     fired_now: "The worker started now; the answer usually arrives within 5 to 15 minutes.", fired_later: "The worker will pick it up on its next scheduled run (every two hours, 08:13 to 22:13 Israel time).",
     fired_running: "The worker is already running and will pick this job up too.", sent: "Sent to the worker ({id}).", open_jobs: "Open Jobs", added_pursuits: "Added to Pursuits. You can now run a full eligibility check on it.",
-    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
+    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
     c_pick: "Pick a company to see what it sells and how to reach it, then run research or outreach.", exporter: "exporter", notable: "notable", contact_p: "contact", trader: "trader", quality: "Quality",
     e_comp_f: "No suppliers match these filters.", e_acc_f: "No accounts match these filters.", tenders_n: "tenders",
     country: "Country", field: "Field", products: "Products", supplied: "Supplied", commodities: "Commodities", won: "Contracts won", wins: "wins", buyers_n: "buyers", in_: "in",
@@ -579,7 +580,7 @@ const L = {
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
     fired_now: "העובד הופעל עכשיו, התשובה תגיע בדרך כלל תוך 5 עד 15 דקות.", fired_later: "העובד יאסוף את המשימה בריצה הקבועה הבאה (כל שעתיים, 08:13 עד 22:13).",
     fired_running: "העובד כבר רץ ויאסוף גם את המשימה הזו.", sent: "נשלח לעובד ({id}).", open_jobs: "למשימות", added_pursuits: "נוסף ל-Pursuits. אפשר להפעיל עליו בדיקת תנאי סף מלאה.",
-    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
+    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
     c_pick: "בחר חברה כדי לראות מה היא מוכרת, פרטי קשר, ולהפעיל מחקר או פנייה.", exporter: "מייצא", notable: "מוכר", contact_p: "פרטי קשר", trader: "טריידר", quality: "איכות",
     e_comp_f: "אין ספקים שמתאימים לסינון.", e_acc_f: "אין חשבונות שמתאימים לסינון.", tenders_n: "מכרזים",
     country: "מדינה", field: "תחום", products: "מוצרים", supplied: "מה סיפקו", commodities: "סחורות", won: "היקף זכיות", wins: "זכיות", buyers_n: "קונים", in_: "ב-",
@@ -899,10 +900,11 @@ function mini(sel, rows, cells, onclick, emptyText) {
 }
 
 /* ---------- TENDERS ---------- */
+const INTL_RE = /^international|world bank|\(icb\)|\bicb\b|^global tender/i;  // open to foreign bidders by rule
 function tenderFilter() {
   const q = $("#tq").value.trim().toLowerCase(), sec = $("#tsector").value, reg = $("#tregion").value, dec = $("#tdec").value, md = num($("#tdays").value) || 0;
-  const cty = $("#tcountry").value, size = $("#tsize").value;
-  return T().filter(r => (!cty || r.country === cty) && inSize(r, size) && (!sec || r.sector === sec) && (!reg || r.region === reg) && (!dec || r.decision === dec) && (r.stage === "planned" || !isFinite(num(r.days_left)) || num(r.days_left) >= md)
+  const cty = $("#tcountry").value, size = $("#tsize").value, intl = $("#tintl").checked;
+  return T().filter(r => (!cty || r.country === cty) && (!intl || INTL_RE.test(r.access || "")) && inSize(r, size) && (!sec || r.sector === sec) && (!reg || r.region === reg) && (!dec || r.decision === dec) && (r.stage === "planned" || !isFinite(num(r.days_left)) || num(r.days_left) >= md)
     && (!q || `${r.title_en} ${r.title_original} ${heTitle(r)} ${r.buyer} ${r.country} ${r.sector} ${r.commodity}`.toLowerCase().includes(q)));
 }
 /* ---------- full-database search: the panel writes the filters into a hidden 'Panel Search' tab and reads back the
@@ -940,11 +942,11 @@ function renderTenders() {
   const tt = num((S.data.tot_t_raw || [])[0]);
   $("#c-tenders").textContent = isFinite(tt) ? tt.toLocaleString("en-US") : (T().length ? T().length.toLocaleString("en-US") : "");
   const q = $("#tq").value.trim(), sec = $("#tsector").value, reg = $("#tregion").value, dec = $("#tdec").value, md = num($("#tdays").value) || 0;
-  const cty = $("#tcountry").value, size = $("#tsize").value, [lo, hi] = sizeRange(size);
+  const cty = $("#tcountry").value, size = $("#tsize").value, [lo, hi] = sizeRange(size), intl = $("#tintl").checked;
   const nl = S.nl.t;
-  if (mcp && (q || sec || reg || dec || cty || size || nl)) {
-    const key = JSON.stringify([q, sec, reg, dec, md, cty, size, nl]);
-    serverSearch("t", key, "'Panel Search'!B1:D5", [[nl ? nl.re : qRegex(q), "country", cty || nl?.country || ""], [sec, "min value", lo || ""], [reg, "max value", hi || ""], [dec, "", ""], [md, "", ""]], LE, "'Panel Search'!A9:AE2009", 0);
+  if (mcp && (q || sec || reg || dec || cty || size || nl || intl)) {
+    const key = JSON.stringify([q, sec, reg, dec, md, cty, size, nl, intl]);
+    serverSearch("t", key, "'Panel Search'!B1:D5", [[nl ? nl.re : qRegex(q), "country", cty || nl?.country || ""], [sec, "min value", lo || ""], [reg, "max value", hi || ""], [dec, "", intl ? "intl" : ""], [md, "", ""]], LE, "'Panel Search'!A9:AE2009", 0);
     const st = SRV.t;
     if (st.busy || st.key !== key) { scopeNote("#tscope", `<span class="spin"></span> ${esc(t("searching_all", { n: isFinite(tt) ? tt.toLocaleString("en-US") : "" }))}`); $("#tlist").innerHTML = ""; return; }
     if (st.err) { scopeNote("#tscope", ""); $("#tlist").innerHTML = `<div class="empty" style="padding:14px">${esc(errText(st.err, SHEETS))}</div>`; return; }
@@ -1971,7 +1973,7 @@ function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.on
 function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderContacts(); renderProjects(); renderJobs(); wireGoto(document); }
 
 document.querySelectorAll("nav.tabs button").forEach(b => b.onclick = () => go(b.dataset.v));
-["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
+["#tq", "#tsector", "#tregion", "#tcountry", "#tsize", "#tdec", "#tdays", "#tintl"].forEach(s => $(s).addEventListener("input", () => { S.limit.t = 60; renderTenders(); }));
 ["#cq", "#cregion", "#ccountry", "#csector", "#crole", "#ccontact", "#ctier"].forEach(s => $(s).addEventListener("input", () => { S.limit.c = 60; renderCompanies(); }));
 $("#dq").addEventListener("input", () => { S.limit.d = 60; renderDeals(); });
 ["#gq", "#gsource", "#gsector", "#gdays"].forEach(s => $(s).addEventListener("input", () => { S.limit.g = 60; renderGrants(); }));

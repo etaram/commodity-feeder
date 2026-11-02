@@ -475,7 +475,7 @@ SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "count
               "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
               "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
               "buyer_median_award_usd", "incumbent", "why"]
-CHUNK, CHUNKS = 2500, 32
+CHUNK, CHUNKS = 2000, 50  # 100k rows; ~2000 rows stay under the IMPORTDATA size limit, so nothing is trimmed
 
 
 def _num(v):
@@ -589,6 +589,8 @@ def write(name, rows, cols=None):
         if kept < len(rows):
             _write_plain(name.replace(".csv", "_all.csv"), rows, cols)
             log.info("%s trimmed for the sheet: %d of %d rows", name, kept, len(rows))
+        elif (LEADS / name.replace(".csv", "_all.csv")).exists():
+            (LEADS / name.replace(".csv", "_all.csv")).unlink()  # an older trimmed copy would be stale
         (LEADS / name).parent.mkdir(parents=True, exist_ok=True)
         (LEADS / name).write_text(buf.getvalue(), encoding="utf-8")
         return

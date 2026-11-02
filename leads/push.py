@@ -95,7 +95,7 @@ def leads_tables():
     for i, f in enumerate(chunks):
         r = read_csv(f)
         rows += r if i == 0 else r[1:]
-    out.append(("Tenders", [x for x in rows if any(x)]))
+    out.append(("Tenders", [x for x in rows if any(x)][:80_001]))  # best first; the cap keeps the sheet under its cell limit
     for tab, name in [("Repeat Buyers", "buyers"), ("Awards", "awards"),
                       ("Competitors", "competitors"), ("Accounts", "accounts"), ("Importers", "importers"),
                       ("Sectors", "sectors"), ("Countries", "countries"), ("Sources", "status"),

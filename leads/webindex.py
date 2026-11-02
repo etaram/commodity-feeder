@@ -14,6 +14,7 @@ import glob
 import gzip
 import json
 import os
+import re
 import sys
 
 from .common import DATA, LEADS, PRIVATE, log
@@ -26,6 +27,10 @@ def _f(x):
         return round(float(x))
     except (TypeError, ValueError):
         return None
+
+
+# Open to foreign bidders by rule: international competitive bidding, development-bank or UN procurement, global tenders
+INTL = re.compile(r"^international|world bank|\(icb\)|\bicb\b|^global tender", re.I)
 
 
 def tenders():
@@ -54,7 +59,7 @@ def tenders():
             "v": _f(r.get("est_value_usd")), "dl": r.get("deadline", ""), "dd": _f(r.get("days_left")),
             "d": r.get("decision", ""), "ev": _f(d.get("priority_ev_usd") or r.get("ev_usd")), "sc": _f(r.get("score")),
             "src": r.get("source", ""), "st": r.get("stage", ""), "l": r.get("link", ""), "n": 1 if r.get("new") else 0,
-            "acc": "set-aside" if "set-aside" in acc else "intl" if acc.startswith("international") else "",
+            "acc": "set-aside" if "set-aside" in acc else "intl" if INTL.search(acc) else "",
             "rt": d.get("route", ""),
             "ig": _f(gov.get(r.get("country", ""), ("", ""))[0]), "if": gov.get(r.get("country", ""), ("", ""))[1],
         })

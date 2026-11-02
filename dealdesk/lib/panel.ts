@@ -61,7 +61,7 @@ async function allSuppliers(): Promise<Supplier[]> {
 
 async function allTenders(): Promise<{ head: string[]; rows: Record<string, string>[] }> {
   return cached("tenders-full", 900_000, async () => {
-    const files = await Promise.all(Array.from({ length: 30 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
+    const files = await Promise.all(Array.from({ length: 50 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
       .then((r) => (r.ok ? r.text() : "")).catch(() => "")));
     const snap = await snapshot("static");
     const fit = (snap.fit || {}) as Record<string, string[]>;
@@ -135,9 +135,11 @@ export async function getRange(key: string): Promise<Grid> {
   throw new Error(`unknown range ${key}`);
 }
 
+// Open to foreign bidders by rule: international competitive bidding, development-bank or UN procurement, global tenders.
+export const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender/i;
 export async function searchTenders(v: string[][]): Promise<Grid> {
   const g = (r: number, c: number) => String((v[r] || [])[c] ?? "").trim();
-  const re = toRe(g(0, 0).toLowerCase()), cty = g(0, 2), sec = g(1, 0), lo = num(g(1, 2)), reg = g(2, 0), hi = num(g(2, 2)), dec = g(3, 0), md = num(g(4, 0));
+  const re = toRe(g(0, 0).toLowerCase()), cty = g(0, 2), sec = g(1, 0), lo = num(g(1, 2)), reg = g(2, 0), hi = num(g(2, 2)), dec = g(3, 0), md = num(g(4, 0)), intl = g(3, 2) === "intl";
   const { head, rows } = await allTenders();
   const he = new Map(((await snapshot("static")).titles || []).slice(1).map((r) => [r[0], r[1] || ""]));
   const out = rows.filter((r) => {
@@ -145,6 +147,7 @@ export async function searchTenders(v: string[][]): Promise<Grid> {
     if (sec && r.sector !== sec) return false;
     if (reg && r.region !== reg) return false;
     if (dec && r.decision !== dec) return false;
+    if (intl && !INTL.test(r.access || "")) return false;
     const val = num(r.est_value_usd);
     if (Number.isFinite(lo) && lo > 0 && !(val >= lo)) return false;
     if (Number.isFinite(hi) && hi > 0 && !(val > 0 && val < hi)) return false;
