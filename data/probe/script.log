@@ -1,18 +1,34 @@
-ma_list ERR Failed to perform, curl: (28) Connection timed out after 40000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-ma_home ERR Failed to perform, curl: (28) Connection timed out after 40000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-ma_rss ERR Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-et_home ERR Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'egp.ppa.gov.et'. See https://curl.se/libcurl/c/lib
-et_api ERR Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'egp.ppa.gov.et'. See https://curl.se/libcurl/c/lib
-et_api2 ERR Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'egp.ppa.gov.et'. See https://curl.se/libcurl/c/lib
-eg_home ERR Failed to perform, curl: (28) Connection timed out after 39999 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-eg_root ERR Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-gh_ghaneps 200 23055 GHANEPS - Welcome | ct text/html;charset=utf-8
-ng_bpp 404 80887 Page not found - Bureau of Public Procurement | ct text/html; charset=UTF-8
-tn_tuneps ERR Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (20). See https://curl.se/libcurl/c/libcur
-dz_bomop ERR Failed to perform, curl: (6) Could not resolve host: www.bomop.dz (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html first for
-jo_jonep ERR Failed to perform, curl: (6) Could not resolve host: www.jonepps.gov.jo (Domain name not found). See https://curl.se/libcurl/c/libcurl-errors.html fir
-rw_umucyo 200 48879 UMUCYO | ct text/html;charset=UTF-8
-ug_egp 200 940119 EGP Uganda | ct text/html; charset=utf-8
-tz_nest 200 74694 NeST - National e-Procurement System of Tanzania | ct text/html
-ci_marches 200 1209918 DGMP - Direction Générale des Marchés Publics | ct text/html; charset=UTF-8
-sn_marches ERR Failed to perform, curl: (28) Connection timed out after 40001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1043, in _request_once
+    c.perform()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 633, in perform
+    self._check_error(ret, "perform")
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 353, in _check_error
+    raise error
+curl_cffi.curl.CurlError: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw (Timeout while contacting DNS servers). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/test_africa.py", line 7, in <module>
+    rows, st = mod.fetch()
+               ^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/rwanda.py", line 26, in fetch
+    s.get(URL, timeout=60)
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1167, in get
+    return self.request(method="GET", url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1117, in request
+    return self._request_once(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1050, in _request_once
+    raise error(str(e), e.code, rsp) from e
+curl_cffi.requests.exceptions.DNSError: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw (Timeout while contacting DNS servers). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+INFO:leads:Uganda new 26, open 26 (pages 2, titles looked up 26)
+leads.uganda 26 {'new': 26}
+{"id": "UG-399731826", "source": "eGP (Uganda)", "group": "", "sector": "CONSULTING", "nature": "services", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Ministry of Lands, Housing and Urban Development", "title": "Procurement of Consultancy Services to prapare Detailed Physical Development Plans in Kisoro, Kapchorwa and Kitgum Municipalities", "notice_type": "MoLHUD/CONS/202
+{"id": "UG-404296404", "source": "eGP (Uganda)", "group": "", "sector": "", "nature": "goods", "cpv": "", "classification": "", "country": "UGA", "buyer": "Ministry of Water & Environment", "title": "Advertising and media services - Procurement of service provider for visibility and IEC materials", "notice_type": "MoWE/SUPLS/2026-2027/00081", "stage": "tender", "access": "Open (check eligibility i
+{"id": "UG-404302482", "source": "eGP (Uganda)", "group": "", "sector": "TRANSPORT_EQ", "nature": "services", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Ministry of Water & Environment", "title": "Procurement of service provider for supply of tyres for office vehicles under frame work contract", "notice_type": "MoWE/NCONS/2026-2027/00061", "stage": "tender", "access": "Ope
+{"id": "UG-405730812", "source": "eGP (Uganda)", "group": "", "sector": "ENERGY", "nature": "goods", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Ministry of Water & Environment", "title": "Procurement of firm for supply of fuel for construction of water for production Facilities and office operations under framework Contract", "notice_type": "MoWE/SUPLS/2026-2027/00099", "s
+{"id": "UG-406881580", "source": "eGP (Uganda)", "group": "", "sector": "SOCIAL", "nature": "services", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Directorate of Citizenship and Immigration Control", "title": "Framework Agreement for Provision of Hotel Services", "notice_type": "DCIC/NCONS/2026-2027/00017", "stage": "tender", "access": "Open (check eligibility in the biddi
+Counter({'Open (check eligibility in the bidding document)': 26}) Counter({'services': 12, 'goods': 11, 'works': 3})
