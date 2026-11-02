@@ -28,3 +28,42 @@ export async function readActivity(email = "", limit = 500): Promise<ActivityRow
   }
   return out;
 }
+
+// What interests each user, from the activity rows of the last N days: visits, time, and the top subjects,
+// countries, searches, features and sources. "open" details are "title | subject | country | value".
+export type UserSummary = {
+  email: string; name: string; role: string; lastSeen: string; days: number; events: number; minutes: number;
+  topSubjects: [string, number][]; topCountries: [string, number][]; topSearches: [string, number][];
+  topTabs: [string, number][]; topFeatures: [string, number][]; topSources: [string, number][]; recentOpens: string[];
+};
+export async function summary(days = 30): Promise<UserSummary[]> {
+  const rows = await readActivity("", 20000);
+  const since = new Date(Date.now() - days * 864e5).toLocaleString("sv-SE", { timeZone: "Asia/Jerusalem" }).slice(0, 19);
+  const by = new Map<string, { s: UserSummary; d: Set<string>; m: Record<string, Map<string, number>> }>();
+  const bump = (m: Map<string, number>, k: string, n = 1) => { if (k) m.set(k, (m.get(k) || 0) + n); };
+  for (const r of rows) {
+    if (r.time < since || !r.email) continue;
+    let u = by.get(r.email);
+    if (!u) {
+      u = { s: { email: r.email, name: r.name, role: r.role, lastSeen: r.time, days: 0, events: 0, minutes: 0, topSubjects: [], topCountries: [], topSearches: [], topTabs: [], topFeatures: [], topSources: [], recentOpens: [] }, d: new Set(),
+        m: { subj: new Map(), ctry: new Map(), srch: new Map(), tab: new Map(), feat: new Map(), src: new Map() } };
+      by.set(r.email, u);
+    }
+    const { s, m } = u;
+    s.events++; u.d.add(r.time.slice(0, 10)); if (r.time > s.lastSeen) s.lastSeen = r.time;
+    if (r.action === "time") { const sec = Number(r.detail) || 0; s.minutes += sec / 60; if (r.target.startsWith("tab ")) bump(m.tab, r.target.slice(4), sec / 60); }
+    else if (r.action === "view" && r.target.startsWith("tab ")) bump(m.tab, r.target.slice(4), 0.01);
+    else if (r.action === "open") {
+      const [title, subject, country] = r.detail.split(" | ");
+      bump(m.subj, subject || ""); bump(m.ctry, country || "");
+      if (s.recentOpens.length < 12) s.recentOpens.push(`${r.time.slice(5, 16)} ${title || r.target}`);
+    } else if (r.action === "search") bump(m.srch, r.detail.split(": ").slice(1).join(": ").toLowerCase());
+    else if (r.action === "click_out") bump(m.src, r.target);
+    else if (r.action === "click") bump(m.feat, r.detail.split(": ").slice(1).join(": ") || r.detail);
+    else if (/^(research_|queue_|job_|ai_quick|why_trend|decision|pursuit|watch_add|not_relevant|profile_)/.test(r.action)) bump(m.feat, r.action);
+  }
+  const top = (m: Map<string, number>, n = 6): [string, number][] => [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n).map(([k, v]) => [k, Math.round(v * 10) / 10]);
+  return [...by.values()].map(({ s, d, m }) => ({ ...s, days: d.size, minutes: Math.round(s.minutes),
+    topSubjects: top(m.subj), topCountries: top(m.ctry), topSearches: top(m.srch), topTabs: top(m.tab), topFeatures: top(m.feat), topSources: top(m.src) }))
+    .sort((a, b) => b.lastSeen.localeCompare(a.lastSeen));
+}

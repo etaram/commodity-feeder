@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, focus: f.total, broad: w.total, top: f.items.slice(0, 5) });
   }
   await saveProfile(s.email, p);
-  await logActivity(s, prev ? "profile_update" : "profile_create", p.lens, `${p.sectors.length} sectors, ${p.countries.length + p.regions.length} places, ${p.mode}`);
+  await logActivity(s, prev ? "profile_update" : "profile_create", p.keywords.join(", ").slice(0, 200),
+    [`sectors: ${p.sectors.join("; ")}`, `where: ${[...p.regions, ...p.countries].join(", ") || "worldwide"}`, `size: ${p.valueMin ?? 0}-${p.valueMax ?? "any"}`, p.home ? `home: ${p.home}` : ""].filter(Boolean).join(" | "));
   return NextResponse.json({ ok: true, profile: p });
 }

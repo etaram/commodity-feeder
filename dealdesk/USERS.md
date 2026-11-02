@@ -52,3 +52,19 @@ sign-in (and failed or blocked attempts), sign-out, access requests, tabs and pa
 deals and grants opened, decisions, research and queued jobs, pursuits, project approvals and closes, AI use
 (size only, never the prompt), and admin changes to users. Views are throttled to one per item per minute.
 Admins see it in the panel, tab Users, section Activity, filtered by user or text.
+
+### What is logged, in detail
+
+- **Opens:** tenders, companies, accounts, deals and grants, as `title | sector or subject | country | value`.
+- **Time:** seconds spent on each tab and on each opened item (sent when the user moves on, hides the page or leaves).
+- **Searches and filters:** the words typed in a search box (after 1.2 s of no typing) and each filter choice.
+- **Clicks:** buttons used, and links out to sources (host + URL).
+- **Profile:** the products the user typed, the inferred sectors, regions, deal size, home country.
+- **AI:** the first 100 characters of each quick AI request; research jobs keep their full request.
+
+Limits: 400 events an hour per user, the same event once a minute. Each event is one Sheets write, so this
+moves to the database together with the user data. Tell users in the terms that usage is recorded to improve
+the service.
+
+**Admin view:** panel, tab Users, section "What interests your users": per user, last seen, active days, minutes,
+top sectors and subjects opened, countries, searches, time by tab, features used, sources opened, recent opens.

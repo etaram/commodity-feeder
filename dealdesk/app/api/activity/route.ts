@@ -1,18 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
-import { logActivity, readActivity } from "@/lib/activity";
+import { logActivity, readActivity, summary } from "@/lib/activity";
 
 // POST: the panel reports what a signed-in user opens (tab, tender, company), at most once a minute per item per instance.
 // GET: admin only, the latest actions, optionally for one user (?email=).
 const seen = new Map<string, number>();
-const VIEW_ACTIONS = new Set(["view", "open"]);
+const VIEW_ACTIONS = new Set(["view", "open", "search", "filter", "click", "click_out", "time"]);
+const perUser = new Map<string, { at: number; n: number }>();
 
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("viewer");
   if (!s) return res;
   const { action, target, detail } = await req.json().catch(() => ({}));
   if (!VIEW_ACTIONS.has(action)) return NextResponse.json({ ok: false }, { status: 400 });
-  const key = `${s.email}|${action}|${target}`;
+  // at most 400 events an hour per user per instance; the same event at most once a minute (time spent always kept)
+  const u = perUser.get(s.email);
+  if (!u || Date.now() - u.at > 3600_000) perUser.set(s.email, { at: Date.now(), n: 1 });
+  else if (++u.n > 400) return NextResponse.json({ ok: true, dropped: true });
+  const key = `${s.email}|${action}|${target}|${action === "time" ? Date.now() : detail}`;
   if (Date.now() - (seen.get(key) || 0) < 60_000) return NextResponse.json({ ok: true, dropped: true });
   seen.set(key, Date.now());
   if (seen.size > 5000) seen.clear();
@@ -23,6 +28,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const { s, res } = await gate("admin");
   if (!s) return res;
+  if (req.nextUrl.searchParams.get("summary")) return NextResponse.json({ ok: true, users: await summary(Number(req.nextUrl.searchParams.get("days")) || 30) });
   const email = req.nextUrl.searchParams.get("email") || "";
   const limit = Math.min(2000, Math.max(1, Number(req.nextUrl.searchParams.get("limit")) || 500));
   return NextResponse.json({ ok: true, rows: await readActivity(email, limit) });
