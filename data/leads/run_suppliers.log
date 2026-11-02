@@ -1,26 +1,20 @@
-Sun Nov  1 22:18:42 UTC 2026
-INFO LatAm awards: Brazil 58 (4 days), Colombia 565
+Mon Nov  2 08:22:40 UTC 2026
+INFO LatAm awards: Brazil 41 (4 days), Colombia 502
 INFO latam_awards: 0 rows
-INFO Prozorro awards: 36929 candidates, 2193 read, 2197 awards
+INFO Prozorro awards: 40002 candidates, 1454 read, 1458 awards
 INFO prozorro_awards: 0 rows
-INFO OCDR 122 HND 2025: 56521 releases, 26023 awards, 26288 contacts
-WARNING OCDR 123/2025: HTTPSConnectionPool(host='data.open-contracting.org', port=443): Read timed out. (read timeout=120)
-INFO OCDR 147 KEN 2025: 33258 releases, 11554 awards, 11509 contacts
-INFO OCDR 156 LBR 2025: 209 releases, 33 awards, 33 contacts
-INFO OCDR 127 NGA 2025: 3 releases, 3 awards, 3 contacts
-INFO OCDR 64 NGA 2025: 22353 releases, 4333 awards, 3735 contacts
-INFO OCDR 86 NGA 2025: 20 releases, 20 awards, 20 contacts
-INFO OCDR 118 NGA 2025: 315 releases, 314 awards, 309 contacts
-INFO OCDR 125 NGA 2025: 122 releases, 114 awards, 114 contacts
-INFO OCDR 63 PRY 2025: 10876 releases, 16545 awards, 16549 contacts
-INFO OCDR 135 PER 2025: 41681 releases, 33562 awards, 33562 contacts
-INFO OCDR {'files': 10, 'awards': 92501, 'contacts': 92122, 'pending': 145}
+INFO OCDR 145 RWA 2025: 6962 releases, 8618 awards, 27741 contacts
+INFO OCDR 143 ZAF 2025: 7214 releases, 2042 awards, 0 contacts
+INFO OCDR 152 TZA 2025: 155651 releases, 35308 awards, 35308 contacts
+INFO OCDR 130 UGA 2025: 18811 releases, 13725 awards, 0 contacts
+INFO OCDR 43 URY 2025: 26406 releases, 35430 awards, 35430 contacts
+INFO OCDR {'files': 5, 'awards': 95123, 'contacts': 98479, 'pending': 139}
 INFO ocdr: 0 rows
 INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
 INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
-INFO OCDR tenders 110 ECU 2026: 318 open of 121705 releases
+INFO OCDR tenders 110 ECU 2026: 274 open of 121705 releases
 INFO OCDR tenders 85 GHA 2026: 0 open of 169 releases
-INFO OCDR tenders 142 GTM 2026: 22 open of 342057 releases
+INFO OCDR tenders 142 GTM 2026: 0 open of 342057 releases
 INFO OCDR tenders 122 HND 2026: 37 open of 46050 releases
 INFO OCDR tenders 123 HND 2026: 0 open of 43975 releases
 INFO OCDR tenders 156 LBR 2026: 0 open of 1227 releases
@@ -29,7 +23,7 @@ INFO OCDR tenders 64 NGA 2026: 0 open of 281 releases
 INFO OCDR tenders 86 NGA 2025: 0 open of 20 releases
 INFO OCDR tenders 118 NGA 2026: 0 open of 3 releases
 INFO OCDR tenders 125 NGA 2025: 0 open of 122 releases
-INFO OCDR tenders 135 PER 2026: 52 open of 134917 releases
+INFO OCDR tenders 135 PER 2026: 49 open of 134917 releases
 INFO OCDR tenders 145 RWA 2026: 0 open of 4144 releases
 INFO OCDR tenders 152 TZA 2026: 0 open of 62293 releases
 INFO OCDR tenders 130 UGA 2026: 1 open of 14162 releases
@@ -48,8 +42,8 @@ INFO OCDR tenders 149 MEX 2026: 0 open of 4256 releases
 INFO OCDR tenders 32 MEX 2025: 0 open of 26 releases
 INFO OCDR tenders 132 MEX 2025: 0 open of 702 releases
 INFO OCDR tenders 34 MDA 2026: 0 open of 47356 releases
-INFO OCDR tenders {'publications': 32, 'read': 32, 'releases': 1125155, 'open_tenders': 468, 'countries': 6}
-INFO ocdr_tenders: 468 rows
+INFO OCDR tenders {'publications': 32, 'read': 32, 'releases': 1125155, 'open_tenders': 399, 'countries': 5}
+INFO ocdr_tenders: 399 rows
 INFO IL exemptions: 5000/165705 read, 0 kept
 INFO IL exemptions: 10000/165705 read, 0 kept
 INFO IL exemptions: 15000/165705 read, 0 kept
@@ -89,8 +83,6 @@ INFO il_exemptions: 0 rows
 INFO external awards {}
 INFO ext_awards: 0 rows
 INFO commodity_producers: 0 rows
-WARNING wikidata 502
-WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 500
@@ -101,9 +93,10 @@ WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
+WARNING wikidata 504
 INFO wikidata companies: 0 countries refreshed (0 companies), 33 countries cached
 INFO wikidata_companies: 0 rows
-INFO listed companies: 40 countries refreshed (40 companies), 160 cached
+INFO listed companies: 40 countries refreshed (157 companies), 200 cached
 INFO listed_companies: 0 rows
 WARNING Failed to parse headers (url=https://www.banquelaurentienne.ca:443/robots.txt): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\n\r\n'
 Traceback (most recent call last):
@@ -294,8 +287,6 @@ Traceback (most recent call last):
   File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
     raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
 urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-Content-Type-Optionx-frame-options : SAMEORIGIN"\r\nx-xss-protection: 0\r\nTransfer-Encoding: chunked\r\n\r\n'
-INFO web profiles: 1001 read, 256 websites discovered of 1500 tried
-INFO web_contacts: 0 rows
-INFO:leads:universe {'awards': 2062322, 'suppliers': 461649, 'with_email': 162974, 'with_phone': 160158, 'exporters': 22108, 'goods': 152070, 'contacts_matched': 433947, 'tier_A': 451415, 'tier_B_notable': 8513, 'tier_1_strategic': 12740, 'tier_2_proven': 57517, 'tier_3_qualified': 91098, 'tier_4_unproven': 300294, 'with_website': 130581, 'notable_total': 10502, 'notable_with_email': 2161, 'notable_with_phone': 2744, 'notable_with_website': 7356, 'quality_40_plus': 107472, 'with_any_contact': 291690, 'region: Europe': 210792, 'region: Latin America': 167803, 'region: Sub-Saharan Africa': 47099, 'region: South Asia': 7751, 'region: Southeast Asia': 6087, 'region: North America': 5696, 'region: unknown': 5011, 'region: East Asia': 3647, 'region: Middle East & North Africa': 3278, 'region: CIS & Central Asia': 2270, 'region: Other': 857, 'region: Oceania': 717, 'region: Israel': 641}
+INFO:leads:universe {'awards': 2160297, 'suppliers': 475510, 'with_email': 177525, 'with_phone': 174378, 'exporters': 22232, 'goods': 153831, 'contacts_matched': 478622, 'tier_A': 465116, 'tier_B_notable': 8665, 'tier_1_strategic': 12841, 'tier_2_proven': 58035, 'tier_3_qualified': 100230, 'tier_4_unproven': 304404, 'with_website': 142628, 'notable_total': 10668, 'notable_with_email': 2408, 'notable_with_phone': 3043, 'notable_with_website': 7510, 'quality_40_plus': 111595, 'with_any_contact': 311568, 'region: Europe': 212071, 'region: Latin America': 170086, 'region: Sub-Saharan Africa': 57207, 'region: South Asia': 7759, 'region: Southeast Asia': 6093, 'region: North America': 5715, 'region: unknown': 5012, 'region: East Asia': 3650, 'region: Middle East & North Africa': 3297, 'region: CIS & Central Asia': 2402, 'region: Other': 858, 'region: Oceania': 719, 'region: Israel': 641}
 wrote 150001 rows to Supplier Universe
-INFO:leads:web index: 90000 suppliers, 3.9 MB encrypted
+INFO:leads:web index: 90000 suppliers, 4.0 MB encrypted
