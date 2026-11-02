@@ -1,1 +1,23 @@
 ts,id,name,price_usd,orig,ccy,date,source
+2026-11-02 02:40,L0001,Crude oil Brent - ICE futures,111.83,111.83,USD,2026-11-02,Yahoo Finance BZ=F (NYM)
+2026-11-02 02:40,L0002,Crude oil WTI - NYMEX futures,102.44,102.44,USD,2026-11-02,Yahoo Finance CL=F (NYM)
+2026-11-02 02:40,L0004,Natural gas Henry Hub - NYMEX futures,2.926,2.926,USD,2026-11-02,Yahoo Finance NG=F (NYM)
+2026-11-02 02:40,L0007,Gasoline RBOB - NYMEX futures,3.0964,3.0964,USD,2026-11-02,Yahoo Finance RB=F (NYM)
+2026-11-02 02:40,L0008,Heating oil / ULSD - NYMEX futures,4.6195,4.6195,USD,2026-11-02,Yahoo Finance HO=F (NYM)
+2026-11-02 02:40,L0009,Gasoil - ICE futures,1390.5,1390.5,USD,2026-11-02,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney
+2026-11-02 02:40,L0016,Gold - COMEX/LBMA futures,3907.7,3907.7,USD,2026-11-02,Yahoo Finance GC=F (CMX)
+2026-11-02 02:40,L0017,Silver - COMEX/LBMA futures,49.775,49.775,USD,2026-11-02,Yahoo Finance SI=F (CMX)
+2026-11-02 02:40,L0018,Platinum - NYMEX/LPPM futures,1448.0,1448.0,USD,2026-11-02,Yahoo Finance PL=F (NYM)
+2026-11-02 02:40,L0019,Palladium - NYMEX/LPPM futures,988.0,988.0,USD,2026-11-02,Yahoo Finance PA=F (NYM)
+2026-11-02 02:40,L0043,Crude palm oil - Bursa Malaysia futures,1154.0547,4682.0,MYR,2026-11-02,Bursa crude palm oil MPM27F (棕榈油2701) via Eastmoney
+2026-11-02 02:40,L0056,Natural rubber RSS3 - OSE/SGX futures,2.7587,433.8,JPY,2026-11-02,OSE RSS3 rubber JRU00Y (日橡胶当月连续) via Eastmoney
+2026-11-02 02:40,H0656,"Vegetable oils; palm oil and its fractions, crude, not chemically modified",1154.0547,4682.0,MYR,2026-11-02,Bursa crude palm oil MPM27F (棕榈油2701) via Eastmoney [benchmark for this HS code]
+2026-11-02 02:40,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",111.83,111.83,USD,2026-11-02,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
+2026-11-02 02:40,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",3.0964,3.0964,USD,2026-11-02,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
+2026-11-02 02:40,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1390.5,1390.5,USD,2026-11-02,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney [benchmark for this HS code]
+2026-11-02 02:40,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",2.926,2.926,USD,2026-11-02,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
+2026-11-02 02:40,H1216,"Rubber; natural (excluding latex), in smoked sheets",2.7587,433.8,JPY,2026-11-02,OSE RSS3 rubber JRU00Y (日橡胶当月连续) via Eastmoney [benchmark for this HS code]
+2026-11-02 02:40,H1674,"Metals; silver, unwrought, (but not powder)",1600.3034,49.775,USD,2026-11-02,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
+2026-11-02 02:40,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",125635.4725,3907.7,USD,2026-11-02,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
+2026-11-02 02:40,H1682,"Metals; platinum, unwrought or in powder form",46554.2811,1448.0,USD,2026-11-02,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
+2026-11-02 02:40,H1684,"Metals; palladium, unwrought or in powder form",31764.9376,988.0,USD,2026-11-02,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
