@@ -1,34 +1,62 @@
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1043, in _request_once
-    c.perform()
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 633, in perform
-    self._check_error(ret, "perform")
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 353, in _check_error
-    raise error
-curl_cffi.curl.CurlError: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw (Timeout while contacting DNS servers). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/runner/work/commodity-feeder/commodity-feeder/tools/test_africa.py", line 7, in <module>
-    rows, st = mod.fetch()
-               ^^^^^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/rwanda.py", line 26, in fetch
-    s.get(URL, timeout=60)
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1167, in get
-    return self.request(method="GET", url=url, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1117, in request
-    return self._request_once(
-           ^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1050, in _request_once
-    raise error(str(e), e.code, rsp) from e
-curl_cffi.requests.exceptions.DNSError: Failed to perform, curl: (6) Could not resolve host: www.umucyo.gov.rw (Timeout while contacting DNS servers). See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-INFO:leads:Uganda new 26, open 26 (pages 2, titles looked up 26)
-leads.uganda 26 {'new': 26}
-{"id": "UG-399731826", "source": "eGP (Uganda)", "group": "", "sector": "CONSULTING", "nature": "services", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Ministry of Lands, Housing and Urban Development", "title": "Procurement of Consultancy Services to prapare Detailed Physical Development Plans in Kisoro, Kapchorwa and Kitgum Municipalities", "notice_type": "MoLHUD/CONS/202
-{"id": "UG-404296404", "source": "eGP (Uganda)", "group": "", "sector": "", "nature": "goods", "cpv": "", "classification": "", "country": "UGA", "buyer": "Ministry of Water & Environment", "title": "Advertising and media services - Procurement of service provider for visibility and IEC materials", "notice_type": "MoWE/SUPLS/2026-2027/00081", "stage": "tender", "access": "Open (check eligibility i
-{"id": "UG-404302482", "source": "eGP (Uganda)", "group": "", "sector": "TRANSPORT_EQ", "nature": "services", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Ministry of Water & Environment", "title": "Procurement of service provider for supply of tyres for office vehicles under frame work contract", "notice_type": "MoWE/NCONS/2026-2027/00061", "stage": "tender", "access": "Ope
-{"id": "UG-405730812", "source": "eGP (Uganda)", "group": "", "sector": "ENERGY", "nature": "goods", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Ministry of Water & Environment", "title": "Procurement of firm for supply of fuel for construction of water for production Facilities and office operations under framework Contract", "notice_type": "MoWE/SUPLS/2026-2027/00099", "s
-{"id": "UG-406881580", "source": "eGP (Uganda)", "group": "", "sector": "SOCIAL", "nature": "services", "cpv": "", "classification": "keyword", "country": "UGA", "buyer": "Directorate of Citizenship and Immigration Control", "title": "Framework Agreement for Provision of Hotel Services", "notice_type": "DCIC/NCONS/2026-2027/00017", "stage": "tender", "access": "Open (check eligibility in the biddi
-Counter({'Open (check eligibility in the bidding document)': 26}) Counter({'services': 12, 'goods': 11, 'works': 3})
+gh_ghaneps_ct	200	36517	fresh=10	GHANEPS - Advanced Search	https://www.ghaneps.gov.gh/epps/quickSearchAction.do?searchSelect=1&selectedItem
+gh_ghaneps_list	200	53971	fresh=10	GHANEPS - Advanced Search	https://www.ghaneps.gov.gh/epps/viewCFTSAction.do?latest=true
+tz_nest_pub	200	74694	fresh=0	NeST - National e-Procurement System of Tanzania	https://nest.go.tz/tenders/published
+tz_nest_api	403	0	fresh=0		https://nest.go.tz/gateway/nest-tendering-api/api/public/tenders?page=0&size=20
+zm_zppa	200	43520	fresh=0	e-GP Platform - Advanced Search	https://eprocure.zppa.org.zm/epps/viewCFTSAction.do?latest=true
+mw_ppda	200	46423	fresh=40	Procurement Notices | Public Procurement and Disposal of Ass	https://www.ppda.mw/tenders
+bw_ppadb	ERR	Failed to perform, curl: (28) Connection timed out after 35000 milliseconds. See https://curl.se/libcurl/c/lib
+na_cpb	ERR	Failed to perform, curl: (6) Could not resolve host: eprocurement.cpb.org.na (Domain name not found). See http
+zw_praz	200	32621	fresh=0	Zimbabwe electronic Government Procurement System	https://egp.praz.org.zw/
+ng_nocopo	ERR	Failed to perform, curl: (60) SSL certificate OpenSSL verify result: certificate has expired (10). See https:/
+ng_etenders	200	391805	fresh=19	NIGERIA GOVERNMENT AND PRIVATE SECTOR TENDERS &amp; CONTRACT	https://www.etenders.com.ng/
+cm_armp	200	756466	fresh=1	PUBLIC CONTRACTS REGULATORY AGENCY	https://www.armp.cm/
+cm_marches	200	591	fresh=0	PPS - Public Procurement System	https://marchespublics.cm/
+bj_marches	200	84955	fresh=0	Portail des Marchés Publics du Bénin	https://marches-publics.bj/
+tg_marches	ERR	Failed to perform, curl: (6) Could not resolve host: marchespublics.gouv.tg (Domain name not found). See https
+bf_dgcmef	500	335	fresh=0		https://www.dgcmef.gov.bf/fr/appels-offres
+mu_procure	200	83844	fresh=0	Public Procurement Portal	https://publicprocurement.govmu.org/publicprocurement/
+mu_eproc	ERR	Failed to perform, curl: (6) Could not resolve host: eproc.govmu.org (Domain name not found). See https://curl
+mg_armp	ERR	Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'www.armp.m
+cd_armp	200	26634	fresh=0	Accueil	https://www.armp-rdc.org/
+ml_dgmp	200	51490	fresh=0	CENTIF MALI &#8211; CELLULE NATIONALE DE TRAITEMENT DES INFO	https://centif.ml/
+sl_ppa	200	261336	fresh=0	National Public Procurement Authority &#8211; NPPA	https://nppa.gov.sl/
+so_mof	200	110571	fresh=0	Procurement Portal | Ministry of Finance Somalia	https://mof.gov.so/procurement
+dj_marches	ERR	Failed to perform, curl: (6) Could not resolve host: www.marches-publics.dj (Domain name not found). See https
+ao_compras	ERR	Failed to perform, curl: (6) Could not resolve host: www.compraspublicas.gv.ao (Domain name not found). See ht
+mz_ufsa	200	90623	fresh=91	Principal | UFSA	https://www.ufsa.gov.mz/
+sd_none	ERR	Failed to perform, curl: (6) Could not resolve host: www.tenders.gov.sd (Domain name not found). See https://c
+jo_gtd	200	308602	fresh=0	الصفحة الرئيسية - دائرة العطاءات الحكومية	https://www.gtd.gov.jo/Default/Ar
+jo_jonepps	ERR	Failed to perform, curl: (6) Could not resolve host: jonepps.gov.jo (Domain name not found). See https://curl.
+ae_dubai	200	154726	fresh=100	Current Opportunities (eSupply)	https://esupply.dubai.gov.ae/esop/toolkit/opportunity/current/list.si?reset=true
+ae_ad	200	26749	fresh=0	Abu Dhabi Government Procurement Gate	https://www.adgpg.gov.ae/
+kw_capt	403	5992	fresh=0	Just a moment...	https://capt.gov.kw/en/tenders/opening-tenders/
+tn_tuneps	ERR	Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (2
+iq_mop	200	264634	fresh=1	وزارة التخطيط &#8211; تخطيط متميز لتنمية مستدامة	https://mop.gov.iq/
+ps_shiraa	ERR	Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (2
+lb_ppa	200	1684275	fresh=0	هيئة الشراء العام	https://www.ppa.gov.lb/ar
+ph_philgeps	200	128692	fresh=20	OpportunitiesSearch	https://notices.philgeps.gov.ph/GEPSNONPILOT/Tender/SplashOpportunitiesSearchUI.
+id_inaproc	403	35065	fresh=0		https://spse.inaproc.id/
+id_lpse	ERR	Failed to perform, curl: (6) Could not resolve host: lpse.lkpp.go.id (DNS server returned answer with no data)
+vn_muasamcong	200	589299	fresh=0	Hệ thống mạng đấu thầu quốc gia - Bộ Tài chính - EGP_v2.0 - 	https://muasamcong.mof.gov.vn/
+bd_egp	200	87998	fresh=0	Advanced Search for eTenders/eProposals	https://www.eprocure.gov.bd/resources/common/AllTenders.jsp
+pk_ppra	200	109858	fresh=0	Home | PPRA :: Public Procurement Regulatory Authority	https://ppra.gov.pk/
+pk_epads	200	7231	fresh=0	EPADS	https://eprocure.gov.pk/#/supplier/opportunities
+lk_promise	ERR	Failed to perform, curl: (28) Connection timed out after 35001 milliseconds. See https://curl.se/libcurl/c/lib
+np_bolpatra	200	710	fresh=0	Nepal e-GP · Public Procurement	https://bolpatra.gov.np/egp/searchOpportunity
+kz_goszakup	200	123069	fresh=63	Объявления о проведении государственных закупок :: Портал го	https://old.goszakup.gov.kz/ru/search/announce
+uz_xarid	200	1952	fresh=0	DAVLAT XARIDLARI MAXSUS AXBOROT PORTALI	https://xarid.uzex.uz/
+ge_spa	200	67368	fresh=0	State Procurement Agency	https://tenders.procurement.gov.ge/public/?lang=en
+am_armeps	500	25097	fresh=0	PSC - An error has occurred	https://armeps.am/epps/viewCFTSAction.do?latest=true
+mn_tender	403	5190	fresh=0	Attention Required! | Cloudflare	https://www.tender.gov.mn/
+kh_gdpp	403	5660	fresh=0	Attention Required! | Cloudflare	https://gdpp.gov.kh/
+th_gprocurement	200	0	fresh=0		https://process3.gprocurement.go.th/egp2procmainWeb/jsp/procsearch.sch
+ec_sercop	200	6575	fresh=0		https://datosabiertos.compraspublicas.gob.ec/PLATAFORMA/api/search_ocds?year=202
+pa_panamacompra	404	0	fresh=0		https://ocds.panamacompraencifras.gob.pa/
+hn_oncae	ERR	Failed to perform, curl: (28) Connection timed out after 35000 milliseconds. See https://curl.se/libcurl/c/lib
+gt_guatecompras	403	6053	fresh=0	Just a moment...	https://www.guatecompras.gt/concursos/consultaConcursos.aspx
+pe_seace	403	83	fresh=0		https://prod2.seace.gob.pe/seacebus-uiwd-pub/buscadorPublico/buscadorPublico.xht
+mx_comprasmx	200	7000	fresh=0	Compras MX	https://comprasmx.buengobierno.gob.mx/
+cr_sicop	200	7266	fresh=0	SICOP	https://www.sicop.go.cr:443/app
+ar_comprar	ERR	Failed to perform, curl: (28) Connection timed out after 35000 milliseconds. See https://curl.se/libcurl/c/lib
+sv_comprasal	200	36177	fresh=0	COMPRASAL	https://www.comprasal.gob.sv/
+bo_sicoes	200	304	fresh=0	SICOES	https://www.sicoes.gob.bo/

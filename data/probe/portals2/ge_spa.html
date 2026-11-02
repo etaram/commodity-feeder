@@ -1,0 +1,397 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="robots" content="noindex">
+        <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css' media="screen">
+        <link rel="stylesheet" type="text/css" href="css/spa.css?k171212" media="screen">
+        <link rel="stylesheet" type="text/css" href="css/spa-en.css?k221013" media="screen">
+        <link rel="stylesheet" type="text/css" href="css/styles.css?k221013" media="screen">
+        <link rel="stylesheet" type="text/css" href="css/spa_print.css?k221013" media="print">
+        <!--[if IE]>
+			<link rel="stylesheet" type="text/css" href="css/ie-only.css?091210" />
+		<![endif]-->
+
+        <script type="text/javascript" src="library/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="library/jquery-ui-1.9.1.custom.min.js"></script>
+
+        <link href="library/dynatree/skin-vista/ui.dynatree.css" rel="stylesheet" type="text/css" id="skinSheet" media="screen">
+        <script src="library/dynatree/jquery.dynatree.js" type="text/javascript"></script>
+
+        <script type="text/javascript" src="library/jquery.layout.min.js?k221013"></script>
+        <script type="text/javascript" src="library/jquery.ui.datepicker-en.js"></script>
+        <script type="text/javascript" src="library/jquery.form.js?k221013"></script>
+        <script type="text/javascript" src="library/jquery.validate.js?k291015"></script>
+        <script type="text/javascript" src="library/jquery.metadata.js?k291015"></script>
+        <script type="text/javascript" src="library/jquery.blockUI.js"></script>
+        <script type="text/javascript" src="library/jquery.timer.js"></script>
+        <script type="text/javascript" src="library/autocomplete/autocomplete.min.js"></script>
+        <script type="text/javascript" src="library/countdown/jquery.countdown.min.js"></script>
+        <script type="text/javascript" src="library/countdown/jquery.countdown-en.js"></script>
+        <script type="text/javascript" src="library/jquery.PrintArea.js?k221013"></script>
+        <script type="text/javascript" src="library/spa.js?k171212"></script>
+        <script type="text/javascript" src="library/spa-en.js?k221013"></script>
+        <script type="text/javascript" src="library/geokbd.js"></script>
+        <title>State Procurement Agency</title>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.ajaxSetup({
+                    cache: true
+                });
+                window.fbAsyncInit = function () {
+                    FB.init({
+                        appId: '133732963496866',
+                        cookie: true,
+                        xfbml: true,
+                        version: 'v10.0'
+                    });
+
+                    FB.AppEvents.logPageView();
+
+                    FB.Event.subscribe('auth.authResponseChange', function (response) {
+                        if (response.status === 'connected') {
+                            FB.api('/me', function (response) {
+                                $.get('library/fblogin.php', response, function (r) {
+                                    $('#btn_today').show();
+                                    $('#btn_ssp').show();
+                                    $('#btn_smp').show();
+                                    $('#btn_splan').show();
+                                    $('#btn_con').show();
+                                    $('#fb_login').attr("disabled", "disabled");
+                                    $('#fb-auth-name').html(response.name);
+                                });
+                            });
+                        }
+                    });
+
+                    FB.Event.subscribe("auth.logout", function () {
+                        $('#fb-auth-name').html('შესვლა');
+                        $('#fb_login').removeAttr("disabled");
+                        $('#btn_today').hide();
+                        $('#btn_ssp').hide();
+                        $('#btn_smp').hide();
+                        $('#btn_splan').hide();
+                        $('#btn_con').hide();
+                    });
+                };
+
+                function SPA_login() {
+                    FB.login(function cb(m) { })
+                }
+
+                (function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {
+                        return;
+                    }
+                    js = d.createElement(s);
+                    js.id = id;
+                    js.src = "https://connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+
+                $('#container').layout({
+                    north__resizable: false,
+                    west__resizable: false,
+                    south__resizable: false,
+                    north__size: 64,
+                    west__size: 250,
+                    north__spacing_open: 0,
+                    west__spacing_open: 0,
+                    south__spacing_open: 0
+                });
+                $('#findspa').button({
+                    icons: {
+                        primary: "ui-icon-search"
+                    }
+                });
+                $('#btn_home').button({
+                    text: false,
+                    icons: {
+                        primary: "ui-icon-home"
+                    }
+                }).click(function () {
+                    GoHome();
+                });
+                $('#btn_today').button({
+                    icons: {
+                        primary: "ui-icon-star"
+                    }
+                });
+                $('#btn_ssp').button({
+                    icons: {
+                        primary: "ui-icon-script"
+                    }
+                });
+                $('#btn_smp').button({
+                    icons: {
+                        primary: "ui-icon-gear"
+                    }
+                });
+                $('#btn_splan').button({
+                    icons: {
+                        primary: "ui-icon-script"
+                    }
+                });
+                $('#btn_con').button({
+                    icons: {
+                        primary: "ui-icon-script"
+                    }
+                });
+                $('#btn_org').button({
+                    icons: {
+                        primary: "ui-icon-gear"
+                    }
+                });
+                $('#fb_login').button({
+                    icons: {
+                        primary: "ui-icon-fblogin"
+                    }
+                });
+                $('#btn_exit').button({
+                    icons: {
+                        primary: "ui-icon-power"
+                    }
+                });
+                $('#btn_cpveng').button({
+                    icons: {
+                        primary: "ui-icon-gear"
+                    }
+                });
+                $('#oss').click(function () {
+                    Osess(0);
+                    Guests(0);
+                });
+                var timer = $.timer(function () {
+                    Who();
+                });
+                timer.set({
+                    time: 120000,
+                    autostart: true
+                });
+                var go = eval('0');
+                var qep = eval('0');
+                if (go || qep) {
+                    if (qep) {
+                        ShowQep(qep);
+                        $.get('library/qep/qep_controller.php', {
+                            action: 'search_qep'
+                        }, function (data) {
+                            $('#app_list').html(data);
+                        });
+                    } else {
+                        ShowApp(go, '', 0);
+                    }
+                } else {
+                    ShowLastEvents();
+                }
+                Who();
+                GeoKBD.map('search_frm');
+                $("#accordion").accordion({
+                    heightStyle: "fill",
+                    activate: function (event, ui) {
+                        $('#app').html('');
+                        $('#app_list').show();
+                    }
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="fb-root"></div>
+        <div id="container">
+            <div id="top" class="ui-layout-north">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td style="font-size: 1.2em">
+                            <button type="button" id="btn_home">|</button>
+                            <button type="button" id="btn_org" onclick="$(this).blur();$.get('library/controller.php',{action:'org_list'}, function(data) {GoList();$('#app_list').html(data);});">Users</button>
+                            <button type="button" id="btn_ssp">CMR</button>
+                            <button type="button" id="btn_con">CON</button>
+                            <button type="button" id="btn_smp">SMP</button>
+                            <button type="button" id="btn_splan">ePLAN</button>
+                            <button type="button" id="btn_mrs">MRS</button>
+                        </td>
+                        <td width="340" align="right">
+                            <a href="http://procurement.gov.ge"><img src="images/spalogo100.png" height="56"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="leftnav" class="ui-layout-west">
+
+                <div id="accordion">
+                    <h3 id="tenders">შესყიდვები</h3>
+                    <div style='background-color: #dddddd;'>
+                        <form name="search_frm" id="search_frm" method="post" action="library/controller.php">
+                            <input type="hidden" name="action" value="search_app">
+                            <input type="hidden" name="app_t" value="0">
+                            <input type="hidden" name="search">
+                            <ul>
+                                <li class="lbl">Announcment number</li>
+                                <li><input type="text" style="width: 200px" id="app_reg_id" name="app_reg_id" maxlength="25"></li>
+                                <li class="lbl">Procuring entities <label></label></li>
+                                <li><input type="hidden" name="app_shems_id" id="app_shems_id" value="0"><input maxlength="200" type="text" style="width:200px" name="org_a" id="org_a"></li>
+                                <li class="lbl">Supplier <label></label></li>
+                                <li><input type="hidden" name="app_monac_id" id="app_monac_id" value="0"><input maxlength="200" type="text" style="width:200px" name="org_b" id="org_b"></li>
+                                <li class="lbl">მიმწოდებლის სტატუსი</li>
+                                <li class="search-field">
+                                    <select style="width:210px" id="app_particip_status_id" name="app_particip_status_id">
+                                        <option value="0"></option>
+                                        <option value="200">ხელშეკრულება დადებული</option>
+                                        <option value="100">დისკვალიფიცირებული</option>
+                                    </select>
+                                </li>
+                                <li class="lbl">Donor</li>
+                                <li class="search-field">
+                                    <select style="width:210px" id="app_donor_id" name="app_donor_id">
+                                        <option value="0"></option>
+                                        <option value="100">The World Bank</option><option value="110">European Bank for Reconstruction and Development</option><option value="120">European Investment Bank</option><option value="130">Asian Development Bank</option><option value="140">Asian Infrastructure Investment Bank</option><option value="150">KFW</option><option value="160">Millennium Challenge Account Georgia</option><option value="170">JICA</option><option value="180">UNHCR</option><option value="190">EU</option><option value="195">International Fund for Agriculture Development</option><option value="200">Council of Europe Development Bank – CEB</option><option value="205">NEFCO</option><option value="206">AFD</option><option value="2000">დონორის წესები მთავრობის თანხმობით</option>
+                                    </select>
+                                </li>
+                                <li class="lbl">Procurement proceeding status</li>
+                                <li><select style="width:210px" id="app_status" name="app_status">
+                                        <option value="0"></option>
+                                        <option value="10">Tender announced</option><option value="20">Bidding commenced</option><option value="30">Bidding completed</option><option value="40">Selection/Evaluation</option><option value="50">Winner identified</option><option value="70">გამარჯვებული მიმწოდებლის მიერ გადახდილია თანხა</option><option value="100">Contract not awarded </option><option value="110">No bids received</option><option value="120">Cancelled</option><option value="130">Finalization of contract       </option><option value="140">Contract awarded</option>
+                                    </select></li>
+                                <li class="lbl">Contract status</li>
+                                <li class="search-field">
+                                    <select style="width:210px" id="app_agr_status" name="app_agr_status">
+                                        <option value="0"></option>
+                                        <option value="10">Ongoing</option><option value="20">Fulfilled</option><option value="30">Not fullfiled</option><option value="40">მიმდინარე ხელშეკრულება - საგარანტიო პერიოდი</option>
+                                    </select>
+                                </li>
+                                <li class="lbl">Procurement type</li>
+                                <li><select style="width:210px" id="app_type" name="app_type">
+                                        <option value="0"></option>
+                                        <option value="9" class="color-0">NAT - Electronic Tender Without Reverse Auction</option><option value="2" class="color-0">SPA - Electronic Tender </option><option value="4" class="color-0">CON - Consolidated Tender</option><option value="6" class="color-0">CNT - Contest </option><option value="11" class="color-0">MEP - Two Stage Electronic Tender</option><option value="15" class="color-0">DAP - Electronic Tender </option><option value="16" class="color-0">TEP - eng_ელექტრონული ტენდერი პრეკვალიფიკაციით</option><option value="3" class="color-0">GEO - eProcurement Procedure</option><option value="5" class="color-0">DEP - Donor electronic procurement procedure</option><option value="7" class="color-0">GRA - Grant Contest</option><option value="22" class="color-0">PPP - Public–Private Partnership/Concession</option><option value="20" class="color-0">B2B - eng_კერძო შესყიდვა</option><option value="8" class="color-1">NAT - Simplified Electronic Tender Without Reverse Auction</option><option value="1" class="color-1">SPA - Simplified Electronic Tender</option><option value="10" class="color-1">MEP - Simplified Two Stage Electronic Tender</option><option value="14" class="color-1">DAP - Simplified Electronic Tender</option>
+                                    </select></li>
+                                <li class="lbl">Procuring category</li>
+                                <li><select style="width:210px" id="app_basecode" name="app_basecode">
+                                        <option value="0"></option>
+                                        <option value="18864">03100000 - Agricultural and horticultural products</option><option value="18865">03200000 - Cereals, potatoes, vegetables, fruits and nuts</option><option value="18870">03300000 - Farming, hunting and fishing products</option><option value="18871">03400000 - Forestry and logging products</option><option value="18866">09100000 - Fuels</option><option value="18867">09200000 - Petroleum, coal and oil products</option><option value="18868">09300000 - Electricity, heating, solar and nuclear energy</option><option value="18869">14200000 - Sand and clay</option><option value="18877">14300000 - Chemical and fertiliser minerals</option><option value="18878">14400000 - Salt and pure sodium chloride</option><option value="18879">14500000 - Related mining and quarrying products</option><option value="18880">14600000 - Metal ores and alloys</option><option value="18881">14700000 - Basic metals</option><option value="18882">14800000 - Miscellaneous non-metallic mineral products</option><option value="18883">14900000 - Recovered secondary raw materials</option><option value="18884">15100000 - Animal products, meat and meat products</option><option value="18885">15200000 - Prepared and preserved fish</option><option value="18886">15300000 - Fruit, vegetables and related products</option><option value="18872">15400000 - Animal or vegetable oils and fats</option><option value="18873">15500000 - Dairy products</option><option value="18874">15600000 - Grain mill products, starches and starch products</option><option value="18875">15700000 - Animal feedstuffs</option><option value="18876">15800000 - Miscellaneous food products</option><option value="18887">15900000 - Beverages, tobacco and related products</option><option value="18894">16100000 - Agricultural and forestry machinery for soil preparation or cultivation</option><option value="18895">16300000 - Harvesting machinery</option><option value="18896">16400000 - Spraying machinery for agriculture or horticulture</option><option value="18897">16500000 - Self-loading or unloading trailers and semi-trailers for agriculture</option><option value="18898">16600000 - Specialist agricultural or forestry machinery</option><option value="18899">16700000 - Tractors</option><option value="18900">16800000 - Parts of agricultural and forestry machinery</option><option value="18901">18100000 - Occupational clothing, special workwear and accessories</option><option value="18902">18200000 - Outerwear</option><option value="18903">18300000 - Garments</option><option value="18904">18400000 - Special clothing and accessories</option><option value="18888">18500000 - Jewellery, watches and related articles</option><option value="18889">18600000 - Furs and articles of fur</option><option value="18890">18800000 - Footwear</option><option value="18891">18900000 - Luggage, saddlery, sacks and bags</option><option value="18892">19100000 - Leather</option><option value="18893">19200000 - Textile fabrics and related items</option><option value="18910">19400000 - Textile yarn and thread</option><option value="18911">19500000 - Rubber and plastic materials</option><option value="18912">19600000 - Leather, textile, rubber and plastic waste</option><option value="18913">19700000 - Synthetic rubber and fibres</option><option value="18914">22100000 - Printed books, brochures and leaflets</option><option value="18915">22200000 - Newspapers, journals, periodicals and magazines</option><option value="18916">22300000 - Postcards, greeting cards and other printed matter</option><option value="18917">22400000 - Stamps, cheque forms, banknotes, stock certificates, trade advertising material, catalogues and manuals</option><option value="18918">22500000 - Printing plates or cylinders or other media for use in printing</option><option value="18919">22600000 - Ink</option><option value="18920">22800000 - Paper or paperboard registers, account books, binders, forms and other articles of printed stationery</option><option value="18921">22900000 - Miscellaneous printed matter</option><option value="18922">24100000 - Gases</option><option value="18923">24200000 - Dyes and pigments</option><option value="18905">24300000 - Basic inorganic and organic chemicals</option><option value="18906">24400000 - Fertilisers and nitrogen compounds</option><option value="18907">24500000 - Plastics in primary forms</option><option value="18908">24600000 - Explosives</option><option value="18909">24900000 - Fine and various chemical products</option><option value="18925">30100000 - Office machinery, equipment and supplies except computers, printers and furniture</option><option value="18924">30200000 - Computer equipment and supplies</option><option value="18931">31100000 - Electric motors, generators and transformers</option><option value="18932">31200000 - Electricity distribution and control apparatus</option><option value="18926">31300000 - Insulated wire and cable</option><option value="18927">31400000 - Accumulators, primary cells and primary batteries</option><option value="18928">31500000 - Lighting equipment and electric lamps</option><option value="18929">31600000 - Electrical equipment and apparatus</option><option value="18930">31700000 - Electronic, electromechanical and electrotechnical supplies</option><option value="18933">32200000 - Transmission apparatus for radiotelephony, radiotelegraphy, radio broadcasting and television</option><option value="18935">32300000 - Television and radio receivers, and sound or video recording or reproducing apparatus</option><option value="18936">32400000 - Networks</option><option value="18937">32500000 - Telecommunications equipment and supplies</option><option value="18934">33100000 - Medical equipments</option><option value="18938">33600000 - Pharmaceutical products</option><option value="18939">33700000 - Personal care products</option><option value="18942">33900000 - Post-mortem and mortuary equipment and supplies</option><option value="18940">34100000 - Motor vehicles</option><option value="18941">34200000 - Vehicle bodies, trailers or semi-trailers</option><option value="18944">34300000 - Parts and accessories for vehicles and their engines</option><option value="18945">34400000 - Motorcycles, bicycles and sidecars</option><option value="18946">34500000 - Ships and boats</option><option value="18947">34600000 - Railway and tramway locomotives and rolling stock and associated parts</option><option value="18948">34700000 - Aircraft and spacecraft</option><option value="18943">34900000 - Miscellaneous transport equipment and spare parts</option><option value="18958">35100000 - Emergency and security equipment</option><option value="18949">35200000 - Police equipment</option><option value="18952">35300000 - Weapons, ammunition and associated parts</option><option value="18953">35400000 - Military vehicles and associated parts</option><option value="18954">35500000 - Warships and associated parts</option><option value="18955">35600000 - Military aircrafts, missiles and spacecrafts</option><option value="18956">35700000 - Military electronic systems</option><option value="18957">35800000 - Individual and support equipment</option><option value="18950">37300000 - Musical instruments and parts</option><option value="18951">37400000 - Sports goods and equipment</option><option value="18965">37500000 - Games and toys; fairground amusements</option><option value="18959">37800000 - Handicraft and art supplies</option><option value="18960">38100000 - Navigational and meteorological instruments</option><option value="18961">38200000 - Geological and geophysical instruments</option><option value="18962">38300000 - Measuring instruments</option><option value="18963">38400000 - Instruments for checking physical characteristics</option><option value="18964">38500000 - Checking and testing apparatus</option><option value="18966">38600000 - Optical instruments</option><option value="18968">38700000 - Time registers and the like; parking meters</option><option value="18969">38800000 - Industrial process control equipment and remote-control equipment</option><option value="18970">38900000 - Miscellaneous evaluation or testing instruments</option><option value="18971">39100000 - Furniture</option><option value="18967">39200000 - Furnishing</option><option value="18975">39300000 - Miscellaneous equipment</option><option value="18976">39500000 - Textile articles</option><option value="18977">39700000 - Domestic appliances</option><option value="18972">39800000 - Cleaning and polishing products</option><option value="18973">41100000 - Natural water</option><option value="18974">42100000 - Machinery for the production and use of mechanical power</option><option value="18985">42200000 - Machinery for food, beverage and tobacco processing and associated parts</option><option value="18978">42300000 - Industrial or laboratory furnaces, incinerators and ovens</option><option value="18979">42400000 - Lifting and handling equipment and parts</option><option value="18983">42500000 - Cooling and ventilation equipment</option><option value="18984">42600000 - Machine tools</option><option value="18980">42700000 - Machinery for textile, apparel and leather production</option><option value="18981">42800000 - Machinery for paper or paperboard production</option><option value="18982">42900000 - Miscellaneous general and special-purpose machinery</option><option value="18994">43100000 - Mining equipment</option><option value="18986">43200000 - Earthmoving and excavating machinery, and associated parts</option><option value="18987">43300000 - Construction machinery and equipment</option><option value="18988">43400000 - Mineral-processing and foundry mould-forming machinery</option><option value="18989">43500000 - Track-laying vehicles</option><option value="18990">43600000 - Parts of machinery for mining, quarrying and construction</option><option value="18991">43700000 - Machinery for metallurgy and associated parts</option><option value="18992">43800000 - Workshop equipment</option><option value="18993">44100000 - Construction materials and associated items</option><option value="19000">44200000 - Structural products</option><option value="19001">44300000 - Cable, wire and related products</option><option value="19002">44400000 - Miscellaneous fabricated products and related items</option><option value="18995">44500000 - Tools, locks, keys, hinges, fasteners, chain and springs</option><option value="18996">44600000 - Tanks, reservoirs and containers; central-heating radiators and boilers</option><option value="18997">44800000 - Paints, varnishes and mastics</option><option value="18998">44900000 - Stone for construction, limestone, gypsum and slate</option><option value="18999">45100000 - Site preparation work</option><option value="19003">45200000 - Works for complete or part construction and civil engineering work</option><option value="19007">45300000 - Building installation work</option><option value="19004">45400000 - Building completion work</option><option value="19005">45500000 - Hire of construction and civil engineering machinery and equipment with operator</option><option value="19006">48100000 - Industry specific software package</option><option value="19012">48200000 - Networking, Internet and intranet software package</option><option value="19013">48300000 - Document creation, drawing, imaging, scheduling and productivity software package</option><option value="19014">48400000 - Business transaction and personal business software package</option><option value="19015">48500000 - Communication and multimedia software package</option><option value="19016">48600000 - Database and operating software package</option><option value="19017">48700000 - Software package utilities</option><option value="19008">48800000 - Information systems and servers</option><option value="19009">48900000 - Miscellaneous software package and computer systems</option><option value="19010">50100000 - Repair, maintenance and associated services of vehicles and related equipment</option><option value="19011">50200000 - Repair, maintenance and associated services related to aircraft, railways, roads and marine equipment</option><option value="19025">50300000 - Repair, maintenance and associated services related to personal computers, office equipment, telecommunications and audio-visual equipment</option><option value="19026">50400000 - Repair and maintenance services of medical and precision equipment</option><option value="19018">50500000 - Repair and maintenance services for pumps, valves, taps and metal containers and machinery</option><option value="19019">50600000 - Repair and maintenance services of security and defence materials</option><option value="19020">50700000 - Repair and maintenance services of building installations</option><option value="19021">50800000 - Miscellaneous repair and maintenance services</option><option value="19024">51100000 - Installation services of electrical and mechanical equipment</option><option value="19022">51200000 - Installation services of equipment for measuring, checking, testing and navigating</option><option value="19023">51300000 - Installation services of communications equipment</option><option value="19046">51400000 - Installation services of medical and surgical equipment</option><option value="19047">51500000 - Installation services of machinery and equipment</option><option value="19027">51600000 - Installation services of computers and office equipment</option><option value="19028">51700000 - Installation services of fire protection equipment</option><option value="19029">51800000 - Installation services of metal containers</option><option value="19030">51900000 - Installation services of guidance and control systems</option><option value="19033">55100000 - Hotel services</option><option value="19034">55200000 - Camping sites and other non-hotel accommodation</option><option value="19035">55300000 - Restaurant and food-serving services</option><option value="19036">55400000 - Beverage-serving services</option><option value="19037">55500000 - Canteen and catering services</option><option value="19038">55900000 - Retail trade services</option><option value="19039">60100000 - Road transport services</option><option value="19040">60200000 - Railway transport services</option><option value="19041">60300000 - Pipeline transport services</option><option value="19042">60400000 - Air transport services</option><option value="19043">60500000 - Space transport services</option><option value="19044">60600000 - Water transport services</option><option value="19045">63100000 - Cargo handling and storage services</option><option value="19031">63500000 - Travel agency, tour operator and tourist assistance services</option><option value="19032">63700000 - Support services for land, water and air transport</option><option value="19055">64100000 - Post and courier services</option><option value="19056">64200000 - Telecommunications services</option><option value="19057">65100000 - Water distribution and related services</option><option value="19058">65200000 - Gas distribution and related services</option><option value="19059">65300000 - Electricity distribution and related services</option><option value="19060">65400000 - Other sources of energy supplies and distribution</option><option value="19061">65500000 - Meter reading service</option><option value="19062">66100000 - Banking and investment services</option><option value="19063">66500000 - Insurance and pension services</option><option value="19048">66600000 - Treasury services</option><option value="19049">66700000 - Reinsurance services</option><option value="19050">70100000 - Real estate services with own property</option><option value="19051">70200000 - Renting or leasing services of own property</option><option value="19052">70300000 - Real estate agency services on a fee or contract basis</option><option value="19053">71200000 - Architectural and related services</option><option value="19054">71300000 - Engineering services</option><option value="19064">71400000 - Urban planning and landscape architectural services</option><option value="19065">71500000 - Construction-related services</option><option value="19066">71600000 - Technical testing, analysis and consultancy services</option><option value="19067">71700000 - Monitoring and control services</option><option value="19068">71800000 - Consulting services for water-supply and waste consultancy</option><option value="19069">71900000 - Laboratory services</option><option value="19070">72100000 - Hardware consultancy services</option><option value="19071">72200000 - Software programming and consultancy services</option><option value="19083">72300000 - Data services</option><option value="19084">72400000 - Internet services</option><option value="19072">72500000 - Computer-related services</option><option value="19073">72600000 - Computer support and consultancy services</option><option value="19074">72700000 - Computer network services</option><option value="19075">72800000 - Computer audit and testing services</option><option value="19076">72900000 - Computer back-up and catalogue conversion services</option><option value="19077">73100000 - Research and experimental development services</option><option value="19078">73200000 - Research and development consultancy services</option><option value="19079">73300000 - Design and execution of research and development</option><option value="19080">73400000 - Research and Development services on security and defence materials</option><option value="19081">75100000 - Administration services</option><option value="19082">75200000 - Provision of services to the community</option><option value="19091">75300000 - Compulsory social security services</option><option value="19092">76100000 - Professional services for the gas industry</option><option value="19093">76200000 - Professional services for the oil industry</option><option value="19094">76300000 - Drilling services</option><option value="19095">76400000 - Rig-positioning services</option><option value="19096">76500000 - Onshore and offshore services</option><option value="19097">76600000 - Pipeline-inspection services</option><option value="19098">77100000 - Agricultural services</option><option value="19099">77200000 - Forestry services</option><option value="19100">77300000 - Horticultural services</option><option value="19101">77400000 - Zoological services</option><option value="19102">77500000 - Animal husbandry services</option><option value="19103">77600000 - Hunting services</option><option value="19104">77700000 - Services incidental to fishing</option><option value="19105">77800000 - Aquaculture services</option><option value="19106">77900000 - Apiculture services</option><option value="19107">79100000 - Legal services</option><option value="19108">79200000 - Accounting, auditing and fiscal services</option><option value="19109">79300000 - Market and economic research; polling and statistics</option><option value="19085">79400000 - Business and management consultancy and related services</option><option value="19086">79500000 - Office-support services</option><option value="19087">79600000 - Recruitment services</option><option value="19088">79700000 - Investigation and security services</option><option value="19089">79800000 - Printing and related services</option><option value="19090">79900000 - Miscellaneous business and business-related services</option><option value="19114">80100000 - Primary education services</option><option value="19115">80200000 - Secondary education services</option><option value="19116">80300000 - Higher education services</option><option value="19117">80400000 - Adult and other education services</option><option value="19118">80500000 - Training services</option><option value="19119">80600000 - Training services in defence and security materials</option><option value="19120">85100000 - Health services</option><option value="19121">85200000 - Veterinary services</option><option value="19122">85300000 - Social work and related services</option><option value="19110">90400000 - Sewage services</option><option value="19111">90500000 - Refuse and waste related services</option><option value="19112">90600000 - Cleaning and sanitation services in urban or rural areas, and related services</option><option value="19113">90700000 - Environmental services</option><option value="19131">90900000 - Cleaning and sanitation services</option><option value="19132">92100000 - Motion picture and video services</option><option value="19133">92200000 - Radio and television services</option><option value="19123">92300000 - Entertainment services</option><option value="19124">92400000 - News-agency services</option><option value="19125">92500000 - Library, archives, museums and other cultural services</option><option value="19126">92600000 - Sporting services</option><option value="19127">92700000 - Cybercafé services</option><option value="19128">98100000 - Membership organisation services</option><option value="19129">98200000 - Equal opportunities consultancy services</option><option value="19130">98300000 - Miscellaneous services</option><option value="19134">98500000 - Private households with employed persons</option><option value="19135">98900000 - Services provided by extra-territorial organisations and bodies</option><option value="50">99999999 - </option>
+                                    </select></li>
+                                <li class="lbl">CPV codes<br /><label></label></li>
+                                <li><textarea id="cpv_codes_search" rows="1" style="width:200px" name="app_codes"></textarea></li>
+                                <li><button id="cpv_tree" type="button">CPV</button><button type="button" id="btn_cpveng" onclick="">CPV (ENG)</button></li>
+                                <li class="lbl">Date</li>
+                                <select style="width:215px" id="app_date_type" name="app_date_type">
+                                    <option value="1">registration date</option><option value="2">auction date</option><option value="3">Status date</option>
+                                </select>
+                                <li><input readonly="readonly" style="width:85px" type="text" name="app_date_from" id="app_date_from" value=""> <input readonly="readonly" style="width:85px" type="text" name="app_date_tlll" id="app_date_till" value=""></li>
+                                <li class="lbl">Estimated value of procurement <label>(from/up to)</label></li>
+                                <li><input maxlength="10" style="width:85px" type="text" name="app_amount_from" id="app_amount_from" value=""> <input style="width:85px" maxlength="10" type="text" name="app_amount_to" id="app_amount_to" value=""></li>
+                                <li id="currency">
+                                    <input type="hidden" name="app_currency" id="c2" value="2" />
+                                </li>
+                                <li class="lbl">Price list</li>
+                                <li class="search-field">
+                                    <select style="width:210px" id="app_pricelist" name="app_pricelist">
+                                        <option value="0"></option>
+                                        <option value="1">Auction with price-list</option>
+                                        <option value="2">Auction without price-list</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <hr noshade="noshade" size="1" />
+                                </li>
+                                <li><span style="margin-right:4px"><button style="width:116px" id="search_btn" type="submit">SEARCH</button></span>
+                                    <button style="width:80px" id="cancel_btn" type="button">Reset</button>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+
+                    <h3 id="qep">ბაზრის კვლევა</h3>
+                    <div>
+
+                        <form name="qep_search_frm" id="qep_search_frm" method="post" action="library/qep/qep_controller.php">
+                            <input type="hidden" name="action" value="search_qep">
+                            <input type="hidden" name="search" value="yez">
+                            <input type="hidden" name="qep_amount_from" value=''>
+                            <input type="hidden" name="qep_amount_to" value=''>
+
+                            <li class="lbl">რეგისტრაციის ნომერი</li>
+                            <li><input type="text" style="width:200px" id="qep_reg_no" name="qep_reg_no" maxlength="20"></li>
+
+                            <li class="lbl">შესყიდვის პროცედურა</li>
+                            <li class="search-field">
+                                <select style="width:210px" id="qep_app_type" name="qep_app_type">
+                                    <option></option>
+                                    <option value="1">გამარტივებული შესყიდვა</option>
+                                    <option value="2">ელექტრონული შესყიდვა</option>
+                                    <option value="3">სხვა</option>
+                                </select>
+                            </li>
+
+                            <li class="lbl">Procuring entities <label></label></li>
+                            <li><input type="hidden" name="qep_shems_id" id="qep_shems_id" value="0"><input maxlength="20" type="text" style="width:200px" name="org_f" id="org_f"></li>
+
+                            <li class="lbl">Procurement proceeding status</li>
+                            <li class="search-field">
+                                <select style="width:210px" id="qep_status" name="qep_status">
+                                    <option value="0"></option>
+                                    <option value="10">გამოცხადებულია</option><option value="20">წინადადების მიღება დაწყებულია</option><option value="30">წინადადების მიღება დასრულებულია</option><option value="110">არ შედგა</option><option value="120">შეწყვეტილია</option><option value="140">ბაზრის  კვლევა დასრულებულია</option>
+                                </select>
+                            </li>
+
+                            <li class="lbl">Procuring category</li>
+                            <li class="search-field"><select style="width:210px" id="qep_basecode" name="qep_basecode">
+                                    <option value="0"></option>
+                                    <option value="18864">03100000 - Agricultural and horticultural products</option><option value="18865">03200000 - Cereals, potatoes, vegetables, fruits and nuts</option><option value="18870">03300000 - Farming, hunting and fishing products</option><option value="18871">03400000 - Forestry and logging products</option><option value="18866">09100000 - Fuels</option><option value="18867">09200000 - Petroleum, coal and oil products</option><option value="18868">09300000 - Electricity, heating, solar and nuclear energy</option><option value="18869">14200000 - Sand and clay</option><option value="18877">14300000 - Chemical and fertiliser minerals</option><option value="18878">14400000 - Salt and pure sodium chloride</option><option value="18879">14500000 - Related mining and quarrying products</option><option value="18880">14600000 - Metal ores and alloys</option><option value="18881">14700000 - Basic metals</option><option value="18882">14800000 - Miscellaneous non-metallic mineral products</option><option value="18883">14900000 - Recovered secondary raw materials</option><option value="18884">15100000 - Animal products, meat and meat products</option><option value="18885">15200000 - Prepared and preserved fish</option><option value="18886">15300000 - Fruit, vegetables and related products</option><option value="18872">15400000 - Animal or vegetable oils and fats</option><option value="18873">15500000 - Dairy products</option><option value="18874">15600000 - Grain mill products, starches and starch products</option><option value="18875">15700000 - Animal feedstuffs</option><option value="18876">15800000 - Miscellaneous food products</option><option value="18887">15900000 - Beverages, tobacco and related products</option><option value="18894">16100000 - Agricultural and forestry machinery for soil preparation or cultivation</option><option value="18895">16300000 - Harvesting machinery</option><option value="18896">16400000 - Spraying machinery for agriculture or horticulture</option><option value="18897">16500000 - Self-loading or unloading trailers and semi-trailers for agriculture</option><option value="18898">16600000 - Specialist agricultural or forestry machinery</option><option value="18899">16700000 - Tractors</option><option value="18900">16800000 - Parts of agricultural and forestry machinery</option><option value="18901">18100000 - Occupational clothing, special workwear and accessories</option><option value="18902">18200000 - Outerwear</option><option value="18903">18300000 - Garments</option><option value="18904">18400000 - Special clothing and accessories</option><option value="18888">18500000 - Jewellery, watches and related articles</option><option value="18889">18600000 - Furs and articles of fur</option><option value="18890">18800000 - Footwear</option><option value="18891">18900000 - Luggage, saddlery, sacks and bags</option><option value="18892">19100000 - Leather</option><option value="18893">19200000 - Textile fabrics and related items</option><option value="18910">19400000 - Textile yarn and thread</option><option value="18911">19500000 - Rubber and plastic materials</option><option value="18912">19600000 - Leather, textile, rubber and plastic waste</option><option value="18913">19700000 - Synthetic rubber and fibres</option><option value="18914">22100000 - Printed books, brochures and leaflets</option><option value="18915">22200000 - Newspapers, journals, periodicals and magazines</option><option value="18916">22300000 - Postcards, greeting cards and other printed matter</option><option value="18917">22400000 - Stamps, cheque forms, banknotes, stock certificates, trade advertising material, catalogues and manuals</option><option value="18918">22500000 - Printing plates or cylinders or other media for use in printing</option><option value="18919">22600000 - Ink</option><option value="18920">22800000 - Paper or paperboard registers, account books, binders, forms and other articles of printed stationery</option><option value="18921">22900000 - Miscellaneous printed matter</option><option value="18922">24100000 - Gases</option><option value="18923">24200000 - Dyes and pigments</option><option value="18905">24300000 - Basic inorganic and organic chemicals</option><option value="18906">24400000 - Fertilisers and nitrogen compounds</option><option value="18907">24500000 - Plastics in primary forms</option><option value="18908">24600000 - Explosives</option><option value="18909">24900000 - Fine and various chemical products</option><option value="18925">30100000 - Office machinery, equipment and supplies except computers, printers and furniture</option><option value="18924">30200000 - Computer equipment and supplies</option><option value="18931">31100000 - Electric motors, generators and transformers</option><option value="18932">31200000 - Electricity distribution and control apparatus</option><option value="18926">31300000 - Insulated wire and cable</option><option value="18927">31400000 - Accumulators, primary cells and primary batteries</option><option value="18928">31500000 - Lighting equipment and electric lamps</option><option value="18929">31600000 - Electrical equipment and apparatus</option><option value="18930">31700000 - Electronic, electromechanical and electrotechnical supplies</option><option value="18933">32200000 - Transmission apparatus for radiotelephony, radiotelegraphy, radio broadcasting and television</option><option value="18935">32300000 - Television and radio receivers, and sound or video recording or reproducing apparatus</option><option value="18936">32400000 - Networks</option><option value="18937">32500000 - Telecommunications equipment and supplies</option><option value="18934">33100000 - Medical equipments</option><option value="18938">33600000 - Pharmaceutical products</option><option value="18939">33700000 - Personal care products</option><option value="18942">33900000 - Post-mortem and mortuary equipment and supplies</option><option value="18940">34100000 - Motor vehicles</option><option value="18941">34200000 - Vehicle bodies, trailers or semi-trailers</option><option value="18944">34300000 - Parts and accessories for vehicles and their engines</option><option value="18945">34400000 - Motorcycles, bicycles and sidecars</option><option value="18946">34500000 - Ships and boats</option><option value="18947">34600000 - Railway and tramway locomotives and rolling stock and associated parts</option><option value="18948">34700000 - Aircraft and spacecraft</option><option value="18943">34900000 - Miscellaneous transport equipment and spare parts</option><option value="18958">35100000 - Emergency and security equipment</option><option value="18949">35200000 - Police equipment</option><option value="18952">35300000 - Weapons, ammunition and associated parts</option><option value="18953">35400000 - Military vehicles and associated parts</option><option value="18954">35500000 - Warships and associated parts</option><option value="18955">35600000 - Military aircrafts, missiles and spacecrafts</option><option value="18956">35700000 - Military electronic systems</option><option value="18957">35800000 - Individual and support equipment</option><option value="18950">37300000 - Musical instruments and parts</option><option value="18951">37400000 - Sports goods and equipment</option><option value="18965">37500000 - Games and toys; fairground amusements</option><option value="18959">37800000 - Handicraft and art supplies</option><option value="18960">38100000 - Navigational and meteorological instruments</option><option value="18961">38200000 - Geological and geophysical instruments</option><option value="18962">38300000 - Measuring instruments</option><option value="18963">38400000 - Instruments for checking physical characteristics</option><option value="18964">38500000 - Checking and testing apparatus</option><option value="18966">38600000 - Optical instruments</option><option value="18968">38700000 - Time registers and the like; parking meters</option><option value="18969">38800000 - Industrial process control equipment and remote-control equipment</option><option value="18970">38900000 - Miscellaneous evaluation or testing instruments</option><option value="18971">39100000 - Furniture</option><option value="18967">39200000 - Furnishing</option><option value="18975">39300000 - Miscellaneous equipment</option><option value="18976">39500000 - Textile articles</option><option value="18977">39700000 - Domestic appliances</option><option value="18972">39800000 - Cleaning and polishing products</option><option value="18973">41100000 - Natural water</option><option value="18974">42100000 - Machinery for the production and use of mechanical power</option><option value="18985">42200000 - Machinery for food, beverage and tobacco processing and associated parts</option><option value="18978">42300000 - Industrial or laboratory furnaces, incinerators and ovens</option><option value="18979">42400000 - Lifting and handling equipment and parts</option><option value="18983">42500000 - Cooling and ventilation equipment</option><option value="18984">42600000 - Machine tools</option><option value="18980">42700000 - Machinery for textile, apparel and leather production</option><option value="18981">42800000 - Machinery for paper or paperboard production</option><option value="18982">42900000 - Miscellaneous general and special-purpose machinery</option><option value="18994">43100000 - Mining equipment</option><option value="18986">43200000 - Earthmoving and excavating machinery, and associated parts</option><option value="18987">43300000 - Construction machinery and equipment</option><option value="18988">43400000 - Mineral-processing and foundry mould-forming machinery</option><option value="18989">43500000 - Track-laying vehicles</option><option value="18990">43600000 - Parts of machinery for mining, quarrying and construction</option><option value="18991">43700000 - Machinery for metallurgy and associated parts</option><option value="18992">43800000 - Workshop equipment</option><option value="18993">44100000 - Construction materials and associated items</option><option value="19000">44200000 - Structural products</option><option value="19001">44300000 - Cable, wire and related products</option><option value="19002">44400000 - Miscellaneous fabricated products and related items</option><option value="18995">44500000 - Tools, locks, keys, hinges, fasteners, chain and springs</option><option value="18996">44600000 - Tanks, reservoirs and containers; central-heating radiators and boilers</option><option value="18997">44800000 - Paints, varnishes and mastics</option><option value="18998">44900000 - Stone for construction, limestone, gypsum and slate</option><option value="18999">45100000 - Site preparation work</option><option value="19003">45200000 - Works for complete or part construction and civil engineering work</option><option value="19007">45300000 - Building installation work</option><option value="19004">45400000 - Building completion work</option><option value="19005">45500000 - Hire of construction and civil engineering machinery and equipment with operator</option><option value="19006">48100000 - Industry specific software package</option><option value="19012">48200000 - Networking, Internet and intranet software package</option><option value="19013">48300000 - Document creation, drawing, imaging, scheduling and productivity software package</option><option value="19014">48400000 - Business transaction and personal business software package</option><option value="19015">48500000 - Communication and multimedia software package</option><option value="19016">48600000 - Database and operating software package</option><option value="19017">48700000 - Software package utilities</option><option value="19008">48800000 - Information systems and servers</option><option value="19009">48900000 - Miscellaneous software package and computer systems</option><option value="19010">50100000 - Repair, maintenance and associated services of vehicles and related equipment</option><option value="19011">50200000 - Repair, maintenance and associated services related to aircraft, railways, roads and marine equipment</option><option value="19025">50300000 - Repair, maintenance and associated services related to personal computers, office equipment, telecommunications and audio-visual equipment</option><option value="19026">50400000 - Repair and maintenance services of medical and precision equipment</option><option value="19018">50500000 - Repair and maintenance services for pumps, valves, taps and metal containers and machinery</option><option value="19019">50600000 - Repair and maintenance services of security and defence materials</option><option value="19020">50700000 - Repair and maintenance services of building installations</option><option value="19021">50800000 - Miscellaneous repair and maintenance services</option><option value="19024">51100000 - Installation services of electrical and mechanical equipment</option><option value="19022">51200000 - Installation services of equipment for measuring, checking, testing and navigating</option><option value="19023">51300000 - Installation services of communications equipment</option><option value="19046">51400000 - Installation services of medical and surgical equipment</option><option value="19047">51500000 - Installation services of machinery and equipment</option><option value="19027">51600000 - Installation services of computers and office equipment</option><option value="19028">51700000 - Installation services of fire protection equipment</option><option value="19029">51800000 - Installation services of metal containers</option><option value="19030">51900000 - Installation services of guidance and control systems</option><option value="19033">55100000 - Hotel services</option><option value="19034">55200000 - Camping sites and other non-hotel accommodation</option><option value="19035">55300000 - Restaurant and food-serving services</option><option value="19036">55400000 - Beverage-serving services</option><option value="19037">55500000 - Canteen and catering services</option><option value="19038">55900000 - Retail trade services</option><option value="19039">60100000 - Road transport services</option><option value="19040">60200000 - Railway transport services</option><option value="19041">60300000 - Pipeline transport services</option><option value="19042">60400000 - Air transport services</option><option value="19043">60500000 - Space transport services</option><option value="19044">60600000 - Water transport services</option><option value="19045">63100000 - Cargo handling and storage services</option><option value="19031">63500000 - Travel agency, tour operator and tourist assistance services</option><option value="19032">63700000 - Support services for land, water and air transport</option><option value="19055">64100000 - Post and courier services</option><option value="19056">64200000 - Telecommunications services</option><option value="19057">65100000 - Water distribution and related services</option><option value="19058">65200000 - Gas distribution and related services</option><option value="19059">65300000 - Electricity distribution and related services</option><option value="19060">65400000 - Other sources of energy supplies and distribution</option><option value="19061">65500000 - Meter reading service</option><option value="19062">66100000 - Banking and investment services</option><option value="19063">66500000 - Insurance and pension services</option><option value="19048">66600000 - Treasury services</option><option value="19049">66700000 - Reinsurance services</option><option value="19050">70100000 - Real estate services with own property</option><option value="19051">70200000 - Renting or leasing services of own property</option><option value="19052">70300000 - Real estate agency services on a fee or contract basis</option><option value="19053">71200000 - Architectural and related services</option><option value="19054">71300000 - Engineering services</option><option value="19064">71400000 - Urban planning and landscape architectural services</option><option value="19065">71500000 - Construction-related services</option><option value="19066">71600000 - Technical testing, analysis and consultancy services</option><option value="19067">71700000 - Monitoring and control services</option><option value="19068">71800000 - Consulting services for water-supply and waste consultancy</option><option value="19069">71900000 - Laboratory services</option><option value="19070">72100000 - Hardware consultancy services</option><option value="19071">72200000 - Software programming and consultancy services</option><option value="19083">72300000 - Data services</option><option value="19084">72400000 - Internet services</option><option value="19072">72500000 - Computer-related services</option><option value="19073">72600000 - Computer support and consultancy services</option><option value="19074">72700000 - Computer network services</option><option value="19075">72800000 - Computer audit and testing services</option><option value="19076">72900000 - Computer back-up and catalogue conversion services</option><option value="19077">73100000 - Research and experimental development services</option><option value="19078">73200000 - Research and development consultancy services</option><option value="19079">73300000 - Design and execution of research and development</option><option value="19080">73400000 - Research and Development services on security and defence materials</option><option value="19081">75100000 - Administration services</option><option value="19082">75200000 - Provision of services to the community</option><option value="19091">75300000 - Compulsory social security services</option><option value="19092">76100000 - Professional services for the gas industry</option><option value="19093">76200000 - Professional services for the oil industry</option><option value="19094">76300000 - Drilling services</option><option value="19095">76400000 - Rig-positioning services</option><option value="19096">76500000 - Onshore and offshore services</option><option value="19097">76600000 - Pipeline-inspection services</option><option value="19098">77100000 - Agricultural services</option><option value="19099">77200000 - Forestry services</option><option value="19100">77300000 - Horticultural services</option><option value="19101">77400000 - Zoological services</option><option value="19102">77500000 - Animal husbandry services</option><option value="19103">77600000 - Hunting services</option><option value="19104">77700000 - Services incidental to fishing</option><option value="19105">77800000 - Aquaculture services</option><option value="19106">77900000 - Apiculture services</option><option value="19107">79100000 - Legal services</option><option value="19108">79200000 - Accounting, auditing and fiscal services</option><option value="19109">79300000 - Market and economic research; polling and statistics</option><option value="19085">79400000 - Business and management consultancy and related services</option><option value="19086">79500000 - Office-support services</option><option value="19087">79600000 - Recruitment services</option><option value="19088">79700000 - Investigation and security services</option><option value="19089">79800000 - Printing and related services</option><option value="19090">79900000 - Miscellaneous business and business-related services</option><option value="19114">80100000 - Primary education services</option><option value="19115">80200000 - Secondary education services</option><option value="19116">80300000 - Higher education services</option><option value="19117">80400000 - Adult and other education services</option><option value="19118">80500000 - Training services</option><option value="19119">80600000 - Training services in defence and security materials</option><option value="19120">85100000 - Health services</option><option value="19121">85200000 - Veterinary services</option><option value="19122">85300000 - Social work and related services</option><option value="19110">90400000 - Sewage services</option><option value="19111">90500000 - Refuse and waste related services</option><option value="19112">90600000 - Cleaning and sanitation services in urban or rural areas, and related services</option><option value="19113">90700000 - Environmental services</option><option value="19131">90900000 - Cleaning and sanitation services</option><option value="19132">92100000 - Motion picture and video services</option><option value="19133">92200000 - Radio and television services</option><option value="19123">92300000 - Entertainment services</option><option value="19124">92400000 - News-agency services</option><option value="19125">92500000 - Library, archives, museums and other cultural services</option><option value="19126">92600000 - Sporting services</option><option value="19127">92700000 - Cybercafé services</option><option value="19128">98100000 - Membership organisation services</option><option value="19129">98200000 - Equal opportunities consultancy services</option><option value="19130">98300000 - Miscellaneous services</option><option value="19134">98500000 - Private households with employed persons</option><option value="19135">98900000 - Services provided by extra-territorial organisations and bodies</option><option value="50">99999999 - </option>
+                                </select>
+                            </li>
+
+                            <li class="lbl">CPV codes</li>
+                            <li class="search-field">
+                                <textarea title="" class="three-char" id="qep_cpv_codes_search" rows="2" style="width:180px" name="qep_codes"></textarea>
+                                <button id="qep_cpv_tree" type="button">CPV</button>
+                                <button type="button" id="qep_btn_cpveng" onclick="">CPV (ENG)</button>
+                            </li>
+
+                            <li class="lbl">Date</li>
+                            <li class="search-field">
+                                <select style="width:210px" id="qep_date_type" name="qep_date_type">
+                                    <option value="1">registration date</option><option value="2">auction date</option><option value="3">Status date</option>
+                                </select>
+                                <input readonly="readonly" style="width:88px" type="text" name="qep_date_from" id="qep_date_from" value="">
+                                <input readonly="readonly" style="width:88px" type="text" name="qep_date_till" id="qep_date_till" value="">
+                            </li>
+
+                            <li>
+                                <hr noshade="noshade" size="1" />
+                            </li>
+
+                            <li><span style="margin-right:4px"><button style="width:116px" id="qep_search_btn" type="submit">SEARCH</button></span>
+                                <button style="width:80px" id="qep_cancel_btn" type="button">Reset</button>
+                            </li>
+                            </ul>
+                        </form>
+                        <!-- <script type="text/javascript" src="templates/qep/qep.js"></script> -->
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="content" class="pane ui-layout-center">
+                <div style="padding:0;margin:0" id="home"></div>
+                <div style="padding:0;margin:0" id="app_list"></div>
+                <div style="padding:0;margin:0" id="app"></div>
+            </div>
+
+            <div id="footer" class="ui-layout-south">
+                <div style="display: inline-block;margin-right:130px"><a href="../privacy_policy.html">PRIVACY POLICY</a></div>
+                Users Online::&nbsp;
+                <span id="osess" class="color-1" style="font-size:1.1em;font-weight:bold">--</span> Registered User,&nbsp;<span id="guests" class="color-1" style="font-size:1.1em;font-weight:bold">--</span> Guest
+                <div class="color-2" style="float:right">State Procurement Agency 2010</div>
+            </div>
+
+        </div>
+        <div id="dialog"></div>
+        <div id="adialog"></div>
+    </body>
+
+</html>

@@ -1,0 +1,930 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+    
+    <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    
+    <!--
+    /WEB-INF/jsp/common/error.jsp
+    -->
+
+    <head>
+        <title>PSC - An error has occurred</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Language" content="en-uk" />
+
+        <link rel="shortcut icon"   type="image/ico" href="/favicon.ico" />
+
+        <link rel="stylesheet" type="text/css" href="/epps/css/screen.css" media="screen, projection" />
+        <!--[if IE]>
+        <link rel="stylesheet"	type="text/css" href="/epps/css/ie-fix.css" media="screen, projection" />
+        <![endif]-->
+        <!--[if lt IE 7]>
+        <link rel="stylesheet"	type="text/css" href="/epps/css/ie-fix-lt7.css" media="screen, projection" />
+        
+        <script type="text/javascript" src="/epps/scripts/buttonfix.js"></script>
+
+        <![endif]-->
+        <link rel="stylesheet" type="text/css" href="/epps/css/print.css" media="print" />
+            
+        <script type="text/javascript" src="/epps/scripts/jquery.pack.js"></script>
+        <script type="text/javascript">
+        //<![CDATA[
+        var $j = jQuery.noConflict();
+        //]]>
+        </script>
+ <!--[if IE 8]>
+<script type="text/javascript">
+//<![CDATA[
+$j('document').ready(function(){
+$j("dl.Grid dd").each(function(){
+if($j(this).text() == ""){
+$j(this).html("&nbsp;");
+}
+});
+});
+//]]>
+</script>
+<style type="text/css">
+#Content dl.Grid dd{margin:5px 0 0 0; float:left;}
+</style>
+<![endif]-->
+        <script type="text/javascript">
+        //<![CDATA[
+        jQuery(function($){
+            $.datepicker.regional['en'] = {
+                clearText: 'Clear', 
+                clearStatus: 'Erase the current date',
+                closeText: 'Close', 
+                closeStatus: 'Close without change',
+                prevText: '&#x3c;Prev', 
+                prevStatus: 'Show the previous month',
+                nextText: 'Next&#x3e;', 
+                nextStatus: 'Show the next month',
+                    currentText: 'Today', 
+                    currentStatus: 'Show the current month',
+                    monthNames: ['January','February',
+                                'March', 'April',
+                                'May','June',
+                                'July','August',
+                                'September', 'October',
+                                'November','December'],
+                    monthNamesShort: ['Jan', 'Feb', 
+                                'Mar', 'Apr', 
+                                'May', 'Jun', 
+                                'Jul', 'Aug', 
+                                'Sep', 'Oct', 
+                                'Nov', 'Dec'],
+                    monthStatus: 'Show a different month', 
+                    yearStatus: 'Show a different year',
+                    weekHeader: 'Wk', 
+                    weekStatus: 'Week of the year',
+                    dayNames: ['Sunday', 'Monday', 
+                        'Tuesday', 'Wednesday', 
+                        'Thursday', 'Friday', 
+                        'Saturday'],
+                    dayNamesShort: ['Sun', 'Mon', 
+                        'Tue', 'Wed', 
+                        'Thu', 'Fri', 
+                        'Sat'],
+                    dayNamesMin: ['Su','Mo',
+                        'Tu', 'We',
+                        'Th','Fr',
+            'Sa'],
+                    dayStatus: 'Set DD as first week day', 
+                    dateStatus: 'Select DD, M d',
+                    dateFormat: 'mm/dd/yy', 
+                    firstDay: 1, 
+                    initStatus: 'Select a date', isRTL: false};
+                $.datepicker.setDefaults($.datepicker.regional['en']);
+            }); 
+        //]]>
+        </script>
+        <script type="text/javascript" src="/epps/scripts/jquery.cookie.js"></script>
+        <script type="text/javascript" src="/epps/scripts/popup.js"></script>
+        <script type="text/javascript" src="/epps/scripts/tender.structure.js"></script>	
+        <script type="text/javascript" src="/epps/scripts/add.criteria.js"></script>
+        <script type="text/javascript" src="/epps/scripts/ui.datepicker.js"></script>
+        <script type="text/javascript" src="/epps/scripts/jqComm.js"></script>
+        <script type="text/javascript" src="/epps/scripts/jqForm.js"></script>
+        
+       <script type="text/javascript" src="/epps/scripts/jqTableSet.js"></script>
+       
+       
+<script type="text/javascript" language="JavaScript"> 
+/*
+ * jqTableSet - Various TABLE jQuery plugins
+ *
+ * Copyright (c) 2008 Milan Andrejevic <milan.andrejevic@gmail.com>
+ * Licensed under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
+(function($) {
+	tableSetDefaults = {
+			hidden: [],
+			prefix: '_',
+			expiresDays: 30,
+			saveState: true,
+			left: false,
+			title: true,
+			wrapperClass: 'tableSet',
+			triggerClass: 'setcolumns',
+			extraClass: 'extra',
+			popupClass: 'showhide',
+			popupTitle: '<p class="smalltitle">Show/Hide</p>',
+			linkText: 'Show/Hide',
+			popupLeftModifierClass: 'left',
+			icon: '../images/sh_icon.gif'
+		};
+})(jQuery);
+
+</script>
+       
+       
+        <script type="text/javascript" src="/epps/scripts/jqModal.js"></script>
+        <script type="text/javascript" src="/epps/scripts/jqDnR.js"></script>
+        <script type="text/javascript" src="/epps/scripts/staticValidatorScript.js"></script>
+        <script type="text/javascript" src="/epps/scripts/iframe.js"></script>
+        <script type="text/javascript">
+	        /*@cc_on
+			if (document && document.execCommand) {
+				try { 
+					document.execCommand("BackgroundImageCache",false, true); 
+				}
+				catch (e) {}
+			}
+			@*/
+        </script>	
+        
+        <script type="text/javascript">
+        //<![CDATA[
+        $j('document').ready(function(ev){
+            $j('#Content').showHideMenu("/epps");
+            $j('.Menu').showHideBox();
+            $j('#ToggleSubmenu').toggleCfTVisibility({hide:'Hide CfT Menu', show:'Show CfT Menu'});	
+            $j("#ShowCFTInfo").toggleNextDiv();					
+            $j('.tabber').tabify();
+            $j("table").tableZebra();
+            $j('.countdown').textCountdown({remaining_text: " remaining characters"});
+            $j('button#MClose').hideAlert("#Message");
+            $j("form").prepareForm();
+        });
+
+        function jcv_handleErrors(messages, focusField) {
+            if (focusField && focusField != null) {
+                var doFocus = true;
+                if (focusField.disabled || focusField.type == 'hidden') {
+                    doFocus = false;
+                }
+                if (doFocus &&
+                        focusField.style &&
+                        focusField.style.visibility &&
+                        focusField.style.visibility == 'hidden') {
+                    doFocus = false;
+                }
+                if (doFocus) {
+                    focusField.focus();
+                }
+            }
+
+            if ($j("#Message")) {
+                $j("#Message").remove();
+            }
+            var mesagesCont = document.createElement("div");
+            $j(mesagesCont)
+                .attr("id", "Message")
+                .addClass("Error");
+            var errorMSG = document.createElement("p");
+            $j(errorMSG)
+                .html("<strong>An error has occurred:</strong>");
+            var msg = document.createElement("ul");
+            for (i=0; i< messages.length; i++){
+                $j(msg)
+                    .append("<li>" + messages[i] + "</li>");
+            }
+            var closeP = document.createElement("p");
+            $j(closeP)
+                .addClass("Buttons")
+                .html('<button id="MClose" type="submit">Close</button>');
+            $j(mesagesCont)
+                .append(errorMSG)
+                .append(msg)
+                .append(closeP);
+            $j(mesagesCont).find("button").click(function() {
+                $j("#Message").remove();
+            });
+            $j("#Content h2")
+                .after(mesagesCont);
+        } 
+        //]]>
+        </script>	
+
+		<script type="text/javascript">
+
+			function setParentHref(link){
+				 window.location.href=link;
+			}
+		</script>
+    </head>
+	
+    <body>
+        <div id="Container">
+        	<div id="Header">
+	            
+
+
+
+
+
+
+<a href="https://armeps.am/epps/home.do">
+  <div id="OGCLogo">
+      <h1 title="ARMEPS">ARMEPS</h1>
+      <div id="SystemTitle">
+          <p>Ministry of Finance of RA</p>
+      </div>
+   </div>
+</a>
+
+
+	            
+
+
+
+
+
+
+
+<script type="text/javascript" language="JavaScript">
+//<![CDATA[
+function openPopup(url) {    
+    newwindow=window.open(url,'name','height=550,width=810,scrollbars=yes,resizable=yes,left=60,top=10');
+    if (window.focus) {
+        newwindow.focus();
+    } 
+}
+
+    $j('document').ready(function(ev){
+        $j("a.PopUp").click(function(){ 
+             $j(this).PopUp(this.href); 
+             return false; 
+        }); 
+    })    
+//]]>
+</script>
+
+<script>
+    function getURL() {
+
+        document.getElementById("Language").getElementsByTagName(a).value=window.location.href;
+
+    }
+</script>
+
+
+
+<div id="GlobalNav" onload="getURL()">
+     <ul>
+       <li><a href="/epps/changeLanguage.do?language=hy&amp;url=">Հայերեն</a></li>
+       <li><a href="/epps/changeLanguage.do?language=en&amp;url=">Անգլերեն</a></li>
+       <li><a href="/epps/changeLanguage.do?language=ru&amp;url=">Русский</a></li>
+
+        <li class="First" id="Homepage">
+            <a href="/epps/home.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__">Homepage</a>
+        </li>
+        <li id="About">
+            <a href="/epps/DisplayHeaderStaticTextAction.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?textTitle=about" class="PopUp">About</a>
+        </li>
+        <li id="FAQ">
+            <a href="/epps/viewInfo.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?section=faq">FAQ</a>
+        </li>
+        <li id="Help">
+            <a href="/epps/help.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__" class="PopUp">Help</a>
+        </li>
+        
+        <li class="Last" id="Contact">
+            <a href="/epps/DisplayHeaderStaticTextAction.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?textTitle=contactUs" class="PopUp">Contact</a>
+        </li>
+    </ul>
+</div><!-- Global_nav // -->
+
+            </div><!-- Header // -->
+            
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function checkSubmit() {
+        var quicSearchForm = document.forms["quickSearchForm"];
+        var col = document.getElementsByName("searchSelect")[0];
+        if (col.selectedIndex != 0) {
+            quicSearchForm.submit();
+        }
+        return false;
+    }
+
+
+</script>
+
+
+
+
+
+<div id="Search">
+    <p class="Time">
+      17:32:08 AMT     
+    </p>
+    <form id="quickSearchForm" method="post" action="/epps/quickSearchAction.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__" onsubmit="javascript: return checkSubmit()" target="_self">
+        <p>
+            <label for="SearchSelect">Search:</label> 
+            <select name="searchSelect"><option value="Select...">Select</option>
+                <option value="1">CfTs</option>
+                <option value="2">Organisation</option></select>
+            <input type="text" name="searchInput" value="" id="SearchInput" class="Text" />
+            <input type="submit" value="Search" class="SearchBTN" />
+            <a href="/epps/prepareAdvancedSearch.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__">Advanced search</a>
+        </p>
+    </form>
+</div><!-- Search -->
+
+            <div id="Main">
+                <div id="Navigation">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="Menu">
+    <p><span>Log in</span></p>
+    <div class="MenuContent" id="LoginMenuContent">
+    
+        <script type="text/javascript"> 
+//<![CDATA[
+
+    var bCancel = false; 
+
+    function validateLoginForm(form) { 
+        if (bCancel) { 
+            return true; 
+        } else { 
+            var formValidationResult; 
+            formValidationResult = validateRequired(form); 
+            return (formValidationResult == 1); 
+        } 
+    } 
+
+    function LoginForm_required () { 
+     this.a0 = new Array("username", "Username is required.", new Function ("varName", " return this[varName];"));
+     this.a1 = new Array("password", "Password is required.", new Function ("varName", " return this[varName];"));
+    } 
+
+
+//]]>
+</script>
+
+
+        <form id="LoginForm" method="post" action="/epps/login.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__" onsubmit="return validateLoginForm(this)">
+            
+         
+            <fieldset>
+                <p>
+                    <label for="Username" class="w15">Username:</label>
+                    <input id="Username" class="w15" type="text" onfocus="this.select();" size="10" name="username"
+                        autocomplete="off" />
+                </p>
+                <p>
+                    <label for="Password" class="Password">Password:</label>
+                    <input type="password" name="password" size="10" value="" onfocus="this.select();" id="Password" class="w15" />
+                    <input type="hidden" name="loginRedirectPath" value="" />
+                    <input type="hidden" name="loginRedirectPathParams" value="" />
+                </p>
+
+                <p class="Buttons">
+                    <input type="submit" value="Log in" class="BTN" />
+                </p>
+            </fieldset>
+        </form>
+
+        <ul>
+          
+            
+            <li>
+                <a href="/epps/prepareRegisterEOOrg.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?registerEO=true">Register as a Supplier</a>
+            </li>
+        </ul>
+    
+
+     
+    
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="Menu">
+    <p><span>Information</span></p>
+    <div class="MenuContent" id="InfoMenuContent">
+        <ul>
+    
+         
+	       	
+	        
+            <li>
+               <a href="/epps/viewInfo.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?section=newItems">News</a>
+            </li>
+            <li>
+               <a href="/epps/viewInfo.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?section=legal">Public procurement legislation</a>
+            </li>
+            <li>
+                <a href="/epps/viewInfo.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?section=eproc">Electronic public procurement</a>
+            </li>
+            <li>
+                <a href="https://armeps.am/ppcm/public/reports#/home">Reports and Analysis</a>
+            </li>
+                    
+            <li>
+                <a href="https://armeps.am/ppcm/public/bid-report">Bids</a>
+            </li>
+            <li>
+               <a href="/epps/viewInfo.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?section=links">Relevant links</a>
+            </li>
+           
+            <li>
+              <a href="/epps/viewInfo.do;jsessionid=2gXC3FL9q--Qx5HWmMJ1aQ__?section=faq">FAQ</a>
+            </li>
+			 
+ 
+         	
+        </ul>
+    </div><!-- MenuContent -->
+</div><!-- Menu // -->
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+//<![CDATA[
+	 function callAjaxCalendarMonth(selMonth){
+	 	var selectedYear = document.getElementById("selYear").options[document.getElementById("selYear").selectedIndex].value;
+	 	//alert("selectedYear" + selectedYear);
+	 	var cal= document.getElementById("displayCal");
+	 	//alert("year=" + selectedYear + "&month=" + selMonth);
+	 	//$(containerElement).find("ul").replaceWith(menu);
+	 	$j('#cal').retrieveCalendar("/epps/info/AjaxCalendarAction.do","selYear=" + selectedYear + "&selMonth=" + selMonth);
+		//alert("displayCal html" + cal.outerHTML);
+	 }
+	 
+	 function callAjaxCalendarYear(selYear){
+
+	 	var selectedMonth = document.getElementById("selMonth").options[document.getElementById("selMonth").selectedIndex].value;
+	 	var cal= document.getElementById("displayCal");
+	 	//alert("selectedMonth" + selectedMonth);
+	 	$j('#cal').retrieveCalendar("/epps/info/AjaxCalendarAction.do","selYear=" + selYear + "&selMonth=" + selectedMonth);
+	 }
+ 	
+  //]]>
+
+</script>
+
+
+<div class="Menu">
+    <p><span>Calendar</span></p>
+    <div id="Calendar" class="MenuContent">
+        <form method="get" action="">
+            <div id="calMenu">
+                <select id="selMonth" onchange="callAjaxCalendarMonth(this.options[this.selectedIndex].value)">
+                
+                		
+                		<option value="1" >
+                			January
+                		</option>
+                
+                		
+                		<option value="2" >
+                			February
+                		</option>
+                
+                		
+                		<option value="3" >
+                			March
+                		</option>
+                
+                		
+                		<option value="4" >
+                			April
+                		</option>
+                
+                		
+                		<option value="5" >
+                			May
+                		</option>
+                
+                		
+                		<option value="6" >
+                			June
+                		</option>
+                
+                		
+                		<option value="7" >
+                			July
+                		</option>
+                
+                		
+                		<option value="8" >
+                			August
+                		</option>
+                
+                		
+                		<option value="9" >
+                			September
+                		</option>
+                
+                		
+                		<option value="10" >
+                			October
+                		</option>
+                
+                		
+                		<option value="11" selected>
+                			November
+                		</option>
+                
+                		
+                		<option value="12" >
+                			December
+                		</option>
+                
+   
+                </select>
+                <select id="selYear" class="Year" onchange="callAjaxCalendarYear(this.options[this.selectedIndex].value)">
+                    
+            		<option value="2007" >
+                			2007
+                	</option>
+                    
+            		<option value="2008" >
+                			2008
+                	</option>
+                    
+            		<option value="2009" >
+                			2009
+                	</option>
+                    
+            		<option value="2010" >
+                			2010
+                	</option>
+                    
+            		<option value="2011" >
+                			2011
+                	</option>
+                    
+            		<option value="2012" >
+                			2012
+                	</option>
+                    
+            		<option value="2013" >
+                			2013
+                	</option>
+                    
+            		<option value="2014" >
+                			2014
+                	</option>
+                    
+            		<option value="2015" >
+                			2015
+                	</option>
+                    
+            		<option value="2016" >
+                			2016
+                	</option>
+                    
+            		<option value="2017" >
+                			2017
+                	</option>
+                    
+            		<option value="2018" >
+                			2018
+                	</option>
+                    
+            		<option value="2019" >
+                			2019
+                	</option>
+                    
+            		<option value="2020" >
+                			2020
+                	</option>
+                    
+            		<option value="2021" >
+                			2021
+                	</option>
+                    
+            		<option value="2022" >
+                			2022
+                	</option>
+                    
+            		<option value="2023" >
+                			2023
+                	</option>
+                    
+            		<option value="2024" >
+                			2024
+                	</option>
+                    
+            		<option value="2025" >
+                			2025
+                	</option>
+                    
+            		<option value="2026" selected>
+                			2026
+                	</option>
+                    
+            		<option value="2027" >
+                			2027
+                	</option>
+                    
+            		<option value="2028" >
+                			2028
+                	</option>
+                    
+            		<option value="2029" >
+                			2029
+                	</option>
+                    
+            		<option value="2030" >
+                			2030
+                	</option>
+                    
+            		<option value="2031" >
+                			2031
+                	</option>
+                    
+            		<option value="2032" >
+                			2032
+                	</option>
+                    
+            		<option value="2033" >
+                			2033
+                	</option>
+                    
+            		<option value="2034" >
+                			2034
+                	</option>
+                    
+            		<option value="2035" >
+                			2035
+                	</option>
+                    
+            		<option value="2036" >
+                			2036
+                	</option>
+                    
+            		<option value="2037" >
+                			2037
+                	</option>
+                    
+            		<option value="2038" >
+                			2038
+                	</option>
+                    
+            		<option value="2039" >
+                			2039
+                	</option>
+                    
+            		<option value="2040" >
+                			2040
+                	</option>
+                    
+            		<option value="2041" >
+                			2041
+                	</option>
+                    
+            		<option value="2042" >
+                			2042
+                	</option>
+                    
+            		<option value="2043" >
+                			2043
+                	</option>
+                    
+            		<option value="2044" >
+                			2044
+                	</option>
+                    
+            		<option value="2045" >
+                			2045
+                	</option>
+                    
+            		<option value="2046" >
+                			2046
+                	</option>
+                    
+            		<option value="2047" >
+                			2047
+                	</option>
+                    
+            		<option value="2048" >
+                			2048
+                	</option>
+                    
+            		<option value="2049" >
+                			2049
+                	</option>
+                    
+            		<option value="2050" >
+                			2050
+                	</option>
+                    
+				</select>
+            </div>
+        </form>
+        <div id="cal">
+	    
+	        
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+<ul><table id="CalendarTable" summary="table summary"><tr><th class="Day" scope="col">M</th><th class="Day" scope="col">T</th><th class="Day" scope="col">W</th><th class="Day" scope="col">T</th><th class="Day" scope="col">F</th><th class="Day" scope="col">S</th><th class="Day" scope="col">S</th></tr><tr><td/><td/><td/><td/><td/><td/><td>1</td></tr><tr><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr><tr><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr><tr><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td></tr><tr><td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td></tr><tr><td>30</td><td/><td/><td/><td/><td/><td/></tr></table></ul>
+
+                
+	        </div>
+		 	<div id="displayCal"><table></table></div>
+	
+       
+            
+    </div><!-- Calendar // -->	
+</div><!-- Menu // -->
+
+
+
+                </div><!-- Navigation -->
+
+                <div id="Content">
+                    
+                    
+                        
+                    
+
+
+
+
+
+<h2>An error has occurred</h2>
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+            
+
+
+
+
+
+
+
+
+
+
+
+                    
+
+
+
+
+
+
+
+
+<h3>An error has occurred:</h3>
+              
+<p>The following error has occurred:</p>         
+
+
+         
+
+        <pre style="color:#4E5F4F;font-size:11px;">Application error</pre>
+        <div>Please contact the webmaster reporting the following error number:</div>
+        <pre style="color:#4E5F4F;font-size:11px;">9c75cf6dac1f00223edf28b7a1a3beb3</pre>
+            	    
+    
+
+                </div><!-- Content -->
+                <div class="clear"></div>
+            </div><!-- Main -->
+
+            
+
+
+
+<div id="Footer">
+    <p id="UpdateInfo">	
+	Last update: 
+ 
+	2 November 2026
+    </p>
+    <p id="CopyrightInfo">
+        &copy;2009 European Dynamics
+    </p>
+    
+</div><!-- Footer // -->
+
+            <br style="clear:both; width:100%;" />
+        </div><!-- Container -->
+    </body>
+</html>

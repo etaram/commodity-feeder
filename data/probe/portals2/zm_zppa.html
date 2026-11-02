@@ -1,0 +1,1275 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+    
+        <!-- ceproc.ok -->
+    
+    
+	<html>
+
+
+	<head>
+		<!--  -->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Script-Type" content="text/javascript">
+		<meta http-equiv="Content-Style-Type" content="text/css" />
+		<title>e-GP Platform - Advanced Search</title>
+        <meta name="Description" content="e-Procurement platform home page"/>
+		<meta content="e-Procurement platform - Home page" name="Title"/>
+		<meta content="57" name="Type"/>
+		<meta content="DOCUMENTS/COMM/EN" name="Reference"/>
+		<meta content="European Dynamics" name="Creator"/>
+		<meta name="Language" content="en"/>
+		<meta content="25" name="Classification"/>
+		<meta content="tenders, e-procurement, documents, european law, legislation, economic operator, tenderer, procurement, contract, contracting authority, supplier, awarding authority, institutions, european union, eu" name="Keywords"/>
+        <link rel="shortcut icon" type="image/ico" href="images/favicon.ico" />
+        
+        
+
+
+<script>
+	const PAGE_LITERAL = 'Page';
+	const RESULTS_PER_PAGE_LITERAL = 'Results per page';
+	const ERROR_MSG_LITERAL = 'An error has occurred';
+	const WARNING_MSG_LITERAL = 'Warning';
+	const GOTO_PAGE_LITERAL = 'Goto page';
+    const RESULTS_PER_PAGE_OPTIONS_LITERAL = ["10","20","50","100"];
+    const CONTEXT_PATH_LITERAL = '/epps';
+    const UPLOAD_ACCEPT_LITERAL = '.7z,.avi,.csv,.doc,.docm,.docx,.dot,.dotx,.dwg,.e0x,.fr,.geojson,.info,.jpeg,.jpg,.json,.mov,.mp4,.mpp,.msg,.odp,.ods,.odt,.p7m,.pages,.pdf,.png,.ppt,.pptx,.rar,.rtf,.svg,.tar,.tiff,.txt,.util,.webp,.wmv,.xls,.xlsb,.xlsm,.xlsx,.xml,.zip,.zipx';
+</script>
+
+        
+        <script src="/epps/scripts/bt/jquery-1.11.3.js" type="text/javascript"></script>
+		<script src="/epps/scripts/bt/popper.min.js" type="text/javascript"></script>
+		<script src="/epps/scripts/bt/bootstrap.min.js" type="text/javascript"></script>
+		<script src="/epps/scripts/bt/navScroll.js" type="text/javascript"></script>
+		
+        <script type="text/javascript">
+	        //<![CDATA[
+	        var $j = jQuery.noConflict();
+	        //]]>
+        </script>
+        <script type="text/javascript">
+            var LOCALE = '';
+            var INVALID_CHARACTERS = '<>%';
+            
+            var defaults = {
+            		language: 'en', 
+                    showOn: "both",
+                    buttonText: "Calendar",
+                    buttonImage: "/epps/images/action_calendar.gif",
+                    buttonImageOnly: true, clearBtn: true,
+                    firstDay: 1,
+                    weekStart: 0,
+                    format: "dd/mm/yyyy",
+                    mandatory: false,
+                    todayHighlight: true,
+                    autoclose: true
+           };
+            
+        </script>
+        <script type="text/javascript" src="/epps/scripts/common.js"></script>
+        <script type="text/javascript" src="/epps/scripts/bt/common.js"></script>
+        
+        <script type="text/javascript" src="/epps/scripts/jqComm.js"></script>
+        <script type="text/javascript" src="/epps/scripts/jqForm.js"></script>
+        <script type="text/javascript" src="/epps/scripts/jqTableSet.js"></script>
+        
+		
+        	<script type="text/javascript" src="/epps/scripts/bt/htmx.min.js"></script>
+			<!-- Morph Swaps supported on Chrome <script src="https://unpkg.com/idiomorph@0.3.0"></script> -->
+			<script type="text/javascript" src="/epps/scripts/bt/htmx.common.js"></script>     	
+		
+		
+		<link href="/epps/css/bt/gijgo.min.css" rel="stylesheet" type="text/css" />
+		<link href="/epps/css/bt/bootstrap-datepicker3.min.css" rel="stylesheet" media='screen'/> 	
+		<link href="/epps/css/bt/jquery.treefilter.css" rel="stylesheet"/>
+     	<script type="text/javascript" src="/epps/scripts/bt/bootstrap-datepicker.min.js"></script>
+     	<script type="text/javascript" src="/epps/scripts/bt/bootstrap-datepicker.en.min.js"></script>
+     	<script type="text/javascript" src="/epps/scripts/jquery.formatCurrency-1.4.0.min.js"></script>
+     	<script type="text/javascript" src="/epps/scripts/jquery.formatCurrency.all.js"></script>
+     	<script type="text/javascript" src="/epps/scripts/bt/jcv_handleMessages.js"></script>
+		
+       	<script type="text/javascript">
+			// functions from bt/common.js
+			$j(document).ready(function(){
+				noResultFoundBeautifier();
+				stackModeDataColumn();
+				$j('.countdown').textCountdown({remaining_text: " remaining characters"});
+				//TODO: modify to be enabled in internal sorting:
+				// tableSawSortableStackMode();
+				
+				
+				
+			});
+		</script>
+		
+        <script type="text/javascript">
+            function setParentHref(link){
+                window.location.href=link;
+            }
+            
+            if(typeof String.prototype.trim !== 'function') {
+	             String.prototype.trim = function() {
+	            	  return this.replace(/^\s+|\s+$/g, ''); 
+	             }
+             }   
+        </script>		
+        
+      
+       
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		<link href="/epps/css/bt/custom.css" rel="stylesheet"/>
+		<link href="/epps/css/bt/bootstrap-datetimepicker.css" rel="stylesheet"/>
+		<link href="/epps/css/bt/mm-folder.css" rel="stylesheet"/>
+		<script src="/epps/scripts/bt/tablesaw.js" type="text/javascript"></script>
+		<script src="/epps/scripts/bt/tablesaw-init.js" type="text/javascript"></script>
+		<script src="/epps/scripts/bt/jquery.treefilter.js" type="text/javascript"></script>
+		<script src="/epps/scripts/bt/moment.min.js" type="text/javascript"></script>
+     	<script src="/epps/scripts/bt/bootstrap-datetimepicker.js" type="text/javascript" ></script>
+     	<script src="/epps/scripts/bt/metisMenu.js" type="text/javascript"></script>
+     	<script src="/epps/scripts/bt/maincard.js" type="text/javascript"></script>
+     	
+     	<script type="text/javascript">
+     		
+     			HtmxCommon.addEventListeners();
+			
+		</script>
+		
+	</head>
+	<body class="">
+	
+		<header>
+			<nav class="navbar navbar-dark navbar-expand-md p-0 NavbarSG fixed-top">
+				<div class="flex-column col-12 p-0">
+					<div class="row no-gutters p-2 align-items-center">
+						<div class="col">	
+							
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+	
+
+
+
+<button class="navbar-toggler pl-0 border-0" type="button" data-toggle="collapse" data-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="fa fa-bars" aria-hidden="true"></span>
+</button>
+
+<a class="navbar-brand  mr-0 py-lg-1 py-xl-1 px-lg-2 px-xl-2" href="/epps">
+	<img class="mr-lg-2 mr-xl-2 img-fluid " src="/epps/images/bt/logo.png" alt="Homepage" />
+</a>
+
+						</div>
+						
+						
+
+
+
+
+
+
+
+
+
+
+	<div id="htmx-load-indicator" class="progress">
+		<div class="indeterminate"></div>
+	</div>
+
+
+						
+						<div class="col">
+							<ul class="navbar-nav flex-row justify-content-end">
+								
+								<!-- Search -->
+								
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	function checkSubmit() {
+		var	quicSearchForm = document.forms["searchForm"];
+		var col = document.getElementsByName("searchType")[0];
+		if (col.selectedIndex != 0) {
+			if(checkInputField(quicSearchForm))quicSearchForm.submit();
+    	}
+    	return false;
+	}
+	
+	function checkInputField(form){
+		var input = form[1].value;
+		if(containForbidenChars(input)){
+			form[1].value = '*';
+			alert("An invalid character was provided for search. Invalid characters include: <, >, &, % .");
+			return false;
+		}
+		return true;
+	}
+	
+	function containForbidenChars(input){
+    	return input.indexOf("<")!=-1 || input.indexOf(">")!=-1 || input.indexOf("%")!=-1 || input.indexOf("&")!=-1;
+    }
+    
+    $j(document).ready(function(){
+        $j('#SearchInput').mouseover(function() {
+           $j(this).attr('title', "Tip: provide a relevant term within asterisks, eg. *consultancy*");
+
+        });
+    });
+	
+	function openForm() {
+		document.getElementById("simple-search").style.height = "100%";
+		$j(".container").attr("aria-hidden","false");
+		$j("#simple-search").attr("aria-hidden","false");
+		$j("#simple-search").css("display", "block");
+	}
+	function closeForm() {
+		document.getElementById("simple-search").style.height = "0%";
+		$j(".container").attr("aria-hidden","true");
+		$j("#simple-search").attr("aria-hidden","true");
+		$j("#simple-search").css("display", "none");
+	}
+	
+</script>
+	
+	
+	 
+        <li class="nav-item mr-2">
+            <div>
+                <a href="/epps/prepareAdvancedSearch.do?type=cftFTS" class="nav-link p-2"><span class="fa fa-search" aria-label='Advanced Search'></span>
+                    
+                     	
+			       	
+					
+                    
+                    <span class="d-none d-lg-inline">Advanced Search</span></a>
+            </div>
+        </li>
+        <li class="nav-item mr-2">
+            <div>
+                <a href="/epps/prepareCurrentOpportunities.do?currentType=cft" class="nav-link p-2"><span class="fa fa-search-plus" aria-label='Current Tenders'></span>
+                        <span class="d-none d-lg-inline">Current Tenders</span></a>
+            </div>
+        </li>
+                 
+    
+	
+	
+	
+
+
+
+								<!--// Search -->
+								
+								<li class="nav-item dropdown user">
+									
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+    	
+	    	<a href="/epps/authenticate/login" id="loginButton" role="button" class="btn login" aria-label="Log In">
+				<i class="fa fa-sign-in" aria-hidden="true"></i>
+				<span>Log In</span>
+	    	</a>
+        
+        
+	
+
+
+								</li>
+								
+							</ul>
+						</div>	
+					</div>	
+					<!-- MAIN NAVIGATION MENU -->
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<!-- /.#mainnav || MAIN NAVIGATION MENU-->
+				</div>		
+			</nav>
+		</header> <!-- /.header -->
+		
+		
+				
+		<div id="main-container" class="container-fluid pt-2">
+		
+            
+                
+            
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	<h1 class="my-4">Advanced Search</h1>
+
+
+
+
+            
+			<div class="row">
+				<div id="msgCol" class="col">
+          			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="Message" class="alert alert-danger alert-dismissible Error">
+            <a href="#" class="close" data-dismiss="alert" aria-label="Close error message">&times;</a>
+        
+            <div class="container-fluid">
+                <div class="row">
+                <strong>An error has occurred:</strong>
+                </div>
+                <div class="row">
+                    <ul>
+                        
+                            <li><a href="#Captcha">Code</a> mismatch, please try again.</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+         <!-- //else -->
+
+    </div>
+
+
+          		</div>
+    		</div>
+    		
+			<div class="row">
+				<div class="col">
+                	
+
+
+
+
+
+
+
+
+
+
+<noscript>
+	<div id="NoJavascriptMessage" class="alert alert-warning alert-dismissible">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		To enjoy the full functionality of this application, please ensure that Javascript is enabled in your browser.
+	</div>
+</noscript>
+
+          		</div>
+    		</div>
+			
+            <div class="row">
+				<div class="col">
+					
+         			
+
+
+
+
+
+
+
+    <div class="card-wrapper">
+        <div class="row">
+            <div class="col">
+
+
+    
+		
+	   		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type='text/javascript'>
+    function newLoc(path, param, paramName){
+    var loc = '/epps' + path;		
+    window.location = loc;
+    }
+</script>
+
+<nav class="navbar-expand-lg">
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		
+        		
+       			<li class="nav-item" role="presentation">
+					<a class="nav-link active"  data-toggle="tab" href="#" role="tab" aria-controls="en" aria-selected="true" onclick="newLoc('/prepareAdvancedSearch.do?type=cftFTS')">Tender</a>
+				</li>
+	        
+  		
+		<li class="nav-item" role="presentation">
+			<a class="nav-link "  data-toggle="tab" href="#" role="tab" aria-controls="contact" aria-selected="false" onclick="newLoc('/prepareAdvancedSearch.do?type=org')">Organisation</a>
+		</li>
+		
+  		
+        
+	</ul>
+</nav>
+
+		
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+// Returns a random number between min and max
+function getRandomArbitary(min, max)
+{
+  return Math.random() * (max - min) + min;
+}
+
+function refreshCaptcha() {
+    var url = "/epps/genCaptcha/captcha" +
+    getRandomArbitary(0, 1000000) + ".jpg";
+
+		$j("#CAPTCHA").attr("src", url);
+	}
+</script>
+
+<script type="text/javascript">
+
+	$j('document').ready(function(ev){
+		$j('#SubmissionFromDate,#SubmissionUntilDate,#TenderOpeningFromDate,#TenderOpeningUntilDate,#PublicationFromDate,#PublicationUntilDate').datepicker($j.extend(defaults, {autoclose: true}));
+		$j('.dateRange').datepicker($j.extend(defaults, {beforeShow: customRange, autoclose: true})) ;
+		function customRange(input) {
+			return {minDate: (input.id == 'DateTo' ? $j('#DateFrom').datepicker('getDate') : null),
+				maxDate: (input.id == 'DateFrom' ? $j('#DateTo').datepicker('getDate') : null)};
+		}
+	$j('#Description').css("height", "auto");
+	
+	$j("a.PopUp").click(function(){
+		PopUpOpts = {
+    		windowname: 'popupwindow',
+    		width:		810,
+    		height:		600,
+    		scroll:		1,
+    		resizable:	0
+    	};
+       	$j(this).PopUp(this.href, PopUpOpts); 
+        return false; 
+    }); 
+	show1();
+  });
+
+	function openPopupCodes() {
+		var url = '/epps/unspsc/displayUnspscAction.do';
+    	newwindow=window.open(url,'unspscPopup', 'height=650,width=1150,scrollbars=yes,resizable=yes,left=60,top=10');
+	
+	    if (window.focus) {
+	    	newwindow.focus()
+	    }
+    }
+    
+	function openUnspscLookup() {
+		openPopupCodes("/epps/unspsc/displayUnspscAction.do");
+	}
+	
+	function openPopupCodes(url) {
+		newwindow=window.open(url,'unspscPopup','height=650,width=1150,scrollbars=yes,resizable=yes,left=60,top=10');
+		if (window.focus) {newwindow.focus()}
+	 
+	}
+
+	function returnUnspscCodes(codes, labels, valLabel) {
+		var unspscSplitResult = null;
+		document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options.length = 0;
+		if(valLabel != null && valLabel !=''){
+			unspscSplitResult = valLabel.split("#lab#");
+		    for(i = 0; i < unspscSplitResult.length; i++){
+				document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options[i] = new Option(unspscSplitResult[i],unspscSplitResult[i]);
+			}
+		}		
+		selectAll(document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options);
+		rebuildUNSPSCLabelList();
+	}
+	
+	function rebuildUNSPSCLabelList() {
+		var allUnspscLabel = "";
+		for(i = 0; i<document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options.length; i++){
+			var label = document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options[i].value;
+			var codeSplit = label.split("-");
+			var code = codeSplit[0];
+			if(code.length == 8){
+				if (allUnspscLabel.length!=0) allUnspscLabel = allUnspscLabel + ",";
+				allUnspscLabel = allUnspscLabel + code;
+			}
+		}
+		document.querySelector('[name="searchCfTWorkspaceForm"]').unspscLabels.value=allUnspscLabel;
+	}
+	
+    function selectAll(selOptions) {
+	    for (var i = 0; i < selOptions.length; i++) {
+	    	selOptions[i].selected = true;
+	    }
+    }
+
+	function clearUNSPSCCodes() {
+		for(i = document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options.length-1; i >=0 ; i--){
+			if (document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options[i].selected==true) {
+				document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options[i]=null;
+			}
+		}
+		selectAll(document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options);
+		rebuildUNSPSCLabelList();
+	}
+	
+	function show1(){
+        var val =document.querySelector('[name="searchCfTWorkspaceForm"]').Procurement.options[document.querySelector('[name="searchCfTWorkspaceForm"]').Procurement.selectedIndex].value ;
+        var showhidecpc=document.getElementById('showhidecpc').style.display;
+          if(val == "cft.contract.type.services"){
+              document.getElementById('showhidecpc').style.visibility='visible';
+              document.getElementById('showhidecpc').style.height='auto';
+              document.getElementById('showhidecpc').style.overflow='visible';
+        } else {
+        	 document.getElementById('showhidecpc').style.visibility='hidden';
+             document.getElementById('showhidecpc').style.height='1px';
+             document.getElementById('showhidecpc').style.overflow='hidden';
+        }
+    }
+	
+	function doFinish() {
+		for(i = 0;i<document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options.length; i++){
+			document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options[i].selected=true;
+		}
+		document.querySelector('[name="searchCfTWorkspaceForm"]').submit();
+		
+	}
+	
+	function populateUnspscs() {
+		var allUnspscLabel = "";
+		
+		$j('#UNSPSCArray option').each(function() {
+			if(allUnspscLabel.length!=0) {
+				allUnspscLabel = allUnspscLabel+"babis";
+			}
+	        allUnspscLabel = allUnspscLabel+$j(this).val();
+	    });
+		
+	    return allUnspscLabel;
+	}
+	
+	function resetForm(form) {
+		selectAll(document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options);
+		clearUNSPSCCodes();
+	    form.find('input:text, input:password, input:file, select, textarea').val('');
+	    form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+	}
+	function clearForm() {
+		resetForm($j('#searchCfTWorkspaceForm'));
+	}
+
+	function loadProfile(){
+		var profileId = document.querySelector('[name="searchCfTWorkspaceForm"]').searchProfileId.value;
+        if (document.querySelector('[name="searchCfTWorkspaceForm"]').isFTS.value == "true") {
+            window.location="/epps/prepareAdvancedSearchCft.do?isFTS=true&profileId=" + profileId ;
+        } else {
+            window.location="/epps/prepareAdvancedSearchCft.do?isFTS=false&profileId=" + profileId ;
+        }
+	}
+
+	function doSave() {
+		doFinish("save");
+	}
+	function doSearch() {
+		doFinish("search");
+	}
+	function doFinish(mode) {
+		for (i = 0;i<document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options.length; i++) {
+			document.querySelector('[name="searchCfTWorkspaceForm"]').unspscArray.options[i].selected=true;
+		}
+        if (document.querySelector('[name="searchCfTWorkspaceForm"]').mode.value != "audits") {
+            document.querySelector('[name="searchCfTWorkspaceForm"]').mode.value = mode;
+        }
+		document.querySelector('[name="searchCfTWorkspaceForm"]').submit();
+	}
+</script>
+
+	
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade active show mt-4" id="cft" role="tabpanel" aria-labelledby="" >
+		<div class="row">
+			<div class="col">
+				<form name="searchCfTWorkspaceForm" id="searchCfTWorkspaceForm" method="post" action="/epps/viewCFTSAction.do" class="col-12" target="_self">
+					
+			   		<input type="hidden" name="mode" value="search" id="mode">
+                    <input type="hidden" name="isFTS" value="true">
+                    <input type="hidden" name="type" value="cft">
+                    <input type="hidden" name="isPopup" value="false">
+                    <input type="hidden" name="popupMode" value="">
+			   		
+                    
+					<div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="CftId">Tender Resource ID
+                                <a href="/epps/definition/field.info.popup.do?bodyKey=field.resource.id.desc&amp;headingKey=field.resource.id" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+                            </label>
+                            <input type="text" name="cftId" value="" id="CftId" class="form-control">
+                        </div>
+						<div class="form-group col-md-6">
+							<label for="Title">Title
+								<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.title.desc&amp;headingKey=field.cft.title.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+							</label>
+							<input type="text" name="title" value="" id="Title" class="form-control">
+						</div>
+                    </div>
+                    <div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="UniqueId">Tender Unique ID
+								<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.unique.desc&amp;headingKey=field.cft.unique.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+							</label>
+							<input type="text" name="uniqueId" value="" id="UniqueId" class="form-control">
+						</div>
+                        
+							<div class="form-group col-md-6">
+					        	<label for="ContractAuth">Name of Procuring Entity
+					            	<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.ca.desc&amp;headingKey=field.cft.ca.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+					           	</label>
+					           	<input type="text" name="contractAuthority" value="" id="ContractAuth" class="form-control">
+							</div>
+						
+                        
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="Description">Description
+                                <a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.description.desc&amp;headingKey=field.cft.description.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+                            </label>
+                            <textarea name="description" id="Description" class="form-control countdown limit_2001_"></textarea>
+                            <span class="remaining">Maximum characters: 2000.</span>
+                            <input type="hidden" name="description" value="">
+                        </div>
+				 		<div class="form-group col-md-6">
+                            <label for="Status">Tender Status
+                                <a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.status.desc&amp;headingKey=field.cft.status.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+                            </label>
+                            <select name="status" id="Status" class="form-control"><option value="">-Select Workspace Status-</option>
+                                
+                                   <option value="cft.status.evaluation">Under Evaluation</option>
+                                
+                                   <option value="cft.status.notice.award">Notice of Award</option>
+                                
+                                   <option value="cft.status.established">Established</option>
+                                
+                                   <option value="cft.status.tender.submission">Bid Submission</option>
+                                
+                                   <option value="cft.status.awaiting.tender.opening">Awaiting Bid Opening</option>
+                                
+                                   <option value="cft.status.award">Awarded</option>
+                                
+                                   <option value="cft.status.archived">Archived</option>
+                                
+                                   <option value="cft.status.approval">Approval</option>
+                                
+                                   <option value="cft.status.for.archival">For Archival</option>
+                                
+                                   <option value="cft.status.cancelled">Cancelled</option></select>
+                            <input type="hidden" name="status" value="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+						<div class="form-group col-md-6">
+					    	<label for="Procurement">Procurement Type
+				           		<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.type.desc&amp;headingKey=field.cft.type.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+							</label> 
+							<select name="contractType" onchange="show1()" id="Procurement" class="form-control"><option value="">-Select Procurement Type-</option>
+								    
+									
+									<option value="cft.contract.type.services">Non-consulting Services</option>
+								    
+									
+									<option value="cft.contract.type.works">Works</option>
+								    
+									
+									<option value="cft.contract.type.services.consulting">Consulting Services</option>
+								    
+									
+									<option value="cft.contract.type.supplies">Goods</option></select> 
+							<input type="hidden" name="contractType" value="">
+				    	</div>
+						<div class="form-group col-md-6">
+                            <label for="Procedure">Procedure
+                                <a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.procedure.desc&amp;headingKey=field.cft.procedure.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+                            </label>
+                            <select name="procedure" id="Procedure" style="float:none;" class="form-control"><option value="">-Select Procedure-</option>
+                                
+                                    <option value="cft.procedure.type.obi">Open Bidding International</option>
+                                
+                                    <option value="cft.procedure.type.osi">Open Selection International</option>
+                                
+                                    <option value="cft.procedure.type.obn">Open Bidding National</option>
+                                
+                                    <option value="cft.procedure.type.osn">Open Selection National</option>
+                                
+                                    <option value="cft.procedure.type.sb">Simplified Bidding</option>
+                                
+                                    <option value="cft.procedure.type.db">Direct Bidding</option>
+                                
+                                    <option value="cft.procedure.type.lb">Limited Bidding</option>
+                                
+                                    <option value="cft.procedure.type.ls">Limited Selection</option>
+                                
+                                    <option value="cft.procedure.type.ds">Direct Selection</option>
+                                
+                                    <option value="cft.procedure.type.ss">Simplified Selection</option></select>
+                            <input type="hidden" name="procedure" value="">
+                        </div>
+				   	</div>
+							
+					<div id="showhidecpc" class="form-row">
+						<div class="form-group col-md-6">    
+							<label for="cpcCategory">CPC Category
+				           		<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.category.desc&amp;headingKey=field.cft.category.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+							</label> 
+							<select name="cpcCategory" id="cpcCategory" style="float:none;" class="form-control"><option value="">-Select CPC Category-</option>
+									  
+										<option value="1">1 - Maintenance and repair services</option>
+									  
+										<option value="2">2 - Land transport services, including armoured car services and courier services, except transport of mail</option>
+									  
+										<option value="3">3 - Air transport services of passengers and freight, except transport of mail</option>
+									  
+										<option value="4">4 - Transport of mail by land and by air</option>
+									  
+										<option value="5">5 - Telecommunications services</option>
+									  
+										<option value="6">6 - Financial services: (a) Insurance services, (b) Banking and investment services</option>
+									  
+										<option value="7">7 - Computer and related services</option>
+									  
+										<option value="8">8 - Research and development services</option>
+									  
+										<option value="9">9 - Accounting, auditing and bookkeeping services</option>
+									  
+										<option value="10">10 - Market research and public opinion polling services</option>
+									  
+										<option value="11">11 - Management consulting services and related services</option>
+									  
+										<option value="12">12 - Architectural services; engineering services and integrated engineering services...</option>
+									  
+										<option value="13">13 - Advertising services</option>
+									  
+										<option value="14">14 - Building-cleaning services and property management services</option>
+									  
+										<option value="15">15 - Publishing and printing services on a fee or contract basis</option>
+									  
+										<option value="16">16 - Sewage and refuse disposal services; sanitation and similar services</option>
+									  
+										<option value="17">17 - Hotel and restaurant services</option>
+									  
+										<option value="18">18 - Rail transport services</option>
+									  
+										<option value="19">19 - Water transport services</option>
+									  
+										<option value="20">20 - Supporting and auxiliary transport services</option>
+									  
+										<option value="21">21 - Legal services</option>
+									  
+										<option value="22">22 - Personnel placement and supply services</option>
+									  
+										<option value="23">23 - Investigation and security services, except armoured car services</option>
+									  
+										<option value="24">24 - Education and vocational education services</option>
+									  
+										<option value="25">25 - Health and social services</option>
+									  
+										<option value="26">26 - Recreational, cultural and sporting services</option>
+									  
+										<option value="27">27 - Other services</option></select>
+							<input type="hidden" name="cpcCategory" value="">
+				           </div>
+					</div>
+					<div class="form-row">
+				  		<div class="form-group col-md-6">
+					    	<label >Deadline for Bid Submission
+				           		<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.deadline.desc&amp;headingKey=field.cft.deadline.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+				           	</label>
+				           	<div class="input-group">
+				           		<div id="SubmissionFromDate" class="input-group date">
+				           			<div class="input-group-prepend">
+				           				<label for="SubmissionFromDateLbl" id="SubmissionStart">From:</label>
+				            		</div>
+				            		<input type="text" name="submissionFromDate" value="" readonly="readonly" id="SubmissionFromDateLbl" class="form-control">
+				            		<span class="input-group-btn">
+										<button class="btn" type="button" aria-label="Submission From Date"><span class="fa fa-calendar-o" aria-hidden="true"></span></button>
+									</span>
+								</div>
+								<div id="SubmissionUntilDate" class="input-group date">
+									<div class="input-group-prepend">
+										<label for="SubmissionUntilDateLbl" id="SubmissionEnd">To:</label>
+									</div>
+					            	<input type="text" name="submissionUntilDate" value="" readonly="readonly" id="SubmissionUntilDateLbl" class="form-control">
+					            	<span class="input-group-btn">
+										<button class="btn" type="button" aria-label="Submission Until Date"><span class="fa fa-calendar-o" aria-hidden="true"></span></button>
+									</span>
+								</div>
+				           	</div>
+				       	</div>
+				       	<div class="form-group col-md-6">
+                            <label >Bid Opening Date
+                                <a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.opening.desc&amp;headingKey=field.cft.opening.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+                            </label>
+                            <div class="input-group">
+                                <div id="TenderOpeningFromDate" class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <label for="TenderOpeningFromDateLbl" id="OpeningFrom">From:</label>
+                                    </div>
+                                    <input type="text" name="tenderOpeningFromDate" value="" readonly="readonly" id="TenderOpeningFromDateLbl" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn" type="button" aria-label="Publication From Date"><span class="fa fa-calendar-o" aria-hidden="true"></span></button>
+                                    </span>
+                                </div>
+                                <div id="TenderOpeningUntilDate" class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <label for="TenderOpeningUntilDateLbl" id="OpeningTo">To:</label>
+                                    </div>
+                                    <input type="text" name="tenderOpeningUntilDate" value="" readonly="readonly" id="TenderOpeningUntilDateLbl" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn" type="button" aria-label="Publication To Date"><span class="fa fa-calendar-o" aria-hidden="true"></span></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>	
+				   	</div>
+					<div class="form-row">
+				    	<div class="form-group col-md-6">
+				    		<label for="UNSPSCArray">UNSPSC codes
+								<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.unspsc.desc&amp;headingKey=field.cft.unspsc.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+							</label>
+							<div class="input-group">
+								<select name="unspscArray" multiple="multiple" size="4" id="UNSPSCArray" class="form-control"></select>
+								<input type="hidden" name="unspscLabels" value="" id="UNSPSCValueLabel">
+								<span class="input-group-btn">
+									<button class="btn" type="button" aria-label="open Unspsc Lookup" onclick="openUnspscLookup()"><span class="fa fa-search" aria-hidden="true"></span></button>
+									<button class="btn" type="button" aria-label="clear UNSPSC Codes" onclick="clearUNSPSCCodes()"><span class="fa fa-trash-o" aria-hidden="true"></span></button>
+								</span>
+							</div>
+				   		</div>
+				   		<div class="form-group col-md-6">
+                            <label >Publication date
+                                <a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.publication.desc&amp;headingKey=field.cft.publication.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+                            </label>
+                            <div class="input-group">
+                                <div id="PublicationFromDate" class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <label for="PublicationFromDateLbl" id="PublicationStart">From:</label>
+                                    </div>
+                                    <input type="text" name="publicationFromDate" value="" readonly="readonly" id="PublicationFromDateLbl" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn" type="button" aria-label="Publication From Date"><span class="fa fa-calendar-o" aria-hidden="true"></span></button>
+                                    </span>
+                                </div>
+                                <div id="PublicationUntilDate" class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <label for="PublicationUntilDateLbl" id="PublicationEnd">To:</label>
+                                    </div>
+                                    <input type="text" name="publicationUntilDate" value="" readonly="readonly" id="PublicationUntilDateLbl" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn" type="button" aria-label="Publication Until Date"><span class="fa fa-calendar-o" aria-hidden="true"></span></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+					</div>	
+				    <div class="form-row">
+				    	<div class="form-group col-md-6">
+				    		<label>Estimated Total Contract Value (ZMW)
+					    		<a href="/epps/definition/field.info.popup.do?bodyKey=field.cft.estimated.desc&amp;headingKey=field.cft.estimated.name" style="float: right;" class="PopUp"><span class="fa fa-info-circle"></span></a>
+			              		</label>
+			              		<div class="input-group">
+			               		<label for="EstimatedValueMin">Min:</label>
+				                <input type="text" name="estimatedValueMin" value="" id="EstimatedValueMin" class="form-control">
+				                <label for="EstimatedValueMax">Max:</label>
+				                <input type="text" name="estimatedValueMax" value="" id="EstimatedValueMax" class="form-control">
+			                </div>
+				    	</div>
+			       	</div>
+				   	<div class="form-row">
+						
+                            
+					    		<div class="form-group col-md-6">
+									<label for="Captcha" class="mandatory">
+										Please type the code shown below
+									</label>
+									<input type="text" name="captcha" size="40" value="" id="Captcha" class="form-control">
+									<br style="clear: both;" /> 
+									<img id="CAPTCHA" src="/epps/genCaptcha/captcha.jpg"
+										alt="CAPTCHA Image" />
+									<button type="button" class="btn btn-secondary btn-sm" onclick="refreshCaptcha();">
+										Refresh Code
+									</button>
+								</div>
+							
+                            
+						
+				   	</div> 
+				   	<div class="form-buttons mt-4">
+					   	
+				    	<input type="submit" title="Search" onclick="doSearch()" value="Search" class="btn btn-primary float-right"/>
+				  		<input type="button" title="Reset" id="Reset" class="btn btn-secondary float-right" value="Reset" onclick="clearForm()"/>
+                        
+                        
+                            <input type="button" title="Cancel" onclick="window.location='/epps/home.do'" value="Cancel" class="btn btn-secondary float-right" />
+                        
+				 	</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+	        </div>
+	    </div>
+	</div>
+
+
+
+				</div>
+			</div>
+						
+			
+			
+			
+
+		</div><!-- /.container-fluid -->
+		
+	
+	
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	<script type="text/javascript">
+	
+	    $j('document').ready(function(ev){
+	    	$j("a.PopUp").click(function(){
+	    		PopUpOpts = {
+	        		windowname: 'popupwindow',
+	        		width:		810,
+	        		height:		600,
+	        		scroll:		1,
+	        		resizable:	0
+	        	};
+	           	$j(this).PopUp(this.href, PopUpOpts); 
+	            return false; 
+	        }); 
+	    });
+	    
+	</script>
+	
+	<footer class="mt-4">
+	
+	
+		<div class="container-fluid">
+			<div class="row">
+			
+				<div class="col-sm">
+					<ul class="list-unstyled">
+                        
+                            <li>
+                                <a href="/epps/app/viewPublication.do">Published Annual Procurement Plan</a>
+                            </li>
+                        
+			        	<li>
+							<a href="/epps/prepareCurrentOpportunities.do?currentType=cft">Current Tenders</a>
+			            </li>
+			        	
+				        	<li>
+				 				<a href="/epps/common/viewOpenedTenders.do">Opened Bid Details</a>
+				        	
+				        	</li>
+			        	
+			        	<li>
+			            	<a href="/epps/viewInfo.do?section=legal">Electronic Public Procurement</a>
+			            </li>
+			      		
+			        	<li>
+			            	<a href="/epps/viewInfo.do?section=statistics">Statistics</a>
+			            </li>
+			        	<li>
+			            	<a href="/epps/viewInfo.do?section=calendar">Events Calendar</a>
+			            </li>
+						<li>
+			            	<a href="/epps/viewInfo.do?section=eproc">Procurement Legislation</a>
+			            </li>
+					</ul>
+				</div>
+				<div class="col-sm">
+					<ul class="list-unstyled">
+			            <li>
+			               <a href="/epps/viewInfo.do?section=newItems">News</a>
+			            </li>
+			            <li>
+			            	<a href="/epps/viewInfo.do?section=links">Relevant Links</a>
+			            </li>
+		        		<li>
+			            	<a href="/epps/viewInfo.do?section=faq">Frequently Asked Questions</a>
+			            </li>
+		        		<li>
+			            	<a href="/epps/viewInfo.do?section=thresholds">Legislation on Threshold</a>
+			            </li>
+						<li>
+			            	<a href="/epps/viewInfo.do?section=circulars">Circulars</a>
+			            </li>
+						<li>
+			            	<a href="/epps/viewInfo.do?section=mpi">Market Price Index (MPI)</a>
+			            </li>
+			            <li>
+			            	<a href="/epps/viewInfo.do?section=eLearning">e-Learning Materials</a>
+			            </li>
+					</ul>
+				</div>
+			
+				<div class="col-sm">
+					<ul class="list-unstyled">		        	
+		    		    
+				        
+				        
+				        
+							<li><a href="/epps/preparation_offline_tool/TenderPreparationTool.zip">
+								Download Preparation Tool</a>
+							</li>	
+						
+									        
+			        	<li id="Help">
+				            <a href="/epps/viewInfo.do?isPopup=true&amp;section=userManual" class="PopUp">User Manuals</a>
+				        </li>
+				        <li id="About">
+				            <a href="/epps/DisplayHeaderStaticTextAction.do" class="PopUp">About</a>
+				        </li>		        
+				        <li class="Last" id="Contact">
+				            <a href="/epps/PrepareContactUsAction.do" class="PopUp">Contact Us</a>
+				        </li>
+					</ul>
+				</div>		
+			</div>
+			<div class="row">
+				<div class="col text-center">
+					<span>&copy;2026 Government of the Republic of Zambia. All rights reserved.</span>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+<!-- Footer // -->
+
+
+
+
+        
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+		
+	</body>
+	
+	
+</html>
+

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="HEuwb68I6FFQ4BajlyDsAqFwH2ScMzhf5ezm40pg">
+
+    <title> Procurement Notices | Public Procurement and Disposal of Assets Authority</title>
+
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css">
+    <link rel="shortcut icon" type="image/x-icon" href="https://ppda.mw/images/favicon.png"/>
+
+
+    <link rel="preload" as="style" href="https://ppda.mw/build/assets/app.f4d07a83.css" /><link rel="preload" as="style" href="https://ppda.mw/build/assets/custom.ae324ab8.css" /><link rel="preload" as="style" href="https://ppda.mw/build/assets/all.1fb0bf93.css" /><link rel="preload" as="style" href="https://ppda.mw/build/assets/fontawesome.68103903.css" /><link rel="preload" as="style" href="https://ppda.mw/build/assets/card.ce231905.css" /><link rel="modulepreload" href="https://ppda.mw/build/assets/app.d225c007.js" /><link rel="modulepreload" href="https://ppda.mw/build/assets/all.d9e42d08.js" /><link rel="stylesheet" href="https://ppda.mw/build/assets/app.f4d07a83.css" /><link rel="stylesheet" href="https://ppda.mw/build/assets/custom.ae324ab8.css" /><link rel="stylesheet" href="https://ppda.mw/build/assets/all.1fb0bf93.css" /><link rel="stylesheet" href="https://ppda.mw/build/assets/fontawesome.68103903.css" /><link rel="stylesheet" href="https://ppda.mw/build/assets/card.ce231905.css" /><script type="module" src="https://ppda.mw/build/assets/app.d225c007.js"></script><script type="module" src="https://ppda.mw/build/assets/all.d9e42d08.js"></script>
+    <!-- Scripts -->
+    
+</head>
+<body class="font-sans antialiased">
+<div class="min-h-screen bg-[#F7FAFC] text-gray-600">
+    <nav class="navbar navbar-expand-lg navbar-light bg-gray-100 py-3 shadow-md">
+    <div class="container">
+        <a class="navbar-brand" href="https://www.ppda.mw">
+            <a href="https://www.ppda.mw">
+    <img src="https://ppda.mw/images/logo.png" alt="PPDA logo" style="width: 90px">
+</a>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-center" id="mynavbar">
+
+            <div class="me-auto"></div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-3 hover:text-green-800" href="https://www.ppda.mw">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/about-ppda" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        About us
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-light text-justify">
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/about-ppda">Mission, Vision, Values</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/board">Board of Directors</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/management">Management</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/directories">Directorates</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/contactus-ppda">Contact Us</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/services">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/supplier-registration">Supplier Registration</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-3 py-3  hover:text-green-800" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Reforms
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-light text-justify">
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/msme-order">The MSME Order</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/eGP">e-Government Procurement System</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/eGM">e-Government Marketplace</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/open-data">Open Data and Open Contracting</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/e-Services">e-Services</a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link px-3 py-3  hover:text-green-800 dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Notices</a>
+                    <ul class="dropdown-menu dropdown-menu-light text-justify">
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/tenders">Procurement Notices</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/intentions-to-award">Intention to Award Notices</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/award-notices">Award Notices</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/debarments">Debarment Notices</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/admin-review-notices">Administrative Review Notices</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/vacancies">Vacancies</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link px-3 py-3  hover:text-green-800 dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">News & Events</a>
+                    <ul class="dropdown-menu dropdown-menu-light text-justify">
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/news">Events</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/newsletters">Newsletters</a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link px-3 py-3  hover:text-green-800 dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" href="#">Resources</a>
+                    <ul class="dropdown-menu dropdown-menu-light text-justify">
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/circulars">Circulars</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/reports">Reports</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800 disabled" href="https://www.ppda.mw/research">Procurement Plans</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/research">Research</a></li>
+                        <li><a class="dropdown-item px-3 py-3  hover:text-green-800" href="https://www.ppda.mw/general-resources">General Resources</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+    <!-- Page Heading -->
+    
+    <!-- Page Content -->
+    <main>
+        <div class="hero-image backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div class="d-flex justify-content-baseline align-items-end h-full py-4">
+            <p class="text-5xl font-normal text-white">Procurement Notices</p>
+        </div>
+    </div>
+</div>
+    <div>
+    <div class="py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="notice-table table-responsive">
+                    <table class="table table-bordered" id="tenderstable">
+                        <thead class="bg-green-700 text-gray-100">
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Institution</th>
+                            <th scope="col">Reference No.</th>
+                            <th scope="col">Publish Date</th>
+                            <th scope="col">Closing Date</th>
+                            <th scope="col">Attachment</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                                                    <tr>
+                                <td> SUPPLY AND DELIVERY OF LAPTOPS-RE-ADVERTISE</td>
+                                <td> Public Procurement and Disposal of Assets Authority</td>
+                                <td> PPDA/LAPTOPS/09/2026</td>
+                                <td> 2026-11-02</td>
+                                <td> 2026-11-06</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ LAPTOPS SEPTEMBER  2026 .pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Supply,Delivery and Fixing of Vertical Blinds</td>
+                                <td> National Cancer Centre</td>
+                                <td> 031/IPDC/NCC/2026-27/G/048</td>
+                                <td> 2026-11-02</td>
+                                <td> 2026-11-06</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ-48-VERTICAL BLINDS.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> CONSTRUCTION OF VARIOUS WORKS UNDER REFORMED CDF PROJECTS PHASE TWO </td>
+                                <td> Mchinji District Council</td>
+                                <td> MCDC-IPDC-HQTRS-CDF-MCW-2627-01-5501</td>
+                                <td> 2026-11-02</td>
+                                <td> 2026-11-10</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/TENDER  ADVERTISEMENT FOR RFQ CDF PROJECTS.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> SUPPLY AND ELIVERY OF HARDWARE AND MAINTENANCE MATERIALS FOR GENERAL REPAIR AND MAINTENANCE WORKS</td>
+                                <td> Department of Irrigation </td>
+                                <td> DOI/MAINTENACE/11/26-27/2502/03</td>
+                                <td> 2026-11-02</td>
+                                <td> 2026-11-06</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ- MAINTENANCE MATERIALS FOR head office.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> SUPPLY AND DELIVERY OF LUBRICANTS FOR PLANT MACHINES FOR THE DEPARTMENT OF IRRIGATION FOR WORKSHOP SECTION</td>
+                                <td> Department of Irrigation </td>
+                                <td> DOI/PLANT AND EQUIPMENT/11/26-27/2509/01</td>
+                                <td> 2026-11-02</td>
+                                <td> 2026-11-06</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ- PLANT AND EQUIPMENT head office.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Supply and Delivery of Electric 4 x 4 Double Cabin Pickup</td>
+                                <td> Mining and Minerals Regulatory Authority-MMRA</td>
+                                <td> MMRA/IPDC/G/MV/001/2026-27      </td>
+                                <td> 2026-10-31</td>
+                                <td> 2026-11-19</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/ELECTRIC MOTOR VEHICLE Advert FINAL MMRA (1).pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> FRAMEWORK AND ONE-OFF CONTRACTS BY NATIONAL COMPETITIVE BIDDING</td>
+                                <td> Electricity Supply Corporation of Malawi (ESCOM)</td>
+                                <td> ESCOM-FRAMEWORK&amp; 1OFF2026-27</td>
+                                <td> 2026-10-31</td>
+                                <td> 2026-11-27</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Tender Advert Framework Agreements REVISED 2nd Nov.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> CONSULTANCY SERVICES FOR PROJECT MANAGEMENT AND CONSTRUCTION SUPERVISION OF THE NCC OFFICE EXTENSION AND REHABILITATION PROJECT</td>
+                                <td> Electricity Supply Corporation of Malawi (ESCOM)</td>
+                                <td> ESC035/RFP/CS/FY2026-27</td>
+                                <td> 2026-10-31</td>
+                                <td> 2026-11-27</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Advert NCC Supervision rbt.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Insect Trapper for Catering Dept.</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/INSECT/TRAPPER/10/26    </td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ For Procurement of  Insect Trappers(Catering DPT), 2026.New.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Doormats and Sleeper Chairs for Paying Dept.</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/PAYING/ITEMS/10/26    </td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/1-RFQ For Procurement of  Doormats and Sleeper Chairs (Paying DPT), 2026.New.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Swivel chairs for Nurses Station (Paying Department)</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/SWIVEL-CHAIRS/10/26    </td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/2-RFQ For Procurement of  Swivel Chairs for Nurses Station (Paying DPT), 2026.New.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Dual Blood Ketone and Blood Glucose Test meter.</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/KETONE/METER/10/26    </td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/3-RFQ For Procurement of  Dual Blood Ketone and blood glucose test meter, 2026.New.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Fixed Overbed Table (Paying Department)</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/OVERBED/10/26    </td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/0-RFQ For Procurement of  Fixed Overbed Tables (Paying DPT), 2026.New.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROCUREMENT OF TUBELESS TYRES SIZE 315/80R22.5 FOR REFUSE VEHICLES REGISTRATION NUMBERS BT 11409, BT 11174 AND BT 11173</td>
+                                <td> Blantyre City Council</td>
+                                <td> BCC/GOODS/01/10/03</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/ADVERT FOR RFQS FOR TUBELESS TYRES FOR REFUSE VEHICLES-   OCTOBER 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROCUREMENT OF TUBELESS TYRES SIZE 265/60R18 FOR VEHICLE REGISTRATION NUMBER NE 3470</td>
+                                <td> Blantyre City Council</td>
+                                <td> BCC/GOODS/01/10/04</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/ADVERT FOR RFQS FOR TUBELESS TYRES FOR NE 3470-   OCTOBER 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROCUREMENT OF SERVICE FOR REBONDING BRAKE LINERS FOR VEHICLE REGISTRATION NUMBER BP 2741</td>
+                                <td> Blantyre City Council</td>
+                                <td> BCC/SERVICE/02/10/15</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/ADVERT FOR RFQS FOR REBONDING OF BRAKE LINERS FOR BP 2741-   OCTOBER 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROCUREMENT OF SERVICE FOR ENGINE OVERHAUL AND MAINTENANCE OF TOYOTA DYNA REGISTRATION NUMBER BT 3737</td>
+                                <td> Blantyre City Council</td>
+                                <td> BCC/SERVICE/02/10/16</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/ADVERT FOR RFQS FOR ENGINE OVERHAUL AND MAINTENANCE OF BT 3797-   OCTOBER 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PRINTING, SUPPLY AND DELIVERY OF NAC BRANDED BANNERS</td>
+                                <td> National Aids Commission</td>
+                                <td> NAC/2627/PME-JAR&amp;CCB-WAD/RFQ/GO/F14</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/PRINTING, SUPPLY AND DELIVERY  OF  BANNERS.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PRINTING, SUPPLY AND DELIVERY OF NAC BRANDED GOLF SHIRTS &amp; T-SHIRTS</td>
+                                <td> National Aids Commission</td>
+                                <td> NAC/2627/CCB-WAD &amp; IACM/RFQ/GO/F15</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/PRINTING, SUPPLY AND DELIVERY OF NAC BRANDED  GOLF SHIRTS &amp; T- SHIRTS FOR 2026 WAD &amp; IACM.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> SUPPLY AND DELIVERY OF ICT LAPTOP</td>
+                                <td> National Aids Commission</td>
+                                <td> NAC/2627/ICT-LAPTOP/RFQ/GO/F03B</td>
+                                <td> 2026-10-30</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/SUPPLY &amp; DELIVERY OF LAPTOP.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> RFQ FOR ICT MAINTENANCE</td>
+                                <td> Roads Authority</td>
+                                <td> RA/ADMN/HQ/MAINTSUPP/ICTACC/04</td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ For ICT Accessories and related services October 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Office Equipment for DDG Office</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/OFF-EQUIP/10/26    </td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ For Procurement of  Office Equipment for Deputy Director General, 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Tailoring Materials</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/TAILORING-MAT/10/26    </td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/1-RFQ For Procurement of  Tailoring materials, 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Traffic Cones with Reflectors</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/TRAFFIC-CONES/10/26    </td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/2-RFQ For Procurement of  Traffic Cones with Reflectors, 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Procurement of Office Printer for DDG Office</td>
+                                <td>  Zomba Central Hospital </td>
+                                <td> ZCH/RFQ/OFF-PRINTER/10/26    </td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/3-RFQ For Procurement of  Office Printer for Deputy Director General, 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Request for Quotation- Stationery Items and Toners</td>
+                                <td> Malawi National Commission for UNESCO</td>
+                                <td> MNCU/STAT/06/00</td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Request for Quotations Ref MNCU STAT 06 00.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Supply and delivery of Office Furniture- Airconditioner and Water Dispenser</td>
+                                <td> Malawi National Commission for UNESCO</td>
+                                <td> MNCU/GDS/OFF/FURN/002</td>
+                                <td> 2026-10-29</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Request for Quotations MNCU GDS OFF FURN 002.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Servicing ICT equipment</td>
+                                <td> Ministry of Health</td>
+                                <td> MOH/RFQ/S/GF/TB-HIV/2026/047</td>
+                                <td> 2026-10-28</td>
+                                <td> 2026-11-03</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/ICT equipment servicing.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> SUPPLY AND DELIVERY OF UROLOGY ENDOSCOPIC EQUIPMENT</td>
+                                <td> Mzuzu Central Hospital</td>
+                                <td> 031/MZCH/2026-27/75</td>
+                                <td> 2026-10-28</td>
+                                <td> 2026-11-10</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Request for Quotations - Urology Equipment 75.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> provision , Installation, Testing and maintenance of Security Access Control Machines at main access points</td>
+                                <td> Accountant General Department</td>
+                                <td> AGD/IPDC/SACM/26-27/10/01</td>
+                                <td> 2026-10-28</td>
+                                <td> 2026-11-04</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ for Provision, Installation, Testing and Maintenance of Security Access Control Machines.....pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Supply and delivery of patient uniforms</td>
+                                <td>  Zomba Mental Hospital </td>
+                                <td> ZMH/RFQ/P-UNI/26/10</td>
+                                <td> 2026-10-28</td>
+                                <td> 2026-11-03</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/RFQ FOR PROCUREMENT OF PATIENT UNIFORM- RE-ADVERTISED.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> RFQ-LAP TOPS AND DESK TOPS </td>
+                                <td> Malawi Prison Service</td>
+                                <td> RFQ-PRIS-FM-2026-2027/40</td>
+                                <td> 2026-10-27</td>
+                                <td> 2026-11-03</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/LAP TOP AND DESK TOPS.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> INVITATION FOR BIDS FOR THE PROVISION OF VPN AND INTERNET SERVICES</td>
+                                <td> Department of Immigration</td>
+                                <td> IM/01/81/29</td>
+                                <td> 2026-10-23</td>
+                                <td> 2026-11-12</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/INVITATION FOR BIDS-edited.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROCUREMENT OF GOODS AND MINOR WORKS UNDER RCDF - PHASE 3</td>
+                                <td> Chitipa District Council</td>
+                                <td> CPDC/IPDC/RCDF/W/2026-2027/05/RFQ</td>
+                                <td> 2026-10-23</td>
+                                <td> 2026-11-06</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/PHASE 3 - RFQ - WORKS ADVERT.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROCUREMENT OF GOODS UNDER RCDF - PHASE 3</td>
+                                <td> Chitipa District Council</td>
+                                <td> CPDC/IPDC/RCDF/W/2026-2027/06/NCB</td>
+                                <td> 2026-10-23</td>
+                                <td> 2026-11-13</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/PHASE 3 - NCB-GOODS ADVERT.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> TENDER FOR SUPPLY &amp; DELIVERY OF PUMPS,PIPES &amp; STEEL TANK FITTINGS &amp; ACCESSORIES</td>
+                                <td> Central Region Water Board</td>
+                                <td> CRWB/G/SA/2026</td>
+                                <td> 2026-10-19</td>
+                                <td> 2026-11-09</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/SALIMA ADVERT.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> TENDER FOR SUPPLY &amp; DELIVERY OF PUMPS,PIPES &amp; FITTINGS</td>
+                                <td> Central Region Water Board</td>
+                                <td> CRWB/G/DA/2026</td>
+                                <td> 2026-10-19</td>
+                                <td> 2026-11-09</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/DOWA ADVERT.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> SUPPLY AND DELIVERY OF VARIOUS OPTIC FIBRE PARTS AND MATERIALS</td>
+                                <td> Electricity Supply Corporation of Malawi (ESCOM)</td>
+                                <td> ESC23/ICB/G/FY2026-27</td>
+                                <td> 2026-10-17</td>
+                                <td> 2026-11-20</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Tender Advert ESC23_ICB_G_FY2026-27 IFB Advert OFC Materials.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> PROVISION OF CONSULTANCY SERVICES FOR MARKETING AGENCY</td>
+                                <td> Electricity Supply Corporation of Malawi (ESCOM)</td>
+                                <td> ESC25/NCB/RFP/FY2026-27</td>
+                                <td> 2026-10-17</td>
+                                <td> 2026-11-13</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Tender Advert for ESC25 for ESCOM Marketing Agency RFP rbt.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                    <tr>
+                                <td> Provision of Catering and Security Services</td>
+                                <td> Chikwawa Teachers Training College</td>
+                                <td> CKTTC/CS/2027/28/1</td>
+                                <td> 2026-10-17</td>
+                                <td> 2026-11-05</td>
+                                <td class="d-flex justify-content-center"><a href="https://ppda.mw/storage/documents/opentenders/Advert for Catering  and Security  Services, 2026.pdf" class="btn w-50 bg-green-800 hover:bg-green-900 hover:text-green-100 text-gray-100"><i class="fa fa-download"></i></a></td>
+                            </tr>
+                                                </tbody>
+                    </table>
+                </div>
+                    </div>
+    </div>
+</div>
+    <div class="footer">
+    <div class="footer-header py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                <div class="px-4 py-4">
+                    <div class="text-2xl font-bold uppercase">Useful Links</div>
+                    <div class="py-4">
+                        <ul>
+                            <li>
+                                <a href="https://www.ppda.mw/about-ppda" class="footer-link">About Us</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ppda.mw/open-data" class="footer-link">Open Data</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ppda.mw/news" class="footer-link">Notices & Announcements</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ppda.mw/publications" class="footer-link">Publications</a>
+                            </li>
+                            <li>
+                                <a href="/resources" class="footer-link">Resources</a>
+                            </li>
+                            <li class="py-3">
+                                <a href="/admin" class="footer-link">Login</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="px-4 py-4">
+                    <div class="text-2xl font-bold uppercase">Other Links</div>
+                    <div class="py-4">
+                        <ul>
+                            <li>
+                                <a href="http://www.finance.gov.mw/" class="footer-link">Ministry of Finance</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mra.mw/" class="footer-link">Malawi Revenue Authority</a>
+                            </li>
+                            <li>
+                                <a href="https://acbmw.org/" class="footer-link">Anti-Corruption Bureau</a>
+                            </li>
+                            <li>
+                                <a href="https://www.registrargeneral.gov.mw/" class="footer-link">Registrar General</a>
+                            </li>
+                            <li>
+                                <a href="https://www.ncic.mw" class="footer-link">National Construction Industry Council</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mera.mw" class="footer-link">Malawi Energy Regulatory Authority</a>
+                            </li>
+                            <li>
+                                <a href="https://www.mitc.mw" class="footer-link">Malawi Investment and Trade Centre</a>
+                            </li>
+                            <li>
+                                <a href="https://projects.worldbank.org/en/projects-operations/project-detail/P160533" class="footer-link">Digital Malawi - Phase 1 </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="px-4 py-4">
+                    <div class="text-2xl font-bold uppercase">Connect with Us</div>
+                    <div class="py-4">
+                        <div class="">
+                            Lets connect with social media and other popular platforms
+                        </div>
+                        <div class="text-3xl text-white flex justify-content-around my-2">
+                            <a href="https://www.facebook.com/ppdamalawi/" class="footer-social p-2"><i class="fab fa-facebook" ></i></a>
+                            <a href="https://www.youtube.com/channel/UCDrg3IwFr9nJFrMZzdsG8DQ" class="footer-social p-2"><i class="fab fa-youtube" ></i></a>
+                            <a href="https://twitter.com/MwPpda" class="footer-social p-2"><i class="fab fa-twitter-square" ></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-4 py-4">
+                    <div class="text-2xl font-bold uppercase">Newsletter</div>
+                    <div class="py-4">
+                        <div class="">Subscribe to our monthly newsletter to bring you up to speed with the latest developments in public procurement</div>
+                    </div>
+                    <div class="">
+                        <form>
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" placeholder="Enter your email here" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fab fa-telegram-plane"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom py-8">
+        <div class="container max-w-7xl mx-auto footer-bottom-text">
+            <div class="copyright-text">
+                <p>Copyright &copy; 2023. PPDA. All Rights Reserved</p>
+            </div>
+        </div>
+    </div>
+</div>
+    </main>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#tenderstable').DataTable();
+        $('#intentionstable').DataTable();
+        $('#awardstable').DataTable();
+        $('#publicationstable').DataTable();
+        $('#newsletterstable').DataTable();
+        $('#debarmentstable').DataTable();
+        $('#adminreviewstable').DataTable();
+    } );
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
+

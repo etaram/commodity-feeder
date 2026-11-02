@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!--meta-->
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta charset="UTF-8">
+    <meta name="description" content="Портал государственных закупок Республики Казахстан">
+    <meta name="author" content="stacks">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Styles -->
+    <link href="/assets/plugins/pace-master/themes/blue/pace-theme-flash.css" rel="stylesheet">
+    <link href="/assets/plugins/uniform/css/default.css" rel="stylesheet">
+    <link href="/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/line-icons/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/offcanvasmenueffects/css/menu_cornerbox.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/waves/waves.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/switchery/switchery.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/3d-bold-navigation/css/style.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/slidepushmenus/css/component.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/weather-icons-master/css/weather-icons.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/sv_style.css" rel="stylesheet" type="text/css">
+    <link href='https://old.goszakup.gov.kz//assets/plugins/datatables2/datatables.min.css?' rel='stylesheet'>
+<link href='https://old.goszakup.gov.kz//assets/plugins/datatables/css/jquery.datatables_themeroller.css?' rel='stylesheet'>
+<link href='https://old.goszakup.gov.kz//assets/plugins/select2/css/select2.min.css?' rel='stylesheet'>
+<link href='https://old.goszakup.gov.kz//assets/plugins/bootstrap-select/css/bootstrap-select.min.css?' rel='stylesheet'>
+<link href='https://old.goszakup.gov.kz/assets/plugins/echarts/echarts.config.css?1759555666' rel='stylesheet'>
+
+
+    <!-- Theme Styles -->
+    <link href="/assets/css/meteor.css?1759555665" rel="stylesheet" type="text/css">
+    <link href="/assets/css/layers/dark-layer.css?1759555665" class="theme-color" rel="stylesheet" type="text/css">
+    <link href="/assets/css/custom.css?1759555665" rel="stylesheet" type="text/css">
+    <link href="/css/style.css?1790362990" rel="stylesheet">
+
+    <script src="/assets/plugins/3d-bold-navigation/js/modernizr.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Javascripts -->
+    <script type="text/javascript" src="/assets/plugins/jquery/jquery-2.1.4.min.js"></script>
+                                                                            
+            <script type='text/javascript' src='https://old.goszakup.gov.kz//js/helpers.js?1719957494' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/js/helpers.js?1719957494' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/jquery-ui/jquery-ui.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/js/clock.js?' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/js/js.cookie.js?1784605222' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/pace-master/pace.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/jquery-blockui/jquery.blockui.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/switchery/switchery.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/uniform/js/jquery.uniform.standalone.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/offcanvasmenueffects/js/classie.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/waves/waves.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/3d-bold-navigation/js/main.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/js/meteor.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/uniform/js/jquery.uniform.bundled.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/datatables2/datatables.min.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/js/sv_script.js?1719957494' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/plugins/select2/js/select2.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/js/pages/form-select2.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/plugins/bootstrap-select/js/bootstrap-select.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/plugins/bootstrap-select/js/i18n/defaults-ru_RU.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/plugins/select2/js/i18n/ru.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz//assets/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.ru.js?1759555665' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/plugins/echarts/echarts.min.js?1759555666' charset='utf-8'></script>
+<script type='text/javascript' src='https://old.goszakup.gov.kz/assets/js/number.format.js?1759555665' charset='utf-8'></script>
+
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            $(window).scroll(function(){
+                if($(this).scrollTop()>140){
+                    $('#scrollUp').show();
+                }
+                else if ($(this).scrollTop()<140){
+                    $('#scrollUp').hide();
+                }
+            });
+            $('#scrollUp').on('click', function(){
+                $("body,html").animate({
+                    scrollTop:0
+                }, 800);
+            });
+        });
+    </script>
+
+    <title>Объявления о проведении государственных закупок :: Портал государственных закупок Республики Казахстан</title>
+</head>
+<body class="compact-menu  pace-done page-horizontal-bar" style="background: #f3f3f3">
+<div class="sv_settings text-center" id="sv_settings">
+    <span>Размер шрифта
+        <span class="fs-outer">
+            <button class="btn btn-default fs-n" id="fs-n">А</button>
+            <button class="btn btn-default fs-m" id="fs-m">А</button>
+            <button class="btn btn-default fs-l" id="fs-l">А</button>
+        </span>
+    </span>
+
+    <span class="mgl20">Цветовая схема
+        <span class="cs-outer">
+            <button class="btn btn-default cs-bw" id="cs-bw">А</button>
+            <button class="btn btn-default cs-wb" id="cs-wb">А</button>
+            <button class="btn btn-default cs-bb" id="cs-bb">А</button>
+            <button class="btn btn-default cs-gb" id="cs-gb">А</button>
+            <button class="btn btn-default cs-yg" id="cs-yg">А</button>
+        </span>
+    </span>
+
+    <span class="mgl20">Изображения
+        <span class="img-outer">
+            <button class="btn btn-default" id="img-onoff"><span class="glyphicon glyphicon-picture"></span><span id="img-onoff-text"> Отключить</span></button>
+        </span>
+    </span>
+</div>
+<div class="pace  pace-inactive">
+    <div class="pace-progress" data-progress-text="100%" data-progress="99" style="transform: translate3d(100%, 0px, 0px);">
+        <div class="pace-progress-inner"></div>
+    </div>
+    <div class="pace-activity"></div>
+</div>
+<div class="overlay"></div>
+<main class="page-content content-wrap">
+    <div class="links-bar">
+        <!--<div class="contrast">
+            <a href="#" id="sv_on" class="btn btn-default">
+                <strong>Версия для слабовидящих</strong>
+            </a>
+        </div>-->
+        <div class="archive">
+            <a href="http://old.goszakup.gov.kz/">Архив</a>
+        </div>
+        <div class="user-count">
+            Количество зарегистрированных пользователей на портале:            678656
+        </div>
+        <div class="lang">
+            <a href="https://satypalu.gov.kz/">KZ</a>
+            <a href="https://goszakup.gov.kz/">RU</a>
+        </div>
+    </div>
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="sidebar-pusher">
+                <a href="javascript:void(0);" class="waves-effect waves-button push-sidebar">
+                    <i class="icon-arrow-right"></i>
+                </a>
+            </div>
+            <div class="logo-box">
+                <a href="/" class="logo-text"><span><img src="/images/logo_header_min.png" height="60"></span> Государственные закупки Республики Казахстан</a>
+            </div><!-- Logo Box -->
+            <div class="topmenu-outer">
+                <div class="support hidden-xs" style=" right: 100px;">
+                    <div class="col-xs-5">
+                        <span aria-hidden="true" class="icon-call-in"></span> <a href="tel:+77172609090" class="support-phone">8(7172) 73 55 15,
+                            +7 705 956 53 88 (в соответствии с тарифами оператора связи)</a><br />
+                        <br />
+                    </div>
+                    <div class="col-xs-3">
+                        <span aria-hidden="true" class="icon-envelope"></span> <a href="mailto:support@ecc.kz" class="support-email">support@ecc.kz</a><br />
+                        <a href="https://t.me/FinQoldau_bot/" target="_blank" class="telegram-link" aria-label="Чат бот FinQoldau">
+                            <span class="telegram-icon"></span>
+                            Чат бот FinQoldau
+                        </a><br />
+                    </div>
+                    <div class="col-xs-4">
+                        <span aria-hidden="true" class="icon-clock"></span> <span title="Время работы контакт-центра" class="support-clock">7/7 с 08:00 до 20:00</span>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div><!-- Navbar -->
+    <div class="horizontal-bar sidebar">
+        <div class="page-sidebar-inner slimscroll">
+            <ul class="menu accordion-menu" style="text-align: left">
+                    <li class="soc-links"><a href="https://www.youtube.com/channel/UC4Regrt3LL8vstz2Tj8kEng" target="_blank" id="btn-youtube" class="btn btn-youtube"><i class="fa fa-youtube"></i></a></li>
+                    <li>
+                        <a href="/ru/" class="waves-effect waves-button" title="Главная">
+                            <span class="menu-icon icon-home" style="margin-right: 0!important;"></span>
+                            <span class="active-page"></span>
+                        </a>
+                    </li>
+                    <li class="droplink"><a href="#" class="waves-effect waves-button" title="Справка"><span class="menu-icon icon-question"></span><p>Справка</p><span class="arrow"></span> <b class="caret"></b> </a><ul class="sub-menu" style="display: none;"><li><a href="https://wiki.zakup.gov.kz/docs/1310943" target="_blank">Инструкция для осуществления звонка с сайта</a></li><li><a href="https://wiki.zakup.gov.kz" target="_blank">База знаний</a></li><li><a href="https://wiki.zakup.gov.kz/docs/1310932" target="_blank">Инструкция пользователей</a></li><li><a href="https://wiki.zakup.gov.kz/docs/1310934" target="_blank">Инструкция пользователей осуществления организации питания обучающихся</a></li><li><a href="https://wiki.zakup.gov.kz/docs/1310930" target="_blank">Инструкция пользователей (квазигоссектор)</a></li><li><a href="https://wiki.zakup.gov.kz/docs/1310928" target="_blank">Инструкция пользователей по договорам государственного образовательного заказа</a></li><li><a href="https://pki.gov.kz/index.php/ru/forum/index" target="_blank">Форум Национального удостоверяющего центра</a></li><li><a href="http://portal.goszakup.gov.kz/portal/uploads/v3/in/top_postavshikov" target="_blank">Сведения по потенциальным поставщикам в сфере строительства, соответствующих критериям финансовой устойчивости</a></li></ul></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Реестры"><span class="menu-icon icon-layers"></span><p>Реестры</p><span class="arrow"></span> <b class="caret"></b> </a><ul class="sub-menu" style="display: none;"><li><a href="https://old.goszakup.gov.kz/ru/registry/supplierreg">Реестр участников ГЗ </a></li><li><a href="https://old.goszakup.gov.kz/ru/registry/rnu_quasi">Реестр недобросовестных участников закупок</a></li><li><a href="https://old.goszakup.gov.kz/ru/registry/rnu">Реестр недобросовестных участников ГЗ</a></li><li><a href="https://old.goszakup.gov.kz/ru/registry/plan">Планы ГЗ</a></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Договоры"><p>Договоры</p><span class="arrow"></span></a><ul class="sub-menu" style="display: none;"><li><a href="https://old.goszakup.gov.kz/ru/registry/contract">Реестр договоров</a></li><li><a href="https://old.goszakup.gov.kz/ru/top/customers">TOP 100 заказчиков</a></li><li><a href="https://old.goszakup.gov.kz/ru/top/suppliers">TOP 100 поставщиков</a></li></ul></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Жалобы"><p>Жалобы</p><span class="arrow"></span></a><ul class="sub-menu" style="display: none;"><li><a href="https://old.goszakup.gov.kz/ru/registry/complaint">Реестр жалоб</a></li><li><a href="https://old.goszakup.gov.kz/ru/reports/complaint/supplier">ТОП Поставщиков</a></li></ul></li><li><a href="https://old.goszakup.gov.kz/ru/registry/rqc">Реестр доверенного программного обеспечения и продукции электронной промышленности</a></li><li><a href="https://old.goszakup.gov.kz/ru/eDepository/dataWorkPerformed">Реестр опытов работы</a></li><li><a href="https://e-ondiris.gov.kz/" target="_blank">Реестр КТП</a></li></ul></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Закупки"><span class="menu-icon icon-magnifier"></span><p>Закупки</p><span class="arrow"></span> <b class="caret"></b> </a><ul class="sub-menu" style="display: none;"><li><a href="https://old.goszakup.gov.kz/ru/registry/order">Поиск заказов</a></li><li><a href="https://old.goszakup.gov.kz/ru/search/lots">Поиск лотов</a></li><li><a href="https://old.goszakup.gov.kz/ru/search/announce">Поиск объявлений</a></li><li><a href="https://old.goszakup.gov.kz/ru/welcome/links">Закупки квазисектора (не субъекты ГЗ)</a></li><li><a href="https://zakup.nationalbank.kz" target="_blank">Закупки проводимые Национальным Банком РК</a></li></ul></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Отчетность"><span class="menu-icon icon-graph"></span><p>Отчетность</p><span class="arrow"></span> <b class="caret"></b> </a><ul class="sub-menu" style="display: none;"><li><a href="https://v3bl.goszakup.gov.kz/ru/reports/plans_report_admin" target="_blank">Отчет "Годовые планы"</a></li><li><a href="https://v3bl.goszakup.gov.kz/ru/rep/rep/m001" target="_blank">Ф.1 - Отчет о проведенных государственных закупках товаров, работ, услуг</a></li><li><a href="https://v3bl.goszakup.gov.kz/ru/rep/rep/m004" target="_blank">Ф.4 - Информация об объемах закупок у ОТП</a></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Модуль цен"><p>Модуль цен</p><span class="arrow"></span></a><ul class="sub-menu" style="display: none;"><li><a href="https://v3bl.goszakup.gov.kz/ru/reports/price_module/report_purchase_prices/index/egz" target="_blank">Мониторинг закупочных цен товаров АИИС "ЭГЗ"</a></li></ul></li></ul></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Разработчикам"><span class="menu-icon icon-puzzle"></span><p>Разработчикам</p><span class="arrow"></span> <b class="caret"></b> </a><ul class="sub-menu" style="display: none;"><li><a href="https://old.goszakup.gov.kz/ru/developer/ows_v2">Унифицированные сервисы V2</a></li><li><a href="https://old.goszakup.gov.kz/ru/developer/ows_v3">Унифицированные сервисы V3</a></li></ul></li><li class="droplink"><a href="#" class="waves-effect waves-button" title="Внешние сервисы"><span class="menu-icon icon-link"></span><p>Внешние сервисы</p><span class="arrow"></span> <b class="caret"></b> </a><ul class="sub-menu" style="display: none;"><li><a href="https://esf.gov.kz:8443/esf-web/login" target="_blank">ИС "ЭСФ"</a></li><li><a href="http://office.sud.kz/index.xhtml" target="_blank">Судебный кабинет (сайт Верховного суда РК)</a></li><li><a href="http://enstru.kz/" target="_blank">ИС "ЕНС ТРУ"</a></li><li><a href="http://kgd.gov.kz/ru/services/ndspayer_search" target="_blank">Сервис проверки признака "Плательщик НДС" (сайт КГД МФ РК)</a></li><li><a href="https://kgd.gov.kz/ru/section/spiski-nesostoyatelnyh-dolzhnikov" target="_blank">Списки несостоятельных должников (сайт КГД МФ РК)</a></li><li><a href="http://kgd.gov.kz/ru/services/taxpayer_search_liquid" target="_blank">Поиск налогоплательщиков, находящихся на стадии ликвидации (сайт КГД МФ РК)</a></li><li><a href="https://egov.kz/cms/ru/services/citizen_and_the_government/e_app" target="_blank">Электронное обращение граждан</a></li><li><a href="https://www.nca.kz" target="_blank">NCA eCabinet</a></li><li><a href="https://erpt.eecommission.org" target="_blank">Евразийский реестр промышленных товаров государств-членов Евразийского экономического союза</a></li><li><a href="https://e-catalog.gov.kz/sma-pars/auth/login" target="_blank">БДЦ сервис</a></li></ul></li>
+                    <li class="login">
+                        <a href="https://v3bl.goszakup.gov.kz/ru/user/">
+                            <span class="menu-icon icon-login"></span> Войти
+                        </a>
+                    </li>
+                    </ul>
+        </div>
+        <div class="slimScrollBar"></div>
+        <div class="slimScrollRail"></div>
+    </div>
+    <!--<div class="filter-sidebar sidebar">
+            </div>-->
+        <div class="page-inner">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-md-4" style="padding-right: 0">
+                    <div class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li><a href="https://old.goszakup.gov.kz/ru" class="">Главная</a></li>
+                            <li><a href="https://old.goszakup.gov.kz/ru/welcome/pay" class=""><strong class="text-black">Тарифы</strong></a></li>
+                            <li><a href="https://old.goszakup.gov.kz/ru/flk/index" class=""><strong class="text-black">ФЛК</strong></a></li>
+                            <li><a href="https://old.goszakup.gov.kz/ru/welcome/national_regime" class=""><strong class="text-black">Национальный режим</strong></a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="col-md-8 text-right">
+                    <a href="https://nct.gov.kz/" class="btn-katalog " target="_blank">
+                        <img src="/images/nct-logo.svg" alt="Национальный каталог товаров">
+                    </a>
+                    <a href="https://wiki.goszakup.gov.kz/pages/viewpage.action?pageId=1310926" class="btn btn-danger " target="_blank">
+                        <strong>
+                            Помощь по платным услугам                        </strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="main-wrapper">
+            
+        <div class="alert alert-danger" id="offline-message">
+            <strong>Внимание!</strong> Соединение с приложением прервано. Дождитесь повторного подключения.
+        </div>
+        
+        <!-- Main content start -->
+                
+        
+        <div id="loading" class="alert alert-info" style="display: none;">Подождите, идет загрузка данных</div>
+        
+        <div class="content-block">
+            <h1>Объявления о проведении государственных закупок</h1>
+            <!--<div class="alert alert-danger" role="alert">
+                <h3>Всем участникам государственных закупок в сфере строительства!</h3>
+
+                <p>С 1 сентября 2019 года все государственные закупки в сфере строительства осуществляются только способом конкурса с предварительным квалификационным отбором (далее - ПКО).</p>
+
+                <p>Условием участия потенциальных поставщиков в закупках в сфере строительства является их соответствие квалификационному требованию в виде финансовой устойчивости согласно показателям, определенным Правилами осуществления государственных закупок.</p>
+
+                <p>В случаях представления потенциальными поставщиками дополнительной налоговой отчетности за расчитываемый трехлетний период, влекущей изменение показателей финансовой устойчивости, по результатам камерального контроля на веб-портале государственных закупок будут внесены изменения в показатели финансовой устойчивости.</p>
+
+                <p>Для внесения изменений в показатели, при уплате налогов в рамках представленной налоговой отчетности, необходимо обратиться в КГД МФ РК с приложением подтверждающих документов.</p>
+
+                <p>Таким образом, потенциальным поставщикам предоставляется возможность повысить свои показатели финансовой устойчивости путем фактической уплаты налоговых обязательств.</p>
+            </div>-->
+            <div class="alert alert-danger hidden" role="alert" id="ajax_result"></div>
+            <div class="hidden" data-ln="ru" id="ln"></div>
+            <style type="text/css">
+    table#search-result a:visited{
+        color: #7ea0bd!important;
+    }
+</style>
+<h3>Поиск объявлений (общий)</h3>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-white">
+    <form action="" method="get">    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+    <label for="in_name">
+        <b>Наименование объявления</b>
+    </label>
+    <div class="input-group m-b-sm">
+        <input type="text" id="in_name" name="filter[name]" value=""class="form-control" placeholder="Наименование объявления">
+        <span class="input-group-btn">
+            <button class="btn btn-success btn-sm" type="submit" name="search">Поиск</button>
+        </span>
+    </div>
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_customer">
+            <b>Организатор</b>
+        </label>
+        <input type="text" id="in_customer" name="filter[customer]" value=""class="form-control" placeholder="БИН/Наименование организатора">
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_number">
+            <b>Номер</b>
+        </label>
+        <input type="text" id="in_number" name="filter[number]" value=""class="form-control" placeholder="Номер объявления">
+</div>            </div>
+            <div class="col-md-3 hidden-xs hide-xs hidden-sm hide-sm">
+                <div class="form-group">
+            <label for="s2_year">
+            <b>Финансовый год</b>
+        </label><br/>
+        <select data-size="7" id="s2_year"
+            name="filter[year]" class="selectpicker form-control">
+        <option></option><option data-subtext="" value="2025">2025</option>
+<option data-subtext="" value="2024">2024</option>
+<option data-subtext="" value="2023">2023</option>
+<option data-subtext="" value="2022">2022</option>
+<option data-subtext="" value="2026">2026</option>
+<option data-subtext="" value="2020">2020</option>
+<option data-subtext="" value="2021">2021</option>
+<option data-subtext="" value="2016">2016</option>
+<option data-subtext="" value="2017">2017</option>
+<option data-subtext="" value="2018">2018</option>
+<option data-subtext="" value="2019">2019</option>
+<option data-subtext="" value="0">0</option>
+<option data-subtext="" value="2027">2027</option>
+    </select>
+</div>            </div>
+        </div>
+        <div class="row hidden-xs hide-xs hidden-sm hide-sm">
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="s2_status">
+            <b>Статус</b>
+        </label><br/>
+        <select data-size="7" id="s2_status"
+            name="filter[status][]" class="selectpicker form-control" multiple="multiple" data-selected-text-format="count &gt; 1" data-style="btn-white" data-size="10">
+        <option data-subtext="" value="350">Завершено</option>
+<option data-subtext="" value="270">Заполнение условных скидок</option>
+<option data-subtext="" value="190">Изменена документация</option>
+<option data-subtext="" value="440">На обжаловании</option>
+<option data-subtext="" value="444">Ожидание камерального контроля</option>
+<option data-subtext="" value="445">Ожидание проведения контроля качества</option>
+<option data-subtext="" value="210">Опубликовано</option>
+<option data-subtext="" value="230">Опубликовано (дополнение заявок)</option>
+<option data-subtext="" value="220">Опубликовано (прием заявок)</option>
+<option data-subtext="" value="240">Опубликовано (прием ценовых предложений)</option>
+<option data-subtext="" value="290">Опубликовано (проведение аукциона)</option>
+<option data-subtext="" value="410">Отказ от закупки</option>
+<option data-subtext="" value="430">Отменено</option>
+<option data-subtext="" value="450">Отправлено на контроль качества</option>
+<option data-subtext="" value="510">Пересмотр итогов</option>
+<option data-subtext="" value="550">Принятие решение о пересмотре итогов</option>
+<option data-subtext="" value="540">Принятие решение об исполнении уведомления</option>
+<option data-subtext="" value="420">Приостановлено</option>
+<option data-subtext="" value="460">Пройдено контроль качества</option>
+<option data-subtext="" value="260">Рассмотрение дополнений заявок</option>
+<option data-subtext="" value="250">Рассмотрение заявок</option>
+<option data-subtext="" value="320">Формирование протокола допуска</option>
+<option data-subtext="" value="330">Формирование протокола итогов</option>
+<option data-subtext="" value="310">Формирование протокола преддопуска</option>
+<option data-subtext="" value="325">Формирование протокола промежуточных итогов</option>
+    </select>
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="s2_method">
+            <b>Способ закупки</b>
+        </label><br/>
+        <select data-size="7" id="s2_method"
+            name="filter[method][]" class="selectpicker form-control" multiple="multiple" data-selected-text-format="count &gt; 1" data-style="btn-white" data-size="10">
+        <option data-subtext="" value="3">Запрос ценовых предложений</option>
+<option data-subtext="" value="2">Открытый конкурс</option>
+<option data-subtext="" value="133">Второй этап конкурса с использованием рамочного соглашения</option>
+<option data-subtext="" value="7">Аукцион (до 2022)</option>
+<option data-subtext="" value="77">Аукцион (с 2022)</option>
+<option data-subtext="" value="78">Аукцион</option>
+<option data-subtext="" value="6">Из одного источника по несостоявшимся закупкам</option>
+<option data-subtext="" value="50">Закупка жилища</option>
+<option data-subtext="" value="52">Закупка по государственному социальному заказу</option>
+<option data-subtext="" value="32">Конкурс с предварительным квалификационным отбором</option>
+<option data-subtext="" value="22">Конкурс с применением двухэтапных процедур </option>
+<option data-subtext="" value="132">Первый этап конкурса с использованием рамочного соглашения</option>
+<option data-subtext="" value="120">Конкурс по приобретению услуг по организации питания воспитанников и обучающихся</option>
+<option data-subtext="" value="121">Конкурс по приобретению товаров, связанных с обеспечением питания воспитанников и обучающихся</option>
+<option data-subtext="" value="124">Тендер</option>
+<option data-subtext="" value="190">Тендер с применением особого порядка</option>
+<option data-subtext="" value="125">Из одного источника по несостоявшимся закупкам не ГЗ</option>
+<option data-subtext="" value="126">Запрос ценовых предложений (не ГЗ new)</option>
+<option data-subtext="" value="128">Конкурс с применением специального порядка</option>
+<option data-subtext="" value="178">Аукцион (не ГЗ)</option>
+<option data-subtext="" value="177">Аукцион (не ГЗ) с 2022 г</option>
+<option data-subtext="" value="188">Конкурс с использованием рейтингово-балльной системы</option>
+<option data-subtext="" value="130">Государственные закупки с применением особого порядка</option>
+<option data-subtext="" value="200">Тендер с использованием рейтингово-балльной системы</option>
+<option data-subtext="" value="201">Конкурс по строительству «под ключ»</option>
+<option data-subtext="" value="202">Тендер по строительству «под ключ»</option>
+    </select>
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_amount_from">
+            <b>Сумма закупки с</b>
+        </label>
+        <input type="text" id="in_amount_from" name="filter[amount_from]" value=""class="form-control" placeholder="Сумма закупки с">
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_amount_to">
+            <b>Сумма закупки по</b>
+        </label>
+        <input type="text" id="in_amount_to" name="filter[amount_to]" value=""class="form-control" placeholder="Сумма закупки по">
+</div>            </div>
+        </div>
+        <div class="row hidden-xs hide-xs hidden-sm hide-sm">
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="s2_signs">
+            <b>Признаки закупки</b>
+        </label><br/>
+        <select data-size="7" id="s2_signs"
+            name="filter[signs][]" class="selectpicker form-control" multiple="multiple" data-selected-text-format="count &gt; 1" data-style="btn-white" data-size="10">
+        <option value="ref_spec_purchase_type_id">Осуществление закупок с применением специального порядка</option>
+<option value="singl_org_sign">Закупки Единого организатора КГЗ МФ РК</option>
+<option value="disable_person_id">Закупка среди организаций инвалидов</option>
+<option value="is_construction_work">Закупка СМР и закупка проектирования</option>
+<option value="is_active">Активные для участия</option>
+<option value="is_not_active">Неактивные/завершенные</option>
+<option value="is_construction_cmr">Строительно-монтажные работы</option>
+<option value="is_construction_design">Работы по проектированию</option>
+<option value="2">Закупка товаров программного обеспечения и продукции электронной промышленности</option>
+<option value="7">Закупка трансформаторов электрических, статических электрических преобразователей, выпрямителей, катушек индуктивности и дросселей</option>
+<option value="1">Закупка легкой и мебельной промышленности</option>
+<option value="6">Закупка услуг по созданию и развитию объектов информатизации</option>
+<option value="3">Закупка автомобилей легковых и прочих моторных транспортных средств</option>
+<option value="8">Закупка проводов изолированных (включая эмалированные или анодированные), кабелей (включая коаксиальные кабели) и других изолированных электрических проводников</option>
+    </select>
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+    <label for="s2_kato">
+        <b>Место поставки</b>
+    </label><br/>
+    <select id="s2_kato" name="filter[kato]" style="display: none; width: 100%; height: 34px;" class="form-control">
+            </select>
+</div>
+<script type="text/javascript">
+    $("#s2_kato").select2({
+        ajax: {
+            url: "/ru/search/getKato",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    name: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            //,
+            //cache: true
+        },
+        allowClear: true,
+        placeholder: {
+            id: '-1', // the value of the option
+            text: 'Поиск...'
+        },
+        //escapeMarkup: function (markup) { return markup; }//,
+        minimumInputLength: 3,
+        language: 'ru'
+    });
+</script>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="s2_trade_type">
+            <b>Предмет закупки</b>
+        </label><br/>
+        <select data-size="7" id="s2_trade_type"
+            name="filter[trade_type]" class="selectpicker form-control">
+        <option></option><option data-subtext="" value="g">Товар</option>
+<option data-subtext="" value="s">Услуга</option>
+<option data-subtext="" value="r">Работа</option>
+    </select>
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="s2_type">
+            <b>Тип закупки</b>
+        </label><br/>
+        <select data-size="7" id="s2_type"
+            name="filter[type]" class="selectpicker form-control" data-selected-text-format="count &gt; 1" data-style="btn-white" data-size="10">
+        <option></option><option value="1">Первая закупка</option>
+<option value="2">Повторная закупка</option>
+    </select>
+</div>            </div>
+        </div>
+        <div class="row hide-filter" style="display: none;">
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_start_date_from">
+            <b>Начало приема заявок с</b>
+        </label>
+        <input type="text" id="in_start_date_from" name="filter[start_date_from]" value=""class="form-control date-picker" placeholder="Прием с">
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_start_date_to">
+            <b>Начало приема заявок по</b>
+        </label>
+        <input type="text" id="in_start_date_to" name="filter[start_date_to]" value=""class="form-control date-picker" placeholder="Прием по">
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_end_date_from">
+            <b>Окончание приема заявок с</b>
+        </label>
+        <input type="text" id="in_end_date_from" name="filter[end_date_from]" value=""class="form-control date-picker" placeholder="Окончание с">
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_end_date_to">
+            <b>Окончание приема заявок по</b>
+        </label>
+        <input type="text" id="in_end_date_to" name="filter[end_date_to]" value=""class="form-control date-picker" placeholder="Окончание по">
+</div>            </div>
+        </div>
+        <div class="row hide-filter" style="display: none;">
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_itog_date_from">
+            <b>Протокол итогов с</b>
+        </label>
+        <input type="text" id="in_itog_date_from" name="filter[itog_date_from]" value=""class="form-control date-picker" placeholder="Дата публикации с">
+</div>            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+            <label for="in_itog_date_to">
+            <b>Протокол итогов по</b>
+        </label>
+        <input type="text" id="in_itog_date_to" name="filter[itog_date_to]" value=""class="form-control date-picker" placeholder="Дата публикации по">
+</div>            </div>
+        </div>
+
+        <div class="row visible-xs">
+            <div class="col-xs-12 text-center">
+                <button type="button" class="btn btn-default" id="show_all_xs"
+                        data-visible="hide">Показать все критерии поиска</button>
+            </div>
+        </div>
+        <div class="row visible-sm">
+            <div class="col-xs-12 text-center">
+                <button type="button" class="btn btn-default" id="show_all_sm"
+                        data-visible="hide">Показать все критерии поиска</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer panel-footer-sm">
+        <div class="row">
+            <div class="col-md-6 text-left">
+                <button class="btn btn-success btn-sm" type="submit" name="smb">Найти</button>                <button class="btn btn-default btn-sm" type="submit" name="reset" value="Y">Отменить</button>            </div>
+            <div class="col-md-6 text-right">
+                                    <button type="button" class="btn btn-default more-info" data-toggle="collapse"
+                            href="#collapseCharts" aria-expanded="false" aria-controls="collapseExample"><span
+                                aria-hidden="true" class="icon-bar-chart"></span> Статистика</button>
+                                                    <button type="button" class="btn btn-info hidden-xs hidden-sm" id="show_filter"
+                            data-visible="hide">Расширенный поиск</button>
+                                            </div>
+        </div>
+        </form>    </div>
+</div>
+<script>
+    $(function () {
+        $('.date-picker').datepicker({
+            format: 'dd.mm.yyyy',
+            language: 'ru',
+            autoclose: true
+        });
+        $('.selectpicker').selectpicker({
+            showTick: true
+        });
+        $('.hide-filter').hide();        $('#show_all_xs').on('click', function () {
+            var vs = $(this).data('visible');
+            if (vs == 'hide') {
+                $('.hide-xs').removeClass('hidden-xs');
+                $('.hide-filter').show();
+                $(this).data('visible', 'show').text('Скрыть критерии поиска');
+            } else {
+                $('.hide-xs').addClass('hidden-xs');
+                $('.hide-filter').hide();
+                $(this).data('visible', 'hide').text('Показать все критерии поиска');
+            }
+        });
+        $('#show_all_sm').on('click', function () {
+            var vs = $(this).data('visible');
+            if (vs == 'hide') {
+                $('.hide-sm').removeClass('hidden-sm');
+                $('.hide-filter').show();
+                $(this).data('visible', 'show').text('Скрыть критерии поиска');
+            } else {
+                $('.hide-sm').addClass('hidden-sm');
+                $('.hide-filter').hide();
+                $(this).data('visible', 'hide').text('Показать все критерии поиска');
+            }
+        });
+        $('#show_filter').on('click', function () {
+            var vs = $(this).data('visible');
+            if (vs == 'hide') {
+                $('.hide-filter').show();
+                $(this).data('visible', 'show').text('Краткий поиск');
+            } else {
+                $('.hide-filter').hide();
+                $(this).data('visible', 'hide').text('Расширенный поиск');
+            }
+        });
+    });
+</script>        <div class="collapse" id="collapseCharts">
+            <div class="row flex-report">
+    <div class="col-md-6 col-xs-12 panel panel-white doughnut">
+        <div class="panel-heading">
+            <h3 class="panel-title">Статистика по опубликованным объявлениям за 2026 год</h3>
+        </div>
+        <div id="main" class="main chartArea"></div>
+    </div>
+    <div class="col-md-6 col-xs-12 panel panel-white table-info">
+                <table class="table table-bordered table-striped table-responsive">
+            <thead>
+            <tr>
+                <th width="10" class="text-center">№</th>
+                <th class="text-center">Способ закупки</th>
+                <th class="text-center">Количество</th>
+                <th class="text-center">Сумма / тыс. тг</th>
+                                    <th class="text-center">%</th>
+                            </tr>
+            </thead>
+            <tbody>
+                                <tr>
+                        <td>1</td>
+                        <td>Открытый конкурс</td>
+                        <td>122345</td>
+                        <td>6 675 319 199.93</td>
+                                                    <td>7.47</td>
+                                            </tr>
+                                        <tr>
+                        <td>2</td>
+                        <td>Закупка жилища</td>
+                        <td>2953</td>
+                        <td>222 449 685.65</td>
+                                                    <td>0.18</td>
+                                            </tr>
+                                        <tr>
+                        <td>3</td>
+                        <td>Запрос ценовых предложений</td>
+                        <td>1081634</td>
+                        <td>1 052 644 211.52</td>
+                                                    <td>66.06</td>
+                                            </tr>
+                                        <tr>
+                        <td>4</td>
+                        <td>Конкурс с предварительным квалификационным отбором</td>
+                        <td>1</td>
+                        <td>10 714.29</td>
+                                                    <td>0</td>
+                                            </tr>
+                                        <tr>
+                        <td>5</td>
+                        <td>Закупка по государственному социальному заказу</td>
+                        <td>3131</td>
+                        <td>80 875 799.76</td>
+                                                    <td>0.19</td>
+                                            </tr>
+                                        <tr>
+                        <td>6</td>
+                        <td>Из одного источника по несостоявшимся закупкам</td>
+                        <td>421387</td>
+                        <td>511 138 907.25</td>
+                                                    <td>25.73</td>
+                                            </tr>
+                                        <tr>
+                        <td>7</td>
+                        <td>Аукцион</td>
+                        <td>1383</td>
+                        <td>54 653 972.70</td>
+                                                    <td>0.08</td>
+                                            </tr>
+                                        <tr>
+                        <td>8</td>
+                        <td>Конкурс с использованием рейтингово-балльной системы</td>
+                        <td>4624</td>
+                        <td>1 556 900 058.28</td>
+                                                    <td>0.28</td>
+                                            </tr>
+                                </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2">
+                    <strong>
+                        Всего:                     </strong>
+                </td>
+                <td>
+                    <strong>
+                        1637458                    </strong>
+                </td>
+                <td>
+                    <strong>
+                        10 153 992 549.36                    </strong>
+                </td>
+                <td>
+                    <strong>
+                        100
+                    </strong>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+            </div>
+</div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var myChart = echarts.init(document.getElementById("main"));
+                myChart.setOption({
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'shadow'
+                        },
+                        formatter: function (params, ticket, callback) {
+                            var res = '<strong>' + params[0].name + '</strong>';
+                            for (var i = 0, l = params.length; i < l; i++) {
+                                res += '<br/>' + params[i].marker + ' ' + params[i].seriesName + ': ' + number_format(params[i].value, 0, '.', ' ');
+                            }
+                            return res;
+                        }
+                    },
+                    legend: {
+                        data: ['Открытый конкурс','Закупка жилища','Запрос ценовых предложений','Конкурс с предварительным квалификационным отбором','Закупка по государственному социальному заказу','Из одного источника по несостоявшимся закупкам','Аукцион','Конкурс с использованием рейтингово-балльной системы']
+                    },
+                    toolbox: {
+                        show: false
+                    },
+                    calculable: true,
+                    grid: {y: 70, y2: 20, x: 20, x2: 20},
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['Статистика по опубликованным объявлениям за 2026 год']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel: {show: false, formatter: '{value}'}
+                        }
+                    ],
+                    series: [{
+                    name:'Открытый конкурс',
+                    type:'bar',
+                    itemStyle: {normal: {color:'#FF6384', label:{show:true}}},
+                    data:[122345]
+                },{
+                    name:'Закупка жилища',
+                    type:'bar',
+                    itemStyle: {normal: {color:'#36A2EB', label:{show:true}}},
+                    data:[2953]
+                },{
+                    name:'Запрос ценовых предложений',
+                    type:'bar',
+                    itemStyle: {normal: {color:'#FF9F40', label:{show:true}}},
+                    data:[1081634]
+                },{
+                    name:'Конкурс с предварительным квалификационным отбором',
+                    type:'bar',
+                    itemStyle: {normal: {color:'#9966FF', label:{show:true}}},
+                    data:[1]
+                },{
+                    name:'Закупка по государственному социальному заказу',
+                    type:'bar',
+                    itemStyle: {normal: {color:'#4bc0c0', label:{show:true}}},
+                    data:[3131]
+                },{
+                    name:'Из одного источника по несостоявшимся закупкам',
+                    type:'bar',
+                    itemStyle: {normal: {color:'', label:{show:true}}},
+                    data:[421387]
+                },{
+                    name:'Аукцион',
+                    type:'bar',
+                    itemStyle: {normal: {color:'', label:{show:true}}},
+                    data:[1383]
+                },{
+                    name:'Конкурс с использованием рейтингово-балльной системы',
+                    type:'bar',
+                    itemStyle: {normal: {color:'', label:{show:true}}},
+                    data:[4624]
+                }]
+                });
+                $(window).on('resize', function () {
+                    if (myChart != null && myChart != undefined) {
+                        myChart.resize();
+                    }
+                });
+                $('#collapseCharts').on('shown.bs.collapse', function () {
+                    $(".chartArea").each(function () {
+                        var myChartR = echarts.init(this);
+                        myChartR.resize();
+                    });
+                });
+                $('#collapseCharts2').on('shown.bs.collapse', function () {
+                    $(".chartArea").each(function () {
+                        var myChartR = echarts.init(this);
+                        myChartR.resize();
+                    });
+                });
+            });
+        </script>
+                </div>
+        <div class="panel panel-white">
+            <div class="panel-heading">
+                <div class="row">
+    <div class="col-md-12">
+        <div class="dataTables_info" role="status" aria-live="polite">
+            <small class="text-muted">
+                <strong>Показано c 1 по 50 из 10000 записей</strong>
+            </small>
+        </div>
+    </div>
+</div>            </div>
+            <div class="panel-body">
+                <table id="search-result" class="table table-bordered table-striped dataTable responsive"
+                       style="width: 100%; cellspacing: 0;">
+                    <thead>
+                    <tr>
+                        <th class="min-tablet-p">№</th>
+                        <th class="all">Наименование объявления</th>
+                        <th class="desktop">Способ</th>
+                        <th class="desktop">Начало приема заявок</th>
+                        <th class="desktop">Окончание приема заявок</th>
+                        <th class="min-tablet-p">Сумма, тг.</th>
+                        <th class="desktop">Статус</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                                            <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896744-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896744" target="_blank" style="font-size: 13px">
+                                    Приобретение циркуляционный насос</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Аппарат акима Уалихановского района Северо - Казахстанской области"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:29:30</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:29:30</td>
+                            <td nowrap="nowrap"><strong>114 372.41</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896739-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896739" target="_blank" style="font-size: 13px">
+                                    Работа по подготовке и размещению информационных стендов для методического кабинета</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное коммунальное казенное предприятие "Многопрофильный индустриально-технический колледж" управления образования Туркестанской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:33:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:35:00</td>
+                            <td nowrap="nowrap"><strong>100 200.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896737-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896737" target="_blank" style="font-size: 13px">
+                                    уличная металлическая урна для мусора</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение «Центр творчества учащихся» отдела образования Индерского района Управление образования Атырауской области»<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>13 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896735-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 2</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896735" target="_blank" style="font-size: 13px">
+                                    Приобретение хтоваров  согласно технической спецификации.</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Некоммерческое акционерное общество "Павлодарский педагогический университет имени Әлкей Марғұлан"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:26:33</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:26:33</td>
+                            <td nowrap="nowrap"><strong>1 880 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896734-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896734" target="_blank" style="font-size: 13px">
+                                    Приобретение прибора учета электроэнергии/</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Департамент полиции Кызылординской области Министерства внутренних дел Республики Казахстан"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:26:28</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:26:28</td>
+                            <td nowrap="nowrap"><strong>145 689.65</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896733-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896733" target="_blank" style="font-size: 13px">
+                                    приобретение моторного масла 5w 40</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Отдел образования по Астраханскому району управления образования Акмолинской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>160 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896728-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896728" target="_blank" style="font-size: 13px">
+                                    Услуги по подписки на печатное периодическое издание</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Отдел предпринимательства и сельского хозяйства акимата Федоровского района"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:25:25</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:25:25</td>
+                            <td nowrap="nowrap"><strong>29 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896727-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896727" target="_blank" style="font-size: 13px">
+                                    Приобретение картриджей согласно технической спецификации</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Отдел финансов Железинского района"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>00:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>00:00:00</td>
+                            <td nowrap="nowrap"><strong>30 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896725-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896725" target="_blank" style="font-size: 13px">
+                                    Повышение квалификации преподавателей финансовой отрасли в городе Сиань</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное коммунальное казенное предприятие "Многопрофильный индустриально-технический колледж" управления образования Туркестанской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>1 050 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896724-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 2</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896724" target="_blank" style="font-size: 13px">
+                                    Шины зимние шипованные</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Прокуратура Карагандинской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>18:28:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>18:28:00</td>
+                            <td nowrap="nowrap"><strong>400 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896722-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896722" target="_blank" style="font-size: 13px">
+                                    приобретение канцелярских товаров</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное коммунальное казенное предприятие «Ясли-сад «Айголек» отдела образования района Байдибек управления образования Туркестанской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>225 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896720-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896720" target="_blank" style="font-size: 13px">
+                                    Пшеница твердая 2 тип</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение «Детско-юношеская спортивная школа по национальным видам конного спорта» управления физической культуры и спорта Восточно-Казахстанской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>08:00:00</td>
+                            <td nowrap="nowrap">2026-11-06<br>00:00:00</td>
+                            <td nowrap="nowrap"><strong>1 752 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896719-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896719" target="_blank" style="font-size: 13px">
+                                    Приобретение запасных частей </a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Аппарат акима Уалихановского района Северо - Казахстанской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>224 137.94</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896716-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896716" target="_blank" style="font-size: 13px">
+                                    Услуги по поверке</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Областная специализированная школа-интернат-колледж олимпийского резерва имени Алии Молдагуловой" Управления физической культуры и спорта Карагандинской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>122 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896712-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896712" target="_blank" style="font-size: 13px">
+                                    Вал карданный, аккумулятор б/с</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Лесное хозяйство Мамлютское" акимата Северо-Казахстанской области управления природных ресурсов и регулирования природопользования Северо-Казахстанской области<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:22:30</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:22:30</td>
+                            <td nowrap="nowrap"><strong>30 172.41</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896711-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896711" target="_blank" style="font-size: 13px">
+                                    услуги по изготовлению конвертов c логотипом </a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Агентство Республики Казахстан по финансовому мониторингу"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:22:26</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:22:26</td>
+                            <td nowrap="nowrap"><strong>150 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896709-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896709" target="_blank" style="font-size: 13px">
+                                     Изготовление медицинской ширмы</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Департамент полиции Северо-Казахстанской области Министерства внутренних дел Республики Казахстан"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:25:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:25:00</td>
+                            <td nowrap="nowrap"><strong>33 285.34</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896707-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896707" target="_blank" style="font-size: 13px">
+                                    Услуги по пересылке регистрируемых почтовых отправлений (внутренних и международных)</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Республиканское государственное предприятие на праве хозяйственного ведения "Национальный центр аккредитации" Комитета технического регулирования и метрологии Министерства торговли и интеграции Республики Казахстан<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:21:28</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:21:28</td>
+                            <td nowrap="nowrap"><strong>344 827.58</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896706-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896706" target="_blank" style="font-size: 13px">
+                                    Приобретение строительных материалов</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Департамент по чрезвычайным ситуациям Павлодарской области Министерства по чрезвычайным ситуациям Республики Казахстан"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:21:26</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:21:26</td>
+                            <td nowrap="nowrap"><strong>33 258.62</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896705-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896705" target="_blank" style="font-size: 13px">
+                                    Услуги по предоставлению доступа к информационным ресурсам (Сведения студентов, обучающихся по дуальной системе обучения загружать на сайт CareerHub.kz)</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное коммунальное казенное предприятие "Многопрофильный индустриально-технический колледж" управления образования Туркестанской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:25:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:25:00</td>
+                            <td nowrap="nowrap"><strong>100 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896704-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896704" target="_blank" style="font-size: 13px">
+                                    Работы по очистке внутрипоселковых дорог от снега в зимний период</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Аппарат акима Родниковского сельского округа Мартукского района"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>1 293 103.45</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896702-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896702" target="_blank" style="font-size: 13px">
+                                    Приобретение товаров для организации</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Управление сельского хозяйства Туркестанской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>19:00:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>19:00:00</td>
+                            <td nowrap="nowrap"><strong>391 035.60</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896701-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896701" target="_blank" style="font-size: 13px">
+                                    Услуги по страхованию жизни сотрудников</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное коммунальное предприятие на праве хозяйственного ведения «Талдыкорганский высший медицинский колледж» государственного учереждения «Управления здравоохранения области Жетісу»<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:20:24</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:20:24</td>
+                            <td nowrap="nowrap"><strong>1 300 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896699-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896699" target="_blank" style="font-size: 13px">
+                                    Установка линий электроснабжения по улице №1 села М.Байсов Ескельдинского района </a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Аппарат акима Карабулакского сельского округа Ескельдинского района"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:28:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:29:00</td>
+                            <td nowrap="nowrap"><strong>17 984 370.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896695-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 2</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896695" target="_blank" style="font-size: 13px">
+                                    Флаг с флагштоком и зеркало</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение «Управление по защите прав детей Павлодарской области»<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:35:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:35:00</td>
+                            <td nowrap="nowrap"><strong>150 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896693-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896693" target="_blank" style="font-size: 13px">
+                                    Монитор для видеонаблюдение</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное казенное предприятие «Сельский дом культуры М.Шаменов» аппарата акима сельского округа имени М.Шаменова<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>120 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896690-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896690" target="_blank" style="font-size: 13px">
+                                    Приобретение дизтоплива зимнего</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Аппарат акима города Тобыл Костанайского района"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>280 170.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896689-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896689" target="_blank" style="font-size: 13px">
+                                    Услуги для ГУ "Отдел экономики и финансов города Алатау"</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Отдел экономики и финансов города Алатау"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>60 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896687-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896687" target="_blank" style="font-size: 13px">
+                                    Приобретение кнопки вкл/выкл (размыкатель массы) для двигателей снегоуборочных машин. (согласно технической спецификации)</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Областная детско-юношеская спортивная школа по настольному теннису" коммунального государственного учреждения "Управление физической культуры и спорта акимата Северо-Казахстанской области"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:17:40</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:17:40</td>
+                            <td nowrap="nowrap"><strong>2 876.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896686-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896686" target="_blank" style="font-size: 13px">
+                                    Услуги по сертификации и повышения квалификации работников финансовых служб</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Управление специализированной службы охраны Алматинской области и области Жетісу Комитета по контролю за охранной деятельностью Министерства внутренних дел Республики Казахстан"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:17:36</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:17:36</td>
+                            <td nowrap="nowrap"><strong>172 413.79</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896685-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896685" target="_blank" style="font-size: 13px">
+                                    Приобретение хозяйственных товаров  согласно технической спецификации.</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Некоммерческое акционерное общество "Павлодарский педагогический университет имени Әлкей Марғұлан"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:17:34</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:17:34</td>
+                            <td nowrap="nowrap"><strong>20 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896684-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896684" target="_blank" style="font-size: 13px">
+                                    Приобретение служебного автомобиля для КГУ Центра поддержки семьи</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Центр поддержки семьи" коммунального государственного учреждения "Отдел занятости и социальных программ акимата района Шал акына Северо-Казахстанской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>19:00:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>19:05:00</td>
+                            <td nowrap="nowrap"><strong>6 490 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896683-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896683" target="_blank" style="font-size: 13px">
+                                    Закупки товаров. Согласно технической спецификации /149/</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Филиал "Жамбылское территориальное эксплуатационное управление" государственного учреждения "Казселезащита" Министерства по чрезвычайным ситуациям Республики Казахстан<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>327 586.20</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896682-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 2</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896682" target="_blank" style="font-size: 13px">
+                                    Приобретение хозяйственных товаров  согласно технической спецификации.</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Некоммерческое акционерное общество "Павлодарский педагогический университет имени Әлкей Марғұлан"<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:17:31</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:17:31</td>
+                            <td nowrap="nowrap"><strong>25 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896680-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896680" target="_blank" style="font-size: 13px">
+                                    Услуги по организации/проведению конференций/семинаров/форумов/конкурсов/корпоративных/спортивных/культурных/праздничных и аналогичных мероприятий/</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение “Кызылкогинский районный отдел культуры, развития языков, физической культуры и спорта” районное государственное казенное коммунальное предприятие дом культуры “Арман”<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:25:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:26:00</td>
+                            <td nowrap="nowrap"><strong>1 100 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896679-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 2</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896679" target="_blank" style="font-size: 13px">
+                                    Шторы текстильные готовые, тюль</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Центр социальных услуг раннего вмешательства" Управления занятости и социальных программ города Алматы"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>112 188.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896678-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896678" target="_blank" style="font-size: 13px">
+                                    Ноутбук (портативный персональный компьютер)</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Прокуратура Карагандинской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>18:20:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>18:20:00</td>
+                            <td nowrap="nowrap"><strong>775 862.06</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896671-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896671" target="_blank" style="font-size: 13px">
+                                    Приобретение разделочных досок</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Областная специализированная школа-интернат-колледж олимпийского резерва имени Алии Молдагуловой" Управления физической культуры и спорта Карагандинской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:25:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:25:00</td>
+                            <td nowrap="nowrap"><strong>180 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896670-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896670" target="_blank" style="font-size: 13px">
+                                    Канат для лазания</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное Учреждение "Отряд специального назначения "Сункар" Министерства внутренних дел Республики Казахстан<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:33:00</td>
+                            <td nowrap="nowrap"><strong>120 689.60</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896668-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896668" target="_blank" style="font-size: 13px">
+                                    ГСМ для ГККП "Отпан"</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> ГККП "Отпан" Управления культуры,развития языков и архивного дела Мангистауской области<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:15:27</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:15:27</td>
+                            <td nowrap="nowrap"><strong>460 340.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896665-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896665" target="_blank" style="font-size: 13px">
+                                    приобретение халатов для тех персонала</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение "Общеобразовательная школа №3" отдела образования города Арыс управления образования Туркестанской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:40:00</td>
+                            <td nowrap="nowrap"><strong>224 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896664-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 2</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896664" target="_blank" style="font-size: 13px">
+                                    Государственный Флаг Республики Казахстан РК</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Аппарат акима сельского округа Теректі"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>290 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896663-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896663" target="_blank" style="font-size: 13px">
+                                    Система Мультимедийная Образовательная для создания цифровых обучающих материалов (согласно технической спецификации)</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Некоммерческое акционерное общество "Южно-Казахстанский университет имени М.Ауэзова"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>09:00:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>09:00:00</td>
+                            <td nowrap="nowrap"><strong>23 900 000.00</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896662-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896662" target="_blank" style="font-size: 13px">
+                                    Приобретение рамки для грамот со стеклом, формат A4</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Коммунальное государственное учреждение «Центр трудовой мобильности области Абай» государственного учреждения «Управление координации занятости и социальных программ области Абай»<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>35 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896660-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896660" target="_blank" style="font-size: 13px">
+                                    Работы по пошиву форменного обмундирования</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Прокуратура Карагандинской области"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-03<br>18:17:00</td>
+                            <td nowrap="nowrap">2026-11-05<br>18:17:00</td>
+                            <td nowrap="nowrap"><strong>1 204 134.09</strong></td>
+                            <td>Опубликовано</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896659-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 6</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896659" target="_blank" style="font-size: 13px">
+                                    Приобретение плинтуса и комплектующие к нему</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Отдел образования Костанайского района" Управления образования акимата Костанайской области<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:27:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:27:04</td>
+                            <td nowrap="nowrap"><strong>300 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896658-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896658" target="_blank" style="font-size: 13px">
+                                    Работы по изготовлению тентового покрытия для палатки-шатра</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> государственное учреждение "Отдел предпринимательства и промышленности" Шортандинского района<br>
+                                </small>
+                            </td>
+                            <td>Из одного источника по несостоявшимся закупкам</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>100 000.00</strong></td>
+                            <td>Опубликовано (прием заявок)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896657-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896657" target="_blank" style="font-size: 13px">
+                                    Услуги по страхованию автомобильного транспорта</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение «Отдел занятости и социальных программ Каратальского района»<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>34 482.75</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896655-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896655" target="_blank" style="font-size: 13px">
+                                    Услуги по размещению рекламы в печатных периодических изданиях</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение "Иргизский районный отдел по земельным отношениям"<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>203 490.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                                <tr>
+                            <td nowrap="nowrap">
+                                <strong>17896653-1</strong><br><br>
+                                <small class="hidden-xs"><b>Лотов:</b> 1</small>
+                            </td>
+                            <td>
+                                <a href="/ru/announce/index/17896653" target="_blank" style="font-size: 13px">
+                                    Работы по пошиву штор</a><br>
+                                <small class="hidden-xs">
+                                    <b>Организатор:</b> Государственное учреждение «Управление по защите прав детей Павлодарской области»<br>
+                                </small>
+                            </td>
+                            <td>Запрос ценовых предложений</td>
+                            <td nowrap="nowrap">2026-11-02<br>18:30:00</td>
+                            <td nowrap="nowrap">2026-11-04<br>18:30:00</td>
+                            <td nowrap="nowrap"><strong>150 000.00</strong></td>
+                            <td>Опубликовано (прием ценовых предложений)</td>
+                        </tr>
+                                            </tbody>
+                </table>
+                <div class="row">
+    <div class="col-md-3 text-left">
+            </div>
+    <div class="col-md-6 text-center">
+        <nav aria-label="Постраничная навигация">
+            <ul class="pagination m-t-xxs">
+                <li>
+                                        <a href="javascript:void(0)" aria-label="Назад">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                                    </li>
+                                                            <li class="active"><a href="javascript:void(0)">1</a></li>
+                                                                                <li><a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=2">2</a></li>
+                                                                                <li><a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=3">3</a></li>
+                                                                                <li><a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=4">4</a></li>
+                                                                                <li><a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=5">5</a></li>
+                                                                                <li><a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=6">6</a></li>
+                                                                                <li><a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=7">7</a></li>
+                                                    <li>
+                                    <a href="https://old.goszakup.gov.kz/ru/search/announce?count_record=50&page=200" aria-label="Назад">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-3 text-left">
+        <div class="form-group">
+            <label class="col-sm-8 control-label text-right">Показывать по </label>
+            <div class="col-sm-4">
+                <select class="form-control m-b-sm" style="width: 80px" onchange="ajax_set_count_record(this)">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50" selected="selected">50</option>
+                                            <option value="70">70</option>
+                                            <option value="100">100</option>
+                                            <option value="500">500</option>
+                                            <option value="2000">2000</option>
+                                    </select>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function site_url() {
+        var lang = 'ru';
+        var url = window.location.href.split('/');
+        var http = location.protocol;
+        var hostname = window.location.hostname;
+
+        switch (url[3]) {
+            case 'kz':
+            case 'en':
+                lang = url[3];
+                break;
+            default:
+                lang = 'ru';
+                break;
+        }
+
+        return http + '//' + hostname + '/' + lang + '/register/plansreg';
+    }
+    function ajax_set_count_record(select) {
+        var count = $(select).val();
+        var href = location.pathname+'?ajax=Y&count_record='+count;
+        $.ajax({
+            type: "POST",
+            async: true,
+            cache: false,
+            url: href,
+            data: count,
+            success: function (data) {
+                location.reload(true);
+            },
+            error: function () {
+                $('#ajax_result').html('<div class="alert alert-danger">Ошибка выполнения запроса, попробуйте позже</div>').removeClass('hidden');
+                return;
+            }
+        });
+    }
+</script>            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var table = $('.dataTable').dataTable({
+            "sDom": '<"row"<"col-md-6"f>>rt<"clear">',
+            "info": false,
+            "searching": false,
+            "language": {
+                "lengthMenu": "Отображать _MENU_",
+                "zeroRecords": "Ничего не найдено",
+                "info": "Страница _PAGE_ из _PAGES_",
+                "infoEmpty": "Ничего не найдено",
+                "infoFiltered": "(найдено из _MAX_ заказов)",
+                "sSearch": "Быстрый поиск:&nbsp;",
+                "paginate": {
+                    "first": "В начало",
+                    "last": "В конец",
+                    "next": "Вперед",
+                    "previous": "Назад"
+                }
+            },
+            "pageLength": 10,
+            bSort : false,
+            paging: false,
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.childRowImmediate,
+                    type: '',
+                    renderer: function ( api, rowIdx, columns ) {
+                        var data = $.map( columns, function ( col, i ) {
+                            return col.hidden ?
+                                '<tr data-dt-row="'+col.rowIndex+'" data-dt-column="'+col.columnIndex+'">'+
+                                '<td>'+col.title+':'+'</td> '+
+                                '<td>'+col.data+'</td>'+
+                                '</tr>' :
+                                '';
+                        } ).join('');
+
+                        return data ?
+                            $('<table class="table"/>').append( data ) :
+                            false;
+                    }
+                }
+            }
+        });
+        //new $.fn.dataTable.FixedHeader( table );
+    });
+</script>
+        </div>
+        <!-- Main content end -->
+                        <span id="_zero_68459" class="pull-right">
+                <noscript>
+                <a href="http://zero.kz/?s=68459" target="_blank">
+                <img src="//c.zero.kz/z.png?u=68459" width="88" height="31" alt="ZERO.kz" />
+                </a>
+                </noscript>
+            </span>
+                    </div><!-- Main Wrapper -->
+    </div><!-- Page Inner -->
+    <div class="page-footer" style="height: 80px">
+        <span class="pull-left">
+            АИИС ЭГЗ © 2026 | <a href="http://www.minfin.gov.kz">Министерство финансов Республики Казахстан</a>
+        </span>
+        <span class="pull-right">
+            <span class="ecc">
+                <a href="http://www.ecc.kz">АО "Центр электронных финансов"</a>
+            </span>
+        </span>
+        <div class="clear"></div>
+        <div class="text-center">
+            Техническая поддержка пользователей портала 7/7 с 08:00 до 20:00: 8(7172) 73 55 15, +7 705 956 53 88 (в соответствии с тарифами оператора связи) <br>
+                <a href=mailto:support@ecc.kz>support@ecc.kz</a> <br>
+                       </div>
+    </div>
+</main><!-- Page Content -->
+
+<a class="scroll-up" href="javascript:void(0)" id="scrollUp" title="Прокрутить вверх"><i class="glyphicon glyphicon-chevron-up"></i></a>
+
+    
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+
+<script>
+    $(function () {
+        $('#advanced-search-button').click(function () {
+
+            var bar = $('.search-bar');
+
+            bar.toggle();
+
+            if(bar.is(":visible"))
+            {
+                $('#search').focus();
+                $('#mini-submit').addClass('btn-primary');
+
+            }
+            else{
+                $('#mini-submit').removeClass('btn-primary');
+            }
+        });
+    });
+</script>
+
+    <link rel="stylesheet" href="https://help.ecc.kz/static/widget/app.css">
+    <vue-widget domain="https://help.ecc.kz" client-id="widget-aiis-epp"></vue-widget>
+    <script defer src="https://help.ecc.kz/static/widget/app.js"></script>
+</body>
+</html>
