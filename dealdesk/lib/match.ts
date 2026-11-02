@@ -11,6 +11,13 @@ export type Match = {
 
 const money = (n: number) => (n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${Math.round(n)}`);
 
+// Reason words per language (English is the fallback for any language without a translation yet).
+const WHY: Record<string, Record<string, string>> = {
+  en: { partner: "local partner in place", direct: "open to direct bids", planned: "upcoming tender", days: "{n} days to submit" },
+  he: { partner: "יש שותף מקומי", direct: "פתוח להגשה ישירה", planned: "מכרז עתידי", days: "{n} ימים להגשה" },
+};
+const w = (lang: string, k: string, n?: number) => (WHY[lang]?.[k] ?? WHY.en[k]).replace("{n}", String(n ?? ""));
+
 export function scoreTender(r: Tender, p: Profile): { score: number; why: string[]; product: boolean } {
   const why: string[] = [];
   const title = (r.t || "").toLowerCase();
@@ -37,8 +44,8 @@ export function scoreTender(r: Tender, p: Profile): { score: number; why: string
   let el = r.rt ? elig[r.rt] ?? 8 : 8;
   if (r.acc === "set-aside") el = 0;
   if (r.acc === "intl") el = Math.min(15, el + 3);
-  if (partner && (r.rt === "via local partner" || r.rt === "needs local partner")) why.push("יש שותף מקומי");
-  else if (r.rt === "direct") why.push("פתוח להגשה ישירה");
+  if (partner && (r.rt === "via local partner" || r.rt === "needs local partner")) why.push(w(p.lang, "partner"));
+  else if (r.rt === "direct") why.push(w(p.lang, "direct"));
 
   // value (10)
   let val = 5;
@@ -50,10 +57,10 @@ export function scoreTender(r: Tender, p: Profile): { score: number; why: string
 
   // timing (10)
   let time = 5;
-  if (r.st === "planned") { time = 8; why.push("מכרז עתידי"); }
+  if (r.st === "planned") { time = 8; why.push(w(p.lang, "planned")); }
   else if (r.dd !== null && r.dd !== undefined) {
     time = r.dd < 7 ? 1 : r.dd <= 60 ? 10 : 7;
-    if (r.dd >= 7 && r.dd <= 60) why.push(`${r.dd} ימים להגשה`);
+    if (r.dd >= 7 && r.dd <= 60) why.push(w(p.lang, "days", r.dd));
   }
 
   // engine (15): the deal engine's own score (margin, competition, buyer history)

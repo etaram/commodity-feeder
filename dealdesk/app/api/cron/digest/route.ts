@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     const m = await matches(p, { mode: "focus", limit: 300 });
     const fresh = m.items.filter((r) => !sent.has(r.id)).slice(0, 12);
     if (!fresh.length) { report.push({ email, items: 0, sent: false }); continue; }
-    const he = p.lang !== "en";
+    const he = p.lang === "he";
     const rows = fresh.map((r) => `<tr><td style="padding:8px 10px;font-weight:700;color:#0B7A4B;vertical-align:top">${r.score}</td><td style="padding:8px 10px"><a href="${esc(r.l)}" style="color:#1E3A5F;font-weight:600;text-decoration:none">${esc(r.t.slice(0, 160))}</a><div style="color:#667385;font-size:13px">${esc([r.b, r.c, r.dd != null ? (he ? `${r.dd} ימים` : `${r.dd} days`) : "", money(r.v)].filter(Boolean).join(" · "))}</div><div style="color:#667385;font-size:12.5px">${esc(r.why.join(" · "))}</div></td></tr>`).join("");
     const html = `<div dir="${he ? "rtl" : "ltr"}" style="font-family:Arial,sans-serif;font-size:14px;color:#1C2733;max-width:680px">
 <p style="font-size:16px;font-weight:700">${he ? `${fresh.length} התאמות חדשות בשבילך` : `${fresh.length} new matches for you`}</p>
