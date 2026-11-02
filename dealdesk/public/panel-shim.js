@@ -88,6 +88,15 @@
   // Activity log: what the signed-in user opens (fire and forget), and the admin's view of everyone's actions.
   window.DD_TRACK = (action, target, detail) => { fetch("/api/activity", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", keepalive: true, body: JSON.stringify({ action, target: String(target || "").slice(0, 300), detail: String(detail || "").slice(0, 300) }) }).catch(() => {}); };
   window.DD_ACTIVITY = async (email) => { const r = await fetch("/api/activity?limit=1000" + (email ? "&email=" + encodeURIComponent(email) : ""), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.rows || []; };
+  // Personal profile and matches (scored on the server from the tender index, no AI).
+  const getj = async (url) => { const r = await fetch(url, { credentials: "same-origin" }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j; };
+  window.DD_PROFILE = {
+    get: (facets) => getj("/api/profile" + (facets ? "?facets=1" : "")),
+    preview: (profile) => post("/api/profile", { profile, preview: true }),
+    save: (profile) => post("/api/profile", { profile }),
+    feedback: (kind, id) => post("/api/profile", { [kind]: id }),
+  };
+  window.DD_MATCH = (mode) => getj("/api/match?" + (mode === "saved" ? "saved=1" : "mode=" + encodeURIComponent(mode || "") + "&limit=150"));
   // Admin only: user accounts (list, approve, change role, disable).
   window.DD_USERS = {
     list: async () => { const r = await fetch("/api/users", { credentials: "same-origin" }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.users || []; },
