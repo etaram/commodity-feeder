@@ -1,23 +1,74 @@
 ts,id,name,price_usd,orig,ccy,date,source
-2026-11-02 02:40,L0001,Crude oil Brent - ICE futures,111.83,111.83,USD,2026-11-02,Yahoo Finance BZ=F (NYM)
-2026-11-02 02:40,L0002,Crude oil WTI - NYMEX futures,102.44,102.44,USD,2026-11-02,Yahoo Finance CL=F (NYM)
-2026-11-02 02:40,L0004,Natural gas Henry Hub - NYMEX futures,2.926,2.926,USD,2026-11-02,Yahoo Finance NG=F (NYM)
-2026-11-02 02:40,L0007,Gasoline RBOB - NYMEX futures,3.0964,3.0964,USD,2026-11-02,Yahoo Finance RB=F (NYM)
-2026-11-02 02:40,L0008,Heating oil / ULSD - NYMEX futures,4.6195,4.6195,USD,2026-11-02,Yahoo Finance HO=F (NYM)
-2026-11-02 02:40,L0009,Gasoil - ICE futures,1390.5,1390.5,USD,2026-11-02,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney
-2026-11-02 02:40,L0016,Gold - COMEX/LBMA futures,3907.7,3907.7,USD,2026-11-02,Yahoo Finance GC=F (CMX)
-2026-11-02 02:40,L0017,Silver - COMEX/LBMA futures,49.775,49.775,USD,2026-11-02,Yahoo Finance SI=F (CMX)
-2026-11-02 02:40,L0018,Platinum - NYMEX/LPPM futures,1448.0,1448.0,USD,2026-11-02,Yahoo Finance PL=F (NYM)
-2026-11-02 02:40,L0019,Palladium - NYMEX/LPPM futures,988.0,988.0,USD,2026-11-02,Yahoo Finance PA=F (NYM)
-2026-11-02 02:40,L0043,Crude palm oil - Bursa Malaysia futures,1154.0547,4682.0,MYR,2026-11-02,Bursa crude palm oil MPM27F (棕榈油2701) via Eastmoney
-2026-11-02 02:40,L0056,Natural rubber RSS3 - OSE/SGX futures,2.7587,433.8,JPY,2026-11-02,OSE RSS3 rubber JRU00Y (日橡胶当月连续) via Eastmoney
-2026-11-02 02:40,H0656,"Vegetable oils; palm oil and its fractions, crude, not chemically modified",1154.0547,4682.0,MYR,2026-11-02,Bursa crude palm oil MPM27F (棕榈油2701) via Eastmoney [benchmark for this HS code]
-2026-11-02 02:40,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",111.83,111.83,USD,2026-11-02,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
-2026-11-02 02:40,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",3.0964,3.0964,USD,2026-11-02,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
-2026-11-02 02:40,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1390.5,1390.5,USD,2026-11-02,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney [benchmark for this HS code]
-2026-11-02 02:40,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",2.926,2.926,USD,2026-11-02,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
-2026-11-02 02:40,H1216,"Rubber; natural (excluding latex), in smoked sheets",2.7587,433.8,JPY,2026-11-02,OSE RSS3 rubber JRU00Y (日橡胶当月连续) via Eastmoney [benchmark for this HS code]
-2026-11-02 02:40,H1674,"Metals; silver, unwrought, (but not powder)",1600.3034,49.775,USD,2026-11-02,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
-2026-11-02 02:40,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",125635.4725,3907.7,USD,2026-11-02,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
-2026-11-02 02:40,H1682,"Metals; platinum, unwrought or in powder form",46554.2811,1448.0,USD,2026-11-02,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
-2026-11-02 02:40,H1684,"Metals; palladium, unwrought or in powder form",31764.9376,988.0,USD,2026-11-02,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,L0001,Crude oil Brent - ICE futures,108.79,108.79,USD,2026-11-02,Yahoo Finance BZ=F (NYM)
+2026-11-02 15:46,L0002,Crude oil WTI - NYMEX futures,99.69,99.69,USD,2026-11-02,Yahoo Finance CL=F (NYM)
+2026-11-02 15:46,L0004,Natural gas Henry Hub - NYMEX futures,2.95,2.95,USD,2026-11-02,Yahoo Finance NG=F (NYM)
+2026-11-02 15:46,L0005,Natural gas TTF - ICE Endex futures,109.4471,97.965,EUR,2026-11-02,Yahoo Finance TTF=F (NYM)
+2026-11-02 15:46,L0007,Gasoline RBOB - NYMEX futures,2.9946,2.9946,USD,2026-11-02,Yahoo Finance RB=F (NYM)
+2026-11-02 15:46,L0008,Heating oil / ULSD - NYMEX futures,4.5296,4.5296,USD,2026-11-02,Yahoo Finance HO=F (NYM)
+2026-11-02 15:46,L0009,Gasoil - ICE futures,1364.5,1364.5,USD,2026-11-02,ICE Gasoil G26Z (重柴油2612) via Eastmoney
+2026-11-02 15:46,L0010,Coal Newcastle - ICE futures,150.25,150.25,USD,2026-11-02,ICE Newcastle coal NCF00Y (纽卡斯尔煤炭当月连续) via Eastmoney
+2026-11-02 15:46,L0012,Propane Mont Belvieu - NYMEX/OPIS futures,1.28,1.28,USD,2026-10-30,Yahoo Finance B0=F (NYM)
+2026-11-02 15:46,L0014,Uranium U3O8 - CME/UxC futures,88.5,88.5,USD,2026-10-22,Yahoo Finance UX=F (CMX)
+2026-11-02 15:46,L0016,Gold - COMEX/LBMA futures,3922.7,3922.7,USD,2026-11-02,Yahoo Finance GC=F (CMX)
+2026-11-02 15:46,L0017,Silver - COMEX/LBMA futures,50.35,50.35,USD,2026-11-02,Yahoo Finance SI=F (CMX)
+2026-11-02 15:46,L0018,Platinum - NYMEX/LPPM futures,1435.2,1435.2,USD,2026-11-02,Yahoo Finance PL=F (NYM)
+2026-11-02 15:46,L0019,Palladium - NYMEX/LPPM futures,963.0,963.0,USD,2026-11-02,Yahoo Finance PA=F (NYM)
+2026-11-02 15:46,L0030,Hot-rolled coil - SHFE/CME futures,1544.3377,1401.0,USD,2026-10-30,Yahoo Finance HRC=F (CMX)
+2026-11-02 15:46,L0032,Wheat (SRW) - CBOT futures,6.0575,605.75,USc,2026-11-02,Yahoo Finance ZW=F (CBT)
+2026-11-02 15:46,L0033,Wheat (HRW) - KCBT futures,6.4875,648.75,USc,2026-11-02,Yahoo Finance KE=F (CBT)
+2026-11-02 15:46,L0035,Corn - CBOT futures,4.515,451.5,USc,2026-11-02,Yahoo Finance ZC=F (CBT)
+2026-11-02 15:46,L0036,Soybeans - CBOT futures,12.3375,1233.75,USc,2026-11-02,Yahoo Finance ZS=F (CBT)
+2026-11-02 15:46,L0037,Soybean meal - CBOT futures,325.7,325.7,USD,2026-11-02,Yahoo Finance ZM=F (CBT)
+2026-11-02 15:46,L0038,Soybean oil - CBOT futures,0.6526,65.26,USc,2026-11-02,Yahoo Finance ZL=F (CBT)
+2026-11-02 15:46,L0039,Rough rice - CBOT futures,17.905,17.905,USD,2026-11-02,Yahoo Finance ZR=F (CBT)
+2026-11-02 15:46,L0040,Oats - CBOT futures,3.485,348.5,USc,2026-11-02,Yahoo Finance ZO=F (CBT)
+2026-11-02 15:46,L0043,Crude palm oil - Bursa Malaysia futures,1144.9347,4645.0,MYR,2026-11-02,Bursa crude palm oil MPM27F (棕榈油2701) via Eastmoney
+2026-11-02 15:46,L0044,Coffee Arabica - ICE futures,2.9545,295.45,USc,2026-11-02,Yahoo Finance KC=F (NYB)
+2026-11-02 15:46,L0046,Cocoa - ICE futures,5519.0,5519.0,USD,2026-11-02,Yahoo Finance CC=F (NYB)
+2026-11-02 15:46,L0047,Sugar No.11 - ICE futures,0.1916,19.16,USc,2026-11-02,Yahoo Finance SB=F (NYB)
+2026-11-02 15:46,L0049,Cotton No.2 - ICE futures,0.7804,78.04,USc,2026-11-02,Yahoo Finance CT=F (NYM)
+2026-11-02 15:46,L0050,Orange juice FCOJ - ICE futures,1.3645,136.45,USc,2026-11-02,Yahoo Finance OJ=F (NYB)
+2026-11-02 15:46,L0051,Lumber - CME futures,521.5,521.5,USD,2026-10-30,Yahoo Finance LBR=F (CME)
+2026-11-02 15:46,L0053,Feeder cattle - CME futures,3.3777,337.775,USc,2026-10-30,Yahoo Finance GF=F (CME)
+2026-11-02 15:46,L0055,Class III milk - CME futures,17.79,17.79,USD,2026-11-02,Yahoo Finance DC=F (CME)
+2026-11-02 15:46,L0056,Natural rubber RSS3 - OSE/SGX futures,2.7695,435.5,JPY,2026-11-02,OSE RSS3 rubber JRU27H (日橡胶2703) via Eastmoney
+2026-11-02 15:46,H0493,Coffee; not roasted or decaffeinated,6.5135,295.45,USc,2026-11-02,Yahoo Finance KC=F (NYB) [benchmark for this HS code]
+2026-11-02 15:46,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",222.575,605.75,USc,2026-11-02,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0541,"Cereals; oats, other than seed",240.0956,348.5,USc,2026-11-02,Yahoo Finance ZO=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0543,"Cereals; maize (corn), other than seed",177.7479,451.5,USc,2026-11-02,Yahoo Finance ZC=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0544,Cereals; rice in the husk (paddy or rough),394.7372,17.905,USD,2026-11-02,Yahoo Finance ZR=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0586,"Soya beans; other than seed, whether or not broken",453.3254,1233.75,USc,2026-11-02,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0646,"Vegetable oils; soya-bean oil and its fractions, crude, whether or not degummed, not...",1438.735,65.26,USc,2026-11-02,Yahoo Finance ZL=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0656,"Vegetable oils; palm oil and its fractions, crude, not chemically modified",1144.9347,4645.0,MYR,2026-11-02,Bursa crude palm oil MPM27F (棕榈油2701) via Eastmoney [benchmark for this HS code]
+2026-11-02 15:46,H0657,"Vegetable oils; palm oil and its fractions, other than crude, whether or not refined,...",1257.6429,9120.0,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Palm olein 24 [P]
+2026-11-02 15:46,H0667,"Vegetable oils; low erucic acid rape or colza oil and its fractions, other than crude,...",1482.419,10750.0,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Rapeseed oil [OI]
+2026-11-02 15:46,H0690,"Sugars; cane sugar, raw, in solid form, other than as specified in Subheading Note 2...",422.4052,19.16,USc,2026-11-02,Yahoo Finance SB=F (NYB) [benchmark for this HS code]
+2026-11-02 15:46,H0705,"Cocoa beans; whole or broken, raw or roasted",5519.0,5519.0,USD,2026-11-02,Yahoo Finance CC=F (NYB) [benchmark for this HS code]
+2026-11-02 15:46,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",359.0227,325.7,USD,2026-11-02,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
+2026-11-02 15:46,H0863,"Coal; bituminous, whether or not pulverised, but not agglomerated",150.25,150.25,USD,2026-11-02,ICE Newcastle coal NCF00Y (纽卡斯尔煤炭当月连续) via Eastmoney [benchmark for this HS code]
+2026-11-02 15:46,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",108.79,108.79,USD,2026-11-02,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",2.9946,2.9946,USD,2026-11-02,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1364.5,1364.5,USD,2026-11-02,ICE Gasoil G26Z (重柴油2612) via Eastmoney [benchmark for this HS code]
+2026-11-02 15:46,H0888,"Petroleum gases and other gaseous hydrocarbons; liquefied, propane",1.28,1.28,USD,2026-10-30,Yahoo Finance B0=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",2.95,2.95,USD,2026-11-02,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H0899,Petroleum bitumen; obtained from bituminous minerals,825.0444,6202.5,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Bitumen [BU]
+2026-11-02 15:46,H0914,Boron; tellurium,132.0,132.0,USD,2026-11-02,Strategic Metals Invest - Tellurium
+2026-11-02 15:46,H0980,"Acyclic hydrocarbons; unsaturated, propene (propylene)",1569.303,11797.67,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Propylene [PL]
+2026-11-02 15:46,H0990,Cyclic hydrocarbons; p-xylene,1396.6895,10500.0,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Paraxylene [PX]
+2026-11-02 15:46,H0996,"Alcohols; saturated monohydric, methanol (methyl alcohol)",530.9641,3991.67,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Methanol [MA]
+2026-11-02 15:46,H1005,"Alcohols; acyclic, diols; ethylene glycol (ethanediol)",775.0523,5826.67,CNY,2026-11-02,100ppi (生意社) spot via AKShare - MEG [EG]
+2026-11-02 15:46,H1073,Acids; aromatic polycarboxylic acids; terephthalic acid and its salts,960.5566,7221.25,CNY,2026-11-02,100ppi (生意社) spot via AKShare - PTA [TA]
+2026-11-02 15:46,H1185,"Poly(ethylene terephthalate); in primary forms, having a viscosity of 78ml/g or higher",1197.3287,9001.25,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Bottle-grade PET chips [PR]
+2026-11-02 15:46,H1216,"Rubber; natural (excluding latex), in smoked sheets",2.7695,435.5,JPY,2026-11-02,OSE RSS3 rubber JRU27H (日橡胶2703) via Eastmoney [benchmark for this HS code]
+2026-11-02 15:46,H1316,"Wood; coniferous species, of fir (Abies spp.) and spruce (Picea spp.), sawn or chipped...",220.9989,521.5,USD,2026-10-30,Yahoo Finance LBR=F (CME) [benchmark for this HS code]
+2026-11-02 15:46,H1481,Cotton; not carded or combed,1720.4854,78.04,USc,2026-11-02,Yahoo Finance CT=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H1606,"Fibres; synthetic staple fibres, of polyesters, not carded, combed or otherwise...",1214.3217,9129.0,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Polyester staple fibre [PF]
+2026-11-02 15:46,H1674,"Metals; silver, unwrought, (but not powder)",1618.7901,50.35,USD,2026-11-02,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
+2026-11-02 15:46,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",126117.7337,3922.7,USD,2026-11-02,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
+2026-11-02 15:46,H1682,"Metals; platinum, unwrought or in powder form",46142.7515,1435.2,USD,2026-11-02,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H1684,"Metals; palladium, unwrought or in powder form",30961.169,963.0,USD,2026-11-02,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
+2026-11-02 15:46,H1715,"Ferro-alloys; ferro-silicon, containing by weight more than 55% of silicon",742.4309,5581.43,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Ferrosilicon [SF]
+2026-11-02 15:46,H1717,Ferro-alloys; ferro-silico-manganese,756.0746,5684.0,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Silicomanganese [SM]
+2026-11-02 15:46,H1810,"Steel, stainless; flat-rolled, width 600mm or more, cold-rolled, of a thickness...",1.849,13900.0,CNY,2026-11-02,100ppi (生意社) spot via AKShare - Stainless steel 304 CR [SS]
+2026-11-02 15:46,H1989,"Hafnium and articles thereof; unwrought, powders, waste and scrap",9595.63,9595.63,USD,2026-11-02,Strategic Metals Invest - Hafnium
+2026-11-02 15:46,H1991,"Rhenium and articles thereof; unwrought, powders, waste and scrap",7366.77,7366.77,USD,2026-11-02,Strategic Metals Invest - Rhenium
