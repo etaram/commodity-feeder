@@ -32,13 +32,13 @@ def fetch():
         rows, _ = rolling("rwanda", [])
         return rows, {"new": 0, "error": "unreachable"}
     t, new, seen, page = str(today()), [], set(), 1
-    while page <= 40:
+    while page <= 150:
         r = s.post(URL, data={"currentPageNo": page, "recordCountPerPage": 50, "searchConditions": ""}, timeout=60)
         if r.status_code != 200:
             log.warning("Rwanda %s page %d", r.status_code, page); break
         body = r.text
         shown = {a: b for a, b in SHOWN.findall(body)}  # internal ref -> reference as published (ends with the entity)
-        got = 0
+        got = opened = 0
         for v in RADIO.findall(body):
             p = html.unescape(v).split("|")
             if len(p) < 9 or p[0] in seen:
@@ -47,8 +47,10 @@ def fetch():
             ref, name, dl, method, typ = p[0], clean(p[1]), _date(p[3]), p[5], p[6]
             if dl and dl < t:
                 continue
+            opened += 1
             pub_ref = shown.get(ref, ref)
             entity = pub_ref.rsplit("/", 1)[-1] if "/" in pub_ref else ""
+            entity = "" if entity.isdigit() else entity  # only an entity code is known
             sector, how = classify(name)
             new.append({
                 "id": "RW-" + re.sub(r"[^\w]", "", ref)[:40], "source": "Umucyo (Rwanda)", "group": "", "sector": sector,
@@ -58,7 +60,7 @@ def fetch():
                 "published": "", "deadline": dl, "value": "", "currency": "",
                 "link": "https://www.umucyo.gov.rw/eb/bav/selectListAdvertisingListForGU.do", "lang": "", "contact": "",
             })
-        if got == 0:
+        if got == 0 or (opened == 0 and page >= 10):  # newest first: stop after a page with nothing still open
             break
         page += 1
         polite(1.5)
