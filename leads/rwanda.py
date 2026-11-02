@@ -23,7 +23,14 @@ def _date(s):
 def fetch():
     from curl_cffi import requests as cr
     s = cr.Session(impersonate="chrome")
-    s.get(URL, timeout=60)
+    for i in range(3):  # the portal's DNS answers slowly from some networks
+        try:
+            s.get(URL, timeout=60); break
+        except Exception as e:  # noqa: BLE001
+            log.warning("Rwanda connect %d: %s", i + 1, str(e)[:120]); polite(20)
+    else:
+        rows, _ = rolling("rwanda", [])
+        return rows, {"new": 0, "error": "unreachable"}
     t, new, seen, page = str(today()), [], set(), 1
     while page <= 40:
         r = s.post(URL, data={"currentPageNo": page, "recordCountPerPage": 50, "searchConditions": ""}, timeout=60)
