@@ -30,8 +30,13 @@ def fetch():
     from curl_cffi import requests as cr
     s = cr.Session(impersonate="chrome")
     t, new, seen = str(today()), [], set()
-    r = s.get(URL, timeout=60)
     page = 1
+    try:
+        r = s.get(URL, timeout=60)
+    except Exception as e:  # noqa: BLE001
+        log.warning("PhilGEPS: %s", str(e)[:120])
+        rows, _ = rolling("philippines", [])
+        return rows, {"new": 0}
     while True:
         got = 0
         for pub, close, rid, title, extra in ROW.findall(r.text):

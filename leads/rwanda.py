@@ -33,7 +33,14 @@ def fetch():
         return rows, {"new": 0, "error": "unreachable"}
     t, new, seen, page = str(today()), [], set(), 1
     while page <= 150:
-        r = s.post(URL, data={"currentPageNo": page, "recordCountPerPage": 50, "searchConditions": ""}, timeout=60)
+        r = None
+        for i in range(3):
+            try:
+                r = s.post(URL, data={"currentPageNo": page, "recordCountPerPage": 50, "searchConditions": ""}, timeout=60); break
+            except Exception as e:  # noqa: BLE001  (the portal sometimes drops a connection)
+                log.warning("Rwanda page %d try %d: %s", page, i + 1, str(e)[:100]); polite(10)
+        if r is None:
+            break
         if r.status_code != 200:
             log.warning("Rwanda %s page %d", r.status_code, page); break
         body = r.text

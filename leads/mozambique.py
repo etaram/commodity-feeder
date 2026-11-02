@@ -15,8 +15,11 @@ def fetch():
     from curl_cffi import requests as cr
     s = cr.Session(impersonate="chrome")
     t, new = str(today()), []
-    r = s.get(BASE, timeout=60)
-    for kind, ref, obj, ent, dl, link in ITEM.findall(r.text):
+    try:
+        body = s.get(BASE, timeout=60).text
+    except Exception as e:  # noqa: BLE001
+        log.warning("Mozambique: %s", str(e)[:120]); body = ""
+    for kind, ref, obj, ent, dl, link in ITEM.findall(body):
         kind = clean(kind).upper()
         if dl < t or "LIMITADO" in kind or "AJUSTE" in kind:
             continue

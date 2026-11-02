@@ -37,7 +37,10 @@ def fetch():
     titles = json.loads(CACHE.read_text()) if CACHE.exists() else {}
     t, new, seen, page, looked = str(today()), [], set(), 1, 0
     while page <= 60:
-        r = s.get(f"{BASE}/bid-notices", params={"page": page}, timeout=60)
+        try:
+            r = s.get(f"{BASE}/bid-notices", params={"page": page}, timeout=60)
+        except Exception as e:  # noqa: BLE001
+            log.warning("Uganda page %d: %s", page, str(e)[:120]); break
         if r.status_code != 200:
             log.warning("Uganda %s page %d", r.status_code, page); break
         got = 0

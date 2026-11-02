@@ -15,7 +15,10 @@ def fetch():
     s = cr.Session(impersonate="chrome")
     t, new = str(today()), []
     for page in range(1, 6):
-        r = s.get(URL, params={"page": page} if page > 1 else None, timeout=60)
+        try:
+            r = s.get(URL, params={"page": page} if page > 1 else None, timeout=60)
+        except Exception as e:  # noqa: BLE001
+            log.warning("Malawi page %d: %s", page, str(e)[:120]); break
         if r.status_code != 200:
             break
         got = 0

@@ -26,10 +26,13 @@ def fetch():
     from curl_cffi import requests as cr
     s = cr.Session(impersonate="chrome")
     t, new, seen = str(today()), [], set()
-    r = s.get(BASE + "/esop/guest/go/public/opportunity/current", timeout=60)
+    page = 0
     for page in range(1, 15):
-        if page > 1:
-            r = s.post(LIST, data={"userAct": "changePage", "opportunityListManager.pagerComponent.page": page}, timeout=60)
+        try:
+            r = (s.get(BASE + "/esop/guest/go/public/opportunity/current", timeout=60) if page == 1 else
+                 s.post(LIST, data={"userAct": "changePage", "opportunityListManager.pagerComponent.page": page}, timeout=60))
+        except Exception as e:  # noqa: BLE001
+            log.warning("Dubai page %d: %s", page, str(e)[:120]); break
         got = 0
         for cur, buyer, oid, title, pub, cat, close in ROW.findall(r.text):
             if oid in seen:
