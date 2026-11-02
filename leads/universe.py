@@ -135,6 +135,8 @@ def quality(r):
     q += 12 if r["notable"] else 0
     q += 15 if "Research" in r["sources"] else (8 if "Wikidata products" in r["sources"] else 0)
     q += 5 if (r["email"] or r["phone"] or r["website"]) else 0
+    sh = int(r.get("shipments_12m") or 0)
+    q += min(30, 6 * math.log2(1 + sh)) if sh else (5 if r.get("hs_codes") else 0)  # steady exports to the US
     return round(max(0, min(100, q)))
 
 
@@ -153,6 +155,55 @@ def balance_regions(rows):
     return [r for _, r in sorted(keyed, key=lambda x: x[0])]
 
 
+HS_SECTOR = [(1, 24, "AGRI_FOOD"), (25, 26, "MINING_METALS"), (27, 27, "ENERGY"), (28, 40, "CHEMICALS"), (41, 43, "TEXTILES"),
+             (44, 46, "CONSTR_MAT"), (47, 49, "CONSUMER"), (50, 67, "TEXTILES"), (68, 70, "CONSTR_MAT"), (71, 83, "MINING_METALS"),
+             (84, 84, "MACHINERY"), (85, 85, "POWER"), (86, 89, "TRANSPORT_EQ"), (90, 92, "LAB"), (93, 93, "DEFENCE"),
+             (94, 97, "CONSUMER")]
+NOISE = re.compile(r"\b\w*(xxx|email|fba|@|www|http|hs code|hscode|po no|invoice|container|pallets?|cartons?|pkgs?|"
+                   r"packages?|bags?|ncm|ref|dthc|thc|caed|cargo|stow|sthe|request|carrying|temperature|degrees?|"
+                   r"celsius|scac|shipper|freight|said|contain|stc|hbl|mbl|pcs|kgs?|net|gross|weight|total|demo|ecn|"
+                   r"please|note|quantity|based|ocean|carrier|waybill|loaded|plts|payable|elsewhere|contract|lot|"
+                   r"drums?|class|pgiii|hscd|psadav|xx+)\w*\b|\b\w*\d\w*\b", re.I)
+
+
+def hs_sector(h):
+    try:
+        ch = int(str(h)[:2])
+    except ValueError:
+        return ""
+    return next((sec for a, b, sec in HS_SECTOR if a <= ch <= b), "")
+
+
+def _customs():
+    """Foreign exporters that shipped to the US, from US Customs bills of lading (ImportYeti HS pages, cached by
+    leads/importyeti.py): real producers and traders with product evidence (HS heading, goods described, shipments
+    in the last 12 months). Freight forwarders are left out. One record per (name, country), merged over headings."""
+    out = {}
+    for f in sorted((LEADS / "importyeti").glob("*.json")):
+        try:
+            d = json.loads(f.read_text())
+        except ValueError:
+            continue
+        head = f.stem
+        for r in d.get("records", []):
+            if r.get("role") != "supplier" or r.get("forwarder") or not r.get("company"):
+                continue
+            k = (norm(r["company"]), iso3(r.get("country") or "") or "")
+            if len(k[0]) < 3 or not k[1] or k[1] == "USA":
+                continue
+            x = out.setdefault(k, {"name": r["company"], "ship12": 0, "total": 0, "heads": {}, "products": [], "address": ""})
+            x["ship12"] = max(x["ship12"], r.get("shipments_12m") or 0)  # the same shipments appear under each heading
+            x["total"] = max(x["total"], r.get("total_shipments") or 0)
+            own = [h.replace(".", "")[:4] for h in (r.get("hs_codes") or "").split() if h[:2].isdigit()]
+            for i, h in enumerate(own or [head]):  # the company's own HS codes first, else the page's heading
+                x["heads"][h] = x["heads"].get(h, 0) + (len(own) - i if own else 0.5)
+            x["address"] = x["address"] or r.get("address") or ""
+            p = re.sub(r"\s+", " ", NOISE.sub(" ", r.get("products") or "")).strip(" ,.-")
+            if p and len(x["products"]) < 3:
+                x["products"].append(p[:90])
+    return out
+
+
 TIER_NAMES = {"1": "Strategic", "2": "Proven", "3": "Qualified", "4": "Unproven"}
 
 
@@ -164,7 +215,8 @@ def supplier_tier(r):
     3 Qualified - repeat winner (2+ wins) or >= $250K won, and reachable (contact or website)
     4 Unproven  - a single small award or thin data
     Returns (tier, reason)."""
-    usd, wins, cross = r["won_usd_est"] or 0, r["wins"] or 0, bool(r["exports"])
+    usd, wins = r["won_usd_est"] or 0, r["wins"] or 0
+    cross = bool(r["exports"]) and "the US" not in r["exports"]  # customs exporters are tiered by shipments below
     notable = bool(r["notable"]) or "Wikidata products" in r["sources"]
     reach = bool(r["email"] or r["phone"] or r["website"])
     m = f"${usd / 1e6:.1f}M won, {wins} wins" if usd >= 1e6 else f"${usd / 1e3:.0f}K won, {wins} wins"
@@ -172,6 +224,11 @@ def supplier_tier(r):
         return "1", f"Strategic: {m}" + (", sells abroad" if cross else "") + (", notable producer" if notable else "")
     if (usd >= 1e6 and wins >= 3) or cross or notable:
         return "2", f"Proven: {m}" + (", sells abroad" if cross else "") + (", notable producer" if notable else "")
+    sh = int(r.get("shipments_12m") or 0)
+    if sh >= 12:
+        return "2", f"Proven: {sh} shipments to the US in 12 months (customs records)"
+    if r.get("hs_codes"):
+        return "3", f"Qualified: exporter in US customs records ({sh} shipments in 12 months)"
     if (wins >= 2 or usd >= 250e3) and reach:
         return "3", f"Qualified: {m}, reachable"
     return "4", f"Unproven: {m}" + ("" if reach else ", no contact yet")
@@ -311,6 +368,27 @@ def build():
             x["industries"] = c["industries"]
         if c.get("type") == "trader":
             x["trader"] = True
+    # exporters seen in US customs records (bills of lading): adds producers in Asia and elsewhere with no public awards
+    n_cu = 0
+    for k, c in _customs().items():
+        x = sup.get(k)
+        if x is None:
+            x = sup[k]; x["names"][c["name"]] += 1; x["country"][k[1]] += 1; x["tier_b"] = True; n_cu += 1
+        x["sources"].add("US customs")
+        x["ship12"] = c["ship12"]; x["ship_total"] = c["total"]
+        heads = sorted(c["heads"].items(), key=lambda y: -y[1])
+        x["hs"] = " ".join(h for h, _ in heads[:6])
+        for h, _ in heads[:3]:
+            sec = hs_sector(h)
+            if sec:
+                x["sectors"][sec] += 1; x["goods"] += 1 if sec in GOODS else 0
+            g = next((gid for gid, gg in BY_ID.items() if h[:2] in (gg.get("hs") or [])), None)
+            if g:
+                x["groups"][g] += 1
+        if c["products"]:
+            prods = ", ".join(p for p in [x.get("products", ""), *c["products"]] if p)
+            x["products"] = prods[:300]
+        x["address"] = x["address"] or c["address"]
     web = _web_profiles()
     out = []
     for (k, wc), x in sup.items():
@@ -337,7 +415,7 @@ def build():
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
             "epc": epc_class(x),
-            "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) else ("trader" if x.get("trader") else "works/services"),
+            "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) or x.get("ship_total") else ("trader" if x.get("trader") else "works/services"),
             "logistics_role": logistics_role(f"{name} {x.get('industries', '')} {about} {items} {x.get('naics', '')}")
             if any(s_ in ("LOGISTICS", "PORTS") for s_, _ in secs[:1]) or "shipbuild" in name.lower() else "",
             "products": about[:300], "web_title": (wp.get("title") or "")[:120], "supplied": items[:240],
@@ -348,13 +426,16 @@ def build():
             # cross-border evidence: won tenders abroad, verified by the research worker, or a known producer
             "exports": ("won abroad" if any(c and wc and c != wc for c in x["buyer_c"]) else
                         "verified (research)" if "Research" in x["sources"] else
-                        "producer (Wikidata)" if "Wikidata products" in x["sources"] else ""),
+                        "producer (Wikidata)" if "Wikidata products" in x["sources"] else
+                        f"ships to the US ({x.get('ship12', 0)} shipments in 12 months)" if x.get("ship12") else
+                        "shipped to the US (customs records)" if x.get("ship_total") else ""),
             "first_win": x["first"] if x["first"] != "9999" else "", "last_win": x["last"],
             "email": x["email"], "phone": x["phone"], "website": x["website"], "website_source": site_src, "address": x["address"],
             "legal_id": x["legal_id"], "sources": "; ".join(sorted(x["sources"])), "example_award": x["example"],
             "tier_reason": "", "origin": "B" if x.get("tier_b") else "A",  # new columns stay at the end (sheet formulas)
             "contact_level": ("email+phone" if x["email"] and x["phone"] else "email" if x["email"] else
                               "phone" if x["phone"] else "website only" if x["website"] else "address only" if x["address"] else "none"),
+            "shipments_12m": x.get("ship12", "") if x.get("ship_total") else "", "hs_codes": x.get("hs", ""),
         })
     for r in out:
         r["quality"] = quality(r)
@@ -368,7 +449,7 @@ def build():
         w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(out)
     stats = {"awards": n_aw, "suppliers": len(out), "with_email": sum(1 for r in out if r["email"]),
              "with_phone": sum(1 for r in out if r["phone"]), "exporters": sum(1 for r in out if r["exports"]),
-             "goods": sum(1 for r in out if r["type"] == "goods supplier"), "contacts_matched": n_ct,
+             "goods": sum(1 for r in out if r["type"] == "goods supplier"), "contacts_matched": n_ct, "customs_exporters": sum(1 for r in out if r["hs_codes"]), "customs_new": n_cu,
              "tier_A": sum(1 for r in out if r["origin"] == "A"), "tier_B_notable": n_b,
              **{f"tier_{t}_{n.lower()}": sum(1 for r in out if r["tier"] == t) for t, n in TIER_NAMES.items()},
              "with_website": sum(1 for r in out if r["website"]),

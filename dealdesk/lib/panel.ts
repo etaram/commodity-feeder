@@ -37,7 +37,7 @@ async function snapshot(part: "static" | "live"): Promise<Snap> {
 const SUP_COLS: [string, keyof Supplier][] = [["quality", "q"], ["supplier", "n"], ["country", "c"], ["region", "rg"], ["tier", "tr"],
   ["main_sector", "s"], ["other_sectors", "s2"], ["type", "ty"], ["trader", "td"], ["epc", "epc"], ["logistics_role", "lg"],
   ["products", "p"], ["commodities", "cm"], ["exports", "x"], ["wins", "w"], ["won_usd_est", "u"], ["buyer_countries", "bc"],
-  ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"]];
+  ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"], ["shipments_12m", "sh"], ["hs_codes", "hs"]];
 const SUP_HEAD = [...SUP_COLS.map(([k]) => k), "sources"];
 const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), "public award records"];
 
@@ -163,6 +163,37 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
     (!reg || s.rg === reg) && (!cty || s.c === cty) && (!sec || s.s === sec || (s.s2 || "").includes(sec)) &&
     (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
     (!role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""))) &&
-    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""}`.toLowerCase()))).slice(0, 2000);
+    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""}`.toLowerCase()))).slice(0, 2000);
   return [SUP_HEAD, ...out.map(supRow)];
+}
+
+// (words hold only letters and digits, so they need no escaping)
+// Suppliers for one tender, ranked over the whole supplier index (not only the rows loaded in the browser):
+// product words in what they make or supplied (+2 each, up to 8), sector (+3 main, +1 other), HS chapter (+2),
+// evidence of exports (+1), proven tier (+2/+1), already sold in the tender's country (+2) or region (+1).
+const STOP = new Set(("the and for with from supply supplies delivery services service provision procurement purchase framework " +
+  "agreement lot lots various other works contract tender ministry department government county national public office council authority municipality district goods items equipment materials des de la le du et pour del los las para und der die für von zur").split(" "));
+export async function suppliersFor(o: { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number }): Promise<Grid> {
+  const words = [...new Set(String(o.text || "").toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
+    .filter((w) => w.length >= 4 && !STOP.has(w)))].slice(0, 14);
+  const res = words.map((w) => new RegExp(`(^|[^\\p{L}])${w}`, "u"));
+  const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
+  const scored: { s: Supplier; sc: number }[] = [];
+  for (const s of await allSuppliers()) {
+    const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""}`.toLowerCase();
+    let hits = 0;
+    for (const r of res) if (r.test(blob)) hits++;
+    const secHit = sec && (s.s === sec ? 3 : (s.s2 || "").includes(sec) ? 1 : 0);
+    if (!hits && !(secHit === 3 && !res.length)) continue;
+    let sc = Math.min(8, hits * 2) + (secHit || 0);
+    if (ch && (s.hs || "").split(" ").some((h) => h.startsWith(ch))) sc += 2;
+    if (s.x) sc += 1;
+    sc += s.tr === "1" ? 2 : s.tr === "2" ? 1 : 0;
+    if (o.country && (s.bc || "").split(" ").includes(o.country)) sc += 2;
+    else if (o.region && s.rg === o.region) sc += 1;
+    sc += (s.q || 0) / 50;
+    scored.push({ s, sc });
+  }
+  scored.sort((a, b) => b.sc - a.sc);
+  return [SUP_HEAD, ...scored.slice(0, Math.min(40, o.n || 15)).map((x) => supRow(x.s))];
 }

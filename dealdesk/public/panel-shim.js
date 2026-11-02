@@ -103,6 +103,8 @@
     list: async () => { const r = await fetch("/api/users", { credentials: "same-origin" }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.users || []; },
     set: async (email, patch) => post("/api/users", Object.assign({ email }, patch), "Deal Desk"),
   };
+  // The best suppliers for one tender, ranked on the server over the whole supplier index.
+  window.DD_SUPFOR = async (q) => (await post("/api/panel/suppliers-for", q, "Deal Desk")).values || [];
   // Official contact details for one supplier, fetched only when its file is opened.
   window.DD_CONTACT = async (name, country) => (await post("/api/panel/contact", { name, country }, "Deal Desk")).contact || null;
 

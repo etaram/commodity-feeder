@@ -462,7 +462,7 @@ const L = {
     a_quick: "Quick analysis", a_elig: "Full eligibility check", a_sup: "Matching suppliers", a_track: "Track in Pursuits", tracked: "Already tracked",
     t_note: "Quick analysis uses the data shown here and takes about half a minute. The full eligibility check goes to the worker, which reads the tender documents, fills a Pursuits row and posts the answer in the Jobs tab.",
     thinking: "Thinking...", only_in_claude: "AI features on the web need an Anthropic API key in Vercel. They work now in the panel inside Claude.", sup_for: "Suppliers for: ",
-    sup_h: "Matching suppliers from the database", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
+    sup_h: "Matching suppliers from the database", sup_wait: "Searching the whole supplier database...", sup_note_all: "Ranked over the whole database by the tender's product words, sector, HS chapter, export evidence and past sales in this country. Tick suppliers and press \"Draft outreach\" to prepare an RFQ; missing e-mails are looked up from official sources.", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
     e_sup_match: "No matching suppliers in the loaded set. Send a supplier search to the worker.", draft_sel: "Draft outreach to selected", deep_sup: "Deep supplier search on the web",
     tick_one: "Tick at least one supplier with an e-mail address.", sup_not_loaded: "The supplier database has not loaded yet.", select: "Select",
     out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft...", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite",
@@ -570,7 +570,7 @@ const L = {
     a_quick: "ניתוח מהיר", a_elig: "בדיקת תנאי סף מלאה", a_sup: "ספקים מתאימים", a_track: "הוסף למעקב (Pursuits)", tracked: "כבר במעקב",
     t_note: "ניתוח מהיר מבוסס על הנתונים שכאן ולוקח כחצי דקה. בדיקת תנאי סף מלאה נשלחת לעובד שקורא את מסמכי המכרז, ממלא שורה ב-Pursuits ומחזיר תשובה בלשונית משימות.",
     thinking: "חושב...", only_in_claude: "יכולות AI בגרסת הווב דורשות מפתח Anthropic API ב-Vercel. בפאנל שבתוך Claude הן עובדות כבר עכשיו.", sup_for: "ספקים לפי: ",
-    sup_h: "ספקים מתאימים מהמאגר", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
+    sup_h: "ספקים מתאימים מהמאגר", sup_wait: "מחפש בכל מאגר הספקים...", sup_note_all: "מדורג מתוך כל המאגר לפי מילות המוצר במכרז, סקטור, פרק HS, עדות לייצוא ומכירות קודמות במדינה. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ; מייל חסר יאותר ממקורות רשמיים.", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
     e_sup_match: "לא נמצאו ספקים מתאימים בטעינה הנוכחית. שלח איתור ספקים לעובד.", draft_sel: "נסח פנייה לספקים המסומנים", deep_sup: "איתור ספקים מעמיק ברשת",
     tick_one: "סמן לפחות ספק אחד עם כתובת מייל.", sup_not_loaded: "מאגר הספקים עוד לא נטען.", select: "בחר",
     out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה...", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש",
@@ -1097,13 +1097,23 @@ function matchSuppliers(sector, text, n = 12) {
     return { s, sc, hits };
   }).filter(x => x.hits > 0 || (sector && x.s.main_sector === sector)).sort((a, b) => b.sc - a.sc).slice(0, n).map(x => x.s);
 }
-function showSuppliers(sector, text, outSel, ctx) {
+async function showSuppliers(sector, text, outSel, ctx) {
   const out = $(outSel);
-  if (!SUP().length) { out.innerHTML = `<div class="flash err">${esc(S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("sup_not_loaded"))}</div>`; return; }
-  const list = matchSuppliers(sector, text);
-  out.innerHTML = `<div class="section"><h3>${esc(t("sup_h"))}</h3><p class="note">${esc(t("sup_note", { n: SUP().length.toLocaleString("en-US") }))}</p>
-    ${list.length ? list.map((s, i) => `<div class="sup"><input type="checkbox" id="ms${i}" ${s.email ? "" : "disabled"} aria-label="${esc(t("select"))} ${esc(s.supplier)}"><label for="ms${i}" style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)} <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span></div>
+  let list = [], whole = false;
+  // On the web: ranked on the server over the whole supplier index; otherwise over the suppliers loaded here.
+  if (window.DD_SUPFOR) {
+    out.innerHTML = `<div class="section"><div class="note"><span class="spin"></span> ${esc(t("sup_wait"))}</div></div>`;
+    const r = ctx?.r || {};
+    try { list = toObjects(await window.DD_SUPFOR({ sector, text, country: r.country || "", region: r.region || "", hs: r.hs || "", n: 15 })); whole = true; } catch (e) { list = []; }
+  }
+  if (!whole) {
+    if (!SUP().length) { out.innerHTML = `<div class="flash err">${esc(S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("sup_not_loaded"))}</div>`; return; }
+    list = matchSuppliers(sector, text);
+  }
+  out.innerHTML = `<div class="section"><h3>${esc(t("sup_h"))}</h3><p class="note">${esc(whole ? t("sup_note_all") : t("sup_note", { n: SUP().length.toLocaleString("en-US") }))}</p>
+    ${list.length ? list.map((s, i) => `<div class="sup"><input type="checkbox" id="ms${i}" aria-label="${esc(t("select"))} ${esc(s.supplier)}"><label for="ms${i}" style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)} <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div>
       <div class="sub">${txt(String(s.products || s.supplied || s.commodities || s.main_sector).slice(0, 220))}</div>
+      ${s.exports || s.tier_reason ? `<div class="sub">${esc(s.exports || s.tier_reason)}${s.hs_codes ? ` · HS ${esc(s.hs_codes)}` : ""}</div>` : ""}
       <div class="sub" dir="ltr">${[s.email, s.phone].filter(Boolean).map(esc).join(" · ")} ${link(s.website, s.website)}</div></label></div>`).join("") : `<div class="empty">${esc(t("e_sup_match"))}</div>`}
     <div class="actions"><button class="primary" type="button" id="ms-rfq">${esc(t("draft_sel"))}</button><button type="button" id="ms-job">${esc(t("deep_sup"))}</button></div><div id="ms-out"></div></div>`;
   $("#ms-rfq").onclick = () => { const chosen = list.filter((s, i) => $("#ms" + i)?.checked); if (!chosen.length) { $("#ms-out").innerHTML = `<div class="flash info">${esc(t("tick_one"))}</div>`; return; } compose({ kind: "rfq", ctx, to: chosen }, "#ms-out"); };

@@ -68,8 +68,8 @@ SUP_FIELDS = {"quality": "q", "supplier": "n", "country": "c", "region": "rg", "
               "other_sectors": "s2", "type": "ty", "trader": "td", "epc": "epc", "logistics_role": "lg",
               "products": "p", "commodities": "cm", "exports": "x", "wins": "w", "won_usd_est": "u",
               "buyer_countries": "bc", "website": "web", "last_win": "lw",
-              "tier_reason": "why"}
-CUT = {"why": 90, "p": 90, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80}
+              "tier_reason": "why", "shipments_12m": "sh", "hs_codes": "hs"}
+CUT = {"why": 90, "p": 120, "hs": 30, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80}
 
 
 def suppliers(limit=90_000):
@@ -95,7 +95,7 @@ def suppliers(limit=90_000):
             v = (r.get(k) or "").strip()
             if not v:
                 continue
-            if short in ("q", "w", "u"):
+            if short in ("q", "w", "u", "sh"):
                 v = _f(v)
                 if v is None:
                     continue
