@@ -246,6 +246,7 @@ BEL,Engineering & architecture services,329,25,0.076,4
 SWE,Agriculture & food,327,3,0.009,3.0
 NLD,"Repair, maintenance & installation",320,10,0.031,3
 CHE,"Environment, waste & cleaning",320,1,0.003,3.0
+GBR,Transport & logistics services,314,243,0.774,10
 BRA,Healthcare & pharmaceuticals,312,0,0.0,
 PRT,"Consulting, business & financial services",311,16,0.051,2.0
 HRV,"Environment, waste & cleaning",309,0,0.0,2
@@ -253,7 +254,6 @@ HUN,Agriculture & food,308,0,0.0,4.0
 DNK,"Consulting, business & financial services",307,56,0.182,3
 BGR,"Furniture, appliances & consumer goods",306,1,0.003,3.0
 LTU,"Consulting, business & financial services",305,30,0.098,2
-GBR,Transport & logistics services,300,229,0.763,10
 PRT,"Environment, waste & cleaning",300,3,0.01,3.0
 FRA,"Textiles, apparel & leather",295,6,0.02,4
 HUN,"Repair, maintenance & installation",294,2,0.007,2.0
@@ -403,6 +403,7 @@ DNK,Agriculture & food,141,0,0.0,2
 DNK,Scientific & measuring instruments,140,50,0.357,1
 ITA,Chemicals & plastics,139,2,0.014,2
 NLD,Transport & civil infrastructure works,139,0,0.0,4
+GBR,Healthcare & pharmaceuticals,139,139,1.0,
 IRL,"Vehicles, rolling stock, ships & aircraft",138,37,0.268,2
 LTU,Building construction works,138,2,0.014,3.0
 BRA,Construction materials & building systems,137,0,0.0,
@@ -426,7 +427,6 @@ PRT,Transport & logistics services,130,2,0.015,2
 PRT,Industrial & construction machinery,129,3,0.023,2
 IRL,Healthcare & pharmaceuticals,128,27,0.211,2
 BEL,Industrial & construction machinery,125,26,0.208,2
-GBR,Healthcare & pharmaceuticals,125,125,1.0,
 LTU,Power & electrical equipment,125,7,0.056,3
 HUN,Chemicals & plastics,123,5,0.041,2
 BGR,Defence & security,123,5,0.041,2
@@ -572,6 +572,7 @@ SVN,"Energy, fuels & utilities",63,1,0.016,2
 FIN,Construction materials & building systems,63,1,0.016,2
 GRC,Power & electrical equipment,63,0,0.0,1
 HUN,Defence & security,62,1,0.016,2.0
+GBR,ICT & telecom,61,58,0.951,3
 DNK,Industrial & construction machinery,61,14,0.23,2
 SVK,Transport & civil infrastructure works,61,1,0.016,6
 BGR,"Textiles, apparel & leather",60,0,0.0,2.0
@@ -585,7 +586,6 @@ BRA,"Education, social & hospitality services",57,0,0.0,
 DNK,Defence & security,57,26,0.456,2
 AUT,Water & wastewater,56,10,0.179,3.0
 BEL,"Energy, fuels & utilities",55,3,0.055,3
-GBR,ICT & telecom,54,51,0.944,3
 SVK,Chemicals & plastics,52,2,0.038,2.0
 GRC,Water & wastewater,52,0,0.0,1.5
 SVK,"Consulting, business & financial services",52,10,0.192,2.0
@@ -632,6 +632,7 @@ CYP,Building construction works,37,2,0.054,2
 EST,Building construction works,37,0,0.0,6
 NOR,Water & wastewater,36,0,0.0,3
 HUN,"Textiles, apparel & leather",36,1,0.028,2.5
+GBR,"Consulting, business & financial services",36,35,0.972,2
 LUX,"Vehicles, rolling stock, ships & aircraft",36,13,0.361,2.0
 BEL,Chemicals & plastics,35,5,0.143,3
 GRC,Building construction works,35,1,0.029,2
@@ -646,7 +647,6 @@ LUX,"Environment, waste & cleaning",32,3,0.094,4.0
 CHE,"Energy, fuels & utilities",31,0,0.0,2
 MLT,"Vehicles, rolling stock, ships & aircraft",31,2,0.065,3.0
 COL,Transport & civil infrastructure works,31,0,0.0,
-GBR,"Consulting, business & financial services",31,30,0.968,2
 AUT,Chemicals & plastics,30,17,0.567,2.0
 DNK,Transport & civil infrastructure works,30,2,0.067,3.5
 GRC,"Textiles, apparel & leather",30,0,0.0,4.5
@@ -691,13 +691,14 @@ NOR,Chemicals & plastics,20,5,0.25,2.0
 AUT,"Mining, minerals & metals",20,3,0.15,1.0
 MLT,Transport & civil infrastructure works,20,1,0.05,2.5
 CHE,"Mining, minerals & metals",19,7,0.368,2
+GBR,Engineering & architecture services,19,18,0.947,1
 USA,Engineering & architecture services,19,0,0.0,
 CYP,"Education, social & hospitality services",19,2,0.105,1
 EST,Industrial & construction machinery,19,5,0.263,2.5
 BGR,"Mining, minerals & metals",18,0,0.0,2.0
 DNK,Chemicals & plastics,18,1,0.056,3.0
 BRA,"Mining, minerals & metals",18,0,0.0,
-GBR,Engineering & architecture services,18,17,0.944,1
+GBR,Building construction works,18,16,0.889,5.5
 CYP,Defence & security,18,2,0.111,3.0
 LUX,"Repair, maintenance & installation",18,7,0.389,3.0
 MLT,Power & electrical equipment,18,1,0.056,4.0
@@ -715,7 +716,6 @@ LIE,"Environment, waste & cleaning",16,0,0.0,2.0
 IRL,"Mining, minerals & metals",15,1,0.067,2
 MLT,Water & wastewater,15,3,0.2,6
 LUX,"Furniture, appliances & consumer goods",15,3,0.2,2
-GBR,Building construction works,15,13,0.867,5.5
 GBR,Agriculture & food,15,15,1.0,
 CYP,Power & electrical equipment,15,3,0.2,4
 ISL,"Repair, maintenance & installation",15,1,0.067,4
@@ -732,6 +732,7 @@ CHE,"Textiles, apparel & leather",13,2,0.154,3
 NOR,"Mining, minerals & metals",12,0,0.0,2.0
 FIN,Water & wastewater,12,1,0.083,2.5
 BRA,"Energy, fuels & utilities",12,0,0.0,
+GBR,"Repair, maintenance & installation",12,11,0.917,8
 GBR,"Vehicles, rolling stock, ships & aircraft",12,12,1.0,
 USA,Construction materials & building systems,12,0,0.0,
 USA,Transport & civil infrastructure works,12,0,0.0,
@@ -755,7 +756,6 @@ CYP,Agriculture & food,9,0,0.0,3
 CYP,Chemicals & plastics,9,3,0.333,2
 MLT,Agriculture & food,9,0,0.0,2
 ISL,Construction materials & building systems,9,3,0.333,2
-GBR,"Repair, maintenance & installation",9,8,0.889,8
 ISL,"Furniture, appliances & consumer goods",9,4,0.444,4
 CYP,Transport & civil infrastructure works,9,0,0.0,4
 CYP,Construction materials & building systems,8,0,0.0,3.0
@@ -775,6 +775,7 @@ BIH,ICT & telecom,7,2,0.286,5
 ISL,Agriculture & food,7,0,0.0,1
 MKD,"Energy, fuels & utilities",6,0,0.0,2.5
 MLT,"Textiles, apparel & leather",6,1,0.167,6.5
+GBR,"Furniture, appliances & consumer goods",6,6,1.0,
 USA,"Energy, fuels & utilities",6,1,0.167,
 MDA,"Vehicles, rolling stock, ships & aircraft",6,2,0.333,1.5
 LUX,Construction materials & building systems,6,1,0.167,3.0
@@ -783,7 +784,6 @@ LIE,Engineering & architecture services,6,1,0.167,4.5
 ISL,Transport & logistics services,6,0,0.0,2.0
 MLT,Chemicals & plastics,5,1,0.2,5
 NLD,"Mining, minerals & metals",5,0,0.0,2
-GBR,"Furniture, appliances & consumer goods",5,5,1.0,
 GBR,"Education, social & hospitality services",5,4,0.8,1
 ISL,Power & electrical equipment,5,0,0.0,5.5
 CYP,"Textiles, apparel & leather",5,0,0.0,4
