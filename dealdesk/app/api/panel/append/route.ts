@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { hasRole } from "@/lib/auth";
 import { appendRow, sheetsEnabled } from "@/lib/sheets";
+import { logActivity } from "@/lib/activity";
 
 // The panel's writes: new research jobs and tracked pursuits. Only these two tabs can be written from the web.
 // Analysts and admins may write; approving a project action or closing a project is for admins only.
@@ -23,6 +24,7 @@ export async function POST(req: NextRequest) {
     // Column L (notes) records who queued the job, so the worker and the log show a person, not a shared account.
     if (tab === "Panel Jobs") row[11] = `${String(row[11] ?? "")}; by=${s.email}`.slice(0, 300);
     await appendRow(tab, row);
+    await logActivity(s, tab === "Panel Jobs" ? "queue_" + String(row[2] || "job") : "pursuit", String(row[4] || row[1] || ""), String(row[6] || "").slice(0, 300));
     return NextResponse.json({ ok: true });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });

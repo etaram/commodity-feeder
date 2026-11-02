@@ -44,3 +44,11 @@ Google accounts never get a password here; they are matched by verified email to
 Every new request (password or Google) emails the admin through Resend.
 Vercel env: `RESEND_API_KEY` (required), `NOTIFY_EMAIL` (default: the owner), `NOTIFY_FROM` (optional).
 Without a verified domain in Resend, mail can only go to the email the Resend account was opened with.
+
+## Activity log
+
+Every action is written to the hidden `Activity` tab (time, email, name, role, action, target, detail):
+sign-in (and failed or blocked attempts), sign-out, access requests, tabs and pages viewed, tenders, companies,
+deals and grants opened, decisions, research and queued jobs, pursuits, project approvals and closes, AI use
+(size only, never the prompt), and admin changes to users. Views are throttled to one per item per minute.
+Admins see it in the panel, tab Users, section Activity, filtered by user or text.

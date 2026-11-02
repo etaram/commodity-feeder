@@ -5,6 +5,7 @@ import { createUser, findUser, touchLogin } from "@/lib/users";
 import { sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
 import { notifyAccessRequest } from "@/lib/notify";
+import { logActivity } from "@/lib/activity";
 
 // Google sends the user back here. A verified Google email that already has an active account signs in; an unknown
 // email becomes a pending access request (admin approves it in the panel); pending or disabled accounts are told so.
@@ -32,10 +33,12 @@ export async function GET(req: NextRequest) {
       u = await createUser(email, String(p.name || email.split("@")[0]), "google");
       await logEvent("info", "users", "access request (google)", email, email);
       await notifyAccessRequest(email, u.name || email, "google", origin);
+      await logActivity({ email, name: u.name, role: "viewer" }, "access_request", "", "google");
       return back("pending=1");
     }
     if (u.status !== "active") return back(u.status === "disabled" ? "disabled=1" : "pending=1");
     touchLogin(u.email);
+    await logActivity({ email: u.email, name: u.name, role: u.role }, "sign_in", "", "google");
     const res = NextResponse.redirect(`${origin}/`);
     res.cookies.set("dd_session", signSession(u.email, u.role, u.name || String(p.name || "")), COOKIE);
     res.cookies.set("dd_oauth", "", { maxAge: 0, path: "/api/auth/google" });

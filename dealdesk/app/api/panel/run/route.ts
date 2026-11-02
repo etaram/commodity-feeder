@@ -4,6 +4,7 @@ import { claude } from "@/lib/anthropic";
 import { appendRow, jobsToday, sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
 import { registryFacts } from "@/lib/registry";
+import { logActivity } from "@/lib/activity";
 
 // Runs a panel job (research, supplier search, eligibility, logistics, quote...) immediately on the server
 // with Claude Haiku 5.5 and web search, writes the finished job to 'Panel Jobs', and returns the answer.
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest) {
   const { s: session, res } = await gate("analyst");
   if (!session) return res;
   const { id, type, target_id, target, context, request, lang } = await req.json().catch(() => ({}));
+  await logActivity(session, "research_" + String(type || "other"), String(target || target_id || ""), String(request || "").slice(0, 300));
   if (!target && !request) return NextResponse.json({ ok: false, error: "empty job" }, { status: 400 });
   const today = new Date().toISOString().slice(0, 10);
   if (today !== day) { day = today; used = 0; }

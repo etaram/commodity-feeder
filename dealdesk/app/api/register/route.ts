@@ -3,6 +3,7 @@ import { createUser, findUser, hashPassword, normEmail, validEmail } from "@/lib
 import { sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
 import { notifyAccessRequest } from "@/lib/notify";
+import { logActivity } from "@/lib/activity";
 
 // Access request: creates a pending account. Nothing is granted until an admin approves it in the panel.
 const recent = new Map<string, number[]>();
@@ -26,5 +27,6 @@ export async function POST(req: NextRequest) {
   await createUser(e, n, "password", hashPassword(p));
   await logEvent("info", "users", "access request", `${e} (${n})`, e).catch(() => {});
   await notifyAccessRequest(e, n, "password", req.nextUrl.origin);
+  await logActivity({ email: e, name: n, role: "viewer" }, "access_request", "", "password");
   return NextResponse.json({ ok: true, status: "pending" });
 }

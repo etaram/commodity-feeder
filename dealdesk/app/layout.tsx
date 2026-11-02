@@ -3,6 +3,8 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
 import SignOut from "@/components/SignOut";
+import Track from "@/components/Track";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = { title: "Sinder Deal Desk", description: "Tenders, deals and market context for Sinder's team" };
@@ -32,6 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             )}
           </div>
         </header>
+        {session && <Suspense fallback={null}><Track /></Suspense>}
         <main className="mx-auto max-w-6xl px-5 py-6">{children}</main>
         <footer className="mx-auto max-w-6xl px-5 pb-8 text-xs text-muted">Internal tool. Data refreshes every 4 hours from official procurement sources; Israel daily.</footer>
       </body>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { claude, MODEL } from "@/lib/anthropic";
 import { gate } from "@/lib/gate";
+import { logActivity } from "@/lib/activity";
 
 // The panel's quick AI features on the web (quick summary, drafts, free-language search, Hebrew translation).
 // Cost controls: cheapest model (Haiku 5.5), capped answer length, cached repeats, daily cap.
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json().catch(() => ({}));
   if (typeof prompt !== "string" || !prompt) return NextResponse.json({ ok: false }, { status: 400 });
   const input = prompt.slice(0, 20000);
+  await logActivity(g.s, "ai_quick", "", `${input.length} chars`);
   const h = createHash("sha256").update(input).digest("hex");
   const hit = cache.get(h);
   if (hit && Date.now() - hit.at < 86400000) return NextResponse.json({ ok: true, text: hit.text, cached: true });

@@ -4,6 +4,7 @@ import { hasRole, ROLES, verifySession } from "@/lib/auth";
 import { listUsers, normEmail, now, publicUser, updateUser } from "@/lib/users";
 import { sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
+import { logActivity } from "@/lib/activity";
 
 // Admin only: list accounts, approve or reject requests, change roles, disable accounts. Password hashes never leave the server.
 async function admin() {
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
   }
   const u = await updateUser(email, patch);
   if (!u) return NextResponse.json({ ok: false, error: "no such user" }, { status: 404 });
+  await logActivity(s, "user_admin", email, Object.entries(patch).filter(([k]) => k === "role" || k === "status").map(([k, v]) => `${k}=${v}`).join(" "));
   await logEvent("info", "users", `user ${email}: ${Object.entries(patch).filter(([k]) => k === "role" || k === "status").map(([k, v]) => `${k}=${v}`).join(" ")}`, "", s.email);
   return NextResponse.json({ ok: true, user: publicUser(u) });
 }

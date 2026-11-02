@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { markets } from "@/lib/markets";
 import { claude } from "@/lib/anthropic";
+import { logActivity } from "@/lib/activity";
 
 // "Why is this trend happening": a short, sourced explanation of what is driving a commodity group's price move.
 // The group and its numbers come from our own data (not from the client), the explanation from a web-searched answer.
@@ -16,6 +17,7 @@ export async function POST(req: NextRequest) {
   if (!auth.s) return auth.res;
   if (!process.env.ANTHROPIC_API_KEY) return NextResponse.json({ ok: false, error: "AI is not configured" }, { status: 503 });
   const { group, lang } = await req.json().catch(() => ({}));
+  await logActivity(auth.s, "why_trend", String(group || ""));
   const he = lang === "he";
   const m = (await markets()) as { trends?: { group: string; signal: string; m1: number | null; m3: number | null; y1: number | null; series: { name: string; unit: string; month: string; price: number; m1: number | null; m3: number | null; y1: number | null }[] }[] };
   const g = (m.trends || []).find((t) => t.group === group);

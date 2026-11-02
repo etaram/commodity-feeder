@@ -377,6 +377,8 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div class="filters"><h2 style="margin-inline-end:auto" data-i="users_h">User accounts</h2><button type="button" id="users-refresh" data-i="refresh">Refresh</button></div>
     <p class="note" data-i="users_note"></p>
     <div id="ulist"></div>
+    <div class="filters" style="margin-top:22px"><h2 style="margin-inline-end:auto" data-i="act_h">Activity</h2><select id="act-user"><option value="" data-i="act_all">All users</option></select><input id="act-q" data-ph="act_q_ph" style="max-width:220px"><button type="button" id="act-refresh" data-i="refresh">Refresh</button></div>
+    <div id="alist"></div>
   </section>
 </main>
 
@@ -525,7 +527,7 @@ const L = {
     s_not_granted: "The panel was not allowed to use Claude.", s_rate: "Too many requests right now. Try again in a few minutes.", s_disabled: "Claude is not available for this account.", s_expired: "Sign in to Claude again.", s_cancel: "Cancelled.", s_other: "Interrupted. You can try again.",
     err_reauth: "The {s} connection expired. Reconnect it in Claude settings, under Connectors.", err_notconn: "{s} is not connected in the web version. Use the panel inside Claude for this action.",
     err_sel: "There is more than one {s} connection. Choose one in the prompt at the top of the page.", err_approval: "The panel needs your approval to use {s}.", err_forbidden: "Your account cannot do this.",
-    sign_out: "Sign out", tab_users: "Users", users_h: "User accounts", users_note: "Access requests wait here until you approve them. Roles: viewer reads only; analyst also runs research, decisions and projects; admin also approves project actions and manages users. Changes apply at the user's next sign-in (within 30 days at most, or sooner if they sign out and in).", u_pending: "Waiting for approval", u_active: "Active", u_disabled: "Disabled", u_approve: "Approve", u_disable: "Disable", u_enable: "Enable", u_reject: "Reject", u_none: "No accounts yet. People can request access from the sign-in page.", u_via: "via", u_last: "last sign-in", u_role_viewer: "viewer", u_role_analyst: "analyst", u_role_admin: "admin", u_saved: "Saved", u_wait: "{n} waiting",
+    sign_out: "Sign out", act_h: "Activity", act_all: "All users", act_q_ph: "Filter: action, tender, company...", act_none: "No activity yet.", act_more: "Showing the latest {n} actions.", act_user: "Activity", tab_users: "Users", users_h: "User accounts", users_note: "Access requests wait here until you approve them. Roles: viewer reads only; analyst also runs research, decisions and projects; admin also approves project actions and manages users. Changes apply at the user's next sign-in (within 30 days at most, or sooner if they sign out and in).", u_pending: "Waiting for approval", u_active: "Active", u_disabled: "Disabled", u_approve: "Approve", u_disable: "Disable", u_enable: "Enable", u_reject: "Reject", u_none: "No accounts yet. People can request access from the sign-in page.", u_via: "via", u_last: "last sign-in", u_role_viewer: "viewer", u_role_analyst: "analyst", u_role_admin: "admin", u_saved: "Saved", u_wait: "{n} waiting",
     err_manifest: "Access to {s} was not approved for this panel. You can allow it from the artifact's permissions menu.", err_policy: "Your organization's policy blocks {s} for this panel.",
     err_unavail: "{s} did not answer just now. Try again in a minute.", err_tool: "{s} returned an error.", err_other: "Could not reach {s}.", sup_db: "Supplier Universe",
   },
@@ -633,7 +635,7 @@ const L = {
     s_not_granted: "לא ניתן אישור להשתמש ב-Claude מהפאנל.", s_rate: "יותר מדי בקשות כרגע. נסה שוב בעוד כמה דקות.", s_disabled: "Claude לא זמין לחשבון הזה.", s_expired: "יש להתחבר מחדש ל-Claude.", s_cancel: "בוטל.", s_other: "נקטע. אפשר לנסות שוב.",
     err_reauth: "החיבור ל-{s} פג. יש לחבר אותו מחדש בהגדרות של Claude, תחת Connectors.", err_notconn: "{s} לא מחובר בגרסת הווב. לפעולה הזו השתמש בפאנל שבתוך Claude.",
     err_sel: "יש יותר מחיבור אחד בשם {s}. בחר אחד בחלון שנפתח בראש העמוד.", err_approval: "הפאנל צריך אישור לגשת ל-{s}.", err_forbidden: "לחשבון שלך אין הרשאה לפעולה הזאת.",
-    sign_out: "התנתק", tab_users: "משתמשים", users_h: "חשבונות משתמשים", users_note: "בקשות גישה ממתינות כאן עד שתאשר אותן. תפקידים: viewer קורא בלבד; analyst גם מריץ מחקר, החלטות ופרויקטים; admin גם מאשר פעולות בפרויקטים ומנהל משתמשים. שינוי תפקיד נכנס לתוקף בכניסה הבאה של המשתמש (לכל היותר תוך 30 יום, או מיד אם יתנתק ויתחבר).", u_pending: "ממתין לאישור", u_active: "פעיל", u_disabled: "מושבת", u_approve: "אשר", u_disable: "השבת", u_enable: "הפעל", u_reject: "דחה", u_none: "אין עדיין חשבונות. אפשר לבקש גישה ממסך הכניסה.", u_via: "דרך", u_last: "כניסה אחרונה", u_role_viewer: "viewer", u_role_analyst: "analyst", u_role_admin: "admin", u_saved: "נשמר", u_wait: "{n} ממתינים",
+    sign_out: "התנתק", act_h: "פעילות", act_all: "כל המשתמשים", act_q_ph: "סינון: פעולה, מכרז, חברה...", act_none: "אין עדיין פעילות.", act_more: "מוצגות {n} הפעולות האחרונות.", act_user: "פעילות", tab_users: "משתמשים", users_h: "חשבונות משתמשים", users_note: "בקשות גישה ממתינות כאן עד שתאשר אותן. תפקידים: viewer קורא בלבד; analyst גם מריץ מחקר, החלטות ופרויקטים; admin גם מאשר פעולות בפרויקטים ומנהל משתמשים. שינוי תפקיד נכנס לתוקף בכניסה הבאה של המשתמש (לכל היותר תוך 30 יום, או מיד אם יתנתק ויתחבר).", u_pending: "ממתין לאישור", u_active: "פעיל", u_disabled: "מושבת", u_approve: "אשר", u_disable: "השבת", u_enable: "הפעל", u_reject: "דחה", u_none: "אין עדיין חשבונות. אפשר לבקש גישה ממסך הכניסה.", u_via: "דרך", u_last: "כניסה אחרונה", u_role_viewer: "viewer", u_role_analyst: "analyst", u_role_admin: "admin", u_saved: "נשמר", u_wait: "{n} ממתינים",
     err_manifest: "הגישה ל-{s} לא אושרה לפאנל הזה. אפשר לאשר דרך תפריט ההרשאות של הארטיפקט.", err_policy: "מדיניות הארגון חוסמת את {s} לפאנל הזה.",
     err_unavail: "{s} לא ענה כרגע. נסה שוב בעוד דקה.", err_tool: "{s} החזיר שגיאה.", err_other: "שגיאה בחיבור ל-{s}.", sup_db: "מאגר הספקים",
   },
@@ -650,6 +652,7 @@ function showNoConn(k) { S.noConn = k; setStatus(`<span class="pill warn">${esc(
 function reopen() { if (S.sel.t && S.view === "tenders") openTender(S.sel.t, true); }
 
 const $ = (s, r = document) => r.querySelector(s);
+const track = (action, target, detail) => { try { window.DD_TRACK && window.DD_TRACK(action, target, detail); } catch (e) {} };
 const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const num = v => { const n = Number(String(v ?? "").replace(/[,%$\s]/g, "")); return isFinite(n) ? n : NaN; };
 const money = v => { const n = num(v); if (!isFinite(n) || !n) return ""; if (n >= 1e9) return "$" + (n / 1e9).toFixed(1) + "B"; if (n >= 1e6) return "$" + (n / 1e6).toFixed(1) + "M"; if (n >= 1e3) return "$" + Math.round(n / 1e3) + "K"; return "$" + Math.round(n); };
@@ -939,6 +942,7 @@ function integrityHtml(r) {
     <div class="result" dir="auto">${esc(t("ig_adv_" + g.flag.replace(" ", "_")))}</div></div>`;
 }
 function openTender(r, keep) {
+  if (!keep) track("open", "tender " + (r.id || ""), r.title_en || r.title || "");
   S.sel.t = r; if (S.view !== "tenders") { go("tenders"); renderTenders(); }
   const inP = (S.data.pursuits || []).some(p => p["Opportunity ID"] === r.id);
   const he = heTitle(r);
@@ -1359,6 +1363,7 @@ function renderCompanies() {
 }
 const kvRows = rows => rows.map(([k, v, raw]) => `<dt>${esc(t(k))}</dt><dd>${raw ? v : txt(v ?? "-")}</dd>`).join("");
 function openSupplier(s) {
+  track("open", "company " + (s.name || s.supplier || ""), s.country || "");
   S.sel.c = s;
   $("#cdetail").innerHTML = `
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span class="pill acc">${esc(t("quality"))} ${esc(s.quality)}</span>${supTier(s, true)}${s.exports ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.trader === "yes" ? `<span class="pill warn">${esc(t("trader"))}</span>` : ""}${s.logistics_role ? `<span class="pill acc">${esc(s.logistics_role)}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}</div>
@@ -1392,6 +1397,7 @@ function openSupplier(s) {
   $("#c-similar").onclick = () => showSuppliers(s.main_sector, `${s.products} ${s.commodities} ${s.supplied}`, "#c-out", { kind: "similar", r: s });
 }
 function openAccount(a) {
+  track("open", "account " + (a.Account || a.account || ""), a.Country || "");
   S.sel.c = a;
   const open = T().filter(r => a["match keyword"] && `${r.buyer}`.toLowerCase().includes(String(a["match keyword"]).toLowerCase())).slice(0, 8);
   $("#cdetail").innerHTML = `
@@ -1468,6 +1474,7 @@ async function quickDeal(mode, r) {
 }
 function gotoDeal(mode, r) { S.dealMode = mode; setSeg(); go("deals"); renderDeals(); openDeal(mode, r); }
 function openDeal(mode, r) {
+  track("open", "deal " + mode, (r && (r.opportunity || r.product || r.buyer || r.market)) || "");
   S.sel.d = r; S.sel.dmode = mode; let head, kv, text;
   if (mode === "ex") {
     head = tr(r.title_en); text = `${r.sector} ${r.title_en}`;
@@ -1647,6 +1654,7 @@ function renderGrants() {
     g => openGrant(g), S.err.grants ? errText(S.err.grants, SHEETS) : t("e_grants"), g => g === S.sel.g);
 }
 function openGrant(g) {
+  track("open", "grant " + (g.id || ""), g.title || "");
   S.sel.g = g;
   $("#gdetail").innerHTML = `<h2>${txt(tr(g.title))}</h2><dl class="kv">${kvRows([["funder", g.funder], ["source", g.source], ["program", g.program || "-"], ["region", g.region], ["sector", g.sector], ["status", g.status], ["opens", g.opens || "-"], ["closes", g.closes || "-"], ["eligibility", g.eligibility], ["notice", link(g.link, t("open_call")), true]])}</dl>
     <div class="actions"><button class="primary" type="button" id="g-deep">${esc(t("more_info"))}</button><button type="button" id="g-sup">${esc(t("a_sup"))}</button></div>
@@ -1672,11 +1680,25 @@ async function renderUsers(fresh) {
     <div class="sub">${esc(t("u_via"))} ${esc(u.via || "password")} · ${esc(u.created || "")}${u.last_login ? `<br>${esc(t("u_last"))} ${esc(u.last_login)}` : ""}</div>
     <div><span class="pill ${pillCls[u.status] || ""}">${esc(t("u_" + u.status))}</span></div>
     <div><select data-role="${i}"${u.email === S.me?.email ? " disabled" : ""}>${["viewer", "analyst", "admin"].map(r => `<option value="${r}"${u.role === r ? " selected" : ""}>${esc(t("u_role_" + r))}</option>`).join("")}</select></div>
-    <div class="actions" style="margin:0">${u.status !== "active" ? `<button class="primary" type="button" data-us="active" data-i2="${i}">${esc(t(u.status === "pending" ? "u_approve" : "u_enable"))}</button>` : ""}${u.status !== "disabled" && u.email !== S.me?.email ? `<button type="button" data-us="disabled" data-i2="${i}">${esc(t(u.status === "pending" ? "u_reject" : "u_disable"))}</button>` : ""}<span class="sub" id="uf-${i}"></span></div>
+    <div class="actions" style="margin:0">${u.status !== "active" ? `<button class="primary" type="button" data-us="active" data-i2="${i}">${esc(t(u.status === "pending" ? "u_approve" : "u_enable"))}</button>` : ""}${u.status !== "disabled" && u.email !== S.me?.email ? `<button type="button" data-us="disabled" data-i2="${i}">${esc(t(u.status === "pending" ? "u_reject" : "u_disable"))}</button>` : ""}<button type="button" data-ua="${i}">${esc(t("act_user"))}</button><span class="sub" id="uf-${i}"></span></div>
   </div>`).join("");
   const save = async (i, patch) => { const u = rows[i], f = $("#uf-" + i); f.textContent = "..."; try { const r = await window.DD_USERS.set(u.email, patch); Object.assign(u, r.user || patch); f.textContent = t("u_saved"); renderUsers(); } catch (e) { f.textContent = errText(e); } };
   el.querySelectorAll("[data-role]").forEach(sel => sel.onchange = () => save(+sel.dataset.role, { role: sel.value }));
   el.querySelectorAll("[data-us]").forEach(b => b.onclick = () => save(+b.dataset.i2, { status: b.dataset.us }));
+  el.querySelectorAll("[data-ua]").forEach(b => b.onclick = () => { $("#act-user").value = rows[+b.dataset.ua].email; renderActivity(true); $("#alist").scrollIntoView({ behavior: "smooth" }); });
+  renderActivity();
+}
+const ACT_HE = { sign_in: "התחברות", sign_out: "התנתקות", sign_in_failed: "סיסמה שגויה", sign_in_blocked: "כניסה נחסמה", access_request: "בקשת גישה", view: "צפייה", open: "פתיחה", decision: "החלטה", pursuit: "מעקב הזדמנות", why_trend: "הסבר מגמה", ai_quick: "AI מהיר", user_admin: "ניהול משתמש" };
+const actLabel = a => LANG === "he" ? (ACT_HE[a] || (a.startsWith("research_") ? "מחקר: " + a.slice(9) : a.startsWith("queue_") ? "משימה: " + a.slice(6) : a.startsWith("job_") ? "משימה: " + a.slice(4) : a)) : a.replace(/_/g, " ");
+async function renderActivity(fresh) {
+  const el = $("#alist"); if (!el || !window.DD_ACTIVITY) return;
+  const sel = $("#act-user"), who = sel.value;
+  if (S.users) { const keep = who; sel.innerHTML = `<option value="">${esc(t("act_all"))}</option>` + S.users.map(u => `<option value="${esc(u.email)}">${esc(u.name || u.email)}</option>`).join(""); sel.value = keep; }
+  if (fresh || !S.act || S.actWho !== who) { el.innerHTML = `<div class="empty">${esc(t("loading"))}</div>`; try { S.act = await window.DD_ACTIVITY(who); S.actWho = who; } catch (e) { el.innerHTML = `<div class="empty">${esc(errText(e))}</div>`; return; } }
+  const q = ($("#act-q").value || "").trim().toLowerCase();
+  const rows = S.act.filter(r => !q || [r.action, actLabel(r.action), r.target, r.detail, r.name, r.email].join(" ").toLowerCase().includes(q));
+  if (!rows.length) { el.innerHTML = `<div class="empty">${esc(t("act_none"))}</div>`; return; }
+  el.innerHTML = `<div class="note">${esc(t("act_more", { n: S.act.length }))}</div>` + rows.slice(0, 500).map(r => `<div class="urow" style="grid-template-columns:150px minmax(120px,1fr) 140px minmax(160px,2fr)"><div class="sub">${esc(r.time)}</div><div><span class="em">${esc(r.name || r.email)}</span>${r.role ? ` <span class="pill">${esc(r.role)}</span>` : ""}</div><div><b>${esc(actLabel(r.action))}</b></div><div>${esc(r.target)}${r.detail ? `<div class="sub">${esc(r.detail)}</div>` : ""}</div></div>`).join("");
 }
 async function bootMe() {
   if (!window.DD_ME) return;
@@ -1804,6 +1826,7 @@ function go(v) {
   try { localStorage.setItem("sinder-panel-view", v); } catch (e) {}
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
   if (v === "users" && S.me?.role === "admin") renderUsers();
+  track("view", "tab " + v);
 }
 function wireGoto(root) { root.querySelectorAll("[data-goto]").forEach(b => b.onclick = () => { go(b.dataset.goto); renderJobs(); }); }
 function renderAll() { renderStatus(); renderToday(); renderMkToday(); renderMarkets(); renderDesk(); renderTenders(); renderCompanies(); renderDeals(); renderGrants(); renderIntel(); renderContacts(); renderProjects(); renderJobs(); wireGoto(document); }
@@ -1826,6 +1849,9 @@ $("#lang-en").onclick = () => setLang("en");
 $("#lang-he").onclick = () => setLang("he");
 $("#refresh").onclick = () => mcp ? loadAll(true) : null;
 $("#users-refresh").onclick = () => renderUsers(true);
+$("#act-refresh").onclick = () => renderActivity(true);
+$("#act-user").onchange = () => renderActivity(true);
+$("#act-q").oninput = () => renderActivity();
 $("#jobs-refresh").onclick = async () => { if (!mcp) return; await load("jobs", true); renderJobs(); renderToday(); };
 $("#jobform").addEventListener("submit", e => {
   e.preventDefault(); if (!mcp) return;

@@ -85,6 +85,9 @@
   // The signed-in user ({email, name, role}); the panel shows a badge and hides what the role cannot do.
   window.DD_ME = fetch("/api/me", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   window.DD_LOGOUT = async () => { await fetch("/api/logout", { method: "POST", credentials: "same-origin" }).catch(() => {}); location.href = "/login"; };
+  // Activity log: what the signed-in user opens (fire and forget), and the admin's view of everyone's actions.
+  window.DD_TRACK = (action, target, detail) => { fetch("/api/activity", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", keepalive: true, body: JSON.stringify({ action, target: String(target || "").slice(0, 300), detail: String(detail || "").slice(0, 300) }) }).catch(() => {}); };
+  window.DD_ACTIVITY = async (email) => { const r = await fetch("/api/activity?limit=1000" + (email ? "&email=" + encodeURIComponent(email) : ""), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.rows || []; };
   // Admin only: user accounts (list, approve, change role, disable).
   window.DD_USERS = {
     list: async () => { const r = await fetch("/api/users", { credentials: "same-origin" }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.users || []; },
