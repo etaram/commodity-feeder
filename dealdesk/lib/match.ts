@@ -9,6 +9,16 @@ export type Match = {
   dl: string; dd: number | null; l: string; src: string; st: string; rt: string; d: string;
 };
 
+// A typed term matches when every word of it starts a word in the title ("pump" matches "pumps", "cement" does not
+// match "displacement"). Compiled patterns are cached across requests.
+const RX = new Map<string, RegExp[]>();
+const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export function hasTerm(title: string, term: string): boolean {
+  let rx = RX.get(term);
+  if (!rx) { rx = term.split(/\s+/).filter(Boolean).map((w) => new RegExp(`(^|[^\\p{L}\\p{N}])${esc(w)}`, "iu")); RX.set(term, rx); if (RX.size > 5000) RX.clear(); }
+  return rx.length > 0 && rx.every((r) => r.test(title));
+}
+
 const money = (n: number) => (n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${Math.round(n)}`);
 
 // Reason words per language (English is the fallback for any language without a translation yet).
@@ -18,19 +28,21 @@ const WHY: Record<string, Record<string, string>> = {
 };
 const w = (lang: string, k: string, n?: number) => (WHY[lang]?.[k] ?? WHY.en[k]).replace("{n}", String(n ?? ""));
 
-export function scoreTender(r: Tender, p: Profile): { score: number; why: string[]; product: boolean } {
+export function scoreTender(r: Tender, p: Profile): { score: number; why: string[]; product: boolean; place: boolean } {
   const why: string[] = [];
   const title = (r.t || "").toLowerCase();
 
-  // product (35)
+  // product (35): a typed term found in the title is the strongest signal (all words of a multi-word term must appear);
+  // a sector match alone is weaker when the user typed terms, since a sector is broad.
   let prod = 0;
-  const kw = p.keywords.find((k) => k.length > 1 && title.includes(k));
-  if (p.sectors.includes(r.s)) { prod += 25; why.push(r.s); }
-  if (r.g && p.groups.includes(r.g)) { prod += 25; if (!why.length) why.push(r.g); }
-  if (kw) { prod += 15; why.push(`"${kw}"`); }
+  const kw = p.keywords.find((k) => k.length > 1 && hasTerm(title, k));
+  const sect = p.sectors.includes(r.s) || (!!r.g && p.groups.includes(r.g));
+  if (kw) { prod += 25; why.push(`"${kw}"`); }
+  if (sect) { prod += p.keywords.length ? 15 : 25; why.push(p.sectors.includes(r.s) ? r.s : r.g); }
   prod = Math.min(35, prod);
   const anyProduct = p.sectors.length + p.groups.length + p.keywords.length > 0;
   if (!anyProduct) prod = 15;
+  const productFit = anyProduct && (!!kw || (sect && !p.keywords.length));
 
   // place (15)
   let place = 0;
@@ -66,7 +78,7 @@ export function scoreTender(r: Tender, p: Profile): { score: number; why: string
   // engine (15): the deal engine's own score (margin, competition, buyer history)
   const eng = Math.round(((r.sc ?? 40) / 100) * 15);
 
-  return { score: Math.max(0, Math.min(100, prod + place + el + val + time + eng)), why: why.slice(0, 5), product: prod >= 15 && anyProduct };
+  return { score: Math.max(0, Math.min(100, prod + place + el + val + time + eng)), why: why.slice(0, 5), product: productFit, place: place >= 10 || (!p.countries.length && !p.regions.length) };
 }
 
 export async function matches(p: Profile, opts: { mode?: "focus" | "broad"; limit?: number; ids?: string[] } = {}) {
@@ -78,12 +90,29 @@ export async function matches(p: Profile, opts: { mode?: "focus" | "broad"; limi
   for (const r of all) {
     if (hidden.has(r.id) || excluded.has(r.c) || (only && !only.has(r.id))) continue;
     const m = scoreTender(r, p);
-    if (!only && mode === "focus" && (!m.product || m.score < p.minScore)) continue;
+    if (!only && mode === "focus" && (!m.product || !m.place || m.score < p.minScore)) continue;
     if (!only && mode === "broad" && m.score < 35) continue;
     out.push({ id: r.id, score: m.score, why: m.why, t: r.t, b: r.b, c: r.c, rg: r.rg, s: r.s, v: r.v, dl: r.dl, dd: r.dd, l: r.l, src: r.src, st: r.st, rt: r.rt, d: r.d });
   }
   out.sort((a, b) => b.score - a.score || (a.dd ?? 999) - (b.dd ?? 999));
   return { total: out.length, items: out.slice(0, Math.min(500, opts.limit || 150)) };
+}
+
+// Sectors implied by what the user typed: the sectors where tenders whose titles contain those terms concentrate.
+// Plain counting over the open tenders, no AI. Up to 3 sectors, each holding at least 12% of the hits.
+export async function inferSectors(keywords: string[]): Promise<string[]> {
+  if (!keywords.length) return [];
+  const all = await tenders();
+  const m = new Map<string, number>();
+  let hits = 0;
+  for (const r of all) {
+    const t = (r.t || "").toLowerCase();
+    if (!keywords.some((k) => hasTerm(t, k))) continue;
+    hits++;
+    if (r.s) m.set(r.s, (m.get(r.s) || 0) + 1);
+  }
+  if (hits < 5) return [];
+  return [...m.entries()].sort((a, b) => b[1] - a[1]).filter(([, n]) => n / hits >= 0.12).slice(0, 3).map(([s]) => s);
 }
 
 // For the onboarding form: the sectors, groups, regions and countries that actually occur, with counts.

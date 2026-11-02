@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { cleanProfile, getProfile, saveProfile } from "@/lib/profiles";
-import { facets, matches } from "@/lib/match";
+import { facets, inferSectors, matches } from "@/lib/match";
 import { logActivity } from "@/lib/activity";
 
 // The signed-in user's own profile. GET ?facets=1 also returns what can be picked in the form, and a preview count.
@@ -32,6 +32,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, profile: prev });
   }
   const p = cleanProfile(b.profile || {}, prev);
+  // Quick onboarding sends only what the user typed: the sectors are worked out from it.
+  if (b.inferSectors) p.sectors = await inferSectors(p.keywords);
   if (b.preview) {
     const [f, w] = await Promise.all([matches(p, { mode: "focus", limit: 5 }), matches(p, { mode: "broad", limit: 1 })]);
     return NextResponse.json({ ok: true, focus: f.total, broad: w.total, top: f.items.slice(0, 5) });

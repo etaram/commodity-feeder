@@ -93,7 +93,7 @@
   window.DD_PROFILE = {
     get: (facets) => getj("/api/profile" + (facets ? "?facets=1" : "")),
     preview: (profile) => post("/api/profile", { profile, preview: true }),
-    save: (profile) => post("/api/profile", { profile }),
+    save: (profile, inferSectors) => post("/api/profile", { profile, inferSectors: !!inferSectors }),
     feedback: (kind, id) => post("/api/profile", { [kind]: id }),
   };
   window.DD_MATCH = (mode) => getj("/api/match?" + (mode === "saved" ? "saved=1" : "mode=" + encodeURIComponent(mode || "") + "&limit=150"));
