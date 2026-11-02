@@ -1,0 +1,35 @@
+name: trends
+
+# Google Trends search interest for the top market signals (pytrends, unofficial; no AI, no tokens).
+# Weekly, small batch, results cached between runs. Replace with the official Trends API when access is granted.
+on:
+  schedule:
+    - cron: "17 3 * * 1"   # Monday 05:17 Israel time (winter)
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "pairs to refresh"
+        default: "40"
+
+concurrency:
+  group: trends
+  cancel-in-progress: false
+
+jobs:
+  trends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests google-auth pytrends pycountry pandas
+      - uses: actions/cache@v4
+        with:
+          path: data/leads/cache/trends.json
+          key: trends-${{ github.run_id }}
+          restore-keys: trends-
+      - run: python -m leads.trends ${{ github.event.inputs.limit || '40' }}
