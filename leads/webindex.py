@@ -87,8 +87,8 @@ def suppliers(limit=90_000):
         log.warning("web index suppliers: %s missing", src); return
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     out = []
-    for i, r in enumerate(csv.DictReader(open(src, encoding="utf-8"))):
-        if i >= limit:
+    for r in csv.DictReader(open(src, encoding="utf-8")):
+        if len(out) >= limit:
             break
         x = {}
         for k, short in SUP_FIELDS.items():
@@ -102,7 +102,7 @@ def suppliers(limit=90_000):
             elif short in CUT:
                 v = v[:CUT[short]]
             x[short] = v
-        if x.get("n"):
+        if x.get("n") and x.get("tr") in ("1", "2"):  # the system shows proven suppliers only (tier 1-2)
             out.append(x)
     raw = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode(), 9)
     nonce = os.urandom(12)

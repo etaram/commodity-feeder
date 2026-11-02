@@ -47,7 +47,8 @@ async function allSuppliers(): Promise<Supplier[]> {
     if (error && !rows.length) throw new Error(error);
     // Best tier first; within a tier, interleave regions so the top is not only EU suppliers (whose awards are larger
     // and better documented): best of Europe, best of Latin America, best of Africa, best of Asia, and so on.
-    const sorted = rows.slice().sort((a, b) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0));
+    // Only proven suppliers are shown in the system: tier 1 (Strategic) and tier 2 (Proven).
+    const sorted = rows.filter((r) => r.tr === "1" || r.tr === "2").sort((a, b) => (a.tr || "9").localeCompare(b.tr || "9") || (b.q || 0) - (a.q || 0));
     const seen = new Map<string, number>();
     const keyed = sorted.map((r, i) => {
       const reg = r.rg || "unknown", k = (r.tr || "9") + "|" + reg, n = (seen.get(k) || 0) + 1;
