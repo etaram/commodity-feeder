@@ -1,62 +1,27 @@
-gh_ghaneps_ct	200	36517	fresh=10	GHANEPS - Advanced Search	https://www.ghaneps.gov.gh/epps/quickSearchAction.do?searchSelect=1&selectedItem
-gh_ghaneps_list	200	53971	fresh=10	GHANEPS - Advanced Search	https://www.ghaneps.gov.gh/epps/viewCFTSAction.do?latest=true
-tz_nest_pub	200	74694	fresh=0	NeST - National e-Procurement System of Tanzania	https://nest.go.tz/tenders/published
-tz_nest_api	403	0	fresh=0		https://nest.go.tz/gateway/nest-tendering-api/api/public/tenders?page=0&size=20
-zm_zppa	200	43520	fresh=0	e-GP Platform - Advanced Search	https://eprocure.zppa.org.zm/epps/viewCFTSAction.do?latest=true
-mw_ppda	200	46423	fresh=40	Procurement Notices | Public Procurement and Disposal of Ass	https://www.ppda.mw/tenders
-bw_ppadb	ERR	Failed to perform, curl: (28) Connection timed out after 35000 milliseconds. See https://curl.se/libcurl/c/lib
-na_cpb	ERR	Failed to perform, curl: (6) Could not resolve host: eprocurement.cpb.org.na (Domain name not found). See http
-zw_praz	200	32621	fresh=0	Zimbabwe electronic Government Procurement System	https://egp.praz.org.zw/
-ng_nocopo	ERR	Failed to perform, curl: (60) SSL certificate OpenSSL verify result: certificate has expired (10). See https:/
-ng_etenders	200	391805	fresh=19	NIGERIA GOVERNMENT AND PRIVATE SECTOR TENDERS &amp; CONTRACT	https://www.etenders.com.ng/
-cm_armp	200	756466	fresh=1	PUBLIC CONTRACTS REGULATORY AGENCY	https://www.armp.cm/
-cm_marches	200	591	fresh=0	PPS - Public Procurement System	https://marchespublics.cm/
-bj_marches	200	84955	fresh=0	Portail des Marchés Publics du Bénin	https://marches-publics.bj/
-tg_marches	ERR	Failed to perform, curl: (6) Could not resolve host: marchespublics.gouv.tg (Domain name not found). See https
-bf_dgcmef	500	335	fresh=0		https://www.dgcmef.gov.bf/fr/appels-offres
-mu_procure	200	83844	fresh=0	Public Procurement Portal	https://publicprocurement.govmu.org/publicprocurement/
-mu_eproc	ERR	Failed to perform, curl: (6) Could not resolve host: eproc.govmu.org (Domain name not found). See https://curl
-mg_armp	ERR	Failed to perform, curl: (60) SSL: no alternative certificate subject name matches target hostname 'www.armp.m
-cd_armp	200	26634	fresh=0	Accueil	https://www.armp-rdc.org/
-ml_dgmp	200	51490	fresh=0	CENTIF MALI &#8211; CELLULE NATIONALE DE TRAITEMENT DES INFO	https://centif.ml/
-sl_ppa	200	261336	fresh=0	National Public Procurement Authority &#8211; NPPA	https://nppa.gov.sl/
-so_mof	200	110571	fresh=0	Procurement Portal | Ministry of Finance Somalia	https://mof.gov.so/procurement
-dj_marches	ERR	Failed to perform, curl: (6) Could not resolve host: www.marches-publics.dj (Domain name not found). See https
-ao_compras	ERR	Failed to perform, curl: (6) Could not resolve host: www.compraspublicas.gv.ao (Domain name not found). See ht
-mz_ufsa	200	90623	fresh=91	Principal | UFSA	https://www.ufsa.gov.mz/
-sd_none	ERR	Failed to perform, curl: (6) Could not resolve host: www.tenders.gov.sd (Domain name not found). See https://c
-jo_gtd	200	308602	fresh=0	الصفحة الرئيسية - دائرة العطاءات الحكومية	https://www.gtd.gov.jo/Default/Ar
-jo_jonepps	ERR	Failed to perform, curl: (6) Could not resolve host: jonepps.gov.jo (Domain name not found). See https://curl.
-ae_dubai	200	154726	fresh=100	Current Opportunities (eSupply)	https://esupply.dubai.gov.ae/esop/toolkit/opportunity/current/list.si?reset=true
-ae_ad	200	26749	fresh=0	Abu Dhabi Government Procurement Gate	https://www.adgpg.gov.ae/
-kw_capt	403	5992	fresh=0	Just a moment...	https://capt.gov.kw/en/tenders/opening-tenders/
-tn_tuneps	ERR	Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (2
-iq_mop	200	264634	fresh=1	وزارة التخطيط &#8211; تخطيط متميز لتنمية مستدامة	https://mop.gov.iq/
-ps_shiraa	ERR	Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to get local issuer certificate (2
-lb_ppa	200	1684275	fresh=0	هيئة الشراء العام	https://www.ppa.gov.lb/ar
-ph_philgeps	200	128692	fresh=20	OpportunitiesSearch	https://notices.philgeps.gov.ph/GEPSNONPILOT/Tender/SplashOpportunitiesSearchUI.
-id_inaproc	403	35065	fresh=0		https://spse.inaproc.id/
-id_lpse	ERR	Failed to perform, curl: (6) Could not resolve host: lpse.lkpp.go.id (DNS server returned answer with no data)
-vn_muasamcong	200	589299	fresh=0	Hệ thống mạng đấu thầu quốc gia - Bộ Tài chính - EGP_v2.0 - 	https://muasamcong.mof.gov.vn/
-bd_egp	200	87998	fresh=0	Advanced Search for eTenders/eProposals	https://www.eprocure.gov.bd/resources/common/AllTenders.jsp
-pk_ppra	200	109858	fresh=0	Home | PPRA :: Public Procurement Regulatory Authority	https://ppra.gov.pk/
-pk_epads	200	7231	fresh=0	EPADS	https://eprocure.gov.pk/#/supplier/opportunities
-lk_promise	ERR	Failed to perform, curl: (28) Connection timed out after 35001 milliseconds. See https://curl.se/libcurl/c/lib
-np_bolpatra	200	710	fresh=0	Nepal e-GP · Public Procurement	https://bolpatra.gov.np/egp/searchOpportunity
-kz_goszakup	200	123069	fresh=63	Объявления о проведении государственных закупок :: Портал го	https://old.goszakup.gov.kz/ru/search/announce
-uz_xarid	200	1952	fresh=0	DAVLAT XARIDLARI MAXSUS AXBOROT PORTALI	https://xarid.uzex.uz/
-ge_spa	200	67368	fresh=0	State Procurement Agency	https://tenders.procurement.gov.ge/public/?lang=en
-am_armeps	500	25097	fresh=0	PSC - An error has occurred	https://armeps.am/epps/viewCFTSAction.do?latest=true
-mn_tender	403	5190	fresh=0	Attention Required! | Cloudflare	https://www.tender.gov.mn/
-kh_gdpp	403	5660	fresh=0	Attention Required! | Cloudflare	https://gdpp.gov.kh/
-th_gprocurement	200	0	fresh=0		https://process3.gprocurement.go.th/egp2procmainWeb/jsp/procsearch.sch
-ec_sercop	200	6575	fresh=0		https://datosabiertos.compraspublicas.gob.ec/PLATAFORMA/api/search_ocds?year=202
-pa_panamacompra	404	0	fresh=0		https://ocds.panamacompraencifras.gob.pa/
-hn_oncae	ERR	Failed to perform, curl: (28) Connection timed out after 35000 milliseconds. See https://curl.se/libcurl/c/lib
-gt_guatecompras	403	6053	fresh=0	Just a moment...	https://www.guatecompras.gt/concursos/consultaConcursos.aspx
-pe_seace	403	83	fresh=0		https://prod2.seace.gob.pe/seacebus-uiwd-pub/buscadorPublico/buscadorPublico.xht
-mx_comprasmx	200	7000	fresh=0	Compras MX	https://comprasmx.buengobierno.gob.mx/
-cr_sicop	200	7266	fresh=0	SICOP	https://www.sicop.go.cr:443/app
-ar_comprar	ERR	Failed to perform, curl: (28) Connection timed out after 35000 milliseconds. See https://curl.se/libcurl/c/lib
-sv_comprasal	200	36177	fresh=0	COMPRASAL	https://www.comprasal.gob.sv/
-bo_sicoes	200	304	fresh=0	SICOES	https://www.sicoes.gob.bo/
+INFO:leads:ghana new 75, open 75 (pages 10)
+## ghana 75 {'new': 75} [('National (foreign firms may bid)', 75)]
+    2026-11-11 | YILO KROBO MUNICIPAL ASSEMBLY | 56.Construction of 2No. 48Cubicle open shed at Klo Agogo
+    2026-11-05 | GHANA NATIONAL PETROLEUM CORPORATION | Consultancy Services for SAP Review Roadmap Implementation
+    2026-11-02 | COMMUNITY WATER AND SANITATION AGENCY | Water Supply Intervention in mining affected communities in the Central Region - Lot 3
+INFO:leads:zambia new 0, open 0 (pages 1)
+## zambia 0 {'new': 0} []
+INFO:leads:Malawi new 40, open 40
+## malawi 40 {'new': 40} [('Open (check eligibility in the bidding document)', 40)]
+    2026-11-06 | National Cancer Centre | Supply,Delivery and Fixing of Vertical Blinds
+    2026-11-10 | Mzuzu Central Hospital | SUPPLY AND DELIVERY OF UROLOGY ENDOSCOPIC EQUIPMENT
+    2026-11-04 | Accountant General Department | provision , Installation, Testing and maintenance of Security Access Control Machines at m
+INFO:leads:Mozambique new 61, open 59
+## mozambique 59 {'new': 61} [('National (foreign firms may bid)', 59)]
+    2026-11-16 | DIRECCAO PROVINCIAL DE DESENVOLVIMENTO T | CONTRATACAO DE SERVICOS DE CONSULTORIA PARA FISCALIZACAO DAS OBRAS DE EMPREITADA NA CONCLU
+    2026-11-04 | SERVICO DISTRITAL DE SAUDE, MULHER E ACC | FORNECIMENTO DE BENS E PRESTACAO DE SERVICO
+    2026-11-05 | BOLSA DE MERCADORIAS DE MOCAMBIQUE | FORNECIMENTO DE EQUIPAMENTO INFORMATICO (5 COMPUTADORES) PARA A BMM
+INFO:leads:Dubai new 234, open 223 (pages 4)
+## dubai 223 {'new': 234} [('Registered suppliers (eSupply)', 223)]
+    2026-11-05 | Dubai Academic Health Corporation | Sack Holder & Dust Bin / CSC-Domestic / IPR 126092021 / T 22602164 / SZA
+    2026-11-12 | Dubai Municipality | 2029_TF-21-C1_Upgrading and Rehabilitation of Stormwater System (Abu H
+    2026-11-03 | Dubai Municipality | DVRS Maintenance and instruments Calibration
+INFO:leads:Philippines new 1200, open 1200 (pages 60)
+## philippines 1200 {'new': 1200} [('Registered suppliers (PhilGEPS)', 1200)]
+    2026-11-03 | MUNICIPALITY OF LANTAPAN, BUKIDNON | CONSTRUCTION/IMPRVEMENT OF MUNICIPAL PREMEISES
+    2026-11-04 | MUNICIPALITY OF TUBA, BENGUET | 2026-10-1000
+    2026-11-09 | MUNICIPALITY OF PLACER, SURIGAO DEL NORT | COMMERCIAL RICE FOR TANOD MEMBERS (NOVEMBER - DECEMBER 2026)
