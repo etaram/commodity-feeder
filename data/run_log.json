@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-02T13:46:37",
+  "finished_utc": "2026-11-02T13:54:36",
   "fx_source": "ECB via Frankfurter 2026-10-30",
   "fx": {
     "EUR": 1.117206091007608,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 27,
+      "sec": 26,
       "newest_date": "2026-11-02",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -51,7 +51,7 @@
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 4,
+      "sec": 2,
       "newest_date": "2026-11-02",
       "log": [
         "INFO cn_spot: 52 prices (2026-11-02)"
@@ -60,7 +60,7 @@
     "eu_agri": {
       "ok": true,
       "prices": 63,
-      "sec": 11,
+      "sec": 38,
       "newest_date": "2026-10-31",
       "log": [
         "INFO eu_agri: 63 prices"
@@ -69,7 +69,7 @@
     "dtn": {
       "ok": true,
       "prices": 7,
-      "sec": 0,
+      "sec": 2,
       "newest_date": "2026-10-23",
       "log": [
         "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/10/28/fertilizer-prices-continue-climb-6"
@@ -105,7 +105,7 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 11,
+      "sec": 12,
       "newest_date": "2026-10-30",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -120,7 +120,7 @@
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 0,
+      "sec": 1,
       "newest_date": null,
       "log": [
         "WARNING census 2026-10: Expecting value: line 1 column 1 (char 0)",
@@ -135,7 +135,7 @@
     "comext": {
       "ok": true,
       "prices": 1913,
-      "sec": 57,
+      "sec": 59,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
