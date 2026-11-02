@@ -873,7 +873,7 @@ function fillSelect(sel, values) {
 /* ---------- TODAY ---------- */
 function renderToday() {
   const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
-  const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
+  const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (b.new === "NEW") - (a.new === "NEW") || (num(b.score) || 0) - (num(a.score) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   $("#kpis").innerHTML = [
     [ts.length.toLocaleString("en-US"), t("k_open")], [ts.filter(r => r.decision === "Pursue").length, t("k_pursue")],
     [BD().filter(r => r.date && daysBetween(r.date, today()) <= 14).length, t("k_bd")], [sup.length.toLocaleString("en-US"), t("k_sup")],
