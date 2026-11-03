@@ -177,14 +177,24 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
 // evidence of exports (+1), proven tier (+2/+1), already sold in the tender's country (+2) or region (+1).
 const STOP = new Set(("the and for with from supply supplies delivery services service provision procurement purchase framework " +
   "agreement lot lots various other works contract tender ministry department government county national public office council authority municipality district goods items equipment materials des de la le du et pour del los las para und der die für von zur").split(" "));
-export async function suppliersFor(o: { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number }): Promise<Grid> {
+export type SupQuery = { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number;
+  originRegion?: string; originCountry?: string; exportersOnly?: boolean };
+export async function suppliersFor(o: SupQuery): Promise<Grid> {
+  return (await supplierSearch(o)).values;
+}
+// The same ranking, plus where the matches come from (origin countries) and how many matched in total.
+export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][] }> {
   const words = [...new Set(String(o.text || "").toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
-    .filter((w) => w.length >= 4 && !STOP.has(w)))].slice(0, 14);
+    .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
   const res = words.map((w) => new RegExp(`(^|[^\\p{L}])${w}`, "u"));
   const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
   const scored: { s: Supplier; sc: number }[] = [];
+  const origins = new Map<string, number>();
   for (const s of await allSuppliers()) {
-    const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""}`.toLowerCase();
+    if (o.originRegion && s.rg !== o.originRegion) continue;
+    if (o.originCountry && s.c !== o.originCountry) continue;
+    if (o.exportersOnly && !s.x) continue;
+    const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""}`.toLowerCase();
     let hits = 0;
     for (const r of res) if (r.test(blob)) hits++;
     const secHit = sec && (s.s === sec ? 3 : (s.s2 || "").includes(sec) ? 1 : 0);
@@ -197,7 +207,9 @@ export async function suppliersFor(o: { sector?: string; text?: string; country?
     else if (o.region && s.rg === o.region) sc += 1;
     sc += (s.q || 0) / 50;
     scored.push({ s, sc });
+    if (s.c && hits) origins.set(s.c, (origins.get(s.c) || 0) + 1);
   }
   scored.sort((a, b) => b.sc - a.sc);
-  return [SUP_HEAD, ...scored.slice(0, Math.min(40, o.n || 15)).map((x) => supRow(x.s))];
+  return { values: [SUP_HEAD, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => supRow(x.s))], total: scored.length,
+    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15) };
 }

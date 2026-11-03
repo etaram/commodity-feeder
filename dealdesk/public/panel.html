@@ -189,6 +189,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <button role="tab" data-v="forme" aria-selected="false"><span data-i="tab_forme">For me</span><span class="count" id="c-forme"></span></button>
       <button role="tab" data-v="tenders" aria-selected="false"><span data-i="tab_tenders">Tenders</span><span class="count" id="c-tenders"></span></button>
       <button role="tab" data-v="companies" aria-selected="false"><span data-i="tab_companies">Companies</span><span class="count" id="c-companies"></span></button>
+      <button role="tab" data-v="research" aria-selected="false"><span data-i="tab_research">Supplier research</span></button>
       <button role="tab" data-v="deals" aria-selected="false"><span data-i="tab_deals">Deals</span><span class="count" id="c-deals"></span></button>
       <button role="tab" data-v="markets" aria-selected="false"><span data-i="tab_markets">Markets</span></button>
       <button role="tab" data-v="desk" aria-selected="false"><span data-i="tab_desk">Deal Desk</span></button>
@@ -391,6 +392,18 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
   <section class="view" id="v-forme" hidden>
     <div id="fm-body"><div class="empty" data-i="loading">Loading...</div></div>
   </section>
+  <section class="view" id="v-research" hidden>
+    <h2 style="margin:0 0 4px" data-i="sr_h">Supplier research</h2>
+    <p class="note" data-i="sr_intro"></p>
+    <form class="filters" id="sr-form">
+      <input type="search" id="sr-q" data-ph="sr_ph" style="flex:2;min-width:220px" autocomplete="off">
+      <select id="sr-reg"><option value="" data-i="sr_any_origin">Any origin</option></select>
+      <input id="sr-cty" data-ph="sr_cty_ph" maxlength="3" style="width:110px" dir="ltr">
+      <label class="chk"><input type="checkbox" id="sr-exp"> <span data-i="sr_exp">Exporters only</span></label>
+      <button class="primary" type="submit" data-i="sr_go">Search</button>
+    </form>
+    <div id="sr-out"></div>
+  </section>
   <section class="view" id="v-users" hidden>
     <div class="filters"><h2 style="margin-inline-end:auto" data-i="users_h">User accounts</h2><button type="button" id="users-refresh" data-i="refresh">Refresh</button></div>
     <p class="note" data-i="users_note"></p>
@@ -472,7 +485,7 @@ const L = {
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
     fired_now: "The worker started now; the answer usually arrives within 5 to 15 minutes.", fired_later: "The worker will pick it up on its next scheduled run (every two hours, 08:13 to 22:13 Israel time).",
     fired_running: "The worker is already running and will pick this job up too.", sent: "Sent to the worker ({id}).", open_jobs: "Open Jobs", added_pursuits: "Added to Pursuits. You can now run a full eligibility check on it.",
-    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
+    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", tab_research: "Supplier research", sr_h: "Supplier research", sr_intro: "Type a product to see the proven suppliers (tier 1-2) for it in the whole database, where they come from, and their evidence (public contracts, exports, US customs shipments). Web research finds more producers on request.", sr_ph: "Product: e.g. ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "Any origin region", sr_cty_ph: "Origin: CHN", sr_exp: "Exporters only", sr_go: "Search", sr_need: "Type a product first.", sr_web_only: "Available on the web version.", sr_found: "{n} proven suppliers for \"{q}\"", sr_origins: "Origin countries (click to filter):", sr_all_c: "All countries", sr_none: "No proven supplier matched. Try other words, or run the web research.", sr_web: "Web research for more producers (AI)", sr_web_wait: "Searching the web for producers and exporters (about a minute)...", sr_web_h: "Web research", fm_sups: "Suppliers", fm_sups_note: "{n} proven suppliers match your products ({k}).", fm_sups_more: "Open in supplier research", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
     c_pick: "Pick a company to see what it sells and how to reach it, then run research or outreach.", exporter: "exporter", notable: "notable", contact_p: "contact", trader: "trader", quality: "Quality",
     e_comp_f: "No suppliers match these filters.", e_acc_f: "No accounts match these filters.", tenders_n: "tenders",
     country: "Country", field: "Field", products: "Products", supplied: "Supplied", commodities: "Commodities", won: "Contracts won", wins: "wins", buyers_n: "buyers", in_: "in",
@@ -580,7 +593,7 @@ const L = {
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
     fired_now: "העובד הופעל עכשיו, התשובה תגיע בדרך כלל תוך 5 עד 15 דקות.", fired_later: "העובד יאסוף את המשימה בריצה הקבועה הבאה (כל שעתיים, 08:13 עד 22:13).",
     fired_running: "העובד כבר רץ ויאסוף גם את המשימה הזו.", sent: "נשלח לעובד ({id}).", open_jobs: "למשימות", added_pursuits: "נוסף ל-Pursuits. אפשר להפעיל עליו בדיקת תנאי סף מלאה.",
-    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
+    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", tab_research: "מחקר ספקים", sr_h: "מחקר ספקים", sr_intro: "הקלד מוצר כדי לראות את הספקים המוכחים (טיר 1-2) עבורו בכל המאגר, מאיפה הם, ומה העדות להם (חוזים ציבוריים, ייצוא, משלוחים במכס האמריקאי). מחקר ברשת מוצא יצרנים נוספים לפי בקשה.", sr_ph: "מוצר: למשל ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "כל אזורי המקור", sr_cty_ph: "מקור: CHN", sr_exp: "יצואנים בלבד", sr_go: "חפש", sr_need: "הקלד קודם מוצר.", sr_web_only: "זמין בגרסת האתר.", sr_found: "{n} ספקים מוכחים עבור \"{q}\"", sr_origins: "מדינות מקור (לחץ לסינון):", sr_all_c: "כל המדינות", sr_none: "לא נמצא ספק מוכח. נסה מילים אחרות, או הרץ מחקר ברשת.", sr_web: "מחקר ברשת ליצרנים נוספים (AI)", sr_web_wait: "מחפש ברשת יצרנים ויצואנים (כדקה)...", sr_web_h: "מחקר ברשת", fm_sups: "ספקים", fm_sups_note: "{n} ספקים מוכחים מתאימים למוצרים שלך ({k}).", fm_sups_more: "פתח במחקר ספקים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
     c_pick: "בחר חברה כדי לראות מה היא מוכרת, פרטי קשר, ולהפעיל מחקר או פנייה.", exporter: "מייצא", notable: "מוכר", contact_p: "פרטי קשר", trader: "טריידר", quality: "איכות",
     e_comp_f: "אין ספקים שמתאימים לסינון.", e_acc_f: "אין חשבונות שמתאימים לסינון.", tenders_n: "מכרזים",
     country: "מדינה", field: "תחום", products: "מוצרים", supplied: "מה סיפקו", commodities: "סחורות", won: "היקף זכיות", wins: "זכיות", buyers_n: "קונים", in_: "ב-",
@@ -1120,6 +1133,55 @@ async function showSuppliers(sector, text, outSel, ctx) {
     <div class="actions"><button class="primary" type="button" id="ms-rfq">${esc(t("draft_sel"))}</button><button type="button" id="ms-job">${esc(t("deep_sup"))}</button></div><div id="ms-out"></div></div>`;
   $("#ms-rfq").onclick = () => { const chosen = list.filter((s, i) => $("#ms" + i)?.checked); if (!chosen.length) { $("#ms-out").innerHTML = `<div class="flash info">${esc(t("tick_one"))}</div>`; return; } compose({ kind: "rfq", ctx, to: chosen }, "#ms-out"); };
   $("#ms-job").onclick = e => queueJob({ type: "supplier_search", target_id: ctx?.r?.id || "", target: (ctx?.r?.title_en || text).slice(0, 200), context: { sector, text: text.slice(0, 400), from: ctx?.kind } }, e.currentTarget, "#ms-out");
+}
+
+/* ---------- supplier research: the whole supplier database (tier 1-2) for a product, where it comes from, and on
+   request a web search for more producers (AI, costs a little; analysts and admins) ---------- */
+const SR = { rows: [], origins: [], total: 0, q: "" };
+function initResearch() {
+  const sel = $("#sr-reg"); if (sel && sel.options.length < 2) fillSelect(sel, REGIONS);
+  const f = $("#sr-form"); if (f.dataset.on) return; f.dataset.on = "1";
+  f.onsubmit = e => { e.preventDefault(); runResearch(); };
+}
+async function runResearch(country) {
+  const q = $("#sr-q").value.trim(), out = $("#sr-out");
+  if (country !== undefined) $("#sr-cty").value = country;
+  if (!q) { out.innerHTML = `<div class="empty">${esc(t("sr_need"))}</div>`; $("#sr-q").focus(); return; }
+  if (!window.DD_SUPSEARCH) { out.innerHTML = `<div class="empty">${esc(t("sr_web_only"))}</div>`; return; }
+  out.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("sup_wait"))}</div>`;
+  const oc = ($("#sr-cty").value || "").trim().toUpperCase(), reg = $("#sr-reg").value, exp = $("#sr-exp").checked;
+  try {
+    const j = await window.DD_SUPSEARCH({ text: q, originRegion: reg, originCountry: oc, exportersOnly: exp, n: 60 });
+    Object.assign(SR, { rows: toObjects(j.values || []), origins: j.origins || [], total: j.total || 0, q });
+  } catch (e) { out.innerHTML = `<div class="empty">${esc(errText(e))}</div>`; return; }
+  renderResearch();
+}
+function renderResearch() {
+  const out = $("#sr-out"), oc = ($("#sr-cty").value || "").trim().toUpperCase();
+  const chips = SR.origins.map(([c, n]) => `<button type="button" data-oc="${esc(c)}" aria-pressed="${c === oc}">${flag(c)}${esc(c)} <span class="num">${n}</span></button>`).join("");
+  out.innerHTML = `<div class="section"><h3>${esc(t("sr_found", { n: SR.total.toLocaleString("en-US"), q: SR.q }))}</h3>
+    ${chips ? `<div class="note">${esc(t("sr_origins"))}</div><div class="fm-chips" id="sr-oc">${oc ? `<button type="button" data-oc="">${esc(t("sr_all_c"))}</button>` : ""}${chips}</div>` : ""}
+    ${SR.rows.length ? SR.rows.map((s, i) => `<div class="sup"><input type="checkbox" id="sr${i}" aria-label="${esc(t("select"))} ${esc(s.supplier)}"><div style="min-width:0;flex:1"><div class="t"><a href="#" data-so="${i}">${flag(s.country)}${txt(s.supplier)}</a> <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div>
+      <div class="sub">${txt(String(s.products || s.commodities || s.main_sector).slice(0, 220))}</div>
+      <div class="sub">${esc([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : "", s.main_sector].filter(Boolean).join(" · "))} ${link(s.website, s.website)}</div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}
+    <div class="actions"><button class="primary" type="button" id="sr-rfq">${esc(t("draft_sel"))}</button><button type="button" id="sr-web">${esc(t("sr_web"))}</button><button type="button" id="sr-job">${esc(t("deep_sup"))}</button></div>
+    <div id="sr-act"></div></div>`;
+  out.querySelectorAll("[data-oc]").forEach(b => b.onclick = () => runResearch(b.dataset.oc));
+  out.querySelectorAll("[data-so]").forEach(a => a.onclick = e => { e.preventDefault(); const s = SR.rows[+a.dataset.so]; go("companies"); openSupplier(s); });
+  const picked = () => SR.rows.filter((s, i) => $("#sr" + i)?.checked);
+  $("#sr-rfq").onclick = () => { const to = picked(); if (!to.length) { $("#sr-act").innerHTML = `<div class="flash info">${esc(t("tick_one"))}</div>`; return; } compose({ kind: "rfq", ctx: { kind: "research", r: { title_en: SR.q } }, to }, "#sr-act"); };
+  $("#sr-job").onclick = e => queueJob({ type: "supplier_search", target_id: "SR:" + SR.q.toLowerCase().slice(0, 80), target: SR.q, context: { query: SR.q, origin_region: $("#sr-reg").value, origin_country: oc }, request: t("web_more_req") }, e.currentTarget, "#sr-act");
+  $("#sr-web").onclick = async e => {
+    if (!window.DD_INSTANT) return;
+    const b = e.currentTarget; b.disabled = true; $("#sr-act").innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("sr_web_wait"))}</div>`;
+    try {
+      const known = SR.rows.slice(0, 15).map(s => `${s.supplier} (${s.country})`).join("; ");
+      const r = await window.DD_INSTANT({ id: "R" + Date.now().toString(36).toUpperCase(), type: "supplier_search", target_id: "SR:" + SR.q.toLowerCase().slice(0, 80), target: SR.q,
+        context: { product: SR.q, origin_region: $("#sr-reg").value, origin_country: oc, already_in_database: known }, request: "Find producers and exporters of this product that are not in the list already_in_database. Say which origins are usually cheapest.", lang: LANG });
+      $("#sr-act").innerHTML = `<div class="section"><h3>${esc(t("sr_web_h"))}</h3><div class="note" style="white-space:pre-wrap">${linkify(r.text || "")}</div></div>`;
+    } catch (err) { $("#sr-act").innerHTML = `<div class="flash err">${esc(errText(err))}</div>`; }
+    b.disabled = false;
+  };
 }
 
 /* EPC contractors near this tender: main contractors that win large works in the same sector or region are the
@@ -1789,16 +1851,32 @@ async function renderForMe(fresh) {
   const lab = r => r.score >= 80 ? "hi" : r.score >= 60 ? "mid" : "";
   const inPanel = id => (S.data.tenders || []).find(x => x.id === id);
   const saved = new Set(S.prof.saved || []);
-  el.innerHTML = `<div class="filters"><div class="seg">${seg("focus", "fm_focus", !FM.saved && mode === "focus")}${seg("broad", "fm_broad", !FM.saved && mode === "broad")}${seg("saved", "fm_saved", FM.saved)}</div><span class="note" style="margin-inline-end:auto">${esc(t("fm_total", { n: d.total }))}${S.prof.sectors && S.prof.sectors.length ? " · " + esc(t("fm_found", { s: S.prof.sectors.join(", ") })) : ""}</span><button type="button" id="fm-edit">${esc(t("fm_edit"))}</button></div>
-  ${FM.widened ? `<div class="note" style="margin-bottom:8px">${esc(t("fm_widened"))}</div>` : ""}${d.err ? `<div class="empty">${esc(errText(d.err))}</div>` : !d.items.length ? `<div class="empty">${esc(t("fm_none"))}</div>` : d.items.map((r, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score ${lab(r)}">${r.score}</div><div style="min-width:0;flex:1"><div class="t">${esc(r.t)}</div><div class="sub">${esc([r.b, r.c, r.dd != null ? t("fm_days", { n: r.dd }) : r.dl, money(r.v), r.src].filter(Boolean).join(" · "))}</div><div class="fm-why">${esc(r.why.join(" · "))}</div>
-    <div class="actions" style="margin:6px 0 0">${saved.has(r.id) ? `<button type="button" data-fu="${i}">${esc(t("fm_unsave"))}</button>` : `<button type="button" data-fs="${i}">${esc(t("fm_save1"))}</button>`}<button type="button" data-fh="${i}">${esc(t("fm_hide"))}</button>${r.l ? `<a class="btn" href="${esc(r.l)}" target="_blank" rel="noopener">${esc(t("fm_src"))}</a>` : ""}${inPanel(r.id) ? `<button type="button" data-fo="${i}">${esc(t("fm_open"))}</button>` : ""}</div></div></div></div>`).join("")}`;
-  el.querySelectorAll("[data-fm]").forEach(b => b.onclick = () => { FM.widened = false; const k = b.dataset.fm; FM.saved = k === "saved"; if (!FM.saved) FM.mode = k; FM.data = null; track("view", "forme " + k); renderForMe(); });
+  el.innerHTML = `<div class="filters"><div class="seg">${seg("focus", "fm_focus", !FM.saved && !FM.sups && mode === "focus")}${seg("broad", "fm_broad", !FM.saved && !FM.sups && mode === "broad")}${seg("saved", "fm_saved", !!FM.saved)}${window.DD_SUPSEARCH ? seg("sups", "fm_sups", !!FM.sups) : ""}</div><span class="note" style="margin-inline-end:auto">${esc(t("fm_total", { n: d.total }))}${S.prof.sectors && S.prof.sectors.length ? " · " + esc(t("fm_found", { s: S.prof.sectors.join(", ") })) : ""}</span><button type="button" id="fm-edit">${esc(t("fm_edit"))}</button></div>
+  <div id="fm-list">${FM.widened ? `<div class="note" style="margin-bottom:8px">${esc(t("fm_widened"))}</div>` : ""}${d.err ? `<div class="empty">${esc(errText(d.err))}</div>` : !d.items.length ? `<div class="empty">${esc(t("fm_none"))}</div>` : d.items.map((r, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score ${lab(r)}">${r.score}</div><div style="min-width:0;flex:1"><div class="t">${esc(r.t)}</div><div class="sub">${esc([r.b, r.c, r.dd != null ? t("fm_days", { n: r.dd }) : r.dl, money(r.v), r.src].filter(Boolean).join(" · "))}</div><div class="fm-why">${esc(r.why.join(" · "))}</div>
+    <div class="actions" style="margin:6px 0 0">${saved.has(r.id) ? `<button type="button" data-fu="${i}">${esc(t("fm_unsave"))}</button>` : `<button type="button" data-fs="${i}">${esc(t("fm_save1"))}</button>`}<button type="button" data-fh="${i}">${esc(t("fm_hide"))}</button>${r.l ? `<a class="btn" href="${esc(r.l)}" target="_blank" rel="noopener">${esc(t("fm_src"))}</a>` : ""}${inPanel(r.id) ? `<button type="button" data-fo="${i}">${esc(t("fm_open"))}</button>` : ""}</div></div></div></div>`).join("")}</div>`;
+  el.querySelectorAll("[data-fm]").forEach(b => b.onclick = () => { FM.widened = false; const k = b.dataset.fm; FM.sups = k === "sups"; FM.saved = k === "saved"; if (!FM.saved && !FM.sups) FM.mode = k; if (!FM.sups) FM.data = null; track("view", "forme " + k); renderForMe(); });
+  if (FM.sups) return renderForMeSuppliers(el.querySelector("#fm-list"));
   $("#fm-edit").onclick = () => { FM.edit = true; renderForMe(); };
   const fb = async (kind, i) => { const r = d.items[i]; try { const j = await window.DD_PROFILE.feedback(kind, r.id); S.prof = j.profile; if (kind === "hide" || (kind === "unsave" && FM.saved)) { d.items.splice(i, 1); d.total--; } renderForMe(); } catch (e) {} };
   el.querySelectorAll("[data-fs]").forEach(b => b.onclick = () => fb("save", +b.dataset.fs));
   el.querySelectorAll("[data-fu]").forEach(b => b.onclick = () => fb("unsave", +b.dataset.fu));
   el.querySelectorAll("[data-fh]").forEach(b => b.onclick = () => fb("hide", +b.dataset.fh));
   el.querySelectorAll("[data-fo]").forEach(b => b.onclick = () => { const r = inPanel(d.items[+b.dataset.fo].id); if (r) openTender(r); });
+}
+// For me, suppliers: the best tier 1-2 suppliers for what the user sells or buys (the profile's products and sectors)
+async function renderForMeSuppliers(box) {
+  if (!box) return;
+  const p = S.prof || {}, kw = (p.keywords || []).join(" ");
+  if (!FM.supData) {
+    box.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("sup_wait"))}</div>`;
+    try { const j = await window.DD_SUPSEARCH({ text: kw, sector: (p.sectors || [])[0] || "", region: (p.regions || [])[0] || "", n: 40 }); FM.supData = { rows: toObjects(j.values || []), total: j.total || 0, kw }; }
+    catch (e) { box.innerHTML = `<div class="empty">${esc(errText(e))}</div>`; return; }
+  }
+  const d = FM.supData;
+  box.innerHTML = `<div class="note" style="margin-bottom:8px">${esc(t("fm_sups_note", { n: d.total.toLocaleString("en-US"), k: d.kw }))} <button type="button" id="fm-sr">${esc(t("fm_sups_more"))}</button></div>
+    ${d.rows.length ? d.rows.map((s, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score">${esc(s.quality)}</div><div style="min-width:0;flex:1"><div class="t"><a href="#" data-fso="${i}">${flag(s.country)}${txt(s.supplier)}</a> <span class="pill">${esc(s.country)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div><div class="sub">${txt(String(s.products || s.commodities || s.main_sector).slice(0, 200))}</div><div class="fm-why">${esc([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : ""].filter(Boolean).join(" · "))}</div></div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}`;
+  box.querySelectorAll("[data-fso]").forEach(a => a.onclick = e => { e.preventDefault(); go("companies"); openSupplier(d.rows[+a.dataset.fso]); });
+  $("#fm-sr").onclick = () => { go("research"); $("#sr-q").value = d.kw; runResearch(); };
 }
 function renderOnboard(el) {
   // KISS: three questions on one screen. The sectors are worked out on the server from what the user typed.
@@ -1834,7 +1912,7 @@ function renderOnboard(el) {
     const prof = { ...p, keywords: kw, regions: [...regs], valueMin: vmin, valueMax: vmax, countries: csv($("#fm-co").value), home: ($("#fm-home").value || "").trim().toUpperCase(), excluded: csv($("#fm-ex").value), partners: csv($("#fm-pa").value), minScore: +$("#fm-min").value || 60, digest: $("#fm-dg").value, lang: LANG };
     const changed = !S.prof || kw.join("|").toLowerCase() !== (S.prof.keywords || []).join("|");
     out.textContent = "...";
-    try { const j = await window.DD_PROFILE.save(prof, changed); S.prof = j.profile; FM.edit = false; FM.mode = null; FM.data = null; await loadForMe(); if (FM.data && !FM.data.total && S.prof.mode === "focus") { FM.mode = "broad"; FM.data = null; FM.widened = true; } await renderForMe(); } catch (e) { out.textContent = errText(e); }
+    try { const j = await window.DD_PROFILE.save(prof, changed); S.prof = j.profile; FM.edit = false; FM.mode = null; FM.data = null; FM.supData = null; FM.sups = false; await loadForMe(); if (FM.data && !FM.data.total && S.prof.mode === "focus") { FM.mode = "broad"; FM.data = null; FM.widened = true; } await renderForMe(); } catch (e) { out.textContent = errText(e); }
   };
   if ($("#fm-cancel")) $("#fm-cancel").onclick = () => { FM.edit = false; renderForMe(); };
 }
@@ -1958,7 +2036,7 @@ async function loadMarkets() {
 ["#mq", "#mtier", "#mcat", "#msort"].forEach(s_ => $(s_).addEventListener("input", () => { S.mkLimit = 80; renderMarkets(); }));
 
 /* ---------- navigation and wiring ---------- */
-const VIEWS = ["today", "forme", "tenders", "companies", "deals", "markets", "desk", "grants", "intel", "contacts", "projects", "jobs", "users"];
+const VIEWS = ["today", "forme", "tenders", "companies", "research", "deals", "markets", "desk", "grants", "intel", "contacts", "projects", "jobs", "users"];
 function go(v) {
   S.view = v; document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.v === v));
   document.querySelectorAll(".view").forEach(s => s.hidden = s.id !== "v-" + v);
@@ -1966,6 +2044,7 @@ function go(v) {
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
   if (v === "users" && S.me?.role === "admin") renderUsers();
   if (v === "forme" && window.DD_PROFILE) renderForMe();
+  if (v === "research") initResearch();
   dwellFlush(); viewFlush(); DW.view = v;
   track("view", "tab " + v);
 }

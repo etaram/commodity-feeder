@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
-import { suppliersFor } from "@/lib/panel";
+import { supplierSearch } from "@/lib/panel";
 import { logActivity } from "@/lib/activity";
 
 export const dynamic = "force-dynamic";
@@ -12,10 +12,12 @@ export async function POST(req: NextRequest) {
   if (!s) return res;
   const b = await req.json().catch(() => ({}));
   try {
-    const values = await suppliersFor({ sector: String(b.sector || ""), text: String(b.text || "").slice(0, 600), country: String(b.country || ""),
-      region: String(b.region || ""), hs: String(b.hs || ""), n: Number(b.n) || 15 });
-    await logActivity(s, "suppliers_for", String(b.text || "").slice(0, 120), `${b.sector || ""} | ${b.country || ""} | ${values.length - 1} found`);
-    return NextResponse.json({ ok: true, values });
+    const r = await supplierSearch({ sector: String(b.sector || ""), text: String(b.text || "").slice(0, 600), country: String(b.country || ""),
+      region: String(b.region || ""), hs: String(b.hs || ""), n: Number(b.n) || 15, originRegion: String(b.originRegion || ""),
+      originCountry: String(b.originCountry || "").toUpperCase(), exportersOnly: !!b.exportersOnly });
+    await logActivity(s, b.research ? "supplier_research" : "suppliers_for", String(b.text || "").slice(0, 120),
+      `${b.sector || ""} | ${b.originRegion || b.originCountry || b.country || ""} | ${r.total} found`);
+    return NextResponse.json({ ok: true, ...r });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });
   }
