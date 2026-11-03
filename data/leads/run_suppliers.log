@@ -1,3 +1,103 @@
-Mon Nov  2 10:11:55 UTC 2026
-INFO:leads:universe {'awards': 2160297, 'suppliers': 490450, 'with_email': 177525, 'with_phone': 174378, 'exporters': 37332, 'goods': 168831, 'contacts_matched': 478622, 'customs_exporters': 15147, 'customs_new': 14940, 'tier_A': 465116, 'tier_B_notable': 8665, 'tier_1_strategic': 12841, 'tier_2_proven': 61724, 'tier_3_qualified': 111505, 'tier_4_unproven': 304380, 'with_website': 142628, 'notable_total': 10668, 'notable_with_email': 2408, 'notable_with_phone': 3043, 'notable_with_website': 7510, 'quality_40_plus': 114039, 'with_any_contact': 326528, 'region: Europe': 216180, 'region: Latin America': 172282, 'region: Sub-Saharan Africa': 57451, 'region: South Asia': 8952, 'region: East Asia': 7460, 'region: Southeast Asia': 7318, 'region: North America': 6768, 'region: unknown': 5012, 'region: Middle East & North Africa': 3920, 'region: CIS & Central Asia': 2432, 'region: Other': 1034, 'region: Oceania': 952, 'region: Israel': 689}
-INFO:leads:web index: 90000 suppliers, 4.4 MB encrypted
+Mon Nov  2 22:29:50 UTC 2026
+INFO LatAm awards: Brazil 41 (4 days), Colombia 509
+INFO latam_awards: 0 rows
+INFO Prozorro awards: 39398 candidates, 2353 read, 2359 awards
+INFO prozorro_awards: 0 rows
+INFO OCDR 3 ZMB 2025: 84954 releases, 13536 awards, 13536 contacts
+INFO OCDR 157 BRA 2024: 17886 releases, 27582 awards, 27582 contacts
+INFO OCDR 22 DOM 2024: 26512 releases, 24341 awards, 33282 contacts
+INFO OCDR 110 ECU 2024: 217422 releases, 208411 awards, 208414 contacts
+INFO OCDR 85 GHA 2024: 2497 releases, 2964 awards, 2964 contacts
+INFO OCDR 142 GTM 2024: 211015 releases, 170968 awards, 170969 contacts
+INFO OCDR {'files': 6, 'awards': 447802, 'contacts': 456747, 'pending': 133}
+INFO ocdr: 0 rows
+INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
+INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
+INFO OCDR tenders 110 ECU 2026: 274 open of 121705 releases
+INFO OCDR tenders 142 GTM 2026: 0 open of 342057 releases
+INFO OCDR tenders 122 HND 2026: 37 open of 46050 releases
+INFO OCDR tenders 123 HND 2026: 0 open of 43975 releases
+INFO OCDR tenders 156 LBR 2026: 0 open of 1227 releases
+INFO OCDR tenders 127 NGA 2025: 0 open of 3 releases
+INFO OCDR tenders 64 NGA 2026: 0 open of 281 releases
+INFO OCDR tenders 86 NGA 2025: 0 open of 20 releases
+INFO OCDR tenders 118 NGA 2026: 0 open of 3 releases
+INFO OCDR tenders 125 NGA 2025: 0 open of 122 releases
+INFO OCDR tenders 135 PER 2026: 49 open of 134917 releases
+INFO OCDR tenders 152 TZA 2026: 0 open of 62293 releases
+INFO OCDR tenders 43 URY 2026: 38 open of 64000 releases
+INFO OCDR tenders 3 ZMB 2026: 0 open of 26157 releases
+INFO OCDR tenders 101 IDN 2120: 0 open of 1 releases
+INFO OCDR tenders 160 TWN 2026: 0 open of 6 releases
+INFO OCDR tenders 158 THA 2026: 0 open of 208218 releases
+INFO OCDR tenders 134 ALB 2025: 0 open of 722 releases
+INFO OCDR tenders 52 GEO 2025: 0 open of 10 releases
+INFO OCDR tenders 115 SRB 2026: 0 open of 597 releases
+INFO OCDR tenders 111 MEX 2025: 0 open of 10 releases
+INFO OCDR tenders 83 MEX 2025: 0 open of 26 releases
+INFO OCDR tenders 31 MEX 2025: 0 open of 205 releases
+INFO OCDR tenders 149 MEX 2026: 0 open of 4256 releases
+INFO OCDR tenders 32 MEX 2025: 0 open of 26 releases
+INFO OCDR tenders 132 MEX 2025: 0 open of 702 releases
+INFO OCDR tenders 34 MDA 2026: 0 open of 47356 releases
+INFO OCDR tenders {'publications': 29, 'read': 29, 'releases': 1106680, 'open_tenders': 399, 'countries': 5}
+INFO ocdr_tenders: 399 rows
+INFO IL exemptions: 5000/165705 read, 0 kept
+INFO IL exemptions: 10000/165705 read, 0 kept
+INFO IL exemptions: 15000/165705 read, 0 kept
+INFO IL exemptions: 20000/165705 read, 1 kept
+INFO IL exemptions: 25000/165705 read, 1 kept
+INFO IL exemptions: 30000/165705 read, 1 kept
+INFO IL exemptions: 35000/165705 read, 1 kept
+INFO IL exemptions: 40000/165705 read, 3 kept
+INFO IL exemptions: 45000/165705 read, 5 kept
+INFO IL exemptions: 50000/165705 read, 8 kept
+INFO IL exemptions: 55000/165705 read, 9 kept
+INFO IL exemptions: 60000/165705 read, 24 kept
+INFO IL exemptions: 65000/165705 read, 28 kept
+INFO IL exemptions: 70000/165705 read, 34 kept
+INFO IL exemptions: 75000/165705 read, 51 kept
+INFO IL exemptions: 80000/165705 read, 78 kept
+INFO IL exemptions: 85000/165705 read, 85 kept
+INFO IL exemptions: 90000/165705 read, 90 kept
+INFO IL exemptions: 95000/165705 read, 106 kept
+INFO IL exemptions: 100000/165705 read, 107 kept
+INFO IL exemptions: 105000/165705 read, 108 kept
+INFO IL exemptions: 110000/165705 read, 108 kept
+INFO IL exemptions: 115000/165705 read, 109 kept
+INFO IL exemptions: 120000/165705 read, 111 kept
+INFO IL exemptions: 125000/165705 read, 116 kept
+INFO IL exemptions: 130000/165705 read, 117 kept
+INFO IL exemptions: 135000/165705 read, 117 kept
+INFO IL exemptions: 140000/165705 read, 117 kept
+INFO IL exemptions: 145000/165705 read, 120 kept
+INFO IL exemptions: 150000/165705 read, 122 kept
+INFO IL exemptions: 155000/165705 read, 129 kept
+INFO IL exemptions: 160000/165705 read, 129 kept
+INFO IL exemptions: 165000/165705 read, 142 kept
+INFO IL exemptions: 165705/165705 read, 143 kept
+INFO IL exemptions {'read': 165705, 'kept': 143, 'next 6 months': 58, 'ended - re-procurement due': 2, '6-18 months': 37, 'later': 46}
+INFO il_exemptions: 0 rows
+INFO external awards {}
+INFO ext_awards: 0 rows
+INFO commodity_producers: 0 rows
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+INFO wikidata companies: 0 countries refreshed (0 companies), 33 countries cached
+INFO wikidata_companies: 0 rows
+INFO listed companies: 2 countries refreshed (0 companies), 202 cached
+INFO listed_companies: 0 rows
+INFO web profiles: 663 read, 276 websites discovered of 1500 tried
+INFO web_contacts: 0 rows
+INFO:leads:universe {'awards': 2610942, 'suppliers': 513926, 'with_email': 182911, 'with_phone': 184752, 'exporters': 38134, 'goods': 174575, 'contacts_matched': 498164, 'customs_exporters': 15938, 'customs_new': 15706, 'tier_A': 487826, 'tier_B_notable': 8665, 'tier_1_strategic': 13063, 'tier_2_proven': 63140, 'tier_3_qualified': 118409, 'tier_4_unproven': 319314, 'with_website': 144213, 'notable_total': 10668, 'notable_with_email': 2455, 'notable_with_phone': 3099, 'notable_with_website': 7510, 'quality_40_plus': 118863, 'with_any_contact': 344866, 'region: Europe': 217659, 'region: Latin America': 186846, 'region: Sub-Saharan Africa': 61848, 'region: South Asia': 9016, 'region: East Asia': 7777, 'region: unknown': 7571, 'region: Southeast Asia': 7360, 'region: North America': 6801, 'region: Middle East & North Africa': 3934, 'region: CIS & Central Asia': 2433, 'region: Other': 1037, 'region: Oceania': 955, 'region: Israel': 689}
+wrote 150001 rows to Supplier Universe
+INFO:leads:web index: 76203 suppliers, 3.7 MB encrypted
