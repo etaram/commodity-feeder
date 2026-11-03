@@ -1,50 +1,50 @@
 source,last_run_utc,rows,note,detail
-ted,2026-11-03T07:33,18235,OK,fetched=3679; days=3; cache=18235
-fts,2026-11-03T07:33,162,OK,pages=1
-sam,2026-11-03T07:36,6633,OK,fetched=8404; set_aside=11831; open_to_foreign=4832; full=1
-canadabuys,2026-11-03T07:36,809,OK,
+ted,2026-11-03T16:16,18235,OK,fetched=3679; days=3; cache=18235
+fts,2026-11-03T16:16,170,OK,pages=1
+sam,2026-11-03T16:16,6837,OK,fetched=1262; set_aside=11831; open_to_foreign=5106; full=0
+canadabuys,2026-11-03T16:16,838,OK,
 za,2026-11-03T12:25,639,OK,
 worldbank,2026-11-03T13:14,700,OK,new=277; cache=700; days=10
-ebrd,2026-11-03T07:36,41,OK,
+ebrd,2026-11-03T16:16,43,OK,
 mrgov,2026-11-03T13:15,192,OK,
-ungm,2026-11-03T07:37,919,OK,new=475; total_active=1708; pages=36
-undp,2026-11-03T07:37,13,OK,new=20; cache=13
-aiib,2026-11-03T05:51,175,OK,"new=174; awards=277 | last error: TP header field was received: frame type: 1, stream: 1, name: [upgrade], value: [h2]. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. "
-isdb,2026-11-03T07:37,34,OK,new=37
-etimad,2026-11-03T07:39,440,OK,new=94; pages=11
-prozorro,2026-11-03T07:39,758,OK,candidates=1392; fetched=159
-pncp,2026-11-03T07:40,3060,OK,new=0
-secop,2026-11-03T07:40,768,OK,new=4
+ungm,2026-11-03T16:17,1022,OK,new=568; total_active=1751; pages=43
+undp,2026-11-03T16:18,14,OK,new=21; cache=14
+aiib,2026-11-03T16:18,175,OK,new=174; awards=277
+isdb,2026-11-03T16:18,34,OK,new=37
+etimad,2026-11-03T16:19,471,OK,new=124; pages=14
+prozorro,2026-11-03T16:24,863,OK,candidates=2423; fetched=908
+pncp,2026-11-03T16:25,3173,OK,new=122
+secop,2026-11-03T16:25,768,OK,new=4
 germany,2026-11-03T12:58,9893,OK,new=514; awards_seen=224; awards_saved=605
-contractsfinder,2026-11-03T07:40,82,OK,new=9
+contractsfinder,2026-11-03T16:25,91,OK,new=19
 paraguay,2026-11-03T13:06,276,OK,new=2
 dominican,2026-11-03T13:07,631,OK,new=30; listed=454
-austender,2026-11-03T07:42,141,OK,new=121
-oman,2026-11-03T07:42,341,OK,new=50
+austender,2026-11-03T16:28,141,OK,new=121
+oman,2026-11-03T16:28,387,OK,new=50
 france,2026-11-03T13:07,6267,OK,new=467
 spain,2026-11-03T13:13,2542,OK,new=436; pages=4; awards_seen=703
-kenya,2026-11-03T07:42,592,OK,new=10
-moldova,2026-11-03T07:40,806,OK,new=257
-uruguay,2026-11-03T07:41,179,OK,new=0
+kenya,2026-11-03T16:28,594,OK,new=30
+moldova,2026-11-03T16:26,910,OK,new=398
+uruguay,2026-11-03T16:26,335,OK,new=156
 bahrain,2026-11-03T12:59,15,OK,new=7
-malaysia,2026-11-03T07:42,453,OK,new=453
-qatar,2026-11-03T07:53,240,OK,new=80
+malaysia,2026-11-03T16:27,460,OK,new=461
+qatar,2026-11-03T16:37,244,OK,new=160
 israel,2026-11-03T11:24,944,OK,bodies_scanned=909; open_notices=944
 nyc,2026-11-03T12:23,191,OK,open=191
 us_cities,2026-11-03T12:25,292,OK,Los_Angeles=207 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-11-03T13:14,943,OK,projects=943
 ocdr_tenders,2026-11-03T09:17,377,OK,publications=29; read=29; releases=1107438; open_tenders=377; countries=6
-afdb,2026-11-03T07:37,42,OK,new=0
-iadb,2026-11-03T07:37,112,OK,new=112
+afdb,2026-11-03T16:18,42,OK,new=0
+iadb,2026-11-03T16:18,113,OK,new=113
 chile,2026-11-03T12:25,4125,OK,new=4099
-simap,2026-11-03T07:38,383,OK,new=240
-gets,2026-11-03T07:38,418,OK,new=402
+simap,2026-11-03T16:18,383,OK,new=240
+gets,2026-11-03T16:18,418,OK,new=402
 india,2026-11-03T12:56,61181,OK,new=53231
-rwanda,2026-11-03T07:43,257,OK,new=257
-uganda,2026-11-03T07:43,28,OK,new=27
-ghana,2026-11-03T07:44,80,OK,new=80
-malawi,2026-11-03T07:44,53,OK,new=52
-mozambique,2026-11-03T07:44,58,OK,new=60
-dubai,2026-11-03T07:44,276,OK,new=227
-philippines,2026-11-03T07:47,1904,OK,new=1200
+rwanda,2026-11-03T16:28,268,OK,new=268
+uganda,2026-11-03T16:28,28,OK,new=27
+ghana,2026-11-03T16:29,86,OK,new=86
+malawi,2026-11-03T16:29,57,OK,new=56
+mozambique,2026-11-03T16:29,60,OK,new=62
+dubai,2026-11-03T16:29,311,OK,new=259
+philippines,2026-11-03T16:32,1904,OK,new=1200
 importyeti,2026-11-03T13:17,2,OK,"2 HS headings cached; this run 20, due 701"
