@@ -1,20 +1,14 @@
-Tue Nov  3 08:37:07 UTC 2026
-INFO LatAm awards: Brazil 81 (4 days), Colombia 424
+Tue Nov  3 20:23:11 UTC 2026
+INFO LatAm awards: Brazil 81 (4 days), Colombia 428
 INFO latam_awards: 0 rows
-INFO Prozorro awards: 40470 candidates, 1114 read, 1128 awards
+INFO Prozorro awards: 40123 candidates, 2600 read, 2611 awards
 INFO prozorro_awards: 0 rows
-INFO OCDR 122 HND 2024: 78177 releases, 35519 awards, 35942 contacts
-INFO OCDR 123 HND 2024: 88437 releases, 88103 awards, 94308 contacts
-INFO OCDR 147 KEN 2024: 58971 releases, 21386 awards, 15095 contacts
-INFO OCDR 156 LBR 2024: 1 releases, 0 awards, 0 contacts
-INFO OCDR 127 NGA 2024: 5 releases, 5 awards, 5 contacts
-INFO OCDR 64 NGA 2024: 52692 releases, 7448 awards, 6770 contacts
-INFO OCDR 86 NGA 2024: 139 releases, 139 awards, 139 contacts
-INFO OCDR 118 NGA 2024: 12 releases, 12 awards, 12 contacts
-INFO OCDR 120 PAN 2024: 10929 releases, 1604 awards, 0 contacts
-INFO OCDR 63 PRY 2024: 12470 releases, 22674 awards, 22678 contacts
-INFO OCDR 135 PER 2024: 19587 releases, 17238 awards, 17238 contacts
-INFO OCDR {'files': 11, 'awards': 194128, 'contacts': 192187, 'pending': 122}
+INFO OCDR 145 RWA 2024: 5544 releases, 6004 awards, 31804 contacts
+INFO OCDR 143 ZAF 2024: 7322 releases, 2455 awards, 0 contacts
+INFO OCDR 152 TZA 2024: 98242 releases, 25549 awards, 25549 contacts
+INFO OCDR 130 UGA 2024: 15083 releases, 10726 awards, 0 contacts
+INFO OCDR 43 URY 2024: 19502 releases, 25866 awards, 25866 contacts
+INFO OCDR {'files': 5, 'awards': 70600, 'contacts': 83219, 'pending': 117}
 INFO ocdr: 0 rows
 INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
 INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
@@ -91,10 +85,10 @@ WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
+WARNING wikidata 500
 WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
+WARNING wikidata 502
+WARNING wikidata 500
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
@@ -102,8 +96,8 @@ INFO wikidata companies: 0 countries refreshed (0 companies), 33 countries cache
 INFO wikidata_companies: 0 rows
 INFO listed companies: 0 countries refreshed (0 companies), 202 cached
 INFO listed_companies: 0 rows
-INFO web profiles: 3047 read, 275 websites discovered of 1500 tried
+INFO web profiles: 3167 read, 372 websites discovered of 1500 tried
 INFO web_contacts: 0 rows
-INFO:leads:universe {'awards': 2809529, 'suppliers': 548015, 'with_email': 196655, 'with_phone': 197961, 'exporters': 39983, 'goods': 182911, 'contacts_matched': 521591, 'customs_exporters': 17501, 'customs_new': 17246, 'tier_A': 520366, 'tier_B_notable': 8663, 'tier_1_strategic': 13263, 'tier_2_proven': 64833, 'tier_3_qualified': 125112, 'tier_4_unproven': 344807, 'with_website': 146449, 'notable_total': 10679, 'notable_with_email': 2457, 'notable_with_phone': 3100, 'notable_with_website': 7519, 'quality_40_plus': 122741, 'with_any_contact': 361459, 'region: Europe': 219583, 'region: Latin America': 204402, 'region: Sub-Saharan Africa': 75323, 'region: South Asia': 9080, 'region: East Asia': 8448, 'region: unknown': 7740, 'region: Southeast Asia': 7448, 'region: North America': 6738, 'region: Middle East & North Africa': 3970, 'region: CIS & Central Asia': 2433, 'region: Other': 1182, 'region: Oceania': 970, 'region: Israel': 698}
+INFO:leads:universe {'awards': 2883549, 'suppliers': 558822, 'with_email': 197921, 'with_phone': 199839, 'exporters': 40795, 'goods': 185141, 'contacts_matched': 524596, 'customs_exporters': 18226, 'customs_new': 17961, 'tier_A': 530459, 'tier_B_notable': 8662, 'tier_1_strategic': 13335, 'tier_2_proven': 65459, 'tier_3_qualified': 126281, 'tier_4_unproven': 353747, 'with_website': 146818, 'notable_total': 10679, 'notable_with_email': 2460, 'notable_with_phone': 3103, 'notable_with_website': 7519, 'quality_40_plus': 124587, 'with_any_contact': 364518, 'region: Europe': 221197, 'region: Latin America': 205794, 'region: Sub-Saharan Africa': 82526, 'region: South Asia': 9135, 'region: East Asia': 8832, 'region: unknown': 7741, 'region: Southeast Asia': 7527, 'region: North America': 6789, 'region: Middle East & North Africa': 3986, 'region: CIS & Central Asia': 2434, 'region: Other': 1188, 'region: Oceania': 973, 'region: Israel': 700}
 wrote 150001 rows to Supplier Universe
-INFO:leads:web index: 78096 suppliers, 3.9 MB encrypted
+INFO:leads:web index: 78794 suppliers, 4.1 MB encrypted
