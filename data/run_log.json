@@ -1,29 +1,29 @@
 {
-  "finished_utc": "2026-11-02T13:54:36",
-  "fx_source": "ECB via Frankfurter 2026-10-30",
+  "finished_utc": "2026-11-03T02:55:55",
+  "fx_source": "ECB via Frankfurter 2026-11-02",
   "fx": {
-    "EUR": 1.117206091007608,
-    "CNY": 0.15031039095732687,
-    "CAD": 0.7158708568974157,
-    "MYR": 0.24648755237860487,
-    "JPY": 0.006359300476947536,
-    "ILS": 0.31965221838639557,
-    "GBP": 1.3398898610534213,
-    "INR": 0.010531858873091101,
-    "AUD": 0.7024445068839562,
-    "BRL": 0.1840773124712379,
-    "NOK": 0.10834001430088189,
-    "CHF": 1.2151406525305304,
-    "ZAR": 0.0599179124599299,
-    "KRW": 0.0007489122050222053,
+    "EUR": 1.1216043428520155,
+    "CNY": 0.15041439164899298,
+    "CAD": 0.7156147130385001,
+    "MYR": 0.24567006510256725,
+    "JPY": 0.006333122229259024,
+    "ILS": 0.31854235020545985,
+    "GBP": 1.3419396395550127,
+    "INR": 0.010536297545042672,
+    "AUD": 0.7008199593524423,
+    "BRL": 0.1838978998859833,
+    "NOK": 0.10808006571267996,
+    "CHF": 1.2200627112233569,
+    "ZAR": 0.060101210438378225,
+    "KRW": 0.0007446570854121676,
     "USD": 1.0
   },
   "sources": {
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 26,
-      "newest_date": "2026-11-02",
+      "sec": 25,
+      "newest_date": "2026-11-03",
       "log": [
         "INFO yahoo: no data for JKM=F",
         "INFO yahoo: 33 prices"
@@ -33,19 +33,19 @@
       "ok": true,
       "prices": 6,
       "sec": 8,
-      "newest_date": "2026-10-30",
+      "newest_date": "2026-11-02",
       "log": [
         "INFO westmetall: 6 prices"
       ]
     },
     "em_global": {
       "ok": true,
-      "prices": 21,
-      "sec": 48,
-      "newest_date": "2026-11-02",
+      "prices": 19,
+      "sec": 37,
+      "newest_date": "2026-11-03",
       "log": [
         "INFO em_global board: 620 rows",
-        "INFO em_global: 21 prices"
+        "INFO em_global: 19 prices"
       ]
     },
     "cn_spot": {
@@ -60,7 +60,7 @@
     "eu_agri": {
       "ok": true,
       "prices": 63,
-      "sec": 38,
+      "sec": 11,
       "newest_date": "2026-10-31",
       "log": [
         "INFO eu_agri: 63 prices"
@@ -69,7 +69,7 @@
     "dtn": {
       "ok": true,
       "prices": 7,
-      "sec": 2,
+      "sec": 0,
       "newest_date": "2026-10-23",
       "log": [
         "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/10/28/fertilizer-prices-continue-climb-6"
@@ -96,7 +96,7 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 1,
+      "sec": 0,
       "newest_date": "2026-11-02",
       "log": [
         "INFO smi: 5 prices (as of 2026-11-02)"
@@ -105,8 +105,8 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 12,
-      "newest_date": "2026-10-30",
+      "sec": 11,
+      "newest_date": "2026-11-02",
       "log": [
         "INFO usda gdt: 8 prices",
         "INFO usda by-products: 3 prices",
@@ -120,7 +120,7 @@
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 1,
+      "sec": 0,
       "newest_date": null,
       "log": [
         "WARNING census 2026-10: Expecting value: line 1 column 1 (char 0)",
@@ -145,7 +145,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 14,
+      "sec": 18,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -155,13 +155,13 @@
     }
   },
   "rows_with_price": 1957,
-  "candidates": 2191,
-  "flagged": 251,
+  "candidates": 2189,
+  "flagged": 253,
   "by_source_selected": {
-    "yahoo": 31,
+    "yahoo": 32,
     "westmetall": 6,
-    "em_global": 4,
-    "cn_spot": 30,
+    "em_global": 3,
+    "cn_spot": 31,
     "eu_agri": 50,
     "dtn": 7,
     "ssb": 2,
@@ -171,12 +171,12 @@
     "census": 0,
     "comext": 1722,
     "comtrade": 3,
-    "derived": 31
+    "derived": 30
   },
   "by_tier": {
-    "T1 Exchange benchmark": 80,
+    "T1 Exchange benchmark": 79,
     "T2 Official market reporting": 81,
-    "T3 Industry assessment": 71,
+    "T3 Industry assessment": 72,
     "T4 Trade statistics (unit value)": 1725
   }
 }
