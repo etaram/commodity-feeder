@@ -3,10 +3,10 @@ ted,2026-11-03T07:33,18235,OK,fetched=3679; days=3; cache=18235
 fts,2026-11-03T07:33,162,OK,pages=1
 sam,2026-11-03T07:36,6633,OK,fetched=8404; set_aside=11831; open_to_foreign=4832; full=1
 canadabuys,2026-11-03T07:36,809,OK,
-za,2026-11-03T05:49,639,OK,
-worldbank,2026-11-03T06:54,667,OK,new=242; cache=667; days=10
+za,2026-11-03T12:25,639,OK,
+worldbank,2026-11-03T13:14,700,OK,new=277; cache=700; days=10
 ebrd,2026-11-03T07:36,41,OK,
-mrgov,2026-11-03T06:55,199,OK,
+mrgov,2026-11-03T13:15,192,OK,
 ungm,2026-11-03T07:37,919,OK,new=475; total_active=1708; pages=36
 undp,2026-11-03T07:37,13,OK,new=20; cache=13
 aiib,2026-11-03T05:51,175,OK,"new=174; awards=277 | last error: TP header field was received: frame type: 1, stream: 1, name: [upgrade], value: [h2]. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. "
@@ -15,31 +15,31 @@ etimad,2026-11-03T07:39,440,OK,new=94; pages=11
 prozorro,2026-11-03T07:39,758,OK,candidates=1392; fetched=159
 pncp,2026-11-03T07:40,3060,OK,new=0
 secop,2026-11-03T07:40,768,OK,new=4
-germany,2026-11-03T06:24,9893,OK,new=514; awards_seen=224; awards_saved=604
+germany,2026-11-03T12:58,9893,OK,new=514; awards_seen=224; awards_saved=605
 contractsfinder,2026-11-03T07:40,82,OK,new=9
-paraguay,2026-11-03T06:36,274,OK,new=22
-dominican,2026-11-03T06:38,601,OK,new=154; listed=371
+paraguay,2026-11-03T13:06,276,OK,new=2
+dominican,2026-11-03T13:07,631,OK,new=30; listed=454
 austender,2026-11-03T07:42,141,OK,new=121
 oman,2026-11-03T07:42,341,OK,new=50
-france,2026-11-03T06:38,6204,OK,new=404
-spain,2026-11-03T06:41,2542,OK,new=436; pages=4; awards_seen=703
+france,2026-11-03T13:07,6267,OK,new=467
+spain,2026-11-03T13:13,2542,OK,new=436; pages=4; awards_seen=703
 kenya,2026-11-03T07:42,592,OK,new=10
 moldova,2026-11-03T07:40,806,OK,new=257
 uruguay,2026-11-03T07:41,179,OK,new=0
-bahrain,2026-11-03T06:26,15,OK,new=7
+bahrain,2026-11-03T12:59,15,OK,new=7
 malaysia,2026-11-03T07:42,453,OK,new=453
 qatar,2026-11-03T07:53,240,OK,new=80
 israel,2026-11-03T11:24,944,OK,bodies_scanned=909; open_notices=944
-nyc,2026-11-03T05:47,191,OK,open=191
-us_cities,2026-11-03T05:49,291,OK,Los_Angeles=207 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
-wb_pipeline,2026-11-03T06:53,943,OK,projects=943
+nyc,2026-11-03T12:23,191,OK,open=191
+us_cities,2026-11-03T12:25,292,OK,Los_Angeles=207 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
+wb_pipeline,2026-11-03T13:14,943,OK,projects=943
 ocdr_tenders,2026-11-03T09:17,377,OK,publications=29; read=29; releases=1107438; open_tenders=377; countries=6
 afdb,2026-11-03T07:37,42,OK,new=0
 iadb,2026-11-03T07:37,112,OK,new=112
-chile,2026-11-03T05:51,4105,OK,new=4094
+chile,2026-11-03T12:25,4125,OK,new=4099
 simap,2026-11-03T07:38,383,OK,new=240
 gets,2026-11-03T07:38,418,OK,new=402
-india,2026-11-03T06:22,57809,OK,new=55890
+india,2026-11-03T12:56,61181,OK,new=53231
 rwanda,2026-11-03T07:43,257,OK,new=257
 uganda,2026-11-03T07:43,28,OK,new=27
 ghana,2026-11-03T07:44,80,OK,new=80
@@ -47,4 +47,4 @@ malawi,2026-11-03T07:44,53,OK,new=52
 mozambique,2026-11-03T07:44,58,OK,new=60
 dubai,2026-11-03T07:44,276,OK,new=227
 philippines,2026-11-03T07:47,1904,OK,new=1200
-importyeti,2026-11-03T06:56,2,OK,"2 HS headings cached; this run 22, due 723"
+importyeti,2026-11-03T13:17,2,OK,"2 HS headings cached; this run 20, due 701"
