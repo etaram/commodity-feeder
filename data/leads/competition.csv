@@ -1,6 +1,7 @@
 country,sector,awards_12m,foreign_wins,foreign_win_rate,median_bids
 DEU,Building construction works,15214,107,0.007,5.0
 POL,Healthcare & pharmaceuticals,15071,239,0.016,2
+DEU,Building construction works,15025,106,0.007,5
 COL,"Consulting, business & financial services",8609,0,0.0,
 ROU,Healthcare & pharmaceuticals,7942,2,0.0,5
 DEU,Engineering & architecture services,7754,71,0.009,3.0
@@ -29,7 +30,7 @@ ITA,Healthcare & pharmaceuticals,2388,21,0.009,3.0
 FRA,ICT & telecom,2365,37,0.016,3.0
 FRA,"Environment, waste & cleaning",2360,4,0.002,3.0
 COL,Healthcare & pharmaceuticals,2270,0,0.0,
-DEU,"Consulting, business & financial services",2143,131,0.061,3
+DEU,"Consulting, business & financial services",2126,131,0.062,3.0
 ESP,"Vehicles, rolling stock, ships & aircraft",2056,35,0.017,2.0
 POL,"Consulting, business & financial services",2016,28,0.014,2
 ESP,"Environment, waste & cleaning",2001,5,0.002,3
@@ -48,6 +49,7 @@ BGR,Healthcare & pharmaceuticals,1707,5,0.003,2
 CZE,"Repair, maintenance & installation",1679,41,0.024,1
 PRT,Healthcare & pharmaceuticals,1677,23,0.014,1
 NLD,"Consulting, business & financial services",1672,29,0.017,3.0
+USA,"Furniture, appliances & consumer goods",1632,2,0.001,
 UKR,Construction materials & building systems,1627,0,0.0,
 CZE,Agriculture & food,1585,2,0.001,3
 USA,Industrial & construction machinery,1558,0,0.0,
@@ -92,8 +94,6 @@ CZE,Building construction works,1025,22,0.021,4
 HRV,ICT & telecom,1021,36,0.035,1
 POL,"Education, social & hospitality services",1013,9,0.009,2.0
 UKR,"Repair, maintenance & installation",1004,0,0.0,
-DEU,"Repair, maintenance & installation",976,12,0.012,2.0
-DEU,Scientific & measuring instruments,973,163,0.168,1
 COL,Defence & security,973,0,0.0,
 FRA,Healthcare & pharmaceuticals,965,31,0.032,3.0
 ESP,Transport & civil infrastructure works,965,0,0.0,3.0
@@ -112,7 +112,7 @@ BGR,ICT & telecom,850,16,0.019,1.0
 BEL,ICT & telecom,850,150,0.176,3.0
 ITA,Engineering & architecture services,843,6,0.007,7.0
 ROU,"Vehicles, rolling stock, ships & aircraft",841,34,0.04,2
-DEU,Industrial & construction machinery,819,74,0.09,2.0
+DEU,Industrial & construction machinery,815,73,0.09,2.0
 UKR,"Energy, fuels & utilities",814,0,0.0,
 SWE,Healthcare & pharmaceuticals,805,60,0.075,3.0
 DEU,Water & wastewater,794,23,0.029,3
@@ -212,7 +212,7 @@ UKR,Industrial & construction machinery,412,0,0.0,
 FRA,Scientific & measuring instruments,408,55,0.135,2.0
 FIN,Building construction works,403,4,0.01,5
 BEL,"Environment, waste & cleaning",401,24,0.06,4
-USA,Healthcare & pharmaceuticals,400,0,0.0,
+USA,"Consulting, business & financial services",387,8,0.021,4
 BGR,"Repair, maintenance & installation",387,10,0.026,1.0
 ROU,Industrial & construction machinery,385,22,0.057,2
 SWE,"Education, social & hospitality services",385,15,0.039,3.0
@@ -423,6 +423,7 @@ LTU,Agriculture & food,132,1,0.008,3.0
 FIN,Agriculture & food,131,6,0.046,4
 BEL,Power & electrical equipment,131,10,0.076,3
 UKR,Scientific & measuring instruments,130,0,0.0,1
+USA,Scientific & measuring instruments,130,9,0.069,
 PRT,Transport & logistics services,130,2,0.015,2
 PRT,Industrial & construction machinery,129,3,0.023,2
 IRL,Healthcare & pharmaceuticals,128,27,0.211,2
@@ -507,6 +508,7 @@ NOR,"Furniture, appliances & consumer goods",87,3,0.034,3
 EST,Engineering & architecture services,87,3,0.034,6
 CHE,"Education, social & hospitality services",87,9,0.103,3
 ITA,Construction materials & building systems,86,0,0.0,3.0
+USA,Transport & logistics services,86,0,0.0,
 PRT,Transport & civil infrastructure works,86,1,0.012,4
 MLT,"Consulting, business & financial services",86,15,0.174,2.0
 SWE,Chemicals & plastics,85,9,0.106,2
@@ -547,6 +549,7 @@ USA,Transport & logistics services,73,0,0.0,
 DEU,"Mining, minerals & metals",71,20,0.282,2
 LTU,"Energy, fuels & utilities",71,2,0.028,2
 BRA,"Vehicles, rolling stock, ships & aircraft",71,0,0.0,
+USA,"Education, social & hospitality services",71,10,0.141,
 GRC,Industrial & construction machinery,70,1,0.014,1.0
 EST,Chemicals & plastics,69,9,0.13,2.0
 NOR,Industrial & construction machinery,69,9,0.13,2
@@ -627,8 +630,8 @@ SVN,Construction materials & building systems,39,4,0.103,2
 BRA,Engineering & architecture services,39,0,0.0,
 COL,Chemicals & plastics,39,0,0.0,
 FIN,"Energy, fuels & utilities",38,1,0.026,3.0
-USA,Other,38,1,0.026,
 GBR,"Consulting, business & financial services",37,36,0.973,2
+USA,Power & electrical equipment,37,1,0.027,
 CYP,Building construction works,37,2,0.054,2
 EST,Building construction works,37,0,0.0,6
 NOR,Water & wastewater,36,0,0.0,3
