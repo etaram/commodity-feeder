@@ -85,3 +85,23 @@ large regenerated data files out of Git history.
 - Fonts: dropped the extra serif; IBM Plex (both scripts) plus Secular One for the mark only.
 - Tests: screenshots at 390/768/1280/1440 px in English and Hebrew, no horizontal overflow, no script errors; classic switch
   shows the old 14 tabs. Rollback: `?ui=classic`, or remove the v2 block and nav.dest from panel.html.
+
+## Slice 7: design skills, accessibility, Today action queue (2026-11-04)
+
+Skills (brief 9.1). Available locally: frontend-design. Fetched and read from their official repositories (raw files,
+2026-11-04; the GitHub API for those repos is blocked here, so file hashes stand in for commit ids):
+- web-design-guidelines (vercel-labs/agent-skills, sha256 f4647ca866a3) + its rules file web-interface-guidelines/command.md
+- webapp-testing (anthropics/skills, d91970639e9f): Playwright reconnaissance-then-action, used for all checks below
+- react-best-practices (vercel-labs/agent-skills, MIT, 51b7349e77ec): applied async-parallel to the live Sheets reads
+- together-ai-design-skill: no public source given; not used.
+
+Accessibility (axe-core 4.10.2, WCAG 2.0/2.1/2.2 AA + best practice, 5 screens, stub data):
+- before: 11 selects without names (critical), no h1, detail panes as top-level complementary landmarks
+- after: 0 violations; keyboard walk: skip link first, every control focusable with a visible outline
+- also: live status region, 44 "..." -> "…", theme-color, touch-action, balanced headings.
+  Screen-reader and zoom checks on the live site: pending (need a signed-in session).
+
+Today (brief 9.5): "What needs your attention" queue first: approvals waiting, bid projects with a next step or missing
+item, Pursue tenders closing in 3-21 days without a project (open items: value, competition, eligibility), research
+finished in the last 2 days. Each item: what, why, deadline (or "no deadline stated"), what is open, one next action that
+opens the exact record. Streams: projects and buyers in the leading column, commodities in the other.

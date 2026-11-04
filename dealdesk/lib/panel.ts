@@ -121,12 +121,13 @@ async function liveDirect(): Promise<Snap | null> {
   try {
     return await withTimeout(cached("live-direct", 60_000, async () => {
       const keys = Object.keys(LIVE), out: Snap = {} as Snap;
-      for (const sid of [LE, SU]) {
+      // both spreadsheets in parallel (react-best-practices: async-parallel)
+      await Promise.all([LE, SU].map(async (sid) => {
         const ks = keys.filter((k) => LIVE[k][0] === sid);
         const vals = await readRanges(sid, ks.map((k) => LIVE[k][1]));
         if (!vals) throw new Error("no service account");
         ks.forEach((k, i) => { out[k] = vals[i]; });
-      }
+      }));
       return out;
     }), LIVE_TIMEOUT_MS, "live Sheets read");
   } catch (e) { if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) await logEvent("warn", "sheets", "live read failed, using the encrypted snapshot", String(e).slice(0, 300)); return null; }
