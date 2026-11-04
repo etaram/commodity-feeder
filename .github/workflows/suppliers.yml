@@ -12,7 +12,9 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: repo-data-writes
+  # its own queue: the commit step lands only the files this workflow owns on top of the latest main, so it does not
+  # need to wait behind the two-hourly leads runs (whose queued run used to cancel a waiting supplier rebuild)
+  group: suppliers-writes
   cancel-in-progress: false
 jobs:
   suppliers:
