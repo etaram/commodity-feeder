@@ -1,27 +1,8 @@
-INFO:leads:ghana new 75, open 75 (pages 10)
-## ghana 75 {'new': 75} [('National (foreign firms may bid)', 75)]
-    2026-11-11 | YILO KROBO MUNICIPAL ASSEMBLY | 56.Construction of 2No. 48Cubicle open shed at Klo Agogo
-    2026-11-05 | GHANA NATIONAL PETROLEUM CORPORATION | Consultancy Services for SAP Review Roadmap Implementation
-    2026-11-02 | COMMUNITY WATER AND SANITATION AGENCY | Water Supply Intervention in mining affected communities in the Central Region - Lot 3
-INFO:leads:zambia new 0, open 0 (pages 1)
-## zambia 0 {'new': 0} []
-INFO:leads:Malawi new 40, open 40
-## malawi 40 {'new': 40} [('Open (check eligibility in the bidding document)', 40)]
-    2026-11-06 | National Cancer Centre | Supply,Delivery and Fixing of Vertical Blinds
-    2026-11-10 | Mzuzu Central Hospital | SUPPLY AND DELIVERY OF UROLOGY ENDOSCOPIC EQUIPMENT
-    2026-11-04 | Accountant General Department | provision , Installation, Testing and maintenance of Security Access Control Machines at m
-INFO:leads:Mozambique new 61, open 59
-## mozambique 59 {'new': 61} [('National (foreign firms may bid)', 59)]
-    2026-11-16 | DIRECCAO PROVINCIAL DE DESENVOLVIMENTO T | CONTRATACAO DE SERVICOS DE CONSULTORIA PARA FISCALIZACAO DAS OBRAS DE EMPREITADA NA CONCLU
-    2026-11-04 | SERVICO DISTRITAL DE SAUDE, MULHER E ACC | FORNECIMENTO DE BENS E PRESTACAO DE SERVICO
-    2026-11-05 | BOLSA DE MERCADORIAS DE MOCAMBIQUE | FORNECIMENTO DE EQUIPAMENTO INFORMATICO (5 COMPUTADORES) PARA A BMM
-INFO:leads:Dubai new 234, open 223 (pages 4)
-## dubai 223 {'new': 234} [('Registered suppliers (eSupply)', 223)]
-    2026-11-05 | Dubai Academic Health Corporation | Sack Holder & Dust Bin / CSC-Domestic / IPR 126092021 / T 22602164 / SZA
-    2026-11-12 | Dubai Municipality | 2029_TF-21-C1_Upgrading and Rehabilitation of Stormwater System (Abu H
-    2026-11-03 | Dubai Municipality | DVRS Maintenance and instruments Calibration
-INFO:leads:Philippines new 1200, open 1200 (pages 60)
-## philippines 1200 {'new': 1200} [('Registered suppliers (PhilGEPS)', 1200)]
-    2026-11-03 | MUNICIPALITY OF LANTAPAN, BUKIDNON | CONSTRUCTION/IMPRVEMENT OF MUNICIPAL PREMEISES
-    2026-11-04 | MUNICIPALITY OF TUBA, BENGUET | 2026-10-1000
-    2026-11-09 | MUNICIPALITY OF PLACER, SURIGAO DEL NORT | COMMERCIAL RICE FOR TANOD MEMBERS (NOVEMBER - DECEMBER 2026)
+== fl: (all)
+{"id": "P518248", "project_name": "Kajeke-Gihanga III hydro-agricultural development project"}
+keys: ['boardapprovaldate', 'borrower', 'closingdate', 'countryshortname', 'curr_ibrd_commitment', 'grantamt', 'id', 'idacommamt', 'impagency', 'lendprojectcost', 'proj_id', 'project_name', 'projid_id_display', 'regionname', 'totalamt']
+{"id": "P513206", "sectorcode": "EEC,HHF,HHG,SSA", "major_sectors": [{"major_sector": {"major_sector_code": "HHX", "major_sector_name": "Health", "sectors": [{"sector_name": "Public Administration - Health", "sector_code": "HHF", "sector_percent": "0"}, {"sector_name": "Health", "sector_code": "HHG", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "SSX", "major_sector_name": "Social Protection", "sectors": [{"sector_name": "Social Protection", "sector_code": "SSA", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "EEX", "major_sector_name": "Education", "sectors": [{"sector_name": "Early Childhood Education", "sector_code": "EEC", "sector_percent": "0"}]}}], "major_sector_name": "Education,Health,Social Protection", "major_sector_code": "EEX,HHX,SSX", "project_name": "Philippines Multisectoral Nutrition Project-Converging Nutrition Efforts for our Children's Tomorrow"}
+keys: ['boardapprovaldate', 'borrower', 'closingdate', 'countryshortname', 'curr_ibrd_commitment', 'grantamt', 'id', 'idacommamt', 'impagency', 'major_sector_code', 'major_sector_name', 'major_sectors', 'proj_id', 'project_name', 'projid_id_display', 'regionname', 'sectorcode', 'totalamt']
+== fl: id,project_name,sector1,sector,mjsector1Name,sectorcode,mjsectorcode,theme1,sector1Name
+{"id": "P518248", "project_name": "Kajeke-Gihanga III hydro-agricultural development project"}
+{"id": "P513206", "sectorcode": "EEC,HHF,HHG,SSA", "major_sectors": [{"major_sector": {"major_sector_code": "HHX", "major_sector_name": "Health", "sectors": [{"sector_name": "Public Administration - Health", "sector_code": "HHF", "sector_percent": "0"}, {"sector_name": "Health", "sector_code": "HHG", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "SSX", "major_sector_name": "Social Protection", "sectors": [{"sector_name": "Social Protection", "sector_code": "SSA", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "EEX", "major_sector_name": "Education", "sectors": [{"sector_name": "Early Childhood Education", "sector_code": "EEC", "sector_percent": "0"}]}}], "project_name": "Philippines Multisectoral Nutrition Project-Converging Nutrition Efforts for our Children's Tomorrow"}
