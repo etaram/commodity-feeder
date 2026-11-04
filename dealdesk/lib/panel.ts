@@ -143,9 +143,11 @@ async function fitMap(): Promise<Map<string, { fw: string; ff: string; rt: strin
 }
 async function withFit(grid: Grid): Promise<Grid> {
   if (!grid.length) return grid;
-  const m = await fitMap(), idc = grid[0].indexOf("id");
+  const m = await fitMap(), idc = grid[0].indexOf("id"), dlc = grid[0].indexOf("deadline");
   if (idc < 0 || grid[0].includes("fit_why")) return grid;
-  return [[...grid[0], "fit_why", "fit_flags", "route"], ...grid.slice(1).map((r) => { const f = m.get(String(r[idc] || "")); return [...r, f?.fw || "", f?.ff || "", f?.rt || ""]; })];
+  // freshness: a notice whose deadline has passed is gone from every list (tracked items live in Pursuits and Projects)
+  const live = dlc < 0 ? grid.slice(1) : grid.slice(1).filter((r) => !isClosed(String(r[dlc] || "")));
+  return [[...grid[0], "fit_why", "fit_flags", "route"], ...live.map((r) => { const f = m.get(String(r[idc] || "")); return [...r, f?.fw || "", f?.ff || "", f?.rt || ""]; })];
 }
 export async function getRange(key: string): Promise<Grid> {
   if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);

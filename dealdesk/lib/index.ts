@@ -30,7 +30,9 @@ async function load<T>(name: string, decode: (b: Buffer) => T): Promise<T> {
 // A tender whose deadline has passed is closed and never shown (the data files are refreshed every few hours,
 // so the check runs against today's date at request time). Tenders without a stated deadline stay.
 export function isClosed(deadline: string | undefined): boolean {
-  const d = Date.parse(String(deadline || "").slice(0, 10));
+  const raw = String(deadline || "").trim();
+  const d = /^\d{4}-\d{2}-\d{2}/.test(raw) ? Date.parse(raw.slice(0, 10)) : Date.parse(raw);  // ISO, or the sheet's "04 Dec 2026"
+  if (isFinite(d) && d < Date.UTC(1990, 0, 1)) return false;  // a mis-parse is never "closed"
   if (!isFinite(d)) return false;
   const now = new Date();
   return d < Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());

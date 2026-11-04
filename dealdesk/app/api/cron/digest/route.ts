@@ -5,6 +5,8 @@ import { matches } from "@/lib/match";
 import { logEvent } from "@/lib/log";
 import { logActivity } from "@/lib/activity";
 import { countryIntel } from "@/lib/country";
+import { links as tgLinks, send as tgSend } from "@/lib/telegram";
+import { getRange } from "@/lib/panel";
 
 // Daily digest (Vercel Cron, 05:00 UTC). For every active user whose profile asks for one: the new matches since the
 // last digest (not sent before, not hidden), best first, by email through Resend. No AI. Weekly digests go on Sundays.
@@ -23,6 +25,17 @@ export async function GET(req: NextRequest) {
   const sunday = new Date().getUTCDay() === 0;
   const active = new Map((await listUsers(true)).filter((u) => u.status === "active").map((u) => [u.email, u]));
   const report: { email: string; items: number; sent: boolean; error?: string }[] = [];
+  // Telegram: the three strongest deal theses of the day to every linked chat with alerts on (no AI)
+  if (!dry && process.env.TELEGRAM_BOT_TOKEN) {
+    try {
+      const g = await getRange("plays"); const h = g[0] || [];
+      const rows = g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))).slice(0, 3);
+      if (rows.length) for (const l of await tgLinks()) if (l.alerts !== "off") {
+        const he = l.lang === "he";
+        await tgSend(l.chat_id, (he ? "<b>תזות העסקה של הבוקר</b>\n" : "<b>This morning's deal theses</b>\n") + rows.map((p) => `• <b>${p.kind}</b> ${p.country} · ${p.title}\n  ${String(p.next_step).slice(0, 160)}`).join("\n") + (he ? "\n/plays לעוד" : "\n/plays for more"));
+      }
+    } catch (e) { await logEvent("warn", "telegram", "morning plays failed", String(e).slice(0, 200)); }
+  }
 
   // The shared team login has no Users row: its digest goes to the owner's address.
   const team = (process.env.TEAM_USER || "").trim().toLowerCase();
