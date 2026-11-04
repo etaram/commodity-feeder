@@ -5,20 +5,21 @@ import { countryIntel } from "./country";
 import { readBrief, buildBrief } from "./brief";
 import { claude } from "./anthropic";
 import { logActivity } from "./activity";
+import { tgEnv } from "./tgenv";
 
 // Talking to the Deal Desk from Telegram. A chat is linked to a system user once, with a code the user takes from
 // the panel (Settings > Telegram); until then the bot answers only /start. Every answer comes from the system's
 // own data; the free-text route uses the AI only to choose which of the same tools to call and to phrase the result,
 // with the tool outputs as its only facts. Nothing is sent to anyone else, and nothing is submitted.
 // Links live in the hidden tab 'Telegram' (chat_id, email, name, linked_at, lang, alerts).
-const API = (m: string) => `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/${m}`;
+const API = (m: string) => `https://api.telegram.org/bot${tgEnv().token}/${m}`;
 const TAB = "Telegram";
 type Link = { chat_id: string; email: string; name: string; lang: "he" | "en"; alerts: string };
 const money = (n: number) => (!n ? "" : n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : `$${Math.round(n / 1e3)}K`);
 const esc = (s: string) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]!));
 
 export async function send(chatId: string, text: string, extra: Record<string, unknown> = {}) {
-  if (!process.env.TELEGRAM_BOT_TOKEN) return;
+  if (!tgEnv().token) return;
   for (const part of chunk(text)) {
     await fetch(API("sendMessage"), { method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ chat_id: chatId, text: part, parse_mode: "HTML", disable_web_page_preview: true, ...extra }) }).catch(() => null);
@@ -37,7 +38,7 @@ export async function links(): Promise<Link[]> {
 // first 6 chars of a hash. The code is private to the signed-in user; the bot checks it against the active users.
 export async function linkCode(email: string): Promise<string> {
   const { createHmac } = await import("crypto");
-  return createHmac("sha256", process.env.TELEGRAM_BOT_TOKEN || "x").update(email.toLowerCase()).digest("hex").slice(0, 6).toUpperCase();
+  return createHmac("sha256", tgEnv().token || "x").update(email.toLowerCase()).digest("hex").slice(0, 6).toUpperCase();
 }
 
 async function linkChat(chatId: string, code: string, lang: "he" | "en"): Promise<string> {

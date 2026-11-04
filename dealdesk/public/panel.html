@@ -1404,7 +1404,8 @@ async function renderTgToday() {
   if (!TG.enabled) { el.innerHTML = admin ? `<details class="dw-add"><summary>${esc(t("tg_h"))}</summary><p class="note">${esc(t("tg_setup1"))}</p></details>` : ""; return; }
   el.innerHTML = `<details class="dw-add"><summary>${esc(t("tg_h"))}</summary><p class="note">${esc(t("tg_how", { b: TG.bot ? "@" + TG.bot : "the Deal Desk bot" }))} <code dir="ltr">/start ${esc(TG.code)}</code></p>${admin ? `<div class="actions"><button type="button" id="tg-setup">${esc(t("tg_connect"))}</button><span id="tg-state" class="sub"></span></div>` : ""}</details>`;
   if (admin && window.DD_TG_SETUP) {
-    window.DD_TG_SETUP.get().then(j => { $("#tg-state").textContent = j.webhook ? t("tg_ok", { b: j.bot }) + (j.last_error ? " · " + j.last_error : "") : t("tg_notyet"); }).catch(() => {});
+    window.DD_TG_SETUP.get().then(async j => { if (j.webhook) { $("#tg-state").textContent = t("tg_ok", { b: j.bot }) + (j.last_error ? " · " + j.last_error : ""); return; }
+      $("#tg-state").textContent = t("tg_notyet"); try { const k = await window.DD_TG_SETUP.set(); $("#tg-state").textContent = k.ok ? t("tg_done") : (k.result || k.error || "failed"); } catch (e) { $("#tg-state").textContent = errText(e); } }).catch(() => {});
     $("#tg-setup").onclick = async () => { $("#tg-setup").disabled = true; try { const j = await window.DD_TG_SETUP.set(); $("#tg-state").textContent = j.ok ? t("tg_done") : (j.result || j.error || "failed"); } catch (e) { $("#tg-state").textContent = errText(e); } $("#tg-setup").disabled = false; };
   }
 }

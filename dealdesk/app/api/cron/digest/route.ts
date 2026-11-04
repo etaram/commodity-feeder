@@ -7,6 +7,7 @@ import { logActivity } from "@/lib/activity";
 import { countryIntel } from "@/lib/country";
 import { links as tgLinks, send as tgSend } from "@/lib/telegram";
 import { getRange } from "@/lib/panel";
+import { tgEnv } from "@/lib/tgenv";
 
 // Daily digest (Vercel Cron, 05:00 UTC). For every active user whose profile asks for one: the new matches since the
 // last digest (not sent before, not hidden), best first, by email through Resend. No AI. Weekly digests go on Sundays.
@@ -26,7 +27,7 @@ export async function GET(req: NextRequest) {
   const active = new Map((await listUsers(true)).filter((u) => u.status === "active").map((u) => [u.email, u]));
   const report: { email: string; items: number; sent: boolean; error?: string }[] = [];
   // Telegram: the three strongest deal theses of the day to every linked chat with alerts on (no AI)
-  if (!dry && process.env.TELEGRAM_BOT_TOKEN) {
+  if (!dry && tgEnv().token) {
     try {
       const g = await getRange("plays"); const h = g[0] || [];
       const rows = g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))).slice(0, 3);

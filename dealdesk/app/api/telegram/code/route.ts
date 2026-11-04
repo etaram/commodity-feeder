@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { linkCode } from "@/lib/telegram";
+import { tgEnv } from "@/lib/tgenv";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +9,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const { s, res } = await gate("viewer");
   if (!s) return res;
-  if (!process.env.TELEGRAM_BOT_TOKEN) return NextResponse.json({ ok: true, enabled: false });
-  return NextResponse.json({ ok: true, enabled: true, bot: process.env.TELEGRAM_BOT_USERNAME || "", code: await linkCode(s.email) });
+  const { token, username } = tgEnv();
+  if (!token) return NextResponse.json({ ok: true, enabled: false });
+  return NextResponse.json({ ok: true, enabled: true, bot: username, code: await linkCode(s.email) });
 }
