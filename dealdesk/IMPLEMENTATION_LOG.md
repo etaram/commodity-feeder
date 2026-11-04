@@ -163,3 +163,30 @@ opens the exact record. Streams: projects and buyers in the leading column, comm
   match each other (transformers 22 -> 34, solar panels 2 -> 4). Open: supplier recall for specific products is low
   (diesel generator 1, robot vacuum cleaners 0 of 84,925 tier 1-2 suppliers) because the product field holds short HS or
   notice wording; this needs richer product data, not a looser match.
+
+## Slice 13: the brain (2026-11-04 evening)
+
+Owner's ask: the first tender shown must not be an off-road car for a regional council; country-level intelligence;
+how information becomes a deal; a competitive edge at low cost. See dealdesk/BRAIN.md.
+- Ranking: `leads/dealfit.py` replaces the objective score. Continuous 0-100 built for a cross-border sourcing firm
+  (EV, size band, goods share, foreign access or IFI financing, proven suppliers per sector, timing, emerging market,
+  partner country, repeat buyer) with named penalties (licensed goods, on-site services, routine local purchases, small
+  municipal buys, closed access, set-asides, exemptions, late, oversized) and the Profile weights as a square-root
+  multiplier. Dry run on 68,114 live notices: 415 notices tied at 96 before; now one at the top (green hydrogen,
+  $40M, Scottish council), Amgros pharma frameworks fall from 96 to 43 with the reason shown, the regional-council
+  vehicle to 24. Sheet formula AC now = score x supplier-match factor (the weights are no longer applied twice).
+- Explanations: `fit_why`, `fit_flags`, `route` merged into every tender grid on the server from the public index;
+  the panel shows "Why this rank" with Relevant / Not relevant buttons (logged as fit_feedback);
+  `tools/fit_calibrate.py` reports rule-by-rule agreement with the owner's marks.
+- Plays (`leads/plays.py` -> data/leads/plays.csv, sheet tab Plays): supply the winner (69), arbitrage gap (205),
+  pre-tender approach (63); emerging markets first; shown on Today and on the country page.
+- Country intelligence: `/api/panel/country?c=ISO3` + the Country sub-tab (open tenders by sector and value, foreign
+  access share, planned projects, top buyers and cycles, who wins, imports and premiums, plays, news, risk, integrity).
+- News: `leads/gdelt.py`: Google News RSS per watched country (GDELT throttles GitHub's shared IPs: HTTP 429, kept as
+  a polite fallback). Test run: 73 headlines for 3 countries.
+- Who I know: hidden tab My Network (LinkedIn export), `/api/panel/know`, shown on tenders and plays to analysts and admins.
+- Supplier aggregates (counts only) published for the brain: data/leads/supplier_sectors.csv, supplier_hs.csv.
+- Rollback: `score` falls back to the old objective score if dealfit raises; remove the dealfit call in leads/run.py
+  to restore it fully; the sheet formula AC can be restored from the log of 2026-11-04 (weights x score, capped 100).
+- Pending: first live leads run with the new score; owner's marks for calibration; IFI procurement plans, LEI groups,
+  exchange filings, freight and FX indexes (BRAIN.md "next").
