@@ -9,6 +9,8 @@ import { allTenders } from "@/lib/panel";
 const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads";
 type Row = Record<string, string>;
 const num = (v: unknown) => { const n = parseFloat(String(v ?? "").replace(/[,$]/g, "")); return Number.isFinite(n) ? n : 0; };
+// days to the deadline, or NaN when the notice states none (a blank is never "closing today")
+const days = (r: Row) => { const v = String(r.days_left ?? "").trim(); if (!v) return NaN; const n = parseFloat(v); return Number.isFinite(n) ? n : NaN; };
 
 export type Lens = { id: string; en: string; he: string; sectors: string[]; kw: RegExp; not?: RegExp };
 export const LENSES: Lens[] = [
@@ -47,7 +49,7 @@ async function csv(name: string): Promise<Row[]> {
 const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender|open to foreign/i;
 export type TItem = { id: string; t: string; b: string; c: string; s: string; v: number; dd: number | null; fit: number; d: string; acc: string; why: string; lensWhy?: string };
 const item = (r: Row): TItem => ({ id: r.id, t: r.title_en || r.title_original || "", b: r.buyer || "", c: r.country || "", s: r.sector || "", v: num(r.est_value_usd),
-  dd: r.days_left === "" || r.days_left == null ? null : num(r.days_left), fit: num(r.fit || r.score), d: r.decision || "", acc: r.access || "", why: r.fit_why || "" });
+  dd: Number.isFinite(days(r)) ? days(r) : null, fit: num(r.fit || r.score), d: r.decision || "", acc: r.access || "", why: r.fit_why || "" });
 
 function lensMatch(l: Lens, r: Row): { sec: boolean; kw: boolean } {
   const text = `${r.title_en || ""} ${r.title_original || ""} ${r.commodity || ""}`;
@@ -58,16 +60,16 @@ function lensMatch(l: Lens, r: Row): { sec: boolean; kw: boolean } {
 export async function todayGeneral() {
   const { rows } = await allTenders();
   const open = rows.filter((r) => r.stage !== "planned");
-  const newBig = open.filter((r) => r.new === "NEW" && INTL.test(r.access || "") && num(r.est_value_usd) >= 1_000_000 && num(r.fit || r.score) >= 40)
+  const newBig = open.filter((r) => r.new === "NEW" && INTL.test(r.access || "") && num(r.est_value_usd) >= 1_000_000 && !(days(r) < 5))
     .sort((a, b) => num(b.est_value_usd) - num(a.est_value_usd)).slice(0, 8).map(item);
-  const closing = open.filter((r) => r.decision === "Pursue" && num(r.days_left) >= 2 && num(r.days_left) <= 10)
+  const closing = open.filter((r) => r.decision === "Pursue" && days(r) >= 2 && days(r) <= 10)
     .sort((a, b) => num(b.fit || b.score) - num(a.fit || a.score)).slice(0, 8).map(item);
   const plays = (await csv("plays.csv")).sort((a, b) => num(b.value_usd) - num(a.value_usd)).slice(0, 6);
   const news = (await csv("news.csv")).sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 10);
   const brief = (await csv("briefing_items.csv")).filter((x) => x.signal).sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 8);
   return {
     counts: { open: open.length, newToday: open.filter((r) => r.new === "NEW").length, intl: open.filter((r) => INTL.test(r.access || "")).length,
-      pursue: open.filter((r) => r.decision === "Pursue").length, closingWeek: open.filter((r) => num(r.days_left) >= 0 && num(r.days_left) <= 7).length,
+      pursue: open.filter((r) => r.decision === "Pursue").length, closingWeek: open.filter((r) => days(r) >= 0 && days(r) <= 7).length,
       planned: rows.length - open.length },
     newBig, closing, plays, news, brief,
   };
@@ -86,7 +88,7 @@ export async function todayFocus(lensId: string) {
   const tag = (x: { r: Row; m: { sec: boolean; kw: boolean } }) => ({ ...item(x.r), lensWhy: x.m.sec && x.m.kw ? "sector and product" : x.m.sec ? "sector" : "product words" });
   const open = scored.filter((x) => x.r.stage !== "planned");
   const top = open.slice(0, 25).map(tag);
-  const closing = open.filter((x) => num(x.r.days_left) >= 2 && num(x.r.days_left) <= 14).slice(0, 8).map(tag);
+  const closing = open.filter((x) => days(x.r) >= 2 && days(x.r) <= 14).slice(0, 8).map(tag);
   const fresh = open.filter((x) => x.r.new === "NEW").slice(0, 8).map(tag);
   const planned = scored.filter((x) => x.r.stage === "planned").slice(0, 6).map(tag);
   const plays = (await csv("plays.csv")).filter((p) => l.sectors.includes(p.sector) || l.kw.test(`${p.title} ${p.thesis}`)).slice(0, 8);
