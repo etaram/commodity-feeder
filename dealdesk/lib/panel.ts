@@ -3,7 +3,7 @@ import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
 import { suppliers as supplierIndex, tenders as supplierIndexTenders, isClosed, type Supplier } from "@/lib/index";
 import { readRanges } from "@/lib/sheets";
-import { isServiceOnly } from "@/lib/supfit";
+import { isServiceOnly, sectorOf } from "@/lib/supfit";
 import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
 import { claude } from "@/lib/anthropic";
@@ -314,7 +314,8 @@ async function webSuppliers(): Promise<Supplier[]> {
     const k = `${n.toLowerCase()}|${c}`;
     if (!n || seen.has(k)) continue;
     seen.add(k);
-    out.push({ n, c, tr: "W", q: 0, ty: String(r[ix("type")] || ""), p: String(r[ix("products")] || ""), web: String(r[ix("website")] || ""),
+    const p = String(r[ix("products")] || ""), qy = String(r[ix("query")] || "");
+    out.push({ n, c, tr: "W", q: 0, ty: String(r[ix("type")] || ""), p, web: String(r[ix("website")] || ""), s: sectorOf(`${n} ${p}`) || sectorOf(qy),
       why: `found on the web (${String(r[ix("added")] || "").slice(0, 10)}), not verified: ${String(r[ix("source")] || "")}`, cm: String(r[ix("query")] || "") });
   }
   return out;

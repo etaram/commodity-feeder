@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from .common import AWARDS, LEADS, PRIVATE, log, today
 from .regions import iso3, region
-from .sectors import SECTORS, classify
+from .sectors import SECTORS, classify, _KW as SECTOR_KW
 from .taxonomy import BY_ID, group_of_text
 
 LEGAL = re.compile(r"\b(gmbh|ag|kg|sa|s\.a\.|sas|sarl|srl|s\.r\.l\.|spa|s\.p\.a\.|bv|nv|ltd|limited|llc|inc|plc|oy|ab|as|a/s|"
@@ -71,17 +71,59 @@ def clean_products(t):
         return ""
     return ", ".join(parts)
 
-def main_sectors(x, name, site_title=""):
+GOODS_SECTORS = {"AGRI_FOOD", "ENERGY", "POWER", "MINING_METALS", "CHEMICALS", "TEXTILES", "CONSTR_MAT", "MACHINERY",
+                 "TRANSPORT_EQ", "DEFENCE", "HEALTH", "LAB", "ICT", "CONSUMER", "WATER"}
+_HSN = None
+
+
+def hs_names(codes):
+    """HS-4 heading descriptions for a supplier's customs codes (data/hs4.csv)."""
+    global _HSN
+    if _HSN is None:
+        try:
+            from .common import DATA
+            _HSN = {r["hs4"]: r["description"] for r in csv.DictReader(open(DATA / "hs4.csv", encoding="utf-8"))}
+        except OSError:
+            _HSN = {}
+    return "; ".join(dict.fromkeys(_HSN[h[:4]] for h in re.split(r"[\s,;]+", codes or "") if h[:4] in _HSN))
+
+
+def self_sectors(text):
+    """Sectors a company's own description names (its name, site title, about text, industry, customs headings).
+    Every sector the text hits counts once; when it names goods, the service words in it (design, installation,
+    events, training) are how it sells them, not what it is."""
+    hits = [sec for sec, rx in SECTOR_KW if rx.search(text or "")]
+    hits = list(dict.fromkeys(hits))
+    goods = [h for h in hits if h in GOODS_SECTORS]
+    return goods or hits
+
+
+def main_sectors(x, name, site_title="", about=""):
+    """(sector, score) best first, and why the first one was chosen: identity (name or declared industry), the
+    company's own description, or the contracts it won."""
     count, usd = x["sectors"], x.get("sec_usd", {})
     tot_c, tot_u = sum(count.values()) or 1, sum(usd.values()) or 0
     score = {k: 0.35 * count[k] / tot_c + (0.65 * usd.get(k, 0) / tot_u if tot_u else 0.65 * count[k] / tot_c) for k in count}
+    why = {k: "contracts won" for k in score}
     ident = x.get("declared") or next((sec for rx, sec in IDENTITY if rx.search(f"{name} {x.get('industries', '')} {site_title if rx is CLEANING_ID else ''}")), "")
     if ident:
-        score[ident] = score.get(ident, 0) + 1.0  # identity outranks any contract mix
+        score[ident] = score.get(ident, 0) + 1.5  # identity outranks any contract mix (which sums to at most 1)
+        why[ident] = "declared industry" if x.get("declared") else "company name or industry"
+    # what the company says it does: its name, site title, about text, industry and customs headings
+    own = self_sectors(f"{name} {site_title} {about} {x.get('industries', '')} {hs_names(x.get('hs', ''))}")
+    for i, sec in enumerate(own[:3]):
+        # goods the company says it makes outrank the mix of what public buyers happened to buy from it
+        score[sec] = score.get(sec, 0) + ((1.1 if sec in GOODS_SECTORS else 0.5) if i == 0 else 0.4)
+        why.setdefault(sec, "own description")
+        if why[sec] == "contracts won":
+            why[sec] = "own description and contracts"
     # a goods maker is not a consultancy because it also sold advice: a service sector leads only with a clear margin
     ranked = sorted(score.items(), key=lambda y: -y[1])
-    if len(ranked) > 1 and ranked[0][0] in SERVICE_SECTORS and ranked[1][0] not in SERVICE_SECTORS and ranked[0][1] < ranked[1][1] * 1.5:
+    if len(ranked) > 1 and ranked[0][0] != ident and ranked[0][0] in SERVICE_SECTORS and ranked[1][0] not in SERVICE_SECTORS and ranked[0][1] < ranked[1][1] * 1.5:
         ranked[0], ranked[1] = ranked[1], ranked[0]
+    x["_sector_why"] = why.get(ranked[0][0], "") if ranked else ""
+    # the company's own words point elsewhere than the chosen sector: listed for review in the check tab
+    x["_sector_check"] = f"own description says {SECTORS.get(own[0], own[0])}" if own and ranked and own[0] != ranked[0][0] and own[0] in GOODS_SECTORS else ""
     return ranked
 
 def norm(n):
@@ -228,6 +270,35 @@ def quality(r):
     sh = int(r.get("shipments_12m") or 0)
     q += min(30, 6 * math.log2(1 + sh)) if sh else (5 if r.get("hs_codes") else 0)  # steady exports to the US
     return round(max(0, min(100, q)))
+
+
+def classification_check(out):
+    """Review tab 'Classification check' in the private Supplier Universe sheet: per sector how many suppliers, how
+    their sector was decided, how many are on-site service firms, how many the rule flags for review; then the top
+    proven suppliers of every sector and every flagged one among them, so a wrong class is visible at a glance."""
+    from .push import UNIVERSE_SHEET, Sheets
+    by = defaultdict(lambda: defaultdict(int))
+    for r in out:
+        b = by[r["main_sector"] or "(none)"]
+        b["total"] += 1; b["proven"] += r["tier"] in ("1", "2"); b["services"] += r["type"] == "works/services"
+        b["goods"] += r["type"] == "goods supplier"; b["flagged"] += bool(r.get("sector_check"))
+        b["why: " + (r.get("sector_why") or "-")] += 1
+    whys = sorted({k for b in by.values() for k in b if k.startswith("why: ")})
+    head = ["sector", "total", "proven (tier 1-2)", "goods", "services", "flagged"] + whys
+    rows = [[f"Built {today()}: {len(out):,} suppliers. 'why' = how the main sector was decided; 'flagged' = the company's own description names another goods sector."], head]
+    for sec, b in sorted(by.items(), key=lambda y: -y[1]["total"]):
+        rows.append([sec, b["total"], b["proven"], b["goods"], b["services"], b["flagged"]] + [b.get(w, 0) for w in whys])
+    cols = ["supplier", "country", "tier", "quality", "main_sector", "sector_why", "sector_check", "other_sectors", "type", "products", "supplied"]
+    rows += [[""], ["Top proven suppliers per sector (check the class)"], cols]
+    for sec in sorted(by):
+        top = [r for r in out if (r["main_sector"] or "(none)") == sec and r["tier"] in ("1", "2")]
+        top.sort(key=lambda r: -r["quality"])
+        rows += [[str(r.get(c, ""))[:140] for c in cols] for r in top[:15]]
+    flagged = sorted((r for r in out if r.get("sector_check") and r["tier"] in ("1", "2")), key=lambda r: -r["quality"])
+    rows += [[""], [f"Flagged for review: {sum(1 for r in out if r.get('sector_check')):,} in all, the 300 strongest proven ones"], cols]
+    rows += [[str(r.get(c, ""))[:140] for c in cols] for r in flagged[:300]]
+    Sheets().replace_tab(UNIVERSE_SHEET, "Classification check", rows, raw=True)
+    log.info("classification check: %d sectors, %d flagged", len(by), sum(b["flagged"] for b in by.values()))
 
 
 def balance_regions(rows):
@@ -500,7 +571,7 @@ def build():
             x["phone"] = wp["phone"]
         about = x.get("products") or wp.get("about") or ""
         items = "; ".join(i for i, _ in sorted(x["items"].items(), key=lambda y: -y[1])[:3])
-        secs = main_sectors(x, name, wp.get("title") or "")
+        secs = main_sectors(x, name, wp.get("title") or "", about)
         out.append({
             "supplier": name[:120], "country": wc, "region": region(wc) if wc else "",
             "tier": "", "notable": "yes" if x.get("notable") else "",
@@ -531,6 +602,7 @@ def build():
             "contact_level": ("email+phone" if x["email"] and x["phone"] else "email" if x["email"] else
                               "phone" if x["phone"] else "website only" if x["website"] else "address only" if x["address"] else "none"),
             "shipments_12m": x.get("ship12", "") if x.get("ship_total") else "", "hs_codes": x.get("hs", ""),
+            "sector_why": x.get("_sector_why", ""), "sector_check": x.get("_sector_check", ""),
         })
     for r in out:
         r["quality"] = quality(r)
@@ -545,6 +617,10 @@ def build():
     out = balance_regions(out)
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)
+    try:
+        classification_check(out)
+    except Exception as e:  # noqa: BLE001
+        log.warning("classification check tab: %s", e)
     cols = list(out[0].keys()) if out else ["supplier"]
     with open(PRIVATE / "universe.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(out)
