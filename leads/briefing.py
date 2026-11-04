@@ -112,7 +112,7 @@ def owner_sources():
         from .push import LEADS_SHEET, Sheets
         rows = Sheets().values(LEADS_SHEET, "'Briefing Sources'!A2:E200")
         return [{"name": r[0], "url": r[1], "kind": (r[2] if len(r) > 2 else "rss") or "rss", "topic": (r[3] if len(r) > 3 else "") or "expert",
-                 "region": (r[4] if len(r) > 4 else "") or "global"} for r in rows if len(r) > 1 and r[1].startswith("http")]
+                 "region": (r[4] if len(r) > 4 else "") or "global"} for r in rows if len(r) > 1 and (r[1].startswith("http") or (len(r) > 2 and r[2].lower().startswith("company")))]
     except Exception as e:  # noqa: BLE001
         log.warning("briefing sources tab: %s", type(e).__name__); return []
 
@@ -150,8 +150,13 @@ def build():
             add(it, topic, regn, "Google News")
         time.sleep(1)
     for src in owner_sources():
-        for it in _feed(s, src["url"]):
-            add(it, src["topic"], src["region"], src["name"])
+        if src["kind"].lower().startswith("company"):  # a company to watch: its name in the url column is enough
+            q = src["url"] if not src["url"].startswith("http") else src["name"]
+            for it in _feed(s, GNEWS, {"q": f'"{q}" when:7d', "hl": "en-US", "gl": "US", "ceid": "US:en"}):
+                add(it, "company watch", src["region"], "Google News")
+        else:
+            for it in _feed(s, src["url"]):
+                add(it, src["topic"], src["region"], src["name"])
         time.sleep(1)
     items.sort(key=lambda x: (x["date"], x["topic"]), reverse=True)
     cols = ["date", "topic", "region", "title", "source", "url", "countries", "group", "signal", "lead_company", "summary"]

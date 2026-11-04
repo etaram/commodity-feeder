@@ -145,9 +145,26 @@ def news_leads():
     return out[:200]
 
 
+def plan_published():
+    """A World Bank project published or updated its procurement plan in the last 90 days: packages are coming."""
+    out = []
+    for r in _rows("wb_plans.csv")[:150]:
+        c = r.get("country") or ""
+        if not c:
+            continue
+        out.append({"kind": "procurement plan", "country": c, "sector": "",
+                    "title": f"{(r.get('title') or r.get('project_id'))[:100]}",
+                    "thesis": f"Procurement plan dated {r.get('date')} for World Bank project {r.get('project_id')}: the packages, methods and dates are in the plan, months before the notices.",
+                    "role": "direct bid, or sub-supplier to the package winner", "entity": r.get("project_id") or "", "entity_kind": "project",
+                    "value_usd": "", "evidence": r.get("pdf") or r.get("link") or "", "confidence": 0.6 + (0.1 if region(c) in EMERGING else 0),
+                    "next_step": "Open the plan, list the goods packages with their dates, and put the ones in our sectors on the watchlist.",
+                    "emerging": region(c) in EMERGING})
+    return out
+
+
 def build():
     sup = supplier_table()
-    plays = supply_the_winner(sup) + arbitrage_gaps(sup) + pre_tender(sup) + news_leads()
+    plays = supply_the_winner(sup) + arbitrage_gaps(sup) + pre_tender(sup) + news_leads() + plan_published()
     cols = ["kind", "country", "region", "sector", "title", "thesis", "role", "entity", "entity_kind", "value_usd",
             "evidence", "confidence", "next_step", "built"]
     for p in plays:
@@ -166,7 +183,7 @@ def build():
     with open(LEADS / "plays.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader(); w.writerows([{k: v for k, v in p.items() if k != "emerging"} for p in plays])
-    log.info("plays: %d (%s)", len(plays), ", ".join(f"{k}={sum(1 for p in plays if p['kind'] == k)}" for k in ("supply the winner", "arbitrage gap", "pre-tender approach", "news lead")))
+    log.info("plays: %d (%s)", len(plays), ", ".join(f"{k}={sum(1 for p in plays if p['kind'] == k)}" for k in ("supply the winner", "arbitrage gap", "pre-tender approach", "news lead", "procurement plan")))
     return plays
 
 
