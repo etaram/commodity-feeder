@@ -105,7 +105,7 @@ const num = (v: unknown) => { const n = parseFloat(String(v ?? "").replace(/,/g,
 const escRe = (p: string) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const toRe = (p: string) => {
   if (!p) return null;
-  p = p.slice(0, 120);
+  p = p.slice(0, 800);  // a free-language search is a prefix of ~70 characters plus up to 14 keywords
   if (/\([^)]*[+*][^)]*\)\s*[+*{]/.test(p) || /(\.\*){3,}/.test(p)) p = escRe(p);
   try { return new RegExp(p.replace(/\\x\{([0-9a-fA-F]+)\}/g, "\\u{$1}"), "iu"); } catch { return null; }
 };
@@ -189,7 +189,17 @@ async function withFit(grid: Grid): Promise<Grid> {
 }
 export async function getRange(key: string, fresh = false): Promise<Grid> {
   if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);
-  if (["tenders", "upcoming"].includes(key)) return withFit(((await snapshot("static"))[key] as Grid) || []);
+  if (["tenders", "upcoming"].includes(key)) {
+    const g = ((await snapshot("static"))[key] as Grid) || [];
+    // the snapshot's tender list comes from a Sheets read that can time out (19:52 run: 0 rows); then the list is
+    // built from the full tender files instead: the best 1,500 open notices by fit
+    if (key === "tenders" && g.length < 2) {
+      const { head, rows } = await allTenders();
+      const top = rows.filter((r) => r.stage !== "planned").sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0)).slice(0, 1500);
+      return withFit([head, ...top.map((r) => head.map((k) => r[k] ?? ""))]);
+    }
+    return withFit(g);
+  }
   // real counts, never the sheet's placeholder: open tenders in the full list, suppliers searchable (tiers 1-3)
   if (key === "tot_t") return [["total", String((await allTenders()).rows.length)]];
   if (["titles", "repeat", "markets", "meta"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
@@ -204,7 +214,8 @@ export const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender/i;
 // The panel sends the search box as a regex ("\\bword"). Hebrew (or other non-Latin) words are translated to English
 // first, and then every word must appear (any order); the original words still match Hebrew titles.
 async function queryRe(rx: string): Promise<{ test: (s: string) => boolean } | null> {
-  if (!rx || !NON_LATIN.test(rx)) return toRe(rx.toLowerCase());
+  // a free-language search arrives as a ready alternation of keywords (English and Hebrew): use it as it is
+  if (!rx || !NON_LATIN.test(rx) || rx.startsWith("(?:^|[^")) return toRe(rx.toLowerCase());
   const plain = rx.replace(/\\b/g, " ").replace(/\\(.)/g, "$1").replace(/\s+/g, " ").trim();
   const en = await toEnglish(plain);
   const a = allWordsRe(en.text), b = toRe(rx.toLowerCase());

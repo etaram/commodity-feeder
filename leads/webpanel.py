@@ -56,18 +56,44 @@ def _key():
     return next((r[1] for r in Sheets().values(SU, "Config!A1:B5") if len(r) > 1 and r[0] == "WEB_INDEX_KEY"), "")
 
 
+def _previous(part):
+    """The last exported values of this part (decrypted), so a failed read keeps them."""
+    try:
+        key = _key()
+        f = OUT / f"panel_{part}.enc"
+        if not key or not f.exists():
+            return {}
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+        b = f.read_bytes()
+        return json.loads(gzip.decompress(AESGCM(base64.b64decode(key)).decrypt(b[:12], b[12:], None)))
+    except Exception as e:  # noqa: BLE001
+        log.warning("web panel: previous %s not readable: %s", part, str(e)[:120]); return {}
+
+
 def export(part):
     sh = Sheets()
     data = {}
+    prev = None
     for k, (sid, rng) in PARTS[part].items():
-        try:
-            data[k] = sh.values(sid, rng)
-        except Exception as e:  # noqa: BLE001 - a missing optional tab must not stop the export
-            log.warning("web panel %s: %s", k, str(e)[:160])
-            data[k] = []
+        got = None
+        for attempt in (1, 2):  # Sheets can time out on a formula-heavy tab; one retry before giving up
+            try:
+                got = sh.values(sid, rng); break
+            except Exception as e:  # noqa: BLE001 - a missing optional tab must not stop the export
+                log.warning("web panel %s (try %d): %s", k, attempt, str(e)[:160])
+        if got is None:
+            # never replace good data with an empty read: keep what the last export had for this key
+            if prev is None:
+                prev = _previous(part)
+            got = prev.get(k, []) if k not in ("fit_ids", "fit_cols") else []
+            log.warning("web panel %s: kept the previous %d rows", k, len(got) if isinstance(got, list) else 0)
+        data[k] = got
     if part == "static":  # one compact map id -> [fit, your_suppliers, tier_AB] for the full-database search
         ids, cols = data.pop("fit_ids"), data.pop("fit_cols")
-        data["fit"] = {(ids[i] or [""])[0]: (cols[i] if i < len(cols) else []) for i in range(1, len(ids)) if ids[i] and ids[i][0]}
+        if len(ids) < 2:  # the fit columns did not read: keep the last map
+            data["fit"] = (prev if prev is not None else _previous(part)).get("fit", {})
+        else:
+            data["fit"] = {(ids[i] or [""])[0]: (cols[i] if i < len(cols) else []) for i in range(1, len(ids)) if ids[i] and ids[i][0]}
     plain = json.dumps(data, ensure_ascii=False, separators=(",", ":")).encode()
     sha = hashlib.sha256(plain).hexdigest()
     shaf = OUT / f"panel_{part}.sha"
