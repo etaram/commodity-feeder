@@ -54,7 +54,7 @@ def service_only(r):
 
 IDENTITY = [
     (re.compile(r"\b(defen[cs]e|military|armament|arms|ammunition|munitions|missile|ordnance|leonardo|rafael|elbit|thales|rheinmetall|"
-                r"saab|bae systems|kongsberg|nexter|knds|krauss-?maffei|hensoldt|aselsan|roketsan|mbda|lockheed|raytheon|northrop|general dynamics|"
+                r"saab|bae systems|kongsberg|nexter|knds|chemring|krauss-?maffei|hensoldt|aselsan|roketsan|mbda|lockheed|raytheon|northrop|general dynamics|"
                 r"patria|nammo|fn herstal|beretta|glock|sig sauer)\b", re.I), "DEFENCE"),
     (CLEANING_ID, "ENV_WASTE"),
     (INSURER_ID, "CONSULTING"),
@@ -459,9 +459,13 @@ def build():
                 if not sec and i == 0:  # an award file without a sector: read it from the contract title and its codes
                     sec = classify(a.get("title") or "", (a.get("cpv") or "").split()[:1] or None)[0]
                     a["sector"] = sec  # the other winners of the same award reuse it
+                # CPV 45 is works and 50-98 are services (health and social work 85, repair 50, cleaning 90 ...):
+                # such a contract is not goods, whatever sector it falls in
+                cpv2 = re.sub(r"\D", "", (a.get("cpv") or "").split(" ")[0])[:2]
+                svc_cpv = cpv2.isdigit() and (cpv2 == "45" or int(cpv2) >= 50)
                 if sec:
                     x["sectors"][sec] += 1; x["sec_usd"][sec] += share
-                    x["goods"] += 1 if sec in GOODS else 0
+                    x["goods"] += 1 if sec in GOODS and not svc_cpv else 0
                 if sec in WORKS or str(a.get("nature", "")).lower().startswith("works"):
                     x["works"] += 1; x["works_usd"] += share
                 g = a.get("group") or _group(a.get("title") or "")
