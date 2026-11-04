@@ -208,8 +208,9 @@ async function queryRe(rx: string): Promise<{ test: (s: string) => boolean } | n
   const a = allWordsRe(en.text), b = toRe(rx.toLowerCase());
   return { test: (s: string) => !!(a && a.test(s)) || !!(b && b.test(s)) };
 }
-export async function searchTenders(v: string[][]): Promise<Grid> {
+export async function searchTenders(v: string[][], meta?: { total?: number }): Promise<Grid> {
   const g = (r: number, c: number) => String((v[r] || [])[c] ?? "").trim();
+  const cap = Math.min(20000, Math.max(2000, num(g(5, 0)) || 2000));  // row 6: how many to return (paging with no filter)
   const re = await queryRe(g(0, 0)), cty = g(0, 2), sec = g(1, 0), lo = num(g(1, 2)), reg = g(2, 0), hi = num(g(2, 2)), dec = g(3, 0), md = num(g(4, 0)), intl = g(3, 2) === "intl";
   const { head, rows } = await allTenders();
   const he = new Map(((await snapshot("static")).titles || []).slice(1).map((r) => [r[0], r[1] || ""]));
@@ -226,8 +227,9 @@ export async function searchTenders(v: string[][]): Promise<Grid> {
     if (Number.isFinite(md) && md > 0 && r.stage !== "planned" && Number.isFinite(dl) && dl < md) return false;
     if (re && !re.test(`${r.title_en} ${r.title_original} ${he.get(r.id) || ""} ${r.buyer} ${r.commodity} ${r.sector}`.toLowerCase())) return false;
     return true;
-  }).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0)).slice(0, 2000);
-  return [head, ...out.map((r) => head.map((k) => r[k] ?? ""))];
+  }).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
+  if (meta) meta.total = out.length;
+  return [head, ...out.slice(0, cap).map((r) => head.map((k) => r[k] ?? ""))];
 }
 
 const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;

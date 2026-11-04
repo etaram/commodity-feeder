@@ -820,7 +820,7 @@ const L = {
     epc_note: "Main contractors that won large works in this country, region or sector. They buy the equipment and materials for projects like this one, and can be partners for a joint bid.",
     epc_none: "No EPC contractors in the loaded set for this region and sector. Search the web for them.", epc_web: "Find EPC contractors on the web",
     web_more: "Find more on the web", web_more_req: "Find the main producers, manufacturers and traders of this product worldwide (or in the requested country) and add them to the database.",
-    searching_all: "Searching all {n} tenders…", found_all: "{n} matches across all tenders{cap}", top2000: " (showing the top 2,000)",
+    searching_all: "Searching all {n} tenders…", found_all: "{n} open tenders{cap}", t_showing: " · {n} loaded, best fit first", t_loadmore: "Load {n} more", top2000: " (showing the top 2,000)",
     scope_t: "Your top {n} tenders by fit. Search or filter to cover all {all}.", searching_all_s: "Searching all {n} suppliers…",
     found_all_s: "{n} matches across all suppliers{cap}", scope_s: "The top {n} suppliers by quality. Search or filter to cover all {all}.",
     s_not_granted: "The panel was not allowed to use Claude.", s_rate: "Too many requests right now. Try again in a few minutes.", s_disabled: "Claude is not available for this account.", s_expired: "Sign in to Claude again.", s_cancel: "Cancelled.", s_other: "Interrupted. You can try again.",
@@ -928,7 +928,7 @@ const L = {
     epc_note: "קבלנים ראשיים שזכו בעבודות גדולות במדינה, באזור או בסקטור הזה. הם קונים את הציוד והחומרים לפרויקטים כאלה, ויכולים להיות שותפים להגשה משותפת.",
     epc_none: "אין קבלני EPC בטעינה הנוכחית לאזור ולסקטור האלה. חפש אותם ברשת.", epc_web: "מצא קבלני EPC ברשת",
     web_more: "מצא עוד ברשת", web_more_req: "Find the main producers, manufacturers and traders of this product worldwide (or in the requested country) and add them to the database.",
-    searching_all: "מחפש בכל {n} המכרזים…", found_all: "{n} תוצאות מכל המכרזים{cap}", top2000: " (מוצגות 2,000 המובילות)",
+    searching_all: "מחפש בכל {n} המכרזים…", found_all: "{n} מכרזים פתוחים{cap}", t_showing: " · {n} נטענו, המתאימים ביותר קודם", t_loadmore: "טען עוד {n}", top2000: " (מוצגות 2,000 המובילות)",
     scope_t: "{n} המכרזים המתאימים לך ביותר. חיפוש או סינון מכסים את כל {all}.", searching_all_s: "מחפש בכל {n} הספקים…",
     found_all_s: "{n} תוצאות מכל הספקים{cap}", scope_s: "{n} הספקים המובילים לפי איכות. חיפוש או סינון מכסים את כל {all}.",
     s_not_granted: "לא ניתן אישור להשתמש ב-Claude מהפאנל.", s_rate: "יותר מדי בקשות כרגע. נסה שוב בעוד כמה דקות.", s_disabled: "Claude לא זמין לחשבון הזה.", s_expired: "יש להתחבר מחדש ל-Claude.", s_cancel: "בוטל.", s_other: "נקטע. אפשר לנסות שוב.",
@@ -1274,7 +1274,7 @@ function serverSearch(kind, key, writeRange, values, sid, readRange, headerRow) 
         const r = await mcp.callTool(SHEETS, "get_values", { spreadsheetId: sid, range: readRange }, { cache: false });
         if (seq !== st.seq) return;
         const v = (r.payload || {}).values || [];
-        st.rows = toObjects(v.slice(headerRow));
+        st.rows = toObjects(v.slice(headerRow)); st.total = num((r.payload || {}).total);
       } catch (e) { if (seq === st.seq) st.err = e; }
       if (seq === st.seq) { st.busy = false; kind === "t" ? renderTenders() : renderCompanies(); }
     });
@@ -1290,14 +1290,22 @@ function renderTenders() {
   const q = $("#tq").value.trim(), sec = $("#tsector").value, reg = $("#tregion").value, dec = $("#tdec").value, md = num($("#tdays").value) || 0;
   const cty = $("#tcountry").value, size = $("#tsize").value, [lo, hi] = sizeRange(size), intl = $("#tintl").checked;
   const nl = S.nl.t;
-  if (mcp && (q || sec || reg || dec || cty || size || nl || intl)) {
-    const key = JSON.stringify([q, sec, reg, dec, md, cty, size, nl, intl]);
-    serverSearch("t", key, "'Panel Search'!B1:D5", [[nl ? nl.re : qRegex(q), "country", cty || nl?.country || ""], [sec, "min value", lo || ""], [reg, "max value", hi || ""], [dec, "", intl ? "intl" : ""], [md, "", ""]], LE, "'Panel Search'!A9:AE2009", 0);
+  // on the web the list always comes from all tenders on the server: no filter = every open tender, best fit first
+  if (mcp && (window.DD_SEARCH || q || sec || reg || dec || cty || size || nl || intl)) {
+    const capN = S.tCap || 2000;
+    const key = JSON.stringify([q, sec, reg, dec, md, cty, size, nl, intl, capN]);
+    serverSearch("t", key, "'Panel Search'!B1:D6", [[nl ? nl.re : qRegex(q), "country", cty || nl?.country || ""], [sec, "min value", lo || ""], [reg, "max value", hi || ""], [dec, "", intl ? "intl" : ""], [md, "", ""], [capN, "", ""]], LE, "'Panel Search'!A9:AE2009", 0);
     const st = SRV.t;
     if (st.busy || st.key !== key) { scopeNote("#tscope", `<span class="spin"></span> ${esc(t("searching_all", { n: isFinite(tt) ? tt.toLocaleString("en-US") : "" }))}`); $("#tlist").innerHTML = ""; return; }
     if (st.err) { scopeNote("#tscope", ""); $("#tlist").innerHTML = `<div class="empty" style="padding:14px">${esc(errText(st.err, SHEETS))}</div>`; return; }
-    scopeNote("#tscope", esc(t("found_all", { n: st.rows.length.toLocaleString("en-US"), cap: st.rows.length >= 2000 ? t("top2000") : "" })));
-    return renderTenderList(st.rows);
+    const tot = isFinite(st.total) ? st.total : st.rows.length;
+    scopeNote("#tscope", esc(t("found_all", { n: tot.toLocaleString("en-US"), cap: st.rows.length < tot ? t("t_showing", { n: st.rows.length.toLocaleString("en-US") }) : "" })));
+    renderTenderList(st.rows);
+    if (st.rows.length < tot && (S.tCap || 2000) < 20000) {
+      $("#tlist").insertAdjacentHTML("beforeend", `<div class="more" style="padding:10px"><button type="button" id="t-loadmore">${esc(t("t_loadmore", { n: Math.min(2000, tot - st.rows.length).toLocaleString("en-US") }))}</button></div>`);
+      $("#t-loadmore").onclick = () => { S.tCap = (S.tCap || 2000) + 2000; S.limit.t = Math.max(S.limit.t, st.rows.length + 100); renderTenders(); };
+    }
+    return;
   }
   scopeNote("#tscope", esc(t("scope_t", { n: T().length.toLocaleString("en-US"), all: isFinite(tt) ? tt.toLocaleString("en-US") : "" })));
   renderTenderList(tenderFilter());

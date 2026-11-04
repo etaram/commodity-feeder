@@ -35,7 +35,7 @@
           if (range.startsWith("'Panel Search'!A9")) {
             const kind = args.spreadsheetId === SU ? "c" : "t";
             const j = await post("/api/panel/search", { kind, values: lastSearch[kind] || [] });
-            return { payload: { values: j.values }, cache: { storedAt: Date.now() } };
+            return { payload: { values: j.values, total: j.total }, cache: { storedAt: Date.now() } };
           }
           const key = range === "'Panel Search'!A6:B6" ? "tot_t" : range === "'Panel Search'!D1:E1" ? "tot_s" : RANGE_KEY[range];
           if (!key) throw err("tool_error", "Google Sheets", "range not available on the web: " + range);

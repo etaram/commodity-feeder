@@ -8,7 +8,9 @@ export async function POST(req: NextRequest) {
   const { kind, values } = await req.json().catch(() => ({}));
   try {
     const v = Array.isArray(values) ? values : [];
-    return NextResponse.json({ ok: true, values: kind === "c" ? await searchSuppliers(v) : await searchTenders(v) });
+    const meta: { total?: number } = {};
+    const grid = kind === "c" ? await searchSuppliers(v) : await searchTenders(v, meta);
+    return NextResponse.json({ ok: true, values: grid, total: meta.total ?? Math.max(0, grid.length - 1) });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });
   }
