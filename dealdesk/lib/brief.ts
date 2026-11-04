@@ -57,3 +57,27 @@ Format (Markdown, headings exactly as given, each section 2-5 bullets, skip a se
   try { await appendRow(TAB, [d, lang, full.slice(0, 45000), fresh.length, by]); } catch { /* the brief still returns */ }
   return { date: d, text: full, items: fresh.length, by, cached: false };
 }
+
+// Geopolitical context: what happened in the world in the last 48 hours that moves cross-border trade (elections and
+// changes of government, sanctions and tariffs, wars and ceasefires, central banks, shipping chokepoints), read from
+// a live web search and cached once a day per language (rows "geo-he" / "geo-en" in the same tab). Each bullet says
+// what happened and what it changes for a sourcing firm, with its source; nothing beyond what the sources say.
+export async function buildGeo(lang: "he" | "en", by: string): Promise<{ date: string; text: string; items: number; by: string; cached: boolean }> {
+  const key = `geo-${lang}`;
+  const cached = await readBrief(key);
+  if (cached) return { ...cached, cached: true };
+  const d = today(), he = lang === "he";
+  const prompt = `Date: ${d}. Search the web for the most important geopolitical and political events of the last 48 hours worldwide (elections and their results, changes of government, sanctions, tariffs and trade measures, wars, ceasefires and security incidents, central bank decisions and currency shocks, shipping chokepoints such as the Red Sea, Hormuz, Suez, Panama, Black Sea). Always check: United States politics and policy, China, Russia and Ukraine, the Middle East and Israel, the EU, India, Turkey, Gulf states and Africa.
+Then write, ${he ? "in Hebrew" : "in English"}, for Sinder, an Israeli cross-border sourcing and trading firm (commodities, infrastructure, energy, defence and health equipment; suppliers in China, India and Turkey; buyers in Africa, the Gulf, Asia and Latin America).
+Rules: only what the sources found say, no invented results or numbers; if a count or result is not final, say so. Short sentences, no emojis, no em-dashes (use hyphens). No URLs in the text.
+Format (Markdown):
+## ${he ? "מה קרה" : "What happened"}
+(4-7 bullets, most important first: "**topic**: what happened")
+## ${he ? "מה זה משנה לנו" : "What it changes for us"}
+(3-5 bullets: the concrete effect on trade, prices, currencies, defence budgets, sanctions risk or markets to watch)`;
+  const { text, sources } = await claude({ max_tokens: 2200, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 6 }], messages: [{ role: "user", content: prompt }] });
+  const uniq = [...new Map(sources.filter((x) => x.url).map((x) => [x.url, x])).values()].slice(0, 20);
+  const full = `${text.trim()}\n\n---\n${he ? "מקורות" : "Sources"}:\n${uniq.map((x, i) => `[${i + 1}] ${x.url}`).join("\n")}`;
+  try { await appendRow(TAB, [d, key, full.slice(0, 45000), uniq.length, by]); } catch { /* still returns */ }
+  return { date: d, text: full, items: uniq.length, by, cached: false };
+}
