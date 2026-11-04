@@ -22,6 +22,61 @@ def session():
     return s
 
 
+_RELAY = {}
+
+
+def relay_config():
+    """RELAY_URL and RELAY_SECRET: from the environment, else the private Supplier Universe sheet, tab Config
+    (the same store as WEB_INDEX_KEY). Empty when neither is available; callers then fetch directly."""
+    import os
+    if _RELAY:
+        return _RELAY
+    url, sec = os.environ.get("RELAY_URL", ""), os.environ.get("RELAY_SECRET", "")
+    if not (url and sec):
+        try:
+            from .push import UNIVERSE_SHEET, Sheets
+            cfg = {r[0]: r[1] for r in Sheets().values(UNIVERSE_SHEET, "Config!A1:B10") if len(r) > 1}
+            url, sec = cfg.get("RELAY_URL", url), cfg.get("RELAY_SECRET", sec)
+        except Exception as e:  # noqa: BLE001
+            log.warning("relay config: %s", type(e).__name__)
+    _RELAY.update({"url": url, "secret": sec})
+    return _RELAY
+
+
+class RelayResponse:
+    def __init__(self, status, content, url, ctype):
+        self.status_code, self.content, self.url, self.headers = status, content, url, {"content-type": ctype}
+        self.ok = 200 <= status < 300
+
+    @property
+    def text(self):
+        return self.content.decode("utf-8", "replace")
+
+    def json(self):
+        return json.loads(self.text)
+
+
+def relay_get(url, timeout=40, accept=None):
+    """GET through the regional relay (dealdesk/RUNNER_ORACLE.md, "relay" section): a Vercel function in Frankfurt
+    that fetches the page from a European address. Returns a response-like object, or None when the relay is not
+    configured or fails, so a collector can fall back to a direct request."""
+    import base64
+    c = relay_config()
+    if not (c.get("url") and c.get("secret")):
+        return None
+    try:
+        h = {"x-relay-secret": c["secret"]}
+        if accept:
+            h["x-relay-accept"] = accept
+        r = requests.get(c["url"], params={"url": url}, headers=h, timeout=timeout)
+        j = r.json()
+        if not j.get("ok"):
+            log.warning("relay %s: %s", url[:60], j.get("error")); return None
+        return RelayResponse(int(j["status"]), base64.b64decode(j["body"]), j.get("url") or url, j.get("type") or "")
+    except Exception as e:  # noqa: BLE001
+        log.warning("relay %s: %s", url[:60], type(e).__name__); return None
+
+
 def cffi_get(url, **kw):
     from curl_cffi import requests as cr
     return cr.get(url, impersonate="chrome", timeout=60, **kw)
