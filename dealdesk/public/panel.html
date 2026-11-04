@@ -19,9 +19,10 @@ table.mk tr:last-child td{border-bottom:0}
 @media (max-width:640px){.dk-card{grid-template-columns:1fr}.dk-ev{text-align:start}.dk-rank{display:none}}
 </style></head><body>
 <title>Sinder Opportunity Panel</title>
+<script>try{var u=new URLSearchParams(location.search).get("ui");if(u)localStorage.setItem("dd-ui",u);if(localStorage.getItem("dd-ui")==="classic")document.documentElement.setAttribute("data-ui","classic")}catch(e){}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap">
 <style>
 /* Layout: a trading-desk console. Top bar + tabs, then a list column and a detail column (stacked on phones). */
 :root{
@@ -152,6 +153,93 @@ a{color:var(--info)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
+/* ===== v2 "chart room" theme (2026-11-04). Off with ?ui=classic (remembered), back on with ?ui=v2. =====
+   Harbor navy and signal teal on cool chart paper; Frank Ruhl Libre for headings and figures; IBM Plex for data.
+   One bold element: the score ring, filled in proportion to the score. Everything else stays quiet. */
+html:not([data-ui="classic"]){
+  --ink:#0f2a3a; --bg:#eef1ee; --panel:#fbfcfa; --line:#d3dad6; --muted:#566872; --soft:#e5ebe7;
+  --accent:#0e6f6b; --accent-ink:#ffffff; --accent-soft:#dcece8;
+  --good:#2e7d4f; --good-soft:#e0efe5; --warn:#8f5d00; --warn-soft:#f6ecd3; --bad:#b5432e; --bad-soft:#f6e3de; --info:#2d5e8c; --info-soft:#e2eaf3;
+  --harbor:#0f2a3a; --harbor-2:#16384b; --ring-track:#d9e1dd;
+  --f-display:"Frank Ruhl Libre","IBM Plex Sans Hebrew",Georgia,serif;
+  --f-body:"IBM Plex Sans","IBM Plex Sans Hebrew",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --r-box:14px; --r-ctl:8px;
+}
+@media (prefers-color-scheme: dark){html:not([data-ui="classic"]):not([data-theme="light"]){
+  --ink:#e3ece9; --bg:#0b1820; --panel:#10222c; --line:#223a46; --muted:#93a8ae; --soft:#152b37;
+  --accent:#4fb3a9; --accent-ink:#06201d; --accent-soft:#143832;
+  --good:#6cc596; --good-soft:#13342a; --warn:#e0b257; --warn-soft:#3a2f16; --bad:#ef8a75; --bad-soft:#3c1f1a; --info:#8db6e6; --info-soft:#17304a;
+  --harbor:#071219; --harbor-2:#0f2330; --ring-track:#223a46}}
+html[data-theme="dark"]:not([data-ui="classic"]){
+  --ink:#e3ece9; --bg:#0b1820; --panel:#10222c; --line:#223a46; --muted:#93a8ae; --soft:#152b37;
+  --accent:#4fb3a9; --accent-ink:#06201d; --accent-soft:#143832;
+  --good:#6cc596; --good-soft:#13342a; --warn:#e0b257; --warn-soft:#3a2f16; --bad:#ef8a75; --bad-soft:#3c1f1a; --info:#8db6e6; --info-soft:#17304a;
+  --harbor:#071219; --harbor-2:#0f2330; --ring-track:#223a46}
+html:not([data-ui="classic"]) body{background:var(--bg);font-size:14.5px;line-height:1.55}
+html[lang="he"]:not([data-ui="classic"]) body{--f-body:"IBM Plex Sans Hebrew","IBM Plex Sans",system-ui,Arial,sans-serif}
+
+/* the harbor band: brand, status and tabs on deep navy */
+html:not([data-ui="classic"]) body::before{background:var(--harbor)}
+html:not([data-ui="classic"]) header.top{background:var(--harbor);border-bottom:0;color:#e9f1ef}
+html:not([data-ui="classic"]) .bar{padding-block:14px 8px}
+html:not([data-ui="classic"]) .brand{font-family:var(--f-display);font-weight:900;font-size:27px;letter-spacing:0;color:#fff;line-height:1}
+html:not([data-ui="classic"]) .brand small{font-family:var(--f-body);font-weight:500;font-size:13px;letter-spacing:0;color:#9fc2bd;text-transform:none}
+html:not([data-ui="classic"]) bdi{unicode-bidi:isolate}
+html:not([data-ui="classic"]) header.top .status,html:not([data-ui="classic"]) header.top .me{color:#b9cdd0}
+html:not([data-ui="classic"]) header.top button,html:not([data-ui="classic"]) header.top .btn{background:transparent;color:#e9f1ef;border-color:#33536a}
+html:not([data-ui="classic"]) header.top button:hover{border-color:#7fc8bf}
+html:not([data-ui="classic"]) header.top .lang button[aria-pressed="true"],html:not([data-ui="classic"]) header.top .seg button[aria-pressed="true"]{background:#e9f1ef;color:var(--harbor)}
+html:not([data-ui="classic"]) header.top .pill{background:#1f4357;color:#cfe6e2}
+html:not([data-ui="classic"]) nav.tabs{gap:2px;scrollbar-width:none}
+html:not([data-ui="classic"]) nav.tabs::-webkit-scrollbar{display:none}
+html:not([data-ui="classic"]) nav.tabs button{color:#a9bfc4;font-weight:500;font-size:14.5px;padding:11px 14px 12px;border-bottom:3px solid transparent}
+html:not([data-ui="classic"]) nav.tabs button:hover{color:#fff;border-color:transparent}
+html:not([data-ui="classic"]) nav.tabs button[aria-selected="true"]{color:#fff;font-weight:600;border-bottom-color:#4fb3a9}
+html:not([data-ui="classic"]) nav.tabs .count{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:#7fa3aa;font-size:12px}
+
+/* type: serif for headings and figures, Plex for data */
+html:not([data-ui="classic"]) h2{font-family:var(--f-display);font-weight:700;font-size:23px;line-height:1.25;letter-spacing:-.005em}
+html:not([data-ui="classic"]) .detail h2{font-family:var(--f-display);font-weight:700;font-size:21px;line-height:1.3}
+html:not([data-ui="classic"]) h3{font-size:14.5px;font-weight:600}
+html:not([data-ui="classic"]) .num,html:not([data-ui="classic"]) .score{font-family:var(--f-body);font-variant-numeric:tabular-nums lining-nums}
+html:not([data-ui="classic"]) .kpis{gap:30px;margin-bottom:20px}
+html:not([data-ui="classic"]) .kpi b{font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1;font-variant-numeric:lining-nums}
+html:not([data-ui="classic"]) .kpi span{font-size:12.5px;margin-top:4px;max-width:22ch}
+html:not([data-ui="classic"]) .t{font-weight:600;line-height:1.4}
+html:not([data-ui="classic"]) .sub{line-height:1.45}
+
+/* surfaces: borders, no shadows; one elevation for the floating detail panel */
+html:not([data-ui="classic"]) .box,html:not([data-ui="classic"]) .list,html:not([data-ui="classic"]) .fm-card{border-radius:var(--r-box);border-color:var(--line)}
+html:not([data-ui="classic"]) .box{padding:16px 18px}
+html:not([data-ui="classic"]) .detail{border-radius:var(--r-box);padding:20px 22px;box-shadow:0 18px 40px -28px rgba(15,42,58,.45)}
+html:not([data-ui="classic"]) .row{padding:13px 16px;gap:14px}
+html:not([data-ui="classic"]) .row:hover{background:var(--soft)}
+html:not([data-ui="classic"]) .row[aria-current="true"]{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+html[dir="rtl"]:not([data-ui="classic"]) .row[aria-current="true"]{box-shadow:inset -3px 0 0 var(--accent)}
+html:not([data-ui="classic"]) .section{margin-top:18px;padding-top:14px}
+html:not([data-ui="classic"]) .ai,html:not([data-ui="classic"]) .result{border-radius:10px;line-height:1.6;background:var(--soft);border:1px solid var(--line)}
+
+/* controls */
+html:not([data-ui="classic"]) button,html:not([data-ui="classic"]) .btn{border-radius:var(--r-ctl);font-weight:600;padding:8px 13px}
+html:not([data-ui="classic"]) button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+html:not([data-ui="classic"]) button.primary:hover{filter:brightness(1.08)}
+html:not([data-ui="classic"]) .filters input,html:not([data-ui="classic"]) .filters select,html:not([data-ui="classic"]) .field input,html:not([data-ui="classic"]) .field select,html:not([data-ui="classic"]) textarea{border-radius:var(--r-ctl);padding:8px 11px;background:var(--panel)}
+html:not([data-ui="classic"]) .seg{border-radius:var(--r-ctl)}
+html:not([data-ui="classic"]) .seg button[aria-pressed="true"],html:not([data-ui="classic"]) .fm-chips button[aria-pressed="true"]{background:var(--harbor);color:#fff;border-color:var(--harbor)}
+html:not([data-ui="classic"]) :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html:not([data-ui="classic"]) .pill{border-radius:6px;font-weight:600;padding:2px 8px}
+html:not([data-ui="classic"]) a{color:var(--accent);text-underline-offset:2px}
+
+/* the score ring: the fill is the score (0-100), set from the number by the panel script */
+html:not([data-ui="classic"]) .score,html:not([data-ui="classic"]) .fm-score{
+  --p:0; width:44px;height:44px;min-width:44px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;
+  font-weight:700;font-size:13.5px;color:var(--ink);
+  background:radial-gradient(closest-side,var(--panel) 74%,transparent 75% 100%),conic-gradient(var(--ring,var(--muted)) calc(var(--p)*1%),var(--ring-track) 0)}
+html:not([data-ui="classic"]) .score.hi,html:not([data-ui="classic"]) .fm-score.hi{--ring:var(--accent);color:var(--accent)}
+html:not([data-ui="classic"]) .fm-score.mid{--ring:var(--warn)}
+html:not([data-ui="classic"]) .score.hi{background:radial-gradient(closest-side,var(--accent-soft) 74%,transparent 75% 100%),conic-gradient(var(--accent) calc(var(--p)*1%),var(--ring-track) 0)}
+@media (prefers-reduced-motion:no-preference){html:not([data-ui="classic"]) .row[aria-current="true"] .score{transition:transform .18s ease;transform:scale(1.06)}}
+
 .kpis{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px}
 .kpi{display:flex;flex-direction:column}
 .kpi b{font-family:var(--f-mono);font-size:20px;font-weight:500}
@@ -971,7 +1059,7 @@ function renderTenders() {
 }
 function renderTenderList(rows) {
   listInto("#tlist", rows, "t", r => `<span class="score ${num(r.fit) >= 80 ? "hi" : ""}">${esc(r.fit || r.score)}</span>
-    <div style="min-width:0"><div class="t">${flag(r.country)}${txt(tTitle(r))}</div>${tAlt(r) ? `<div class="sub">${txt(tAlt(r))}</div>` : ""}<div class="sub">${txt(tr(r.buyer))} · ${esc(r.country)} · ${esc(r.sector)}</div></div>
+    <div style="min-width:0"><div class="t">${flag(r.country)}${txt(tTitle(r))}</div>${tAlt(r) ? `<div class="sub">${txt(tAlt(r))}</div>` : ""}<div class="sub"><bdi>${txt(tr(r.buyer))}</bdi> · <bdi>${esc(r.country)}</bdi> · <bdi>${esc(r.sector)}</bdi></div></div>
     <div class="right"><span class="num">${money(r.est_value_usd) || `<span class='muted'>${esc(t("no_value"))}</span>`}</span>${r.stage === "planned" ? `<span class="pill info">${esc(t("planned"))}</span>` : daysPill(r.days_left)}${decisionPill(r.decision)}${compHtml(r, true)}</div>`,
     r => openTender(r), S.err.tenders ? errText(S.err.tenders, SHEETS) : t("e_tenders"), r => r.id === S.sel.t?.id);
 }
@@ -1166,7 +1254,7 @@ function renderResearch() {
     ${chips ? `<div class="note">${esc(t("sr_origins"))}</div><div class="fm-chips" id="sr-oc">${oc ? `<button type="button" data-oc="">${esc(t("sr_all_c"))}</button>` : ""}${chips}</div>` : ""}
     ${SR.rows.length ? SR.rows.map((s, i) => `<div class="sup"><input type="checkbox" id="sr${i}" aria-label="${esc(t("select"))} ${esc(s.supplier)}"><div style="min-width:0;flex:1"><div class="t"><a href="#" data-so="${i}">${flag(s.country)}${txt(s.supplier)}</a> <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div>
       <div class="sub">${txt(String(s.products || s.commodities || s.main_sector).slice(0, 220))}</div>
-      <div class="sub">${esc([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : "", s.main_sector].filter(Boolean).join(" · "))} ${link(s.website, s.website)}</div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}
+      <div class="sub">${bidiJoin([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : "", s.main_sector])} ${link(s.website, s.website)}</div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}
     <div class="actions"><button class="primary" type="button" id="sr-rfq">${esc(t("draft_sel"))}</button><button type="button" id="sr-web">${esc(t("sr_web"))}</button><button type="button" id="sr-job">${esc(t("deep_sup"))}</button></div>
     <div id="sr-act"></div></div>`;
   out.querySelectorAll("[data-oc]").forEach(b => b.onclick = () => runResearch(b.dataset.oc));
@@ -1426,6 +1514,8 @@ function clearNL(key) {
 
 /* ---------- "More info": a research job whose answer appears inside the item's own card ---------- */
 const latestJob = tid => (S.data.jobs || []).filter(j => j.target_id === tid).sort((a, b) => String(b.created).localeCompare(String(a.created)))[0];
+// joins fragments with a separator, each one isolated (<bdi>) so mixed Hebrew/English lines keep their order
+const bidiJoin = (parts, sep = " · ") => (parts || []).filter(x => x !== "" && x != null).map(x => `<bdi>${esc(x)}</bdi>`).join(sep);
 const linkify = x => esc(x).replace(/https?:\/\/[^\s<)"]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
 /* AI answers come as Markdown: show them as readable text (headings, bold, bullets, links, simple tables), never raw
    Markdown or JSON. Escapes first, so model output cannot inject HTML. Containers keep white-space: pre-wrap. */
@@ -1873,7 +1963,7 @@ async function renderForMe(fresh) {
   const inPanel = id => (S.data.tenders || []).find(x => x.id === id);
   const saved = new Set(S.prof.saved || []);
   el.innerHTML = `<div class="filters"><div class="seg">${seg("focus", "fm_focus", !FM.saved && !FM.sups && mode === "focus")}${seg("broad", "fm_broad", !FM.saved && !FM.sups && mode === "broad")}${seg("saved", "fm_saved", !!FM.saved)}${window.DD_SUPSEARCH ? seg("sups", "fm_sups", !!FM.sups) : ""}</div><span class="note" style="margin-inline-end:auto">${esc(t("fm_total", { n: d.total }))}${S.prof.sectors && S.prof.sectors.length ? " · " + esc(t("fm_found", { s: S.prof.sectors.join(", ") })) : ""}</span><button type="button" id="fm-edit">${esc(t("fm_edit"))}</button></div>
-  <div id="fm-list">${FM.widened ? `<div class="note" style="margin-bottom:8px">${esc(t("fm_widened"))}</div>` : ""}${d.err ? `<div class="empty">${esc(errText(d.err))}</div>` : !d.items.length ? `<div class="empty">${esc(t("fm_none"))}</div>` : d.items.map((r, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score ${lab(r)}">${r.score}</div><div style="min-width:0;flex:1"><div class="t">${esc(r.t)}</div><div class="sub">${esc([r.b, r.c, r.dd != null ? t("fm_days", { n: r.dd }) : r.dl, money(r.v), r.src].filter(Boolean).join(" · "))}</div><div class="fm-why">${esc(r.why.join(" · "))}</div>
+  <div id="fm-list">${FM.widened ? `<div class="note" style="margin-bottom:8px">${esc(t("fm_widened"))}</div>` : ""}${d.err ? `<div class="empty">${esc(errText(d.err))}</div>` : !d.items.length ? `<div class="empty">${esc(t("fm_none"))}</div>` : d.items.map((r, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score ${lab(r)}">${r.score}</div><div style="min-width:0;flex:1"><div class="t">${esc(r.t)}</div><div class="sub">${bidiJoin([r.b, r.c, r.dd != null ? t("fm_days", { n: r.dd }) : r.dl, money(r.v), r.src])}</div><div class="fm-why">${bidiJoin(r.why)}</div>
     <div class="actions" style="margin:6px 0 0">${saved.has(r.id) ? `<button type="button" data-fu="${i}">${esc(t("fm_unsave"))}</button>` : `<button type="button" data-fs="${i}">${esc(t("fm_save1"))}</button>`}<button type="button" data-fh="${i}">${esc(t("fm_hide"))}</button>${r.l ? `<a class="btn" href="${esc(r.l)}" target="_blank" rel="noopener">${esc(t("fm_src"))}</a>` : ""}${inPanel(r.id) ? `<button type="button" data-fo="${i}">${esc(t("fm_open"))}</button>` : ""}</div></div></div></div>`).join("")}</div>`;
   el.querySelectorAll("[data-fm]").forEach(b => b.onclick = () => { FM.widened = false; const k = b.dataset.fm; FM.sups = k === "sups"; FM.saved = k === "saved"; if (!FM.saved && !FM.sups) FM.mode = k; if (!FM.sups) FM.data = null; track("view", "forme " + k); renderForMe(); });
   if (FM.sups) return renderForMeSuppliers(el.querySelector("#fm-list"));
@@ -1895,7 +1985,7 @@ async function renderForMeSuppliers(box) {
   }
   const d = FM.supData;
   box.innerHTML = `<div class="note" style="margin-bottom:8px">${esc(t("fm_sups_note", { n: d.total.toLocaleString("en-US"), k: d.kw }))} <button type="button" id="fm-sr">${esc(t("fm_sups_more"))}</button></div>
-    ${d.rows.length ? d.rows.map((s, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score">${esc(s.quality)}</div><div style="min-width:0;flex:1"><div class="t"><a href="#" data-fso="${i}">${flag(s.country)}${txt(s.supplier)}</a> <span class="pill">${esc(s.country)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div><div class="sub">${txt(String(s.products || s.commodities || s.main_sector).slice(0, 200))}</div><div class="fm-why">${esc([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : ""].filter(Boolean).join(" · "))}</div></div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}`;
+    ${d.rows.length ? d.rows.map((s, i) => `<div class="fm-card"><div class="fm-top"><div class="fm-score">${esc(s.quality)}</div><div style="min-width:0;flex:1"><div class="t"><a href="#" data-fso="${i}">${flag(s.country)}${txt(s.supplier)}</a> <span class="pill">${esc(s.country)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div><div class="sub">${txt(String(s.products || s.commodities || s.main_sector).slice(0, 200))}</div><div class="fm-why">${bidiJoin([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : ""])}</div></div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}`;
   box.querySelectorAll("[data-fso]").forEach(a => a.onclick = e => { e.preventDefault(); go("companies"); openSupplier(d.rows[+a.dataset.fso]); });
   $("#fm-sr").onclick = () => { go("research"); $("#sr-q").value = d.kw; runResearch(); };
 }
@@ -2056,6 +2146,10 @@ async function loadMarkets() {
 }
 ["#mq", "#mtier", "#mcat", "#msort"].forEach(s_ => $(s_).addEventListener("input", () => { S.mkLimit = 80; renderMarkets(); }));
 
+/* score rings: each .score / .fm-score gets --p from its number (0-100) after every render */
+let ringQ = 0;
+const ringify = () => { ringQ = 0; document.querySelectorAll(".score,.fm-score").forEach(e => { const n = parseFloat(e.textContent); const v = isFinite(n) ? String(Math.max(0, Math.min(100, n))) : "0"; if (e.style.getPropertyValue("--p") !== v) e.style.setProperty("--p", v); }); };
+new MutationObserver(() => { if (!ringQ) ringQ = requestAnimationFrame(ringify); }).observe(document.body, { childList: true, subtree: true });
 /* ---------- navigation and wiring ---------- */
 const VIEWS = ["today", "forme", "tenders", "companies", "research", "deals", "markets", "desk", "grants", "intel", "contacts", "projects", "jobs", "users"];
 function go(v) {

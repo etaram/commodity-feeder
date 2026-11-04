@@ -63,3 +63,12 @@ targets, not results.
 Evidence/provenance entities, project stages, commodity signal engine, unified private deal workflow, compliance matrix and bid
 package, v1/v2 switch in the UI, the 240 supplier capability matches, the 30 labeled search cases with human review, and moving
 large regenerated data files out of Git history.
+
+## Slice 5: visual design v2, "chart room" (2026-11-04)
+
+- Harbor-navy band for brand and tabs, cool chart-paper background, signal teal for actions, buoy red for urgency.
+- Frank Ruhl Libre (Hebrew and Latin serif) for headings and figures; IBM Plex Sans / Sans Hebrew for data; no monospace labels.
+- Score rings: every score is drawn as a ring filled to its value (0-100).
+- Mixed Hebrew/English lines isolated per fragment (bdi), so the order stays right in RTL.
+- Light and dark, mobile checked with screenshots (stub data). The theme is one CSS layer: `?ui=classic` switches back
+  (remembered per browser), `?ui=v2` returns. Rollback: remove the v2 block from panel.html.
