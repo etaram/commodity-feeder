@@ -35,6 +35,21 @@ IDENTITY = [
 SERVICE_SECTORS = {"CONSULTING", "MAINT", "SOCIAL", "ENV_WASTE", "ENGINEERING", "LOGISTICS"}
 
 
+
+def clean_products(t):
+    """Customs product lines repeat fragments ("Stab, Stab Stab, Stab Stab Loose"): keep each distinct phrase once and
+    drop a list that is only one short word repeated, which says nothing about what the company makes."""
+    parts, seen = [], set()
+    for p in re.split(r"\s*[,;]\s*", str(t or "")):
+        k = " ".join(dict.fromkeys(p.lower().split()))
+        if len(k) < 3 or k in seen or any(k in q for q in seen):
+            continue
+        seen.add(k); parts.append(p.strip())
+    words = {w for p in parts for w in p.lower().split()}
+    if len(words) <= 2 and all(len(w) <= 6 for w in words):
+        return ""
+    return ", ".join(parts)
+
 def main_sectors(x, name):
     count, usd = x["sectors"], x.get("sec_usd", {})
     tot_c, tot_u = sum(count.values()) or 1, sum(usd.values()) or 0
@@ -477,7 +492,7 @@ def build():
             "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) or x.get("ship_total") else ("trader" if x.get("trader") else "works/services"),
             "logistics_role": logistics_role(f"{name} {x.get('industries', '')} {about} {items} {x.get('naics', '')}")
             if any(s_ in ("LOGISTICS", "PORTS") for s_, _ in secs[:1]) or "shipbuild" in name.lower() else "",
-            "products": about[:300], "web_title": (wp.get("title") or "")[:120], "supplied": items[:240],
+            "products": clean_products(about)[:300], "web_title": (wp.get("title") or "")[:120], "supplied": items[:240],
             "commodities": "; ".join(BY_ID[g]["name"] for g, _ in sorted(x["groups"].items(), key=lambda y: -y[1])[:3]
                                      if g in BY_ID),
             "main_cpv": max(x["cpv"].items(), key=lambda y: y[1])[0] if x["cpv"] else "",
