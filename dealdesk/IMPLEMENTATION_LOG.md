@@ -158,3 +158,8 @@ opens the exact record. Streams: projects and buyers in the leading column, comm
   partners, not suppliers. Output: data/probe/seed_check.md.
 - World Bank Pink Sheet (S04) was already the source of price_trends; the registry now says so, with the licence.
 - Operator guide: dealdesk/OPERATOR_GUIDE.md (Hebrew).
+- Eval result after the fixes (2026-11-04 16:08Z run in Actions): 30 cases, 28 with results, precision@10 0.99 by the
+  first-pass labels; every Hebrew query now returns the same set as its English pair (maize: 2 -> 25). Plural and singular
+  match each other (transformers 22 -> 34, solar panels 2 -> 4). Open: supplier recall for specific products is low
+  (diesel generator 1, robot vacuum cleaners 0 of 84,925 tier 1-2 suppliers) because the product field holds short HS or
+  notice wording; this needs richer product data, not a looser match.
