@@ -31,8 +31,9 @@ def trending(s, iso2):
     try:
         r = s.get(TRENDS_RSS, params={"geo": iso2}, timeout=30)
         if r.status_code != 200:
-            return []
+            log.warning("trends rss %s: HTTP %s", iso2, r.status_code); return []
         root = ET.fromstring(r.content)
+        log.info("trends rss %s: %d items", iso2, sum(1 for _ in root.iter("item")))
     except Exception as e:  # noqa: BLE001
         log.warning("trends rss %s: %s", iso2, type(e).__name__); return []
     out = []

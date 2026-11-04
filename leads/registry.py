@@ -69,6 +69,7 @@ OTHER = {
     "news": ("signals", "economic news", "public RSS", None),
     "wb_plans": ("projects", "World Bank procurement plans (documents API) and IPF contract awards (Finances One DS00005, CC BY 4.0)", "official APIs", "leads/wb_plans.csv"),
     "lei": ("suppliers", "company groups and ultimate parents (GLEIF LEI register)", "official API", "leads/groups_lei.csv"),
+    "social": ("signals", "community signals: Reddit (public listings, relay fallback), Hacker News (Algolia), public Telegram channels from the Briefing Sources tab", "public feeds", "leads/social.csv"),
     "attention": ("signals", "attention: Google Trends daily trending searches per country (RSS) and Wikipedia pageviews for watched topics", "official feeds", "leads/attention.csv"),
     "fx": ("commodities", "exchange rates, USD per unit (ECB reference rates)", "official API", "leads/fx.csv"),
     "briefing": ("signals", "world briefing feed: trade, shipping, commodities, geopolitics, regional infrastructure, owner's own feeds (Briefing Sources tab)", "public RSS feeds", "leads/briefing_items.csv"),

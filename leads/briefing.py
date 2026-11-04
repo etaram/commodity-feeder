@@ -97,6 +97,8 @@ def _feed(s, url, params=None):
 
 
 def _when(v):
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v or ""):
+        return dt.date.fromisoformat(v)
     try:
         return email.utils.parsedate_to_datetime(v).date()
     except (TypeError, ValueError):
@@ -158,6 +160,10 @@ def build():
             for it in _feed(s, src["url"]):
                 add(it, src["topic"], src["region"], src["name"])
         time.sleep(1)
+    sp = LEADS / "social.csv"  # community signals collected by leads.social (same shape)
+    if sp.exists():
+        for it in csv.DictReader(open(sp, encoding="utf-8")):
+            add({"title": it["title"], "url": it["url"], "date": it["date"], "summary": it.get("summary", ""), "source": it["source"]}, it["topic"], it.get("region", ""), it["source"])
     items.sort(key=lambda x: (x["date"], x["topic"]), reverse=True)
     cols = ["date", "topic", "region", "title", "source", "url", "countries", "group", "signal", "lead_company", "summary"]
     with open(LEADS / "briefing_items.csv", "w", newline="", encoding="utf-8") as f:
