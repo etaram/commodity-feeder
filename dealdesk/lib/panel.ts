@@ -112,7 +112,7 @@ const LE = "1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y", SU = "1crzrRr4qrgt1Wp
 const LIVE: Record<string, [string, string]> = {
   bd: [LE, "'BD Agent'!A1:M600"], accounts: [LE, "'Key Accounts'!A1:S400"], intel: [LE, "'Intel'!A1:P2000"],
   pursuits: [LE, "'Pursuits'!A1:V600"], jobs: [LE, "'Panel Jobs'!A1:L800"], contacts: [LE, "'Contacts'!A1:S1500"],
-  projects: [LE, "'Projects'!A1:V300"], ptasks: [LE, "'Project Tasks'!A1:L3000"], approvals: [LE, "'Approvals'!A1:M2000"], stats: [SU, "'Stats'!A1:B60"],
+  projects: [LE, "'Projects'!A1:V300"], websup: [LE, "'Web Suppliers'!A1:J3000"], ptasks: [LE, "'Project Tasks'!A1:L3000"], approvals: [LE, "'Approvals'!A1:M2000"], stats: [SU, "'Stats'!A1:B60"],
 };
 // Live reads from Google Sheets can hang; after LIVE_TIMEOUT_MS the panel uses the encrypted snapshot instead
 // (refreshed by the panel worker), so a page load never waits for the 60 s function limit.
@@ -240,6 +240,22 @@ export async function suppliersFor(o: SupQuery): Promise<Grid> {
   return (await supplierSearch(o)).values;
 }
 // The same ranking, plus where the matches come from (origin countries) and how many matched in total.
+// Companies found by web research (Web Suppliers tab): searchable next to the universe, tier "W" = not verified.
+async function webSuppliers(): Promise<Supplier[]> {
+  const g = (await liveKey("websup")) || [];
+  if (g.length < 2) return [];
+  const h = g[0], ix = (k: string) => h.indexOf(k), seen = new Set<string>();
+  const out: Supplier[] = [];
+  for (const r of g.slice(1).reverse()) {
+    const n = String(r[ix("supplier")] || "").trim(), c = String(r[ix("country")] || "").trim();
+    const k = `${n.toLowerCase()}|${c}`;
+    if (!n || seen.has(k)) continue;
+    seen.add(k);
+    out.push({ n, c, tr: "W", q: 0, ty: String(r[ix("type")] || ""), p: String(r[ix("products")] || ""), web: String(r[ix("website")] || ""),
+      why: `found on the web (${String(r[ix("added")] || "").slice(0, 10)}), not verified: ${String(r[ix("source")] || "")}`, cm: String(r[ix("query")] || "") });
+  }
+  return out;
+}
 // word -> HS6 codes whose official name contains it (data/master_rows.csv, about 2,000 traded lines)
 async function hsWordMap(): Promise<(w: string) => Set<string>> {
   const rows = await cached("hs-names", 3_600_000, async () => {
@@ -268,8 +284,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   const hsOf = await hsWordMap(), wordHs = res.map((_, i) => hsOf(words[i]));
   const scored: { s: Supplier; sc: number }[] = [];
   const origins = new Map<string, number>();
-  for (const s of await allSuppliers()) {
-    if (o.originRegion && s.rg !== o.originRegion) continue;
+  for (const s of [...(await allSuppliers()), ...(await webSuppliers().catch(() => [] as Supplier[]))]) {
+    if (o.originRegion && s.rg && s.rg !== o.originRegion) continue;
     if (o.originCountry && s.c !== o.originCountry) continue;
     if (o.exportersOnly && !s.x) continue;
     // what the company makes or trades (name, products, industry, customs headings) counts more than what it once

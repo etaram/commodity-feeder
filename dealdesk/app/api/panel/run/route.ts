@@ -67,7 +67,8 @@ ${verified ? `VERIFIED REGISTRY FACTS (official open data, fetched just now; tre
 
 Use web search to check current facts. ${type === "find_contact" ? "Return only the JSON object described above." : ""}Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" || type === "read_plan" ? 900 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
 Never invent people, emails, phone numbers or companies; if a fact was not found, say so. Never suggest paying or doing favours for officials.
-${type === "find_contact" ? "" : 'End with one line "Next step:" saying the single most useful action.'}`;
+${type === "find_contact" ? "" : 'End with one line "Next step:" saying the single most useful action.'}${type === "supplier_search" ? `
+After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array of the companies you named (at most 12), each {"name": "...", "country": "ISO3 code", "type": "manufacturer" or "exporter" or "trader", "products": "what they make, short", "website": "official site you saw, or empty", "source": "URL where you saw the company"}. Only companies actually found on a page; a company without a source URL is left out.` : ""}`;
 
   try {
     const { text, sources } = await claude({
@@ -77,8 +78,27 @@ ${type === "find_contact" ? "" : 'End with one line "Next step:" saying the sing
         : [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" || type === "find_contact" ? 6 : 3 }],
       messages: [{ role: "user", content: prompt }],
     });
+    // web-found suppliers: saved to the Web Suppliers tab so the next supplier search finds them (marked unverified)
+    let body = text, saved = 0;
+    if (type === "supplier_search") {
+      const at = text.lastIndexOf("SUPPLIERS_JSON:");
+      if (at >= 0) {
+        body = text.slice(0, at).trimEnd();
+        try {
+          const m = text.slice(at).match(/\[[\s\S]*\]/);
+          const list = (m ? JSON.parse(m[0]) : []) as Record<string, unknown>[];
+          const stamp0 = new Date().toISOString().slice(0, 16).replace("T", " ");
+          const str = (v: unknown, n: number) => String(v ?? "").replace(/[\r\n\t]+/g, " ").trim().slice(0, n);
+          for (const x of list.slice(0, 12)) {
+            const name = str(x.name, 160), web = str(x.website, 200), source = str(x.source, 300);
+            if (!name || !/^https?:\/\//.test(source || web)) continue;
+            if (sheetsEnabled()) { await appendRow("Web Suppliers", [stamp0, str(target, 120), name, str(x.country, 3).toUpperCase(), str(x.type, 20), str(x.products, 300), web, source || web, session.email || "", "web-found"]); saved++; }
+          }
+        } catch (e) { await logEvent("warn", "run", "web suppliers not saved", String(e).slice(0, 200), session.email); }
+      }
+    }
     const src = sources.slice(0, 8).map((s) => `- ${s.title}: ${s.url}`).join("\n");
-    const result = (text + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 45000);
+    const result = (body + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 45000);
     let contacts: unknown = undefined;
     if (type === "find_contact") {
       try { const m = text.match(/\{[\s\S]*\}/); contacts = m ? JSON.parse(m[0]) : undefined; } catch { contacts = undefined; }
@@ -90,7 +110,7 @@ ${type === "find_contact" ? "" : 'End with one line "Next step:" saying the sing
           JSON.stringify(context || {}).slice(0, 4000), String(request || "").slice(0, 2000), "done", result.slice(0, 20000), sources[0]?.url || "", stamp, `web instant; ${session.email || ""}`]);
       } catch (e) { await logEvent("error", "run", "sheet write failed", String(e).slice(0, 300), session.email); }
     }
-    return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp, contacts });
+    return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp, contacts, saved });
   } catch (e) {
     await logEvent("error", "run", `${type || "job"} failed`, String((e as Error).message || e), session.email);
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });
