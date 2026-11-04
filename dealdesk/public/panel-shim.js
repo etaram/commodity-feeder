@@ -110,6 +110,7 @@
     get: async (id) => { const r = await fetch("/api/deal?id=" + encodeURIComponent(id), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j; },
     save: (deal_id, kind, data, record_id, del) => post("/api/deal", { deal_id, kind, data, record_id, delete: !!del }, "Deal Desk"),
   };
+  window.DD_KNOW = (names) => post("/api/panel/know", { names }, "Deal Desk");
   window.DD_COUNTRY = (c) => getj("/api/panel/country?c=" + encodeURIComponent(c));
   window.DD_SUPSEARCH = async (q) => post("/api/panel/suppliers-for", Object.assign({ research: true }, q), "Deal Desk");
   // Official contact details for one supplier, fetched only when its file is opened.
