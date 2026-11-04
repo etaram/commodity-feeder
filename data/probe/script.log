@@ -1,34 +1,7 @@
-WARNING:leads:reddit r/supplychain: HTTP 403
-WARNING:leads:reddit r/logistics: HTTP 403
-WARNING:leads:reddit r/Commodities: HTTP 403
-WARNING:leads:reddit r/energy: HTTP 403
-WARNING:leads:reddit r/geopolitics: HTTP 403
-WARNING:leads:reddit r/africa: HTTP 403
-WARNING:leads:reddit r/Kenya: HTTP 403
-WARNING:leads:reddit r/Nigeria: HTTP 403
-WARNING:leads:reddit r/Ethiopia: HTTP 403
-WARNING:leads:reddit r/Ghana: HTTP 403
-WARNING:leads:reddit r/southafrica: HTTP 403
-WARNING:leads:reddit r/Egypt: HTTP 403
-WARNING:leads:reddit r/saudiarabia: HTTP 403
-WARNING:leads:reddit r/dubai: HTTP 403
-WARNING:leads:reddit r/india: HTTP 403
-WARNING:leads:reddit r/Pakistan: HTTP 403
-WARNING:leads:reddit r/vietnam: HTTP 403
-WARNING:leads:reddit r/Philippines: HTTP 403
-WARNING:leads:reddit r/Israel: HTTP 403
-WARNING:leads:reddit r/manufacturing: HTTP 403
-WARNING:leads:reddit r/procurement: HTTP 403
-WARNING:leads:reddit r/mining: HTTP 403
-WARNING:leads:reddit r/solar: HTTP 403
-INFO:leads:social: 15 items (0 reddit, 15 hn, 0 telegram)
-2026-11-04 Hacker News (29 points) | Adding Window Functions to a Spreadsheet
-2026-11-04 Hacker News (35 points) | Show HN: I built a tool that prices a prebuilt PC part by part
-2026-11-04 Hacker News (367 points) | North Korean fake job interview led to $6.3B Binance heist
-2026-11-04 Hacker News (478 points) | Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)
-2026-11-03 Hacker News (83 points) | Getting hit with "Prove you are a human" at every other website
-2026-11-03 Hacker News (162 points) | Gitbook Breached
-2026-11-03 Hacker News (510 points) | OpenAI seems to be silently re-enabling model training on Codex chats
-2026-11-03 Hacker News (1009 points) | The 'Astra can read and write weights to improve Qwen' post is misleading
-2026-11-02 Hacker News (2938 points) | Astra can read and write weights to improve Qwen
-2026-11-02 Hacker News (36 points) | I Read the Clankers' Code
+feed https://www.reddit.com/r/Kenya/new/.rss: HTTP 429
+reddit direct 200 47887
+reddit relay 200 47887
+reddit items via _feed 0
+telegram 20
+trends rss 200 text/xml; charset=utf-8 <?xml version="1.0" encoding="UTF-8" standalone="yes"?> <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ht="https://trends.google.com/trending/rss" version="2.0"> 	<channel> 		<title>Daily Search 
+trending KE [{'term': 'rennes', 'traffic': '200+', 'headline': 'Europa League : Boulaye Dia enchaîne avec une nouvelle titularisation face à l’Olympiakos', 'url': 'https://wiwsport.com/2026/11/04/europa-league-boulaye-dia-enchaine-avec-une-nouvelle-titularisation-face-a-lolympiakos/', 'business': False}, {'term': 'fenerbahçe vs liverpool', 'traffic': '20000+', 'headline': 'Champions League: Liverpool visit Fenerbahce before Arsenal and Man City in action', 'url': 'https://www.bbc.com/sport/football/live/c6rmy8zvwnryt', 'business': False}, {'term': 'aek vs real madrid', 'traffic': '10000+', 'headline': 'Mourinho: "We need to play at our best, stay focused, and maintain our level of play"', 'url': 'https://www.realmadrid.com/en-US/news/football/first-team/press-conference/mourinho-xxxx-03-11-2026', 'business': False}]
