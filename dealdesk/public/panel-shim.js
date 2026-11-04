@@ -105,6 +105,11 @@
   };
   // The best suppliers for one tender, ranked on the server over the whole supplier index.
   window.DD_SUPFOR = async (q) => (await post("/api/panel/suppliers-for", q, "Deal Desk")).values || [];
+  // Private deal workspace (analysts and admins; the server refuses viewers).
+  window.DD_DEAL = {
+    get: async (id) => { const r = await fetch("/api/deal?id=" + encodeURIComponent(id), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j; },
+    save: (deal_id, kind, data, record_id, del) => post("/api/deal", { deal_id, kind, data, record_id, delete: !!del }, "Deal Desk"),
+  };
   window.DD_SUPSEARCH = async (q) => post("/api/panel/suppliers-for", Object.assign({ research: true }, q), "Deal Desk");
   // Official contact details for one supplier, fetched only when its file is opened.
   window.DD_CONTACT = async (name, country) => (await post("/api/panel/contact", { name, country }, "Deal Desk")).contact || null;

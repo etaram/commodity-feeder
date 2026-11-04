@@ -21,3 +21,16 @@ assert.ok(Number.isNaN(ECON.priceAtMargin(100, -0.1)));
 near(ECON.priceAtMargin(100, 0), 100, 1e-9);
 assert.ok(Number.isNaN(ECON.margin(0, 10)));
 console.log("econ: 10 checks passed");
+// deal cash flows (principal): 100k goods, 30% deposit day 0, balance day 30, freight 5k, customer pays day 90 at 120k
+const base = { role: "principal", sale_price: 120000, cost_goods: 100000, freight: 5000, insurance: 0, deposit_pct: 30, deposit_day: 0, balance_day: 30, customer_day: 90, fin_rate_pct: 0, bank_pct: 0, duty_pct: 0, contingency_pct: 0 };
+let d = ECON.deal(base);
+near(d.gp, 15000); near(d.peak, 105000); assert.equal(d.peakDay, 30); assert.equal(d.exposure, 90);
+// freight already in the quote is not counted twice
+d = ECON.deal({ ...base, freight_in_quote: true }); near(d.gp, 20000); near(d.peak, 100000);
+// financing 10%/yr on the negative balance: 30,000 x 30 days + 105,000 x 60 days, /365 x 10%
+d = ECON.deal({ ...base, fin_rate_pct: 10 }); near(d.fin, (30000 * 30 + 105000 * 60) * 0.1 / 365, 0.01);
+// unknown inputs stay zero cost, never NaN
+d = ECON.deal({ role: "principal", sale_price: 1000, cost_goods: "" }); near(d.gp, 1000); assert.equal(d.peak, 0);
+// agent: commission only, no capital
+d = ECON.deal({ role: "agent", sale_price: 200000, commission_pct: 3, customer_day: 60 }); near(d.net, 6000); assert.equal(d.peak, 0);
+console.log("deal cash flows: 9 checks passed");
