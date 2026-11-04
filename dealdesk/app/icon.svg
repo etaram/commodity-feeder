@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Sinder">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2d52"/><stop offset="1" stop-color="#0b1324"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e8c56f"/><stop offset="1" stop-color="#b8902e"/></linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#g)"/>
+  <!-- two trade routes: goods out and value back, forming an S -->
+  <path d="M44 20c-2.5-4-7-6-12-6-7 0-12 4-12 9.5 0 11 24 7 24 18 0 6-5.5 10-13 10-6 0-10.5-2.5-13-6.5" fill="none" stroke="url(#gold)" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="45" cy="16.5" r="3.4" fill="#e8c56f"/>
+  <circle cx="19" cy="47.5" r="3.4" fill="#e8c56f"/>
+</svg>
