@@ -190,6 +190,11 @@ def fit(r, prefs=None, sup=None):
     if usd is None:
         pts *= 0.8
 
+    mv = prefs.get("min_value") or 0
+    if mv and usd is not None and usd < mv:
+        pts *= 0.3; flags.append("below your minimum deal size")
+    if stage == "planned" and not (prefs.get("planned", 1) or 0):
+        pts *= 0.3; flags.append("planned notices are off in your profile")
     # --- the owner's weights: a soft multiplier, so a 0 still hides and a 2 lifts without saturating
     w = (prefs.get("sector") or {}).get(sec, 1.0) * (prefs.get("region") or {}).get(region, 1.0)
     if w <= 0:

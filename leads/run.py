@@ -421,6 +421,7 @@ def load_prefs():
         from .push import LEADS_SHEET, Sheets
         sh = Sheets()
         prof = sh.values(LEADS_SHEET, "Profile!A4:E27")
+        other = {r[3]: r[4] for r in prof if len(r) > 4 and r[3]}
         part = sh.values(LEADS_SHEET, "Partners!A2:D200")
 
         def num(x, d=1.0):
@@ -430,7 +431,9 @@ def load_prefs():
                 return d
         prefs = {"sector": {r[0]: num(r[1]) for r in prof if len(r) > 1 and r[0]},
                  "region": {r[3]: num(r[4]) for r in prof if len(r) > 4 and r[3]},
-                 "partners": {r[0].strip().upper(): num(r[3], 1.0) for r in part if len(r) > 3 and r[0].strip()}}
+                 "partners": {r[0].strip().upper(): num(r[3], 1.0) for r in part if len(r) > 3 and r[0].strip()},
+                 "min_value": num(other.get("Minimum value USD (0 = include unknown)", 0), 0.0),
+                 "planned": num(other.get("Include planned / early notices (1/0)", 1), 1.0)}
         PRIVATE.mkdir(parents=True, exist_ok=True)
         cache.write_text(json.dumps(prefs))
         return prefs
