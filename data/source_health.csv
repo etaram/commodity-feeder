@@ -1,31 +1,31 @@
 source,type,status,prices,expected_min,previous_prices,newest_date,age_days,max_age_days,http_status,latency_ms,changed,last_change_utc,message,url
-yahoo,feed,OK,33,25,33,2026-11-03,0,4,,25000,,,,https://finance.yahoo.com/markets/commodities/
-westmetall,feed,OK,6,6,6,2026-11-02,1,5,,8000,,,,https://www.westmetall.com/en/markdaten.php
-em_global,feed,OK,21,15,19,2026-11-03,0,4,,53000,,,,https://quote.eastmoney.com/center/gridlist.html#futures_global
-cn_spot,feed,OK,52,45,52,2026-11-03,0,6,,4000,,,,https://www.100ppi.com/sf/
-eu_agri,feed,OK,63,50,63,2026-10-31,3,21,,11000,,,,https://agridata.ec.europa.eu/extensions/DataPortal/prices.html
-dtn,feed,OK,7,7,7,2026-10-23,11,14,,1000,,,,https://www.dtnpf.com/agriculture/web/ag/crops
-ssb,feed,OK,2,2,2,2026-10-25,9,21,,1000,,,,https://www.ssb.no/en/statbank1/table/03024/
-scrapmonster,feed,OK,34,30,34,2026-09-21,43,45,,0,,,,https://www.scrapmonster.com/metal-prices/minor-metals
-smi,feed,OK,5,5,5,2026-11-02,1,5,,2000,,,,https://strategicmetalsinvest.com/current-strategic-metals-prices/
-usda,feed,OK,52,20,52,2026-11-02,1,35,,12000,,,,https://www.ams.usda.gov/market-news
+yahoo,feed,OK,33,25,33,2026-11-04,0,4,,25000,,,,https://finance.yahoo.com/markets/commodities/
+westmetall,feed,OK,6,6,6,2026-11-03,1,5,,8000,,,,https://www.westmetall.com/en/markdaten.php
+em_global,feed,OK,20,15,21,2026-11-04,0,4,,40000,,,,https://quote.eastmoney.com/center/gridlist.html#futures_global
+cn_spot,feed,OK,52,45,52,2026-11-03,1,6,,3000,,,,https://www.100ppi.com/sf/
+eu_agri,feed,OK,63,50,63,2026-10-31,4,21,,10000,,,,https://agridata.ec.europa.eu/extensions/DataPortal/prices.html
+dtn,feed,OK,7,7,7,2026-10-23,12,14,,1000,,,,https://www.dtnpf.com/agriculture/web/ag/crops
+ssb,feed,OK,2,2,2,2026-10-25,10,21,,1000,,,,https://www.ssb.no/en/statbank1/table/03024/
+scrapmonster,feed,OK,34,30,34,2026-09-21,44,45,,0,,,,https://www.scrapmonster.com/metal-prices/minor-metals
+smi,feed,OK,5,5,5,2026-11-03,1,5,,0,,,,https://strategicmetalsinvest.com/current-strategic-metals-prices/
+usda,feed,OK,52,20,52,2026-11-03,1,35,,12000,,,,https://www.ams.usda.gov/market-news
 census,feed,DOWN,0,800,0,,,120,,0,,,WARNING census 2026-06: Expecting value: line 1 column 1 (char 0) | WARNING census 2026-05: Expecting value: line 1 column 1 (char 0) | WARNING census: no data,https://api.census.gov/data/timeseries/intltrade/imports/hs
-comext,feed,OK,1913,800,1913,2026-08-31,64,120,,57000,,,,https://ec.europa.eu/eurostat/comext/newxtweb/
-comtrade,feed,DEGRADED,3,300,3,2026-08-31,64,150,,25000,,,,https://comtradeplus.un.org/
-World Bank Pink Sheet,watch,UNCHANGED,,,,,,,200,148,,2026-10-29T00:52,,https://www.worldbank.org/en/research/commodity-markets
-China NBS 10-day prices,watch,UNCHANGED,,,,,,,200,6690,,2026-11-03T02:56,,https://www.stats.gov.cn/english/PressRelease/
-ICO coffee prices,watch,UNCHANGED,,,,,,,200,678,,,,https://ico.org/resources/public-market-information/
-FAO Food Price Index,watch,UNCHANGED,,,,,,,200,73,,,,https://www.fao.org/worldfoodsituation/foodpricesindex/en/
-Global Dairy Trade,watch,UNCHANGED,,,,,,,200,397,,,,https://www.globaldairytrade.info/en/product-results/
-USDA FV shipping point,watch,UNCHANGED,,,,,,,200,91,,2026-10-28T11:42,,https://www.ams.usda.gov/mnreports/fvwtrds.pdf
-USDA feedstuffs AMS_3668,watch,UNCHANGED,,,,,,,200,122,,,,https://www.ams.usda.gov/mnreports/ams_3668.pdf
-USDA boxed beef AMS_2461,watch,UNCHANGED,,,,,,,200,139,,2026-10-31T00:46,,https://www.ams.usda.gov/mnreports/ams_2461.pdf
-IMF primary commodity prices,watch,DOWN,,,,,,,403,59,,,"<HTML><HEAD>
+comext,feed,OK,1913,800,1913,2026-08-31,65,120,,58000,,,,https://ec.europa.eu/eurostat/comext/newxtweb/
+comtrade,feed,DEGRADED,3,300,3,2026-08-31,65,150,,20000,,,,https://comtradeplus.un.org/
+World Bank Pink Sheet,watch,CHANGED,,,,,,,200,115,yes,2026-11-04T01:18,,https://www.worldbank.org/en/research/commodity-markets
+China NBS 10-day prices,watch,UNCHANGED,,,,,,,200,4433,,2026-11-03T02:56,,https://www.stats.gov.cn/english/PressRelease/
+ICO coffee prices,watch,UNCHANGED,,,,,,,200,20095,,,,https://ico.org/resources/public-market-information/
+FAO Food Price Index,watch,UNCHANGED,,,,,,,200,174,,,,https://www.fao.org/worldfoodsituation/foodpricesindex/en/
+Global Dairy Trade,watch,UNCHANGED,,,,,,,200,288,,,,https://www.globaldairytrade.info/en/product-results/
+USDA FV shipping point,watch,CHANGED,,,,,,,200,222,yes,2026-11-04T01:18,,https://www.ams.usda.gov/mnreports/fvwtrds.pdf
+USDA feedstuffs AMS_3668,watch,UNCHANGED,,,,,,,200,106,,,,https://www.ams.usda.gov/mnreports/ams_3668.pdf
+USDA boxed beef AMS_2461,watch,UNCHANGED,,,,,,,200,70,,2026-10-31T00:46,,https://www.ams.usda.gov/mnreports/ams_2461.pdf
+IMF primary commodity prices,watch,DOWN,,,,,,,403,41,,,"<HTML><HEAD>
 <TITLE>Access Denied</TITLE>
 </HEAD><BODY>
 <H1>Access Denied</H1>
  
 You don't have permission to access ""http&#58;&#47;&#47;www&#46;imf&#",https://www.imf.org/en/Research/commodity-prices
-LME homepage,watch,DOWN,,,,,,,403,110,,,"<!DOCTYPE html><html lang=""en-US""><head><title>Just a moment...</title><meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8""><meta http-e",https://www.lme.com/
-Spices Board India,watch,CHANGED,,,,,,,200,909,yes,2026-11-03T13:04,,https://www.indianspices.com/marketing/price/domestic/current-market-price.html
-MPOB palm oil,watch,UNCHANGED,,,,,,,200,3268,,,,https://bepi.mpob.gov.my/
+LME homepage,watch,DOWN,,,,,,,403,76,,,"<!DOCTYPE html><html lang=""en-US""><head><title>Just a moment...</title><meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8""><meta http-e",https://www.lme.com/
+Spices Board India,watch,UNCHANGED,,,,,,,200,1095,,2026-11-03T13:04,,https://www.indianspices.com/marketing/price/domestic/current-market-price.html
+MPOB palm oil,watch,UNCHANGED,,,,,,,200,1438,,,,https://bepi.mpob.gov.my/
