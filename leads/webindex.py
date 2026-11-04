@@ -127,7 +127,7 @@ def suppliers(limit=90_000):
             d = "; ".join(dict.fromkeys(hsn[h[:4]] for h in re.split(r"[\s,;]+", x["hs"]) if h[:4] in hsn))
             if d:
                 x["hd"] = d[:CUT["hd"]]
-        if x.get("n") and x.get("tr") in ("1", "2"):  # the system shows proven suppliers only (tier 1-2)
+        if x.get("n") and x.get("tr") in ("1", "2", "3"):  # proven (tier 1-2) and qualified (tier 3); tier 4 stays out
             out.append(x)
     raw = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode(), 9)
     nonce = os.urandom(12)
