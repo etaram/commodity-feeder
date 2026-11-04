@@ -14,17 +14,17 @@ const DICT: Record<string, string> = {
   "כבלים": "cables", "כבל": "cable", "סולארי": "solar", "פאנלים סולאריים": "solar panels", "אנרגיה סולארית": "solar energy",
   "סוללות": "batteries", "אגירה": "energy storage", "חשמל": "electricity", "מוצרי חשמל": "electrical appliances",
   "שואבי אבק": "vacuum cleaners", "שואבי אבק רובוטיים": "robot vacuum cleaners", "רובוט": "robot",
-  "חיטה": "wheat", "תירס": "maize corn", "אורז": "rice", "סוכר": "sugar", "שמן": "oil", "שמן צמחי": "vegetable oil",
+  "חיטה": "wheat", "תירס": "maize", "אורז": "rice", "סוכר": "sugar", "שמן": "oil", "שמן צמחי": "vegetable oil",
   "שמן חמניות": "sunflower oil", "שמן דקלים": "palm oil", "קמח": "flour", "סויה": "soybean", "קפה": "coffee", "שומשום": "sesame",
   "דשן": "fertilizer", "דשנים": "fertilizers", "אוריאה": "urea", "פלדה": "steel", "ברזל": "iron", "אלומיניום": "aluminium",
-  "נחושת": "copper", "מלט": "cement", "בטון": "concrete", "אספלט": "asphalt bitumen", "דלק": "fuel", "גז": "gas",
+  "נחושת": "copper", "מלט": "cement", "בטון": "concrete", "אספלט": "asphalt", "דלק": "fuel", "גז": "gas",
   "פולימרים": "polymers", "פלסטיק": "plastic", "נייר": "paper", "תאית": "pulp", "ציוד רפואי": "medical equipment",
   "תרופות": "pharmaceuticals", "בית חולים": "hospital", "מרכז נתונים": "data center", "מרכזי נתונים": "data centers",
   "נמל": "port", "נמלים": "ports", "לוגיסטיקה": "logistics", "כבישים": "roads", "גשר": "bridge", "רכבת": "railway",
   "רכבים": "vehicles", "משאיות": "trucks", "אוטובוסים": "buses", "מזגנים": "air conditioners", "מיזוג אוויר": "air conditioning",
   "תאורה": "lighting", "פנסי רחוב": "street lights", "מחשבים": "computers", "מצלמות": "cameras", "אבטחה": "security",
-  "ביטחון": "defence", "מדים": "uniforms", "טקסטיל": "textiles", "מזון": "food", "בשר": "meat", "עוף": "chicken poultry",
-  "דגים": "fish", "חלב": "milk dairy", "פירות": "fruit", "ירקות": "vegetables", "בנייה": "construction", "מבנים": "buildings",
+  "ביטחון": "defence", "מדים": "uniforms", "טקסטיל": "textiles", "מזון": "food", "בשר": "meat", "עוף": "chicken",
+  "דגים": "fish", "חלב": "milk", "פירות": "fruit", "ירקות": "vegetables", "בנייה": "construction", "מבנים": "buildings",
 };
 
 const cache = new Map<string, string>();

@@ -124,3 +124,37 @@ opens the exact record. Streams: projects and buyers in the leading column, comm
 - The step results, the price estimate and then the notice details follow; WhatsApp sharing stays secondary.
 - Same buttons, ids and handlers as before; classic keeps the old row. Tests: screenshots 1440 px Hebrew, 390 px English,
   classic; axe-core clean. Rollback: `?ui=classic`, or remove tenderSteps() from panel.html.
+
+## Slice 10: private deal workspace (2026-11-04)
+
+- Store: hidden tab "Deal Records" in the engine sheet, append-only (every save is a new version, latest wins, delete is a
+  "deleted" version), written with RAW input so quote text cannot run as a formula. API `/api/deal`, analysts and admins only,
+  checked on the server; nothing is sent outside the system.
+- Panel (v2, tender step 5 "Deal workspace"): header with stage, owner, deadline, next action, blocker; requirements matrix
+  (document, page, mandatory, status, evidence; "met" needs evidence; not ready while a mandatory item is open; the bid
+  project agent's conditions shown read-only); quote comparison (source required, basis = Incoterm + currency + unit, mixed
+  bases flagged and no "lowest" pick, expired validity, unconfirmed availability); economics (principal or agent, dated cash
+  flows, freight and insurance not double-counted, financing on the negative balance, peak capital and days tied up, base
+  and downside).
+- Tests: tests/econ.test.mjs 19 checks (9 new for cash flows); type-check; screenshots 1440 px Hebrew and 390 px English,
+  no overflow, no script errors. Rollback: remove the "a-ws" button (the tab is inert without it) or `?ui=classic`.
+
+## Slice 11: global projects by stage (2026-11-04)
+
+- Planned projects (World Bank pipeline and others) show a project card: stage, funding (proposed / approved / unknown), the
+  Bank's financing labelled as financing and not project cost, addressable value "unknown until the procurement plan lists
+  the packages", how the buyer will buy, and open tenders in the same country with the same buyer or sector.
+- Rollback: remove projectStageHtml() from panel.html.
+
+## Slice 12: evaluation set, seeds, commodity source (2026-11-04)
+
+- tools/search_eval.py: 30 labeled cases (16 tenders, 14 suppliers, Hebrew and English pairs) on the real indexes, the
+  panel's own dictionary and matching rules. Labels are a first pass by the builder, pending human review. Precision here
+  measures translation and exact matching, not recall. Output: data/probe/search_eval.md.
+- Found and fixed: dictionary entries with two words ("maize corn", "chicken poultry", "milk dairy", "asphalt bitumen")
+  required both words under strict matching, so Hebrew "תירס" found fewer suppliers than "maize" (part of A13).
+- tools/seed_check.py: 27 of the 28 brief seeds are already in the supplier index (Apical is not); several name matches are
+  noisy (Olam, ETG, ADM, Wilmar) and must be merged by hand, not added. POWERCHINA (via Sinohydro) and CSCEC are EPC
+  partners, not suppliers. Output: data/probe/seed_check.md.
+- World Bank Pink Sheet (S04) was already the source of price_trends; the registry now says so, with the licence.
+- Operator guide: dealdesk/OPERATOR_GUIDE.md (Hebrew).
