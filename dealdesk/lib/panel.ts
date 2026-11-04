@@ -1,7 +1,7 @@
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
-import { suppliers as supplierIndex, isClosed, type Supplier } from "@/lib/index";
+import { suppliers as supplierIndex, tenders as supplierIndexTenders, isClosed, type Supplier } from "@/lib/index";
 import { readRanges } from "@/lib/sheets";
 import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
@@ -66,7 +66,7 @@ async function allTenders(): Promise<{ head: string[]; rows: Record<string, stri
     const files = await Promise.all(Array.from({ length: 65 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
       .then((r) => (r.ok ? r.text() : "")).catch(() => "")));
     const snap = await snapshot("static");
-    const fit = (snap.fit || {}) as Record<string, string[]>;
+    const fit = (snap.fit || {}) as Record<string, string[]>, fm = await fitMap();
     let head: string[] = [];
     const rows: Record<string, string>[] = [];
     for (const text of files) {
@@ -75,12 +75,13 @@ async function allTenders(): Promise<{ head: string[]; rows: Record<string, stri
       if (!head.length) head = p.meta.fields || [];
       for (const r of p.data) {
         if (!r.id || isClosed(r.deadline)) continue;
-        const f = fit[r.id] || [];
+        const f = fit[r.id] || [], x = fm.get(r.id);
         r.fit = f[0] || r.score || ""; r.your_suppliers = f[1] || ""; r.tier_AB = f[2] || "";
+        r.fit_why = x?.fw || ""; r.fit_flags = x?.ff || ""; r.route = r.route || x?.rt || "";
         rows.push(r);
       }
     }
-    return { head: [...head, "fit", "your_suppliers", "tier_AB"], rows };
+    return { head: [...head, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route"], rows };
   });
 }
 
@@ -135,9 +136,21 @@ async function liveDirect(): Promise<Snap | null> {
 }
 export async function liveSource(): Promise<"sheets" | "snapshot"> { return (await liveDirect()) ? "sheets" : "snapshot"; }
 
+// The ranking brain's explanation per notice (why it ranks, what cost it, the deal route) comes from the public
+// index; it is merged into every tender grid the panel receives, so the sheet layout never changes.
+async function fitMap(): Promise<Map<string, { fw: string; ff: string; rt: string }>> {
+  return cached("fit-map", 900_000, async () => new Map((await supplierIndexTenders()).map((r) => [r.id, { fw: r.fw || "", ff: r.ff || "", rt: r.rt || "" }])));
+}
+async function withFit(grid: Grid): Promise<Grid> {
+  if (!grid.length) return grid;
+  const m = await fitMap(), idc = grid[0].indexOf("id");
+  if (idc < 0 || grid[0].includes("fit_why")) return grid;
+  return [[...grid[0], "fit_why", "fit_flags", "route"], ...grid.slice(1).map((r) => { const f = m.get(String(r[idc] || "")); return [...r, f?.fw || "", f?.ff || "", f?.rt || ""]; })];
+}
 export async function getRange(key: string): Promise<Grid> {
   if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);
-  if (["tenders", "titles", "repeat", "markets", "meta", "upcoming", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
+  if (["tenders", "upcoming"].includes(key)) return withFit(((await snapshot("static"))[key] as Grid) || []);
+  if (["titles", "repeat", "markets", "meta", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
   if (key in LIVE) return (((await liveDirect()) || (await snapshot("live")))[key] as Grid) || [];
   if (key === "suppliers") return [SUP_HEAD, ...(await allSuppliers()).slice(0, 6000).map(supRow)];
   if (key === "tot_s") return [["suppliers", String((await allSuppliers()).length)]];

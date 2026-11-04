@@ -495,6 +495,14 @@ def build():
     stats.update({f"region: {k}": v for k, v in sorted(by_region.items(), key=lambda y: -y[1])})
     log.info("universe %s", stats)
     (PRIVATE / "universe_stats.json").write_text(json.dumps(stats))
+    by_sec = defaultdict(int)  # public aggregate (counts only) for the ranking brain: proven suppliers per sector
+    for r in out:
+        if str(r.get("tier")) in ("1", "2"):
+            by_sec[r.get("main_sector") or "Other"] += 1
+    with open(LEADS / "supplier_sectors.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f); w.writerow(["sector", "suppliers"])
+        for k, v in sorted(by_sec.items(), key=lambda y: -y[1]):
+            w.writerow([k, v])
     return out, stats
 
 

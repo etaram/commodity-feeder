@@ -658,6 +658,11 @@ def merge():
             comp.append({"country": c, "sector": sec, "awards_12m": n, "foreign_wins": fw,
                          "foreign_win_rate": round(fw / n, 3), "median_bids": median(b) if b else ""})
         write("competition.csv", sorted(comp, key=lambda x: -x["awards_12m"]))
+        try:
+            from . import dealfit
+            dealfit.apply(tenders, load_prefs())  # the ranking brain: score = deal fit, with fit_why and fit_flags
+        except Exception as e:  # noqa: BLE001
+            log.warning("deal fit: %s", e)
         tenders.sort(key=lambda x: ({"Pursue": 0, "Watch": 1, "Ignore": 2}[x["decision"]], -(x["ev_usd"] or 0), -x["score"]))
     except Exception as e:  # noqa: BLE001
         log.warning("brain: %s", e)
@@ -667,7 +672,8 @@ def merge():
             "buyer", "title_en", "summary_en", "title", "est_value_usd", "est_value", "currency", "published", "notice_type", "access", "nature",
             "classification", "contact", "benchmark", "link", "lang", "first_seen", "id", "decision", "ev_usd",
             "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent",
-            "margin_pct", "integrity_score", "integrity_flag", "integrity_note", "why"]
+            "margin_pct", "integrity_score", "integrity_flag", "integrity_note", "why", "fit_why", "fit_flags", "base_score",
+            "route", "deal_value_usd", "net_margin_pct", "gross_profit_usd", "payment_days", "roi", "fta_note", "nature"]
     write_digest(tenders, buyers or [])
     dcols = ["id", "decision", "ev_usd", "roi", "p_win_market", "deal_value_usd", "value_basis", "value_confidence",
              "addressable_share", "framework_split", "gross_margin_pct", "net_margin_pct", "gross_profit_usd",
