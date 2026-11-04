@@ -7,6 +7,7 @@ import re
 from collections import defaultdict
 
 from .common import AWARDS, LEADS, PRIVATE, log, today
+from .contacts import clean_email, clean_phone
 from .regions import iso3, region
 from .sectors import SECTORS, classify, _KW as SECTOR_KW
 from .taxonomy import BY_ID, group_of_text
@@ -283,11 +284,13 @@ def classification_check(out):
         b["total"] += 1; b["proven"] += r["tier"] in ("1", "2"); b["services"] += r["type"] == "works/services"
         b["goods"] += r["type"] == "goods supplier"; b["flagged"] += bool(r.get("sector_check"))
         b["why: " + (r.get("sector_why") or "-")] += 1
+        b["email"] += bool(r["email"]); b["phone"] += bool(r["phone"]); b["website"] += bool(r["website"])
+        b["no contact"] += not (r["email"] or r["phone"] or r["website"])
     whys = sorted({k for b in by.values() for k in b if k.startswith("why: ")})
-    head = ["sector", "total", "proven (tier 1-2)", "goods", "services", "flagged"] + whys
+    head = ["sector", "total", "proven (tier 1-2)", "goods", "services", "flagged", "email", "phone", "website", "no contact"] + whys
     rows = [[f"Built {today()}: {len(out):,} suppliers. 'why' = how the main sector was decided; 'flagged' = the company's own description names another goods sector."], head]
     for sec, b in sorted(by.items(), key=lambda y: -y[1]["total"]):
-        rows.append([sec, b["total"], b["proven"], b["goods"], b["services"], b["flagged"]] + [b.get(w, 0) for w in whys])
+        rows.append([sec, b["total"], b["proven"], b["goods"], b["services"], b["flagged"], b["email"], b["phone"], b["website"], b["no contact"]] + [b.get(w, 0) for w in whys])
     cols = ["supplier", "country", "tier", "quality", "main_sector", "sector_why", "sector_check", "other_sectors", "type", "products", "supplied"]
     rows += [[""], ["Top proven suppliers per sector (check the class)"], cols]
     for sec in sorted(by):
@@ -297,6 +300,12 @@ def classification_check(out):
     flagged = sorted((r for r in out if r.get("sector_check") and r["tier"] in ("1", "2")), key=lambda r: -r["quality"])
     rows += [[""], [f"Flagged for review: {sum(1 for r in out if r.get('sector_check')):,} in all, the 300 strongest proven ones"], cols]
     rows += [[str(r.get(c, ""))[:140] for c in cols] for r in flagged[:300]]
+    # the strongest proven goods suppliers the system cannot reach yet: the first ones to research for contacts
+    gap = sorted((r for r in out if r["tier"] in ("1", "2") and r["type"] != "works/services" and not (r["email"] or r["phone"])),
+                 key=lambda r: -r["quality"])
+    rows += [[""], [f"Proven suppliers with no e-mail or phone: {len(gap):,}; the 300 strongest (website shown when known)"],
+             ["supplier", "country", "tier", "quality", "main_sector", "website", "products"]]
+    rows += [[str(r.get(c, ""))[:140] for c in ("supplier", "country", "tier", "quality", "main_sector", "website", "products")] for r in gap[:300]]
     Sheets().replace_tab(UNIVERSE_SHEET, "Classification check", rows, raw=True)
     log.info("classification check: %d sectors, %d flagged", len(by), sum(b["flagged"] for b in by.values()))
 
@@ -569,6 +578,8 @@ def build():
             x["email"] = wp["email"]
         if not x["phone"] and wp.get("phone"):
             x["phone"] = wp["phone"]
+        # one clean e-mail list; phones in +<code><number> form so WhatsApp and call buttons work
+        x["email"], x["phone"] = clean_email(x["email"]), clean_phone(x["phone"], wc)
         about = x.get("products") or wp.get("about") or ""
         items = "; ".join(i for i, _ in sorted(x["items"].items(), key=lambda y: -y[1])[:3])
         secs = main_sectors(x, name, wp.get("title") or "", about)

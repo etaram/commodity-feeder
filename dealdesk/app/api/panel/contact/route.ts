@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifySession } from "@/lib/auth";
 import { lookupContact } from "@/lib/sheets";
+import { cleanPhones } from "@/lib/phone";
 
 // Contact details for one supplier, read from the private Supplier Universe sheet only when a signed-in user opens it.
 const cache = new Map<string, { at: number; v: Record<string, string> | null }>();
@@ -17,6 +18,7 @@ export async function POST(req: NextRequest) {
   try {
     let v = await lookupContact(name.trim(), String(country || "").trim());
     if (!v && country) v = await lookupContact(name.trim(), "");
+    if (v && v.phone) v = { ...v, phone: cleanPhones(v.phone, String(v.country || country || "")) || v.phone };
     if (cache.size > 2000) cache.delete(cache.keys().next().value as string);
     cache.set(k, { at: Date.now(), v });
     return NextResponse.json({ ok: true, contact: v });

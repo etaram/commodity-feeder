@@ -1,3 +1,4 @@
+import { intlPhone } from "@/lib/phone";
 import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 
 // Private deal records (hidden tab 'Deal Records' in the engine sheet): quotes, requirements and economics for one
@@ -31,7 +32,7 @@ function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
   }
   const role = str(d.role, 20);
   const x = { role: ROLES.has(role) ? role : "supplier", name: str(d.name, 200), country: str(d.country, 3).toUpperCase(), contact_name: str(d.contact_name, 160),
-    email: str(d.email, 200), phone: str(d.phone, 40), wechat: str(d.wechat, 60), website: str(d.website, 240), status: PARTY_STATUS.has(str(d.status, 20)) ? str(d.status, 20) : "candidate",
+    email: str(d.email, 200), phone: intlPhone(str(d.phone, 40), str(d.country, 3)) || str(d.phone, 40), wechat: str(d.wechat, 60), website: str(d.website, 240), status: PARTY_STATUS.has(str(d.status, 20)) ? str(d.status, 20) : "candidate",
     note: str(d.note, 600), source: str(d.source, 300), last_contact: isDate(str(d.last_contact, 10)) ? str(d.last_contact, 10) : "" };
   if (!x.name) return { ok: false as const, error: "name is required" };
   return { ok: true as const, data: x, status: x.status };
