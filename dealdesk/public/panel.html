@@ -1300,13 +1300,10 @@ function renderTenders() {
     if (st.err) { scopeNote("#tscope", ""); $("#tlist").innerHTML = `<div class="empty" style="padding:14px">${esc(errText(st.err, SHEETS))}</div>`; return; }
     const tot = isFinite(st.total) ? st.total : st.rows.length;
     scopeNote("#tscope", esc(t("found_all", { n: tot.toLocaleString("en-US"), cap: st.rows.length < tot ? t("t_showing", { n: st.rows.length.toLocaleString("en-US") }) : "" })));
-    renderTenderList(st.rows);
-    if (st.rows.length < tot && (S.tCap || 2000) < 20000) {
-      $("#tlist").insertAdjacentHTML("beforeend", `<div class="more" style="padding:10px"><button type="button" id="t-loadmore">${esc(t("t_loadmore", { n: Math.min(2000, tot - st.rows.length).toLocaleString("en-US") }))}</button></div>`);
-      $("#t-loadmore").onclick = () => { S.tCap = (S.tCap || 2000) + 2000; S.limit.t = Math.max(S.limit.t, st.rows.length + 100); renderTenders(); };
-    }
-    return;
+    S.tMore = st.rows.length < tot && (S.tCap || 2000) < 20000 ? Math.min(2000, tot - st.rows.length) : 0;
+    return renderTenderList(st.rows);
   }
+  S.tMore = 0;
   scopeNote("#tscope", esc(t("scope_t", { n: T().length.toLocaleString("en-US"), all: isFinite(tt) ? tt.toLocaleString("en-US") : "" })));
   renderTenderList(tenderFilter());
 }
@@ -1315,6 +1312,11 @@ function renderTenderList(rows) {
     <div style="min-width:0"><div class="t">${flag(r.country)}${txt(tTitle(r))}</div>${tAlt(r) ? `<div class="sub">${txt(tAlt(r))}</div>` : ""}<div class="sub"><bdi>${txt(tr(r.buyer))}</bdi> · <bdi>${esc(r.country)}</bdi> · <bdi>${esc(r.sector)}</bdi></div></div>
     <div class="right"><span class="num">${money(r.est_value_usd) || `<span class='muted'>${esc(t("no_value"))}</span>`}</span>${r.stage === "planned" ? `<span class="pill info">${esc(t("planned"))}</span>` : daysPill(r.days_left)}${decisionPill(r.decision)}${compHtml(r, true)}</div>`,
     r => openTender(r), S.err.tenders ? errText(S.err.tenders, SHEETS) : t("e_tenders"), r => r.id === S.sel.t?.id);
+  // all tenders on the server: the next 2,000 load once the loaded ones are all shown
+  if (S.tMore && rows.length <= (S.limit.t || 60)) {
+    $("#tlist").insertAdjacentHTML("beforeend", `<div class="more" style="padding:10px"><button type="button" id="t-loadmore">${esc(t("t_loadmore", { n: S.tMore.toLocaleString("en-US") }))}</button></div>`);
+    $("#t-loadmore").onclick = () => { S.tCap = (S.tCap || 2000) + 2000; S.limit.t = rows.length + 100; renderTenders(); };
+  }
   autoTx(rows.slice(0, S.limit.t || 60), () => renderTenderList(rows));
 }
 function listInto(sel, rows, key, tpl, onclick, emptyText, isSel) {
