@@ -1477,7 +1477,8 @@ async function showSuppliers(sector, text, outSel, ctx) {
   }
   out.innerHTML = `<div class="section"><h3>${esc(t("sup_h"))}</h3><p class="note">${esc(whole ? t("sup_note_all") : t("sup_note", { n: SUP().length.toLocaleString("en-US") }))}</p>
     ${list.length ? list.map((s, i) => `<div class="sup"><input type="checkbox" id="ms${i}" aria-label="${esc(t("select"))} ${esc(s.supplier)}"><label for="ms${i}" style="min-width:0"><div class="t">${flag(s.country)}${txt(s.supplier)} <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div>
-      <div class="sub">${txt(String(s.products || s.supplied || s.commodities || s.main_sector).slice(0, 220))}</div>
+      <div class="sub">${txt(String(s.products || s.hs_names || s.industries || s.commodities || s.main_sector || "").slice(0, 220))}</div>
+      ${s.supplied ? `<div class="sub">${esc(t("supplied"))}: ${txt(String(s.supplied).slice(0, 200))}</div>` : ""}
       ${s.exports || s.tier_reason ? `<div class="sub">${esc(s.exports || s.tier_reason)}${s.hs_codes ? ` · HS ${esc(s.hs_codes)}` : ""}</div>` : ""}
       <div class="sub" dir="ltr">${[s.email, s.phone].filter(Boolean).map(esc).join(" · ")} ${link(s.website, s.website)}</div></label></div>`).join("") : `<div class="empty">${esc(t("e_sup_match"))}</div>`}
     <div class="actions"><button class="primary" type="button" id="ms-rfq">${esc(t("draft_sel"))}</button><button type="button" id="ms-job">${esc(t("deep_sup"))}</button></div><div id="ms-out"></div></div>`;
@@ -1512,7 +1513,8 @@ function renderResearch() {
   out.innerHTML = `<div class="section"><h3>${esc(t("sr_found", { n: SR.total.toLocaleString("en-US"), q: SR.q }))}</h3>
     ${chips ? `<div class="note">${esc(t("sr_origins"))}</div><div class="fm-chips" id="sr-oc">${oc ? `<button type="button" data-oc="">${esc(t("sr_all_c"))}</button>` : ""}${chips}</div>` : ""}
     ${SR.rows.length ? SR.rows.map((s, i) => `<div class="sup"><input type="checkbox" id="sr${i}" aria-label="${esc(t("select"))} ${esc(s.supplier)}"><div style="min-width:0;flex:1"><div class="t"><a href="#" data-so="${i}">${flag(s.country)}${txt(s.supplier)}</a> <span class="pill">${esc(s.country)}</span> <span class="pill acc num">${esc(s.quality)}</span>${s.tier ? ` <span class="pill">${esc(t("st_" + s.tier))}</span>` : ""}</div>
-      <div class="sub">${txt(String(s.products || s.commodities || s.main_sector).slice(0, 220))}</div>
+      <div class="sub">${txt(String(s.products || s.hs_names || s.industries || s.commodities || s.main_sector || "").slice(0, 220))}</div>
+      ${s.supplied ? `<div class="sub">${esc(t("supplied"))}: ${txt(String(s.supplied).slice(0, 200))}</div>` : ""}
       <div class="sub">${bidiJoin([s.exports || s.tier_reason, s.hs_codes ? "HS " + s.hs_codes : "", s.main_sector])} ${link(s.website, s.website)}</div></div></div>`).join("") : `<div class="empty">${esc(t("sr_none"))}</div>`}
     <div class="actions"><button class="primary" type="button" id="sr-rfq">${esc(t("draft_sel"))}</button><button type="button" id="sr-web">${esc(t("sr_web"))}</button><button type="button" id="sr-job">${esc(t("deep_sup"))}</button></div>
     <div id="sr-act"></div></div>`;
