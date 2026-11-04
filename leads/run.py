@@ -323,6 +323,7 @@ def _bench_usd_kg(bm, hs6):
 
 
 def merge_markets(bm):
+    from .regions import iso3
     d = LEADS / "markets"
     if not d.exists():
         return []
@@ -344,7 +345,7 @@ def merge_markets(bm):
                 (min(20, max(0, prem) * 50) if prem is not None else 0)
             out.append({
                 "hs6": f"HS {h}", "product": hs_name.get(h, "")[:80], "group": BY_ID[m["group"]]["name"],
-                "country": names.get(code, code), "year": m["years"][1], "imports_usd": round(cur["v"]),
+                "country": names.get(code, code), "iso3": iso3(names.get(code, code)) or "", "year": m["years"][1], "imports_usd": round(cur["v"]),
                 "prev_year_usd": round(prev), "growth_pct": round(growth * 100, 1) if growth is not None else "",
                 "world_share_pct": round(cur["v"] / world * 100, 2),
                 "unit_value_usd_kg": round(uv, 3) if uv else "", "benchmark_usd_kg": round(bench, 3) if bench else "",

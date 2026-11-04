@@ -95,7 +95,7 @@ const toRe = (p: string) => {
   try { return new RegExp(p.replace(/\\x\{([0-9a-fA-F]+)\}/g, "\\u{$1}"), "iu"); } catch { return null; }
 };
 
-const PUBLIC_CSV: Record<string, string> = { grants: "leads/grants.csv", exempt: "leads/exempt.csv", ilex: "leads/il_exempt.csv", integrity: "leads/governance.csv" };
+const PUBLIC_CSV: Record<string, string> = { plays: "leads/plays.csv", grants: "leads/grants.csv", exempt: "leads/exempt.csv", ilex: "leads/il_exempt.csv", integrity: "leads/governance.csv" };
 
 async function csvGrid(path: string): Promise<Grid> {
   return cached(`csv-${path}`, 600_000, async () => {
