@@ -96,6 +96,24 @@ def _feed(s, url, params=None):
     return items
 
 
+def _telegram(s, channel):
+    """Public Telegram channel preview (t.me/s/<channel>): the last messages as items. No account, no bot token."""
+    try:
+        r = s.get(f"https://t.me/s/{channel}", timeout=30)
+        if r.status_code != 200:
+            log.warning("telegram %s: HTTP %s", channel, r.status_code); return []
+        page = r.text
+    except Exception as e:  # noqa: BLE001
+        log.warning("telegram %s: %s", channel, type(e).__name__); return []
+    out = []
+    for m in re.finditer(r'<div class="tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>.*?<a class="tgme_widget_message_date" href="([^"]+)"[^>]*><time datetime="([^"]+)"', page, re.S):
+        text = html.unescape(re.sub(r"<br\s*/?>", " ", m.group(1)))
+        text = re.sub(r"<[^>]+>", "", text).strip()
+        if text:
+            out.append({"title": text[:160], "url": m.group(2), "date": m.group(3), "summary": text[160:460], "source": f"t.me/{channel}"})
+    return out[-30:]
+
+
 def _when(v):
     if re.fullmatch(r"\d{4}-\d{2}-\d{2}", v or ""):
         return dt.date.fromisoformat(v)
@@ -152,7 +170,16 @@ def build():
             add(it, topic, regn, "Google News")
         time.sleep(1)
     for src in owner_sources():
-        if src["kind"].lower().startswith("company"):  # a company to watch: its name in the url column is enough
+        kind = src["kind"].lower()
+        if kind.startswith("reddit"):  # url column: subreddit name or its URL; Reddit's public RSS, relayed if the runner is refused
+            sub_ = re.sub(r"^.*?/r/|/.*$", "", src["url"]).strip("/") or src["name"]
+            for it in _feed(s, f"https://www.reddit.com/r/{sub_}/new/.rss"):
+                add(it, src["topic"] or "community", src["region"], f"r/{sub_}")
+        elif kind.startswith("telegram"):  # url column: public channel name or t.me link; the public preview page, no account
+            ch = re.sub(r"^.*?t\.me/(s/)?|/.*$", "", src["url"]).strip("/") or src["name"]
+            for it in _telegram(s, ch):
+                add(it, src["topic"] or "community", src["region"], f"t.me/{ch}")
+        elif kind.startswith("company"):  # a company to watch: its name in the url column is enough
             q = src["url"] if not src["url"].startswith("http") else src["name"]
             for it in _feed(s, GNEWS, {"q": f'"{q}" when:7d', "hl": "en-US", "gl": "US", "ceid": "US:en"}):
                 add(it, "company watch", src["region"], "Google News")
