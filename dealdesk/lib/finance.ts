@@ -74,7 +74,7 @@ export async function financeFor(q: FinQuery) {
 }
 
 const KEEP = ["name", "short_name", "category", "country_hq", "owner", "products", "sectors", "regions", "eligibility", "content_rule", "defence_ok",
-  "ticket_min_usd", "ticket_max_usd", "typical_cost", "rating", "reputation_note", "israel_link", "apply_url", "source_url", "verified"];
+  "ticket_min_usd", "ticket_max_usd", "typical_cost", "rating", "reputation_note", "israel_link", "apply_url", "source_url", "verified", "check_note"];
 const pick = (f: Fin) => Object.fromEntries(KEEP.map((k) => [k, f[k] || ""]));
 
 export async function financeList() {

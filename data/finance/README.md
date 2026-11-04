@@ -48,3 +48,11 @@ SERV's facts come from the Swiss government SME portal (kmu.admin.ch).
 | grant (feasibility and grant funding) | 11 |
 | fund (specialist funds and platforms) | 6 |
 | **total** | **133** |
+
+
+## Independent verification (2026-11-04)
+A second researcher, who had not seen the build, checked 116 of the 133 rows (every row with a stated ticket, cost,
+rating, defence policy, content rule or Israel link, plus a sample of the rest) against the official pages.
+21 fields were corrected (ratings, defence policies, content rules, costs, tickets stated in another currency).
+Fields that could not be confirmed on an official page are listed per row in `check_note` and shown in the panel.
+Results: `_verify_1_result.csv`, `_verify_2_result.csv`.
