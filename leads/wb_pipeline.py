@@ -9,7 +9,7 @@ from .sectors import classify
 from .taxonomy import group_of_text
 
 API = "https://search.worldbank.org/api/v3/projects"
-FIELDS = "id,project_name,countryshortname,countrycode,status,totalamt,boardapprovaldate,sector1,impagency,url,lendinginstr,projectstatusdisplay,project_abstract"
+FIELDS = "id,project_name,countryshortname,countrycode,status,totalamt,boardapprovaldate,sector1,major_sectors,major_sector_name,impagency,url,lendinginstr,projectstatusdisplay,project_abstract"
 ACCESS = "International (World Bank financed: open to firms from all member countries, Israel included)"
 
 
@@ -71,6 +71,20 @@ def fetch():
                     sec = s1[0].get("Name", "") if isinstance(s1[0], dict) else str(s1[0])
                 elif isinstance(s1, str):
                     sec = s1
+                if not sec:  # current API: major_sectors[].major_sector.sectors[] with percentages (0 in the pipeline)
+                    subs = []
+                    for ms in p.get("major_sectors") or []:
+                        m = (ms or {}).get("major_sector") or {}
+                        for x in m.get("sectors") or []:
+                            try:
+                                pct = float(x.get("sector_percent") or 0)
+                            except (TypeError, ValueError):
+                                pct = 0
+                            subs.append((pct, x.get("sector_name") or m.get("major_sector_name") or ""))
+                        if not m.get("sectors") and m.get("major_sector_name"):
+                            subs.append((0, m["major_sector_name"]))
+                    subs.sort(key=lambda y: -y[0])
+                    sec = next((n for _, n in subs if wb_sector(n)), subs[0][1] if subs else "")
                 title = f"{name} ({sec})" if sec else name
                 sector, method = (wb_sector(sec), "World Bank sector") if wb_sector(sec) else classify(name)
                 cc = p.get("countrycode") or p.get("countryshortname") or ""
