@@ -1542,6 +1542,8 @@ async function renderBriefToday() {
   if (btn) btn.onclick = async () => { btn.disabled = true; $("#br-out").innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("br_wait"))}</div>`;
     try { BRIEF.data = (await window.DD_BRIEF.build(lang)).brief; if (!BRIEF.data?.text) { $("#br-out").innerHTML = `<div class="flash info">${esc(t("br_empty"))}</div>`; btn.disabled = false; return; } track("brief", lang); renderBriefToday(); }
     catch (e) { $("#br-out").innerHTML = `<div class="flash err">${esc(errText(e))}</div>`; btn.disabled = false; } };
+  // the morning agent builds it at 06:30 Israel time; if it is not there yet, the first visitor builds it once for everyone
+  if (btn && !b && !BRIEF.auto) { BRIEF.auto = true; btn.click(); }
 }
 async function renderAppToday() {
   const el = $("#today-app"); if (!el || !window.DD_PUSH) return;
