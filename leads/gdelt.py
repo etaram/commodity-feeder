@@ -84,7 +84,7 @@ def fetch_country(s, iso):
     if f.exists():
         try:
             j = json.loads(f.read_text())
-            if j.get("fetched") == str(today()):
+            if j.get("fetched") == str(today()) and j.get("articles"):
                 return j["articles"]
         except (ValueError, KeyError):
             pass
