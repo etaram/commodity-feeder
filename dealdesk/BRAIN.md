@@ -39,3 +39,26 @@ are changed by hand, with the report as evidence, never silently.
 - The owner's own network (LinkedIn export in a private tab): "you know someone at this buyer".
 - Exchange filings RSS (SZSE, BSE, NASDAQ) for listed partners and winners.
 - Freight and FX indexes (Freightos FBX, ECB) feeding the margin model.
+
+## Reaching markets and customers the system does not see today (2026-11-04)
+
+What is missing today: private-sector buyers (no tender), portals that block foreign IPs, markets without an
+open portal, and the context (news, geopolitics, experts) that says where demand is moving. Four routes, cheapest first:
+
+1. **The news as a buyer feed** (built: `leads/briefing.py`). A company named as building, expanding, winning or
+   financing something is a buyer or an EPC before any tender exists. Items become "news lead" plays with the
+   article as evidence. Sources: Google News RSS topic queries shipped with the code, plus the owner's own feeds in
+   the sheet tab Briefing Sources: podcasts (show notes), newsletters (Substack feeds), YouTube channels (feed),
+   expert blogs. No AI in collection.
+2. **The daily world brief** (built: `/api/panel/brief`). One Haiku call a day over the collected items, cached
+   for everyone, every line cites its source, in Hebrew or English. Cost under $0.10 a day.
+3. **Buyers behind the money**: IFI procurement plans (World Bank STEP, AfDB, ADB), listed companies' exchange
+   filings (SZSE, BSE, Tadawul, NSE Kenya RSS), national budgets' capex lines. All free; next slices.
+4. **Portals that block foreign IPs** (Zambia captcha, some Gulf and Latin portals): GitHub Actions runs only from
+   US addresses. The cheapest fix is a free-tier VM in the right region (Oracle Cloud "always free", Frankfurt,
+   Jeddah or Mumbai) running the same collectors on a cron and pushing to the repo. Needs the owner's account; no
+   code change beyond a runner label. Paid alternative: a residential proxy, not recommended.
+
+What the system will still not have: customs records with company names outside the US (Panjiva, Volza: paid),
+private tenders that are never published, and anyone's intent before it is written somewhere. Those come from
+people: the My Network tab and the plays' "next step" are built to put the owner in front of them first.
