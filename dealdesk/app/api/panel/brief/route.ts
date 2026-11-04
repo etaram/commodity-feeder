@@ -3,6 +3,7 @@ import { gate } from "@/lib/gate";
 import { buildBrief, readBrief } from "@/lib/brief";
 import { logActivity } from "@/lib/activity";
 import { broadcast } from "@/lib/telegram";
+import { pushAll } from "@/lib/push";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
   try {
     const out = await buildBrief(lang, s.email);
     await logActivity(s, "brief", lang, out.cached ? "cached" : `built from ${out.items} items`);
+    if (!out.cached && out.text) void pushAll({ title: lang === "he" ? "התקציר העולמי של היום מוכן" : "Today's world brief is ready", body: out.text.replace(/^## .*$/gm, "").replace(/[#*\[\]]/g, "").trim().slice(0, 140), url: "/#today", tag: "brief" }, lang);
     if (!out.cached && out.text) void broadcast((lang === "he" ? "התקציר העולמי של היום מוכן. /brief לקריאה.\n\n" : "Today's world brief is ready. /brief to read it.\n\n") + out.text.replace(/^## (.*)$/gm, "<b>$1</b>").replace(/\n---[\s\S]*$/, "").slice(0, 1500), lang);
     return NextResponse.json({ ok: true, brief: out });
   } catch (e) {

@@ -8,6 +8,7 @@ import { countryIntel } from "@/lib/country";
 import { links as tgLinks, send as tgSend } from "@/lib/telegram";
 import { getRange } from "@/lib/panel";
 import { tgEnv } from "@/lib/tgenv";
+import { pushAll } from "@/lib/push";
 
 // Daily digest (Vercel Cron, 05:00 UTC). For every active user whose profile asks for one: the new matches since the
 // last digest (not sent before, not hidden), best first, by email through Resend. No AI. Weekly digests go on Sundays.
@@ -31,6 +32,7 @@ export async function GET(req: NextRequest) {
     try {
       const g = await getRange("plays"); const h = g[0] || [];
       const rows = g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))).slice(0, 3);
+      if (rows.length && process.env.VAPID_PRIVATE_KEY) { for (const lg of ["he", "en"] as const) await pushAll({ title: lg === "he" ? "תזות העסקה של הבוקר" : "This morning's deal theses", body: rows.map((p) => `${p.kind}: ${p.title}`).join(" · ").slice(0, 160), url: "/#today", tag: "plays" }, lg); }
       if (rows.length) for (const l of await tgLinks()) if (l.alerts !== "off") {
         const he = l.lang === "he";
         await tgSend(l.chat_id, (he ? "<b>תזות העסקה של הבוקר</b>\n" : "<b>This morning's deal theses</b>\n") + rows.map((p) => `• <b>${p.kind}</b> ${p.country} · ${p.title}\n  ${String(p.next_step).slice(0, 160)}`).join("\n") + (he ? "\n/plays לעוד" : "\n/plays for more"));

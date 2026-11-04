@@ -1,0 +1,23 @@
+{
+  "name": "Sinder Deal Desk",
+  "short_name": "Sinder",
+  "description": "Tenders, deal theses, suppliers and market context for Sinder's team",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1324",
+  "theme_color": "#0b1324",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/brand/mark-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/brand/mark-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/brand/mark.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Today", "url": "/#today" },
+    { "name": "Tenders", "url": "/#tenders" },
+    { "name": "Country", "url": "/#country" }
+  ]
+}
