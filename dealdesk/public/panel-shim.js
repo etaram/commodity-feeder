@@ -82,6 +82,8 @@
 
   // Instant jobs on the web: the server researches now (Claude Haiku 5.5 with web search) instead of queueing for the worker.
   window.DD_INSTANT = async (job) => post("/api/panel/run", job, "Deal Desk AI");
+  // search all tenders (or suppliers) on the server: a word or an id, optionally in one country
+  window.DD_SEARCH = async (o) => post("/api/panel/search", { kind: o.kind || "t", values: o.kind === "c" ? [[o.q || ""]] : [[String(o.q || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "country", o.country || ""]] });
   window.DD_TX = async (lang, items) => post("/api/panel/translate", { lang, items }, "Deal Desk AI");
   // The signed-in user ({email, name, role}); the panel shows a badge and hides what the role cannot do.
   window.DD_ME = fetch("/api/me", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);

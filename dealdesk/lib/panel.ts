@@ -225,7 +225,7 @@ export async function searchTenders(v: string[][], meta?: { total?: number }): P
     if (Number.isFinite(hi) && hi > 0 && !(val > 0 && val < hi)) return false;
     const dl = num(r.days_left);
     if (Number.isFinite(md) && md > 0 && r.stage !== "planned" && Number.isFinite(dl) && dl < md) return false;
-    if (re && !re.test(`${r.title_en} ${r.title_original} ${he.get(r.id) || ""} ${r.buyer} ${r.commodity} ${r.sector}`.toLowerCase())) return false;
+    if (re && !re.test(`${r.id} ${r.title_en} ${r.title_original} ${he.get(r.id) || ""} ${r.buyer} ${r.commodity} ${r.sector}`.toLowerCase())) return false;
     return true;
   }).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   if (meta) meta.total = out.length;
