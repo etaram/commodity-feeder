@@ -1,5 +1,7 @@
-"""Business news per watched country from GDELT (free, no key, updated every 15 minutes): the "what happened this
-week" of the country intelligence page. One request per country per day; the result is a list of headlines with
+"""Business news per watched country: the "what happened this week" of the country intelligence page.
+Primary source: Google News RSS search (free, no key; a public feed of headlines and links, each credited to its
+publisher). Secondary: GDELT DOC API, which throttles shared cloud IPs (HTTP 429 from GitHub Actions), so it is
+tried once, politely, only when the feed returns nothing. One request per country per day; the result is a list of headlines with
 links, never summarised by AI unless a person asks. Countries watched: partner countries, the home market, and
 the emerging-market countries with the most Pursue decisions (cap WATCH_MAX).
 Run inside leads.run: python -m leads.gdelt  ->  data/leads/news.csv
@@ -14,6 +16,8 @@ from .regions import region
 from .dealfit import EMERGING
 
 API = "https://api.gdeltproject.org/api/v2/doc/doc"
+RSS = "https://news.google.com/rss/search"
+RSS_TERMS = "(procurement OR tender OR infrastructure OR \"power plant\" OR pipeline OR refinery OR mining OR fertilizer OR port OR railway OR solar OR desalination OR \"World Bank\" OR financing) when:7d"
 TERMS = ('(procurement OR tender OR "signs contract" OR "awarded" OR infrastructure OR "power plant" OR pipeline OR '
          'refinery OR mining OR fertilizer OR "port" OR "railway" OR "solar" OR "desalination" OR "hospital" OR imports OR exports OR "World Bank" OR "financing")')
 WATCH_MAX = 40
@@ -47,6 +51,33 @@ def watched(prefs=None, tenders=None):
     return ws[:WATCH_MAX]
 
 
+def _rss(s, iso):
+    """Google News RSS: title, link, publisher, date. Returns rows in the GDELT article shape."""
+    import email.utils
+    import xml.etree.ElementTree as ET
+    try:
+        r = s.get(RSS, params={"q": f'"{_name(iso)}" {RSS_TERMS}', "hl": "en-US", "gl": "US", "ceid": "US:en"}, timeout=40)
+        if r.status_code != 200:
+            log.warning("news rss %s: HTTP %s", iso, r.status_code); return []
+        root = ET.fromstring(r.content)
+    except Exception as e:  # noqa: BLE001
+        log.warning("news rss %s: %s", iso, type(e).__name__); return []
+    out = []
+    for it in root.iter("item"):
+        title = (it.findtext("title") or "").strip()
+        src = it.find("source")
+        try:
+            d = email.utils.parsedate_to_datetime(it.findtext("pubDate") or "")
+            seen = d.strftime("%Y%m%d")
+        except (TypeError, ValueError):
+            seen = ""
+        # Google News titles end with " - Publisher"
+        if src is not None and src.text and title.endswith(" - " + src.text):
+            title = title[: -len(src.text) - 3]
+        out.append({"title": title, "url": it.findtext("link") or "", "domain": (src.text if src is not None else "") or "", "seendate": seen, "language": "English"})
+    return out
+
+
 def fetch_country(s, iso):
     CACHE.mkdir(parents=True, exist_ok=True)
     f = CACHE / f"{iso}.json"
@@ -57,12 +88,15 @@ def fetch_country(s, iso):
                 return j["articles"]
         except (ValueError, KeyError):
             pass
-    q = f'"{_name(iso)}" {TERMS} sourcelang:english'
-    try:
-        r = s.get(API, params={"query": q, "mode": "ArtList", "maxrecords": 40, "format": "json", "timespan": "7d", "sort": "DateDesc"}, timeout=40)
-        arts = (r.json() or {}).get("articles") or [] if r.status_code == 200 else []
-    except Exception as e:  # noqa: BLE001
-        log.warning("gdelt %s: %s", iso, type(e).__name__); arts = []
+    arts = _rss(s, iso)
+    if not arts:
+        q = f'"{_name(iso)}" {TERMS} sourcelang:english'
+        try:
+            time.sleep(6)
+            r = s.get(API, params={"query": q, "mode": "ArtList", "maxrecords": 40, "format": "json", "timespan": "7d", "sort": "DateDesc"}, timeout=40)
+            arts = (r.json() or {}).get("articles") or [] if r.status_code == 200 else []
+        except Exception as e:  # noqa: BLE001
+            log.warning("gdelt %s: %s", iso, type(e).__name__); arts = []
     seen, out = set(), []
     for a in arts:
         t = (a.get("title") or "").strip()
