@@ -3,6 +3,7 @@ import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
 import { suppliers as supplierIndex, isClosed, type Supplier } from "@/lib/index";
 import { readRanges } from "@/lib/sheets";
+import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
 
 const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
@@ -110,9 +111,15 @@ const LIVE: Record<string, [string, string]> = {
   pursuits: [LE, "'Pursuits'!A1:V600"], jobs: [LE, "'Panel Jobs'!A1:L800"], contacts: [LE, "'Contacts'!A1:S1500"],
   projects: [LE, "'Projects'!A1:V300"], ptasks: [LE, "'Project Tasks'!A1:L3000"], approvals: [LE, "'Approvals'!A1:M2000"], stats: [SU, "'Stats'!A1:B60"],
 };
+// Live reads from Google Sheets can hang; after LIVE_TIMEOUT_MS the panel uses the encrypted snapshot instead
+// (refreshed by the panel worker), so a page load never waits for the 60 s function limit.
+const LIVE_TIMEOUT_MS = Number(process.env.LIVE_TIMEOUT_MS || 9000);
+function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
+  return Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`${what} timed out after ${ms} ms`)), ms))]);
+}
 async function liveDirect(): Promise<Snap | null> {
   try {
-    return await cached("live-direct", 60_000, async () => {
+    return await withTimeout(cached("live-direct", 60_000, async () => {
       const keys = Object.keys(LIVE), out: Snap = {} as Snap;
       for (const sid of [LE, SU]) {
         const ks = keys.filter((k) => LIVE[k][0] === sid);
@@ -121,7 +128,7 @@ async function liveDirect(): Promise<Snap | null> {
         ks.forEach((k, i) => { out[k] = vals[i]; });
       }
       return out;
-    });
+    }), LIVE_TIMEOUT_MS, "live Sheets read");
   } catch (e) { if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) await logEvent("warn", "sheets", "live read failed, using the encrypted snapshot", String(e).slice(0, 300)); return null; }
 }
 export async function liveSource(): Promise<"sheets" | "snapshot"> { return (await liveDirect()) ? "sheets" : "snapshot"; }
@@ -137,9 +144,18 @@ export async function getRange(key: string): Promise<Grid> {
 
 // Open to foreign bidders by rule: international competitive bidding, development-bank or UN procurement, global tenders.
 export const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender/i;
+// The panel sends the search box as a regex ("\\bword"). Hebrew (or other non-Latin) words are translated to English
+// first, and then every word must appear (any order); the original words still match Hebrew titles.
+async function queryRe(rx: string): Promise<{ test: (s: string) => boolean } | null> {
+  if (!rx || !NON_LATIN.test(rx)) return toRe(rx.toLowerCase());
+  const plain = rx.replace(/\\b/g, " ").replace(/\\(.)/g, "$1").replace(/\s+/g, " ").trim();
+  const en = await toEnglish(plain);
+  const a = allWordsRe(en.text), b = toRe(rx.toLowerCase());
+  return { test: (s: string) => !!(a && a.test(s)) || !!(b && b.test(s)) };
+}
 export async function searchTenders(v: string[][]): Promise<Grid> {
   const g = (r: number, c: number) => String((v[r] || [])[c] ?? "").trim();
-  const re = toRe(g(0, 0).toLowerCase()), cty = g(0, 2), sec = g(1, 0), lo = num(g(1, 2)), reg = g(2, 0), hi = num(g(2, 2)), dec = g(3, 0), md = num(g(4, 0)), intl = g(3, 2) === "intl";
+  const re = await queryRe(g(0, 0)), cty = g(0, 2), sec = g(1, 0), lo = num(g(1, 2)), reg = g(2, 0), hi = num(g(2, 2)), dec = g(3, 0), md = num(g(4, 0)), intl = g(3, 2) === "intl";
   const { head, rows } = await allTenders();
   const he = new Map(((await snapshot("static")).titles || []).slice(1).map((r) => [r[0], r[1] || ""]));
   const out = rows.filter((r) => {
@@ -162,7 +178,7 @@ export async function searchTenders(v: string[][]): Promise<Grid> {
 const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;
 export async function searchSuppliers(v: string[][]): Promise<Grid> {
   const g = (r: number) => String((v[r] || [])[0] ?? "").trim();
-  const re = toRe(g(0).toLowerCase()), reg = g(1), cty = g(2), sec = g(3), minq = num(g(4)), needC = g(5) === "yes", role = g(6);
+  const re = await queryRe(g(0)), reg = g(1), cty = g(2), sec = g(3), minq = num(g(4)), needC = g(5) === "yes", role = g(6);
   const out = (await allSuppliers()).filter((s) =>
     (!reg || s.rg === reg) && (!cty || s.c === cty) && (!sec || s.s === sec || (s.s2 || "").includes(sec)) &&
     (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
@@ -178,13 +194,14 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
 const STOP = new Set(("the and for with from supply supplies delivery services service provision procurement purchase framework " +
   "agreement lot lots various other works contract tender ministry department government county national public office council authority municipality district goods items equipment materials des de la le du et pour del los las para und der die für von zur").split(" "));
 export type SupQuery = { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number;
-  originRegion?: string; originCountry?: string; exportersOnly?: boolean };
+  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean };
 export async function suppliersFor(o: SupQuery): Promise<Grid> {
   return (await supplierSearch(o)).values;
 }
 // The same ranking, plus where the matches come from (origin countries) and how many matched in total.
-export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][] }> {
-  const words = [...new Set(String(o.text || "").toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
+export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string }> {
+  const query = NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || "");
+  const words = [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
     .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
   const res = words.map((w) => new RegExp(`(^|[^\\p{L}])${w}`, "u"));
   const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
@@ -199,6 +216,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     for (const r of res) if (r.test(blob)) hits++;
     const secHit = sec && (s.s === sec ? 3 : (s.s2 || "").includes(sec) ? 1 : 0);
     if (!hits && !(secHit === 3 && !res.length)) continue;
+    // strict (supplier research, profile suppliers): a short product phrase must match as a whole, so "diesel generator"
+    // does not return fuel traders or ozone generators; long tender titles keep the any-word match.
+    if (o.strict && res.length && hits < (res.length <= 3 ? res.length : Math.ceil(res.length * 0.75))) continue;
     let sc = Math.min(8, hits * 2) + (secHit || 0);
     if (ch && (s.hs || "").split(" ").some((h) => h.startsWith(ch))) sc += 2;
     if (s.x) sc += 1;
@@ -211,5 +231,5 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   }
   scored.sort((a, b) => b.sc - a.sc);
   return { values: [SUP_HEAD, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => supRow(x.s))], total: scored.length,
-    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15) };
+    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query };
 }

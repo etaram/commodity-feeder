@@ -13,6 +13,24 @@ FIELDS = "id,project_name,countryshortname,countrycode,status,totalamt,boardappr
 ACCESS = "International (World Bank financed: open to firms from all member countries, Israel included)"
 
 
+# The Bank's own sector (sector1) decides the sector; the title is used only when it maps to nothing.
+WB_SECTOR = [
+    (r"\bhealth", "HEALTH"), (r"irrigation|drainage|\bwater\b|sanitation|flood", "WATER"), (r"waste management|solid waste", "ENV_WASTE"),
+    (r"oil and gas|\bgas\b|petroleum", "ENERGY"), (r"\bmining|mineral", "MINING_METALS"),
+    (r"\bpower|energy|hydropower|renewable|solar|\bwind\b|transmission|electric", "POWER"),
+    (r"\broads?\b|highway|\brail|\bports?\b|waterway|aviation|airport|urban transport|\btransport", "INFRA"),
+    (r"housing|construction", "BUILDING"), (r"\bict\b|information and communication|telecom|digital", "ICT"),
+    (r"agri|\bcrops?\b|livestock|fisher|forestry|agro|\bfood", "AGRI_FOOD"),
+    (r"education|social protection|\bsocial\b|vocational", "SOCIAL"),
+    (r"banking|financ|insurance|public administration|central government|sub-national|government|trade and services|industry", "CONSULTING"),
+]
+
+
+def wb_sector(name):
+    n = (name or "").lower().replace("public administration - ", "")
+    return next((sid for rx, sid in WB_SECTOR if re.search(rx, n)), "")
+
+
 def _amount(v):
     try:
         return int(float(str(v).replace(",", "")))
@@ -54,7 +72,7 @@ def fetch():
                 elif isinstance(s1, str):
                     sec = s1
                 title = f"{name} ({sec})" if sec else name
-                sector, method = classify(title)
+                sector, method = (wb_sector(sec), "World Bank sector") if wb_sector(sec) else classify(name)
                 cc = p.get("countrycode") or p.get("countryshortname") or ""
                 if isinstance(cc, list):
                     cc = cc[0] if cc else ""

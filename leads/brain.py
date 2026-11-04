@@ -58,7 +58,8 @@ class Stats:
     def __init__(self, awards):
         self.bids_cs, self.bids_s = defaultdict(list), defaultdict(list)
         self.foreign = defaultdict(lambda: [0, 0])
-        self.buyer = defaultdict(lambda: {"n": 0, "usd": [], "bids": [], "wins": defaultdict(int), "foreign": 0})
+        self.buyer = defaultdict(lambda: {"n": 0, "usd": [], "bids": [], "wins": defaultdict(int), "foreign": 0,
+                                          "wins_s": defaultdict(lambda: defaultdict(int))})
         self.usd_cs, self.usd_s = defaultdict(list), defaultdict(list)
         for a in awards:
             c, s = _c(a.get("country")), a.get("sector_name") or "Other"
@@ -80,6 +81,7 @@ class Stats:
                 x["bids"].append(b)
             for w in a.get("winners") or []:
                 x["wins"][w] += 1
+                x["wins_s"][s][w] += 1  # per sector: an incumbent must have won this kind of contract
             x["foreign"] += 1 if is_foreign else 0
 
     def est_bidders(self, buyer, country, sector):
@@ -180,7 +182,11 @@ def deal(r, st, trends, prefs=None, edge=None):
     if fr is None:
         fr, fsrc = _access_prior(r.get("access")), "access rules"
     x = st.buyer.get((_norm(r.get("buyer")), _c(country)))
-    inc = "; ".join(w for w, _ in sorted(x["wins"].items(), key=lambda y: -y[1])[:2])[:120] if x and x["wins"] else ""
+    # incumbent = who won THIS buyer's contracts in the same sector (buyer-wide winners, e.g. its IT suppliers, are not
+    # competition for a container tender); INCUMBENT_SCOPE=buyer restores the old buyer-wide rule.
+    import os
+    pool = (x["wins"] if os.environ.get("INCUMBENT_SCOPE") == "buyer" else x["wins_s"].get(sec or "Other", {})) if x else {}
+    inc = "; ".join(w for w, _ in sorted(pool.items(), key=lambda y: -y[1])[:2])[:120] if pool else ""
     text = f"{r.get('title', '')} {r.get('title_en', '')} {r.get('notice_type', '')}"
     fw = bool(FRAMEWORK.search(text))
     pm = PLACES.search(text)

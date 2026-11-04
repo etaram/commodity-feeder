@@ -462,7 +462,7 @@ const L = {
     b_tenders: "Tenders to decide on", b_tenders_s: "Pursue, 7+ days to close", b_deals: "New trade opportunities", b_deals_s: "From the BD agent, last 14 days",
     b_repeat: "Buyers likely to tender soon", b_repeat_s: "From their buying pattern, next 60 days", b_acc: "Key account signals", b_acc_s: "Latest agent check",
     b_comp: "Companies worth a call", b_comp_s: "High-quality suppliers with contact details", b_jobs: "Results ready for you", b_jobs_s: "Finished jobs", all_jobs: "All jobs",
-    k_open: "open tenders in your profile", k_pursue: "marked Pursue", k_bd: "trade opportunities, 14 days", k_sup: "top suppliers loaded", k_jobs: "jobs in progress",
+    k_open: "open tenders in the company profile (For me is your personal one)", k_pursue: "marked Pursue", k_bd: "trade opportunities, 14 days", k_sup: "top suppliers loaded", k_jobs: "jobs in progress",
     e_pursue: "No Pursue tenders with 7+ days left right now. Try the Tenders tab.", e_bd: "The agent has not added opportunities in the last two weeks.",
     e_rep: "No repeat buyers are expected to tender in the next 60 days.", e_acc: "The agent has not found new signals in your key accounts yet.",
     e_comp: "The supplier database is still filling up.", e_jobs_today: "No results yet. Every deep check you start shows up here.",
@@ -473,7 +473,7 @@ const L = {
     buyer: "Buyer", sector: "Sector", est_value: "Estimated value", deadline: "Deadline", access: "Foreign access", ev: "Expected value", win_chance: "win chance", exp_bidders: "expected bidders",
     buyer_hist: "Buyer history", awards_12m: "awards in 12 months", median: "median", incumbent: "incumbent", why: "Why", contact: "Contact", notice: "Notice", open_notice: "Open the original notice",
     not_stated: "not stated", title_en: "English title", title_orig: "Original title",
-    a_quick: "Quick analysis", a_elig: "Full eligibility check", a_sup: "Matching suppliers", a_track: "Track in Pursuits", tracked: "Already tracked",
+    a_quick: "Quick analysis", qa_conflict: "The quick analysis says \"{a}\" while the engine decision is {d}. Treat it as open until the missing facts are checked; the decision stays yours.", a_elig: "Full eligibility check", a_sup: "Matching suppliers", a_track: "Track in Pursuits", tracked: "Already tracked",
     t_note: "Quick analysis uses the data shown here and takes about half a minute. The full eligibility check goes to the worker, which reads the tender documents, fills a Pursuits row and posts the answer in the Jobs tab.",
     thinking: "Thinking...", only_in_claude: "AI features on the web need an Anthropic API key in Vercel. They work now in the panel inside Claude.", sup_for: "Suppliers for: ",
     sup_h: "Matching suppliers from the database", sup_wait: "Searching the whole supplier database...", sup_note_all: "Ranked over the whole database by the tender's product words, sector, HS chapter, export evidence and past sales in this country. Tick suppliers and press \"Draft outreach\" to prepare an RFQ; missing e-mails are looked up from official sources.", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
@@ -485,7 +485,7 @@ const L = {
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
     fired_now: "The worker started now; the answer usually arrives within 5 to 15 minutes.", fired_later: "The worker will pick it up on its next scheduled run (every two hours, 08:13 to 22:13 Israel time).",
     fired_running: "The worker is already running and will pick this job up too.", sent: "Sent to the worker ({id}).", open_jobs: "Open Jobs", added_pursuits: "Added to Pursuits. You can now run a full eligibility check on it.",
-    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", tab_research: "Supplier research", sr_h: "Supplier research", sr_intro: "Type a product to see the proven suppliers (tier 1-2) for it in the whole database, where they come from, and their evidence (public contracts, exports, US customs shipments). Web research finds more producers on request.", sr_ph: "Product: e.g. ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "Any origin region", sr_cty_ph: "Origin: CHN", sr_exp: "Exporters only", sr_go: "Search", sr_need: "Type a product first.", sr_web_only: "Available on the web version.", sr_found: "{n} proven suppliers for \"{q}\"", sr_origins: "Origin countries (click to filter):", sr_all_c: "All countries", sr_none: "No proven supplier matched. Try other words, or run the web research.", sr_web: "Web research for more producers (AI)", sr_web_wait: "Searching the web for producers and exporters (about a minute)...", sr_web_h: "Web research", fm_sups: "Suppliers", fm_sups_note: "{n} proven suppliers match your products ({k}).", fm_sups_more: "Open in supplier research", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With contact details",
+    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", no_dl: "no deadline stated", no_dl_t: "The notice gives no closing date; check the source. Shown even with a minimum-days filter.", tab_research: "Supplier research", sr_h: "Supplier research", sr_intro: "Type a product to see the proven suppliers (tier 1-2) for it in the whole database, where they come from, and their evidence (public contracts, exports, US customs shipments). Web research finds more producers on request.", sr_ph: "Product: e.g. ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "Any origin region", sr_cty_ph: "Origin: CHN", sr_exp: "Exporters only", sr_go: "Search", sr_need: "Type a product first.", sr_web_only: "Available on the web version.", sr_found: "{n} proven suppliers for \"{q}\"", sr_origins: "Origin countries (click to filter):", sr_all_c: "All countries", sr_none: "No proven supplier matched. Try other words, or run the web research.", sr_web: "Web research for more producers (AI)", sr_web_wait: "Searching the web for producers and exporters (about a minute)...", sr_web_h: "Web research", fm_sups: "Suppliers", fm_sups_note: "{n} proven suppliers match your products ({k}).", fm_sups_more: "Open in supplier research", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With a website",
     c_pick: "Pick a company to see what it sells and how to reach it, then run research or outreach.", exporter: "exporter", notable: "notable", contact_p: "contact", trader: "trader", quality: "Quality",
     e_comp_f: "No suppliers match these filters.", e_acc_f: "No accounts match these filters.", tenders_n: "tenders",
     country: "Country", field: "Field", products: "Products", supplied: "Supplied", commodities: "Commodities", won: "Contracts won", wins: "wins", buyers_n: "buyers", in_: "in",
@@ -515,7 +515,7 @@ const L = {
     a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
     est_ptw: "Estimated price to win: {lo} to {mid} (from {src}, about {n} bidders). The worker's price quote checks this against real prices.",
     est_noval: "No budget or award history for this tender, so no price to win yet. Use Price quote to research it.",
-    est_cost: "Supplier cost USD", est_freight: "Freight USD", est_duty: "Duty %", est_other: "Other costs %", est_margin: "Margin %",
+    est_cost: "Supplier cost USD", est_freight: "Freight USD", est_duty: "Duty %", est_other: "Other costs %", est_margin: "Gross margin %", est_profit: "Gross profit", est_mm: "Gross margin {gm}% of the price = markup {mu}% on cost.", est_mbad: "Gross margin must be between 0% and 95%.",
     est_note: "Other costs: insurance, guarantees, financing, FX buffer and contingency (about 7% by default). Duty only if you deliver duty paid.",
     est_maxcost: "To win with this margin, the total supplier cost should stay under about {v}.", est_landed: "Landed cost", est_bid: "Bid price",
     est_ok: "Inside the price to win; you keep about {m}% at the price-to-win level.", est_tight: "Above the price to win at this margin; bidding at the price to win leaves about {m}%.",
@@ -570,7 +570,7 @@ const L = {
     b_tenders: "מכרזים שכדאי להחליט עליהם", b_tenders_s: "Pursue, לפחות 7 ימים לסגירה", b_deals: "הזדמנויות סחר חדשות", b_deals_s: "מסוכן ה-BD, 14 ימים אחרונים",
     b_repeat: "קונים שצפויים לצאת למכרז", b_repeat_s: "לפי דפוס הרכש שלהם, 60 ימים קדימה", b_acc: "אותות מחשבונות מפתח", b_acc_s: "בדיקה אחרונה של הסוכן",
     b_comp: "חברות בולטות לשיחה", b_comp_s: "ספקים באיכות גבוהה עם פרטי קשר", b_jobs: "תוצאות שהוכנו עבורך", b_jobs_s: "משימות שהסתיימו", all_jobs: "כל המשימות",
-    k_open: "מכרזים פתוחים בפרופיל שלך", k_pursue: "בהמלצת Pursue", k_bd: "הזדמנויות סחר ב-14 ימים", k_sup: "ספקים מובילים טעונים", k_jobs: "משימות בעבודה",
+    k_open: "מכרזים פתוחים בפרופיל החברה (\"בשבילי\" הוא הפרופיל האישי שלך)", k_pursue: "בהמלצת Pursue", k_bd: "הזדמנויות סחר ב-14 ימים", k_sup: "ספקים מובילים טעונים", k_jobs: "משימות בעבודה",
     e_pursue: "אין כרגע מכרזי Pursue עם 7 ימים ויותר. נסה את לשונית מכרזים.", e_bd: "הסוכן עדיין לא הוסיף הזדמנויות בשבועיים האחרונים.",
     e_rep: "אין קונים חוזרים שצפויים לצאת למכרז ב-60 הימים הקרובים.", e_acc: "הסוכן עוד לא מצא אותות חדשים בחשבונות המפתח.",
     e_comp: "מאגר הספקים עדיין מתמלא.", e_jobs_today: "עדיין אין תוצאות. כל בדיקה מעמיקה שתפעיל תופיע כאן.",
@@ -581,7 +581,7 @@ const L = {
     buyer: "קונה", sector: "סקטור", est_value: "ערך משוער", deadline: "מועד אחרון", access: "גישה לספק זר", ev: "תוחלת רווח", win_chance: "סיכוי זכייה", exp_bidders: "מציעים צפויים",
     buyer_hist: "היסטוריית הקונה", awards_12m: "זכיות ב-12 חודשים", median: "חציון", incumbent: "ספק נוכחי", why: "למה", contact: "קשר", notice: "הודעה", open_notice: "פתיחת ההודעה המקורית",
     not_stated: "לא צוין", title_en: "כותרת באנגלית", title_orig: "כותרת מקורית",
-    a_quick: "ניתוח מהיר", a_elig: "בדיקת תנאי סף מלאה", a_sup: "ספקים מתאימים", a_track: "הוסף למעקב (Pursuits)", tracked: "כבר במעקב",
+    a_quick: "ניתוח מהיר", qa_conflict: "הניתוח המהיר אומר \"{a}\" בעוד שהחלטת המנוע היא {d}. ראה בזה שאלה פתוחה עד שהעובדות החסרות ייבדקו; ההחלטה שלך.", a_elig: "בדיקת תנאי סף מלאה", a_sup: "ספקים מתאימים", a_track: "הוסף למעקב (Pursuits)", tracked: "כבר במעקב",
     t_note: "ניתוח מהיר מבוסס על הנתונים שכאן ולוקח כחצי דקה. בדיקת תנאי סף מלאה נשלחת לעובד שקורא את מסמכי המכרז, ממלא שורה ב-Pursuits ומחזיר תשובה בלשונית משימות.",
     thinking: "חושב...", only_in_claude: "יכולות AI בגרסת הווב דורשות מפתח Anthropic API ב-Vercel. בפאנל שבתוך Claude הן עובדות כבר עכשיו.", sup_for: "ספקים לפי: ",
     sup_h: "ספקים מתאימים מהמאגר", sup_wait: "מחפש בכל מאגר הספקים...", sup_note_all: "מדורג מתוך כל המאגר לפי מילות המוצר במכרז, סקטור, פרק HS, עדות לייצוא ומכירות קודמות במדינה. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ; מייל חסר יאותר ממקורות רשמיים.", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
@@ -593,7 +593,7 @@ const L = {
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
     fired_now: "העובד הופעל עכשיו, התשובה תגיע בדרך כלל תוך 5 עד 15 דקות.", fired_later: "העובד יאסוף את המשימה בריצה הקבועה הבאה (כל שעתיים, 08:13 עד 22:13).",
     fired_running: "העובד כבר רץ ויאסוף גם את המשימה הזו.", sent: "נשלח לעובד ({id}).", open_jobs: "למשימות", added_pursuits: "נוסף ל-Pursuits. אפשר להפעיל עליו בדיקת תנאי סף מלאה.",
-    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", tab_research: "מחקר ספקים", sr_h: "מחקר ספקים", sr_intro: "הקלד מוצר כדי לראות את הספקים המוכחים (טיר 1-2) עבורו בכל המאגר, מאיפה הם, ומה העדות להם (חוזים ציבוריים, ייצוא, משלוחים במכס האמריקאי). מחקר ברשת מוצא יצרנים נוספים לפי בקשה.", sr_ph: "מוצר: למשל ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "כל אזורי המקור", sr_cty_ph: "מקור: CHN", sr_exp: "יצואנים בלבד", sr_go: "חפש", sr_need: "הקלד קודם מוצר.", sr_web_only: "זמין בגרסת האתר.", sr_found: "{n} ספקים מוכחים עבור \"{q}\"", sr_origins: "מדינות מקור (לחץ לסינון):", sr_all_c: "כל המדינות", sr_none: "לא נמצא ספק מוכח. נסה מילים אחרות, או הרץ מחקר ברשת.", sr_web: "מחקר ברשת ליצרנים נוספים (AI)", sr_web_wait: "מחפש ברשת יצרנים ויצואנים (כדקה)...", sr_web_h: "מחקר ברשת", fm_sups: "ספקים", fm_sups_note: "{n} ספקים מוכחים מתאימים למוצרים שלך ({k}).", fm_sups_more: "פתח במחקר ספקים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם פרטי קשר",
+    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", no_dl: "ללא מועד הגשה", no_dl_t: "ההודעה לא מציינת מועד סגירה; בדוק במקור. מוצג גם כשיש סינון מינימום ימים.", tab_research: "מחקר ספקים", sr_h: "מחקר ספקים", sr_intro: "הקלד מוצר כדי לראות את הספקים המוכחים (טיר 1-2) עבורו בכל המאגר, מאיפה הם, ומה העדות להם (חוזים ציבוריים, ייצוא, משלוחים במכס האמריקאי). מחקר ברשת מוצא יצרנים נוספים לפי בקשה.", sr_ph: "מוצר: למשל ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "כל אזורי המקור", sr_cty_ph: "מקור: CHN", sr_exp: "יצואנים בלבד", sr_go: "חפש", sr_need: "הקלד קודם מוצר.", sr_web_only: "זמין בגרסת האתר.", sr_found: "{n} ספקים מוכחים עבור \"{q}\"", sr_origins: "מדינות מקור (לחץ לסינון):", sr_all_c: "כל המדינות", sr_none: "לא נמצא ספק מוכח. נסה מילים אחרות, או הרץ מחקר ברשת.", sr_web: "מחקר ברשת ליצרנים נוספים (AI)", sr_web_wait: "מחפש ברשת יצרנים ויצואנים (כדקה)...", sr_web_h: "מחקר ברשת", fm_sups: "ספקים", fm_sups_note: "{n} ספקים מוכחים מתאימים למוצרים שלך ({k}).", fm_sups_more: "פתח במחקר ספקים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם אתר",
     c_pick: "בחר חברה כדי לראות מה היא מוכרת, פרטי קשר, ולהפעיל מחקר או פנייה.", exporter: "מייצא", notable: "מוכר", contact_p: "פרטי קשר", trader: "טריידר", quality: "איכות",
     e_comp_f: "אין ספקים שמתאימים לסינון.", e_acc_f: "אין חשבונות שמתאימים לסינון.", tenders_n: "מכרזים",
     country: "מדינה", field: "תחום", products: "מוצרים", supplied: "מה סיפקו", commodities: "סחורות", won: "היקף זכיות", wins: "זכיות", buyers_n: "קונים", in_: "ב-",
@@ -623,7 +623,7 @@ const L = {
     a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
     est_ptw: "מחיר משוער לזכייה: {lo} עד {mid} (לפי {src}, כ-{n} מציעים). הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
     est_noval: "אין תקציב או היסטוריית זכיות למכרז הזה, ולכן עוד אין מחיר לזכייה. לחץ על הצעת מחיר כדי לחקור.",
-    est_cost: "עלות ספק USD", est_freight: "הובלה USD", est_duty: "מכס %", est_other: "עלויות נוספות %", est_margin: "מרווח %",
+    est_cost: "עלות ספק USD", est_freight: "הובלה USD", est_duty: "מכס %", est_other: "עלויות נוספות %", est_margin: "רווח גולמי %", est_profit: "רווח גולמי", est_mm: "רווח גולמי {gm}% ממחיר ההצעה = תוספת (markup) של {mu}% על העלות.", est_mbad: "הרווח הגולמי חייב להיות בין 0% ל-95%.",
     est_note: "עלויות נוספות: ביטוח, ערבויות, מימון, כרית מט\"ח ובלת\"מ (כ-7% כברירת מחדל). מכס רק אם מספקים כולל מכס (DDP).",
     est_maxcost: "כדי לזכות במרווח הזה, עלות הספק הכוללת צריכה להישאר מתחת לכ-{v}.", est_landed: "עלות נחיתה", est_bid: "מחיר הצעה",
     est_ok: "בתוך המחיר לזכייה; במחיר הזכייה נשאר מרווח של כ-{m}%.", est_tight: "מעל המחיר לזכייה במרווח הזה; הצעה במחיר הזכייה משאירה כ-{m}%.",
@@ -865,7 +865,7 @@ const T = () => S.data.tenders || [];
 const SUP = () => S.data.suppliers || [];
 const BD = () => (S.data.bd || []).slice().reverse();
 function decisionPill(d) { return d === "Pursue" ? `<span class="pill good">Pursue</span>` : d === "Watch" ? `<span class="pill warn">Watch</span>` : d ? `<span class="pill">${esc(d)}</span>` : ""; }
-function daysPill(d) { const n = num(d); if (!isFinite(n)) return ""; return `<span class="pill ${n < 7 ? "bad" : n < 15 ? "warn" : "info"}">${n} ${esc(t("days"))}</span>`; }
+function daysPill(d) { const n = num(d); if (!isFinite(n)) return `<span class="pill" title="${esc(t("no_dl_t"))}">${esc(t("no_dl"))}</span>`; return `<span class="pill ${n < 7 ? "bad" : n < 15 ? "warn" : "info"}">${n} ${esc(t("days"))}</span>`; }
 function prioPill(p) { return p === "High" ? `<span class="pill acc">High</span>` : p === "Medium" ? `<span class="pill info">Medium</span>` : p ? `<span class="pill">${esc(p)}</span>` : ""; }
 const supTier = (s, long) => { const tr = String(s.tier || ""); if (!/^[1-4]$/.test(tr)) return ""; return `<span class="pill ${tr === "1" ? "good" : tr === "2" ? "info" : tr === "3" ? "warn" : ""}" title="${esc(s.tier_reason || "")}">${esc(long ? t("st_" + tr) : "T" + tr)}</span>`; };
 const hasContact = s => !!(s.email || s.phone || s.website);
@@ -1074,7 +1074,7 @@ async function tenderAsk(r, kind) {
   const prompt = kind === "sum"
     ? `Write a short brief of this public tender for a busy trader, in ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", under these headings: What is being bought (plain words, main items); Order of magnitude (the estimated value in USD and what that means, for example roughly how many units, tonnes or months of service it buys at typical market prices, labelled as an estimate); Who buys and where (buyer, country, delivery place if known); Timeline (deadline, days left, likely contract period); Competition (expected bidders, incumbent, how open to foreign suppliers); Why it may matter for Sinder (one or two lines). Use only the data below plus general market knowledge, and say when something is not stated. Data: ${data}`
     : `List the threshold (eligibility) conditions a foreign supplier is likely to face in this public tender, in ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", grouped as: Registration and legal (supplier portal registration, local entity, agent or partner, tax and company documents); Financial (minimum turnover, bid security amount as a typical % of value, performance guarantee, audited accounts); Technical and experience (similar contracts in recent years, certificates such as ISO, CE, product registrations); Submission (language, electronic portal, signatures, legalisation); Red flags for a foreign bidder. Base it on the procedure, the country's procurement rules and this buyer's practice; mark every item as expected and to be verified in the tender documents. Data: ${data}`;
-  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#ta-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#ta-out").textContent = text; }
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#ta-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#ta-out").innerHTML = mdHtml(text); }
   catch (e) { $("#ta-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 async function quickTender(r) {
@@ -1086,13 +1086,16 @@ Return exactly these sections (translate the headings into ${outLang()}), each w
 1. What is being bought (one or two lines, plain words)
 2. Likely eligibility and threshold requirements (what this buyer, country and procedure typically require: registration, local agent or entity, bid bond, experience, certificates, language). Say clearly these are expected and must be verified in the documents
 3. Risks and barriers for a foreign supplier
-4. Go / No-go / Need info, with a short reason based on the data
+4. A line starting with exactly "VERDICT: Go", "VERDICT: No-go" or "VERDICT: Need info", then a short reason based on the data. Use Need info when eligibility, scope or competition cannot be judged from the data
 5. What to check now (3 checks)
 6. A final line starting with "KEYWORDS:" and 5 comma-separated English keywords for supplier search
 Tender data (JSON): ${JSON.stringify(pick(r, ["title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "days_left", "access", "notice_type", "source", "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "buyer_median_award_usd", "incumbent", "why"]))}`;
   try {
     const { text } = await sample(prompt, { onText: ({ text }) => { $("#qa").textContent = text; }, cache: { gcTime: 3600000 } });
-    $("#qa").textContent = text.replace(/KEYWORDS:.*$/m, "").trim();
+    $("#qa").innerHTML = mdHtml(text.replace(/KEYWORDS:.*$/m, "").trim());
+    // one recommendation: if the quick analysis disagrees with the engine's decision, say so next to it
+    const v = ((text.match(/VERDICT:\s*(Go|No-go|Need info)/i) || [])[1] || "").toLowerCase(), eng = { Pursue: "go", Watch: "need info", Ignore: "no-go" }[r.decision];
+    if (v && eng && v !== eng) $("#qa").insertAdjacentHTML("beforebegin", `<div class="flash info">${esc(t("qa_conflict", { a: v, d: r.decision }))}</div>`);
     const kw = (text.match(/KEYWORDS:\s*(.*)$/m) || [])[1] || "";
     if (kw) { const b = document.createElement("button"); b.type = "button"; b.textContent = t("sup_for") + kw.slice(0, 60); b.style.marginTop = "8px"; b.onclick = () => showSuppliers(r.sector, kw + " " + r.title_en, "#t-out", { kind: "tender", r }); $("#qa").after(b); }
   } catch (e) { $("#qa").textContent = (e.text || "") + "\n" + sampleErr(e); }
@@ -1178,7 +1181,7 @@ function renderResearch() {
       const known = SR.rows.slice(0, 15).map(s => `${s.supplier} (${s.country})`).join("; ");
       const r = await window.DD_INSTANT({ id: "R" + Date.now().toString(36).toUpperCase(), type: "supplier_search", target_id: "SR:" + SR.q.toLowerCase().slice(0, 80), target: SR.q,
         context: { product: SR.q, origin_region: $("#sr-reg").value, origin_country: oc, already_in_database: known }, request: "Find producers and exporters of this product that are not in the list already_in_database. Say which origins are usually cheapest.", lang: LANG });
-      $("#sr-act").innerHTML = `<div class="section"><h3>${esc(t("sr_web_h"))}</h3><div class="note" style="white-space:pre-wrap">${linkify(r.text || "")}</div></div>`;
+      $("#sr-act").innerHTML = `<div class="section"><h3>${esc(t("sr_web_h"))}</h3><div class="result" dir="auto">${mdHtml(r.text || "")}</div></div>`;
     } catch (err) { $("#sr-act").innerHTML = `<div class="flash err">${esc(errText(err))}</div>`; }
     b.disabled = false;
   };
@@ -1292,7 +1295,7 @@ async function queueJob(job, btn, outSel) {
     try {
       const r = await window.DD_INSTANT({ id, type: job.type, target_id: rec.target_id, target: job.target, context: job.context || {}, request: job.request || "", lang: LANG });
       Object.assign(rec, { status: "done", result: r.text, result_link: r.link || "", updated: r.updated || nowStamp() });
-      if (!hasCard) box.innerHTML = `<div class="card"><h3>${esc(t("jt_" + job.type))}</h3><div class="result" dir="auto">${linkify(r.text)}</div></div>`;
+      if (!hasCard) box.innerHTML = `<div class="card"><h3>${esc(t("jt_" + job.type))}</h3><div class="result" dir="auto">${mdHtml(r.text)}</div></div>`;
     } catch (e) {
       Object.assign(rec, { status: "error", notes: e.message || "" });
       if (!hasCard) box.innerHTML = `<div class="flash err">${esc(t("more_err"))} ${esc(e.message || "")}</div>`;
@@ -1362,15 +1365,24 @@ function estimateHtml(r) {
     </div>
     <div id="e-out" class="note"></div><p class="note">${esc(t("est_note"))}</p></div>`;
 }
+/* Economics, kept as plain functions so they can be tested:
+   markup = (price - cost) / cost; gross margin = (price - cost) / price; price at gross margin m = cost / (1 - m). */
+const ECON = {
+  landed: (cost, freight, duty, other) => (cost + freight) * (1 + duty) * (1 + other),
+  priceAtMargin: (cost, m) => (m >= 0 && m < 0.95 ? cost / (1 - m) : NaN),
+  markup: (price, cost) => (cost > 0 ? (price - cost) / cost : NaN),
+  margin: (price, cost) => (price > 0 ? (price - cost) / price : NaN),
+};
 function wireEstimate(r) {
   const p = ptw(r), ids = ["#e-cost", "#e-fr", "#e-duty", "#e-oth", "#e-m"];
   const calc = () => {
     const c = num($("#e-cost").value), fr = num($("#e-fr").value) || 0, du = (num($("#e-duty").value) || 0) / 100, ot = (num($("#e-oth").value) || 0) / 100, m = (num($("#e-m").value) || 0) / 100;
-    if (!isFinite(c) || c <= 0) { $("#e-out").innerHTML = p ? esc(t("est_maxcost", { v: money(p.mid / (1 + m) / (1 + ot)) })) : ""; return; }
-    const landed = (c + fr) * (1 + du) * (1 + ot), bid = landed * (1 + m);
+    if (!(m >= 0 && m < 0.95)) { $("#e-out").innerHTML = esc(t("est_mbad")); return; }
+    if (!isFinite(c) || c <= 0) { $("#e-out").innerHTML = p ? esc(t("est_maxcost", { v: money(p.mid * (1 - m) / (1 + ot) / (1 + du)) })) : ""; return; }
+    const landed = ECON.landed(c, fr, du, ot), bid = ECON.priceAtMargin(landed, m), profit = bid - landed;
     let verdict = "";
-    if (p) { const realM = p.mid / landed - 1; verdict = bid <= p.mid ? t("est_ok", { m: (realM * 100).toFixed(1) }) : realM > 0.02 ? t("est_tight", { m: (realM * 100).toFixed(1) }) : t("est_no", { v: money(landed - p.mid / 1.02) }); }
-    $("#e-out").innerHTML = `<b>${esc(t("est_landed"))}</b> <span class="num">${money(landed)}</span> · <b>${esc(t("est_bid"))}</b> <span class="num">${money(bid)}</span>${verdict ? `<br>${esc(verdict)}` : ""}`;
+    if (p) { const gm = ECON.margin(p.mid, landed); verdict = bid <= p.mid ? t("est_ok", { m: (gm * 100).toFixed(1) }) : gm > 0.02 ? t("est_tight", { m: (gm * 100).toFixed(1) }) : t("est_no", { v: money(landed - p.mid * 0.98) }); }
+    $("#e-out").innerHTML = `<b>${esc(t("est_landed"))}</b> <span class="num">${money(landed)}</span> · <b>${esc(t("est_bid"))}</b> <span class="num">${money(bid)}</span> · <b>${esc(t("est_profit"))}</b> <span class="num">${money(profit)}</span><br><span class="muted">${esc(t("est_mm", { gm: (ECON.margin(bid, landed) * 100).toFixed(1), mu: (ECON.markup(bid, landed) * 100).toFixed(1) }))}</span>${verdict ? `<br>${esc(verdict)}` : ""}`;
   };
   ids.forEach(i => $(i)?.addEventListener("input", calc)); calc();
 }
@@ -1415,11 +1427,20 @@ function clearNL(key) {
 /* ---------- "More info": a research job whose answer appears inside the item's own card ---------- */
 const latestJob = tid => (S.data.jobs || []).filter(j => j.target_id === tid).sort((a, b) => String(b.created).localeCompare(String(a.created)))[0];
 const linkify = x => esc(x).replace(/https?:\/\/[^\s<)"]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
+/* AI answers come as Markdown: show them as readable text (headings, bold, bullets, links, simple tables), never raw
+   Markdown or JSON. Escapes first, so model output cannot inject HTML. Containers keep white-space: pre-wrap. */
+const mdHtml = x => linkify(String(x ?? "").replace(/```[a-z]*\n?/gi, "").trim())
+  .replace(/^#{1,6}\s*(.+)$/gm, "<b>$1</b>")
+  .replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>")
+  .replace(/^\s*[-*]\s+/gm, "• ")
+  .replace(/^\|?\s*:?-{3,}.*$/gm, "")
+  .replace(/^\|(.+)\|\s*$/gm, (m, row) => row.split("|").map(c => c.trim()).join("  ·  "))
+  .replace(/\n{3,}/g, "\n\n");
 function cardHtml(tid) {
   const j = latestJob(tid); if (!j) return "";
   if (j.status === "queued" || j.status === "running") return `<div class="card"><b>${esc(t({ logistics: "a_log", quote: "a_quote", eligibility: "a_elig", company_intel: "c_intel" }[j.type] || "more_info"))}</b> <span class="spin"></span> ${esc(t("more_wait"))}<div class="note">${esc(t(window.DD_INSTANT ? "instant_wait" : "more_note"))}</div></div>`;
   if (j.status === "error") return `<div class="card"><b>${esc(t("more_err"))}</b> ${esc(j.notes || "")}</div>`;
-  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote", company_intel: "c_intel" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${linkify(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
+  if (j.status === "done") return `<div class="card"><h3>${esc(t({ logistics: "a_log", quote: "a_quote", company_intel: "c_intel" }[j.type] || "more_done"))} <span class="sub num">${esc(j.updated)}</span></h3><div class="result" dir="auto">${mdHtml(j.result)}</div>${j.result_link ? link(j.result_link, t("link")) : ""}</div>`;
   return "";
 }
 function renderCards() { document.querySelectorAll("[data-jobcard]").forEach(el => { el.innerHTML = cardHtml(el.dataset.jobcard); }); }
@@ -1547,7 +1568,7 @@ async function quickCompany(s) {
   if (!sample) { out.innerHTML = `<div class="flash err">${esc(t("only_in_claude"))}</div>`; return; }
   out.innerHTML = `<div class="section"><h3>${esc(t("c_quick"))}</h3><div class="ai" dir="auto" id="cq-out"><span class="spin"></span> ${esc(t("thinking"))}</div><p class="note">${esc(t("quick_note"))}</p></div>`;
   const prompt = `In ${outLang()}, concise lines starting with "- ", no emojis, no em-dashes. From the data below about a company in Sinder's supplier database, explain: what it most likely makes or supplies, how strong the evidence is (public contract wins, values, buyers, exports), which kinds of Sinder deals it fits (as a supplier for which tenders or buyers), and what to ask in a first call. Say what is unknown. Data: ${JSON.stringify(pick(s, ["supplier", "country", "region", "main_sector", "other_sectors", "type", "logistics_role", "products", "web_title", "supplied", "commodities", "wins", "won_usd_est", "buyers", "buyer_countries", "exports", "first_win", "last_win", "website", "sources", "industries", "employees", "example_award"]))}`;
-  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#cq-out").textContent = text; }, modelTier: "quick", cache: { gcTime: 3600000 } }); $("#cq-out").textContent = text; }
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#cq-out").textContent = text; }, modelTier: "quick", cache: { gcTime: 3600000 } }); $("#cq-out").innerHTML = mdHtml(text); }
   catch (e) { $("#cq-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 
@@ -1591,7 +1612,7 @@ async function quickDeal(mode, r) {
   out.innerHTML = `<div class="section"><h3>${esc(t("a_quick"))}</h3><div class="ai" dir="auto" id="dq-out"><span class="spin"></span> ${esc(t("thinking"))}</div></div>`;
   const kind = mode === "bd" ? "a trade opportunity found by the BD research agent" : mode === "rep" ? "a public buyer that buys the same goods repeatedly (from award history) and is expected to tender again" : "an import market signal (customs data: import value, growth, unit price vs a world benchmark price)";
   const prompt = `You are Sinder's deal strategist (Israeli international procurement and commodity trading firm that connects global manufacturers with buyers). This is ${kind}. In ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", under these headings: 1. What the deal is (who buys what, roughly how much) 2. Why it can make money (price gap, demand growth, weak competition, timing), with the numbers from the data 3. Realistic economics (deal size, likely gross margin range for this kind of trade, cash and guarantees needed) 4. Main risks 5. The 3 next steps for Sinder this week. Say clearly what is an estimate. Data (JSON): ${JSON.stringify(r).slice(0, 6000)}`;
-  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#dq-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#dq-out").textContent = text; }
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#dq-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#dq-out").innerHTML = mdHtml(text); }
   catch (e) { $("#dq-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 function gotoDeal(mode, r) { S.dealMode = mode; setSeg(); go("deals"); renderDeals(); openDeal(mode, r); }
@@ -1869,7 +1890,7 @@ async function renderForMeSuppliers(box) {
   const p = S.prof || {}, kw = (p.keywords || []).join(" ");
   if (!FM.supData) {
     box.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("sup_wait"))}</div>`;
-    try { const j = await window.DD_SUPSEARCH({ text: kw, sector: (p.sectors || [])[0] || "", region: (p.regions || [])[0] || "", n: 40 }); FM.supData = { rows: toObjects(j.values || []), total: j.total || 0, kw }; }
+    try { const j = await window.DD_SUPSEARCH({ text: kw, sector: (p.sectors || [])[0] || "", region: (p.regions || [])[0] || "", n: 40, strict: false }); FM.supData = { rows: toObjects(j.values || []), total: j.total || 0, kw }; }
     catch (e) { box.innerHTML = `<div class="empty">${esc(errText(e))}</div>`; return; }
   }
   const d = FM.supData;
@@ -1932,7 +1953,7 @@ function renderJobs(openId) {
   const el = $("#jlist");
   if (!jobs.length) { el.innerHTML = `<div class="empty" style="padding:14px">${esc(S.err.jobs ? errText(S.err.jobs, SHEETS) : t("e_jobs"))}</div>`; return; }
   el.innerHTML = jobs.map(j => `<div class="row" style="cursor:default">${statusPill(j.status)}<div style="min-width:0"><div class="t">${esc(t("jt_" + j.type))}: ${txt(j.target)}</div><div class="sub num">${esc(j.job_id)} · ${esc(j.created)}</div>
-    ${j.result ? `<details ${j.job_id === openId ? "open" : ""}><summary class="sub" style="cursor:pointer">${esc(t("result"))}</summary><div class="result" dir="auto">${esc(j.result)}</div>${j.result_link ? `<div style="margin-top:6px">${link(j.result_link, t("link"))}</div>` : ""}</details>` : ""}${j.notes && j.status === "error" ? `<div class="sub">${esc(j.notes)}</div>` : ""}</div>
+    ${j.result ? `<details ${j.job_id === openId ? "open" : ""}><summary class="sub" style="cursor:pointer">${esc(t("result"))}</summary><div class="result" dir="auto">${mdHtml(j.result)}</div>${j.result_link ? `<div style="margin-top:6px">${link(j.result_link, t("link"))}</div>` : ""}</details>` : ""}${j.notes && j.status === "error" ? `<div class="sub">${esc(j.notes)}</div>` : ""}</div>
     <div class="right"><span class="sub num">${esc(j.updated)}</span></div></div>`).join("");
 }
 

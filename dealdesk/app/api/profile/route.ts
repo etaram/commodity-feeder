@@ -3,6 +3,7 @@ import { gate } from "@/lib/gate";
 import { cleanProfile, getProfile, saveProfile } from "@/lib/profiles";
 import { facets, inferSectors, matches } from "@/lib/match";
 import { logActivity } from "@/lib/activity";
+import { NON_LATIN, toEnglish } from "@/lib/qtranslate";
 
 // The signed-in user's own profile. GET ?facets=1 also returns what can be picked in the form, and a preview count.
 export async function GET(req: NextRequest) {
@@ -32,6 +33,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, profile: prev });
   }
   const p = cleanProfile(b.profile || {}, prev);
+  // Hebrew (non-Latin) products are matched through their English translation; the original words are kept too.
+  if (p.keywords.some((k) => NON_LATIN.test(k))) {
+    const out: string[] = [];
+    for (const k of p.keywords) {
+      if (NON_LATIN.test(k)) { const en = await toEnglish(k); if (en.text && !NON_LATIN.test(en.text)) out.push(en.text.toLowerCase()); }
+      out.push(k);
+    }
+    p.keywords = [...new Set(out)].slice(0, 30);
+  }
   // Quick onboarding sends only what the user typed: the sectors are worked out from it.
   if (b.inferSectors) p.sectors = await inferSectors(p.keywords);
   if (b.preview) {

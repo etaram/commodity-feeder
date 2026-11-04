@@ -93,7 +93,32 @@ def logistics_role(text):
 FREE_MAIL = re.compile(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|ukr|i\.ua|meta\.ua|bigmir|"
                        r"web\.de|orange|free|laposte|wanadoo|libero|terra|uol|bol|ig|rediffmail|qq|163|126|sina|naver|"
                        r"hanmail|proton|zoho|seznam|wp\.pl|o2|interia|abv|btinternet|sky|comcast|verizon|att|"
-                       r"sbcglobal|prodigy|telkomsa|mweb|iafrica|vodamail)\b", re.I)
+                       r"sbcglobal|prodigy|telkomsa|mweb|iafrica|vodamail|pec|legalmail|arubapec|postacert|pecimprese|cert\.legalmail|"
+                       r"pec\.it|ticertifica|sicurezzapostale|gigapec|registerpec|t-online|mail\.ru|bk\.ru|list\.ru|inbox)\b", re.I)
+GENERIC_SITE = re.compile(r"\b(pec\.it|legalmail\.it|arubapec\.it|postacert|gov\.|\.gov\b|europa\.eu|ted\.|linkedin\.|facebook\.|"
+                          r"google\.|wikipedia\.|yellowpages|kompass|dnb\.com|bloomberg\.|zoominfo)", re.I)
+
+
+def _fold(s):
+    import unicodedata
+    return "".join(c for c in unicodedata.normalize("NFKD", str(s or "").lower()) if not unicodedata.combining(c))
+
+
+def domain_matches(name, url):
+    """True when the web domain plausibly belongs to the company: a word of the name (4+ letters, or its first 4)
+    or the initials of the name appear in the domain. Rejects certified-mail and generic domains (pec.it,
+    government or directory sites), so a buyer's or a mail provider's domain is not shown as the company's site."""
+    host = re.sub(r"^https?://", "", _fold(url)).split("/")[0].removeprefix("www.")
+    if not host or GENERIC_SITE.search(host):
+        return False
+    label = re.sub(r"[^a-z0-9]", "", ".".join(host.split(".")[:-1]) or host)
+    words = [w for w in re.split(r"[^a-z0-9]+", _fold(norm(name))) if len(w) >= 3]
+    if not words or not label:
+        return False
+    if any((len(w) >= 4 and (w in label or w[:4] in label)) or (len(w) == 3 and label.startswith(w)) for w in words):
+        return True
+    initials = "".join(w[0] for w in words)
+    return len(initials) >= 2 and label.startswith(initials)
 
 
 def _research_rows():
@@ -395,10 +420,15 @@ def build():
         name = max(x["names"].items(), key=lambda y: y[1])[0]
         wp = web.get(f"{name[:120]}|{wc}") or {}
         site_src = "registry/notice" if x["website"] else ""
+        if x["website"] and not domain_matches(name, x["website"]):
+            x["website"], site_src = "", ""  # a notice's website that is not the company's own (buyer, mail provider)
         if not x["website"] and wp.get("website"):
-            x["website"] = wp["website"]; site_src = "found (name verified)" if wp.get("discovered") else "e-mail domain"
+            if wp.get("discovered") or domain_matches(name, wp["website"]):
+                x["website"] = wp["website"]; site_src = "found (name verified)" if wp.get("discovered") else "e-mail domain (name matches)"
         elif not x["website"] and x["email"] and "@" in x["email"] and not FREE_MAIL.search(x["email"]):
-            x["website"] = "http://" + x["email"].split(";")[0].strip().split("@")[1] + "/"; site_src = "e-mail domain"
+            dom = "http://" + x["email"].split(";")[0].strip().split("@")[1] + "/"
+            if domain_matches(name, dom):
+                x["website"] = dom; site_src = "e-mail domain (name matches)"
         if not x["email"] and wp.get("email"):
             x["email"] = wp["email"]
         if not x["phone"] and wp.get("phone"):
