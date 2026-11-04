@@ -4,7 +4,7 @@
    the Documents & Reports API). A new or updated plan means packages are about to be tendered, months before
    the notices. We keep the latest plan per project (date, country, title, PDF link); the packages inside the PDF
    are read on request in the panel (AI, by click), never here.
-2. Contract awards (Finances One dataset DS00005, CC BY 4.0): who won what, where, for how much, with the
+2. Contract awards (Finances One view DS01154 of dataset DS00005, all regions, CC BY 4.0): who won what, where, for how much, with the
    supplier's country. A repeat winner of Bank-financed supply contracts in a region is a customer for sourcing.
 
 Outputs: data/leads/wb_plans.csv, data/leads/wb_awards.csv.  Run inside leads.run: python -m leads.wb_plans
@@ -59,7 +59,7 @@ def awards(s):
         skip = 0
         while skip < 20000:
             try:
-                r = s.get(AWARDS, params={"viewId": "DS00005", "top": 1000, "skip": skip, "type": "json", "filter": f"fiscal_year={fiscal}"}, timeout=120)
+                r = s.get(AWARDS, params={"viewId": "DS01154", "top": 1000, "skip": skip, "type": "json", "filter": f"fiscal_year={fiscal}"}, timeout=120)
                 j = r.json()
             except Exception as e:  # noqa: BLE001
                 log.warning("wb awards fy%s skip %d: %s", fiscal, skip, type(e).__name__); break
@@ -67,11 +67,11 @@ def awards(s):
             if not rows:
                 break
             for a in rows:
-                out.append({"fiscal_year": a.get("fiscal_year", ""), "country": iso3(str(a.get("borrower_country") or "")) or (a.get("borrower_country_code") or "")[:3],
+                out.append({"fiscal_year": a.get("fiscal_year", ""), "country": iso3(str(a.get("borrower_country") or "").split(",")[0]) or "",
                             "project_id": a.get("project_id", ""), "project": (a.get("project_name") or "")[:120], "category": a.get("procurement_category", ""),
                             "method": a.get("procurement_method", ""), "practice": a.get("project_global_practice", ""), "description": (a.get("contract_description") or "")[:200],
                             "signed": (a.get("contract_signing_date") or "")[:10], "supplier": (a.get("supplier") or "")[:120],
-                            "supplier_country": iso3(str(a.get("supplier_country") or "")) or (a.get("supplier_country_code") or "")[:3],
+                            "supplier_country": iso3(str(a.get("supplier_country") or "").split(",")[0]) or "",
                             "usd": a.get("supplier_contract_amount_usd", "")})
             if len(rows) < 1000:
                 break
