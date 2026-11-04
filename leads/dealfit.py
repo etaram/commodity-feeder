@@ -211,6 +211,8 @@ def fit(r, prefs=None, sup=None):
     if w <= 0:
         return 0, "hidden by profile weight", ""
     pts *= w ** 0.5
+    if usd is None:
+        pts = min(pts, 72)  # an unpriced notice never outranks a priced deal of substance
     score = max(0, min(100, round(pts, 1)))
     return score, "; ".join(why)[:240], "; ".join(flags)[:240]
 

@@ -504,6 +504,10 @@ def write_sheet_chunks(tenders):
     for i in range(CHUNKS):
         write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
     write("tenders.csv", rows[:CHUNK], SHEET_COLS)
+    # the brain's explanations travel beside the chunks (the Tenders tab layout stays fixed; the web index reads this)
+    write("fit.csv", [{"id": r.get("id", ""), "fit_why": (r.get("fit_why") or "")[:160], "fit_flags": (r.get("fit_flags") or "")[:160],
+                             "route": r.get("route") or "", "base_score": r.get("base_score", "")} for r in tenders if r.get("id")],
+          ["id", "fit_why", "fit_flags", "route", "base_score"])
 
 
 def write_accounts(tenders, buyers):

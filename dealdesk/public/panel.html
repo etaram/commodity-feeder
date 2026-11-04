@@ -278,10 +278,12 @@ html[dir="rtl"]:not([data-ui="classic"]) .row[aria-current="true"]{box-shadow:in
 :root:not([data-ui="classic"]) #tdetail:has(ol.ts) > *{order:10}
 :root:not([data-ui="classic"]) #tdetail:has(ol.ts) > :first-child,:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > h2{order:0}
 :root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .ts-sum{order:1}
-:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > ol.ts{order:2}
-:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > #t-out,:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > [data-jobcard],:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > [id$="-flash"]{order:3}
-:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .section{order:4}
-:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .kv{order:6;border-top:1px solid var(--line);padding-top:12px}
+/* first the tender itself (facts, why it ranks, project card), then the guided actions */
+:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .kv{order:2;border-top:0;padding-top:0}
+:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .fitwhy,:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .ps,:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > #know-line{order:3}
+:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > ol.ts{order:5;border-top:1px solid var(--line);padding-top:12px;margin-top:8px}
+:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > #t-out,:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > [data-jobcard],:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > [id$="-flash"]{order:6}
+:root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .section:not(.fitwhy):not(.ps){order:8}
 :root:not([data-ui="classic"]) #tdetail:has(ol.ts) > .note{order:7}
 /* one prominent action: share buttons stay secondary */
 :root:not([data-ui="classic"]) ol.ts button:not(.primary){background:var(--panel);color:var(--ink);border-color:var(--ctl)}

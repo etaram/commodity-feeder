@@ -42,6 +42,11 @@ def tenders():
     if gv.exists():
         for r in csv.DictReader(open(gv, encoding="utf-8")):
             gov[r["country"]] = (r["integrity_score"], r["flag"])
+    fit = {}
+    fc = LEADS / "fit.csv"
+    if fc.exists():
+        for r in csv.DictReader(open(fc, encoding="utf-8")):
+            fit[r["id"]] = r
     deal = {}
     dc = LEADS / "deal_calc.csv"
     if dc.exists():
@@ -60,7 +65,7 @@ def tenders():
             "d": r.get("decision", ""), "ev": _f(d.get("priority_ev_usd") or r.get("ev_usd")), "sc": _f(r.get("score")),
             "src": r.get("source", ""), "st": r.get("stage", ""), "l": r.get("link", ""), "n": 1 if r.get("new") else 0,
             "acc": "set-aside" if "set-aside" in acc else "intl" if INTL.search(acc) else "",
-            "rt": d.get("route", "") or r.get("route", ""), "fw": (r.get("fit_why") or "")[:160], "ff": (r.get("fit_flags") or "")[:160],
+            "rt": d.get("route", "") or fit.get(r["id"], {}).get("route", ""), "fw": (fit.get(r["id"], {}).get("fit_why") or "")[:160], "ff": (fit.get(r["id"], {}).get("fit_flags") or "")[:160],
             "ig": _f(gov.get(r.get("country", ""), ("", ""))[0]), "if": gov.get(r.get("country", ""), ("", ""))[1],
         })
     OUT.mkdir(parents=True, exist_ok=True)
