@@ -1,13 +1,34 @@
-INFO:leads:attention: 20 rows (0 trending, 20 wikipedia)
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Urea', 'value': 885, 'chg_30d_pct': -7.8, 'note': 'peak day 1175', 'url': 'https://en.wikipedia.org/wiki/Urea'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Wheat', 'value': 918, 'chg_30d_pct': -15.4, 'note': 'peak day 1186', 'url': 'https://en.wikipedia.org/wiki/Wheat'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Maize', 'value': 1601, 'chg_30d_pct': -12.6, 'note': 'peak day 1805', 'url': 'https://en.wikipedia.org/wiki/Maize'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Rice', 'value': 1054, 'chg_30d_pct': -7.2, 'note': 'peak day 1296', 'url': 'https://en.wikipedia.org/wiki/Rice'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Sugar', 'value': 980, 'chg_30d_pct': -0.1, 'note': 'peak day 1124', 'url': 'https://en.wikipedia.org/wiki/Sugar'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Palm oil', 'value': 648, 'chg_30d_pct': 0.4, 'note': 'peak day 914', 'url': 'https://en.wikipedia.org/wiki/Palm_oil'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Sunflower oil', 'value': 150, 'chg_30d_pct': -11.3, 'note': 'peak day 174', 'url': 'https://en.wikipedia.org/wiki/Sunflower_oil'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Fertilizer', 'value': 296, 'chg_30d_pct': -20.8, 'note': 'peak day 387', 'url': 'https://en.wikipedia.org/wiki/Fertilizer'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Steel', 'value': 1044, 'chg_30d_pct': -8.4, 'note': 'peak day 1238', 'url': 'https://en.wikipedia.org/wiki/Steel'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Rebar', 'value': 279, 'chg_30d_pct': -8.3, 'note': 'peak day 388', 'url': 'https://en.wikipedia.org/wiki/Rebar'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Solar panel', 'value': 531, 'chg_30d_pct': 0.3, 'note': 'peak day 822', 'url': 'https://en.wikipedia.org/wiki/Solar_panel'}
-{'kind': 'wikipedia attention', 'country': '', 'term': 'Transformer', 'value': 644, 'chg_30d_pct': -15.2, 'note': 'peak day 1001', 'url': 'https://en.wikipedia.org/wiki/Transformer'}
+WARNING:leads:reddit r/supplychain: HTTP 403
+WARNING:leads:reddit r/logistics: HTTP 403
+WARNING:leads:reddit r/Commodities: HTTP 403
+WARNING:leads:reddit r/energy: HTTP 403
+WARNING:leads:reddit r/geopolitics: HTTP 403
+WARNING:leads:reddit r/africa: HTTP 403
+WARNING:leads:reddit r/Kenya: HTTP 403
+WARNING:leads:reddit r/Nigeria: HTTP 403
+WARNING:leads:reddit r/Ethiopia: HTTP 403
+WARNING:leads:reddit r/Ghana: HTTP 403
+WARNING:leads:reddit r/southafrica: HTTP 403
+WARNING:leads:reddit r/Egypt: HTTP 403
+WARNING:leads:reddit r/saudiarabia: HTTP 403
+WARNING:leads:reddit r/dubai: HTTP 403
+WARNING:leads:reddit r/india: HTTP 403
+WARNING:leads:reddit r/Pakistan: HTTP 403
+WARNING:leads:reddit r/vietnam: HTTP 403
+WARNING:leads:reddit r/Philippines: HTTP 403
+WARNING:leads:reddit r/Israel: HTTP 403
+WARNING:leads:reddit r/manufacturing: HTTP 403
+WARNING:leads:reddit r/procurement: HTTP 403
+WARNING:leads:reddit r/mining: HTTP 403
+WARNING:leads:reddit r/solar: HTTP 403
+INFO:leads:social: 15 items (0 reddit, 15 hn, 0 telegram)
+2026-11-04 Hacker News (29 points) | Adding Window Functions to a Spreadsheet
+2026-11-04 Hacker News (35 points) | Show HN: I built a tool that prices a prebuilt PC part by part
+2026-11-04 Hacker News (367 points) | North Korean fake job interview led to $6.3B Binance heist
+2026-11-04 Hacker News (478 points) | Tell HN: Gemini trains on chat history, even for subscribers (personal accounts)
+2026-11-03 Hacker News (83 points) | Getting hit with "Prove you are a human" at every other website
+2026-11-03 Hacker News (162 points) | Gitbook Breached
+2026-11-03 Hacker News (510 points) | OpenAI seems to be silently re-enabling model training on Codex chats
+2026-11-03 Hacker News (1009 points) | The 'Astra can read and write weights to improve Qwen' post is misleading
+2026-11-02 Hacker News (2938 points) | Astra can read and write weights to improve Qwen
+2026-11-02 Hacker News (36 points) | I Read the Clankers' Code
