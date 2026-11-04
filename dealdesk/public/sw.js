@@ -1,6 +1,6 @@
 // Sinder Deal Desk service worker: fast start, push notifications. Data is never cached (the API answers live or
 // from the server's own snapshot); only the shell, the shim, brand files and fonts are kept for an instant open.
-const SHELL = "sinder-shell-v1";
+const SHELL = "sinder-shell-v2";  // v1 kept a stale panel-shim.js forever; bumping the name clears it
 const STATIC = ["/panel-shim.js", "/brand/mark.svg", "/brand/mark-512.png", "/manifest.webmanifest"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(SHELL).then((c) => c.addAll(STATIC)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== SHELL).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -12,7 +12,12 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(fetch(e.request).then((r) => { const c = r.clone(); caches.open(SHELL).then((k) => k.put("/", c)); return r; }).catch(() => caches.match("/")));
     return;
   }
-  if (STATIC.includes(u.pathname) || u.pathname.startsWith("/brand/")) {
+  // the shim and the manifest change with every release: network first, the cached copy only when offline
+  if (u.pathname === "/panel-shim.js" || u.pathname === "/manifest.webmanifest") {
+    e.respondWith(fetch(e.request, { cache: "no-store" }).then((r) => { const c = r.clone(); caches.open(SHELL).then((k) => k.put(e.request, c)); return r; }).catch(() => caches.match(e.request)));
+    return;
+  }
+  if (u.pathname.startsWith("/brand/")) {
     e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request).then((r) => { const c = r.clone(); caches.open(SHELL).then((k) => k.put(e.request, c)); return r; })));
   }
 });
