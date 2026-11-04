@@ -190,3 +190,26 @@ how information becomes a deal; a competitive edge at low cost. See dealdesk/BRA
   to restore it fully; the sheet formula AC can be restored from the log of 2026-11-04 (weights x score, capped 100).
 - Pending: first live leads run with the new score; owner's marks for calibration; IFI procurement plans, LEI groups,
   exchange filings, freight and FX indexes (BRAIN.md "next").
+
+## Slice 14: context and reach (2026-11-04, late evening)
+
+- World briefing feed `leads/briefing.py`: Google News RSS topic queries (trade policy, shipping, commodities, geopolitics,
+  regional infrastructure x6, Israel trade, China outbound) plus the owner's own feeds (sheet tab Briefing Sources:
+  podcasts, newsletters, YouTube channels, expert blogs; kind "company" watches a company by name). Items tagged with
+  countries, commodity group and signal type; "news leads" (company + build/award verb) become plays. Test: 645 items,
+  16 news leads in 48 h.
+- Daily world brief `/api/panel/brief` (lib/brief.ts): one Haiku call a day, cached in the hidden tab Briefs, Hebrew or
+  English, every line cites a numbered source, no outside knowledge; a button on Today builds it when missing.
+- World Bank `leads/wb_plans.py`: procurement plans from the Documents API (1,118 projects with a plan in 90 days, PDF
+  links) -> "procurement plan published" plays and a country-page section; "Read the plan (AI)" lists the packages on
+  click (web_fetch, on demand). IPF contract awards from Finances One view DS01154 (147,872 rows, FY filter works;
+  the first run used the wrong view id and got 0 rows, fixed for the next run) -> country-page WB winners.
+- GLEIF LEI `leads/lei.py`: ultimate parents for repeat winners and play entities, 250 lookups a run, cached in Git;
+  shown as "group" on the country page winners. Untested against the live API until the next leads run.
+- ECB FX `leads/fx.py`: USD per unit for 20 currencies with 30-day change -> data/leads/fx.csv (for the margin model
+  and quotes in other currencies; wiring into the deal workspace is next).
+- Sunday digest now carries a country watch for the profile's countries (open, Pursue, planned, 3 plays, 5 headlines).
+- Search evaluation on the enriched supplier index: diesel generator 1 -> 11 suppliers, transformers 34 -> 228, solar
+  panels 4 -> 43, ductile iron pipes 2 -> 4, medical equipment 51 -> 2,337 (contract history now counts; ranked below
+  own products). Robot vacuum cleaners still 0: no such supplier in the universe.
+- Oracle Cloud runner for geoblocked portals: dealdesk/RUNNER_ORACLE.md (needs the owner's account; nothing built).
