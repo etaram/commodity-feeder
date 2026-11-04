@@ -1,8 +1,38 @@
-== fl: (all)
-{"id": "P518248", "project_name": "Kajeke-Gihanga III hydro-agricultural development project"}
-keys: ['boardapprovaldate', 'borrower', 'closingdate', 'countryshortname', 'curr_ibrd_commitment', 'grantamt', 'id', 'idacommamt', 'impagency', 'lendprojectcost', 'proj_id', 'project_name', 'projid_id_display', 'regionname', 'totalamt']
-{"id": "P513206", "sectorcode": "EEC,HHF,HHG,SSA", "major_sectors": [{"major_sector": {"major_sector_code": "HHX", "major_sector_name": "Health", "sectors": [{"sector_name": "Public Administration - Health", "sector_code": "HHF", "sector_percent": "0"}, {"sector_name": "Health", "sector_code": "HHG", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "SSX", "major_sector_name": "Social Protection", "sectors": [{"sector_name": "Social Protection", "sector_code": "SSA", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "EEX", "major_sector_name": "Education", "sectors": [{"sector_name": "Early Childhood Education", "sector_code": "EEC", "sector_percent": "0"}]}}], "major_sector_name": "Education,Health,Social Protection", "major_sector_code": "EEX,HHX,SSX", "project_name": "Philippines Multisectoral Nutrition Project-Converging Nutrition Efforts for our Children's Tomorrow"}
-keys: ['boardapprovaldate', 'borrower', 'closingdate', 'countryshortname', 'curr_ibrd_commitment', 'grantamt', 'id', 'idacommamt', 'impagency', 'major_sector_code', 'major_sector_name', 'major_sectors', 'proj_id', 'project_name', 'projid_id_display', 'regionname', 'sectorcode', 'totalamt']
-== fl: id,project_name,sector1,sector,mjsector1Name,sectorcode,mjsectorcode,theme1,sector1Name
-{"id": "P518248", "project_name": "Kajeke-Gihanga III hydro-agricultural development project"}
-{"id": "P513206", "sectorcode": "EEC,HHF,HHG,SSA", "major_sectors": [{"major_sector": {"major_sector_code": "HHX", "major_sector_name": "Health", "sectors": [{"sector_name": "Public Administration - Health", "sector_code": "HHF", "sector_percent": "0"}, {"sector_name": "Health", "sector_code": "HHG", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "SSX", "major_sector_name": "Social Protection", "sectors": [{"sector_name": "Social Protection", "sector_code": "SSA", "sector_percent": "0"}]}}, {"major_sector": {"major_sector_code": "EEX", "major_sector_name": "Education", "sectors": [{"sector_name": "Early Childhood Education", "sector_code": "EEC", "sector_percent": "0"}]}}], "project_name": "Philippines Multisectoral Nutrition Project-Converging Nutrition Efforts for our Children's Tomorrow"}
+# Search evaluation (first pass, labels pending human review)
+
+Cases: 30 (16 tenders, 14 suppliers); scored: 27; skipped: 0; zero results: 3.
+Mean precision@10: 0.99
+
+| Case | Query | Searched as | Translation | Results | P@10 | Not relevant in top 10 |
+|---|---|---|---|---|---|---|
+| T01 | diesel generator | diesel generator | none | 46 | 1.0 |  |
+| T02 | גנרטור דיזל | diesel generator | dict | 46 | 1.0 |  |
+| T03 | desalination plant | desalination plant | none | 4 | 1.0 |  |
+| T04 | מתקן התפלה | desalination plant | dict | 4 | 1.0 |  |
+| T05 | transformer | transformer | none | 468 | 1.0 |  |
+| T06 | שנאים | transformers | dict | 152 | 1.0 |  |
+| T07 | solar panels | solar panels | none | 11 | 1.0 |  |
+| T08 | פאנלים סולאריים | solar panels | dict | 11 | 1.0 |  |
+| T09 | medical equipment | medical equipment | none | 554 | 1.0 |  |
+| T10 | ציוד רפואי | medical equipment | dict | 554 | 1.0 |  |
+| T11 | ductile iron pipes | ductile iron pipes | none | 2 | 1.0 |  |
+| T12 | צינורות | pipes | dict | 172 | 1.0 |  |
+| T13 | fertilizer urea | fertilizer urea | none | 1 | 1.0 |  |
+| T14 | street lights | street lights | none | 131 | 1.0 |  |
+| T15 | פנסי רחוב | street lights | dict | 131 | 1.0 |  |
+| T16 | data center | data center | none | 42 | 0.8 | Spain - Computer-related services - Supply and service for the renewal, extension and maintenance of the infra; CENTER DATA - STORAGE AND MODERNIZATION OF THE TECHNOLOGICAL INFRASTRUCTURE OF THE CENTER DATA and ABILITATI |
+| S01 | diesel generator | diesel generator | none | 1 | 1.0 |  |
+| S02 | גנרטור דיזל | diesel generator | dict | 1 | 1.0 |  |
+| S03 | ductile iron pipes | ductile iron pipes | none | 0 |  |  |
+| S04 | transformers | transformers | none | 22 | 1.0 |  |
+| S05 | שנאים | transformers | dict | 22 | 1.0 |  |
+| S06 | maize | maize | none | 25 | 1.0 |  |
+| S07 | תירס | maize corn | dict | 2 | 1.0 |  |
+| S08 | sunflower oil | sunflower oil | none | 26 | 1.0 |  |
+| S09 | שמן חמניות | sunflower oil | dict | 26 | 1.0 |  |
+| S10 | robot vacuum cleaners | robot vacuum cleaners | none | 0 |  |  |
+| S11 | שואבי אבק רובוטיים | robot vacuum cleaners | dict | 0 |  |  |
+| S12 | solar panels | solar panels | none | 2 | 1.0 |  |
+| S13 | medical equipment | medical equipment | none | 80 | 1.0 |  |
+| S14 | מוצרי חשמל | electrical appliances | dict | 92 | 1.0 |  |
+

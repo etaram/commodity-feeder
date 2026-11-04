@@ -1,6 +1,6 @@
 # Search evaluation (first pass, labels pending human review)
 
-Cases: 30 (16 tenders, 14 suppliers); scored: 16; skipped: 14; zero results: 0.
+Cases: 30 (16 tenders, 14 suppliers); scored: 27; skipped: 0; zero results: 3.
 Mean precision@10: 0.99
 
 | Case | Query | Searched as | Translation | Results | P@10 | Not relevant in top 10 |
@@ -21,17 +21,17 @@ Mean precision@10: 0.99
 | T14 | street lights | street lights | none | 131 | 1.0 |  |
 | T15 | פנסי רחוב | street lights | dict | 131 | 1.0 |  |
 | T16 | data center | data center | none | 42 | 0.8 | Spain - Computer-related services - Supply and service for the renewal, extension and maintenance of the infra; CENTER DATA - STORAGE AND MODERNIZATION OF THE TECHNOLOGICAL INFRASTRUCTURE OF THE CENTER DATA and ABILITATI |
-| S01 | diesel generator | diesel generator | none | supplier index key not available here |  |  |
-| S02 | גנרטור דיזל | diesel generator | dict | supplier index key not available here |  |  |
-| S03 | ductile iron pipes | ductile iron pipes | none | supplier index key not available here |  |  |
-| S04 | transformers | transformers | none | supplier index key not available here |  |  |
-| S05 | שנאים | transformers | dict | supplier index key not available here |  |  |
-| S06 | maize | maize | none | supplier index key not available here |  |  |
-| S07 | תירס | maize corn | dict | supplier index key not available here |  |  |
-| S08 | sunflower oil | sunflower oil | none | supplier index key not available here |  |  |
-| S09 | שמן חמניות | sunflower oil | dict | supplier index key not available here |  |  |
-| S10 | robot vacuum cleaners | robot vacuum cleaners | none | supplier index key not available here |  |  |
-| S11 | שואבי אבק רובוטיים | robot vacuum cleaners | dict | supplier index key not available here |  |  |
-| S12 | solar panels | solar panels | none | supplier index key not available here |  |  |
-| S13 | medical equipment | medical equipment | none | supplier index key not available here |  |  |
-| S14 | מוצרי חשמל | electrical appliances | dict | supplier index key not available here |  |  |
+| S01 | diesel generator | diesel generator | none | 1 | 1.0 |  |
+| S02 | גנרטור דיזל | diesel generator | dict | 1 | 1.0 |  |
+| S03 | ductile iron pipes | ductile iron pipes | none | 0 |  |  |
+| S04 | transformers | transformers | none | 22 | 1.0 |  |
+| S05 | שנאים | transformers | dict | 22 | 1.0 |  |
+| S06 | maize | maize | none | 25 | 1.0 |  |
+| S07 | תירס | maize corn | dict | 2 | 1.0 |  |
+| S08 | sunflower oil | sunflower oil | none | 26 | 1.0 |  |
+| S09 | שמן חמניות | sunflower oil | dict | 26 | 1.0 |  |
+| S10 | robot vacuum cleaners | robot vacuum cleaners | none | 0 |  |  |
+| S11 | שואבי אבק רובוטיים | robot vacuum cleaners | dict | 0 |  |  |
+| S12 | solar panels | solar panels | none | 2 | 1.0 |  |
+| S13 | medical equipment | medical equipment | none | 80 | 1.0 |  |
+| S14 | מוצרי חשמל | electrical appliances | dict | 92 | 1.0 |  |
