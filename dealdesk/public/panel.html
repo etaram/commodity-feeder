@@ -355,6 +355,8 @@ ul.news{list-style:none;padding:0;margin:0}ul.news li{padding:5px 0;border-botto
 #palette li span{color:var(--muted);font-size:12.5px;margin-inline-start:auto;white-space:nowrap}
 #palette li .pt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :root[data-ui="classic"] #palette,:root[data-ui="classic"] .cmdbar{display:none!important}
+:root[data-ui="v3"] .seg button[aria-pressed="true"],:root[data-ui="v3"] .fm-chips button[aria-pressed="true"],:root[data-ui="v3"] nav.tabs button[aria-selected="true"]{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+:root[data-ui="v3"] [data-oc][aria-pressed="true"]{background:var(--gold);color:#1a1200}
 .v2only{display:none}
 :root:not([data-ui="classic"]) .v2only{display:block}
 :root:not([data-ui="classic"]) .queue-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-box);padding:16px 18px;margin-bottom:18px}
