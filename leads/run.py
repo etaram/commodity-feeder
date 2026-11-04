@@ -338,7 +338,10 @@ def merge_markets(bm):
             if code in ("0", "97", "490") or cur["v"] < 5_000_000:
                 continue
             prev = m["prev"].get(code, {}).get("v", 0)
-            growth = (cur["v"] / prev - 1) if prev else None
+            # a growth rate needs a real base: below $2M (or under a tenth of this year) the previous year is a
+            # few test shipments or a reporting gap, and the rate (+57,000,000%) says nothing; it is a new market
+            new_mkt = prev < max(2_000_000, cur["v"] / 10)
+            growth = None if new_mkt else (cur["v"] / prev - 1)
             uv = cur["v"] / cur["kg"] if cur["kg"] else None
             prem = (uv / bench - 1) if (uv and bench) else None
             score = min(40, cur["v"] / world * 400) + (min(40, max(0, growth) * 100) if growth is not None else 20) + \
@@ -346,7 +349,7 @@ def merge_markets(bm):
             out.append({
                 "hs6": f"HS {h}", "product": hs_name.get(h, "")[:80], "group": BY_ID[m["group"]]["name"],
                 "country": names.get(code, code), "iso3": iso3(names.get(code, code)) or "", "year": m["years"][1], "imports_usd": round(cur["v"]),
-                "prev_year_usd": round(prev), "growth_pct": round(growth * 100, 1) if growth is not None else "",
+                "prev_year_usd": round(prev), "growth_pct": round(growth * 100, 1) if growth is not None else "", "new_market": "yes" if new_mkt else "",
                 "world_share_pct": round(cur["v"] / world * 100, 2),
                 "unit_value_usd_kg": round(uv, 3) if uv else "", "benchmark_usd_kg": round(bench, 3) if bench else "",
                 "premium_vs_benchmark_pct": round(prem * 100, 1) if prem is not None else "",

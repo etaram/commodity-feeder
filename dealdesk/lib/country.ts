@@ -56,7 +56,7 @@ export async function countryIntel(iso: string) {
   for (const a of wbAwards.filter((r) => r.country === c)) { const k = a.supplier; const v = wbWin.get(k) || { n: 0, usd: 0, from: a.supplier_country }; v.n++; v.usd += num(a.usd); wbWin.set(k, v); }
   const wbWinners = [...wbWin.entries()].map(([supplier, v]) => ({ supplier, ...v })).sort((a, b) => b.usd - a.usd).slice(0, 8);
   const imports = markets.filter((r) => r.iso3 === c).sort((a, b) => num(b.imports_usd) - num(a.imports_usd)).slice(0, 12)
-    .map((r) => ({ product: r.product, hs: r.hs6, group: r.group, usd: r.imports_usd, growth: r.growth_pct, unit: r.unit_value_usd_kg, bench: r.benchmark_usd_kg, premium: r.premium_vs_benchmark_pct, year: r.year }));
+    .map((r) => ({ product: r.product, hs: r.hs6, group: r.group, usd: r.imports_usd, growth: num(r.prev_year_usd) && num(r.prev_year_usd) < Math.max(2e6, num(r.imports_usd) / 10) ? "new" : r.growth_pct, unit: r.unit_value_usd_kg, bench: r.benchmark_usd_kg, premium: r.premium_vs_benchmark_pct, year: r.year }));
   const cp = plays.filter((r) => r.country === c).slice(0, 12);
   const cn = news.filter((r) => r.country === c).slice(0, 20);
   const meta = countries.find((r) => r.country === c) || {};

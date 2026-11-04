@@ -28,7 +28,7 @@
   }
 
   const mcp = {
-    async callTool(server, tool, args) {
+    async callTool(server, tool, args, opts) {
       if (server === "Google Sheets") {
         const range = String(args.range || "");
         if (tool === "get_values") {
@@ -39,7 +39,7 @@
           }
           const key = range === "'Panel Search'!A6:B6" ? "tot_t" : range === "'Panel Search'!D1:E1" ? "tot_s" : RANGE_KEY[range];
           if (!key) throw err("tool_error", "Google Sheets", "range not available on the web: " + range);
-          const j = await post("/api/panel/get", { key });
+          const j = await post("/api/panel/get", { key, fresh: !!(opts && opts.cache && opts.cache.refresh) });
           return { payload: { values: j.values }, cache: { storedAt: j.at || Date.now() } };
         }
         if (tool === "update_values" && range.startsWith("'Panel Search'!")) {
@@ -82,6 +82,7 @@
 
   // Instant jobs on the web: the server researches now (Claude Haiku 5.5 with web search) instead of queueing for the worker.
   window.DD_INSTANT = async (job) => post("/api/panel/run", job, "Deal Desk AI");
+  window.DD_TX = async (lang, items) => post("/api/panel/translate", { lang, items }, "Deal Desk AI");
   // The signed-in user ({email, name, role}); the panel shows a badge and hides what the role cannot do.
   window.DD_ME = fetch("/api/me", { credentials: "same-origin" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   window.DD_LOGOUT = async () => { await fetch("/api/logout", { method: "POST", credentials: "same-origin" }).catch(() => {}); location.href = "/login"; };

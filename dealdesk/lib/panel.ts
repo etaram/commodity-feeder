@@ -11,12 +11,13 @@ type Grid = string[][];
 type Snap = Record<string, Grid> & { fit?: unknown };
 const mem: Record<string, { at: number; data: unknown }> = {};
 
+// concurrent requests on one instance share a single build of the same entry (a cold instance gets ten at once)
+const flight: Record<string, Promise<unknown>> = {};
 async function cached<T>(name: string, ttlMs: number, make: () => Promise<T>): Promise<T> {
   const hit = mem[name];
   if (hit && Date.now() - hit.at < ttlMs) return hit.data as T;
-  const data = await make();
-  mem[name] = { at: Date.now(), data };
-  return data;
+  if (!flight[name]) flight[name] = make().then((data) => { mem[name] = { at: Date.now(), data }; return data; }).finally(() => { delete flight[name]; });
+  return flight[name] as Promise<T>;
 }
 
 function decrypt(b: Buffer): Buffer {
@@ -66,7 +67,7 @@ async function allTenders(): Promise<{ head: string[]; rows: Record<string, stri
     const files = await Promise.all(Array.from({ length: 65 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
       .then((r) => (r.ok ? r.text() : "")).catch(() => "")));
     const snap = await snapshot("static");
-    const fit = (snap.fit || {}) as Record<string, string[]>, fm = await fitMap();
+    const fit = (snap.fit || {}) as Record<string, string[]>, fm = await fitSoon(4000);
     let head: string[] = [];
     const rows: Record<string, string>[] = [];
     for (const text of files) {
@@ -119,41 +120,64 @@ const LIVE_TIMEOUT_MS = Number(process.env.LIVE_TIMEOUT_MS || 9000);
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   return Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`${what} timed out after ${ms} ms`)), ms))]);
 }
-async function liveDirect(): Promise<Snap | null> {
+// One tab per read: a single batch of all ten tabs grew past the timeout and every page fell back to the snapshot.
+// Each key is cached 30 s, concurrent requests share one read, and a refresh (fresh) skips the cache.
+const liveMem: Record<string, { at: number; data: Grid }> = {}, liveFlight: Record<string, Promise<Grid>> = {};
+async function liveKey(key: string, fresh = false): Promise<Grid | null> {
+  const hit = liveMem[key];
+  if (hit && !fresh && Date.now() - hit.at < 30_000) return hit.data;
   try {
-    return await withTimeout(cached("live-direct", 60_000, async () => {
-      const keys = Object.keys(LIVE), out: Snap = {} as Snap;
-      // both spreadsheets in parallel (react-best-practices: async-parallel)
-      await Promise.all([LE, SU].map(async (sid) => {
-        const ks = keys.filter((k) => LIVE[k][0] === sid);
-        const vals = await readRanges(sid, ks.map((k) => LIVE[k][1]));
-        if (!vals) throw new Error("no service account");
-        ks.forEach((k, i) => { out[k] = vals[i]; });
-      }));
-      return out;
-    }), LIVE_TIMEOUT_MS, "live Sheets read");
-  } catch (e) { if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) await logEvent("warn", "sheets", "live read failed, using the encrypted snapshot", String(e).slice(0, 300)); return null; }
+    const p = liveFlight[key] || (liveFlight[key] = (async () => {
+      const [sid, range] = LIVE[key];
+      const vals = await readRanges(sid, [range]);
+      if (!vals) throw new Error("no service account");
+      liveMem[key] = { at: Date.now(), data: vals[0] };
+      return vals[0];
+    })().finally(() => { delete liveFlight[key]; }));
+    return await withTimeout(p, LIVE_TIMEOUT_MS, `live Sheets read (${key})`);
+  } catch (e) {
+    if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) await logEvent("warn", "sheets", `live read failed (${key}), using the last copy`, String(e).slice(0, 300));
+    return hit ? hit.data : null;
+  }
 }
-export async function liveSource(): Promise<"sheets" | "snapshot"> { return (await liveDirect()) ? "sheets" : "snapshot"; }
+async function liveDirect(): Promise<Snap | null> {
+  const out = {} as Snap;
+  const got = await Promise.all(Object.keys(LIVE).map(async (k) => [k, await liveKey(k)] as const));
+  for (const [k, v] of got) { if (!v) return null; out[k] = v; }
+  return out;
+}
+export async function liveSource(): Promise<"sheets" | "snapshot"> { return (await liveKey("jobs")) ? "sheets" : "snapshot"; }
 
 // The ranking brain's explanation per notice (why it ranks, what cost it, the deal route) comes from the public
 // index; it is merged into every tender grid the panel receives, so the sheet layout never changes.
-async function fitMap(): Promise<Map<string, { fw: string; ff: string; rt: string }>> {
-  return cached("fit-map", 900_000, async () => new Map((await supplierIndexTenders()).map((r) => [r.id, { fw: r.fw || "", ff: r.ff || "", rt: r.rt || "" }])));
+// From the small fit.csv the leads run writes (id, fit_why, fit_flags, route), never from the 10 MB tender index:
+// loading that index on every cold instance is what kept the tender list from arriving.
+type Fit = { fw: string; ff: string; rt: string };
+async function fitMap(): Promise<Map<string, Fit>> {
+  return cached("fit-map", 900_000, async () => {
+    const r = await fetch(`${RAW}/leads/fit.csv`, { cache: "no-store" }).catch(() => null);
+    if (!r || !r.ok) return new Map<string, Fit>();
+    const rows = Papa.parse<Record<string, string>>(await r.text(), { header: true, skipEmptyLines: true }).data || [];
+    return new Map(rows.map((x) => [x.id, { fw: x.fit_why || "", ff: x.fit_flags || "", rt: x.route || "" }]));
+  });
+}
+// never wait more than ms for the explanations: without them the list still goes out, and they load for the next call
+async function fitSoon(ms: number): Promise<Map<string, Fit>> {
+  return Promise.race([fitMap().catch(() => new Map<string, Fit>()), new Promise<Map<string, Fit>>((res) => setTimeout(() => res(new Map()), ms))]);
 }
 async function withFit(grid: Grid): Promise<Grid> {
   if (!grid.length) return grid;
-  const m = await fitMap(), idc = grid[0].indexOf("id"), dlc = grid[0].indexOf("deadline");
+  const m = await fitSoon(2500), idc = grid[0].indexOf("id"), dlc = grid[0].indexOf("deadline");
   if (idc < 0 || grid[0].includes("fit_why")) return grid;
   // freshness: a notice whose deadline has passed is gone from every list (tracked items live in Pursuits and Projects)
   const live = dlc < 0 ? grid.slice(1) : grid.slice(1).filter((r) => !isClosed(String(r[dlc] || "")));
   return [[...grid[0], "fit_why", "fit_flags", "route"], ...live.map((r) => { const f = m.get(String(r[idc] || "")); return [...r, f?.fw || "", f?.ff || "", f?.rt || ""]; })];
 }
-export async function getRange(key: string): Promise<Grid> {
+export async function getRange(key: string, fresh = false): Promise<Grid> {
   if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);
   if (["tenders", "upcoming"].includes(key)) return withFit(((await snapshot("static"))[key] as Grid) || []);
   if (["titles", "repeat", "markets", "meta", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
-  if (key in LIVE) return (((await liveDirect()) || (await snapshot("live")))[key] as Grid) || [];
+  if (key in LIVE) return (await liveKey(key, fresh)) || ((await snapshot("live"))[key] as Grid) || [];
   if (key === "suppliers") return [SUP_HEAD, ...(await allSuppliers()).slice(0, 6000).map(supRow)];
   if (key === "tot_s") return [["suppliers", String((await allSuppliers()).length)]];
   throw new Error(`unknown range ${key}`);
@@ -216,6 +240,22 @@ export async function suppliersFor(o: SupQuery): Promise<Grid> {
   return (await supplierSearch(o)).values;
 }
 // The same ranking, plus where the matches come from (origin countries) and how many matched in total.
+// word -> HS6 codes whose official name contains it (data/master_rows.csv, about 2,000 traded lines)
+async function hsWordMap(): Promise<(w: string) => Set<string>> {
+  const rows = await cached("hs-names", 3_600_000, async () => {
+    const r = await fetch(`${RAW}/master_rows.csv`, { cache: "no-store" }).catch(() => null);
+    if (!r || !r.ok) return [] as [string, string][];
+    return (Papa.parse<Record<string, string>>(await r.text(), { header: true, skipEmptyLines: true }).data || [])
+      .filter((x) => /^\d{6}$/.test(x.hs6 || "")).map((x) => [x.hs6, ` ${String(x.name || "").toLowerCase()} `] as [string, string]);
+  }).catch(() => [] as [string, string][]);
+  return (w: string) => {
+    if (!w || w.length < 4) return new Set<string>();
+    const stem = w.length > 4 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w;
+    const re = new RegExp(`[^\\p{L}]${stem}(e?s)?[^\\p{L}]`, "u");  // whole word: "pipe" is not "piper" (pepper)
+    const out = new Set(rows.filter(([, n]) => re.test(n)).map(([c]) => c));
+    return out.size > 40 ? new Set<string>() : out;  // a generic word ("steel", "parts") names too many lines to help
+  };
+}
 export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string }> {
   const query = NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || "");
   const words = [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
@@ -223,6 +263,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   // plural and singular match each other: the stem drops a final "s" ("pipes" finds "pipe", "panels" finds "panel")
   const res = words.map((w) => new RegExp(`(^|[^\\p{L}])${w.length > 4 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w}`, "u"));
   const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
+  // product words reach the customs codes too: "tuna" is named in HS 0302.31-0303.49 and 1604.14, while a supplier
+  // record often carries only the codes and the 4-digit heading ("Fish, frozen")
+  const hsOf = await hsWordMap(), wordHs = res.map((_, i) => hsOf(words[i]));
   const scored: { s: Supplier; sc: number }[] = [];
   const origins = new Map<string, number>();
   for (const s of await allSuppliers()) {
@@ -234,7 +277,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();
     const all = `${blob} ${s.sp || ""}`.toLowerCase();
     let hits = 0, own = 0;
-    for (const r of res) if (r.test(all)) { hits++; if (r.test(blob)) own++; }
+    const codes = wordHs.some((x) => x.size) ? new Set(String(s.hs || "").replace(/\./g, "").match(/\d{6}/g) || []) : null;
+    res.forEach((r, i) => { const viaHs = !!codes && [...wordHs[i]].some((c) => codes.has(c)); if (viaHs || r.test(all)) { hits++; if (viaHs || r.test(blob)) own++; } });
     const secHit = sec && (s.s === sec ? 3 : (s.s2 || "").includes(sec) ? 1 : 0);
     if (!hits && !(secHit === 3 && !res.length)) continue;
     // strict (supplier research, profile suppliers): a short product phrase must match as a whole, so "diesel generator"
