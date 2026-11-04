@@ -120,9 +120,10 @@ def run():
         else:
             if Sx is None:
                 out.append({"id": cid, "scope": scope, "q": q, "en": en, "how": how, "skipped": "supplier index key not available here"}); continue
-            rows = [(r, " ".join(str(r.get(k, "")) for k in ("n", "p", "cm", "lg", "hs"))) for r in Sx]
+            rows = [(r, " ".join(str(r.get(k, "")) for k in ("n", "p", "cm", "lg", "hs", "hd", "in", "wt", "sp"))) for r in Sx]
             need = len(ws) if len(ws) <= 3 else -(-len(ws) * 3 // 4)
-            key = lambda r: (r.get("tr", "9"), -(float(r.get("sh") or 0)), -(float(r.get("w") or 0)))
+            own = lambda r: hits(" ".join(str(r.get(k, "")) for k in ("n", "p", "cm", "lg", "hs", "hd", "in", "wt")), ws)
+            key = lambda r: (-own(r), r.get("tr", "9"), -(float(r.get("sh") or 0)), -(float(r.get("w") or 0)))
         m = [(r, txt) for r, txt in rows if ws and hits(txt, ws) >= need]
         m.sort(key=lambda x: key(x[0]))
         top = m[:K]

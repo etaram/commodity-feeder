@@ -12,7 +12,7 @@ export type Tender = {
 export type Supplier = {
   q?: number; n: string; c?: string; rg?: string; tr?: string; s?: string; s2?: string; ty?: string; td?: string;
   epc?: string; lg?: string; p?: string; cm?: string; x?: string; w?: number; u?: number; bc?: string; web?: string; lw?: string; why?: string;
-  sh?: number; hs?: string;
+  sh?: number; hs?: string; sp?: string; in?: string; wt?: string; hd?: string;
 };
 
 const mem: Record<string, { at: number; data: unknown }> = {};

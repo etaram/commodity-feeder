@@ -73,8 +73,19 @@ SUP_FIELDS = {"quality": "q", "supplier": "n", "country": "c", "region": "rg", "
               "other_sectors": "s2", "type": "ty", "trader": "td", "epc": "epc", "logistics_role": "lg",
               "products": "p", "commodities": "cm", "exports": "x", "wins": "w", "won_usd_est": "u",
               "buyer_countries": "bc", "website": "web", "last_win": "lw",
-              "tier_reason": "why", "shipments_12m": "sh", "hs_codes": "hs"}
-CUT = {"why": 90, "p": 120, "hs": 30, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80}
+              "tier_reason": "why", "shipments_12m": "sh", "hs_codes": "hs",
+              # what the company actually supplied (titles of contracts it won) and its stated industry: the evidence
+              # supplier research searches when the product field is empty
+              "supplied": "sp", "industries": "in", "web_title": "wt"}
+CUT = {"why": 90, "p": 160, "hs": 30, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80, "sp": 200, "in": 80, "wt": 80, "hd": 140}
+
+
+def _hs_names():
+    """HS-4 heading descriptions (data/hs4.csv), so a supplier known only by its customs codes is found by product words."""
+    try:
+        return {r["hs4"]: r["description"] for r in csv.DictReader(open(DATA / "hs4.csv", encoding="utf-8"))}
+    except OSError:
+        return {}
 
 
 def suppliers(limit=90_000):
@@ -91,7 +102,7 @@ def suppliers(limit=90_000):
     if not src.exists():
         log.warning("web index suppliers: %s missing", src); return
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-    out = []
+    out, hsn = [], _hs_names()
     for r in csv.DictReader(open(src, encoding="utf-8")):
         if len(out) >= limit:
             break
@@ -107,6 +118,10 @@ def suppliers(limit=90_000):
             elif short in CUT:
                 v = v[:CUT[short]]
             x[short] = v
+        if x.get("hs") and hsn:
+            d = "; ".join(dict.fromkeys(hsn[h[:4]] for h in re.split(r"[\s,;]+", x["hs"]) if h[:4] in hsn))
+            if d:
+                x["hd"] = d[:CUT["hd"]]
         if x.get("n") and x.get("tr") in ("1", "2"):  # the system shows proven suppliers only (tier 1-2)
             out.append(x)
     raw = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode(), 9)

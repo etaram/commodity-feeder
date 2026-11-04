@@ -38,7 +38,8 @@ async function snapshot(part: "static" | "live"): Promise<Snap> {
 const SUP_COLS: [string, keyof Supplier][] = [["quality", "q"], ["supplier", "n"], ["country", "c"], ["region", "rg"], ["tier", "tr"],
   ["main_sector", "s"], ["other_sectors", "s2"], ["type", "ty"], ["trader", "td"], ["epc", "epc"], ["logistics_role", "lg"],
   ["products", "p"], ["commodities", "cm"], ["exports", "x"], ["wins", "w"], ["won_usd_est", "u"], ["buyer_countries", "bc"],
-  ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"], ["shipments_12m", "sh"], ["hs_codes", "hs"]];
+  ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"], ["shipments_12m", "sh"], ["hs_codes", "hs"],
+  ["supplied", "sp"], ["industries", "in"], ["hs_names", "hd"]];
 const SUP_HEAD = [...SUP_COLS.map(([k]) => k), "sources"];
 const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), "public award records"];
 
@@ -184,7 +185,7 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
     (!reg || s.rg === reg) && (!cty || s.c === cty) && (!sec || s.s === sec || (s.s2 || "").includes(sec)) &&
     (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
     (!role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""))) &&
-    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""}`.toLowerCase()))).slice(0, 2000);
+    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.sp || ""}`.toLowerCase()))).slice(0, 2000);
   return [SUP_HEAD, ...out.map(supRow)];
 }
 
@@ -213,15 +214,18 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     if (o.originRegion && s.rg !== o.originRegion) continue;
     if (o.originCountry && s.c !== o.originCountry) continue;
     if (o.exportersOnly && !s.x) continue;
-    const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""}`.toLowerCase();
-    let hits = 0;
-    for (const r of res) if (r.test(blob)) hits++;
+    // what the company makes or trades (name, products, industry, customs headings) counts more than what it once
+    // supplied under a contract (a crane firm that moved generators is not a generator maker)
+    const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();
+    const all = `${blob} ${s.sp || ""}`.toLowerCase();
+    let hits = 0, own = 0;
+    for (const r of res) if (r.test(all)) { hits++; if (r.test(blob)) own++; }
     const secHit = sec && (s.s === sec ? 3 : (s.s2 || "").includes(sec) ? 1 : 0);
     if (!hits && !(secHit === 3 && !res.length)) continue;
     // strict (supplier research, profile suppliers): a short product phrase must match as a whole, so "diesel generator"
     // does not return fuel traders or ozone generators; long tender titles keep the any-word match.
     if (o.strict && res.length && hits < (res.length <= 3 ? res.length : Math.ceil(res.length * 0.75))) continue;
-    let sc = Math.min(8, hits * 2) + (secHit || 0);
+    let sc = Math.min(8, own * 2 + (hits - own)) + (secHit || 0);
     if (ch && (s.hs || "").split(" ").some((h) => h.startsWith(ch))) sc += 2;
     if (s.x) sc += 1;
     sc += s.tr === "1" ? 2 : s.tr === "2" ? 1 : 0;
