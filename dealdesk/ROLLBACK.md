@@ -43,3 +43,11 @@ No passwords or secrets in this file. Secrets live only in Vercel environment va
    the baseline copy, and restore only the damaged rows; keep every row written after the baseline (users, decisions, projects).
 
 Never revertible by code: e-mails sent, bids submitted, commitments made. These stay behind explicit approvals.
+
+## Deployments after the upgrade (2026-11-04)
+- dpl_Dh43nWPutk9Jy1NLJ4GBeLjGB5TM: current production (deal workspace, project card, search stem).
+- dpl_2ZKAwbSqXkFqYXCBQtBgDLwyt1iu: deal workspace without the search stem.
+- dpl_ERrELrA3eqJoKZzEofBu31j8brhB: before the deal workspace.
+- dpl_8eZMMTDJYcE8DPEcaSd5WxJgf8Vw: baseline before the upgrade.
+To go back one step: promote the previous deployment in Vercel (instant). The "Deal Records" tab can stay; nothing reads it
+once the route is gone.
