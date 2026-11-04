@@ -125,7 +125,8 @@
   window.DD_BRIEF = { get: (lang) => getj("/api/panel/brief?lang=" + lang), build: (lang) => post("/api/panel/brief", { lang }, "Deal Desk AI") };
   window.DD_KNOW = (names) => post("/api/panel/know", { names }, "Deal Desk");
   window.DD_COUNTRY = (c) => getj("/api/panel/country?c=" + encodeURIComponent(c));
-  window.DD_SUPSEARCH = async (q) => post("/api/panel/suppliers-for", Object.assign({ research: true }, q), "Deal Desk");
+  // one automatic retry when the connection drops (a cold server can drop the first long request)
+  window.DD_SUPSEARCH = async (q) => { const b = Object.assign({ research: true }, q); try { return await post("/api/panel/suppliers-for", b, "Deal Desk"); } catch (e) { if (!e || !e.retryable) throw e; await new Promise((r) => setTimeout(r, 1500)); return post("/api/panel/suppliers-for", b, "Deal Desk"); } };
   // Official contact details for one supplier, fetched only when its file is opened.
   window.DD_CONTACT = async (name, country) => (await post("/api/panel/contact", { name, country }, "Deal Desk")).contact || null;
 

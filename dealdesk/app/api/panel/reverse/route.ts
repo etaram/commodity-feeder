@@ -10,7 +10,7 @@ import { logActivity } from "@/lib/activity";
 // 2. The system's own data: proven suppliers of the product, import flows and benchmark price, open tenders, plays.
 // 3. Research pass (one AI call, web search): likely counterparties, price sanity, and how Sinder gets into the deal.
 // The file is processed in memory and never stored; only the extracted facts go to the job record.
-export const maxDuration = 120;
+export const maxDuration = 180;
 export const dynamic = "force-dynamic";
 type Facts = Record<string, unknown> & { product?: string; hs?: string; quantity?: string; unit?: string; incoterm?: string; place?: string; buyer_hints?: string[]; seller_hints?: string[]; date?: string; doc_type?: string; redacted?: string[]; search_terms?: string[] };
 const toObjects = (g: string[][]) => { const h = g[0] || []; return g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))); };
@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
   const b = await req.json().catch(() => ({}));
   const data = String(b.data || ""), mime = String(b.mime || ""), text = String(b.text || "").slice(0, 8000), lang = b.lang === "en" ? "en" : "he";
   if (!data && !text) return NextResponse.json({ ok: false, error: "send a file (image or PDF) or text" }, { status: 400 });
+  const t0 = Date.now(); console.log(`[reverse] start ${mime} ${Math.round(data.length / 1024)} KB`);
   if (data.length > 6_000_000) return NextResponse.json({ ok: false, error: "file over 4 MB" }, { status: 413 });
   await logActivity(s, "reverse_deal", mime || "text", `${Math.round(data.length / 1024)} KB`);
   const he = lang === "he";

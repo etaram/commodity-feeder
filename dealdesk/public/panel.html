@@ -1636,7 +1636,8 @@ function wireReverse() {
     btn.disabled = true; out.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("rv_wait"))}</div>`;
     try {
       let data = "", mime = "";
-      if (f) { mime = f.type || "image/png"; data = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1] || ""); r.onerror = rej; r.readAsDataURL(f); }); }
+      if (f && /^image\//.test(f.type || "")) ({ data, mime } = await shrinkImage(f));
+      else if (f) { mime = f.type || "application/pdf"; data = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1] || ""); r.onerror = rej; r.readAsDataURL(f); }); }
       const j = await window.DD_REVERSE({ data, mime, text, lang: LANG });
       const fx = j.facts || {};
       out.innerHTML = `<div class="section"><h3>${esc(t("rv_facts"))}</h3><dl class="kv">${[["doc_type", "rv_f_type"], ["date", "deadline"], ["product", "dw_c_prod"], ["hs", "HS"], ["quantity", "dw_c_qty"], ["incoterm", "dw_c_basis"], ["place", "dw_place"], ["price", "dw_c_price"], ["future_volume", "rv_f_future"]].filter(([k]) => fx[k]).map(([k, l]) => `<dt>${esc(l === "HS" ? "HS" : t(l))}</dt><dd>${txt(String(fx[k]))}${k === "quantity" && fx.unit ? " " + esc(fx.unit) : ""}</dd>`).join("")}
@@ -2964,6 +2965,18 @@ async function finForTender(r, box) {
   } catch (e) { $("#fin-list").innerHTML = `<div class="flash err">${esc(errText(e))}</div>`; }
 }
 
+/* a phone screenshot can be 3-4 MB, over the request limit once encoded: scale to 1800 px on the long side and send
+   as JPEG (about 200-400 KB), which keeps every printed word readable */
+async function shrinkImage(f) {
+  const url0 = URL.createObjectURL(f);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url0; });
+    const k = Math.min(1, 1800 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    return { data: c.toDataURL("image/jpeg", 0.85).split(",")[1] || "", mime: "image/jpeg" };
+  } finally { URL.revokeObjectURL(url0); }
+}
 /* ---------- Deal builder: one deal from the tender to suppliers, financing, logistics and outreach ---------- */
 const STAGES = ["lead", "qualified", "sourcing", "financing", "logistics", "offer", "negotiation", "won", "lost"];
 const ROLES = ["supplier", "finance", "logistics", "buyer", "partner"];
