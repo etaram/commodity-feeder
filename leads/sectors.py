@@ -33,7 +33,7 @@ SECTORS = {
 
 # CPV: longest prefix wins. Division-level defaults plus finer overrides.
 CPV = {
-    "03": "AGRI_FOOD", "15": "AGRI_FOOD", "77": "AGRI_FOOD",
+    "03": "AGRI_FOOD", "15": "AGRI_FOOD", "77": "ENV_WASTE",  # 77: horticultural and green-area services, not food
     "09": "ENERGY", "65": "ENERGY", "76": "ENERGY", "0931": "POWER", "0933": "POWER", "4112": "WATER",
     "31": "POWER", "4531": "POWER", "45251": "POWER", "452314": "POWER", "45255": "ENERGY",
     "14": "MINING_METALS",
@@ -133,9 +133,9 @@ EXTRA = [
             r"mesa de servicio|service desk|datenverarbeitung|edv|rechenzentr"),
     ("DEFENCE", r"vigilancia|seguridad privada|gardiennage|sicherheitsdienst|security guard|brandmelde|fire alarm|"
                 r"police nationale|polic[eí]a|anti-terror|land mine|projectile"),
-    ("HEALTH", r"d[eé]fibrillat|hygien|menstrual|vaccin|tierimpf|impfstoff|anthropom|paracet|amoxi|medizin"),
+    ("HEALTH", r"vacuna|vacina|vaccin|medicament|medicamento|m[eé]dicaments?|d[eé]fibrillat|hygien|menstrual|vaccin|tierimpf|impfstoff|anthropom|paracet|amoxi|medizin"),
     ("ENERGY", r"p[eé]troli|petroleum products"),
-    ("POWER", r"alumbrado|beleuchtung|onduleur|ups\b|אל פסק"),
+    ("POWER", r"prepa(id|yment) meters?|energy meters?|electricity meters?|medidores? de energ|compteurs?|alumbrado|beleuchtung|onduleur|ups\b|אל פסק"),
     ("LAB", r"laboratoire|labor\b|labtronic|analy[sz]er"),
     ("TRANSPORT_EQ", r"viaturas|fahrzeug|taxi|fleet"),
     ("MACHINERY", r"valve|gland|motor|bolts?\b|bearing|gasket|\bseal|fastener|harness|refrigerat|compressor|"
@@ -153,7 +153,7 @@ EXTRA = [
                   r"bunker|warehousing|cold storage|3pl|third-party logistics|supply chain|transitaire|despachante|"
                   r"agente de carga|naviera|armador|transporte mar[ií]timo|transporte de carga"),
     ("CONSUMER", r"signage|beschilderung|electoral material|ear tags|kits"),
-    ("AGRI_FOOD", r"ganader|apicult|beekeep|nursery|culinaire|\bfish|seafood|tuna\b|at[uú]n|thon\b|sardin|shrimp|prawn|"
+    ("AGRI_FOOD", r"bl[eé] tendre|bl[eé] dur|\btrigo|ma[iï]s|\bmilho|azúcar|ganader|apicult|beekeep|nursery|culinaire|\bfish|seafood|tuna\b|at[uú]n|thon\b|sardin|shrimp|prawn|"
                   r"crustacean|mollus|\bmeat|poultry|dairy|cheese|coffee|cocoa|cacao|\btea\b|fruit|vegetable|\bnuts?\b|"
                   r"cashew|spice|beverage|canned|cannery|frozen food|grain|cereal|oilseed|soybean|edible oil|bakery|"
                   r"confection|animal feed|slaughter|abattoir"),

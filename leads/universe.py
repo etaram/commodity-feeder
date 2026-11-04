@@ -33,6 +33,15 @@ SERVICE_NAMES = {"Repair, maintenance & installation", "Transport & logistics se
 GOODS_HINT = re.compile(r"\b(manufactur\w*|producers?|factory|mill|supplier of|supplies of|equipment|machinery|vehicles|parts|spare|products?)\b", re.I)
 
 
+NOT_SUPPLIER = re.compile(r"\b(world food programme|food and agriculture organi[sz]ation|international organi[sz]ation for migration|"
+                          r"unicef|undp|unops|unhcr|unfpa|world health organi[sz]ation|united nations|red cross|red crescent|"
+                          r"ministry of|ministerio de|minist[eè]re|government of|gobierno de|embassy of|municipality of|"
+                          r"city council|county council)\b", re.I)
+# insurers and green-area contractors read as what they are, whoever bought from them
+INSURER_ID = re.compile(r"\b(seguros?|reaseguros|insurance|assurances?|versicherung\w*|assicurazion\w*|reinsurance)\b", re.I)
+GREEN_ID = re.compile(r"\b(landscap\w*|paysag\w*|grounds maintenance|green areas?|espaces verts|jardin\w*|gardening|tree (works|surgery|care)|arborist)\b", re.I)
+
+
 def service_only(r):
     """A company that only delivers services on site (laundry, cleaning, maintenance, consulting, design): not a
     cross-border goods supplier for Sinder, however much it won."""
@@ -48,6 +57,8 @@ IDENTITY = [
                 r"saab|bae systems|kongsberg|nexter|knds|krauss-?maffei|hensoldt|aselsan|roketsan|mbda|lockheed|raytheon|northrop|general dynamics|"
                 r"patria|nammo|fn herstal|beretta|glock|sig sauer)\b", re.I), "DEFENCE"),
     (CLEANING_ID, "ENV_WASTE"),
+    (INSURER_ID, "CONSULTING"),
+    (GREEN_ID, "ENV_WASTE"),
     (re.compile(r"\b(pharma\w*|biotech\w*|medical devices?|diagnostics)\b", re.I), "HEALTH"),
     (re.compile(r"\b(steel|metals?|mining|aluminium|aluminum|copper)\b", re.I), "MINING_METALS"),
     (re.compile(r"\b(cement|ceramics?|glass|tiles)\b", re.I), "CONSTR_MAT"),
@@ -445,6 +456,9 @@ def build():
                 x = sup[(k, wc)]
                 x["names"][w] += 1; x["country"][wc] += 1; x["wins"] += 1; x["usd"] += share
                 sec = a.get("sector") or NAME2ID.get(a.get("sector_name", ""), "")
+                if not sec and i == 0:  # an award file without a sector: read it from the contract title and its codes
+                    sec = classify(a.get("title") or "", (a.get("cpv") or "").split()[:1] or None)[0]
+                    a["sector"] = sec  # the other winners of the same award reuse it
                 if sec:
                     x["sectors"][sec] += 1; x["sec_usd"][sec] += share
                     x["goods"] += 1 if sec in GOODS else 0
@@ -563,6 +577,8 @@ def build():
     out = []
     for (k, wc), x in sup.items():
         name = max(x["names"].items(), key=lambda y: y[1])[0]
+        if NOT_SUPPLIER.search(name):
+            continue  # UN agencies, ministries, councils: buyers or implementers, not suppliers
         wp = web.get(f"{name[:120]}|{wc}") or {}
         site_src = "registry/notice" if x["website"] else ""
         if x["website"] and not domain_matches(name, x["website"]):
@@ -592,7 +608,8 @@ def build():
             "main_sector": SECTORS.get(secs[0][0], "") if secs else "",
             "other_sectors": "; ".join(SECTORS.get(s, s) for s, _ in secs[1:3]),
             "epc": epc_class(x),
-            "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) or x.get("ship_total") else ("trader" if x.get("trader") else "works/services"),
+            "type": "goods supplier" if x["goods"] >= max(1, x["wins"] / 2) or x.get("ship_total") or (secs and secs[0][0] in GOODS_SECTORS and x.get("_sector_why") in ("own description", "company name or industry", "declared industry") and not x["works"])
+                    else ("trader" if x.get("trader") else "works/services"),
             "logistics_role": logistics_role(f"{name} {x.get('industries', '')} {about} {items} {x.get('naics', '')}")
             if any(s_ in ("LOGISTICS", "PORTS") for s_, _ in secs[:1]) or "shipbuild" in name.lower() else "",
             "products": clean_products(about)[:300], "web_title": (wp.get("title") or "")[:120], "supplied": items[:240],
