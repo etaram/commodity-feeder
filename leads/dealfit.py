@@ -74,6 +74,17 @@ def supplier_counts():
     return {r["sector"]: int(r["suppliers"] or 0) for r in csv.DictReader(open(p, encoding="utf-8"))}
 
 
+def supplier_table():
+    """Full aggregate rows: sector -> {suppliers, exporters, asia_exporters}; and hs4 -> {suppliers, asia_suppliers}."""
+    out = {"sector": {}, "hs": {}}
+    for name, key, fn in (("supplier_sectors.csv", "sector", "sector"), ("supplier_hs.csv", "hs4", "hs")):
+        p = LEADS / name
+        if p.exists():
+            for r in csv.DictReader(open(p, encoding="utf-8")):
+                out[fn][r[key]] = {k: int(v or 0) for k, v in r.items() if k != key}
+    return out
+
+
 def _log_points(x, lo, hi, pmax):
     """0 at lo, pmax at hi, log scale between."""
     if x is None or x <= lo:

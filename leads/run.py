@@ -663,9 +663,16 @@ def merge():
         write("competition.csv", sorted(comp, key=lambda x: -x["awards_12m"]))
         try:
             from . import dealfit
-            dealfit.apply(tenders, load_prefs())  # the ranking brain: score = deal fit, with fit_why and fit_flags
+            prefs = load_prefs()
+            dealfit.apply(tenders, prefs)  # the ranking brain: score = deal fit, with fit_why and fit_flags
         except Exception as e:  # noqa: BLE001
-            log.warning("deal fit: %s", e)
+            log.warning("deal fit: %s", e); prefs = {}
+        for mod in ("plays", "gdelt"):  # deal theses from the signals, and the week's news per watched country
+            try:
+                m = __import__(f"leads.{mod}", fromlist=["build"])
+                m.build(prefs, tenders) if mod == "gdelt" else m.build()
+            except Exception as e:  # noqa: BLE001
+                log.warning("%s: %s", mod, e)
         tenders.sort(key=lambda x: ({"Pursue": 0, "Watch": 1, "Ignore": 2}[x["decision"]], -(x["ev_usd"] or 0), -x["score"]))
     except Exception as e:  # noqa: BLE001
         log.warning("brain: %s", e)

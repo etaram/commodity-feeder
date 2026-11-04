@@ -495,14 +495,32 @@ def build():
     stats.update({f"region: {k}": v for k, v in sorted(by_region.items(), key=lambda y: -y[1])})
     log.info("universe %s", stats)
     (PRIVATE / "universe_stats.json").write_text(json.dumps(stats))
-    by_sec = defaultdict(int)  # public aggregate (counts only) for the ranking brain: proven suppliers per sector
+    # public aggregates (counts only, no names) for the ranking brain and the plays: proven suppliers per sector,
+    # how many of them export, how many are Asian exporters (CHN, IND, TUR, VNM, KOR, MYS, THA, IDN), and per HS-4 heading
+    ASIA = {"CHN", "IND", "TUR", "VNM", "KOR", "MYS", "THA", "IDN", "TWN", "PAK", "BGD"}
+    by_sec, by_hs = defaultdict(lambda: [0, 0, 0]), defaultdict(lambda: [0, 0])
     for r in out:
-        if str(r.get("tier")) in ("1", "2"):
-            by_sec[r.get("main_sector") or "Other"] += 1
+        if str(r.get("tier")) not in ("1", "2"):
+            continue
+        b = by_sec[r.get("main_sector") or "Other"]
+        b[0] += 1
+        if r.get("exports"):
+            b[1] += 1
+            if r.get("country") in ASIA:
+                b[2] += 1
+        for h in str(r.get("hs_codes") or "").split():
+            if h[:4].isdigit():
+                by_hs[h[:4]][0] += 1
+                if r.get("country") in ASIA:
+                    by_hs[h[:4]][1] += 1
     with open(LEADS / "supplier_sectors.csv", "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f); w.writerow(["sector", "suppliers"])
-        for k, v in sorted(by_sec.items(), key=lambda y: -y[1]):
-            w.writerow([k, v])
+        w = csv.writer(f); w.writerow(["sector", "suppliers", "exporters", "asia_exporters"])
+        for k, v in sorted(by_sec.items(), key=lambda y: -y[1][0]):
+            w.writerow([k, *v])
+    with open(LEADS / "supplier_hs.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f); w.writerow(["hs4", "suppliers", "asia_suppliers"])
+        for k, v in sorted(by_hs.items(), key=lambda y: -y[1][0]):
+            w.writerow([k, *v])
     return out, stats
 
 

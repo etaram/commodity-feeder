@@ -106,7 +106,7 @@ jobs:
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
           mkdir -p data/web
-          P="data/leads/awards data/leads/companies data/leads/run_suppliers.log data/web/suppliers.enc data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv"
+          P="data/leads/awards data/leads/companies data/leads/run_suppliers.log data/leads/supplier_sectors.csv data/leads/supplier_hs.csv data/web/suppliers.enc data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv"
           # keep a copy of what this workflow owns, then land it on top of the latest main (other workflows push meanwhile)
           rm -rf /tmp/own && mkdir -p /tmp/own
           for f in $P; do [ -e "$f" ] && cp -r --parents "$f" /tmp/own/; done
