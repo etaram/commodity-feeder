@@ -112,6 +112,7 @@
     save: (deal_id, kind, data, record_id, del) => post("/api/deal", { deal_id, kind, data, record_id, delete: !!del }, "Deal Desk"),
   };
   window.DD_TG = () => getj("/api/telegram/code");
+  window.DD_TG_SETUP = { get: () => getj("/api/telegram/setup"), set: () => post("/api/telegram/setup", {}, "Deal Desk") };
   window.DD_BRIEF = { get: (lang) => getj("/api/panel/brief?lang=" + lang), build: (lang) => post("/api/panel/brief", { lang }, "Deal Desk AI") };
   window.DD_KNOW = (names) => post("/api/panel/know", { names }, "Deal Desk");
   window.DD_COUNTRY = (c) => getj("/api/panel/country?c=" + encodeURIComponent(c));
