@@ -213,3 +213,22 @@ how information becomes a deal; a competitive edge at low cost. See dealdesk/BRA
   panels 4 -> 43, ductile iron pipes 2 -> 4, medical equipment 51 -> 2,337 (contract history now counts; ranked below
   own products). Robot vacuum cleaners still 0: no such supplier in the universe.
 - Oracle Cloud runner for geoblocked portals: dealdesk/RUNNER_ORACLE.md (needs the owner's account; nothing built).
+
+## Slice 15: channels, documents, app, brand, v3 (2026-11-04, night)
+
+- Telegram bot (lib/telegram.ts, /api/telegram): commands and free text over the system's own tools; chat linked by a
+  per-user code; alerts (morning theses, brief); token accepted under the bot's own variable name; webhook set by one
+  click (or automatically when an admin opens Today). Pending: the owner's first /start.
+- Document reading: /api/deal/docs reads a notice page, PDF or bidding document into the requirements matrix.
+- Deal reverse engineering: /api/panel/reverse: image or PDF -> facts (read vs inferred, redactions), own data, candidate
+  counterparties with evidence, price check, way in. File processed in memory only.
+- Freshness: closed notices dropped server-side from every grid; isClosed() handles "04 Dec 2026" (a slice bug that
+  would have parsed year 202 was caught in tests).
+- PWA: manifest, service worker (shell only, data never cached), Web Push with VAPID implemented in Node crypto (no
+  dependency); install and notification box on Today; push for the brief and the morning theses. Keys in Vercel.
+- Brand: mark (two trade routes forming an S), light and dark logos, favicon, 512 icon.
+- v3 (default): dark theme, Today as a morning page (greeting, rings, step bars, sparklines), command palette Ctrl/Cmd+K.
+  `?ui=v2` light, `?ui=classic` old. axe-core: 0 violations on 5 views after a contrast fix on pressed controls.
+- Regional relay (sinder-relay-eu, Vercel fra1): collectors fall back on 403/451; verified Frankfurt egress.
+- Attention: Google Trends daily trending RSS per country and Wikipedia pageviews; Bright Data provider optional.
+- Reddit and public Telegram channels as briefing sources.
