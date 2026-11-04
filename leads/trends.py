@@ -19,6 +19,7 @@ import json
 import random
 import sys
 import time
+import urllib.parse
 from pathlib import Path
 
 from .common import LEADS
@@ -97,6 +98,65 @@ def topic_id(py, term, cache):
     return topics[term]
 
 
+def _brightdata():
+    """Bright Data's Google Trends API (paid per successful request, cents each; github.com/luminati-io/google-trends-api).
+    Used when BRIGHTDATA_API_KEY and BRIGHTDATA_ZONE are set in the environment or in the Supplier Universe sheet,
+    tab Config (the same store as WEB_INDEX_KEY). Otherwise pytrends as before."""
+    import os
+    key, zone = os.environ.get("BRIGHTDATA_API_KEY", ""), os.environ.get("BRIGHTDATA_ZONE", "")
+    if not (key and zone):
+        try:
+            from .push import UNIVERSE_SHEET, Sheets
+            cfg = {r[0]: r[1] for r in Sheets().values(UNIVERSE_SHEET, "Config!A1:B12") if len(r) > 1}
+            key, zone = cfg.get("BRIGHTDATA_API_KEY", key), cfg.get("BRIGHTDATA_ZONE", zone)
+        except Exception:  # noqa: BLE001
+            pass
+    return (key, zone) if key and zone else None
+
+
+def fetch_series_brightdata(creds, term, geo):
+    """Interest over time through Bright Data: monthly means of the 12-month weekly series, oldest first.
+    The parsed JSON shape is taken from the response as it comes; unknown shapes are logged, never guessed."""
+    import requests
+    key, zone = creds
+    url = "https://trends.google.com/trends/explore?" + urllib.parse.urlencode({"q": term, "geo": geo, "date": "today 12-m", "hl": "en", "brd_trends": "timeseries", "brd_json": "1"})
+    r = requests.post("https://api.brightdata.com/request", json={"zone": zone, "url": url, "format": "raw"},
+                      headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, timeout=90)
+    if r.status_code != 200:
+        raise Blocked(f"brightdata {r.status_code}: {r.text[:120]}")
+    j = r.json()
+    pts = None
+    for path in (("timeseries",), ("timelineData",), ("default", "timelineData"), ("interest_over_time", "timelineData")):
+        cur = j
+        for k in path:
+            cur = cur.get(k) if isinstance(cur, dict) else None
+        if isinstance(cur, list) and cur:
+            pts = cur; break
+    if pts is None:
+        log.warning("brightdata trends: unknown shape, keys %s", list(j)[:8] if isinstance(j, dict) else type(j).__name__)
+        return []
+    vals = []
+    for x in pts:
+        v = x.get("value") if isinstance(x, dict) else None
+        v = v[0] if isinstance(v, list) and v else v
+        t = x.get("time") or x.get("date") or x.get("formattedTime") if isinstance(x, dict) else None
+        try:
+            vals.append((str(t), float(v)))
+        except (TypeError, ValueError):
+            continue
+    if not vals:
+        return []
+    # monthly means from weekly points: time is an epoch string or a date
+    by_m = {}
+    for t, v in vals:
+        try:
+            d = dt.datetime.utcfromtimestamp(int(t)) if t.isdigit() else dt.datetime.fromisoformat(t[:10])
+        except ValueError:
+            continue
+        by_m.setdefault(d.strftime("%Y-%m"), []).append(v)
+    return [round(sum(v) / len(v), 1) for _, v in sorted(by_m.items())][-12:]
+
+
 def fetch_series(py, kw, geo):
     """12 months of weekly interest (0-100) for one keyword/topic in one country -> monthly means, oldest first."""
     try:
@@ -128,7 +188,10 @@ def main(argv=None):
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
     series_cache = cache.setdefault("series", {})
     pairs = _pairs(limit)
-    py = _client()
+    bd = _brightdata()
+    py = None if bd else _client()
+    if bd:
+        log.info("trends: Bright Data Google Trends API (paid per success)")
     ok = blocked = failed = 0
     strikes = 0
     for p in pairs:
@@ -137,8 +200,11 @@ def main(argv=None):
             p["status"] = "skipped (rate limited)"
             continue
         try:
-            kw = topic_id(py, p["term"], cache)
-            s = fetch_series(py, kw, p["geo"])
+            if bd:
+                s = fetch_series_brightdata(bd, p["term"], p["geo"])
+            else:
+                kw = topic_id(py, p["term"], cache)
+                s = fetch_series(py, kw, p["geo"])
             series_cache[key] = {"series": s, "fetched": dt.date.today().isoformat()}
             p["status"] = "ok" if s else "no data"
             ok += 1
