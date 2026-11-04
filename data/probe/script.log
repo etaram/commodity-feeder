@@ -1,4 +1,13 @@
-direct  https://api.ipify.org?format=json 200 {"ip":"57.154.167.145"}
-relay   https://api.ipify.org?format=json 200 {"ip":"63.177.58.109"}
-direct  https://ipapi.co/json/ 200 {     "ip": "57.154.167.145",     "network": "57.154.128.0/18",     "version": "IPv4",     "city": "San Francisco",     "region": "California",     "region_code
-relay   https://ipapi.co/json/ 200 {     "ip": "63.177.58.109",     "network": "63.176.0.0/15",     "version": "IPv4",     "city": "Frankfurt am Main",     "region": "Hesse",     "region_code": "
+INFO:leads:attention: 20 rows (0 trending, 20 wikipedia)
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Urea', 'value': 885, 'chg_30d_pct': -7.8, 'note': 'peak day 1175', 'url': 'https://en.wikipedia.org/wiki/Urea'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Wheat', 'value': 918, 'chg_30d_pct': -15.4, 'note': 'peak day 1186', 'url': 'https://en.wikipedia.org/wiki/Wheat'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Maize', 'value': 1601, 'chg_30d_pct': -12.6, 'note': 'peak day 1805', 'url': 'https://en.wikipedia.org/wiki/Maize'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Rice', 'value': 1054, 'chg_30d_pct': -7.2, 'note': 'peak day 1296', 'url': 'https://en.wikipedia.org/wiki/Rice'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Sugar', 'value': 980, 'chg_30d_pct': -0.1, 'note': 'peak day 1124', 'url': 'https://en.wikipedia.org/wiki/Sugar'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Palm oil', 'value': 648, 'chg_30d_pct': 0.4, 'note': 'peak day 914', 'url': 'https://en.wikipedia.org/wiki/Palm_oil'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Sunflower oil', 'value': 150, 'chg_30d_pct': -11.3, 'note': 'peak day 174', 'url': 'https://en.wikipedia.org/wiki/Sunflower_oil'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Fertilizer', 'value': 296, 'chg_30d_pct': -20.8, 'note': 'peak day 387', 'url': 'https://en.wikipedia.org/wiki/Fertilizer'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Steel', 'value': 1044, 'chg_30d_pct': -8.4, 'note': 'peak day 1238', 'url': 'https://en.wikipedia.org/wiki/Steel'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Rebar', 'value': 279, 'chg_30d_pct': -8.3, 'note': 'peak day 388', 'url': 'https://en.wikipedia.org/wiki/Rebar'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Solar panel', 'value': 531, 'chg_30d_pct': 0.3, 'note': 'peak day 822', 'url': 'https://en.wikipedia.org/wiki/Solar_panel'}
+{'kind': 'wikipedia attention', 'country': '', 'term': 'Transformer', 'value': 644, 'chg_30d_pct': -15.2, 'note': 'peak day 1001', 'url': 'https://en.wikipedia.org/wiki/Transformer'}
