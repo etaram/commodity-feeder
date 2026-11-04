@@ -26,7 +26,7 @@ async function valid(token: string | undefined): Promise<boolean> {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/login") || pathname.startsWith("/api/register") || pathname.startsWith("/api/auth/") || pathname.startsWith("/api/logout") || pathname.startsWith("/api/cron/") || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+  if (pathname.startsWith("/login") || pathname.startsWith("/api/login") || pathname.startsWith("/api/register") || pathname.startsWith("/api/auth/") || pathname.startsWith("/api/logout") || pathname.startsWith("/api/cron/") || pathname === "/api/telegram" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
     return NextResponse.next();
   }
   if (!(await valid(req.cookies.get("dd_session")?.value))) {

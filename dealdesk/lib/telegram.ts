@@ -104,7 +104,7 @@ export async function handle(chatId: string, text: string, _from: string) {
   if (!link) {
     const m = t.match(/^\/start(?:@\w+)?\s*([A-Za-z0-9]{6})?$/) || t.match(/^([A-Za-z0-9]{6})$/);
     if (m && m[1]) return send(chatId, await linkChat(chatId, m[1], he ? "he" : "en"));
-    return send(chatId, he ? "שלום. כדי לקשר את הצ'אט למשתמש שלך שלח את הקוד מהמערכת (היום > טלגרם), למשל: /start AB12CD" : "Hello. To link this chat to your account send the code from the panel (Today > Telegram), e.g. /start AB12CD");
+    return send(chatId, he ? "שלום. כדי לקשר את הצ'אט למשתמש שלך שלח את הקוד מהמערכת (היום בשבילך > טלגרם, בתחתית העמוד), למשל: /start AB12CD" : "Hello. To link this chat to your account send the code from the panel (Today for you > Telegram, at the bottom), e.g. /start AB12CD");
   }
   const who = { email: link.email, name: link.name };
   const [cmd, ...rest] = t.split(/\s+/);
