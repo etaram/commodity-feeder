@@ -114,3 +114,13 @@ opens the exact record. Streams: projects and buyers in the leading column, comm
 - Supplier universe: 607,183 suppliers; tier 1-2 = 84,925 (13,723 + 71,202).
 - Bug found and fixed: the suppliers workflow copied all of data/web over newer files (a stale tender index and panel
   snapshot); it now owns only data/web/suppliers.enc.
+
+## Slice 9: tender detail as a guided sequence (2026-11-04)
+
+- v2 tender detail: identity, then the engine decision with what is still open (value, eligibility, competition, deadline),
+  then five ordered steps: understand, requirements, suppliers and partners, price and logistics, decide and act.
+  Each step shows done / in progress / not yet from the job records; one primary action: the first step not done
+  (eligibility, then quote, then track or start the bid project; an existing project is opened, never duplicated).
+- The step results, the price estimate and then the notice details follow; WhatsApp sharing stays secondary.
+- Same buttons, ids and handlers as before; classic keeps the old row. Tests: screenshots 1440 px Hebrew, 390 px English,
+  classic; axe-core clean. Rollback: `?ui=classic`, or remove tenderSteps() from panel.html.
