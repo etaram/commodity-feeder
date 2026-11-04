@@ -29,7 +29,7 @@ uruguay,"Uruguay: ARCE / Compras Estatales open OCDS feed (RSS of releases per m
 bahrain,Bahrain: Tender Board e-tendering public dashboard (published tenders with time left). Needs a real browser.,projects,tenders,Bahrain,public portal,active,15,3.0,,twice a day,42d82b9c,free,
 malaysia,"Malaysia: MyProcurement (Ministry of Finance) tender advertisements, via the portal's own JSON listing (100 per page).",projects,tenders,Malaysia,public portal,active,440,3.0,,every 2 h,d27416b3,free,
 qatar,Qatar: Monaqasat (state procurement portal) - open ministry and government-entity tenders. Arabic.,projects,tenders,Qatar,public portal,active,249,2.3,,every 2 h,478529c0,free,
-israel,(module not loadable: ModuleNotFoundError),projects,tenders,Israel,public portals,active,922,3.2,,every 2 h,05e11ff0,free,
+israel,"Israel monitor: daily scan of the tenders / calls pages of ~1,000 Israeli public bodies (data/israel/bodies.csv).",projects,tenders,Israel,public portals,active,922,3.2,,every 2 h,05e11ff0,free,
 nyc,"New York City: open procurement solicitations from the City Record Online (NYC Open Data, Socrata API, no key).",projects,tenders,USA (New York City),official open data,active,191,3.7,,twice a day,dea3332f,free,
 us_cities,"US cities: open solicitations of the 20 largest US cities (New York City has its own module, leads/nyc.py).",projects,tenders,USA (cities),official open data,active,293,3.7,,twice a day,5d1c74ea,free,
 wb_pipeline,World Bank project pipeline (official Projects API): projects under preparation or newly approved.,projects,tenders,Global (World Bank projects),official API,active,948,0.6,,twice a day,64e8ad5f,free,
@@ -51,24 +51,24 @@ zambia,,projects,tenders,Zambia,public portal (ZPPA),implemented,,,list page nee
 tanzania,"Tanzania: NeST (National e-Procurement System) OCDS data portal, releases since a recent date.",projects,tenders,Tanzania,official OCDS API (NeST),implemented,,,upstream data months late,not scheduled,ff0268b0,free,
 georgia,(module not loadable: ModuleNotFoundError),projects,tenders,Georgia,official API,implemented,,,not scheduled,not scheduled,,free,
 ecuador,(module not loadable: ModuleNotFoundError),projects,tenders,Ecuador,official OCDS API,implemented,,,not scheduled,not scheduled,,free,
-awards,award notices from all tender sources,suppliers,suppliers,global,derived,active,,0.3,,daily to weekly,a80c1f61,free,
+awards,award notices from all tender sources,suppliers,suppliers,global,derived,active,,0.9,,daily to weekly,a80c1f61,free,
 ext_awards,"World Bank contract awards, USAspending",suppliers,suppliers,global,official APIs,active,,,,daily to weekly,2913dce2,free,
-importyeti,US customs bills of lading by HS heading (foreign exporters),suppliers,suppliers,global,public web pages,active,,0.6,,daily to weekly,dcaa630d,free,
+importyeti,US customs bills of lading by HS heading (foreign exporters),suppliers,suppliers,global,public web pages,active,,5.8,,daily to weekly,dcaa630d,free,
 wikidata_companies,notable producers and traders,suppliers,suppliers,global,official SPARQL,active,,,,daily to weekly,d5c0bc8a,free,
 listed_companies,listed companies,suppliers,suppliers,global,official SPARQL,active,,,,daily to weekly,8e6f9820,free,
 commodity_producers,commodity producers by product,suppliers,suppliers,global,official SPARQL,active,,,,daily to weekly,8044279e,free,
 web_contacts,official contact details from company sites,suppliers,suppliers,global,public web pages,active,,,,daily to weekly,0100ca39,free,
-sanctions,"OFAC, EU, UN, UK sanctions lists",compliance,compliance,global,official downloads,active,,0.6,,daily to weekly,4f20e3dd,free,
-integrity,country governance and integrity indicators,compliance,compliance,global,official open data,active,,0.2,,daily to weekly,e6e6e74e,free,
-markets,trade flows and buyer prices (UN Comtrade and others),commodities,commodities,global,official APIs,active,,0.2,,daily to weekly,eee42951,free,
-price_trends,commodity price trends,commodities,commodities,global,derived from the tracker,active,,0.2,,daily to weekly,a7d13f81,free,
+sanctions,"OFAC, EU, UN, UK sanctions lists",compliance,compliance,global,official downloads,active,,3.6,,daily to weekly,4f20e3dd,free,
+integrity,country governance and integrity indicators,compliance,compliance,global,official open data,active,,0.9,,daily to weekly,e6e6e74e,free,
+markets,trade flows and buyer prices (UN Comtrade and others),commodities,commodities,global,official APIs,active,,0.9,,daily to weekly,eee42951,free,
+price_trends,commodity price trends,commodities,commodities,global,"World Bank Pink Sheet (monthly, CC BY 4.0) + Commodities Tracker",active,,149.6,,daily to weekly,a7d13f81,free,
 trends,"Google Trends interest by country (pytrends, unofficial library; official API is alpha, access requested)",signals,signals,global,unofficial library,degraded,,,"unofficial library; the official Google Trends API is restricted alpha (access requested, not granted)",daily to weekly,7dfe7ab4,free,
-grants,grants and incentives,projects,projects,global,public pages,active,,0.6,,daily to weekly,45b32f01,free,
+grants,grants and incentives,projects,projects,global,public pages,active,,2.4,,daily to weekly,45b32f01,free,
 news,economic news,signals,signals,global,public RSS,active,,,,daily to weekly,56e61872,free,
 S01,AMIS Market Monitor,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://www.amis-outlook.org/market-monitor
 S02,USDA FAS Open Data,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://apps.fas.usda.gov/opendataweb/home
 S03,FAO GIEWS / FPMA,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://www.fao.org/giews/food-prices/price-tool/en/
-S04,World Bank Commodity Markets,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://www.worldbank.org/en/research/commodity-markets
+S04,World Bank Commodity Markets,commodities,backlog,,,active,,,covered by connector 'price_trends',,,,https://www.worldbank.org/en/research/commodity-markets
 S05,CONAB,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras/safra-de-graos
 S06,MPOB,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://bepi.mpob.gov.my/
 S07,USGS Mineral Commodity Summaries,commodities,backlog,,unverified,discovered,,,"researched link only: access, terms and cost not verified",,,unverified,https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries/
