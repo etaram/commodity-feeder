@@ -1,4 +1,16 @@
-# A collector in another region (Oracle Cloud always-free VM)
+# Reaching portals that refuse US addresses
+
+## Done without any new account: the regional relay (2026-11-04)
+A one-function Vercel project on the owner's existing account, `sinder-relay-eu`, deployed in Frankfurt (fra1):
+`GET /api/fetch?url=...` with a secret header returns the page fetched from a European address. Every collector's
+`session().get()` falls back to it automatically on HTTP 403, 451 or no connection, and logs "relay used". Verified
+from GitHub Actions: direct requests leave from San Francisco, relayed ones from Frankfurt am Main.
+Secret and URL live in the Supplier Universe sheet, tab Config (RELAY_URL, RELAY_SECRET), next to WEB_INDEX_KEY;
+nothing in Git. Source: relay/ in the repository. More regions: the same files deployed as another project with
+serverlessFunctionRegion bom1 (Mumbai), cpt1 (Cape Town), sin1 (Singapore), gru1 (Sao Paulo); Vercel has no Gulf region.
+Limits: GET only, 25 s, 4 MB, no cookies kept, so a portal that needs a login session still needs a real runner.
+
+## If a Gulf address or a login session is ever needed: Oracle Cloud always-free VM
 
 Why: GitHub Actions runs from US addresses. Some portals refuse them (Zambia: captcha; several Gulf and Latin
 portals: geoblock). A small VM in Frankfurt, Jeddah or Mumbai runs the same collectors from a local address and
