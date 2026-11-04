@@ -76,7 +76,7 @@ async function allSuppliers(): Promise<Supplier[]> {
   });
 }
 
-async function allTenders(): Promise<{ head: string[]; rows: Record<string, string>[] }> {
+export async function allTenders(): Promise<{ head: string[]; rows: Record<string, string>[] }> {
   return cached("tenders-full", 900_000, async () => {
     const files = await Promise.all(Array.from({ length: 65 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
       .then((r) => (r.ok ? r.text() : "")).catch(() => "")));
