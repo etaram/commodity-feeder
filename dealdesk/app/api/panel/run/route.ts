@@ -33,6 +33,7 @@ Mark every fact with its source; never guess; write "not found in public sources
   find_contact: `Find the best OFFICIAL public contact route to reach the organisation in the subject (a buyer, procurement unit, or supplier), so a trader can send a business inquiry. Look, in order, at: the contact or procurement person named in the tender notice or in the data given; the organisation's own website (procurement / tenders / supplier registration / sales / export pages, "contact us"); official procurement portals and registers; the organisation's public directories. For a buyer with no open tender (direct award), find the procurement or purchasing department and the person or role responsible.
 Return JSON ONLY (no prose, no code fences): {"organisation": "...", "website": "...", "contacts": [{"name": "person name or empty", "role": "role or department", "email": "...", "phone": "...", "channel": "where to send (email, portal form, registration page)", "kind": "personal" or "department" or "generic", "source": "URL where you saw it", "confidence": "high" or "medium" or "low"}], "notes": "one short line: what to do if no email was found, e.g. register on the supplier portal"}.
 Rules: only details actually seen on a page; copy emails exactly; never guess or construct an email from a name pattern; if only a contact form or portal exists, put it in channel and leave email empty. Prefer department emails (procurement@, tenders@) over generic info@ ones, and list at most 5 contacts, best first.`,
+  read_plan: `Open the procurement plan document at the URL in the subject (fetch it) and extract its packages. Return a Markdown table with one row per package: reference, description, category (goods / works / services / consulting), estimated amount and currency, procurement method, planned bid-invitation or opening date, status. Keep every number and date exactly as written in the plan; write "not stated" where the plan has no value. After the table, three bullets: which goods or works packages a cross-border supplier of equipment and commodities could bid for or sub-supply, with their dates. If the document cannot be opened, say so in one line and stop.`,
   other: "Answer the request practically.",
 };
 
@@ -64,14 +65,16 @@ Task type: ${type || "other"}. ${GUIDE[type] || GUIDE.other}
 Subject: ${String(target || "").slice(0, 400)}
 ${verified ? `VERIFIED REGISTRY FACTS (official open data, fetched just now; treat as authoritative, quote them under Identity and Legal, and say if a match was by name only):\n${verified}\n` : ""}${request ? `Specific request: ${String(request).slice(0, 1500)}\n` : ""}Data we already have (JSON): ${JSON.stringify(context || {}).slice(0, 6000)}
 
-Use web search to check current facts. ${type === "find_contact" ? "Return only the JSON object described above." : ""}Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" ? 600 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
+Use web search to check current facts. ${type === "find_contact" ? "Return only the JSON object described above." : ""}Write in ${he ? "Hebrew" : "English"}, practical and short (at most about ${type === "company_intel" || type === "read_plan" ? 900 : 350} words), short headings and lines starting with "- ". No emojis, no em-dashes.
 Never invent people, emails, phone numbers or companies; if a fact was not found, say so. Never suggest paying or doing favours for officials.
 ${type === "find_contact" ? "" : 'End with one line "Next step:" saying the single most useful action.'}`;
 
   try {
     const { text, sources } = await claude({
       max_tokens: 4000,
-      tools: [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" || type === "find_contact" ? 6 : 3 }],
+      tools: type === "read_plan"
+        ? [{ type: "web_fetch_20250910", name: "web_fetch", max_uses: 2 }]
+        : [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" || type === "find_contact" ? 6 : 3 }],
       messages: [{ role: "user", content: prompt }],
     });
     const src = sources.slice(0, 8).map((s) => `- ${s.title}: ${s.url}`).join("\n");
