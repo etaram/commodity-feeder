@@ -190,7 +190,9 @@ async function withFit(grid: Grid): Promise<Grid> {
 export async function getRange(key: string, fresh = false): Promise<Grid> {
   if (PUBLIC_CSV[key]) return csvGrid(PUBLIC_CSV[key]);
   if (["tenders", "upcoming"].includes(key)) return withFit(((await snapshot("static"))[key] as Grid) || []);
-  if (["titles", "repeat", "markets", "meta", "tot_t"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
+  // real counts, never the sheet's placeholder: open tenders in the full list, suppliers searchable (tiers 1-3)
+  if (key === "tot_t") return [["total", String((await allTenders()).rows.length)]];
+  if (["titles", "repeat", "markets", "meta"].includes(key)) return ((await snapshot("static"))[key] as Grid) || [];
   if (key in LIVE) return (await liveKey(key, fresh)) || ((await snapshot("live"))[key] as Grid) || [];
   if (key === "suppliers") return [SUP_HEAD, ...(await allSuppliers()).slice(0, 6000).map(supRow)];
   if (key === "tot_s") return [["suppliers", String((await allSuppliers()).length)]];

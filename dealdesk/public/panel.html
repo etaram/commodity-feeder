@@ -1299,6 +1299,7 @@ function renderTenders() {
     if (st.busy || st.key !== key) { scopeNote("#tscope", `<span class="spin"></span> ${esc(t("searching_all", { n: isFinite(tt) ? tt.toLocaleString("en-US") : "" }))}`); $("#tlist").innerHTML = ""; return; }
     if (st.err) { scopeNote("#tscope", ""); $("#tlist").innerHTML = `<div class="empty" style="padding:14px">${esc(errText(st.err, SHEETS))}</div>`; return; }
     const tot = isFinite(st.total) ? st.total : st.rows.length;
+    if (!(q || sec || reg || dec || cty || size || nl || intl) && isFinite(st.total)) $("#c-tenders").textContent = st.total.toLocaleString("en-US");
     scopeNote("#tscope", esc(t("found_all", { n: tot.toLocaleString("en-US"), cap: st.rows.length < tot ? t("t_showing", { n: st.rows.length.toLocaleString("en-US") }) : "" })));
     S.tMore = st.rows.length < tot && (S.tCap || 2000) < 20000 ? Math.min(2000, tot - st.rows.length) : 0;
     return renderTenderList(st.rows);
@@ -2134,7 +2135,7 @@ function wireEstimate(r) {
 }
 
 /* ---------- free-language search: Claude turns the request into keywords (with synonyms) and filters ---------- */
-const NL_CTX = { t: "searching open public tenders worldwide", c: "searching a database of 150,000 suppliers: manufacturers, traders, exporters and logistics companies", d: "searching trade opportunities, repeat public buyers and import market signals" };
+const NL_CTX = { t: "searching open public tenders worldwide", c: "searching a database of suppliers (manufacturers first, then traders, exporters and logistics companies)", d: "searching trade opportunities, repeat public buyers and import market signals" };
 async function askSubmit(key) {
   const q = $("#askq-" + key).value.trim(), chips = $("#nl-" + key);
   if (!q) { clearNL(key); return; }
