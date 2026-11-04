@@ -19,6 +19,35 @@ WORKS = {"BUILDING", "INFRA", "WATER", "ENGINEERING"}
 NAME2ID = {v: k for k, v in SECTORS.items()}
 
 
+
+# A company's main sector is what it is, not what it last won: (1) its declared industry or a name that says it
+# (Leonardo, "... Defence Systems", "... Pharmaceuticals"); (2) otherwise the sector of the money it won, with the
+# number of contracts as a smaller weight, so ten small consulting jobs do not outweigh one large defence contract.
+IDENTITY = [
+    (re.compile(r"\b(defen[cs]e|military|armament|arms|ammunition|munitions|missile|ordnance|leonardo|rafael|elbit|thales|rheinmetall|"
+                r"saab|bae systems|kongsberg|nexter|knds|hensoldt|aselsan|roketsan|mbda|lockheed|raytheon|northrop|general dynamics)\b", re.I), "DEFENCE"),
+    (re.compile(r"\b(pharma\w*|biotech\w*|medical devices?|diagnostics)\b", re.I), "HEALTH"),
+    (re.compile(r"\b(steel|metals?|mining|aluminium|aluminum|copper)\b", re.I), "MINING_METALS"),
+    (re.compile(r"\b(cement|ceramics?|glass|tiles)\b", re.I), "CONSTR_MAT"),
+    (re.compile(r"\b(cables?|transformers?|switchgear|electric(al)?|solar|energy systems)\b", re.I), "POWER"),
+    (re.compile(r"\b(telecom\w*|software|informatics|it solutions|ict)\b", re.I), "ICT"),
+]
+SERVICE_SECTORS = {"CONSULTING", "MAINT", "SOCIAL", "ENV_WASTE", "ENGINEERING", "LOGISTICS"}
+
+
+def main_sectors(x, name):
+    count, usd = x["sectors"], x.get("sec_usd", {})
+    tot_c, tot_u = sum(count.values()) or 1, sum(usd.values()) or 0
+    score = {k: 0.35 * count[k] / tot_c + (0.65 * usd.get(k, 0) / tot_u if tot_u else 0.65 * count[k] / tot_c) for k in count}
+    ident = x.get("declared") or next((sec for rx, sec in IDENTITY if rx.search(f"{name} {x.get('industries', '')}")), "")
+    if ident:
+        score[ident] = score.get(ident, 0) + 1.0  # identity outranks any contract mix
+    # a goods maker is not a consultancy because it also sold advice: a service sector leads only with a clear margin
+    ranked = sorted(score.items(), key=lambda y: -y[1])
+    if len(ranked) > 1 and ranked[0][0] in SERVICE_SECTORS and ranked[1][0] not in SERVICE_SECTORS and ranked[0][1] < ranked[1][1] * 1.5:
+        ranked[0], ranked[1] = ranked[1], ranked[0]
+    return ranked
+
 def norm(n):
     n = re.sub(r"[^\w ]", " ", (n or "").lower())
     n = LEGAL.sub(" ", n)
@@ -276,7 +305,7 @@ def _awards():
 def build():
     rates = _rates()
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
-                               "sectors": defaultdict(int), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
+                               "sectors": defaultdict(int), "sec_usd": defaultdict(float), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
                                "last": "", "first": "9999", "sources": set(), "example": "", "ex_usd": 0,
                                "email": "", "phone": "", "website": "", "address": "", "legal_id": "", "goods": 0, "works": 0,
                                "works_usd": 0.0,
@@ -301,7 +330,7 @@ def build():
                 x["names"][w] += 1; x["country"][wc] += 1; x["wins"] += 1; x["usd"] += share
                 sec = a.get("sector") or NAME2ID.get(a.get("sector_name", ""), "")
                 if sec:
-                    x["sectors"][sec] += 1
+                    x["sectors"][sec] += 1; x["sec_usd"][sec] += share
                     x["goods"] += 1 if sec in GOODS else 0
                 if sec in WORKS or str(a.get("nature", "")).lower().startswith("works"):
                     x["works"] += 1; x["works_usd"] += share
@@ -354,7 +383,7 @@ def build():
         if x is None:
             x = sup[k]; x["names"][c["name"]] += 1; x["country"][k[1]] += 1; x["tier_b"] = True; n_b += 1
             if c.get("sector"):
-                x["sectors"][c["sector"]] += 1
+                x["sectors"][c["sector"]] += 1; x["declared"] = c["sector"]
                 x["goods"] += 1 if c["sector"] in GOODS else 0
             x["sources"].add("Wikidata listed" if c.get("listed_on") else "Wikidata")
         x["website"] = x["website"] or c.get("website", "")
@@ -435,7 +464,7 @@ def build():
             x["phone"] = wp["phone"]
         about = x.get("products") or wp.get("about") or ""
         items = "; ".join(i for i, _ in sorted(x["items"].items(), key=lambda y: -y[1])[:3])
-        secs = sorted(x["sectors"].items(), key=lambda y: -y[1])
+        secs = main_sectors(x, name)
         out.append({
             "supplier": name[:120], "country": wc, "region": region(wc) if wc else "",
             "tier": "", "notable": "yes" if x.get("notable") else "",
