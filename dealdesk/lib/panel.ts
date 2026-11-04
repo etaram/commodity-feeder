@@ -204,7 +204,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   const query = NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || "");
   const words = [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
     .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
-  const res = words.map((w) => new RegExp(`(^|[^\\p{L}])${w}`, "u"));
+  // plural and singular match each other: the stem drops a final "s" ("pipes" finds "pipe", "panels" finds "panel")
+  const res = words.map((w) => new RegExp(`(^|[^\\p{L}])${w.length > 4 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w}`, "u"));
   const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
   const scored: { s: Supplier; sc: number }[] = [];
   const origins = new Map<string, number>();

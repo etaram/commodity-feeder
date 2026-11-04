@@ -60,5 +60,6 @@ export async function toEnglish(q: string): Promise<{ text: string; how: "none" 
 export function allWordsRe(text: string): RegExp | null {
   const w = [...new Set(text.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((x) => x.length >= 2))].slice(0, 6);
   if (!w.length) return null;
-  return new RegExp(w.map((x) => `(?=.*(?:^|[^\\p{L}])${x})`).join(""), "iu");
+  const stem = (x: string) => (x.length > 4 && x.endsWith("s") && !x.endsWith("ss") ? x.slice(0, -1) : x); // plural = singular
+  return new RegExp(w.map((x) => `(?=.*(?:^|[^\\p{L}])${stem(x)})`).join(""), "iu");
 }

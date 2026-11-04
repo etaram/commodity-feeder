@@ -77,8 +77,9 @@ def translate(q, d):
     return k, "needs AI translation"
 
 
-def words(q):
-    return [x for x in dict.fromkeys(re.split(r"[^\w]+", q.lower())) if len(x) >= 2][:6]
+def words(q):  # the panel's stem: a final "s" is dropped so plural and singular match
+    w = [x for x in dict.fromkeys(re.split(r"[^\w]+", q.lower())) if len(x) >= 2][:6]
+    return [x[:-1] if len(x) > 4 and x.endswith("s") and not x.endswith("ss") else x for x in w]
 
 
 def hits(text, ws):
@@ -119,7 +120,7 @@ def run():
         else:
             if Sx is None:
                 out.append({"id": cid, "scope": scope, "q": q, "en": en, "how": how, "skipped": "supplier index key not available here"}); continue
-            rows = [(r, " ".join(str(r.get(k, "")) for k in ("n", "p", "cm", "s", "s2", "hs"))) for r in Sx]
+            rows = [(r, " ".join(str(r.get(k, "")) for k in ("n", "p", "cm", "lg", "hs"))) for r in Sx]
             need = len(ws) if len(ws) <= 3 else -(-len(ws) * 3 // 4)
             key = lambda r: (r.get("tr", "9"), -(float(r.get("sh") or 0)), -(float(r.get("w") or 0)))
         m = [(r, txt) for r, txt in rows if ws and hits(txt, ws) >= need]
