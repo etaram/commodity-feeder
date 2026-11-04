@@ -139,6 +139,8 @@ def build():
         sig = next((n for n, rx in SIGNAL if re.search(rx, text, re.I)), "")
         cs = mentions(text)
         m = LEAD_RX.search(title)
+        if m and (m.group(1) in _countries() or re.fullmatch(r"(The )?(Contractor|Government|Ministry|Company|Firm|Consortium|Group|State|President|Minister|Officials?|Report|Why|How|What|When)", m.group(1), re.I)):
+            m = None
         items.append({"date": str(d or t), "topic": topic, "region": regn or (region(cs[0]) if cs else ""), "title": title[:200], "source": (it.get("source") or source)[:60],
                       "url": it["url"], "countries": " ".join(cs), "group": group_of_text(text) or "", "signal": sig,
                       "lead_company": (m.group(1) if m and len(m.group(1)) > 3 else "")[:80], "summary": summ})
