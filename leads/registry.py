@@ -67,6 +67,7 @@ OTHER = {
                "unofficial library", "leads/trends.csv"),
     "grants": ("projects", "grants and incentives", "public pages", "leads/grants.csv"),
     "news": ("signals", "economic news", "public RSS", None),
+    "briefing": ("signals", "world briefing feed: trade, shipping, commodities, geopolitics, regional infrastructure, owner's own feeds (Briefing Sources tab)", "public RSS feeds", "leads/briefing_items.csv"),
     "gdelt": ("signals", "business news per watched country (GDELT DOC API, free, no key)", "official API", "leads/news.csv"),
     "plays": ("brain", "deal theses from signals: supply the winner, arbitrage gap, pre-tender approach", "derived", "leads/plays.csv"),
     "dealfit": ("brain", "deal-fit ranking with why and flags per notice", "derived", "leads/supplier_sectors.csv"),
