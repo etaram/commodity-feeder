@@ -82,6 +82,7 @@
 
   // Instant jobs on the web: the server researches now (Claude Haiku 5.5 with web search) instead of queueing for the worker.
   window.DD_INSTANT = async (job) => post("/api/panel/run", job, "Deal Desk AI");
+  window.DD_FIN = { list: () => getj("/api/panel/finance"), forDeal: (q) => post("/api/panel/finance", q, "Deal Desk") };
   window.DD_TODAY = async (focus) => { const r = await fetch("/api/panel/today" + (focus ? "?focus=" + encodeURIComponent(focus) : ""), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j; };
   // search all tenders (or suppliers) on the server: a word or an id, optionally in one country
   window.DD_SEARCH = async (o) => post("/api/panel/search", { kind: o.kind || "t", values: o.kind === "c" ? [[o.q || ""]] : [[String(o.q || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "country", o.country || ""]] });
