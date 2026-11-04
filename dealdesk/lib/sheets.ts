@@ -7,11 +7,16 @@ export function sheetsEnabled(): boolean {
   return Boolean(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
 }
 
+// One client per instance: the JWT caches its access token (about an hour), so reads no longer ask Google for a new
+// token every call (ten parallel page reads used to queue ten token requests and time out together).
+let jwtClient: JWT | null = null;
 async function client(): Promise<JWT | null> {
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
   if (!raw) return null;
+  if (jwtClient) return jwtClient;
   const key = JSON.parse(raw);
-  return new JWT({ email: key.client_email, key: key.private_key, scopes: ["https://www.googleapis.com/auth/spreadsheets"] });
+  jwtClient = new JWT({ email: key.client_email, key: key.private_key, scopes: ["https://www.googleapis.com/auth/spreadsheets"] });
+  return jwtClient;
 }
 
 async function call(jwt: JWT, method: string, url: string, body?: unknown) {

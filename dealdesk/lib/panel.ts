@@ -360,7 +360,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   const res = concepts;
   const scored: { s: Supplier; sc: number }[] = [];
   const origins = new Map<string, number>();
-  for (const s of [...(await allSuppliers()), ...(await webSuppliers().catch(() => [] as Supplier[]))]) {
+  // web-found suppliers join only if their tab answers within 1.5 s; the search never waits on Sheets
+  const web = await Promise.race([webSuppliers().catch(() => [] as Supplier[]), new Promise<Supplier[]>((res) => setTimeout(() => res([]), 1500))]);
+  for (const s of [...(await allSuppliers()), ...web]) {
     if (o.originRegion && s.rg && s.rg !== o.originRegion) continue;
     if (o.originCountry && s.c !== o.originCountry) continue;
     if (o.exportersOnly && !s.x) continue;

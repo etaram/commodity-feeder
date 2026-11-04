@@ -93,7 +93,7 @@ def _hs_names():
         return {}
 
 
-def suppliers(limit=90_000):
+def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the universe
     key = os.environ.get("WEB_INDEX_KEY", "")
     if not key:  # kept in the private Supplier Universe sheet (hidden tab Config), readable by the service account
         try:
