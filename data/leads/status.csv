@@ -1,50 +1,50 @@
 source,last_run_utc,rows,note,detail
-ted,2026-11-04T04:04,19689,OK,fetched=5439; days=3; cache=19689
-fts,2026-11-04T04:04,168,OK,pages=1
-sam,2026-11-04T04:07,6893,OK,fetched=8237; set_aside=11775; open_to_foreign=5101; full=1
-canadabuys,2026-11-04T04:08,802,OK,
+ted,2026-11-04T06:14,19689,OK,fetched=5439; days=3; cache=19689
+fts,2026-11-04T06:15,168,OK,pages=1
+sam,2026-11-04T06:15,6978,OK,fetched=1587; set_aside=11775; open_to_foreign=5157; full=0
+canadabuys,2026-11-04T06:15,802,OK,
 za,2026-11-04T04:08,693,OK,
 worldbank,2026-11-04T05:21,661,OK,new=277; cache=661; days=10
-ebrd,2026-11-04T04:09,43,OK,
+ebrd,2026-11-04T06:15,43,OK,
 mrgov,2026-11-04T05:22,190,OK,
-ungm,2026-11-04T04:10,980,OK,new=449; total_active=1743; pages=34
-undp,2026-11-04T04:10,14,OK,new=21; cache=14
-aiib,2026-11-04T04:10,175,OK,new=174; awards=277
-isdb,2026-11-04T04:10,35,OK,new=38
-etimad,2026-11-04T04:42,474,OK,new=90; pages=10
-prozorro,2026-11-04T04:43,853,OK,candidates=2465; fetched=29
-pncp,2026-11-04T04:43,3205,OK,new=167
-secop,2026-11-04T04:43,743,OK,new=2
+ungm,2026-11-04T06:16,989,OK,new=457; total_active=1741; pages=34
+undp,2026-11-04T06:16,14,OK,new=21; cache=14
+aiib,2026-11-04T06:16,175,OK,new=174; awards=277
+isdb,2026-11-04T06:17,35,OK,new=38
+etimad,2026-11-04T06:18,482,OK,new=98; pages=11
+prozorro,2026-11-04T06:19,862,OK,candidates=2463; fetched=44
+pncp,2026-11-04T06:19,3225,OK,new=187
+secop,2026-11-04T06:19,743,OK,new=2
 germany,2026-11-04T04:43,10483,OK,new=751; awards_seen=359; awards_saved=744
-contractsfinder,2026-11-04T04:43,90,OK,new=20
+contractsfinder,2026-11-04T06:20,90,OK,new=20
 paraguay,2026-11-04T04:59,237,OK,new=3
 dominican,2026-11-04T05:01,619,OK,new=112; listed=812
-austender,2026-11-04T05:01,147,OK,new=122
-oman,2026-11-04T05:01,377,OK,new=50
+austender,2026-11-04T06:22,147,OK,new=122
+oman,2026-11-04T06:22,391,OK,new=50
 france,2026-11-04T05:01,6412,OK,new=596
 spain,2026-11-04T05:10,2941,OK,new=924; pages=8; awards_seen=1898
-kenya,2026-11-04T05:10,412,OK,new=0
-moldova,2026-11-04T04:44,861,OK,new=350
-uruguay,2026-11-03T23:29,398,OK,"new=63 | last error: TTPSConnection(host='www.comprasestatales.gub.uy', port=443) at 0x71464c5334a0>, 'Connection to www.comprasestatales.gub.uy timed out. (connect timeout=120)')) "
+kenya,2026-11-04T06:23,412,OK,new=50
+moldova,2026-11-04T06:21,865,OK,new=353
+uruguay,2026-11-04T06:21,366,OK,new=1
 bahrain,2026-11-04T04:49,15,OK,new=7
-malaysia,2026-11-04T04:50,432,OK,new=432
+malaysia,2026-11-04T06:22,432,OK,new=432
 qatar,2026-11-04T05:20,244,OK,new=205
 israel,2026-11-03T11:24,944,OK,bodies_scanned=909; open_notices=944
 nyc,2026-11-04T04:07,191,OK,open=191
 us_cities,2026-11-04T04:08,290,OK,Los_Angeles=208 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-11-04T05:21,943,OK,projects=943
 ocdr_tenders,2026-11-03T21:04,377,OK,publications=29; read=29; releases=1107438; open_tenders=377; countries=6
-afdb,2026-11-04T04:10,42,OK,new=0
-iadb,2026-11-04T04:10,111,OK,new=111
+afdb,2026-11-04T06:17,42,OK,new=0
+iadb,2026-11-04T06:17,111,OK,new=111
 chile,2026-11-04T04:10,4190,OK,new=4175
-simap,2026-11-04T04:10,438,OK,new=240
-gets,2026-11-04T04:11,418,OK,new=406
+simap,2026-11-04T06:17,438,OK,new=240
+gets,2026-11-04T06:17,419,OK,new=407
 india,2026-11-04T04:41,57486,OK,new=56056
-rwanda,2026-11-04T05:11,261,OK,new=261
-uganda,2026-11-04T05:11,27,OK,new=27
-ghana,2026-11-04T05:12,87,OK,new=87
-malawi,2026-11-04T05:12,55,OK,new=45
-mozambique,2026-11-04T05:12,53,OK,new=0
-dubai,2026-11-04T05:12,267,OK,new=249
-philippines,2026-11-04T05:14,1946,OK,new=1200
+rwanda,2026-11-04T06:24,263,OK,new=263
+uganda,2026-11-04T06:24,27,OK,new=27
+ghana,2026-11-04T06:25,87,OK,new=87
+malawi,2026-11-04T06:25,56,OK,new=46
+mozambique,2026-11-04T06:25,53,OK,new=0
+dubai,2026-11-04T06:25,301,OK,new=240
+philippines,2026-11-04T06:27,1946,OK,new=1200
 importyeti,2026-11-04T05:22,1,OK,"1 HS headings cached; this run 0, due 681"
