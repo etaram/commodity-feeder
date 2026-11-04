@@ -408,6 +408,12 @@ ul.news{list-style:none;padding:0;margin:0}ul.news li{padding:5px 0;border-botto
   .db-steps li{padding:4px 8px;font-size:12px}
   main{padding-inline:12px !important}
 }
+/* nothing may make the page wider than the screen (long words, links, tables scroll inside their own box) */
+html,body{overflow-x:hidden;max-width:100%}
+main,.view,.box,.section,.detail,.split > *{min-width:0;max-width:100%}
+.brief,.result,.sub,.note,.t,dd,td,.card,.flash{overflow-wrap:anywhere;word-break:break-word}
+.tbl{overflow-x:auto;max-width:100%}
+a.lnk{white-space:nowrap}
 #today-brief:empty,#today-plays:empty,#today-tg:empty,#today-app:empty{display:none}
 .pulse{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0 16px}
 .pulse .pk{background:var(--card,#fff);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
@@ -2295,7 +2301,8 @@ function clearNL(key) {
 const latestJob = tid => (S.data.jobs || []).filter(j => j.target_id === tid).sort((a, b) => String(b.created).localeCompare(String(a.created)))[0];
 // joins fragments with a separator, each one isolated (<bdi>) so mixed Hebrew/English lines keep their order
 const bidiJoin = (parts, sep = " · ") => (parts || []).filter(x => x !== "" && x != null).map(x => `<bdi>${esc(x)}</bdi>`).join(sep);
-const linkify = x => esc(x).replace(/https?:\/\/[^\s<)"]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
+// a link shows its site name, never the raw address (Google News links are hundreds of characters and widened the page)
+const linkify = x => esc(x).replace(/https?:\/\/[^\s<)"]+/g, u => { const h = (u.match(/^https?:\/\/([^/?#]+)/) || [])[1] || "link"; return `<a href="${u}" target="_blank" rel="noopener" class="lnk">${h.replace(/^www\./, "")}</a>`; });
 /* AI answers come as Markdown: show them as readable text (headings, bold, bullets, links, simple tables), never raw
    Markdown or JSON. Escapes first, so model output cannot inject HTML. Containers keep white-space: pre-wrap. */
 const mdHtml = x => linkify(String(x ?? "").replace(/```[a-z]*\n?/gi, "").trim())
