@@ -43,6 +43,9 @@ export async function linkCode(email: string): Promise<string> {
 
 async function linkChat(chatId: string, code: string, lang: "he" | "en"): Promise<string> {
   const users = (await listUsers(true)).filter((u) => u.status === "active");
+  // the shared team login (TEAM_USER) has no Users row but signs in to the panel and sees its own code
+  const team = (process.env.TEAM_USER || "").trim().toLowerCase();
+  if (team && !users.some((u) => u.email.toLowerCase() === team)) users.push({ email: team, name: "Sinder", role: "admin", status: "active" } as (typeof users)[number]);
   for (const u of users) {
     if ((await linkCode(u.email)) === code.toUpperCase()) {
       await appendRow(TAB, [chatId, u.email, u.name || "", new Date().toISOString().slice(0, 16), lang, "on"]);
@@ -50,7 +53,7 @@ async function linkChat(chatId: string, code: string, lang: "he" | "en"): Promis
       return lang === "he" ? `מקושר ל-${u.name || u.email}. שלח /help לרשימת הפקודות.` : `Linked to ${u.name || u.email}. Send /help for the commands.`;
     }
   }
-  return lang === "he" ? "קוד לא מוכר. הקוד מופיע במערכת: היום > טלגרם." : "Unknown code. The code is shown in the panel: Today > Telegram.";
+  return lang === "he" ? "קוד לא מוכר. הקוד מופיע במערכת: היום בשבילך > טלגרם, בתחתית העמוד." : "Unknown code. The code is shown in the panel: Today for you > Telegram, at the bottom.";
 }
 
 const HELP_HE = `פקודות:
