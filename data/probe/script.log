@@ -1,6 +1,6 @@
-plain 400 {"code":"400","message":"No data found."}
-fiscal_year=2026 400 {"code":"400","message":"No data found."}
-fiscal_year='2026' 400 {"code":"400","message":"No data found."}
-fiscal_year = 2026 400 {"code":"400","message":"No data found."}
-borrower_country=Kenya 400 {"code":"400","message":"No data found."}
-contract_signing_date desc 400 {"code":"400","message":"No data found."}
+{'viewId': 'DS01154', 'top': 2, 'type': 'json'} 200 {   "count": 147872,   "data": [     {       "as_of_date": "2026-11-04T00:00:00",       "fiscal_year": 2020.0,       "region": "Western and Central Africa",       "borrower_country": "Burkina Faso",       "borrower_country_code": "BF",       "project_id": "P120517",       "project_name": "Local Government Support, COVID-19 and Resilience Response Project",       "procurement_category": 
+{'viewId': 'DS01702', 'top': 2, 'type': 'json'} 400 {"code":"400","message":"No data found."}
+{'datasetId': 'DS00005', 'resourceId': 'RS00005', 'top': 2, 'type': 'json'} 400 {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-4ca8d3522b0955ffbe9e83ba62f81e62-df8f7d19dad2e6b8-00","errors":{"viewId":["The viewId field is required."]}}
+{'viewId': 'DS01154', 'top': 2, 'type': 'json', 'filter': 'fiscal_year=2026'} 200 {   "count": 19185,   "data": [     {       "as_of_date": "2026-11-04T00:00:00",       "fiscal_year": 2026.0,       "region": "Middle East, North Africa, Afghanistan, and Pakistan",       "borrower_country": "Yemen, Republic of",       "borrower_country_code": "RY",       "project_id": "P178143",       "project_name": "Program on Sustainable Fishery Development in Red Sea and Gulf of Ade
+{'viewId': 'DS01154', 'top': 2, 'type': 'json', 'filter': 'borrower_country=Kenya|Ethiopia'} 417 Invalid column name 'Kenya'. Invalid column name 'Ethiopia'.
+meta DS00005 200 {   "id": "DS00005",   "object_type": "DATASET",   "title": "Contract Awards in Investment Project Financing (Since FY 2020)",   "description": "<p>The data available here now includes all contract awards financed by The World Bank under Investment Project Financing (IPF) operations since FY2020. The data source is STEP (Systematic Tracking of Exchanges in Procurement), which is required to be used by Borrowers in all IPF operations subject to the World Bank?s Procurement Regulations. Data is entered by Borrowers. \"Supplier Country / Economy\" represents the place of supplier registration
