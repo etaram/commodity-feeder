@@ -668,10 +668,16 @@ def merge():
             dealfit.apply(tenders, prefs)  # the ranking brain: score = deal fit, with fit_why and fit_flags
         except Exception as e:  # noqa: BLE001
             log.warning("deal fit: %s", e); prefs = {}
-        for mod in ("briefing", "wb_plans", "plays", "gdelt", "lei", "fx"):  # deal theses from the signals, and the week's news per watched country
+        for mod in ("briefing", "wb_plans", "plays", "gdelt", "lei", "fx", "attention"):  # signals -> theses -> news -> groups -> fx -> attention
             try:
                 m = __import__(f"leads.{mod}", fromlist=["build"])
-                m.build(prefs, tenders) if mod == "gdelt" else m.build()  # briefing before plays: plays read news_leads
+                if mod == "gdelt":
+                    m.build(prefs, tenders)
+                elif mod == "attention":
+                    from .gdelt import watched
+                    m.build(watched(prefs, tenders))
+                else:
+                    m.build()  # briefing before plays: plays read news_leads
             except Exception as e:  # noqa: BLE001
                 log.warning("%s: %s", mod, e)
         tenders.sort(key=lambda x: ({"Pursue": 0, "Watch": 1, "Ignore": 2}[x["decision"]], -(x["ev_usd"] or 0), -x["score"]))
