@@ -240,7 +240,21 @@ export async function searchTenders(v: string[][], meta?: { total?: number }): P
     if (Number.isFinite(md) && md > 0 && r.stage !== "planned" && Number.isFinite(dl) && dl < md) return false;
     if (re && !re.test(`${r.id} ${r.title_en} ${r.title_original} ${he.get(r.id) || ""} ${r.buyer} ${r.commodity} ${r.sector}`.toLowerCase())) return false;
     return true;
-  }).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
+  });
+  // row 6, column 2: the sort the user chose (over all matches, not only the loaded page)
+  const sortBy = g(5, 1) || "fit";
+  const dl = (r: Record<string, string>) => { const d = num(r.days_left); return Number.isFinite(d) ? d : 1e9; };
+  const SORTS: Record<string, (a: Record<string, string>, b: Record<string, string>) => number> = {
+    fit: (a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0),
+    value: (a, b) => (num(b.est_value_usd) || 0) - (num(a.est_value_usd) || 0),
+    ev: (a, b) => (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0),
+    deadline: (a, b) => dl(a) - dl(b),
+    latest: (a, b) => dl(b) - dl(a),
+    az: (a, b) => String(a.title_en || a.title_original || "").localeCompare(String(b.title_en || b.title_original || "")),
+    country: (a, b) => String(a.country || "").localeCompare(String(b.country || "")) || (num(b.fit) || 0) - (num(a.fit) || 0),
+    buyer: (a, b) => String(a.buyer || "").localeCompare(String(b.buyer || "")),
+  };
+  out.sort(SORTS[sortBy] || SORTS.fit);
   if (meta) meta.total = out.length;
   return [head, ...out.slice(0, cap).map((r) => head.map((k) => r[k] ?? ""))];
 }
