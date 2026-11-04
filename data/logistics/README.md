@@ -89,3 +89,7 @@
 - These organisations are not included because their official pages could not be read or did not confirm the service: TÜV SÜD, Yusen Logistics, Norden, Livingston (US and Canada only), Ashdod Port Company (site blocks automated reading), Doraleh Multipurpose Port, Agility (its forwarding business was sold to DSV), Shipco Transport and Unilog (no official site found), and the Volga-Dnepr successors.
 - DB Schenker is folded into the DSV row because dbschenker.com project pages now redirect to dsv.com.
 - Many global providers do not state their Israel presence on the pages checked, so `israel_presence` is `not stated`. This does not mean they are absent from Israel.
+
+## Independent check (November 2026)
+
+A second, independent pass re-checked all 148 rows field by field on the official pages. 25 wrong fields were corrected (for example Descartes is a customs software platform, not a broker; Redcliffe and SLG are defence-capable forwarders; Challenge is headquartered in Malta; Kenya PVoC now cites KEBS and its manual version 15). Fields that no official page could confirm, usually because the site refused automated reading, are listed per row in `check_note`. Raw results: `_verify_1_result.csv`, `_verify_2_result.csv`.
