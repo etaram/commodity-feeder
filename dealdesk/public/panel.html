@@ -22,7 +22,7 @@ table.mk tr:last-child td{border-bottom:0}
 <script>try{var u=new URLSearchParams(location.search).get("ui");if(u)localStorage.setItem("dd-ui",u);if(localStorage.getItem("dd-ui")==="classic")document.documentElement.setAttribute("data-ui","classic")}catch(e){}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Secular+One&display=swap">
 <style>
 /* Layout: a trading-desk console. Top bar + tabs, then a list column and a detail column (stacked on phones). */
 :root{
@@ -153,92 +153,108 @@ a{color:var(--info)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.spin{animation:none}}
-/* ===== v2 "chart room" theme (2026-11-04). Off with ?ui=classic (remembered), back on with ?ui=v2. =====
-   Harbor navy and signal teal on cool chart paper; Frank Ruhl Libre for headings and figures; IBM Plex for data.
-   One bold element: the score ring, filled in proportion to the score. Everything else stays quiet. */
-html:not([data-ui="classic"]){
-  --ink:#0f2a3a; --bg:#eef1ee; --panel:#fbfcfa; --line:#d3dad6; --muted:#566872; --soft:#e5ebe7;
-  --accent:#0e6f6b; --accent-ink:#ffffff; --accent-soft:#dcece8;
-  --good:#2e7d4f; --good-soft:#e0efe5; --warn:#8f5d00; --warn-soft:#f6ecd3; --bad:#b5432e; --bad-soft:#f6e3de; --info:#2d5e8c; --info-soft:#e2eaf3;
-  --harbor:#0f2a3a; --harbor-2:#16384b; --ring-track:#d9e1dd;
-  --f-display:"Frank Ruhl Libre","IBM Plex Sans Hebrew",Georgia,serif;
+/* ===== v2 workspace (2026-11-04, brief section 9). Off with ?ui=classic (remembered per browser), on with ?ui=v2. =====
+   Sinder navy and restrained gold on light surfaces; IBM Plex Sans / Sans Hebrew (existing fonts, both scripts).
+   Five destinations (side navigation on wide screens, bottom bar on phones); existing views become sub-tabs.
+   Contrast checked: text pairs 4.6-14:1; form fields use #7B8798 boundaries (3.65:1 on white). Light theme only. */
+:root:not([data-ui="classic"]){
+  color-scheme:light;
+  --ink:#172b4d; --bg:#f5f7fa; --panel:#ffffff; --line:#cbd5e1; --muted:#526175; --soft:#eef2f7; --ctl:#7b8798;
+  --accent:#8a6500; --accent-ink:#ffffff; --accent-soft:#f6efdd;
+  --good:#146c43; --good-soft:#e3f1e8; --warn:#8a4b00; --warn-soft:#f8ebda; --bad:#b42318; --bad-soft:#fbe4e1; --info:#2f5d9a; --info-soft:#e4ecf6;
+  --nav:#172b4d; --nav-2:#1f3660; --nav-ink:#e7edf5; --nav-muted:#aebbd0; --gold:#c9a44a; --ring-track:#dde3ec;
   --f-body:"IBM Plex Sans","IBM Plex Sans Hebrew",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
-  --r-box:14px; --r-ctl:8px;
+  --f-display:var(--f-body);
+  --side:220px; --r-box:10px; --r-ctl:7px;
 }
-@media (prefers-color-scheme: dark){html:not([data-ui="classic"]):not([data-theme="light"]){
-  --ink:#e3ece9; --bg:#0b1820; --panel:#10222c; --line:#223a46; --muted:#93a8ae; --soft:#152b37;
-  --accent:#4fb3a9; --accent-ink:#06201d; --accent-soft:#143832;
-  --good:#6cc596; --good-soft:#13342a; --warn:#e0b257; --warn-soft:#3a2f16; --bad:#ef8a75; --bad-soft:#3c1f1a; --info:#8db6e6; --info-soft:#17304a;
-  --harbor:#071219; --harbor-2:#0f2330; --ring-track:#223a46}}
-html[data-theme="dark"]:not([data-ui="classic"]){
-  --ink:#e3ece9; --bg:#0b1820; --panel:#10222c; --line:#223a46; --muted:#93a8ae; --soft:#152b37;
-  --accent:#4fb3a9; --accent-ink:#06201d; --accent-soft:#143832;
-  --good:#6cc596; --good-soft:#13342a; --warn:#e0b257; --warn-soft:#3a2f16; --bad:#ef8a75; --bad-soft:#3c1f1a; --info:#8db6e6; --info-soft:#17304a;
-  --harbor:#071219; --harbor-2:#0f2330; --ring-track:#223a46}
-html:not([data-ui="classic"]) body{background:var(--bg);font-size:14.5px;line-height:1.55}
+:root:not([data-ui="classic"]) body{background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55}
 html[lang="he"]:not([data-ui="classic"]) body{--f-body:"IBM Plex Sans Hebrew","IBM Plex Sans",system-ui,Arial,sans-serif}
+:root:not([data-ui="classic"]) bdi{unicode-bidi:isolate}
 
-/* the harbor band: brand, status and tabs on deep navy */
-html:not([data-ui="classic"]) body::before{background:var(--harbor)}
-html:not([data-ui="classic"]) header.top{background:var(--harbor);border-bottom:0;color:#e9f1ef}
-html:not([data-ui="classic"]) .bar{padding-block:14px 8px}
-html:not([data-ui="classic"]) .brand{font-family:var(--f-display);font-weight:900;font-size:27px;letter-spacing:0;color:#fff;line-height:1}
-html:not([data-ui="classic"]) .brand small{font-family:var(--f-body);font-weight:500;font-size:13px;letter-spacing:0;color:#9fc2bd;text-transform:none}
-html:not([data-ui="classic"]) bdi{unicode-bidi:isolate}
-html:not([data-ui="classic"]) header.top .status,html:not([data-ui="classic"]) header.top .me{color:#b9cdd0}
-html:not([data-ui="classic"]) header.top button,html:not([data-ui="classic"]) header.top .btn{background:transparent;color:#e9f1ef;border-color:#33536a}
-html:not([data-ui="classic"]) header.top button:hover{border-color:#7fc8bf}
-html:not([data-ui="classic"]) header.top .lang button[aria-pressed="true"],html:not([data-ui="classic"]) header.top .seg button[aria-pressed="true"]{background:#e9f1ef;color:var(--harbor)}
-html:not([data-ui="classic"]) header.top .pill{background:#1f4357;color:#cfe6e2}
-html:not([data-ui="classic"]) nav.tabs{gap:2px;scrollbar-width:none}
-html:not([data-ui="classic"]) nav.tabs::-webkit-scrollbar{display:none}
-html:not([data-ui="classic"]) nav.tabs button{color:#a9bfc4;font-weight:500;font-size:14.5px;padding:11px 14px 12px;border-bottom:3px solid transparent}
-html:not([data-ui="classic"]) nav.tabs button:hover{color:#fff;border-color:transparent}
-html:not([data-ui="classic"]) nav.tabs button[aria-selected="true"]{color:#fff;font-weight:600;border-bottom-color:#4fb3a9}
-html:not([data-ui="classic"]) nav.tabs .count{font-family:var(--f-body);font-variant-numeric:tabular-nums;color:#7fa3aa;font-size:12px}
+/* header: light surface with status and the sub-tabs of the current destination */
+:root:not([data-ui="classic"]) body::before{background:var(--panel)}
+:root:not([data-ui="classic"]) header.top{background:var(--panel);border-bottom:1px solid var(--line)}
+:root:not([data-ui="classic"]) .bar{padding-block:10px 4px;gap:12px}
+:root:not([data-ui="classic"]) .brand{font-family:"Secular One",var(--f-body);font-size:24px;color:var(--ink);letter-spacing:0}
+:root:not([data-ui="classic"]) .brand small{font-family:var(--f-body);font-weight:500;font-size:13px;letter-spacing:0;text-transform:none;color:var(--muted)}
+:root:not([data-ui="classic"]) nav.tabs{gap:2px;scrollbar-width:none}
+:root:not([data-ui="classic"]) nav.tabs::-webkit-scrollbar{display:none}
+:root:not([data-ui="classic"]) nav.tabs button{color:var(--muted);font-weight:500;font-size:14.5px;padding:9px 12px 10px;border-bottom:3px solid transparent}
+:root:not([data-ui="classic"]) nav.tabs button:hover{color:var(--ink);border-color:transparent}
+:root:not([data-ui="classic"]) nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--accent)}
+:root:not([data-ui="classic"]) nav.tabs button.off-group{display:none}
+:root:not([data-ui="classic"]) nav.tabs .count{font-family:var(--f-body);font-variant-numeric:tabular-nums;font-size:12px}
 
-/* type: serif for headings and figures, Plex for data */
-html:not([data-ui="classic"]) h2{font-family:var(--f-display);font-weight:700;font-size:23px;line-height:1.25;letter-spacing:-.005em}
-html:not([data-ui="classic"]) .detail h2{font-family:var(--f-display);font-weight:700;font-size:21px;line-height:1.3}
-html:not([data-ui="classic"]) h3{font-size:14.5px;font-weight:600}
-html:not([data-ui="classic"]) .num,html:not([data-ui="classic"]) .score{font-family:var(--f-body);font-variant-numeric:tabular-nums lining-nums}
-html:not([data-ui="classic"]) .kpis{gap:30px;margin-bottom:20px}
-html:not([data-ui="classic"]) .kpi b{font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1;font-variant-numeric:lining-nums}
-html:not([data-ui="classic"]) .kpi span{font-size:12.5px;margin-top:4px;max-width:22ch}
-html:not([data-ui="classic"]) .t{font-weight:600;line-height:1.4}
-html:not([data-ui="classic"]) .sub{line-height:1.45}
+/* five destinations */
+nav.dest{display:none}
+:root:not([data-ui="classic"]) nav.dest{display:flex;flex-direction:column;gap:2px;background:var(--nav);color:var(--nav-ink)}
+:root:not([data-ui="classic"]) nav.dest .dbrand{font-family:"Secular One",var(--f-body);font-size:24px;color:#fff;padding:18px 18px 14px}
+:root:not([data-ui="classic"]) nav.dest .dbrand small{display:block;font-family:var(--f-body);font-size:12.5px;color:var(--nav-muted);margin-top:2px;text-transform:none;letter-spacing:0}
+@media (max-width:1099px){
+  :root:not([data-ui="classic"]) header.top a.btn[href="/today"],:root:not([data-ui="classic"]) header.top .brand small{display:none}
+  :root:not([data-ui="classic"]) .bar{gap:8px;padding-block:8px 2px}
+  :root:not([data-ui="classic"]) .status{order:9;width:100%;margin-inline-start:0}
+}
+:root:not([data-ui="classic"]) nav.dest button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 18px;font:500 15px var(--f-body);color:var(--nav-muted);border-inline-start:3px solid transparent;min-height:44px}
+:root:not([data-ui="classic"]) nav.dest button:hover{color:#fff;background:var(--nav-2)}
+:root:not([data-ui="classic"]) nav.dest button[aria-current="true"]{color:#fff;font-weight:600;background:var(--nav-2);border-inline-start-color:var(--gold)}
+:root:not([data-ui="classic"]) nav.dest button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+:root:not([data-ui="classic"]) nav.dest .dfoot{margin-top:auto;padding:14px 18px;font-size:12.5px;color:var(--nav-muted)}
+#admin-go{display:none}
+@media (max-width:1099px){:root:not([data-ui="classic"]) #admin-go:not([hidden]){display:inline-flex}}
+@media (min-width:1100px){
+  :root:not([data-ui="classic"]) nav.dest{position:fixed;inset-block:0;inset-inline-start:0;width:var(--side);z-index:6;overflow-y:auto}
+  :root:not([data-ui="classic"]) header.top,:root:not([data-ui="classic"]) main{margin-inline-start:var(--side)}
+  :root:not([data-ui="classic"]) header.top .brand{display:none}
+}
+@media (max-width:1099px){
+  :root:not([data-ui="classic"]) nav.dest{position:fixed;inset-inline:0;bottom:0;z-index:20;flex-direction:row;gap:0;padding-bottom:env(safe-area-inset-bottom,0px);border-top:1px solid var(--nav-2)}
+  :root:not([data-ui="classic"]) nav.dest .dbrand,:root:not([data-ui="classic"]) nav.dest .dfoot{display:none}
+  :root:not([data-ui="classic"]) nav.dest button{flex:1 1 0;flex-direction:column;justify-content:center;gap:0;padding:7px 2px 8px;font-size:11.5px;line-height:1.2;text-align:center;border-inline-start:0;border-top:3px solid transparent;min-height:52px}
+  :root:not([data-ui="classic"]) nav.dest button[aria-current="true"]{border-top-color:var(--gold)}
+  :root:not([data-ui="classic"]) main{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+}
 
-/* surfaces: borders, no shadows; one elevation for the floating detail panel */
-html:not([data-ui="classic"]) .box,html:not([data-ui="classic"]) .list,html:not([data-ui="classic"]) .fm-card{border-radius:var(--r-box);border-color:var(--line)}
-html:not([data-ui="classic"]) .box{padding:16px 18px}
-html:not([data-ui="classic"]) .detail{border-radius:var(--r-box);padding:20px 22px;box-shadow:0 18px 40px -28px rgba(15,42,58,.45)}
-html:not([data-ui="classic"]) .row{padding:13px 16px;gap:14px}
-html:not([data-ui="classic"]) .row:hover{background:var(--soft)}
-html:not([data-ui="classic"]) .row[aria-current="true"]{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+/* type scale: 15 body, 14.5 rows, 13 metadata, 20 sections, 26 page titles; tabular figures */
+:root:not([data-ui="classic"]) h2{font-family:var(--f-body);font-weight:700;font-size:20px;line-height:1.3}
+:root:not([data-ui="classic"]) #v-research > h2,:root:not([data-ui="classic"]) .view > h2:first-child{font-size:24px}
+:root:not([data-ui="classic"]) .detail h2{font-family:var(--f-body);font-weight:700;font-size:19px;line-height:1.35}
+:root:not([data-ui="classic"]) h3{font-size:15px;font-weight:600}
+:root:not([data-ui="classic"]) .num,:root:not([data-ui="classic"]) .score{font-family:var(--f-body);font-variant-numeric:tabular-nums lining-nums}
+:root:not([data-ui="classic"]) .kpi b{font-family:var(--f-body);font-weight:700;font-size:26px;line-height:1.1}
+:root:not([data-ui="classic"]) .kpi span{font-size:13px;max-width:24ch}
+:root:not([data-ui="classic"]) .t{font-size:14.5px;font-weight:600;line-height:1.4}
+:root:not([data-ui="classic"]) .sub,:root:not([data-ui="classic"]) .note{font-size:13px;line-height:1.45}
+
+/* surfaces: borders and quiet separators, one soft elevation for the floating detail */
+:root:not([data-ui="classic"]) .box,:root:not([data-ui="classic"]) .list,:root:not([data-ui="classic"]) .fm-card{border-radius:var(--r-box)}
+:root:not([data-ui="classic"]) .detail{border-radius:var(--r-box);padding:18px 20px;box-shadow:0 12px 32px -24px rgba(23,43,77,.45)}
+:root:not([data-ui="classic"]) .row{padding:12px 16px;gap:14px}
+:root:not([data-ui="classic"]) .row[aria-current="true"]{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
 html[dir="rtl"]:not([data-ui="classic"]) .row[aria-current="true"]{box-shadow:inset -3px 0 0 var(--accent)}
-html:not([data-ui="classic"]) .section{margin-top:18px;padding-top:14px}
-html:not([data-ui="classic"]) .ai,html:not([data-ui="classic"]) .result{border-radius:10px;line-height:1.6;background:var(--soft);border:1px solid var(--line)}
+:root:not([data-ui="classic"]) .ai,:root:not([data-ui="classic"]) .result{border-radius:8px;line-height:1.6;border:1px solid var(--line)}
 
-/* controls */
-html:not([data-ui="classic"]) button,html:not([data-ui="classic"]) .btn{border-radius:var(--r-ctl);font-weight:600;padding:8px 13px}
-html:not([data-ui="classic"]) button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-html:not([data-ui="classic"]) button.primary:hover{filter:brightness(1.08)}
-html:not([data-ui="classic"]) .filters input,html:not([data-ui="classic"]) .filters select,html:not([data-ui="classic"]) .field input,html:not([data-ui="classic"]) .field select,html:not([data-ui="classic"]) textarea{border-radius:var(--r-ctl);padding:8px 11px;background:var(--panel)}
-html:not([data-ui="classic"]) .seg{border-radius:var(--r-ctl)}
-html:not([data-ui="classic"]) .seg button[aria-pressed="true"],html:not([data-ui="classic"]) .fm-chips button[aria-pressed="true"]{background:var(--harbor);color:#fff;border-color:var(--harbor)}
-html:not([data-ui="classic"]) :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-html:not([data-ui="classic"]) .pill{border-radius:6px;font-weight:600;padding:2px 8px}
-html:not([data-ui="classic"]) a{color:var(--accent);text-underline-offset:2px}
+/* controls: visible boundaries, 44px-friendly sizes, gold for selection, navy for primary */
+:root:not([data-ui="classic"]) button,:root:not([data-ui="classic"]) .btn{border-radius:var(--r-ctl);font-weight:600;padding:8px 13px;border-color:var(--ctl)}
+:root:not([data-ui="classic"]) button.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+:root:not([data-ui="classic"]) button.primary:hover{background:var(--nav-2)}
+:root:not([data-ui="classic"]) .filters input,:root:not([data-ui="classic"]) .filters select,:root:not([data-ui="classic"]) .field input,:root:not([data-ui="classic"]) .field select,:root:not([data-ui="classic"]) textarea{border-radius:var(--r-ctl);padding:8px 11px;border-color:var(--ctl);background:var(--panel);font-size:14.5px}
+:root:not([data-ui="classic"]) .seg{border-color:var(--ctl);border-radius:var(--r-ctl)}
+:root:not([data-ui="classic"]) .seg button{border:0}
+:root:not([data-ui="classic"]) .seg button[aria-pressed="true"],:root:not([data-ui="classic"]) .fm-chips button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+:root:not([data-ui="classic"]) :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:root:not([data-ui="classic"]) .me .pill{text-transform:none;letter-spacing:0}
+:root:not([data-ui="classic"]) .pill{border-radius:5px;font-weight:600;padding:2px 7px;font-size:12px}
+:root:not([data-ui="classic"]) a{color:var(--info);text-underline-offset:2px}
+@media (max-width:1099px){:root:not([data-ui="classic"]) button,:root:not([data-ui="classic"]) .btn{min-height:40px}}
 
-/* the score ring: the fill is the score (0-100), set from the number by the panel script */
-html:not([data-ui="classic"]) .score,html:not([data-ui="classic"]) .fm-score{
-  --p:0; width:44px;height:44px;min-width:44px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;
+/* score ring: filled to the score (0-100); gold for strong fits, never green (a fit is not a readiness signal) */
+:root:not([data-ui="classic"]) .score,:root:not([data-ui="classic"]) .fm-score{
+  --p:0; width:42px;height:42px;min-width:42px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;
   font-weight:700;font-size:13.5px;color:var(--ink);
-  background:radial-gradient(closest-side,var(--panel) 74%,transparent 75% 100%),conic-gradient(var(--ring,var(--muted)) calc(var(--p)*1%),var(--ring-track) 0)}
-html:not([data-ui="classic"]) .score.hi,html:not([data-ui="classic"]) .fm-score.hi{--ring:var(--accent);color:var(--accent)}
-html:not([data-ui="classic"]) .fm-score.mid{--ring:var(--warn)}
-html:not([data-ui="classic"]) .score.hi{background:radial-gradient(closest-side,var(--accent-soft) 74%,transparent 75% 100%),conic-gradient(var(--accent) calc(var(--p)*1%),var(--ring-track) 0)}
-@media (prefers-reduced-motion:no-preference){html:not([data-ui="classic"]) .row[aria-current="true"] .score{transition:transform .18s ease;transform:scale(1.06)}}
+  background:radial-gradient(closest-side,var(--panel) 76%,transparent 77% 100%),conic-gradient(var(--ring,#7b8798) calc(var(--p)*1%),var(--ring-track) 0)}
+:root:not([data-ui="classic"]) .score.hi,:root:not([data-ui="classic"]) .fm-score.hi{--ring:var(--accent);color:var(--accent)}
+:root:not([data-ui="classic"]) .fm-score.mid{--ring:var(--info)}
 
 .kpis{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px}
 .kpi{display:flex;flex-direction:column}
@@ -270,6 +286,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <a class="btn" href="/today" data-i="deal_desk">Classic screens</a>
       <button id="refresh" type="button" data-i="refresh">Refresh</button>
       <span class="me" id="me" hidden></span>
+      <button type="button" id="admin-go" class="ghost" hidden data-i="dest_admin">Admin</button>
       <button id="signout" type="button" data-i="sign_out" hidden>Sign out</button>
     </div>
     <nav class="tabs" role="tablist" id="tabs">
@@ -291,6 +308,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
   </div>
 </header>
 
+<nav class="dest" id="dest" aria-label="Main"></nav>
 <main class="wrap">
   <div id="banner"></div>
 
@@ -573,7 +591,7 @@ const L = {
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
     fired_now: "The worker started now; the answer usually arrives within 5 to 15 minutes.", fired_later: "The worker will pick it up on its next scheduled run (every two hours, 08:13 to 22:13 Israel time).",
     fired_running: "The worker is already running and will pick this job up too.", sent: "Sent to the worker ({id}).", open_jobs: "Open Jobs", added_pursuits: "Added to Pursuits. You can now run a full eligibility check on it.",
-    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", no_dl: "no deadline stated", no_dl_t: "The notice gives no closing date; check the source. Shown even with a minimum-days filter.", tab_research: "Supplier research", sr_h: "Supplier research", sr_intro: "Type a product to see the proven suppliers (tier 1-2) for it in the whole database, where they come from, and their evidence (public contracts, exports, US customs shipments). Web research finds more producers on request.", sr_ph: "Product: e.g. ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "Any origin region", sr_cty_ph: "Origin: CHN", sr_exp: "Exporters only", sr_go: "Search", sr_need: "Type a product first.", sr_web_only: "Available on the web version.", sr_found: "{n} proven suppliers for \"{q}\"", sr_origins: "Origin countries (click to filter):", sr_all_c: "All countries", sr_none: "No proven supplier matched. Try other words, or run the web research.", sr_web: "Web research for more producers (AI)", sr_web_wait: "Searching the web for producers and exporters (about a minute)...", sr_web_h: "Web research", fm_sups: "Suppliers", fm_sups_note: "{n} proven suppliers match your products ({k}).", fm_sups_more: "Open in supplier research", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With a website",
+    cs_sup: "Suppliers", cs_acc: "Key accounts (buyers)", cq_ph: "Search: tuna, steel, cement, company name...", all_types: "All types", intl_only: "International only", dest_today: "Today", dest_markets: "Markets & Commodities", dest_projects: "Global Projects", dest_suppliers: "Suppliers & Buyers", dest_mydeals: "My Deals", dest_admin: "Admin", no_dl: "no deadline stated", no_dl_t: "The notice gives no closing date; check the source. Shown even with a minimum-days filter.", tab_research: "Supplier research", sr_h: "Supplier research", sr_intro: "Type a product to see the proven suppliers (tier 1-2) for it in the whole database, where they come from, and their evidence (public contracts, exports, US customs shipments). Web research finds more producers on request.", sr_ph: "Product: e.g. ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "Any origin region", sr_cty_ph: "Origin: CHN", sr_exp: "Exporters only", sr_go: "Search", sr_need: "Type a product first.", sr_web_only: "Available on the web version.", sr_found: "{n} proven suppliers for \"{q}\"", sr_origins: "Origin countries (click to filter):", sr_all_c: "All countries", sr_none: "No proven supplier matched. Try other words, or run the web research.", sr_web: "Web research for more producers (AI)", sr_web_wait: "Searching the web for producers and exporters (about a minute)...", sr_web_h: "Web research", fm_sups: "Suppliers", fm_sups_note: "{n} proven suppliers match your products ({k}).", fm_sups_more: "Open in supplier research", st_all: "All tiers", st_1: "Tier 1 - Strategic", st_2: "Tier 2 - Proven", st_3: "Tier 3 - Qualified", st_4: "Tier 4 - Unproven", st_n: "Tier", role_log: "Logistics and shipping", role_goods: "Manufacturer / goods supplier", role_trader: "Trader", with_contact: "With a website",
     c_pick: "Pick a company to see what it sells and how to reach it, then run research or outreach.", exporter: "exporter", notable: "notable", contact_p: "contact", trader: "trader", quality: "Quality",
     e_comp_f: "No suppliers match these filters.", e_acc_f: "No accounts match these filters.", tenders_n: "tenders",
     country: "Country", field: "Field", products: "Products", supplied: "Supplied", commodities: "Commodities", won: "Contracts won", wins: "wins", buyers_n: "buyers", in_: "in",
@@ -627,7 +645,7 @@ const L = {
     ig_adv_open: "Bid on the merits. Questions to the procurement office before the deadline, and market consultation where allowed, are lawful - keep them in writing.",
     ig_adv_caution: "Workable, but verify before spending: eligibility and local-content rules, who won the last comparable contracts, payment terms. Use local counsel for the contract. Early written contact with the procurement office is lawful and useful.",
     ig_adv_high_risk: "Few firms bid here and awards repeat to the same suppliers, so a cold bid rarely wins on price alone. Treat it as a market-entry decision: vet a local partner (written agreement, no success fees to anyone with influence), run anti-bribery due diligence. If winning seems to need payments or favours to officials, decline - it is a crime under Israeli Penal Law 291A, the US FCPA and the UK Bribery Act.",
-    tab_projects: "Projects", pq_ph: "Search: project, tender, buyer, country...", all_types: "All types", p_only_appr: "Waiting for my approval", pscope: "One project agent per tender you decided to pursue. The agent finds suppliers, writes blind RFQs (no buyer and no tender number), follows up, checks every tender condition and prepares the forms. Nothing is sent, committed or submitted without your approval here. When you close a project, all its data is archived.", e_projects: "No active projects. Open a tender and press Start bid project.", a_proj: "Start bid project", p_open_already: "Project open", p_confirm: "Start a bid project for this tender? The project agent will prepare everything and ask for your approval before any outside action.", p_queued: "Project request {id} saved. The project agent picks it up on its next run (every 2 hours).", p_days: "{n} days left", p_wait: "{n} waiting for approval", p_progress: "Progress", p_best: "Best quote", p_sup: "Suppliers", p_next: "Next step", p_missing: "Missing", p_appr: "Approval needed", p_to: "To", p_subj: "Subject", p_body: "Show the full text", p_note_ph: "Optional note or change for the agent", p_approve: "Approve", p_reject: "Reject", p_tasks: "{n} open tasks and conditions", p_outcome: "Outcome...", p_close: "Close and archive", p_close_confirm: "Close this project and archive all its data?", p_folder: "Project folder", tab_contacts: "Contacts", kq_ph: "Search: name, organization, country...", k_with_contact: "With email or phone", kscope: "Senior people and official bodies with a documented link to Israel: chambers, embassies and trade attaches, investment agencies, finance bodies, associations and leading companies. Business roles and official channels only; every row links to its source. Check the verified date before you reach out.", e_contacts: "No contacts match these filters yet.", k_seniority: "Seniority", k_role: "Role", k_org: "Organization", k_israel: "Link to Israel", k_why: "Why relevant", k_channel: "Official channel", k_email: "Email", k_phone: "Phone", k_source: "Source", k_verified: "Verified", k_notes: "Notes", k_mail: "Draft outreach", k_research: "Research more", k_nf: "not found", jt_contact_research: "Contact research",
+    tab_projects: "Bid projects", pq_ph: "Search: project, tender, buyer, country...", all_types: "All types", p_only_appr: "Waiting for my approval", pscope: "One project agent per tender you decided to pursue. The agent finds suppliers, writes blind RFQs (no buyer and no tender number), follows up, checks every tender condition and prepares the forms. Nothing is sent, committed or submitted without your approval here. When you close a project, all its data is archived.", e_projects: "No active projects. Open a tender and press Start bid project.", a_proj: "Start bid project", p_open_already: "Project open", p_confirm: "Start a bid project for this tender? The project agent will prepare everything and ask for your approval before any outside action.", p_queued: "Project request {id} saved. The project agent picks it up on its next run (every 2 hours).", p_days: "{n} days left", p_wait: "{n} waiting for approval", p_progress: "Progress", p_best: "Best quote", p_sup: "Suppliers", p_next: "Next step", p_missing: "Missing", p_appr: "Approval needed", p_to: "To", p_subj: "Subject", p_body: "Show the full text", p_note_ph: "Optional note or change for the agent", p_approve: "Approve", p_reject: "Reject", p_tasks: "{n} open tasks and conditions", p_outcome: "Outcome...", p_close: "Close and archive", p_close_confirm: "Close this project and archive all its data?", p_folder: "Project folder", tab_contacts: "Contacts", kq_ph: "Search: name, organization, country...", k_with_contact: "With email or phone", kscope: "Senior people and official bodies with a documented link to Israel: chambers, embassies and trade attaches, investment agencies, finance bodies, associations and leading companies. Business roles and official channels only; every row links to its source. Check the verified date before you reach out.", e_contacts: "No contacts match these filters yet.", k_seniority: "Seniority", k_role: "Role", k_org: "Organization", k_israel: "Link to Israel", k_why: "Why relevant", k_channel: "Official channel", k_email: "Email", k_phone: "Phone", k_source: "Source", k_verified: "Verified", k_notes: "Notes", k_mail: "Draft outreach", k_research: "Research more", k_nf: "not found", jt_contact_research: "Contact research",
     tab_intel: "Intelligence", iq_ph: "Search: country, commodity, buyer...", all_cats: "All categories", high_only: "High signal only",
     iscope: "Verified market signals published every morning: only official sources (governments, state buyers, development banks, UN, statistics), tier-1 media (Reuters, Bloomberg, FT, Platts, Argus) and industry bodies. Each item links to its source.",
     e_intel: "The intelligence agent publishes its first items this morning; they will appear here.", tier_off: "Official source", tier_1: "Tier-1 media", event: "event",
@@ -681,7 +699,7 @@ const L = {
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
     fired_now: "העובד הופעל עכשיו, התשובה תגיע בדרך כלל תוך 5 עד 15 דקות.", fired_later: "העובד יאסוף את המשימה בריצה הקבועה הבאה (כל שעתיים, 08:13 עד 22:13).",
     fired_running: "העובד כבר רץ ויאסוף גם את המשימה הזו.", sent: "נשלח לעובד ({id}).", open_jobs: "למשימות", added_pursuits: "נוסף ל-Pursuits. אפשר להפעיל עליו בדיקת תנאי סף מלאה.",
-    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", no_dl: "ללא מועד הגשה", no_dl_t: "ההודעה לא מציינת מועד סגירה; בדוק במקור. מוצג גם כשיש סינון מינימום ימים.", tab_research: "מחקר ספקים", sr_h: "מחקר ספקים", sr_intro: "הקלד מוצר כדי לראות את הספקים המוכחים (טיר 1-2) עבורו בכל המאגר, מאיפה הם, ומה העדות להם (חוזים ציבוריים, ייצוא, משלוחים במכס האמריקאי). מחקר ברשת מוצא יצרנים נוספים לפי בקשה.", sr_ph: "מוצר: למשל ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "כל אזורי המקור", sr_cty_ph: "מקור: CHN", sr_exp: "יצואנים בלבד", sr_go: "חפש", sr_need: "הקלד קודם מוצר.", sr_web_only: "זמין בגרסת האתר.", sr_found: "{n} ספקים מוכחים עבור \"{q}\"", sr_origins: "מדינות מקור (לחץ לסינון):", sr_all_c: "כל המדינות", sr_none: "לא נמצא ספק מוכח. נסה מילים אחרות, או הרץ מחקר ברשת.", sr_web: "מחקר ברשת ליצרנים נוספים (AI)", sr_web_wait: "מחפש ברשת יצרנים ויצואנים (כדקה)...", sr_web_h: "מחקר ברשת", fm_sups: "ספקים", fm_sups_note: "{n} ספקים מוכחים מתאימים למוצרים שלך ({k}).", fm_sups_more: "פתח במחקר ספקים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם אתר",
+    cs_sup: "ספקים", cs_acc: "חשבונות מפתח (קונים)", cq_ph: "חיפוש: tuna, steel, cement, שם חברה...", all_types: "כל הסוגים", intl_only: "בינלאומיים בלבד", dest_today: "היום", dest_markets: "שווקים וסחורות", dest_projects: "פרויקטים בעולם", dest_suppliers: "ספקים וקונים", dest_mydeals: "העסקאות שלי", dest_admin: "ניהול", no_dl: "ללא מועד הגשה", no_dl_t: "ההודעה לא מציינת מועד סגירה; בדוק במקור. מוצג גם כשיש סינון מינימום ימים.", tab_research: "מחקר ספקים", sr_h: "מחקר ספקים", sr_intro: "הקלד מוצר כדי לראות את הספקים המוכחים (טיר 1-2) עבורו בכל המאגר, מאיפה הם, ומה העדות להם (חוזים ציבוריים, ייצוא, משלוחים במכס האמריקאי). מחקר ברשת מוצא יצרנים נוספים לפי בקשה.", sr_ph: "מוצר: למשל ductile iron pipes, solar panels, frozen chicken", sr_any_origin: "כל אזורי המקור", sr_cty_ph: "מקור: CHN", sr_exp: "יצואנים בלבד", sr_go: "חפש", sr_need: "הקלד קודם מוצר.", sr_web_only: "זמין בגרסת האתר.", sr_found: "{n} ספקים מוכחים עבור \"{q}\"", sr_origins: "מדינות מקור (לחץ לסינון):", sr_all_c: "כל המדינות", sr_none: "לא נמצא ספק מוכח. נסה מילים אחרות, או הרץ מחקר ברשת.", sr_web: "מחקר ברשת ליצרנים נוספים (AI)", sr_web_wait: "מחפש ברשת יצרנים ויצואנים (כדקה)...", sr_web_h: "מחקר ברשת", fm_sups: "ספקים", fm_sups_note: "{n} ספקים מוכחים מתאימים למוצרים שלך ({k}).", fm_sups_more: "פתח במחקר ספקים", st_all: "כל הדרגות", st_1: "דרגה 1 - אסטרטגי", st_2: "דרגה 2 - מוכח", st_3: "דרגה 3 - כשיר", st_4: "דרגה 4 - לא מוכח", st_n: "דרגה", role_log: "לוגיסטיקה וספנות", role_goods: "יצרן / ספק סחורה", role_trader: "טריידר", with_contact: "עם אתר",
     c_pick: "בחר חברה כדי לראות מה היא מוכרת, פרטי קשר, ולהפעיל מחקר או פנייה.", exporter: "מייצא", notable: "מוכר", contact_p: "פרטי קשר", trader: "טריידר", quality: "איכות",
     e_comp_f: "אין ספקים שמתאימים לסינון.", e_acc_f: "אין חשבונות שמתאימים לסינון.", tenders_n: "מכרזים",
     country: "מדינה", field: "תחום", products: "מוצרים", supplied: "מה סיפקו", commodities: "סחורות", won: "היקף זכיות", wins: "זכיות", buyers_n: "קונים", in_: "ב-",
@@ -735,7 +753,7 @@ const L = {
     ig_adv_open: "להגיש לגופו של עניין. שאלות לגוף הרוכש לפני המועד, והתייעצות שוק היכן שמותר, הן חוקיות - לשמור הכול בכתב.",
     ig_adv_caution: "אפשרי, אבל לבדוק לפני שמשקיעים: תנאי סף ותוכן מקומי, מי זכה בחוזים דומים, תנאי תשלום. עורך דין מקומי לחוזה. פנייה מוקדמת בכתב לגוף הרוכש חוקית ומועילה.",
     ig_adv_high_risk: "מעט חברות ניגשות כאן והזכיות חוזרות לאותם ספקים, כך שהצעה קרה כמעט לא זוכה על מחיר. להתייחס לזה כהחלטת כניסה לשוק: לבדוק שותף מקומי (הסכם כתוב, בלי עמלות הצלחה למי שיש לו השפעה), לבצע בדיקת נאותות נגד שוחד. אם נראה שזכייה דורשת תשלום או טובה לעובד ציבור - לוותר. זו עבירה לפי סעיף 291א לחוק העונשין, ה-FCPA האמריקאי וחוק השוחד הבריטי.",
-    tab_projects: "פרויקטים", pq_ph: "חיפוש: פרויקט, מכרז, קונה, מדינה...", all_types: "כל הסוגים", p_only_appr: "ממתין לאישור שלי", pscope: "סוכן פרויקט אחד לכל מכרז שהחלטת לגשת אליו. הסוכן מאתר ספקים, מנסח בקשות להצעת מחיר בלי לחשוף את הקונה ואת מספר המכרז, עוקב מולם, בודק כל תנאי במכרז ומכין את הטפסים. שום דבר לא נשלח, לא מתחייבים ולא מגישים בלי אישור שלך כאן. בסגירת פרויקט כל המידע שלו עובר לארכיון.", e_projects: "אין פרויקטים פעילים. פתח מכרז ולחץ על פתח פרויקט הגשה.", a_proj: "פתח פרויקט הגשה", p_open_already: "פרויקט פתוח", p_confirm: "לפתוח פרויקט הגשה למכרז הזה? סוכן הפרויקט יכין הכל ויבקש את אישורך לפני כל פעולה כלפי חוץ.", p_queued: "בקשת הפרויקט {id} נשמרה. סוכן הפרויקט יטפל בה בריצה הבאה (כל שעתיים).", p_days: "{n} ימים נותרו", p_wait: "{n} ממתינים לאישור", p_progress: "התקדמות", p_best: "הצעה מובילה", p_sup: "ספקים", p_next: "הצעד הבא", p_missing: "חסר", p_appr: "נדרש אישור", p_to: "אל", p_subj: "נושא", p_body: "הצג את הנוסח המלא", p_note_ph: "הערה או שינוי לסוכן (לא חובה)", p_approve: "אשר", p_reject: "דחה", p_tasks: "{n} משימות ותנאים פתוחים", p_outcome: "תוצאה...", p_close: "סגור והעבר לארכיון", p_close_confirm: "לסגור את הפרויקט ולהעביר את כל המידע שלו לארכיון?", p_folder: "תיקיית הפרויקט", tab_contacts: "אנשי קשר", kq_ph: "חיפוש: שם, ארגון, מדינה...", k_with_contact: "עם מייל או טלפון", kscope: "אנשים בכירים וגופים רשמיים עם קשר מתועד לישראל: לשכות מסחר, שגרירויות ונספחים, סוכנויות השקעה, גופי מימון, איגודים וחברות מובילות. תפקידים עסקיים וערוצים רשמיים בלבד; כל שורה מקושרת למקורה. בדוק את תאריך האימות לפני יצירת קשר.", e_contacts: "אין עדיין אנשי קשר שמתאימים לסינון.", k_seniority: "בכירות", k_role: "תפקיד", k_org: "ארגון", k_israel: "קשר לישראל", k_why: "למה רלוונטי", k_channel: "ערוץ רשמי", k_email: "מייל", k_phone: "טלפון", k_source: "מקור", k_verified: "אומת", k_notes: "הערות", k_mail: "נסח פנייה", k_research: "חקור עוד", k_nf: "לא נמצא", jt_contact_research: "מחקר איש קשר",
+    tab_projects: "פרויקטי הגשה", pq_ph: "חיפוש: פרויקט, מכרז, קונה, מדינה...", all_types: "כל הסוגים", p_only_appr: "ממתין לאישור שלי", pscope: "סוכן פרויקט אחד לכל מכרז שהחלטת לגשת אליו. הסוכן מאתר ספקים, מנסח בקשות להצעת מחיר בלי לחשוף את הקונה ואת מספר המכרז, עוקב מולם, בודק כל תנאי במכרז ומכין את הטפסים. שום דבר לא נשלח, לא מתחייבים ולא מגישים בלי אישור שלך כאן. בסגירת פרויקט כל המידע שלו עובר לארכיון.", e_projects: "אין פרויקטים פעילים. פתח מכרז ולחץ על פתח פרויקט הגשה.", a_proj: "פתח פרויקט הגשה", p_open_already: "פרויקט פתוח", p_confirm: "לפתוח פרויקט הגשה למכרז הזה? סוכן הפרויקט יכין הכל ויבקש את אישורך לפני כל פעולה כלפי חוץ.", p_queued: "בקשת הפרויקט {id} נשמרה. סוכן הפרויקט יטפל בה בריצה הבאה (כל שעתיים).", p_days: "{n} ימים נותרו", p_wait: "{n} ממתינים לאישור", p_progress: "התקדמות", p_best: "הצעה מובילה", p_sup: "ספקים", p_next: "הצעד הבא", p_missing: "חסר", p_appr: "נדרש אישור", p_to: "אל", p_subj: "נושא", p_body: "הצג את הנוסח המלא", p_note_ph: "הערה או שינוי לסוכן (לא חובה)", p_approve: "אשר", p_reject: "דחה", p_tasks: "{n} משימות ותנאים פתוחים", p_outcome: "תוצאה...", p_close: "סגור והעבר לארכיון", p_close_confirm: "לסגור את הפרויקט ולהעביר את כל המידע שלו לארכיון?", p_folder: "תיקיית הפרויקט", tab_contacts: "אנשי קשר", kq_ph: "חיפוש: שם, ארגון, מדינה...", k_with_contact: "עם מייל או טלפון", kscope: "אנשים בכירים וגופים רשמיים עם קשר מתועד לישראל: לשכות מסחר, שגרירויות ונספחים, סוכנויות השקעה, גופי מימון, איגודים וחברות מובילות. תפקידים עסקיים וערוצים רשמיים בלבד; כל שורה מקושרת למקורה. בדוק את תאריך האימות לפני יצירת קשר.", e_contacts: "אין עדיין אנשי קשר שמתאימים לסינון.", k_seniority: "בכירות", k_role: "תפקיד", k_org: "ארגון", k_israel: "קשר לישראל", k_why: "למה רלוונטי", k_channel: "ערוץ רשמי", k_email: "מייל", k_phone: "טלפון", k_source: "מקור", k_verified: "אומת", k_notes: "הערות", k_mail: "נסח פנייה", k_research: "חקור עוד", k_nf: "לא נמצא", jt_contact_research: "מחקר איש קשר",
     tab_intel: "מודיעין", iq_ph: "חיפוש: מדינה, סחורה, קונה...", all_cats: "כל הקטגוריות", high_only: "רק אות חזק",
     iscope: "אותות שוק מאומתים שמתפרסמים כל בוקר: רק ממקורות רשמיים (ממשלות, קונים ממלכתיים, בנקי פיתוח, האו\"ם, לשכות סטטיסטיקה), מדיה מהשורה הראשונה (Reuters, Bloomberg, FT, Platts, Argus) וגופי תעשייה. כל פריט מקושר למקור שלו.",
     e_intel: "סוכן המודיעין מפרסם את הפריטים הראשונים הבוקר, והם יופיעו כאן.", tier_off: "מקור רשמי", tier_1: "מדיה מובילה", event: "מועד",
@@ -767,6 +785,7 @@ function applyLang() {
   document.querySelectorAll("[data-i]").forEach(el => { el.textContent = t(el.dataset.i); });
   document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = t(el.dataset.ph); });
   $("#lang-en").setAttribute("aria-pressed", LANG === "en"); $("#lang-he").setAttribute("aria-pressed", LANG === "he");
+  if (typeof renderDest === "function") renderDest();
 }
 function setLang(l) { LANG = l; try { localStorage.setItem("sinder-panel-lang", l); } catch (e) {} applyLang(); if (S.noConn) showNoConn(S.noConn); else if (Object.keys(S.data).length) renderAll(); else setStatus(`<span class="spin" aria-hidden="true"></span> ${esc(t("loading"))}`); reopen(); }
 function showNoConn(k) { S.noConn = k; setStatus(`<span class="pill warn">${esc(t("not_connected"))}</span>`); $("#banner").innerHTML = `<div class="banner">${esc(t(k))}</div>`; }
@@ -2034,6 +2053,8 @@ async function bootMe() {
   $("#me").hidden = false; $("#me").innerHTML = `${esc(me.name || me.email)} <span class="pill acc">${esc(me.role)}</span>`;
   const so = $("#signout"); so.hidden = false; so.onclick = () => window.DD_LOGOUT();
   if (me.role === "admin") { renderUsers(); } else if (S.view === "users") go("today");
+  renderDest();
+  if (me.role === "admin") { const ag = $("#admin-go"); ag.hidden = false; ag.onclick = () => go("users"); }
   if (window.DD_PROFILE) { document.body.classList.add("has-profile-api"); await loadForMe(true); if (!S.prof && S.view === "today") go("forme"); else if (S.view === "forme") renderForMe(); }
 }
 function renderJobsCount() { const n = (S.data.jobs || []).filter(j => j.status === "queued" || j.status === "running").length; $("#c-jobs").textContent = n ? n : ""; }
@@ -2146,6 +2167,36 @@ async function loadMarkets() {
 }
 ["#mq", "#mtier", "#mcat", "#msort"].forEach(s_ => $(s_).addEventListener("input", () => { S.mkLimit = 80; renderMarkets(); }));
 
+/* ---------- v2 navigation: five destinations, existing views as their sub-tabs (deep links #view keep working) ---------- */
+const DEST = [
+  { id: "today", views: ["today", "forme", "intel"] },
+  { id: "markets", views: ["markets", "deals"] },
+  { id: "projects", views: ["tenders", "grants"] },
+  { id: "suppliers", views: ["companies", "research", "contacts"] },
+  { id: "mydeals", views: ["desk", "projects", "jobs"] },
+];
+const ADMIN_VIEWS = ["users"];
+const destOf = v => (DEST.find(d => d.views.includes(v)) || (ADMIN_VIEWS.includes(v) ? { id: "admin", views: ADMIN_VIEWS } : DEST[0]));
+const V2 = () => document.documentElement.getAttribute("data-ui") !== "classic";
+function renderDest() {
+  const el = $("#dest"); if (!el) return;
+  const cur = destOf(S.view || "today").id;
+  el.innerHTML = `<div class="dbrand">Sinder<small>${esc(t("brand_sub"))}</small></div>` +
+    DEST.map(d => `<button type="button" data-dest="${d.id}" aria-current="${d.id === cur}">${esc(t("dest_" + d.id))}</button>`).join("") +
+    `<div class="dfoot">${S.me?.role === "admin" ? `<button type="button" data-dest="admin" aria-current="${cur === "admin"}">${esc(t("dest_admin"))}</button>` : ""}</div>`;
+  el.querySelectorAll("[data-dest]").forEach(b => b.onclick = () => {
+    const d = b.dataset.dest === "admin" ? { views: ADMIN_VIEWS } : DEST.find(x => x.id === b.dataset.dest);
+    const last = (() => { try { return localStorage.getItem("dd-dest-" + b.dataset.dest); } catch (e) { return null; } })();
+    go(d.views.includes(last) ? last : d.views[0]);
+  });
+}
+function applyGroup(v) {
+  if (!V2()) return;
+  const g = destOf(v);
+  document.querySelectorAll("nav.tabs button[data-v]").forEach(b => b.classList.toggle("off-group", !g.views.includes(b.dataset.v)));
+  try { localStorage.setItem("dd-dest-" + g.id, v); } catch (e) {}
+  renderDest();
+}
 /* score rings: each .score / .fm-score gets --p from its number (0-100) after every render */
 let ringQ = 0;
 const ringify = () => { ringQ = 0; document.querySelectorAll(".score,.fm-score").forEach(e => { const n = parseFloat(e.textContent); const v = isFinite(n) ? String(Math.max(0, Math.min(100, n))) : "0"; if (e.style.getPropertyValue("--p") !== v) e.style.setProperty("--p", v); }); };
@@ -2160,6 +2211,7 @@ function go(v) {
   if (v === "users" && S.me?.role === "admin") renderUsers();
   if (v === "forme" && window.DD_PROFILE) renderForMe();
   if (v === "research") initResearch();
+  applyGroup(v);
   dwellFlush(); viewFlush(); DW.view = v;
   track("view", "tab " + v);
 }

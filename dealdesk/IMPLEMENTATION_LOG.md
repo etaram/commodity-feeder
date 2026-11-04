@@ -64,7 +64,11 @@ Evidence/provenance entities, project stages, commodity signal engine, unified p
 package, v1/v2 switch in the UI, the 240 supplier capability matches, the 30 labeled search cases with human review, and moving
 large regenerated data files out of Git history.
 
-## Slice 5: visual design v2, "chart room" (2026-11-04)
+## Slice 5: visual design v2 (2026-11-04), superseded by slice 6
+
+(First pass "chart room" in teal; replaced the same day by the brief section 9 palette.)
+
+## Slice 5 (original notes)
 
 - Harbor-navy band for brand and tabs, cool chart-paper background, signal teal for actions, buoy red for urgency.
 - Frank Ruhl Libre (Hebrew and Latin serif) for headings and figures; IBM Plex Sans / Sans Hebrew for data; no monospace labels.
@@ -72,3 +76,12 @@ large regenerated data files out of Git history.
 - Mixed Hebrew/English lines isolated per fragment (bdi), so the order stays right in RTL.
 - Light and dark, mobile checked with screenshots (stub data). The theme is one CSS layer: `?ui=classic` switches back
   (remembered per browser), `?ui=v2` returns. Rollback: remove the v2 block from panel.html.
+
+## Slice 6: design per brief section 9 (2026-11-04)
+
+- Palette changed to the brief's navy and restrained gold on light surfaces, contrast computed for every text pair (DESIGN.md).
+- Five destinations (side navigation on wide screens, bottom bar on phones); all 14 views kept as sub-tabs; deep links kept.
+- "Projects" renamed "Bid projects" so private bids are not confused with global projects.
+- Fonts: dropped the extra serif; IBM Plex (both scripts) plus Secular One for the mark only.
+- Tests: screenshots at 390/768/1280/1440 px in English and Hebrew, no horizontal overflow, no script errors; classic switch
+  shows the old 14 tabs. Rollback: `?ui=classic`, or remove the v2 block and nav.dest from panel.html.
