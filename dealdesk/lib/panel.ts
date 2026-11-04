@@ -286,7 +286,7 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
     (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
     (!role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""))) &&
     (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.sp || ""}`.toLowerCase())))
-    .sort((a, b) => KIND_RANK[supplierKind(a)] - KIND_RANK[supplierKind(b)]).slice(0, 2000);
+    .sort((a, b) => (sec ? (a.s === sec ? 0 : 1) - (b.s === sec ? 0 : 1) : 0) || KIND_RANK[supplierKind(a)] - KIND_RANK[supplierKind(b)]).slice(0, 2000);
   return [SUP_HEAD, ...out.map(supRow)];
 }
 
