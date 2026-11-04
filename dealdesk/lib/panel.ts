@@ -41,8 +41,21 @@ const SUP_COLS: [string, keyof Supplier][] = [["quality", "q"], ["supplier", "n"
   ["products", "p"], ["commodities", "cm"], ["exports", "x"], ["wins", "w"], ["won_usd_est", "u"], ["buyer_countries", "bc"],
   ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"], ["shipments_12m", "sh"], ["hs_codes", "hs"],
   ["supplied", "sp"], ["industries", "in"], ["hs_names", "hd"]];
-const SUP_HEAD = [...SUP_COLS.map(([k]) => k), "sources"];
-const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), "public award records"];
+// Manufacturer or trader: a search always shows the makers first. Declared type first, then the name ("X Trading",
+// "Import & Export"), then what the record says it does ("manufacturer of", "factory", "mill"). Unknown stays unknown.
+const TRADER_RX = /\b(trad(er|ers|ing)|distribut\w*|wholesal\w*|import(er|ers|s)?|export(er|ers|s)?|merchants?|supply chain|sourcing|agenc(y|ies)|commerce|commercial|general supplies)\b/i;
+const MAKER_RX = /\b(manufactur\w*|producers?|production|factory|factories|mills?|foundry|refiner\w*|cannery|canning|processing plant|maker|fabricat\w*|industries|industrial co)\b/i;
+export function supplierKind(s: Supplier): "maker" | "trader" | "" {
+  const ty = String(s.ty || "");
+  if (s.td === "yes" || /trader|distributor|agent/i.test(ty)) return "trader";
+  if (/manufactur|producer/i.test(ty)) return "maker";
+  if (TRADER_RX.test(s.n || "")) return "trader";
+  if (MAKER_RX.test(`${s.n || ""} ${s.p || ""} ${s.in || ""} ${s.wt || ""}`)) return "maker";
+  return "";
+}
+const KIND_RANK = { maker: 0, "": 1, trader: 2 } as const;
+const SUP_HEAD = [...SUP_COLS.map(([k]) => k), "sources", "kind"];
+const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), "public award records", supplierKind(s)];
 
 async function allSuppliers(): Promise<Supplier[]> {
   return cached("sup-sorted", 900_000, async () => {
@@ -224,7 +237,8 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
     (!reg || s.rg === reg) && (!cty || s.c === cty) && (!sec || s.s === sec || (s.s2 || "").includes(sec)) &&
     (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
     (!role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""))) &&
-    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.sp || ""}`.toLowerCase()))).slice(0, 2000);
+    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.sp || ""}`.toLowerCase())))
+    .sort((a, b) => KIND_RANK[supplierKind(a)] - KIND_RANK[supplierKind(b)]).slice(0, 2000);
   return [SUP_HEAD, ...out.map(supRow)];
 }
 
@@ -310,7 +324,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     scored.push({ s, sc });
     if (s.c && hits) origins.set(s.c, (origins.get(s.c) || 0) + 1);
   }
-  scored.sort((a, b) => b.sc - a.sc);
+  // makers first, always; then suppliers of unknown kind; traders and exporters last. Within a group, by score.
+  scored.sort((a, b) => KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
   return { values: [SUP_HEAD, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => supRow(x.s))], total: scored.length,
     origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query };
 }
