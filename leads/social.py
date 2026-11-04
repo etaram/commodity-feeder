@@ -25,14 +25,49 @@ SUBS = [("supplychain", "logistics"), ("logistics", "logistics"), ("Commodities"
 BIZ = re.compile(r"\b(tender|procurement|contract|awarded|power|electric|grid|outage|fuel|diesel|petrol|shortage|wheat|maize|rice|sugar|fertili[sz]|urea|cement|steel|"
                  r"port|railway|pipeline|refinery|solar|dam|desalin|water|drought|flood|strike|sanction|tariff|export|import|shipping|freight|container|mining|"
                  r"copper|cobalt|lithium|oil|gas|lng|loan|world bank|imf|investment|factory|plant|\$\d|million|billion)\b", re.I)
-HN = "https://hn.algolia.com/api/v1/search_by_date"
+HN = "https://hn.algolia.com/api/v1/search"
 HN_TERMS = ["supply chain", "tariff", "sanctions", "shipping", "Red Sea", "fertilizer", "commodity prices", "infrastructure Africa", "World Bank"]
 
 
+_TOKEN = {}
+
+
+def reddit_token(s):
+    """Official Reddit API (free): app credentials REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET from the environment or the
+    Supplier Universe sheet, tab Config. Without them the public listing is tried, which cloud addresses rarely get."""
+    import os
+    if "v" in _TOKEN:
+        return _TOKEN["v"]
+    cid, sec = os.environ.get("REDDIT_CLIENT_ID", ""), os.environ.get("REDDIT_CLIENT_SECRET", "")
+    if not (cid and sec):
+        try:
+            from .push import UNIVERSE_SHEET, Sheets
+            cfg = {r[0]: r[1] for r in Sheets().values(UNIVERSE_SHEET, "Config!A1:B12") if len(r) > 1}
+            cid, sec = cfg.get("REDDIT_CLIENT_ID", cid), cfg.get("REDDIT_CLIENT_SECRET", sec)
+        except Exception:  # noqa: BLE001
+            pass
+    tok = ""
+    if cid and sec:
+        try:
+            r = s.post("https://www.reddit.com/api/v1/access_token", auth=(cid, sec), data={"grant_type": "client_credentials"},
+                       headers={"User-Agent": UA_R}, timeout=30)
+            tok = r.json().get("access_token", "") if r.status_code == 200 else ""
+            if not tok:
+                log.warning("reddit token: HTTP %s", r.status_code)
+        except Exception as e:  # noqa: BLE001
+            log.warning("reddit token: %s", type(e).__name__)
+    _TOKEN["v"] = tok
+    return tok
+
+
+UA_R = "sinder-deal-desk/1.0 (business research feed; github etaram/commodity-feeder)"
+
+
 def reddit(s, sub, regn, since):
-    url = f"https://www.reddit.com/r/{sub}/new.json"
+    tok = reddit_token(s)
+    url = f"https://oauth.reddit.com/r/{sub}/new" if tok else f"https://www.reddit.com/r/{sub}/new.json"
     try:
-        r = s.get(url, params={"limit": 50}, timeout=30, headers={"User-Agent": "sinder-deal-desk/1.0 (business research feed; github etaram/commodity-feeder)"})
+        r = s.get(url, params={"limit": 50}, timeout=30, headers={"User-Agent": UA_R, **({"Authorization": f"Bearer {tok}"} if tok else {})})
         if r.status_code != 200:
             log.warning("reddit r/%s: HTTP %s", sub, r.status_code); return []
         posts = (r.json().get("data") or {}).get("children") or []
@@ -62,8 +97,8 @@ def hackernews(s, since):
         except Exception as e:  # noqa: BLE001
             log.warning("hn %s: %s", term, type(e).__name__); hits = []
         for h in hits:
-            if h.get("objectID") in seen:
-                continue
+            if h.get("objectID") in seen or term.lower() not in (h.get("title") or "").lower():
+                continue  # relevance search returns loose matches: keep only titles that carry the term
             seen.add(h.get("objectID"))
             out.append({"date": (h.get("created_at") or "")[:10], "topic": "hacker news", "region": "global", "title": (h.get("title") or "")[:200],
                         "source": f"Hacker News ({h.get('points')} points)", "url": h.get("url") or f"https://news.ycombinator.com/item?id={h.get('objectID')}", "summary": ""})
@@ -105,6 +140,8 @@ def build():
     rows = []
     for sub, regn in SUBS:
         rows += reddit(s, sub, regn, since)
+        if not reddit_token(s) and not rows:
+            log.warning("reddit: no app credentials and the public listing refused; skipping the rest"); break
         time.sleep(2)
     rows += hackernews(s, since)
     for ch, regn in owner_channels():
