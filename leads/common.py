@@ -16,8 +16,33 @@ log = logging.getLogger("leads")
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
+class _Session(requests.Session):
+    """requests session that falls back to the regional relay when a site refuses the runner's address
+    (HTTP 403 or 451, or no connection). Logged each time, so the registry can say which sources needed it."""
+    relayed = 0
+
+    def get(self, url, **kw):
+        try:
+            r = super().get(url, **kw)
+            if r.status_code not in (403, 451):
+                return r
+            why = f"HTTP {r.status_code}"
+        except requests.RequestException as e:
+            r, why = None, type(e).__name__
+        if kw.get("params"):
+            url = url + ("&" if "?" in url else "?") + requests.compat.urlencode(kw["params"], doseq=True)
+        rr = relay_get(url, timeout=kw.get("timeout", 40) if isinstance(kw.get("timeout"), (int, float)) else 40)
+        if rr is not None and rr.status_code < 400:
+            _Session.relayed += 1
+            log.info("relay used for %s (%s)", url[:70], why)
+            return rr
+        if r is not None:
+            return r
+        raise requests.ConnectionError(f"{why} and relay unavailable for {url[:70]}")
+
+
 def session():
-    s = requests.Session()
+    s = _Session()
     s.headers.update({"User-Agent": UA, "Accept-Language": "en-US,en;q=0.9,he;q=0.8"})
     return s
 
@@ -54,6 +79,10 @@ class RelayResponse:
 
     def json(self):
         return json.loads(self.text)
+
+    def raise_for_status(self):
+        if not self.ok:
+            raise requests.HTTPError(f"{self.status_code} via relay for {self.url}")
 
 
 def relay_get(url, timeout=40, accept=None):
