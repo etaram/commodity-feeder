@@ -105,3 +105,12 @@ Today (brief 9.5): "What needs your attention" queue first: approvals waiting, b
 item, Pursue tenders closing in 3-21 days without a project (open items: value, competition, eligibility), research
 finished in the last 2 days. Each item: what, why, deadline (or "no deadline stated"), what is open, one next action that
 opens the exact record. Streams: projects and buyers in the leading column, commodities in the other.
+
+## Slice 8: pipeline fixes verified on live data (2026-11-04)
+
+- Incumbents (A2): TED-762196-2026 now shows Vogelsang Austria and Börger (same sector) instead of the buyer's IT suppliers; score 96, Pursue.
+- World Bank sectors (A10): the API moved sectors to `major_sectors`; read from there. "Other" fell from 468 to 137 of 928 projects.
+- Supplier websites (A7): sites kept only when the domain matches the company: 142,628 -> 109,391 suppliers with a website.
+- Supplier universe: 607,183 suppliers; tier 1-2 = 84,925 (13,723 + 71,202).
+- Bug found and fixed: the suppliers workflow copied all of data/web over newer files (a stale tender index and panel
+  snapshot); it now owns only data/web/suppliers.enc.
