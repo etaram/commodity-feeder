@@ -38,10 +38,24 @@ export function isClosed(deadline: string | undefined): boolean {
   return d < Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 }
 
+// The compact view the profile matcher and the country page use, built from the server's one tender store (the same
+// strings, no second copy of 128k notices).
+let compact: { at: number; rows: Tender[] } | null = null;
 export async function tenders(): Promise<Tender[]> {
   try {
-    const all: Tender[] = await load("tenders.json.gz", (b) => JSON.parse(gunzipSync(b).toString("utf-8")));
-    return all.filter((r) => !isClosed(r.dl));
+    const { allTenders } = await import("@/lib/panel");
+    const store = await allTenders();
+    if (compact && compact.rows.length && Date.now() - compact.at < 900_000) return compact.rows;
+    const f = (v: string) => { const n = parseFloat(String(v || "").replace(/,/g, "")); return Number.isFinite(n) ? n : null; };
+    const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender/i;
+    const rows: Tender[] = store.rows.map((r) => {
+      const acc = (r.access || "").toLowerCase();
+      return { id: r.id, c: r.country, rg: r.region, s: r.sector, g: r.commodity || "", t: r.title_en, b: r.buyer, v: f(r.est_value_usd), dl: r.deadline,
+        dd: f(r.days_left), d: r.decision, ev: f(r.ev_usd), sc: f(r.fit || r.score), src: r.source, st: r.stage, l: r.link, n: r.new ? 1 : 0,
+        acc: acc.includes("set-aside") ? "set-aside" : INTL.test(acc) ? "intl" : "", rt: r.route, fw: r.fit_why, ff: r.fit_flags };
+    });
+    compact = { at: Date.now(), rows };
+    return rows;
   } catch {
     return [];
   }

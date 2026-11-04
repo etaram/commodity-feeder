@@ -76,27 +76,55 @@ async function allSuppliers(): Promise<Supplier[]> {
   });
 }
 
-export async function allTenders(): Promise<{ head: string[]; rows: Record<string, string>[] }> {
+// The one tender store of the server (all open notices), built once per instance from the public sheet chunks with
+// the brain's explanations (fit.csv) merged in. Each notice is a compact array of strings behind a small accessor
+// (r.title_en, r.country... read the array), repeated values are stored once, and long text is trimmed: about 150 MB
+// for 128k notices instead of about 1.1 GB for the two object copies and the explanation map that used to push an
+// instance past its memory limit and drop requests all over the app ("did not answer").
+const INTERN = new Set(["new", "stage", "sector", "country", "region", "source", "access", "notice_type", "commodity", "decision", "deadline",
+  "days_left", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m", "score", "route", "fit", "tier_AB"]);
+const TRIM: Record<string, number> = { why: 160, contact: 120, title_original: 200, title_en: 220, buyer: 140, incumbent: 80, link: 300, fit_why: 160, fit_flags: 160 };
+const own = (v: string) => (v.length ? (" " + v).slice(1) : "");  // a copy that does not keep the whole file text alive
+type TRow = Record<string, string>;
+function rowClass(head: string[]) {
+  class R { a: string[]; constructor(a: string[]) { this.a = a; } }
+  head.forEach((k, i) => Object.defineProperty(R.prototype, k, { get(this: R) { return this.a[i] ?? ""; }, set(this: R, v: string) { this.a[i] = v; }, enumerable: true }));
+  return R as unknown as new (a: string[]) => TRow;
+}
+export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId: Map<string, TRow> }> {
   return cached("tenders-full", 900_000, async () => {
-    const files = await Promise.all(Array.from({ length: 65 }, (_, i) => fetch(`${RAW}/leads/sheet/tenders_${String(i + 1).padStart(2, "0")}.csv`, { cache: "no-store" })
-      .then((r) => (r.ok ? r.text() : "")).catch(() => "")));
-    const snap = await snapshot("static");
-    const fit = (snap.fit || {}) as Record<string, string[]>, fm = await fitSoon(4000);
-    let head: string[] = [];
-    const rows: Record<string, string>[] = [];
-    for (const text of files) {
+    const pool = new Map<string, string>();
+    const iv = (v: string) => { let x = pool.get(v); if (x === undefined) { x = own(v); pool.set(x, x); } return x; };
+    const fitText = await fetch(`${RAW}/leads/fit.csv`, { cache: "no-store" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+    const fit = new Map<string, [string, string, string]>();
+    if (fitText) Papa.parse<Record<string, string>>(fitText, { header: true, skipEmptyLines: true, step: (res) => { const x = res.data; if (x.id) fit.set(own(x.id), [own((x.fit_why || "").slice(0, 160)), own((x.fit_flags || "").slice(0, 160)), iv(x.route || "")]); } });
+    const sfit = (((await snapshot("static").catch(() => ({} as Snap))).fit) || {}) as Record<string, string[]>;
+    let head: string[] = [], R: (new (a: string[]) => TRow) | null = null;
+    const rows: TRow[] = [];
+    for (let i = 1; i <= 65; i++) {
+      // one chunk at a time: the raw text of all 65 files is never held at once
+      const text = await fetch(`${RAW}/leads/sheet/tenders_${String(i).padStart(2, "0")}.csv`, { cache: "no-store" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
       if (!text) continue;
-      const p = Papa.parse<Record<string, string>>(text, { header: true, skipEmptyLines: true });
-      if (!head.length) head = p.meta.fields || [];
-      for (const r of p.data) {
-        if (!r.id || isClosed(r.deadline)) continue;
-        const f = fit[r.id] || [], x = fm.get(r.id);
-        r.fit = f[0] || r.score || ""; r.your_suppliers = f[1] || ""; r.tier_AB = f[2] || "";
-        r.fit_why = x?.fw || ""; r.fit_flags = x?.ff || ""; r.route = r.route || x?.rt || "";
-        rows.push(r);
+      const p = Papa.parse<string[]>(text, { header: false, skipEmptyLines: true }).data;
+      if (!p.length) continue;
+      const h = p[0];
+      if (!head.length) { head = [...h, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route"].filter((k, j, all) => all.indexOf(k) === j); R = rowClass(head); }
+      const ix = head.map((k) => h.indexOf(k)), idI = h.indexOf("id"), dlI = h.indexOf("deadline"), scI = h.indexOf("score"), rtI = h.indexOf("route");
+      for (let j = 1; j < p.length; j++) {
+        const a = p[j], id = a[idI] || "";
+        if (!id || isClosed(a[dlI])) continue;
+        const f = sfit[id] || [], x = fit.get(id);
+        const extra: Record<string, string> = { fit: f[0] || a[scI] || "", your_suppliers: f[1] || "", tier_AB: f[2] || "", fit_why: x?.[0] || "", fit_flags: x?.[1] || "", route: (rtI >= 0 ? a[rtI] : "") || x?.[2] || "" };
+        rows.push(new R!(head.map((k, n) => {
+          const v = ix[n] >= 0 ? (a[ix[n]] ?? "") : (extra[k] ?? "");
+          if (k in extra && ix[n] < 0) return INTERN.has(k) ? iv(v) : v;
+          if (INTERN.has(k)) return iv(v);
+          return own(TRIM[k] && v.length > TRIM[k] ? v.slice(0, TRIM[k]) : v);
+        })));
       }
     }
-    return { head: [...head, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route"], rows };
+    fit.clear(); pool.clear();
+    return { head, rows, byId: new Map(rows.map((r) => [r.id, r])) };
   });
 }
 
@@ -166,22 +194,12 @@ export async function liveSource(): Promise<"sheets" | "snapshot"> { return (awa
 // index; it is merged into every tender grid the panel receives, so the sheet layout never changes.
 // From the small fit.csv the leads run writes (id, fit_why, fit_flags, route), never from the 10 MB tender index:
 // loading that index on every cold instance is what kept the tender list from arriving.
-type Fit = { fw: string; ff: string; rt: string };
-async function fitMap(): Promise<Map<string, Fit>> {
-  return cached("fit-map", 900_000, async () => {
-    const r = await fetch(`${RAW}/leads/fit.csv`, { cache: "no-store" }).catch(() => null);
-    if (!r || !r.ok) return new Map<string, Fit>();
-    const rows = Papa.parse<Record<string, string>>(await r.text(), { header: true, skipEmptyLines: true }).data || [];
-    return new Map(rows.map((x) => [x.id, { fw: x.fit_why || "", ff: x.fit_flags || "", rt: x.route || "" }]));
-  });
-}
-// never wait more than ms for the explanations: without them the list still goes out, and they load for the next call
-async function fitSoon(ms: number): Promise<Map<string, Fit>> {
-  return Promise.race([fitMap().catch(() => new Map<string, Fit>()), new Promise<Map<string, Fit>>((res) => setTimeout(() => res(new Map()), ms))]);
-}
 async function withFit(grid: Grid): Promise<Grid> {
   if (!grid.length) return grid;
-  const m = await fitSoon(2500), idc = grid[0].indexOf("id"), dlc = grid[0].indexOf("deadline");
+  // the explanations come from the tender store when it is already loaded (never wait for it more than 2.5 s)
+  const store = await Promise.race([allTenders().catch(() => null), new Promise<null>((res) => setTimeout(() => res(null), 2500))]);
+  const idc = grid[0].indexOf("id"), dlc = grid[0].indexOf("deadline");
+  const m = { get: (id: string) => { const r = store?.byId.get(id); return r ? { fw: r.fit_why, ff: r.fit_flags, rt: r.route } : undefined; } };
   if (idc < 0 || grid[0].includes("fit_why")) return grid;
   // freshness: a notice whose deadline has passed is gone from every list (tracked items live in Pursuits and Projects)
   const live = dlc < 0 ? grid.slice(1) : grid.slice(1).filter((r) => !isClosed(String(r[dlc] || "")));
