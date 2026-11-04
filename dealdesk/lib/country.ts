@@ -31,6 +31,8 @@ export async function countryIntel(iso: string) {
     csv("leads/markets.csv"), csv("leads/plays.csv"), csv("leads/news.csv"), csv("leads/country_risk.csv"), csv("leads/governance.csv"), tenderIndex(),
     csv("leads/wb_plans.csv"), csv("leads/wb_awards.csv"), csv("leads/groups_lei.csv"),
   ]);
+  const attention = (await csv("leads/attention.csv")).filter((r) => r.country === c && r.kind === "trending search").slice(0, 10)
+    .map((r) => ({ term: r.term, traffic: r.value, headline: r.note, url: r.url }));
   const parent = new Map(groups.map((g) => [g.company.toLowerCase(), g.parent_name && g.parent_name !== g.legal_name ? g.parent_name : ""]));
   const open = all.filter((t: Tender) => t.c === c);
   const live = open.filter((t) => t.st !== "planned"), planned = open.filter((t) => t.st === "planned");
@@ -66,7 +68,7 @@ export async function countryIntel(iso: string) {
     pursue: live.filter((t) => t.d === "Pursue").length, planned: planned.length, planned_usd: planned.reduce((a, t) => a + (t.v || 0), 0),
     sources: String(meta.sources || "").split(";").map((s) => s.trim()).filter(Boolean).slice(0, 12),
     sectors, top, topPlanned, competition: comp, awards_12m: awards, foreign_win_rate: awards ? fwins / awards : null,
-    buyers: topBuyers, winners: topWinners, imports, plays: cp, news: cn, wb_plans: plansHere, wb_winners: wbWinners,
+    buyers: topBuyers, winners: topWinners, imports, plays: cp, news: cn, wb_plans: plansHere, wb_winners: wbWinners, attention,
     integrity: g.integrity_score ? { score: g.integrity_score, flag: g.flag, advice: g.advice, single_bid_share: g.single_bid_share } : null,
     risk: rk ? { level: rk.level, reason: rk.reason } : null,
   };
