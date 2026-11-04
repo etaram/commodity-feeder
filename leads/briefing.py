@@ -175,6 +175,7 @@ def build():
             sub_ = re.sub(r"^.*?/r/|/.*$", "", src["url"]).strip("/") or src["name"]
             for it in _feed(s, f"https://www.reddit.com/r/{sub_}/new/.rss"):
                 add(it, src["topic"] or "community", src["region"], f"r/{sub_}")
+            time.sleep(7)  # Reddit allows about ten unauthenticated requests a minute; the relay takes over on a refusal
         elif kind.startswith("telegram"):  # url column: public channel name or t.me link; the public preview page, no account
             ch = re.sub(r"^.*?t\.me/(s/)?|/.*$", "", src["url"]).strip("/") or src["name"]
             for it in _telegram(s, ch):
