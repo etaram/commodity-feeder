@@ -23,9 +23,30 @@ NAME2ID = {v: k for k, v in SECTORS.items()}
 # A company's main sector is what it is, not what it last won: (1) its declared industry or a name that says it
 # (Leonardo, "... Defence Systems", "... Pharmaceuticals"); (2) otherwise the sector of the money it won, with the
 # number of contracts as a smaller weight, so ten small consulting jobs do not outweigh one large defence contract.
+# laundry, cleaning and catering firms: an on-site service, whatever their buyers (schools, hospitals) were
+CLEANING_ID = re.compile(r"\b(laundry|laundries|linen|textile (rental|service)|workwear rental|vask\w*|w[äa]scherei|blanchisserie|"
+                         r"lavander[ií]a|wasserij|tv[äa]tteri|pesula|pralnia|cleaning|rengøring|reinigung|nettoyage|limpieza|"
+                         r"schoonmaak|facility services|facility management|catering|canteen)\b", re.I)
+SERVICE_NAMES = {"Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services",
+                 "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services"}
+GOODS_HINT = re.compile(r"\b(manufactur\w*|producers?|factory|mill|supplier of|supplies of|equipment|machinery|vehicles|parts|spare|products?)\b", re.I)
+
+
+def service_only(r):
+    """A company that only delivers services on site (laundry, cleaning, maintenance, consulting, design): not a
+    cross-border goods supplier for Sinder, however much it won."""
+    if r.get("type") == "goods supplier" or r.get("trader") == "yes" or r.get("hs_codes") or r.get("shipments_12m"):
+        return False
+    if CLEANING_ID.search(f"{r['supplier']} {r.get('web_title', '')} {r.get('industries', '')}"):
+        return True
+    return r.get("main_sector") in SERVICE_NAMES and (r.get("type") == "works/services" or not GOODS_HINT.search(f"{r.get('products', '')} {r.get('supplied', '')}"))
+
+
 IDENTITY = [
     (re.compile(r"\b(defen[cs]e|military|armament|arms|ammunition|munitions|missile|ordnance|leonardo|rafael|elbit|thales|rheinmetall|"
-                r"saab|bae systems|kongsberg|nexter|knds|hensoldt|aselsan|roketsan|mbda|lockheed|raytheon|northrop|general dynamics)\b", re.I), "DEFENCE"),
+                r"saab|bae systems|kongsberg|nexter|knds|krauss-?maffei|hensoldt|aselsan|roketsan|mbda|lockheed|raytheon|northrop|general dynamics|"
+                r"patria|nammo|fn herstal|beretta|glock|sig sauer)\b", re.I), "DEFENCE"),
+    (CLEANING_ID, "ENV_WASTE"),
     (re.compile(r"\b(pharma\w*|biotech\w*|medical devices?|diagnostics)\b", re.I), "HEALTH"),
     (re.compile(r"\b(steel|metals?|mining|aluminium|aluminum|copper)\b", re.I), "MINING_METALS"),
     (re.compile(r"\b(cement|ceramics?|glass|tiles)\b", re.I), "CONSTR_MAT"),
@@ -50,11 +71,11 @@ def clean_products(t):
         return ""
     return ", ".join(parts)
 
-def main_sectors(x, name):
+def main_sectors(x, name, site_title=""):
     count, usd = x["sectors"], x.get("sec_usd", {})
     tot_c, tot_u = sum(count.values()) or 1, sum(usd.values()) or 0
     score = {k: 0.35 * count[k] / tot_c + (0.65 * usd.get(k, 0) / tot_u if tot_u else 0.65 * count[k] / tot_c) for k in count}
-    ident = x.get("declared") or next((sec for rx, sec in IDENTITY if rx.search(f"{name} {x.get('industries', '')}")), "")
+    ident = x.get("declared") or next((sec for rx, sec in IDENTITY if rx.search(f"{name} {x.get('industries', '')} {site_title if rx is CLEANING_ID else ''}")), "")
     if ident:
         score[ident] = score.get(ident, 0) + 1.0  # identity outranks any contract mix
     # a goods maker is not a consultancy because it also sold advice: a service sector leads only with a clear margin
@@ -479,7 +500,7 @@ def build():
             x["phone"] = wp["phone"]
         about = x.get("products") or wp.get("about") or ""
         items = "; ".join(i for i, _ in sorted(x["items"].items(), key=lambda y: -y[1])[:3])
-        secs = main_sectors(x, name)
+        secs = main_sectors(x, name, wp.get("title") or "")
         out.append({
             "supplier": name[:120], "country": wc, "region": region(wc) if wc else "",
             "tier": "", "notable": "yes" if x.get("notable") else "",
@@ -514,7 +535,13 @@ def build():
     for r in out:
         r["quality"] = quality(r)
         r["tier"], r["tier_reason"] = supplier_tier(r)
-    out.sort(key=lambda r: (r["tier"], -r["quality"], -r["won_usd_est"]))  # best tier first, then quality
+        r["_svc"] = service_only(r)
+        if r["_svc"]:
+            r["quality"] = round(r["quality"] * 0.6); r["type"] = "works/services"
+    # best tier first; goods suppliers before on-site service firms; then quality
+    out.sort(key=lambda r: (r["tier"], r["_svc"], -r["quality"], -r["won_usd_est"]))
+    for r in out:
+        r.pop("_svc", None)  # best tier first, then quality
     out = balance_regions(out)
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)

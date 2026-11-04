@@ -1,3 +1,4 @@
+import { normalizeSuppliers } from "@/lib/supfit";
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 
@@ -72,7 +73,7 @@ export async function suppliers(): Promise<{ rows: Supplier[]; error?: string }>
       const plain = Buffer.concat([d.update(body), d.final()]);
       return JSON.parse(gunzipSync(plain).toString("utf-8")) as Supplier[];
     });
-    return { rows };
+    return { rows: normalizeSuppliers(rows) };
   } catch (e) {
     return { rows: [], error: String(e).includes("404") ? "The supplier index is being built - try again in a few minutes" : String(e).slice(0, 120) };
   }

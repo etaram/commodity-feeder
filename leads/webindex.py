@@ -127,6 +127,7 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             d = "; ".join(dict.fromkeys(hsn[h[:4]] for h in re.split(r"[\s,;]+", x["hs"]) if h[:4] in hsn))
             if d:
                 x["hd"] = d[:CUT["hd"]]
+        x["qv"] = 2  # quality already scaled for service-only firms (dealdesk/lib/supfit.ts skips these rows)
         if x.get("n") and x.get("tr") in ("1", "2", "3"):  # proven (tier 1-2) and qualified (tier 3); tier 4 stays out
             out.append(x)
     raw = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode(), 9)
