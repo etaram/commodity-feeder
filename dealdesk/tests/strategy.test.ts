@@ -1,0 +1,12 @@
+import { applyStrategy } from "@/lib/strategy";
+let n = 0, bad = 0; const ok = (c: boolean, m: string) => { n++; if (!c) { bad++; console.log("FAIL", m); } };
+const g = [["id", "country", "sector", "score", "fit", "fit_why"], ["1", "KEN", "Agriculture", "60", "60", "goods; local partner"], ["2", "GHA", "Energy", "50", "50", "goods"], ["3", "IRN", "Energy", "70", "70", "goods"]];
+const own = applyStrategy(g, "sinder", { partners: ["GHA"], focus: [], excluded: ["IRN"] });
+ok(own === g || JSON.stringify(own) === JSON.stringify(g), "owner workspace untouched");
+const none = applyStrategy(g, "acme", null);
+ok(none[1][3] === "55" && !/local partner/.test(none[1][5]), "other workspace: original partner credit removed");
+const st = applyStrategy(g, "acme", { partners: ["GHA"], focus: ["energy"], excluded: ["IRN"] });
+ok(st.length === 3, "excluded market dropped");
+ok(st[2][3] === "58" && /local partner \(your workspace\)/.test(st[2][5]) && /focus sector/.test(st[2][5]), "own partner and focus credit added");
+ok(st[1][3] === "55", "non-partner row keeps the scrubbed score");
+console.log(`${n - bad}/${n} strategy checks pass`); if (bad) process.exit(1);
