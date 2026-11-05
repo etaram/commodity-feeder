@@ -132,6 +132,7 @@
     add: (a) => post("/api/panel/assertions", a, "Deal Desk"),
     quarantine: (id, status, reason) => post("/api/panel/assertions", { quarantine: id, status, reason }, "Deal Desk"),
   };
+  window.DD_COMMODITIES = (q) => getj("/api/panel/commodities?" + new URLSearchParams({ product: (q && q.product) || "", hs6: (q && q.hs6) || "", limit: String((q && q.limit) || 200) }));
   window.DD_AI_USAGE = (days) => getj("/api/panel/ai-usage?days=" + (days || 7));
   window.DD_STRATEGY = { get: () => getj("/api/panel/strategy"), save: (b) => post("/api/panel/strategy", b, "Deal Desk") };
   // Client intake: dossiers from the client's own deck and site, target profiles and prospects. PUT returns the body

@@ -302,6 +302,14 @@ jobs:
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 90
         continue-on-error: true
+      - name: commodities (normalise, stats; code only)
+        if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,') }}
+        run: |
+          set -o pipefail
+          python -m leads.commodity_norm 2>&1 | tail -2 | tee -a data/leads/run.log
+          python -m leads.commodity_stats 2>&1 | tail -2 | tee -a data/leads/run.log
+        timeout-minutes: 10
+        continue-on-error: true
       - name: news
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',news,') || contains(format(',{0},', env.ONLY), ',merge,') }}
         timeout-minutes: 10
