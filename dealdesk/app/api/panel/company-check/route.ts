@@ -3,7 +3,7 @@ import { gate } from "@/lib/gate";
 import { appendRow, gviz, gvizLit, UNIVERSE } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
 
-// Company checks (leads/company_check.py, a background job every 3 hours, code only): what the supplier's own website
+// Company checks (leads/company_check.py, a background job every hour, code only): what the supplier's own website
 // says. GET ?name=&country= -> the latest check for that company, or null. POST {name, country} (analyst) -> puts the
 // company at the front of the next run's queue (tab 'Check queue'). GET ?summary=1 (viewer) -> counts by verdict.
 export const dynamic = "force-dynamic";
@@ -38,5 +38,5 @@ export async function POST(req: NextRequest) {
   if (!name) return NextResponse.json({ ok: false, error: "name is required" }, { status: 400 });
   await appendRow("Check queue", [new Date().toISOString(), name, country, s.email]);
   await logActivity(s, "company_check_request", name, country);
-  return NextResponse.json({ ok: true, queued: true, note: "checked in the next background run (every 3 hours)" });
+  return NextResponse.json({ ok: true, queued: true, note: "checked in the next background run (every hour)" });
 }

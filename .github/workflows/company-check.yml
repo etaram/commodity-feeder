@@ -1,15 +1,15 @@
 name: company-check
 # Background company checks (leads/company_check.py): reads suppliers' own websites, code only, no model calls.
-# Every 3 hours; the private supplier list is restored read-only from the suppliers workflow's cache, and the checks
+# Every hour (public repository: Actions minutes are free); the private supplier list is restored read-only from the suppliers workflow's cache, and the checks
 # keep their own cache, so this job never overwrites the suppliers workflow's private files.
 on:
   schedule:
-    - cron: "20 */3 * * *"
+    - cron: "20 * * * *"
   workflow_dispatch:
     inputs:
       limit:
         description: "companies to check this run"
-        default: "400"
+        default: "600"
 permissions:
   contents: read
 concurrency:
@@ -39,4 +39,4 @@ jobs:
           restore-keys: checks-
       - run: pip install requests google-auth
       - name: Check companies
-        run: python -m leads.company_check --limit ${{ inputs.limit || '400' }} --minutes 40 2>&1 | tail -20
+        run: python -m leads.company_check --limit ${{ inputs.limit || '600' }} --minutes 45 2>&1 | tail -20
