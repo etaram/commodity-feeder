@@ -327,7 +327,7 @@ async function webSuppliers(): Promise<Supplier[]> {
 // Verified capabilities (private Supplier Universe tab): a reviewer checked one company for one product on an
 // authoritative source. Reused across searches and users until it expires (365 days), so the same fact is not
 // researched again; a "no" is scoped to that product only and never blacklists the company.
-type Verified = { key: string; product: RegExp; label: string; url: string; note: string; checked: string };
+type Verified = { key: string; product: RegExp; label: string; url: string; note: string; checked: string; human: boolean };
 async function verifiedCaps(): Promise<Map<string, Verified[]>> {
   return cached("verified-caps", 900_000, async () => {
     const g = (await readRanges(UNIVERSE, ["'Verified capabilities'!A1:I20000"]).catch(() => null))?.[0] || [];
@@ -340,7 +340,7 @@ async function verifiedCaps(): Promise<Map<string, Verified[]>> {
       const checked = String(r[ix("checked")] || "");
       if (!sup || !prod || !["yes", "no", "related"].includes(lab) || (checked && checked < cutoff)) continue;
       const key = dedupeKey({ n: sup, c: String(r[ix("country")] || "") } as Supplier);
-      const v = { key, product: termRe(prod), label: lab, url: String(r[ix("evidence_url")] || ""), note: String(r[ix("evidence_note")] || ""), checked };
+      const v = { key, product: termRe(prod), label: lab, url: String(r[ix("evidence_url")] || ""), note: String(r[ix("evidence_note")] || ""), checked, human: /^human/.test(String(r[ix("method")] || "")) };
       m.set(key, [...(m.get(key) || []), v]);
     }
     return m;
@@ -444,7 +444,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     const dk = dedupeKey(s);
     let m: MatchResult = res.length ? classifyMatch(s, cTerms, cHs, `${query} ${o.text || ""}`, fams) : { bucket: "plausible" as const, why: "sector match only", evidence: "sector", conflicts: [], gaps: ["no product terms in the request"] };
     // a reviewed fact for this company and this product outranks the text heuristics, in both directions
-    const vf = (vcaps.get(dk) || []).find((v) => v.product.test(`${query} ${o.text || ""}`));
+    // a person's report outranks a model check; the latest of each kind wins
+    const vlist = (vcaps.get(dk) || []).filter((v) => v.product.test(`${query} ${o.text || ""}`));
+    const vf = [...vlist].reverse().find((v) => v.human) || vlist[vlist.length - 1];
     if (vf) m = vf.label === "yes"
       ? { bucket: "supported", why: `Verified ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [], gaps: m.gaps.filter((g) => !/product|terms|customs|contracts/.test(g)), url: vf.url }
       : { bucket: vf.label === "no" ? "incompatible" : "related", why: `Checked ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [vf.note.slice(0, 120)], gaps: [], url: vf.url };
