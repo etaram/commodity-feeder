@@ -1537,6 +1537,10 @@ function openTender(r, keep) {
   if (!keep) autoTx([r], () => { if (S.sel.t === r) openTender(r, true); });
   const inP = (S.data.pursuits || []).some(p => p["Opportunity ID"] === r.id);
   const he = heTitle(r);
+  // a re-render of the same tender (a translation arriving, a data refresh) keeps what is open below it, such as a
+  // summary that is still being written: the nodes are moved back, so running answers keep writing into them
+  const prevOut = keep ? $("#t-out") : null;
+  const kept = prevOut && prevOut.childNodes.length ? Array.from(prevOut.childNodes) : null;
   $("#tdetail").innerHTML = `
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">${decisionPill(r.decision)}${r.new === "NEW" ? `<span class="pill acc">${esc(t("new_"))}</span>` : ""}${daysPill(r.days_left)}<span class="pill">${esc(r.source)}</span></div>
     <h2>${flag(r.country)}${txt(tTitle(r))}</h2>
@@ -1581,6 +1585,7 @@ function openTender(r, keep) {
     <div id="t-fin"></div>
     <div id="t-log"></div>
     <div id="t-out"></div>`;
+  if (kept) $("#t-out").append(...kept);
   finForTender(r, $("#t-fin")); logForTender(r, $("#t-log"));
   $("#a-quick").onclick = () => quickTender(r);
   $("#a-sum").onclick = () => tenderAsk(r, "sum");
@@ -2040,8 +2045,9 @@ async function tenderAsk(r, kind) {
   const prompt = kind === "sum"
     ? `Write a short brief of this public tender for a busy trader, in ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", under these headings: What is being bought (plain words, main items); Order of magnitude (the estimated value in USD and what that means, for example roughly how many units, tonnes or months of service it buys at typical market prices, labelled as an estimate); Who buys and where (buyer, country, delivery place if known); Timeline (deadline, days left, likely contract period); Competition (expected bidders, incumbent, how open to foreign suppliers); Why it may matter for Sinder (one or two lines). Use only the data below plus general market knowledge, and say when something is not stated. Data: ${data}`
     : `List the threshold (eligibility) conditions a foreign supplier is likely to face in this public tender, in ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", grouped as: Registration and legal (supplier portal registration, local entity, agent or partner, tax and company documents); Financial (minimum turnover, bid security amount as a typical % of value, performance guarantee, audited accounts); Technical and experience (similar contracts in recent years, certificates such as ISO, CE, product registrations); Submission (language, electronic portal, signatures, legalisation); Red flags for a foreign bidder. Base it on the procedure, the country's procurement rules and this buyer's practice; mark every item as expected and to be verified in the tender documents. Data: ${data}`;
-  try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#ta-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#ta-out").innerHTML = mdHtml(text); }
-  catch (e) { $("#ta-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
+  const box = out.querySelector("#ta-out");  // the node itself: still valid if the page around it is re-rendered
+  try { const { text } = await sample(prompt, { onText: ({ text }) => { box.textContent = text; }, cache: { gcTime: 3600000 } }); box.innerHTML = mdHtml(text); }
+  catch (e) { box.textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 async function quickTender(r) {
   const out = $("#t-out");

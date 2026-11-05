@@ -5,7 +5,7 @@ import { gate } from "@/lib/gate";
 import { logActivity } from "@/lib/activity";
 
 // The panel's quick AI features on the web (quick summary, drafts, free-language search, Hebrew translation).
-// Cost controls: cheapest model (Haiku 5.5), capped answer length, cached repeats, daily cap.
+// Cost controls: cheapest model (Haiku 5.5), capped answer length, cached repeats; a daily count that warns, never refuses.
 export const maxDuration = 60;
 const MAX_OUT = Number(process.env.AI_MAX_TOKENS || 3000);
 const DAILY_LIMIT = Number(process.env.AI_DAILY_LIMIT || 300);
@@ -29,8 +29,9 @@ export async function POST(req: NextRequest) {
   if (hit && Date.now() - hit.at < 86400000) return NextResponse.json({ ok: true, text: hit.text, cached: true });
   const today = new Date().toISOString().slice(0, 10);
   if (today !== day) { day = today; used = 0; }
-  if (used >= DAILY_LIMIT) return NextResponse.json({ ok: false, error: "Daily AI limit reached. It resets at midnight UTC." }, { status: 429 });
+  // calls are never refused (the budget only alerts, lib/anthropic.ts); past the daily count it is logged once
   used++;
+  if (used === DAILY_LIMIT + 1) console.warn(`panel ai: ${DAILY_LIMIT} quick calls today on this instance (not refused)`);
   try {
     const { text } = await claude({ max_tokens: MAX_OUT, messages: [{ role: "user", content: input }] }, { job: "panel ai" });
     if (cache.size > 500) cache.delete(cache.keys().next().value as string);
