@@ -1,0 +1,43 @@
+name: supplier-eval
+# Supplier-search benchmark on the real index (measure before tuning). Writes the private tab 'Search eval'.
+on:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: "Commit to compare with (blank: no baseline)"
+        default: ""
+permissions:
+  contents: read
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      SUPPLIER_EXPAND: "off"
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - run: pip install requests google-auth
+      - name: Index key from the private sheet (masked)
+        run: |
+          K=$(python -c "from leads.push import UNIVERSE_SHEET, Sheets; print(next((r[1] for r in Sheets().values(UNIVERSE_SHEET, 'Config!A1:B10') if len(r) > 1 and r[0] == 'WEB_INDEX_KEY'), ''))")
+          echo "::add-mask::$K"; echo "WEB_INDEX_KEY=$K" >> $GITHUB_ENV
+      - run: npm ci --prefix dealdesk --ignore-scripts --no-audit --no-fund
+      - name: Run the benchmark (current code)
+        run: |
+          cd dealdesk && npx --yes esbuild@0.24.0 tools/eval-suppliers.ts --bundle --platform=node --format=cjs --alias:@=. --outfile=/tmp/ev.js --log-level=error
+          node --max-old-space-size=3000 /tmp/ev.js /tmp/eval_new.json
+      - name: Run the benchmark (baseline)
+        if: ${{ inputs.baseline != '' }}
+        run: |
+          git worktree add /tmp/base ${{ inputs.baseline }}
+          mkdir -p /tmp/base/dealdesk/tools && cp dealdesk/tools/eval-suppliers.ts /tmp/base/dealdesk/tools/
+          ln -s $PWD/dealdesk/node_modules /tmp/base/dealdesk/node_modules
+          cd /tmp/base/dealdesk && npx --yes esbuild@0.24.0 tools/eval-suppliers.ts --bundle --platform=node --format=cjs --alias:@=. --outfile=/tmp/evb.js --log-level=error
+          node --max-old-space-size=3000 /tmp/evb.js /tmp/eval_base.json
+      - run: python -m leads.search_eval /tmp/eval_new.json $([ -f /tmp/eval_base.json ] && echo /tmp/eval_base.json)

@@ -7,6 +7,7 @@ Each group:
   mr     mr.gov.il (Israel Government Procurement Administration) category codes
   ref    Master rows used as the headline price benchmark for the group
 """
+import re as _re_mod
 GROUPS = [
     {"id": "MEAT", "name": "Meat & livestock", "hs": ["01", "02", "05", "16"],
      "cpv": ["15100000", "03320000"], "wb": ["meat", "livestock"], "mr": ["ZD160003", "ZD020001"], "ref": [53, 55]},
@@ -110,6 +111,19 @@ def match_cpv(codes):
                 if c.startswith(p) and len(p) > blen:
                     best, blen = g["id"], len(p)
     return best, blen
+
+
+# A CPV like 44160000 (pipes) or 44170000 (plates) says the form, not the material: "PE pipes" under it are plastic.
+# When the title names a material, the material decides the group.
+NON_STEEL_MATERIAL = _re_mod.compile(r"\b(polyethylene|hdpe|mdpe|ldpe|pe ?100|pe ?80|pe pipes?|pvc|upvc|cpvc|polypropylene|grp|frp|"
+                                     r"plastic|polymer|fibreglass|fiberglass|concrete|clay|copper|alumin(i)?um)\b", _re_mod.I)
+
+
+def refine_group(gid, text):
+    """Group from a CPV code, corrected by a material the title states (plastic pipes are not iron & steel)."""
+    if gid == "STEEL" and text and NON_STEEL_MATERIAL.search(text):
+        return group_of_text(text) or ("PLASTIC" if _re_mod.search(r"poly|pvc|plastic|pe\b|grp|frp|fib", text, _re_mod.I) else None)
+    return gid
 
 
 def group_of_cpv(codes):

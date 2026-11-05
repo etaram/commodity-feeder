@@ -23,7 +23,9 @@ EMERGING = {"Sub-Saharan Africa", "Middle East & North Africa", "South Asia", "S
 IFI = re.compile(r"world bank|afdb|african development|aiib|asian infrastructure|\bidb\b|inter-american|ebrd|\bebrd\b|"
                  r"\bicb\b|international competitive|undp|unops|\bun\b procurement|ungm", re.I)
 # goods that need a local marketing authorisation or a licensed local distributor: not a cross-border supply deal
-LICENSED = re.compile(r"pharmaceutical|medicinal|medicines?\b|drugs?\b|vaccin|blood|plasma|narcotic|insulin|radiopharm|"
+# "blood" and "plasma" only as products (not blood-pressure monitors or plasma cutters)
+LICENSED = re.compile(r"pharmaceutical|medicinal|medicines?\b|drugs?\b|vaccin|blood(?![\s-]*(pressure|glucose|gas|bank refrigerat|collection (chair|bed)))|"
+                      r"plasma(?![\s-]*(cutt|torch|weld|tv|screen|display|cleaner))|narcotic|insulin|radiopharm|"
                       r"läkemedel|lægemid|medicamento|médicament|arzneimittel|farmac", re.I)
 # work that has to be done on site by local staff: no goods cross a border
 ON_SITE = re.compile(r"cleaning|catering|canteen|security guard|guarding|staffing|temporary staff|recruit|insurance|"
@@ -60,10 +62,12 @@ W = {  # points; the sum of the maxima is about 100 before penalties
 
 
 def _num(v, d=None):
+    """A finite number or the default: NaN and infinity never reach the score (min(100, nan) is 100 in Python)."""
     try:
-        return float(str(v).replace(",", "").replace("$", ""))
+        x = float(str(v).replace(",", "").replace("$", ""))
     except (TypeError, ValueError):
         return d
+    return x if math.isfinite(x) else d
 
 
 def supplier_counts():
@@ -103,7 +107,9 @@ def fit(r, prefs=None, sup=None):
     ev = _num(r.get("priority_ev_usd"), None)
     if ev is None:
         ev = _num(r.get("ev_usd"), None)
-    addr = _num(r.get("addressable_share"), 1.0) or 0.0
+    addr_raw = _num(r.get("addressable_share"), None)
+    # an unknown goods share is not a full goods share: half credit and a flag, until the scope is read
+    addr = min(1.0, max(0.0, addr_raw)) if addr_raw is not None else 0.5
     days = _num(r.get("days_left"))
     route = r.get("route") or "direct"
     why, flags, pts = [], [], 0.0
@@ -129,20 +135,29 @@ def fit(r, prefs=None, sup=None):
     # --- is it goods that cross a border
     g = W["goods_max"] * addr
     pts += g
-    why.append("goods supply" if addr >= 0.9 else f"{addr:.0%} of scope is goods" if addr >= 0.3 else "mostly services or works")
+    if addr_raw is None:
+        flags.append("goods share unknown (counted as half)")
+    else:
+        why.append("goods supply" if addr >= 0.9 else f"{addr:.0%} of scope is goods" if addr >= 0.3 else "mostly services or works")
     if route != "direct":
         why.append(route)
 
     # --- can a foreign firm win it
     ifi = bool(IFI.search(f"{acc} {r.get('source') or ''} {text}"))
+    # an explicit restriction wins over any positive wording or an IFI mention ("not open to foreign bidders"
+    # contains "open to foreign"); a closed notice keeps the partner / sub-supplier routes, flagged, not erased
+    closed = bool(re.search(r"\bnot open\b|\bclosed to\b|\bnationals? only\b|\bdomestic (bidders|firms|suppliers) only\b|"
+                            r"\blocal (bidders|firms|suppliers) only\b|\b(ncb|national competitive)\b|\brestricted to (national|local|domestic)", acc))
     if country == "ISR":
         pts += 11; why.append("home market")
+    elif closed:
+        pts -= W["pen_closed"]; flags.append("closed to foreign bidders: partner or sub-supplier route only" + (" (IFI mentioned, restriction applies)" if ifi else ""))
     elif acc.startswith("international") or ifi:
         pts += W["access_max"]; why.append("international: open to foreign bidders" + (" (IFI financed)" if ifi else ""))
     elif any(k in acc for k in ("gpa", "open to foreign", "trade agreements", "may bid")):
         pts += 8; why.append("open under trade agreements")
-    elif "local" in acc or "domestic" in acc or "not open" in acc:
-        pts -= W["pen_closed"]; flags.append("closed to foreign bidders: partner route only")
+    elif "local" in acc or "domestic" in acc:
+        pts -= W["pen_closed"]; flags.append("local or domestic procurement: partner route only")
     else:
         pts += 3
     if "set-aside" in acc:
@@ -162,7 +177,8 @@ def fit(r, prefs=None, sup=None):
     if region in EMERGING:
         pts += W["emerging"]; why.append("emerging market")
     partners = prefs.get("partners") or {}
-    if country in partners:
+    pv = partners.get(country)
+    if pv and str(pv).strip().lower() not in ("0", "false", "no", "none", "candidate"):  # a false or candidate value is not a partner
         pts += W["partner"]; why.append("local partner")
     if (_num(r.get("buyer_awards_12m"), 0) or 0) >= 5:
         pts += W["repeat_buyer"]; why.append("repeat buyer")
@@ -172,6 +188,8 @@ def fit(r, prefs=None, sup=None):
         pts += 5; why.append("planned: approach before the tender")
     elif days is None:
         pts += 4
+    elif days < 0:
+        flags.append("deadline passed"); return 0, "; ".join(why), "; ".join(flags)
     elif days < 5:
         pts -= W["pen_late"]; flags.append(f"only {int(days)} days left")
     elif days < 10:
@@ -192,7 +210,8 @@ def fit(r, prefs=None, sup=None):
         pts -= W["pen_routine"]; flags.append("routine purchase through a local dealer")
     if MUNICIPAL.search(buyer) and (usd is None or usd < 1_000_000):
         pts -= W["pen_small_local"]; flags.append("small or unpriced municipal purchase")
-    # the economics engine's own verdict: an Ignore (no money in it, or too late) cannot rank above a Pursue
+    # the economics engine's own verdict lowers the score (Ignore x0.55, Watch x0.85). This is a weight, not a
+    # guarantee that every Pursue outranks every Ignore; strict ordering uses fit_bucket (see apply)
     dec = r.get("decision") or ""
     if dec == "Ignore":
         pts *= 0.55; flags.append("engine: ignore")
@@ -210,17 +229,21 @@ def fit(r, prefs=None, sup=None):
     w = (prefs.get("sector") or {}).get(sec, 1.0) * (prefs.get("region") or {}).get(region, 1.0)
     if w <= 0:
         return 0, "hidden by profile weight", ""
-    pts *= w ** 0.5
+    # EV is already weighted by these preferences (brain.enrich); apply the weight to the rest of the score only
+    ev_pts = _log_points(ev, 1_000, 3_000_000, W["ev_max"]) if ev and ev > 0 else 0.0
+    pts = ev_pts + (pts - ev_pts) * w ** 0.5
     if usd is None:
         pts = min(pts, 72)  # an unpriced notice never outranks a priced deal of substance
     score = max(0, min(100, round(pts, 1)))
-    return score, "; ".join(why)[:240], "; ".join(flags)[:240]
+    # warnings first and never cut: what cost the rank must stay visible
+    return score, "; ".join(why)[:400], "; ".join(flags)
 
 
 def apply(tenders, prefs=None):
     sup = supplier_counts()
     for r in tenders:
-        r["base_score"] = r.get("score", "")
+        r.setdefault("base_score", r.get("score", ""))  # the engine's original score, kept across repeated runs
         s, why, flags = fit(r, prefs, sup)
         r["score"], r["fit_why"], r["fit_flags"] = s, why, flags
+        r["fit_bucket"] = {"Pursue": 1, "Watch": 2, "Ignore": 3}.get(r.get("decision") or "", 2)  # explicit ordering bucket
     return sup

@@ -16,7 +16,7 @@ from statistics import median
 from urllib.parse import quote_plus
 
 from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_rows, save_partial, today
-from .taxonomy import BY_ID, CH2GROUP, match_cpv
+from .taxonomy import refine_group, BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
@@ -130,7 +130,7 @@ def merge_tenders(bm, seen):
     for r in rows:
         if r.get("skip"):
             continue
-        g = BY_ID.get(r.get("group") or "", {})
+        g = BY_ID.get(refine_group(r.get("group") or "", r.get("title") or "") or "", {})
         codes = (r.get("cpv") or (r.get("classification") if re.match(r"^\d{8}", r.get("classification") or "") else "")).split()
         sec = r.get("sector") or classify(r.get("title", ""), codes or None)[0]
         first = seen.setdefault(r["id"], str(t))

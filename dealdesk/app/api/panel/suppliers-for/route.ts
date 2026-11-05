@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   try {
     const r = await supplierSearch({ sector: String(b.sector || ""), text: String(b.text || "").slice(0, 600), country: String(b.country || ""),
       region: String(b.region || ""), hs: String(b.hs || ""), n: Number(b.n) || 15, originRegion: String(b.originRegion || ""),
-      originCountry: String(b.originCountry || "").toUpperCase(), exportersOnly: !!b.exportersOnly, strict: (b.strict ?? !!b.research) === true && process.env.SUPPLIER_STRICT !== "off" });
+      originCountry: String(b.originCountry || "").toUpperCase(), exportersOnly: !!b.exportersOnly, kind: (["maker", "trader"].includes(String(b.kind)) ? b.kind : "") as "maker" | "trader" | "", strict: (b.strict ?? !!b.research) === true && process.env.SUPPLIER_STRICT !== "off" });
     await logActivity(s, b.research ? "supplier_research" : "suppliers_for", String(b.text || "").slice(0, 120),
       `${b.sector || ""} | ${b.originRegion || b.originCountry || b.country || ""} | ${r.total} found`);
     console.log(`[sup] done ${r.total} in ${Date.now() - t0} ms mem=${Math.round(process.memoryUsage().rss / 1e6)}MB`);

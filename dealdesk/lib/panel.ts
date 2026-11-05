@@ -4,6 +4,7 @@ import Papa from "papaparse";
 import { suppliers as supplierIndex, tenders as supplierIndexTenders, isClosed, type Supplier } from "@/lib/index";
 import { readRanges } from "@/lib/sheets";
 import { isServiceOnly, sectorOf } from "@/lib/supfit";
+import { BUCKET_RANK, MATCH_VERSION, classifyMatch, dedupeKey, evidenceRank, familiesFor, termRe, type MatchResult } from "@/lib/supmatch";
 import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
 import { claude } from "@/lib/anthropic";
@@ -298,7 +299,7 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
 const STOP = new Set(("the and for with from supply supplies delivery services service provision procurement purchase framework " +
   "agreement lot lots various other works contract tender ministry department government county national public office council authority municipality district goods items equipment materials des de la le du et pour del los las para und der die für von zur").split(" "));
 export type SupQuery = { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number;
-  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean };
+  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean; kind?: "maker" | "trader" | "" };
 export async function suppliersFor(o: SupQuery): Promise<Grid> {
   return (await supplierSearch(o)).values;
 }
@@ -342,7 +343,8 @@ async function hsWordMap(): Promise<(w: string) => Set<string>> {
 // queries without AI keep the plain word match.
 type Concept = { terms: RegExp[]; hs: string[] };
 const conceptCache = new Map<string, { en: string; concepts: { terms: string[]; hs: string[] }[] }>();
-const stemRe = (w: string) => new RegExp(`(^|[^\\p{L}])${w.length > 4 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w}`, "u");
+// whole-word matching (lib/supmatch.ts): "corn" no longer matches inside "Corning" or "Cornerstone"
+const stemRe = termRe;
 async function expandQuery(text: string): Promise<{ en: string; concepts: { terms: string[]; hs: string[] }[] } | null> {
   const key = text.toLowerCase().trim();
   if (!key || key.length > 80 || !process.env.ANTHROPIC_API_KEY || process.env.SUPPLIER_EXPAND === "off") return null;
@@ -378,7 +380,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     ? ex.concepts.map((c) => ({ terms: c.terms.map((t) => stemRe(t)), hs: [...c.hs, ...c.terms.flatMap((t) => [...hsOf(t)])] }))
     : words.map((w) => ({ terms: [stemRe(w)], hs: [...hsOf(w)] }));
   const res = concepts;
-  const scored: { s: Supplier; sc: number }[] = [];
+  const scored: { s: Supplier; sc: number; m: MatchResult }[] = [];
+  const fams = familiesFor(`${query} ${o.text || ""}`), seenKey = new Set<string>();
+  const cTerms = concepts.map((c) => c.terms), cHs = concepts.map((c) => c.hs);
   const origins = new Map<string, number>();
   // web-found suppliers join only if their tab answers within 1.5 s; the search never waits on Sheets
   const web = await Promise.race([webSuppliers().catch(() => [] as Supplier[]), new Promise<Supplier[]>((res) => setTimeout(() => res([]), 1500))]);
@@ -388,6 +392,7 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     if (o.exportersOnly && !s.x) continue;
     // what the company makes or trades (name, products, industry, customs headings) counts more than what it once
     // supplied under a contract (a crane firm that moved generators is not a generator maker)
+    if (o.kind && supplierKind(s) !== o.kind) continue;
     const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();
     const all = `${blob} ${s.sp || ""}`.toLowerCase();
     let hits = 0, own = 0;
@@ -409,11 +414,20 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     if (o.country && (s.bc || "").split(" ").includes(o.country)) sc += 2;
     else if (o.region && s.rg === o.region) sc += 1;
     sc += (s.q || 0) / 50;
-    scored.push({ s, sc });
+    // stage C: does the evidence support this requirement (supported / plausible / related / incompatible)
+    const m = res.length ? classifyMatch(s, cTerms, cHs, `${query} ${o.text || ""}`, fams) : { bucket: "plausible" as const, why: "sector match only", evidence: "sector", conflicts: [], gaps: ["no product terms in the request"] };
+    if (m.bucket === "incompatible") continue;
+    const dk = dedupeKey(s);
+    if (seenKey.has(dk)) continue;
+    seenKey.add(dk);
+    scored.push({ s, sc, m });
     if (s.c && hits) origins.set(s.c, (origins.get(s.c) || 0) + 1);
   }
-  // makers first, always; then suppliers of unknown kind; traders and exporters last. Within a group, by score.
-  scored.sort((a, b) => KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
-  return { values: [SUP_HEAD, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => supRow(x.s))], total: scored.length,
+  // stage D: product fit first (a strong global tier never compensates a mismatch), then evidence strength, then
+  // the score; makers before traders only as a tie-break (the role filter "kind" narrows explicitly)
+  scored.sort((a, b) => BUCKET_RANK[a.m.bucket] - BUCKET_RANK[b.m.bucket] || evidenceRank(a.m.evidence) - evidenceRank(b.m.evidence)
+    || KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
+  const head = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version"];
+  return { values: [head, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION])], total: scored.length,
     origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query };
 }
