@@ -750,6 +750,12 @@ def merge():
         log.info("exempt buys: %d notices", len(ex))
     except Exception as e:  # noqa: BLE001
         log.warning("exempt list: %s", e)
+    # closed notices we did not take part in leave the database (moved to data/leads/archive, see leads/archive.py)
+    try:
+        from .archive import archive
+        tenders = archive(tenders, cols)
+    except Exception as e:  # noqa: BLE001
+        log.warning("archive skipped: %s", e)
     write("tenders_all.csv", tenders, cols)
     write_sheet_chunks(tenders)
     try:
