@@ -17,7 +17,7 @@ import type { Supplier } from "@/lib/index";
 // signals, not proof of compatibility. Terms match on whole words ("corn" is not in "Corning").
 export const MATCH_VERSION = "match-1.3 (2026-11-05)";
 export type Bucket = "supported" | "plausible" | "related" | "incompatible";
-export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[] };
+export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[]; url?: string };
 
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** whole-word (or whole-phrase) match; a trailing plural s/es is allowed, a longer word is not */

@@ -446,8 +446,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     // a reviewed fact for this company and this product outranks the text heuristics, in both directions
     const vf = (vcaps.get(dk) || []).find((v) => v.product.test(`${query} ${o.text || ""}`));
     if (vf) m = vf.label === "yes"
-      ? { bucket: "supported", why: `Verified ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [], gaps: m.gaps.filter((g) => !/product|terms|customs|contracts/.test(g)) }
-      : { bucket: vf.label === "no" ? "incompatible" : "related", why: `Checked ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [vf.note.slice(0, 120)], gaps: [] };
+      ? { bucket: "supported", why: `Verified ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [], gaps: m.gaps.filter((g) => !/product|terms|customs|contracts/.test(g)), url: vf.url }
+      : { bucket: vf.label === "no" ? "incompatible" : "related", why: `Checked ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [vf.note.slice(0, 120)], gaps: [], url: vf.url };
     if (m.bucket === "incompatible") continue;
     if (seenKey.has(dk)) continue;
     seenKey.add(dk);
@@ -458,7 +458,7 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   // the score; makers before traders only as a tie-break (the role filter "kind" narrows explicitly)
   scored.sort((a, b) => BUCKET_RANK[a.m.bucket] - BUCKET_RANK[b.m.bucket] || evidenceRank(a.m.evidence) - evidenceRank(b.m.evidence)
     || KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
-  const head = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version"];
-  return { values: [head, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION])], total: scored.length,
+  const head = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version", "match_url"];
+  return { values: [head, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION, x.m.url || ""])], total: scored.length,
     origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query };
 }
