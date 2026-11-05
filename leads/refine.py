@@ -30,6 +30,7 @@ to read next), data/leads/refine_progress.json (counts only, public), sheet tabs
 import csv
 import gzip
 import hashlib
+import html
 import json
 import re
 import shutil
@@ -78,7 +79,7 @@ def iso3_set():
 
 
 def norm_name(n):
-    n = re.sub(r"[^\w ]", " ", (n or "").lower())
+    n = re.sub(r"[^\w ]", " ", html.unescape(html.unescape(n or "")).replace("&", " and ").lower())
     n = LEGAL.sub(" ", n)
     return re.sub(r"\s+", " ", n).strip()[:80]
 

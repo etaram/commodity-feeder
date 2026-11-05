@@ -44,7 +44,7 @@ from .sectors import _KW, SECTORS
 CHECKS = DATA / "checks"
 OUT = CHECKS / "company_checks.jsonl"
 UA = "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0; +https://github.com/etaram/commodity-feeder)"
-VERSION = "check-2"
+VERSION = "check-3"
 RECHECK_DAYS = 90
 MAX_PAGES = 6
 PAGE_BYTES = 600_000
@@ -57,6 +57,9 @@ GENERIC = re.compile(r"^(info|sales|export|exports|contact|contacto|contato|kont
                      r"vendas|ventas|enquiries|inquiries|hello|marketing|orders|business|bd|procurement|tender|tenders|admin|"
                      r"mail|general|customerservice|service|support|ventes|vertrieb|verkauf)\b", re.I)
 PHONE = re.compile(r"(?:\+|00)\d[\d\s().-]{7,18}\d")
+PERSON = re.compile(r"[a-z]{1,}[._-][a-z]{2,}(?:[._-][a-z]{2,})?")
+DEPT = re.compile(r"press|media|news|pr\b|marketing|kund|customer|client|cliente|legal|compliance|sponsor|social|rrhh|hr\b|jobs|career|"
+                  r"recruit|operacion|servicio|support|service|help|billing|invoice|factur|account|privacy|gdpr|webmaster|noreply|info", re.I)
 PARKED = re.compile(r"domain (is )?for sale|buy this domain|this domain (may be|is) for sale|parked (free|domain)|sedo\.com|"
                     r"hugedomains|dan\.com|coming soon|under construction|account (has been )?suspended|index of /|"
                     r"website is (currently )?(under|being)|default web site page|welcome to nginx|it works!", re.I)
@@ -64,21 +67,24 @@ LINK_HINT = re.compile(r"about|company|who-we-are|quienes|empresa|nosotros|sobre
                        r"product|products|productos|produtos|produits|produkte|solutions|services|catalog|catalogue|range|"
                        r"contact|contacto|contato|kontakt|impressum|export|certific|quality|calidad|qualidade", re.I)
 ROLE_RULES = [
-    ("manufacturer", re.compile(r"\b(we (manufacture|produce|make)|manufacturer of|leading manufacturer|producer of|our (factory|plant|mill|production (line|facility|plant)s?)|"
+    ("manufacturer", re.compile(r"\b(we (manufacture|produce)|manufacturer of|leading manufacturer|producer of|our (factory|plant|mill|production (line|facility|plant)s?)|"
                                 r"production capacity|manufacturing (facility|plant|site)|fabricante|fabricamos|fabricação|fabrique|fabricant|hersteller|"
                                 r"produzent|produttore|ISO 9001 certified (factory|plant)|tonnes per (year|day|annum)|tons per (year|day))\b", re.I)),
     # exporting is not trading: a manufacturer exports too, so export wording is recorded apart (EXPORT)
-    ("trader", re.compile(r"\b(distributor (of|for)|trading company|we (distribute|import|resell)|importer (of|and)|wholesale(r|rs)?|"
+    ("trader", re.compile(r"\b(we are (a|an|the) (leading )?(distributor|importer|wholesaler)|official distributor (of|for)|trading company|we (distribute|import|resell)|importer (of|and)|wholesale(r|rs)?|"
                           r"authori[sz]ed (dealer|distributor|agent)|sole agent|representative of|distribuidor|importador|"
                           r"comercializadora|négoce|distributeur|großhandel|händler)\b", re.I)),
-    ("epc", re.compile(r"\b(epc|turnkey|engineering,? procurement and construction|general contractor|main contractor|design and build|"
+    ("epc", re.compile(r"\b(EPC|engineering,? procurement and construction|general contractor|main contractor|design and build|"
                        r"installation (and|&) commissioning|contratista|empreiteira|entreprise générale)\b", re.I)),
-    ("service", re.compile(r"\b(consulting|consultancy|advisory|training|maintenance services|cleaning services|security services|"
-                           r"staffing|recruitment|software development|it services|marketing agency|law firm|accounting)\b", re.I)),
+    ("service", re.compile(r"\b(consulting (firm|company|services)|consultancy|advisory (firm|services)|maintenance services|cleaning services|security services|"
+                           r"guarding|staffing agency|software (company|development company)|it services|marketing agency|law firm|accounting firm|"
+                           r"engineering consultancy|catering services|facility management)\b", re.I)),
 ]
+# role phrases count only in the company's own description, title and about pages, never in careers, news or menus
+ROLE_PAGE = re.compile(r"about|company|who-we-are|quienes|empresa|nosotros|sobre|unternehmen|societe|profile|^/$", re.I)
 CERTS = re.compile(r"\b(ISO\s?9001|ISO\s?14001|ISO\s?45001|OHSAS\s?18001|ISO\s?22000|ISO\s?13485|ISO\s?27001|ISO\s?50001|IATF\s?16949|"
-                   r"AS\s?9100|FSSC\s?22000|HACCP|GMP|BRC(GS)?|IFS Food|CE mark(ing)?|CE certified|API\s?(5L|6D|Q1|spec)|ASME|PED|"
-                   r"UL (listed|certified)|IECEx|ATEX|halal|kosher|organic certified|USDA organic|GOST|SASO|BIS|INMETRO|NSF|WRAS|DVGW|KEMA)\b", re.I)
+                   r"AS\s?9100|FSSC\s?22000|HACCP|GMP certified|BRCGS|IFS Food|CE mark(?:ing|ed)?|API\s?(?:5L|6D|Q1)|ASME [A-Z]|"
+                   r"UL listed|IECEx|ATEX|[Hh]alal certified|[Kk]osher certified|USDA [Oo]rganic|INMETRO|NSF/ANSI|WRAS|DVGW|KEMA-KEUR)\b")
 EXPORT = re.compile(r"\b(export(s|ing|ed)? to|we export|exporting to|our export|countries worldwide|in over \d+ countries|"
                     r"more than \d+ countries|\d+\+? countries|exportamos|exportações|exportons|exportieren)\b", re.I)
 LEGAL_ID = [
@@ -154,10 +160,35 @@ def headings(page):
     seen, res = set(), []
     for t in out:
         k = t.lower()
-        if k in seen or re.fullmatch(r"(home|about( us)?|contact( us)?|news|blog|careers?|login|menu|search|products?|services?|solutions?|read more|learn more)", k):
+        if k in seen or not product_like(t):
             continue
         seen.add(k); res.append(t)
     return res[:40]
+
+
+NAV = re.compile(r"^(home|start|inicio|accueil|startseite|about|about us|who we are|our company|company|profile|contact|contact us|kontakt|contacto|"
+                 r"impressum|imprint|legal|privacy|cookies?|cookie settings|news|newsroom|press|media|media hub|blog|events?|careers?|jobs|"
+                 r"join us|investors?|investor relations|sustainability|esg|our mission|mission|vision|values|history|leadership|"
+                 r"products?|services?|solutions?|our solutions|our services|our products|read more|learn more|more|menu|main navigation|"
+                 r"navigation|search|login|sign in|shop|onlineshop|downloads?|resources|support|faq|english|deutsch|español|français|"
+                 r"choose your country or region|select your region|social media|follow us|subscribe|newsletter|"
+                 r"quienes somos|nosotros|misi[oó]n|visi[oó]n|noticias|aktuelles|über uns|unternehmen|konzern|qui sommes-nous|"
+                 r"actualit[eé]s|carri[eè]res|a propos)$", re.I)
+
+
+def product_like(t):
+    """A heading that names a product or a product line, not a slogan, a news title, a menu item or a figure."""
+    t = t.strip()
+    words = t.split()
+    if not (1 <= len(words) <= 7) or len(t) > 70:
+        return False
+    if NAV.match(t.strip(" .:!?-").lower()):
+        return False
+    if re.search(r"[.!?:]\s*$|[“”\"«»]|\b(20[12]\d|19\d\d)\b|\d+\s?%|[£$€]\s?\d|\bwe\b|\bour\b|\byou(r)?\b|\bnous\b|\bwir\b|\bnuestr|\bsomos\b", t, re.I):
+        return False  # sentences, quotes, dated news, figures, slogans in the first or second person
+    if re.fullmatch(r"[\d\W]+", t) or re.search(r"cookie|privacy|gdpr|terms (of|and)|datenschutz|privacidad|confidentialit", t, re.I):
+        return False
+    return True
 
 
 def name_match(name, title, text):
@@ -190,8 +221,12 @@ def emails_on(text, domain):
         if e.endswith((".png", ".jpg", ".gif", ".webp", ".svg", ".js", ".css")) or e in (x["email"] for x in out):
             continue
         d = e.split("@")[1]
+        box = e.split("@")[0]
+        if re.fullmatch(r"x+|test|example|name|email|your\.?name", box):
+            continue
         if core and (d == domain or d.endswith("." + domain) or core_of(d) == core):
-            out.append({"email": e, "kind": "generic" if GENERIC.match(e.split("@")[0]) else "named"})
+            kind = "generic" if GENERIC.match(box) else "named" if PERSON.fullmatch(box) and not DEPT.search(box) else "department"
+            out.append({"email": e, "kind": kind})
     return out[:6]
 
 
@@ -240,14 +275,18 @@ def analyse(name, record_sector, pages):
         prods += [h for h in headings(p) if h not in prods]
     sec, how, sec_score = site_sector(f"{title}. {desc}", prods)
     roles = []
+    role_text = "\n".join([title, desc] + [text_of(p) for u, p in pages if ROLE_PAGE.search(urlsplit(u).path or "/")])
     for role, rx in ROLE_RULES:
-        m = rx.search(alltext)
+        m = rx.search(role_text)
         if m:
             roles.append({"role": role, "phrase": m.group(0)[:80]})
     certs = sorted({re.sub(r"\s+", " ", m.group(0)).upper().replace("ISO9", "ISO 9").replace("ISO1", "ISO 1").replace("ISO2", "ISO 2").replace("ISO4", "ISO 4")
                     for m in CERTS.finditer(alltext)})[:15]
     exp = EXPORT.search(alltext)
-    named_countries = sorted({iso for iso, rx in COUNTRIES if rx.search(alltext)})[:40] if exp else []
+    near = " ".join(l for l in alltext.split("\n") if EXPORT.search(l))[:3000] if exp else ""
+    named_countries = sorted({iso for iso, rx in COUNTRIES if rx.search(near)}) if near else []
+    if len(named_countries) > 40:  # a list of every country is a site's country picker, not export evidence
+        named_countries = []
     ids = []
     for kind, rx in LEGAL_ID:
         for m in rx.finditer(alltext):
@@ -290,8 +329,17 @@ def _get(s, url):
             r.close(); return None, r.status_code
         body = r.raw.read(PAGE_BYTES, decode_content=True)
         r.close()
-        enc = r.encoding or "utf-8"
-        return (r.url, body.decode(enc, errors="replace")), 200
+        declared = re.search(r"charset=([\w-]+)", r.headers.get("content-type", ""), re.I)
+        meta = re.search(rb"<meta[^>]+charset=[\"']?([\w-]+)", body[:4000], re.I)
+        enc = (declared.group(1) if declared else meta.group(1).decode() if meta else "utf-8")
+        try:
+            txt = body.decode(enc)
+        except (UnicodeDecodeError, LookupError):
+            try:
+                txt = body.decode("utf-8")
+            except UnicodeDecodeError:
+                txt = body.decode("latin-1", errors="replace")
+        return (r.url, txt), 200
     except Exception as e:  # noqa: BLE001
         return None, type(e).__name__
 

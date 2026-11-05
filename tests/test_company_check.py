@@ -40,7 +40,7 @@ def test_helpers():
     assert name_match("Grupo Fer Cons SAC", "Inicio", "nothing here")[0] == "none"
     assert PARKED.search("This domain is for sale! Buy this domain")
     assert "var a" not in text_of(PAGE)
-    assert emails_on("x@sub.acme.com y@acme.com z@other.com", "acme.com") == [{"email": "x@sub.acme.com", "kind": "named"}, {"email": "y@acme.com", "kind": "named"}]
+    assert emails_on("j.doe@sub.acme.com pr@acme.com z@other.com xxx@acme.com", "acme.com") == [{"email": "j.doe@sub.acme.com", "kind": "named"}, {"email": "pr@acme.com", "kind": "department"}]
 
 
 def test_site_sector_scored_not_first_match():
@@ -52,7 +52,23 @@ def test_site_sector_scored_not_first_match():
     assert site_sector("a leading global security, defense and aerospace contractor", ["Air", "Land"])[0] != "MACHINERY"  # contractor is not tractor
 
 
+def test_products_roles_from_real_pages():
+    # headings seen on real sites in the first runs
+    from leads.company_check import product_like
+    keep = ["Granular Urea", "Ammonia", "Urbino electric", "Cell Culture Media", "Aceites Vegetales", "Butterfly valves DN50-DN1200"]
+    drop = ["Our Business", "Investor Relations", "Impressum", "Wir bauen auf Expertise und Innovationskraft", "70%", "Newsroom",
+            "Euronaval 2026: Elbit Systems to Present UUV", "Choose your country or region", "Setari Cookie-uri", "Misión"]
+    assert all(product_like(t) for t in keep) and not any(product_like(t) for t in drop)
+    careers = "<title>Acme Valves</title><h1>Valves</h1>"
+    jobs = "<p>Training and recruitment at Acme: find a distributor of our valves near you.</p>"
+    r = analyse("Acme Valves", "", [("https://acme.com/", careers), ("https://acme.com/careers/training", jobs)])
+    assert r["roles"] == [], r["roles"]  # careers pages and dealer locators do not make a service firm or a trader
+    big = "<p>We export to " + ", ".join(["Kenya", "Uganda", "France", "Spain"] * 1) + ".</p><select>" + "".join(f"<option>{c}</option>" for c in ["Germany", "Italy", "Brazil", "Chile"]) + "</select>"
+    r2 = analyse("Acme Valves", "", [("https://acme.com/", "<title>Acme Valves</title>" + big)])
+    assert set(r2["export_countries"]) == {"KEN", "UGA", "FRA", "ESP"}, r2["export_countries"]  # only the countries in the export sentence
+
+
 if __name__ == "__main__":
-    for f in [test_analyse, test_mismatch_and_gaps, test_links_same_site_only, test_helpers, test_site_sector_scored_not_first_match]:
+    for f in [test_analyse, test_mismatch_and_gaps, test_links_same_site_only, test_helpers, test_site_sector_scored_not_first_match, test_products_roles_from_real_pages]:
         f()
     print("company check: all checks passed")
