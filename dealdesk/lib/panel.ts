@@ -166,6 +166,7 @@ function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
 }
 // One tab per read: a single batch of all ten tabs grew past the timeout and every page fell back to the snapshot.
 // Each key is cached 30 s, concurrent requests share one read, and a refresh (fresh) skips the cache.
+const warnedAt: Record<string, number> = {};
 const liveMem: Record<string, { at: number; data: Grid }> = {}, liveFlight: Record<string, Promise<Grid>> = {};
 async function liveKey(key: string, fresh = false): Promise<Grid | null> {
   const hit = liveMem[key];
@@ -180,7 +181,8 @@ async function liveKey(key: string, fresh = false): Promise<Grid | null> {
     })().finally(() => { delete liveFlight[key]; }));
     return await withTimeout(p, LIVE_TIMEOUT_MS, `live Sheets read (${key})`);
   } catch (e) {
-    if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) await logEvent("warn", "sheets", `live read failed (${key}), using the last copy`, String(e).slice(0, 300));
+    // one warning per key per 10 minutes: during a Sheets stall, a log row per tab per request only adds writes to the stall
+    if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON && Date.now() - (warnedAt[key] || 0) > 600_000) { warnedAt[key] = Date.now(); await logEvent("warn", "sheets", `live read failed (${key}), using the last copy`, String(e).slice(0, 300)); }
     return hit ? hit.data : null;
   }
 }

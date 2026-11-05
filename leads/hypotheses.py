@@ -117,7 +117,9 @@ def build(write=True):
 
     def add(rule, x, **kw):
         hid = "hy-" + hashlib.sha1(f"{rule}|{x.get('project_key') or kw.get('evidence', '')}".encode()).hexdigest()[:12]
-        status = "actionable" if kw.get("tender_id") else "research candidate"
+        # actionable = a live goods/works notice; a consultancy-only notice is a research candidate (it buys no goods)
+        status = "actionable" if kw.get("tender_id") and not kw.pop("consultancy_only", False) else "research candidate"
+        kw.pop("consultancy_only", None)
         h = {c: "" for c in COLS}
         h.update(hyp_id=hid, status=status, label=f"HYPOTHESIS ({status})", rule=rule, project_key=x.get("project_key", ""),
                  project_ref=x.get("project_ref", ""), project_name=x.get("name", "")[:160], project_country=x.get("project_country", ""),
@@ -159,9 +161,12 @@ def build(write=True):
             best = min(cands, key=lambda e: (bool(CONSULT.search(e["title"])), e.get("tender_deadline") or "9999"), default=None)
             if not best:
                 continue
-            if CONSULT.search(best["title"]):
+            consultancy_only = bool(CONSULT.search(best["title"]))
+            if consultancy_only:
                 counter.append("the open notice is consultancy or supervision, not goods/works")
                 conf = "low"
+            elif conf == "low" and not counter:
+                conf = "medium"  # a live goods/works notice is direct evidence of a package, whatever the project size
             add("tender_open", x, mechanism="bid directly or as the supplier / sub-supplier to a bidder on a live notice of a financed project",
                 likely_package=best["title"][:200], actors=" | ".join(actors), timing_from=ts, timing_to=best.get("tender_deadline") or "",
                 timing_basis="the notice's own deadline" if best.get("tender_deadline") else "no deadline stated on the notice",
@@ -169,7 +174,8 @@ def build(write=True):
                 counter_evidence="; ".join(counter), missing_info="; ".join(missing + ["eligibility and local-content rules", "bid security and payment terms",
                                                                                       "whether Asian-sourced goods meet the origin rules"]),
                 next_action=f"Open notice {best['tender_id']}, read eligibility and the BoQ, then line up two supplier quotes before the deadline.",
-                confidence=conf, tender_id=best["tender_id"], tender_deadline=best.get("tender_deadline", ""), tender_link=best.get("url", ""))
+                confidence=conf, tender_id=best["tender_id"], tender_deadline=best.get("tender_deadline", ""), tender_link=best.get("url", ""),
+                consultancy_only=consultancy_only)
             continue
         if fin and not open_ids and gw == 0:
             a = _date(fin)
