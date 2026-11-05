@@ -330,6 +330,11 @@ jobs:
         if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
         run: python -m leads.source_quality 2>&1 | tail -1 | tee -a data/leads/run.log
         continue-on-error: true
+      - name: world events, project timelines and hypotheses (code only, no model)
+        if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
+        run: python -m leads.events 2>&1 | tail -3 | tee -a data/leads/run.log; python -m leads.hypotheses 2>&1 | tail -3 | tee -a data/leads/run.log
+        timeout-minutes: 10
+        continue-on-error: true
       - name: registry
         if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
         run: python -m leads.registry 2>&1 | tee -a data/leads/run.log || true

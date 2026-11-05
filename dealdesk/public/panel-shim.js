@@ -125,6 +125,40 @@
   if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" }).catch(() => {});
   window.DD_TG_SETUP = { get: () => getj("/api/telegram/setup"), set: () => post("/api/telegram/setup", {}, "Deal Desk") };
   window.DD_LABEL = (b) => post("/api/panel/label", b, "Deal Desk");
+  // World and project intelligence (events, project timelines, hypotheses), from the pipeline CSVs.
+  window.DD_INTEL = (q) => getj("/api/panel/intel" + (q ? "?" + new URLSearchParams(q).toString() : ""));
+  window.DD_STRATEGY = { get: () => getj("/api/panel/strategy"), save: (b) => post("/api/panel/strategy", b, "Deal Desk") };
+  // Client intake: dossiers from the client's own deck and site, target profiles and prospects. PUT returns the body
+  // with its HTTP status (409 stale version, 422 blockers) so the screen can show why a change was refused.
+  const ddput = async (u, b) => { const r = await fetch(u, { method: "PUT", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(b) }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({ ok: false })); return Object.assign({ status: r.status }, j); };
+  const cid = (id) => "/api/clients/" + encodeURIComponent(id);
+  window.DD_CLIENTS = {
+    list: () => getj("/api/clients"),
+    create: (b) => post("/api/clients", b, "Deal Desk"),
+    get: (id) => getj(cid(id)),
+    save: (id, patch) => ddput(cid(id), patch),
+    ingest: (id, b) => post(cid(id) + "/ingest", b, "Deal Desk AI"),
+    targets: (id, b) => post(cid(id) + "/targets", b || {}, "Deal Desk AI"),
+    prospects: (id, stage) => getj(cid(id) + "/prospects" + (stage ? "?stage=" + encodeURIComponent(stage) : "")),
+  };
+  // Outreach campaigns. Sending is off in this build: the only transport records what would be sent.
+  const oq = (o) => (o ? "?" + new URLSearchParams(Object.entries(o).filter(([, v]) => v !== undefined && v !== "")).toString() : "");
+  window.DD_OUTREACH = {
+    list: () => getj("/api/outreach/campaign"),
+    get: (id) => getj("/api/outreach/campaign?id=" + encodeURIComponent(id)),
+    save: (id, plan) => post("/api/outreach/campaign", { id, plan }, "Deal Desk"),
+    accounts: (b) => post("/api/outreach/accounts", b, "Deal Desk"),
+    authorize: (campaign_id, confirm_scope_hash) => post("/api/outreach/authorize", { campaign_id, confirm_scope_hash }, "Deal Desk"),
+    control: (b) => post("/api/outreach/control", b, "Deal Desk"),
+    preview: (b) => post("/api/outreach/preview", b, "Deal Desk AI"),
+    outbox: (o) => getj("/api/outreach/outbox" + oq(o)),
+    log: (o) => getj("/api/outreach/log" + oq(o)),
+    suppression: () => getj("/api/outreach/suppression"),
+    suppress: (b) => post("/api/outreach/suppression", b, "Deal Desk"),
+    reply: (b) => post("/api/outreach/reply", b, "Deal Desk AI"),
+    linkedin: (o) => getj("/api/outreach/linkedin" + oq(o)),
+    linkedinAct: (b) => post("/api/outreach/linkedin", b, "Deal Desk"),
+  };
   window.DD_COVERAGE = (fresh) => getj("/api/panel/coverage" + (fresh ? "?fresh=1" : ""));
   window.DD_GEO = { get: (lang) => getj("/api/panel/brief?kind=geo&lang=" + lang), build: (lang) => post("/api/panel/brief", { lang, kind: "geo" }, "Deal Desk AI") };
   window.DD_BRIEF = { get: (lang) => getj("/api/panel/brief?lang=" + lang), build: (lang) => post("/api/panel/brief", { lang }, "Deal Desk AI") };
