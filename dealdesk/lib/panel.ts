@@ -298,6 +298,9 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
 // evidence of exports (+1), proven tier (+2/+1), already sold in the tender's country (+2) or region (+1).
 const STOP = new Set(("the and for with from supply supplies delivery services service provision procurement purchase framework " +
   "agreement lot lots various other works contract tender ministry department government county national public office council authority municipality district goods items equipment materials des de la le du et pour del los las para und der die für von zur").split(" "));
+// descriptors that are preferences, not product identity: "granular urea" still finds urea makers that do not write
+// "granular" (the gap is shown per result); the material and the product stay mandatory
+const FLEX_WORDS = new Set(["granular", "prilled", "bulk", "premium", "quality", "high", "grade", "standard", "new", "best", "cheap", "good", "industrial", "fertilizer", "fertiliser"]);
 export type SupQuery = { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number;
   originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean; kind?: "maker" | "trader" | "" };
 export async function suppliersFor(o: SupQuery): Promise<Grid> {
@@ -378,7 +381,7 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   const hsOf = await hsWordMap();
   const concepts: Concept[] = ex
     ? ex.concepts.map((c) => ({ terms: c.terms.map((t) => stemRe(t)), hs: [...c.hs, ...c.terms.flatMap((t) => [...hsOf(t)])] }))
-    : words.map((w) => ({ terms: [stemRe(w)], hs: [...hsOf(w)] }));
+    : words.filter((w) => !FLEX_WORDS.has(w) || words.every((x) => FLEX_WORDS.has(x))).map((w) => ({ terms: [stemRe(w)], hs: [...hsOf(w)] }));
   const res = concepts;
   const scored: { s: Supplier; sc: number; m: MatchResult }[] = [];
   const fams = familiesFor(`${query} ${o.text || ""}`), seenKey = new Set<string>();

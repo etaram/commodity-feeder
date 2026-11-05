@@ -52,6 +52,10 @@ const FAMILIES: Family[] = [
       { rx: /\b(flour|meal|starch|snacks?|chips|syrup|gluten|bran|popcorn|tortillas?|sweet ?corn|canned|corn oil|cornflakes?|grits|dextrose)\b/i, label: "processed maize product, not whole grain", bucket: "related" },
       { rx: /\b(animal feed|feed mill|silage|ddgs|by-?products?)\b/i, label: "feed or by-product", bucket: "related" },
     ] },
+  { id: "ammonia", when: /\bammonia\b/i,
+    rules: [
+      { rx: /\b(ultra ?purity|ultima|electronic grade|reagent|laborator\w*|labochemicals|analytical grade|ammonium hydroxide|ammonia solution)\b/i, label: "laboratory or electronic grade, not bulk ammonia", bucket: "related" },
+    ] },
   { id: "generator", when: /\b(generators?|gensets?|generating sets?)\b/i,
     rules: [
       { rx: /\b(reefer|clip-?on|refrigerated containers?|container gensets?|cold chain|freight|shipping line)\b/i, label: "genset named in a transport context, not sold", bucket: "related" },
@@ -72,6 +76,7 @@ const FAMILIES: Family[] = [
       { rx: /\b(instrument transformers?|current transformers?|voltage transformers?|potential transformers?)\b/i, label: "instrument transformers, not power", bucket: "related" },
       { rx: /\b(bushings?|tap[- ]changers?|transformer oil|radiators?|insulating oil)\b/i, label: "transformer accessories", bucket: "related" },
       { rx: /\b(installation|erection|commissioning|substation construction|epc|turnkey|civil works)\b/i, label: "project execution role (installer or EPC)", bucket: "related" },
+      { rx: /\b(fire suppression|containment|filtration|protection systems?|monitoring systems?) (for|of)\b|\bfor (electrical |electric |power |distribution )*transformers\b/i, label: "systems for transformers, not transformers", bucket: "related" },
     ] },
   { id: "pe-pipe", when: /\b(pe|hdpe|mdpe|polyethylene|pe100|pe80|plastic) pipes?\b|\bpolyethylene\b/i,
     exact: /\b(polyethylene|hdpe|mdpe|pe ?100|pe ?80|pe pipes?)\b/i,
@@ -90,46 +95,65 @@ export function familiesFor(query: string): Family[] {
 
 const SERVICE_TYPE = /services/i;
 
+// the product must appear as one product: all request terms in the same item of a list (";" or "," separated),
+// not "diesel" in one contract and "generator" in another
+const segments = (t: string) => t.split(/[;|\n]|,\s+|\s+-\s+/).map((x) => x.trim()).filter((x) => x.length > 2);
+// the product named while a service is bought around it (fuel for generators, servicing of transformers)
+const SERVICE_CTX = /\b(maintenance|servicing|service and repair|repairs?|overhaul|demoisturi\w*|installation of|erection|commissioning|fuel for|diesel for|petrol for|hire of|rental of|transport of|inspection of|testing of|calibration of|cleaning of)\b/i;
+
 export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: string[][], query: string, fams = familiesFor(query)): MatchResult {
-  const own = `${s.p || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();      // the company's own words
-  const award = `${s.sp || ""} ${s.cm || ""}`.toLowerCase();                  // what it supplied under contracts
-  const customs = `${s.hd || ""}`.toLowerCase();                              // customs headings (from codes)
-  const name = String(s.n || "").toLowerCase();
+  const own = `${s.p || ""} ${s.in || ""} ${s.wt || ""}`;        // the company's own words
+  const award = `${s.sp || ""}`;                                    // what it supplied under contracts
+  const customs = `${s.hd || ""} ${s.cm || ""}`;                    // customs headings and derived commodity names
+  const name = String(s.n || "");
   const codes = (String(s.hs || "").replace(/\./g, "").match(/\d{4,6}/g) || []);
-  let inOwn = 0, inAward = 0, inCustoms = 0, inName = 0;
-  for (let i = 0; i < conceptTerms.length; i++) {
-    const t = conceptTerms[i], hs = conceptHs[i] || [];
-    const viaCode = codes.length > 0 && hs.some((h) => codes.some((x) => (h.length === 4 ? x.startsWith(h) : x === h)));
-    if (t.some((r) => r.test(own))) inOwn++;
-    else if (t.some((r) => r.test(award))) inAward++;
-    else if (viaCode || t.some((r) => r.test(customs))) inCustoms++;
-    else if (t.some((r) => r.test(name))) inName++;
-  }
-  const n = conceptTerms.length || 1, found = inOwn + inAward + inCustoms + inName;
+  const isService = SERVICE_TYPE.test(String(s.ty || ""));
+  const rules = fams.flatMap((f) => f.rules.filter((r) => !r.rx.test(query)));
+  const n = conceptTerms.length || 1;
+  const all = (seg: string) => conceptTerms.every((t) => t.some((r) => r.test(seg)));
   const conflicts: string[] = [], gaps: string[] = [];
-  const evidenceText = `${own} ${award} ${customs}`;
-  let bucket: Bucket;
-  let evidence = inOwn === n ? "company's own product description" : inOwn + inAward === n ? "own description and contract items"
-    : inOwn + inAward + inCustoms === n ? (inCustoms ? "customs headings" : "contract items") : found ? "partial" : "none";
-  if (found < n) { bucket = "plausible"; gaps.push(`${n - found} of ${n} product terms not found`); }
-  else if (inName && inOwn + inAward + inCustoms < n) { bucket = "plausible"; evidence = "company name only"; gaps.push("product capability not evidenced (name match)"); }
-  else if (inOwn === n || (inOwn + inAward === n && !SERVICE_TYPE.test(String(s.ty || "")))) bucket = "supported";
-  else { bucket = "plausible"; gaps.push(inCustoms ? "only customs codes or headings name the product" : "named only in contracts it delivered as services"); }
-  if (inAward && !inOwn && SERVICE_TYPE.test(String(s.ty || "")) && bucket !== "plausible") { bucket = "related"; conflicts.push("supplied within service contracts"); }
-  for (const f of fams) {
-    for (const r of f.rules) {
-      if (r.rx.test(query)) continue; // the buyer asked for that product itself
-      if (!r.rx.test(evidenceText)) continue;
-      // a rule about the wrong product only applies when the right one is not also stated
-      const right = f.exact ? f.exact.test(f.strip ? own.replace(f.strip, " ") : own) : !!(f.need && f.need.rx.test(own));
-      if (r.bucket === "incompatible" && !right) { bucket = "incompatible"; conflicts.push(r.label); }
-      else if (!right && bucket !== "incompatible") { if (bucket === "supported" || bucket === "plausible") bucket = "related"; conflicts.push(r.label); }
-      else conflicts.push(`${r.label} (also listed)`);
+  // stage C per item: an item that names the whole product, with no conflicting product or service context in it
+  const judge = (txt: string) => {
+    let clean = false, conflicted = "";
+    for (const seg of segments(txt)) {
+      if (!all(seg)) continue;
+      const bad = rules.find((r) => r.rx.test(seg));
+      if (bad) { if (bad.bucket === "incompatible") conflicted = conflicted || "!" + bad.label; else conflicted = conflicted || bad.label; continue; }
+      if (SERVICE_CTX.test(seg)) { conflicted = conflicted || "named in a service or fuel context, not sold"; continue; }
+      clean = true;
     }
-    if (f.need && !f.need.rx.test(`${own} ${award}`) && !(codes.length && f.need.rx.test(codes.join(" "))) && bucket === "supported") { bucket = "plausible"; gaps.push(f.need.gap); }
+    return { clean, conflicted };
+  };
+  const jo = judge(own), ja = judge(award), jc = judge(customs);
+  const viaCode = conceptHs.some((hs) => hs.length && codes.some((x) => hs.some((h) => (h.length === 4 ? x.startsWith(h) : x === h))));
+  const anywhere = (txt: string) => conceptTerms.filter((t) => t.some((r) => r.test(txt))).length;
+  let bucket: Bucket, evidence: string;
+  if (jo.clean) { bucket = "supported"; evidence = "company's own product description"; }
+  else if (ja.clean && !isService) { bucket = "supported"; evidence = "contract items"; }
+  else if (ja.clean) { bucket = "plausible"; evidence = "contract items"; gaps.push("named in contracts of a works or services firm"); }
+  else if (jo.conflicted || ja.conflicted) {
+    const c = jo.conflicted || ja.conflicted;
+    bucket = c.startsWith("!") ? "incompatible" : "related"; evidence = jo.conflicted ? "company's own product description" : "contract items";
+    conflicts.push(c.replace(/^!/, ""));
+  } else if (jc.clean || viaCode) { bucket = "plausible"; evidence = "customs headings"; gaps.push("only customs codes or headings name the product"); if (jc.conflicted) conflicts.push(jc.conflicted.replace(/^!/, "")); }
+  else if (jc.conflicted) { bucket = jc.conflicted.startsWith("!") ? "incompatible" : "related"; evidence = "customs headings"; conflicts.push(jc.conflicted.replace(/^!/, "")); }
+  else if (anywhere(`${own} ${award} ${customs}`) >= n) { bucket = "plausible"; evidence = "partial"; gaps.push("the request terms appear separately, not as one product"); }
+  else if (anywhere(`${own} ${award} ${customs} ${name}`) >= n) { bucket = "plausible"; evidence = "company name only"; gaps.push("product capability not evidenced (name match)"); }
+  else { bucket = "plausible"; evidence = "partial"; gaps.push(`${n - anywhere(`${own} ${award} ${customs}`)} of ${n} product terms not found`); }
+  // a wrong product that the company states while not stating the right one (cosmetic urea, rails for PE pipe)
+  for (const f of fams) {
+    const ownAward = `${own} ${award}`;
+    const right = f.exact ? f.exact.test(f.strip ? ownAward.replace(f.strip, " ") : ownAward) : !!(f.need && f.need.rx.test(ownAward));
+    for (const r of f.rules) {
+      if (r.rx.test(query) || !r.rx.test(`${own} ${award} ${customs}`)) continue;
+      if (!right && r.bucket === "incompatible") { bucket = "incompatible"; conflicts.push(r.label); }
+      else if (!right && (bucket === "supported" || bucket === "plausible")) { bucket = "related"; conflicts.push(r.label); }
+      else if (!conflicts.includes(r.label)) conflicts.push(`${r.label} (also listed)`);
+    }
+    if (f.need && bucket === "supported" && !f.need.rx.test(`${own} ${award} ${codes.join(" ")}`)) { bucket = "plausible"; gaps.push(f.need.gap); }
   }
   const role = s.td === "yes" || /trader|distributor/i.test(String(s.ty || "")) ? "trader" : /manufactur|producer|goods/i.test(String(s.ty || "")) ? "goods supplier" : "";
-  const why = bucket === "supported" ? `Fits because its ${evidence} names ${conceptTerms.length > 1 ? "every part of the request" : "the product"}`
+  const why = bucket === "supported" ? `Fits because its ${evidence} names ${n > 1 ? "the whole product in one item" : "the product"}`
     : bucket === "plausible" ? `Possible: evidence is ${evidence}`
     : bucket === "related" ? `Related, not an exact fit: ${conflicts[0] || "role differs"}`
     : `Not compatible: ${conflicts[0] || ""}`;

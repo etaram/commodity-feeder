@@ -29,4 +29,14 @@ T("power transformer", [["power transformer"]], { n: "EPC Build", sp: "supply an
 // F PE pipe
 T("PE pipes and fittings", [["pe pipe", "polyethylene pipe", "hdpe pipe"]], { n: "Rail Steel", p: "rails, steel pipe fittings", ty: "goods supplier" }, "incompatible");
 T("PE pipes and fittings", [["pe pipe", "polyethylene pipe", "hdpe pipe"]], { n: "Plastic Pipes Ltd", p: "HDPE pipe PE100, polyethylene pipe fittings", ty: "goods supplier", web: "x" }, "supported");
+// from the first benchmark run (real rows)
+T("diesel generator", [["diesel"], ["generator", "genset"]], { n: "SAMATAR INVESTMENT LTD", sp: "DIESEL FOR MISSION'S GENERATORS AT THE RESIDENTIAL COMPOUND", ty: "works/services" }, "related");
+T("diesel generator", [["diesel"], ["generator", "genset"]], { n: "Unstolic", sp: "SUPPLY OF TYRES; Diesel; standby generator servicing", ty: "goods supplier" }, "plausible");
+T("diesel generator", [["diesel"], ["generator", "genset"]], { n: "ENERGY POWER SYSTEMS", sp: "One 830 kW Diesel Generator", ty: "goods supplier" }, "supported");
+T("hot rolled steel coil", [["hot rolled"], ["steel"], ["coil"]], { n: "Wire Co", p: "Hot Rolled Steel Wire Rod Coils, Wire Rod", ty: "goods supplier" }, "related");
+T("power transformer", [["power transformer"]], { n: "Akhelec", p: "Fire suppression systems for electrical power transformers", ty: "goods supplier" }, "related");
+T("power transformer", [["power transformer"]], { n: "Tanelec", sp: "Demoisturizing and Maintenance of Power Transformers", ty: "goods supplier" }, "related");
+T("ammonia", [["ammonia"]], { n: "Acros", p: "Ammonia Solution, labochemicals", ty: "goods supplier" }, "related");
+T("ammonia", [["ammonia"]], { n: "Trinidad Nitrogen", p: "Bulk Anhydrous Ammonia", ty: "goods supplier", web: "x" }, "supported");
+T("white maize", [["white"], ["maize", "corn"]], { n: "KASHAKAT", sp: "DELIVERY OF EMERGENCY RELIEF FOOD (WHITE MAIZE AND BEANS)", ty: "goods supplier" }, "supported");
 console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
