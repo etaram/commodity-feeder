@@ -376,7 +376,7 @@ def queue(rows, checks, limit, today):
     due = lambda k: k not in checks or str(checks[k].get("checked", "")) < stale or checks[k].get("version") != VERSION  # noqa: E731
     picked, seen = [], set()
 
-    def add(r, reason, force=False):
+    def add(r, reason, force=False, discover=False):
         k = f"{r['supplier']}|{r['country']}"
         if k in seen or (not force and not due(k)):
             return
@@ -385,8 +385,9 @@ def queue(rows, checks, limit, today):
             em = (r.get("email") or "").split(";")[0].strip()
             if "@" in em and not re.search(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|qq|163|126)\.", em, re.I):
                 w = em.split("@")[1]
-        if not w:
+        if not w and not discover:
             return
+        # no site at all: the check first looks for one (likely domains, accepted only when the page names the company)
         seen.add(k); picked.append((k, r["supplier"], r["country"], w, r.get("main_sector", ""), reason))
 
     # 1. asked from the panel (Check queue: time, company, country, by)
@@ -407,6 +408,19 @@ def queue(rows, checks, limit, today):
         cands = by_name.get(name, [])
         for r in ([x for x in cands if x["country"] == cty] or cands)[:2]:
             add(r, "opened in the panel")
+    # 2b. what the refinement asked for (leads/refine.py check_queue: proven suppliers first, then sites on record)
+    rq = CHECKS / "refine" / "check_queue.txt"
+    if rq.exists():
+        n_disc = 0
+        for k in rq.read_text(encoding="utf-8").splitlines()[: limit * 2]:
+            r = by_key.get(k)
+            if not r:
+                continue
+            nosite = not (r.get("website") or r.get("email"))
+            if nosite and n_disc >= limit // 3:  # discovery is slower: at most a third of a run
+                continue
+            n_disc += nosite
+            add(r, "refinement: " + ("find the official website" if nosite else "confirm the website on record"), discover=nosite)
     # 3. proven suppliers with an unknown or flagged sector; 4. proven, never checked; 5. the rest, best first
     proven = [r for r in rows if r.get("tier") in ("1", "2")]
     for r in proven:
@@ -450,6 +464,16 @@ def check_one(item, prev):
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
     base = {"key": key, "supplier": name, "country": country, "website": website, "checked": now[:10], "checked_at": now,
             "reason": reason, "version": VERSION, "record_sector": rec_sector}
+    if not website:
+        try:
+            from .web_contacts import discover
+            website = discover(name, country) or ""
+        except Exception:  # noqa: BLE001
+            website = ""
+        base["website"] = website
+        if not website:
+            return {**base, "verdict": "no website found", "detail": "likely domains tried; none names the company", "gaps": ["no website found"], "content_hash": ""}
+        base["discovered"] = True
     pages, why = fetch_site(website)
     if not pages:
         return {**base, "verdict": why.split(" (")[0], "detail": why, "gaps": [why], "content_hash": ""}

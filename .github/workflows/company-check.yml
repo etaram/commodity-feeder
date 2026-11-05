@@ -1,5 +1,6 @@
 name: company-check
-# Background company checks (leads/company_check.py): reads suppliers' own websites, code only, no model calls.
+# Background company checks and data refinement (leads/company_check.py, leads/refine.py): reads suppliers' own
+# websites and refines every supplier record in code; only the counts (data/leads/refine_progress.json) are public.
 # Every hour (public repository: Actions minutes are free); the private supplier list is restored read-only from the suppliers workflow's cache, and the checks
 # keep their own cache, so this job never overwrites the suppliers workflow's private files.
 on:
@@ -10,8 +11,11 @@ on:
       limit:
         description: "companies to check this run"
         default: "600"
+      sample:
+        description: "refine only a sample of N records (0 = all)"
+        default: "0"
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: company-check
   cancel-in-progress: false
@@ -40,3 +44,17 @@ jobs:
       - run: pip install requests google-auth
       - name: Check companies
         run: python -m leads.company_check --limit ${{ inputs.limit || '600' }} --minutes 45 2>&1 | tail -20
+        continue-on-error: true
+      - name: Refine every supplier record (unchanged records are reused)
+        run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5
+      - name: Publish progress counts
+        run: |
+          git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
+          cp data/leads/refine_progress.json /tmp/rp.json
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/rp.json data/leads/refine_progress.json
+            git add data/leads/refine_progress.json
+            git diff --cached --quiet && break
+            git commit -q -m "refine progress: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
+            sleep $((i * 10))
+          done

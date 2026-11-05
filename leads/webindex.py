@@ -128,6 +128,12 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             if d:
                 x["hd"] = d[:CUT["hd"]]
         x["qv"] = 2  # quality already scaled for service-only firms (dealdesk/lib/supfit.ts skips these rows)
+        if r.get("dup_of"):  # a duplicate of another record (leads/refine.py): the canonical record is the one searched
+            continue
+        if r.get("refine") and "conflicts" in r["refine"]:
+            x["rc"] = 1  # the refined layer found a conflict: shown as "check first", never as proof
+        if r.get("website_basis"):
+            x["wb"] = r["website_basis"][:80]
         if x.get("n") and x.get("tr") in ("1", "2", "3"):  # proven (tier 1-2) and qualified (tier 3); tier 4 stays out
             out.append(x)
     raw = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode(), 9)

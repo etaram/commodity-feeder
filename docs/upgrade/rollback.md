@@ -10,3 +10,10 @@ What a rollback must restore: compatible behaviour across code, configuration, s
 6. User work is never deleted by a rollback: deal records, labels, verified facts and dossiers are append-only rows.
 
 Rehearsal: promote the previous deployment in a preview, open the panel, run one supplier search and one tender detail, then promote back.
+
+## Data refinement (leads/refine.py)
+
+- The raw supplier rows are never changed by the refinement; the refined layer is `data/checks/refine/refined.jsonl.gz` (Actions cache `checks-*`), applied by `leads/universe.py` while `REFINE` is not `off`.
+- Switch off: set `REFINE: "off"` in the `suppliers` workflow env and run it with `only=universe`; the next build has no refined values.
+- Go back to an earlier refined layer: the last 7 daily copies are in `data/checks/refine/history/`; copy one over `refined.jsonl.gz` in a workflow step, then rebuild the universe.
+- A replaced website is kept in the `website_rejected` column with the reason; duplicate rows stay in the universe with `dup_of` (only the search index shows the canonical record).

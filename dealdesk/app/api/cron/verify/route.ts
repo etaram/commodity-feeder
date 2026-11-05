@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runVerification } from "@/lib/verify";
 import { backfillJobs } from "@/lib/researchmemory";
+import { runRefineAI } from "@/lib/refineai";
 
 // The verification agent (lib/verify.ts), twice a day. Vercel sends "Authorization: Bearer <CRON_SECRET>".
 export const dynamic = "force-dynamic";
@@ -13,7 +14,9 @@ export async function GET(req: NextRequest) {
     const v = await runVerification();
     // research memory: past research jobs not yet in the ledger (idempotent, bounded, code only)
     const memory = await backfillJobs(300).catch((e) => ({ error: String(e).slice(0, 160) }));
-    return NextResponse.json({ ok: true, ...v, memory });
+    // data refinement: the cases code could not settle, read by the model from the company's own site text
+    const refine = await runRefineAI().catch((e) => ({ error: String(e).slice(0, 160) }));
+    return NextResponse.json({ ok: true, ...v, memory, refine });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });
   }

@@ -147,7 +147,7 @@ body.role-analyst [data-pa],body.role-analyst [data-pc],body.role-analyst .pclos
 body:not(.role-admin) [data-v="users"],body:not(.role-admin) [data-v="ops"]{display:none}
 .adkpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.adk{background:var(--card,rgba(255,255,255,.04));border:1px solid var(--line,rgba(255,255,255,.1));border-radius:12px;padding:10px 12px}.adk .num{font-size:1.4em;font-weight:700}
 .adgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}.adrow{display:flex;align-items:center;gap:8px;margin:2px 0}
-.adbar{flex:1;display:inline-block;height:8px;border-radius:4px;background:rgba(127,127,127,.18);min-width:40px;overflow:hidden}.adbar>span{display:block;height:100%;background:var(--info,#5b8def);border-radius:4px}.adbar>span.acc{background:var(--acc,#d6b25e)}
+.adbar{flex:1;display:inline-block;height:8px;border-radius:4px;background:rgba(127,127,127,.18);min-width:40px;overflow:hidden}.adbar>span{display:block;height:100%;background:var(--info,#5b8def);border-radius:4px}.adbar>span.acc{background:var(--acc,#d6b25e)}.adbar>span.warn{background:var(--warn,#f0b35a)}
 body:not(.has-profile-api) [data-v="forme"]{display:none}
 .fm-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--panel)}
 .fm-top{display:flex;gap:10px;align-items:flex-start}
@@ -3812,6 +3812,27 @@ const AD = { data: null, at: 0 };
 const adBar = (v, max, cls) => `<span class="adbar"><span class="${cls || ""}" style="width:${max ? Math.max(2, Math.round(100 * v / max)) : 0}%"></span></span>`;
 const adErr = x => x && x.error ? `<div class="note q-block">${esc(mt("Not available: ", "לא זמין: "))}${esc(x.error)}</div>` : "";
 const adNum = v => (v === null || v === undefined || v === "") ? "-" : Number(v).toLocaleString(LANG === "he" ? "he-IL" : "en-US");
+/* data refinement progress (leads/refine.py): real counts from the last run, nothing estimated */
+function refineHtml(r) {
+  if (!r) return "";
+  if (r.error) return `<section class="section"><h3>${esc(mt("Data refinement", "טיוב נתונים"))}</h3><div class="sub">${esc(mt("First run within the hour.", "ריצה ראשונה בתוך שעה."))}</div></section>`;
+  const U = r.universe || 0, pct = v => U ? Math.round(100 * v / U) : 0;
+  const row = (l, v, cls, note) => `<div class="adrow"><span style="flex:0 0 46%">${esc(l)}</span>${adBar(v, U, cls)}<span class="num" style="min-width:110px;text-align:end">${adNum(v)} <span class="muted">(${pct(v)}%)</span></span></div>${note ? `<div class="sub muted" style="margin:-2px 0 4px">${esc(note)}</div>` : ""}`;
+  return `<section class="section"><h3>${esc(mt("Data refinement: suppliers", "טיוב נתונים: ספקים"))} <span class="muted sub">${esc(r.version)} · ${esc(String(r.at || "").replace("T", " ").slice(0, 16))} UTC</span></h3>
+    ${row(mt("Records processed", "רשומות שטופלו"), r.processed, "acc", mt(`${adNum(r.reused_unchanged)} unchanged and still valid, reused without reprocessing`, `${adNum(r.reused_unchanged)} לא השתנו ועדיין בתוקף, נלקחו בלי עיבוד מחדש`))}
+    ${row(mt("Completed from an official source", "הושלמו ממקור רשמי"), r.completed, "", mt("at least one field filled, each with its source and date", "לפחות שדה אחד הושלם, כל אחד עם מקור ותאריך"))}
+    ${row(mt("Official website attached", "אתר רשמי משויך"), r.official_website)}
+    ${row(mt("Contact channel found", "נמצא ערוץ קשר"), r.contact_found)}
+    ${row(mt("Cleaned fields (originals kept)", "שדות שנוקו (המקור נשמר)"), r.cleaned)}
+    ${row(mt("In a duplicate group (nothing deleted)", "בקבוצת כפילויות (לא נמחק דבר)"), r.in_duplicate_groups, "", `${adNum(r.duplicate_groups)} ${mt("groups", "קבוצות")}`)}
+    ${row(mt("With conflicts to resolve", "עם סתירות לבירור"), r.with_conflicts, "warn")}
+    ${row(mt("With gaps", "עם חוסרים"), r.with_gaps, "warn")}
+    <div class="sub" style="margin-top:6px">${esc(mt("Websites read so far", "אתרים שנקראו עד כה"))}: ${adNum(r.websites_checked)} · ${esc(mt("queued for reading", "בתור לקריאה"))}: ${adNum(r.website_check_queue)} · ${esc(mt("cases for the AI review", "מקרים לבדיקת AI"))}: ${adNum(r.needs_ai)}</div>
+    <details style="margin-top:6px"><summary class="sub">${esc(mt("Gaps and conflicts by kind", "חוסרים וסתירות לפי סוג"))}</summary>
+      ${Object.entries(r.gaps || {}).map(([k, v]) => `<div class="sub">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}
+      ${Object.entries(r.conflicts || {}).map(([k, v]) => `<div class="sub q-block">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}</details>
+    <p class="note">${esc(mt("Nothing here is marked verified: a website's text is the company's statement, a model reading is labelled as such, and the raw record is never changed (rollback: REFINE=off).", "שום דבר כאן לא מסומן כמאומת: טקסט באתר הוא הצהרת החברה, קריאת מודל מסומנת ככזו, והרשומה המקורית לא משתנה (חזרה לאחור: REFINE=off)."))}</p></section>`;
+}
 async function renderOps(fresh) {
   const el = $("#ops-out"); if (!el) return;
   if (!window.DD_ADMIN) { el.innerHTML = `<div class="empty">${esc(mt("Not available in this panel.", "לא זמין בפאנל הזה."))}</div>`; return; }
@@ -3846,6 +3867,7 @@ async function renderOps(fresh) {
       ${kpi("$" + (b.spent_usd ?? 0), mt("AI spend today (estimated)", "הוצאת AI היום (אומדן)"), `${esc(mt("alert line", "קו התראה"))} $${esc(b.alert_usd ?? "")}${b.over_alert ? ` <span class="pill warn">${esc(mt("over", "מעל"))}</span>` : ""}`)}
     </div>
 
+    ${refineHtml(d.refine)}
     <div class="adgrid">
     <section class="section"><h3>${esc(mt("Model cost, 14 days", "עלות מודל, 14 יום"))}</h3>${adErr(ai)}
       ${aiDays.map(([day, usd]) => `<div class="adrow"><span class="num" style="width:84px">${esc(day.slice(5))}</span>${adBar(usd, aiMax, day === today ? "acc" : "")}<span class="num">$${usd.toFixed(2)}</span></div>`).join("") || `<div class="sub">${esc(mt("No metered calls yet: metering started today.", "עדיין אין קריאות מדודות: המדידה התחילה היום."))}</div>`}

@@ -200,6 +200,62 @@ def _item(title):
     return t[:70] if len(t) >= 4 else ""
 
 
+def apply_refined(out):
+    """The refined layer (leads/refine.py) on top of the built rows, before tiers and quality: the official website
+    and its basis, the company's own-domain e-mails and site phones where the row has none, the role from the site,
+    the duplicate group and its canonical record, and the open conflicts. The raw values are never lost: a replaced
+    website is kept in website_rejected. REFINE=off skips this (rollback)."""
+    import os
+    for r in out:
+        r.setdefault("website_basis", ""); r.setdefault("website_rejected", ""); r.setdefault("dup_of", ""); r.setdefault("refine", "")
+    if os.environ.get("REFINE", "on") == "off":
+        return 0
+    p = DATA / "checks" / "refine" / "refined.jsonl.gz"
+    if not p.exists():
+        return 0
+    import gzip
+    ref = {}
+    for line in gzip.open(p, "rt", encoding="utf-8"):
+        try:
+            d = json.loads(line); ref[d["key"]] = d
+        except (ValueError, KeyError):
+            pass
+    n = 0
+    for r in out:
+        d = ref.get(f"{r['supplier']}|{r['country']}")
+        if not d:
+            continue
+        n += 1
+        f = d.get("filled", {})
+        rej = (d.get("cleaned") or {}).get("website")
+        if rej and r.get("website") and rej.get("from", "").rstrip("/").lower().endswith(re.sub(r"^https?://(www\.)?", "", r["website"]).rstrip("/").lower()[:40]):
+            r["website_rejected"] = f"{r['website']} ({rej.get('reason', '')})"; r["website"] = ""; r["website_source"] = ""
+        if f.get("website"):
+            if not r.get("website"):
+                r["website"] = f["website"]["value"]; r["website_source"] = "refined"
+            r["website_basis"] = f"{f['website']['basis']} ({f['website']['date']})"[:200]
+        if not r.get("email") and f.get("emails_own_domain"):
+            r["email"] = f["emails_own_domain"]["value"]; r["contact_level"] = r.get("contact_level") or "company website"
+        if not r.get("phone") and f.get("phones_site"):
+            r["phone"] = clean_phone(f["phones_site"]["value"].split(";")[0], r["country"])
+        role = (f.get("role") or {}).get("value", "")
+        if "manufacturer" in role and r.get("type") != "goods supplier" and not r.get("epc"):
+            r["type"] = "goods supplier"
+        elif role.startswith("trader") and r.get("trader") != "yes":
+            r["trader"] = "yes"
+        dup = d.get("duplicate") or {}
+        if dup and dup.get("canonical") and dup["canonical"] != d["key"]:
+            r["dup_of"] = dup["canonical"]
+        flags = []
+        if d.get("conflicts"):
+            flags.append(f"{len(d['conflicts'])} conflicts: " + "; ".join(d["conflicts"])[:160])
+        if d.get("gaps"):
+            flags.append("gaps: " + "; ".join(g.split(" (")[0] for g in d["gaps"])[:120])
+        r["refine"] = f"{d.get('version')} {d.get('refined')} | " + " | ".join(flags) if flags else f"{d.get('version')} {d.get('refined')}"
+    log.info("refined layer applied to %d suppliers", n)
+    return n
+
+
 def _company_checks():
     """Latest company check per supplier key (leads/company_check.py), only where the site names the company."""
     out = {}
@@ -697,6 +753,7 @@ def build():
             "email_kind": email_kind(x["email"], x["website"])[0], "email_domain": email_kind(x["email"], x["website"])[1],
             "contact_seen": today() if (x["email"] or x["phone"]) else "",  # last seen in a source, not a deliverability check
         })
+    n_ref = apply_refined(out)
     for r in out:
         r["quality"] = quality(r)
         r["tier"], r["tier_reason"] = supplier_tier(r)

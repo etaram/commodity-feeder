@@ -22,7 +22,7 @@ export async function GET() {
   const { s, res } = await gate("admin");
   if (!s) return res;
   const since14 = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
-  const [classif, evalTab, verified, assertions, sources, quality, ai, applog, volumes, world, checks] = await Promise.all([
+  const [classif, evalTab, verified, assertions, sources, quality, ai, applog, volumes, world, checks, refine] = await Promise.all([
     safe(readRanges(UNIVERSE, ["'Classification check'!A1:L28"]).then((g) => {
       const v = g?.[0] || [];
       const hi = v.findIndex((r) => r[0] === "sector");
@@ -68,10 +68,12 @@ export async function GET() {
     safe((async () => ({ tenders_open: n((await getRange("tot_t"))[0]?.[1]), suppliers_searchable: n((await getRange("tot_s"))[0]?.[1]) }))(), 20000),
     safe(intel({}).then((x) => x.counts)),
     safe(gviz(UNIVERSE, "Company checks", "select E, count(A), max(D) group by E").then((rows) => ({ by_verdict: Object.fromEntries(rows.map((r) => [r[0], Number(r[1]) || 0])), last: rows.map((r) => r[2]).sort().pop() || "" }))),
+    // refinement progress: counts only, published by the hourly company-check workflow
+    safe(fetch("https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/refine_progress.json", { cache: "no-store", signal: AbortSignal.timeout(8000) }).then((r) => (r.ok ? r.json() : { error: `not published yet (${r.status})` }))),
   ]);
   return NextResponse.json({ ok: true, at: new Date().toISOString(),
     build: { commit: process.env.VERCEL_GIT_COMMIT_SHA || "local", supplier_match: MATCH_VERSION, model: MODEL },
-    ai_budget: await budgetState().catch(() => null), volumes, world, classification: classif, search_eval: evalTab, verified, assertions, sources, source_quality: quality, ai, warnings: applog, company_checks: checks });
+    ai_budget: await budgetState().catch(() => null), volumes, world, classification: classif, search_eval: evalTab, verified, assertions, sources, source_quality: quality, ai, warnings: applog, company_checks: checks, refine });
 }
 
 // POST {action: "backfill_research"} (admin): copies past research jobs into the research memory now, instead of

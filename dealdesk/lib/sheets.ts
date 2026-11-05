@@ -115,6 +115,21 @@ export async function gviz(sid: string, sheet: string, tq: string): Promise<stri
 
 // RAW: a cell typed by a user is stored as text and never evaluated as a formula (=, +, -, @ at the start are harmless).
 // Appends one row to a tab of another spreadsheet the service account can edit (the private Supplier Universe).
+// Many rows to a tab of any spreadsheet in one request; creates the tab (with the given header) when it is missing.
+export async function appendManyTo(sid: string, tab: string, rows: (string | number)[][], header?: string[]) {
+  if (!rows.length) return;
+  const jwt = await client();
+  if (!jwt) throw new Error("Sheets is not configured");
+  const url = `${API}/${sid}/values/${encodeURIComponent(`'${tab}'!A1`)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+  try {
+    await call(jwt, "POST", url, { values: rows.map((r) => r.slice(0, 40)) });
+  } catch (e: unknown) {
+    if (!String(e).includes("Unable to parse range")) throw e;
+    await call(jwt, "POST", `${API}/${sid}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab } } }] });
+    await call(jwt, "POST", url, { values: [...(header ? [header] : []), ...rows.map((r) => r.slice(0, 40))] });
+  }
+}
+
 export async function appendTo(sid: string, tab: string, row: (string | number)[]) {
   const jwt = await client();
   if (!jwt) throw new Error("Sheets is not configured");

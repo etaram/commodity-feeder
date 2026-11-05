@@ -462,6 +462,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
       ? { bucket: "supported", why: `Verified ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [], gaps: m.gaps.filter((g) => !/product|terms|customs|contracts/.test(g)), url: vf.url }
       : { bucket: vf.label === "no" ? "incompatible" : "related", why: `Checked ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [vf.note.slice(0, 120)], gaps: [], url: vf.url };
     if (m.bucket === "incompatible") continue;
+    // the refinement found a conflict on this record (another company's evidence, a site that disagrees): never proof
+    if (s.rc) m = { ...m, gaps: [...m.gaps, "the record has an open conflict (refinement): check before relying on it"] };
     if (seenKey.has(dk)) continue;
     seenKey.add(dk);
     scored.push({ s, sc, m });
