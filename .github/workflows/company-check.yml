@@ -10,7 +10,7 @@ on:
     inputs:
       limit:
         description: "companies to check this run"
-        default: "600"
+        default: "1500"
       sample:
         description: "refine only a sample of N records (0 = all)"
         default: "0"
@@ -43,7 +43,7 @@ jobs:
           restore-keys: checks-
       - run: pip install requests google-auth
       - name: Check companies
-        run: python -m leads.company_check --limit ${{ inputs.limit || '600' }} --minutes 45 2>&1 | tail -20
+        run: python -m leads.company_check --limit ${{ inputs.limit || '1500' }} --minutes 45 2>&1 | tail -20
         continue-on-error: true
       - name: Refine every supplier record (unchanged records are reused)
         run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5

@@ -40,7 +40,7 @@ from datetime import date, datetime, timedelta, timezone
 from .common import DATA, LEADS, PRIVATE, log
 from .contacts import CC, clean_email, clean_phone, email_kind
 
-REFINE_VERSION = "refine-3"
+REFINE_VERSION = "refine-4"
 DIR = DATA / "checks" / "refine"  # kept with the website checks, in their Actions cache
 OUT = DIR / "refined.jsonl.gz"  # about 10x smaller than plain JSON lines; read and written as a stream
 HIST = DIR / "history"
@@ -126,6 +126,12 @@ def name_in_domain(name, host):
     return False
 
 
+def core_label(h):
+    """The brand label of a domain: baxter.com.pl and baxter.com are both 'baxter'."""
+    r = root_of(h or "")
+    return r.split(".")[0] if r else ""
+
+
 def sha(*parts):
     return hashlib.sha1("\x1f".join(str(p) for p in parts).encode("utf-8", "ignore")).hexdigest()[:16]
 
@@ -160,11 +166,13 @@ def duplicate_groups(rows):
         nn = norm_name(r["supplier"]).replace(" ", "")  # "A.B.C. Ltd" and "ABC Limited" are one name
         if len(nn) >= 4:
             idx[("same name, same country", nn, r["country"])].append(k)
+        # a website or an e-mail domain is an identity signal only when it carries the company's name: tender
+        # records often hold a distributor's, a tender portal's or a group's domain (Baxter and Sarstedt shared one)
         h = host_of(r.get("website", ""))
-        if h and not site_rejection(r.get("website", ""), r["supplier"]):
+        if h and not site_rejection(r.get("website", ""), r["supplier"]) and name_in_domain(r["supplier"], h):
             idx[("same website", root_of(h), r["country"])].append(k)
         e = (r.get("email") or "").split(";")[0].strip().lower()
-        if "@" in e and not FREE.search(e):
+        if "@" in e and not FREE.search(e) and name_in_domain(r["supplier"], e.split("@")[1]):
             idx[("same e-mail domain", root_of(e.split("@")[1]), r["country"])].append(k)
     for sig, ks in idx.items():
         if 1 < len(ks) <= 25:  # a signal shared by dozens is a portal or a parent group, not one company
@@ -284,13 +292,15 @@ def refine_one(r, check, ai, dup, namesakes, today):
             conflicts.append("the site's products share no word with the contracts or shipments on record")
     if namesakes.get(norm_name(name), 0) > 1 and (r.get("shipments_12m") or r.get("hs_codes")):
         conflicts.append(f"the same name exists in {namesakes[norm_name(name)]} countries; shipment evidence matched by name may belong to a namesake")
+    # soft checks: worth a look, not a contradiction (a group's .com mailbox for its .pl site, a head-office number)
+    notes = []
     best_mail = (filled.get("emails_own_domain") or {}).get("value") or em
-    if best_mail and site:
-        kind, align = email_kind(best_mail, site)
-        if align == "different domain":
-            conflicts.append("e-mail domain differs from the website")
-    if ph and cty in CC and not ph.replace(" ", "").startswith("+" + CC[cty]) and ph.startswith("+"):
-        conflicts.append(f"phone calling code is not {cty}'s (+{CC[cty]})")
+    if best_mail and site and "@" in best_mail:
+        md = best_mail.split(";")[0].strip().split("@")[1]
+        if core_label(md) != core_label(host_of(site)) and not name_in_domain(name, md):
+            notes.append("e-mail domain is not the company's (neither the website's nor carrying its name)")
+    if ph and cty in CC and ph.startswith("+") and not ph.replace(" ", "").startswith("+" + CC[cty]):
+        notes.append(f"phone is not a {cty} number (+{CC[cty]}): head office or a reseller")
 
     # 6 status
     contact = bool((filled.get("emails_own_domain") or {}).get("value") or (em and not personal) or ph or (filled.get("phones_site") or {}).get("value"))
@@ -311,7 +321,7 @@ def refine_one(r, check, ai, dup, namesakes, today):
     elif check and check.get("name_match") == "partial" and not ai:
         needs_ai = "identity: the site names the company only partly"
     out = {"key": key, "supplier": name, "country": cty, "version": REFINE_VERSION, "refined": now,
-           "cleaned": cleaned, "filled": filled, "conflicts": conflicts, "gaps": gaps, "contact_found": contact,
+           "cleaned": cleaned, "filled": filled, "conflicts": conflicts, "notes": notes, "gaps": gaps, "contact_found": contact,
            "personal_mailbox": bool(personal), "needs_ai": needs_ai}
     if dup:
         out["duplicate"] = {"group": dup[0], "canonical": dup[1], "signals": dup[2], "size": dup[3]}
@@ -390,6 +400,7 @@ def main(sample=0):
         stats["contact_found"] += res["contact_found"]
         stats["website"] += "website" in res["filled"]
         stats["with_conflicts"] += bool(res["conflicts"])
+        stats["with_notes"] += bool(res.get("notes"))
         stats["with_gaps"] += bool(res["gaps"])
         stats["cleaned"] += bool(res["cleaned"])
         stats["duplicates"] += "duplicate" in res
@@ -398,6 +409,8 @@ def main(sample=0):
             stats["gap: " + g.split(" (")[0]] += 1
         for c in res["conflicts"]:
             stats["conflict: " + re.sub(r"\d+|[a-z0-9.-]+\.[a-z]{2,}", "#", c)[:60]] += 1
+        for c in res.get("notes", []):
+            stats["note: " + re.sub(r"\b[A-Z]{3}\b|\+\d+|\d+", "#", c)[:60]] += 1
         # the website check reads next: a site on record not checked yet, or proven suppliers with no site at all
         if not ck and (r.get("website") or r.get("tier") in ("1", "2")):
             queue.append((0 if r.get("tier") in ("1", "2") else 1, -int(r.get("quality") or 0), k))
@@ -416,11 +429,12 @@ def main(sample=0):
     total = len(rows)
     prog = {"version": REFINE_VERSION, "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), "universe": total, "sample": sample or None,
             "processed": stats["processed"], "reused_unchanged": reused, "completed": stats["completed"], "contact_found": stats["contact_found"],
-            "official_website": stats["website"], "with_conflicts": stats["with_conflicts"], "with_gaps": stats["with_gaps"], "cleaned": stats["cleaned"],
+            "official_website": stats["website"], "with_conflicts": stats["with_conflicts"], "with_notes": stats["with_notes"], "with_gaps": stats["with_gaps"], "cleaned": stats["cleaned"],
             "in_duplicate_groups": stats["duplicates"], "duplicate_groups": len({v[0] for v in dups.values()}), "needs_ai": stats["needs_ai"],
             "websites_checked": len(checks), "website_check_queue": len(queue),
             "gaps": {k[5:]: v for k, v in stats.most_common() if k.startswith("gap: ")},
-            "conflicts": {k[10:]: v for k, v in stats.most_common(40) if k.startswith("conflict: ")}}
+            "conflicts": {k[10:]: v for k, v in stats.most_common(40) if k.startswith("conflict: ")},
+            "notes": {k[6:]: v for k, v in stats.most_common(40) if k.startswith("note: ")}}
     (LEADS / "refine_progress.json").write_text(json.dumps(prog, ensure_ascii=False, indent=1), encoding="utf-8")
     push_sheet(out, prog)
     log.info("refine: %s", json.dumps({k: v for k, v in prog.items() if k not in ("gaps", "conflicts")}))

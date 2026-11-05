@@ -3826,11 +3826,13 @@ function refineHtml(r) {
     ${row(mt("Cleaned fields (originals kept)", "שדות שנוקו (המקור נשמר)"), r.cleaned)}
     ${row(mt("In a duplicate group (nothing deleted)", "בקבוצת כפילויות (לא נמחק דבר)"), r.in_duplicate_groups, "", `${adNum(r.duplicate_groups)} ${mt("groups", "קבוצות")}`)}
     ${row(mt("With conflicts to resolve", "עם סתירות לבירור"), r.with_conflicts, "warn")}
+    ${row(mt("With notes to look at (not contradictions)", "עם הערות לבדיקה (לא סתירות)"), r.with_notes || 0)}
     ${row(mt("With gaps", "עם חוסרים"), r.with_gaps, "warn")}
     <div class="sub" style="margin-top:6px">${esc(mt("Websites read so far", "אתרים שנקראו עד כה"))}: ${adNum(r.websites_checked)} · ${esc(mt("queued for reading", "בתור לקריאה"))}: ${adNum(r.website_check_queue)} · ${esc(mt("cases for the AI review", "מקרים לבדיקת AI"))}: ${adNum(r.needs_ai)}</div>
     <details style="margin-top:6px"><summary class="sub">${esc(mt("Gaps and conflicts by kind", "חוסרים וסתירות לפי סוג"))}</summary>
       ${Object.entries(r.gaps || {}).map(([k, v]) => `<div class="sub">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}
-      ${Object.entries(r.conflicts || {}).map(([k, v]) => `<div class="sub q-block">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}</details>
+      ${Object.entries(r.conflicts || {}).map(([k, v]) => `<div class="sub q-block">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}
+      ${Object.entries(r.notes || {}).map(([k, v]) => `<div class="sub muted">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}</details>
     <p class="note">${esc(mt("Nothing here is marked verified: a website's text is the company's statement, a model reading is labelled as such, and the raw record is never changed (rollback: REFINE=off).", "שום דבר כאן לא מסומן כמאומת: טקסט באתר הוא הצהרת החברה, קריאת מודל מסומנת ככזו, והרשומה המקורית לא משתנה (חזרה לאחור: REFINE=off)."))}</p></section>`;
 }
 async function renderOps(fresh) {

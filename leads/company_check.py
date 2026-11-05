@@ -484,7 +484,7 @@ def check_one(item, prev):
     return {**base, **res, "website": pages[0][0], "pages": [u for u, _ in pages], "content_hash": h}
 
 
-def main(limit=400, minutes=40):
+def main(limit=1500, minutes=45):
     src = PRIVATE / "universe.csv"
     if not src.exists():
         log.info("company check: no universe yet"); return {}
@@ -496,7 +496,7 @@ def main(limit=400, minutes=40):
     deadline = time.time() + minutes * 60
     stats = defaultdict(int)
     # many companies in parallel; inside one company the pages are fetched one after another with a pause
-    with ThreadPoolExecutor(max_workers=32) as ex, open(OUT, "a", encoding="utf-8") as f:
+    with ThreadPoolExecutor(max_workers=48) as ex, open(OUT, "a", encoding="utf-8") as f:
         futs = []
         for item in todo:
             futs.append((item, ex.submit(lambda it: None if time.time() > deadline else check_one(it, checks.get(it[0])), item)))

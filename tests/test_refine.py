@@ -48,13 +48,22 @@ def test_evidence_mismatch_and_identity():
 
 
 def test_duplicates_never_delete():
-    rows = [rec(supplier="M.A.R.K. Ltd"), rec(supplier="MARK Limited", quality="80"), rec(supplier="Other Co", website="https://abc.co.il/"), rec(supplier="Zeta", country="KEN")]
+    rows = [rec(supplier="M.A.R.K. Ltd"), rec(supplier="MARK Limited", quality="80"), rec(supplier="Other Co", website="https://abc.co.il/"), rec(supplier="Zeta", country="KEN"),
+            rec(supplier="Baxter Polska", country="POL", email="przetargi@medtender.pl"), rec(supplier="Sarstedt", country="POL", email="biuro@medtender.pl")]
     d = duplicate_groups(rows)
+    assert "Baxter Polska|POL" not in d  # a shared distributor or portal mailbox is not the same company
     assert d["M.A.R.K. Ltd|ISR"][0] == d["MARK Limited|ISR"][0] and d["M.A.R.K. Ltd|ISR"][1] == "MARK Limited|ISR"
     assert "Zeta|KEN" not in d
 
 
+def test_soft_notes_not_conflicts():
+    ck = {"verdict": "ok", "name_match": "high", "website": "https://baxter.com.pl/", "checked": "2026-11-05", "emails": [{"email": "info@baxter.com", "kind": "generic"}], "phones": []}
+    r = refine_one(rec(supplier="Baxter Polska", country="POL", phone="+46 8 123 4567"), ck, None, None, {}, T)
+    assert not r["conflicts"], r["conflicts"]  # a group mailbox for a national site is not a contradiction
+    assert any("not a POL number" in n for n in r["notes"])
+
+
 if __name__ == "__main__":
-    for f in [test_websites, test_check_completes_with_provenance, test_evidence_mismatch_and_identity, test_duplicates_never_delete]:
+    for f in [test_websites, test_check_completes_with_provenance, test_evidence_mismatch_and_identity, test_duplicates_never_delete, test_soft_notes_not_conflicts]:
         f()
     print("refine: all checks passed")
