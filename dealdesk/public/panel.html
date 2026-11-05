@@ -2254,7 +2254,7 @@ async function compose({ kind, ctx, to }, outSel) {
     <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
     <div class="field" id="m-langf">${langField(recipCountry(kind, ctx, to))}</div>
     <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
-    <div class="field"><label for="m-body">${esc(t("body"))}</label><textarea id="m-body" dir="auto">${esc(t("writing"))}</textarea></div>
+    <div class="field"><label for="m-body">${esc(t("body"))}</label><div class="sub" id="m-status" aria-live="polite"></div><textarea id="m-body" dir="auto" placeholder="${esc(t("writing"))}"></textarea></div>
     <div id="m-review"></div>
     <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
     <div class="note">${esc(t(window.DD_INSTANT ? "web_note" : "draft_note"))}</div><div id="m-flash"></div></div>`;
@@ -2281,6 +2281,9 @@ async function compose({ kind, ctx, to }, outSel) {
   const write = async (fresh) => {
     if (!sample) { $("#m-body").value = ""; $("#m-flash").innerHTML = `<div class="flash info">${esc(t("hand_write"))}</div>`; $("#m-draft").disabled = false; return; }
     $("#m-draft").disabled = $("#m-again").disabled = true;
+    const st = out.querySelector("#m-status"), t0 = Date.now();
+    const tick = () => { if (st) st.innerHTML = `<span class="spin"></span> ${esc(t("writing"))} ${Math.round((Date.now() - t0) / 1000)}s`; };
+    tick(); const timer = setInterval(tick, 1000);
     const party = ctx?.party || null;
     const what = kind === "finance" ? `an introduction e-mail to ${party?.name || "a trade finance institution"} asking whether it can finance or insure this cross-border supply deal (Sinder supplies the goods to the buyer below; ask which product fits: buyer credit, supplier credit, guarantee, credit or political risk insurance; what they need to assess it, typical timeline and indicative cost). Do not state any figure we do not have` : kind === "logistics" ? `a request for a freight quotation to ${party?.name || "a logistics provider"} for moving the goods of this deal from the supplier's country (${party?.country || "to be confirmed"}) to the buyer's country, asking for mode options, transit time, indicative cost, insurance and any inspection or certification required at destination` : kind === "rfq" ? `a request for quotation (RFQ) to supplier(s) for this opportunity` : kind === "buyer" ? `an introduction e-mail to this buyer / procurement unit offering Sinder as an international supplier and asking about supplier registration and upcoming needs` : `a first business introduction to this company exploring supply cooperation with Sinder`;
     const L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
@@ -2296,6 +2299,7 @@ Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", 
     try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || "";
       $("#m-review").innerHTML = j.review ? `<details class="section" open><summary>${esc(t("m_review"))}</summary><div class="ai" dir="auto" style="white-space:pre-wrap">${esc(j.review)}</div><div class="sub">${esc(t("m_review_note"))}</div></details>` : ""; }
     catch (e) { $("#m-body").value = e.text || ""; $("#m-flash").innerHTML = `<div class="flash err">${esc(sampleErr(e))}</div>`; }
+    clearInterval(timer); if (st) st.innerHTML = "";
     $("#m-draft").disabled = $("#m-again").disabled = false;
   };
   $("#m-again").onclick = () => write(true);
@@ -2316,8 +2320,10 @@ Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", 
     }
     $("#m-flash").innerHTML = `<div class="flash ok">${esc(t("drafts"))}<br>${done.join("<br>")}</div>`;
   };
-  await finding;
-  bodyBox.value = t("writing");
+  // the address search can take up to a minute (it reads the company's own pages): wait for it at most 15 seconds,
+  // then write the draft anyway; a later address still fills the recipients box
+  await Promise.race([finding, new Promise(r => setTimeout(r, 15000))]);
+  bodyBox.value = "";
   write(false);
 }
 
