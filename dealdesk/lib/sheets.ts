@@ -75,6 +75,14 @@ export async function writeRange(range: string, values: (string | number)[][]) {
 export const ENGINE_SHEET = SHEET;
 
 // RAW: a cell typed by a user is stored as text and never evaluated as a formula (=, +, -, @ at the start are harmless).
+// Appends one row to a tab of another spreadsheet the service account can edit (the private Supplier Universe).
+export async function appendTo(sid: string, tab: string, row: (string | number)[]) {
+  const jwt = await client();
+  if (!jwt) throw new Error("Sheets is not configured");
+  const range = encodeURIComponent(`'${tab}'!A1`);
+  await call(jwt, "POST", `${API}/${sid}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`, { values: [row.slice(0, 40)] });
+}
+
 async function append(tab: string, row: (string | number)[]) {
   if (row.length > 40) row = row.slice(0, 40);
   const jwt = await client();
