@@ -294,6 +294,15 @@ def merge_awards():
             "median_award_usd": round(median([r["usd"] for r in lst if r["usd"]])) if any(r["usd"] for r in lst) else "",
         })
     buyers.sort(key=lambda b: (-b["total_usd"], -b["awards_12m"]))
+    # refinement overlay (leads/refine_modules.py): a missing contact from the buyer's own notices, its official domain,
+    # and the canonical record of a duplicate; the original values are kept
+    from .refine_modules import load_overlay
+    ov = load_overlay("buyers")
+    for b in buyers:
+        o = ov.get(f"{b['buyer']}|{b['country']}") or {}
+        if not b["buyer_email"] and o.get("contact_email"):
+            b["buyer_email"] = o["contact_email"]
+        b["website"], b["dup_of"], b["refine"] = o.get("website", ""), o.get("dup_of", ""), "; ".join(x for x in (o.get("conflicts"), o.get("identity")) if x)[:200]
     write("buyers.csv", buyers[:5000])
     global AWARD_ROWS
     AWARD_ROWS = rows
@@ -496,7 +505,16 @@ def write_sheet_chunks(tenders):
     """The Google Sheet imports tenders in fixed-size chunks (IMPORTDATA has a per-file size limit); every chunk file
     always exists so the sheet formula never breaks. Highest score first."""
     rows, expired = [], 0
+    from .refine_modules import load_overlay
+    ov = load_overlay("tenders")
+    live = lambda r: not (isinstance(r.get("days_left"), (int, float)) and r["days_left"] < 0 and (r.get("stage") or "tender") != "planned")  # noqa: E731
+    ids = {r.get("id") for r in tenders if live(r)}
+    dups = 0
     for r in tenders:
+        o = ov.get(r.get("id")) or {}
+        if o.get("dup_of") and o["dup_of"] in ids and o["dup_of"] != r.get("id"):
+            dups += 1
+            continue  # the same notice from another source: the canonical one stays in the open list (tenders_all keeps both)
         # a notice whose deadline has passed is not open: it stays in tenders_all.csv (history) but leaves the open
         # list (6,000+ such rows were listed on 5 Nov 2026, mostly cached India and Chile notices)
         d = r.get("days_left")
@@ -507,10 +525,10 @@ def write_sheet_chunks(tenders):
         x["title_en"] = (r.get("title_en") or r.get("title") or "")[:220]
         x["title_original"] = r.get("title", "")[:140] if r.get("lang") else ""
         x["buyer"] = (r.get("buyer") or "")[:90]
-        x["contact"] = (r.get("contact") or "")[:80]
+        x["contact"] = (r.get("contact") or o.get("contact_email") or "")[:80]  # else the buyer's own address from its other notices
         x["why"] = (r.get("why") or "")[:160]; x["incumbent"] = (r.get("incumbent") or "")[:80]
         rows.append(x)
-    log.info("open list: %d notices, %d past their deadline left out", len(rows), expired)
+    log.info("open list: %d notices, %d past their deadline left out, %d duplicates of another source's notice left out", len(rows), expired, dups)
     for i in range(CHUNKS):
         write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
     write("tenders.csv", rows[:CHUNK], SHEET_COLS)
@@ -556,6 +574,13 @@ def write_accounts(tenders, buyers):
                     "awards_12m": x["awards"], "awarded_usd_12m": round(x["usd"]), "next_expected_tender": x["next"],
                     "sources": "; ".join(sorted(a["sources"])), "latest_notice": a["latest"], "contact": a["contact"][:80]})
     out.sort(key=lambda y: -y["activity_score"])
+    from .refine_modules import load_overlay
+    ov = load_overlay("accounts")
+    for y in out:
+        o = ov.get(f"{y['account']}|{y['country']}") or {}
+        if not y["contact"] and o.get("contact_email"):
+            y["contact"] = o["contact_email"]
+        y["website"], y["dup_of"] = o.get("website", ""), o.get("dup_of", "")
     write("accounts.csv", out[:4000])
     log.info("accounts %d", len(out))
 

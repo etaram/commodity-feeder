@@ -3839,6 +3839,27 @@ const adBar = (v, max, cls) => `<span class="adbar"><span class="${cls || ""}" s
 const adErr = x => x && x.error ? `<div class="note q-block">${esc(mt("Not available: ", "לא זמין: "))}${esc(x.error)}</div>` : "";
 const adNum = v => (v === null || v === undefined || v === "") ? "-" : Number(v).toLocaleString(LANG === "he" ? "he-IL" : "en-US");
 /* data refinement progress (leads/refine.py): real counts from the last run, nothing estimated */
+/* refinement of the other modules (leads/refine_modules.py): one row per module, real counts */
+function modulesHtml(m) {
+  if (!m) return "";
+  const names = { tenders: mt("Tenders", "מכרזים"), buyers: mt("Buyers (award history)", "קונים (היסטוריית זכיות)"), accounts: mt("Buyers in open notices", "קונים במכרזים פתוחים"),
+    projects: mt("Projects", "פרויקטים"), finance: mt("Financing", "מימון"), logistics: mt("Logistics", "לוגיסטיקה"), importers: mt("Importers", "יבואנים") };
+  const cell = v => `<td class="num">${adNum(v || 0)}</td>`;
+  const HE = { "no estimated value": "אין היקף משוער", "no contact in the notice": "אין איש קשר במכרז", "no deadline": "אין מועד הגשה", "no link to the official notice": "אין קישור למכרז הרשמי",
+    "no English title": "אין כותרת באנגלית", "no sector": "אין תחום", "no official website": "אין אתר רשמי", "no contact channel": "אין ערוץ קשר", "no project value": "אין היקף לפרויקט",
+    "no implementing agency": "אין גוף מבצע", "no link to the official project page": "אין קישור לדף הפרויקט", "no apply_url": "אין קישור להגשת בקשה", "no contact_url": "אין קישור ליצירת קשר",
+    "no source_url": "אין קישור למקור", "no verification date": "אין תאריך בדיקה", "no address": "אין כתובת", "no contact channel (customs records carry none)": "אין ערוץ קשר (ברשומות מכס אין)",
+    "verification older than 180 days": "נבדק לפני יותר מ-180 יום" };
+  const tr = k => LANG === "he" ? (HE[k] || HE[String(k).split(" (")[0]] || String(k).replace(/project marked (\w+) but # of its tenders are still open/, (m, w) => `פרויקט מסומן ${{ dropped: "כמבוטל", closed: "כסגור", cancelled: "כמבוטל" }[w] || w} אבל יש לו מכרזים פתוחים`).replace(/official link returns (\d+).*/, "הקישור הרשמי מחזיר $1")) : k;
+  const rows = Object.keys(names).filter(k => m[k]).map(k => { const x = m[k];
+    return `<tr><td style="white-space:nowrap;font-weight:600">${esc(names[k])}</td>${cell(x.processed)}${cell(x.reused_unchanged)}${cell(x.completed)}${cell(x.contact_found)}${cell(x.verified_identity)}${cell(x.duplicates)}${cell(x.cleaned)}${cell(x.with_conflicts)}${cell(x.with_gaps)}</tr>
+      <tr><td colspan="10" class="sub muted" style="white-space:normal">${esc(Object.entries(x.gaps || {}).slice(0, 4).map(([g, v]) => `${tr(g)}: ${adNum(v)}`).join(" · "))}${Object.keys(x.conflicts || {}).length ? " | " + esc(Object.entries(x.conflicts).slice(0, 3).map(([g, v]) => `${tr(g)}: ${adNum(v)}`).join(" · ")) : ""}</td></tr>`; }).join("");
+  const h = l => `<th>${esc(l)}</th>`;
+  return `<section class="section"><h3>${esc(mt("Data refinement: the other modules", "טיוב נתונים: שאר המודולים"))} <span class="muted sub">${esc(m.version || "")} · ${esc(String(m.at || "").replace("T", " ").slice(0, 16))} UTC</span></h3>
+    <div class="tbl"><table><thead><tr>${h(mt("Module", "מודול"))}${h(mt("Processed", "טופלו"))}${h(mt("Unchanged, reused", "לא השתנו"))}${h(mt("Completed", "הושלמו"))}${h(mt("Contact found", "ערוץ קשר"))}${h(mt("Identity verified", "זהות מאומתת"))}${h(mt("Duplicates", "כפילויות"))}${h(mt("Cleaned", "נוקו"))}${h(mt("Conflicts", "סתירות"))}${h(mt("Gaps", "חוסרים"))}</tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="sub">${esc(mt("Official links checked so far", "קישורים רשמיים שנבדקו עד כה"))}: ${adNum(m.links_on_record || 0)} · ${esc(mt("this run", "בריצה הזו"))}: ${adNum(m.links_checked_this_run || 0)} · ${esc(mt("sites read", "אתרים שנקראו"))}: ${adNum(m.sites_read_this_run || 0)} · ${esc(mt("register lookups", "בדיקות מרשם"))}: ${adNum(m.registers_this_run || 0)}</div>
+    <p class="note">${esc(mt("Duplicates point to one canonical record and nothing is deleted; a notice from another source that repeats one already listed leaves the open list only. Rollback: REFINE_MODULES=off.", "כפילויות מצביעות על רשומה קנונית אחת ושום דבר לא נמחק; מכרז שמופיע שוב ממקור אחר יוצא רק מהרשימה הפתוחה. חזרה לאחור: REFINE_MODULES=off."))}</p></section>`;
+}
 function refineHtml(r) {
   if (!r) return "";
   if (r.error) return `<section class="section"><h3>${esc(mt("Data refinement", "טיוב נתונים"))}</h3><div class="sub">${esc(mt("First run within the hour.", "ריצה ראשונה בתוך שעה."))}</div></section>`;
@@ -3848,6 +3869,7 @@ function refineHtml(r) {
     ${row(mt("Records processed", "רשומות שטופלו"), r.processed, "acc", mt(`${adNum(r.reused_unchanged)} unchanged and still valid, reused without reprocessing`, `${adNum(r.reused_unchanged)} לא השתנו ועדיין בתוקף, נלקחו בלי עיבוד מחדש`))}
     ${row(mt("Completed from an official source", "הושלמו ממקור רשמי"), r.completed, "", mt("at least one field filled, each with its source and date", "לפחות שדה אחד הושלם, כל אחד עם מקור ותאריך"))}
     ${row(mt("Official website attached", "אתר רשמי משויך"), r.official_website)}
+    ${row(mt("Identity verified in an official register", "זהות מאומתת במרשם רשמי"), r.identity_verified || 0, "", mt(`${adNum(r.registry_checked || 0)} checked against GLEIF and EU VIES so far; verified only with an active record in the same name and country`, `${adNum(r.registry_checked || 0)} נבדקו עד כה מול GLEIF ו-VIES; מאומת רק עם רשומה פעילה באותו שם ובאותה מדינה`))}
     ${row(mt("Contact channel found", "נמצא ערוץ קשר"), r.contact_found)}
     ${row(mt("Cleaned fields (originals kept)", "שדות שנוקו (המקור נשמר)"), r.cleaned)}
     ${row(mt("In a duplicate group (nothing deleted)", "בקבוצת כפילויות (לא נמחק דבר)"), r.in_duplicate_groups, "", `${adNum(r.duplicate_groups)} ${mt("groups", "קבוצות")}`)}
@@ -3859,7 +3881,7 @@ function refineHtml(r) {
       ${Object.entries(r.gaps || {}).map(([k, v]) => `<div class="sub">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}
       ${Object.entries(r.conflicts || {}).map(([k, v]) => `<div class="sub q-block">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}
       ${Object.entries(r.notes || {}).map(([k, v]) => `<div class="sub muted">${esc(k)}: <span class="num">${adNum(v)}</span></div>`).join("")}</details>
-    <p class="note">${esc(mt("Nothing here is marked verified: a website's text is the company's statement, a model reading is labelled as such, and the raw record is never changed (rollback: REFINE=off).", "שום דבר כאן לא מסומן כמאומת: טקסט באתר הוא הצהרת החברה, קריאת מודל מסומנת ככזו, והרשומה המקורית לא משתנה (חזרה לאחור: REFINE=off)."))}</p></section>`;
+    <p class="note">${esc(mt("Verified is used only for identity with an official register record behind it. A website's text is the company's statement, a model reading is labelled as such, and the raw record is never changed (rollback: REFINE=off).", "\"מאומת\" מסומן רק לזהות שיש מאחוריה רשומה במרשם רשמי. טקסט באתר הוא הצהרת החברה, קריאת מודל מסומנת ככזו, והרשומה המקורית לא משתנה (חזרה לאחור: REFINE=off)."))}</p></section>${modulesHtml(r.modules)}`;
 }
 async function renderOps(fresh) {
   const el = $("#ops-out"); if (!el) return;
