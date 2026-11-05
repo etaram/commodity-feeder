@@ -68,7 +68,20 @@ def test_products_roles_from_real_pages():
     assert set(r2["export_countries"]) == {"KEN", "UGA", "FRA", "ESP"}, r2["export_countries"]  # only the countries in the export sentence
 
 
+
+def test_linkedin_whatsapp_links():
+    from leads.company_check import social_on
+    page = ('<a href="https://www.linkedin.com/company/acme-valves/">in</a><a href="https://www.linkedin.com/shareArticle?url=x">share</a>'
+            '<a href="https://www.linkedin.com/in/john-doe">John</a><a href="https://wa.me/972501234567">chat</a>'
+            '<a href="https://api.whatsapp.com/send?phone=+44 20 7946 0958&amp;text=hi">wa</a><a href="https://wa.me/?text=share">share</a>')
+    li, wa = social_on([page])
+    assert li == "https://www.linkedin.com/company/acme-valves", li
+    assert wa == ["+972501234567", "+442079460958"], wa
+    r = analyse("Acme Valves", "", [("https://acme.com/", "<title>Acme Valves</title>" + page)])
+    assert r["linkedin"] and r["whatsapp"]
+
+
 if __name__ == "__main__":
-    for f in [test_analyse, test_mismatch_and_gaps, test_links_same_site_only, test_helpers, test_site_sector_scored_not_first_match, test_products_roles_from_real_pages]:
+    for f in [test_analyse, test_mismatch_and_gaps, test_links_same_site_only, test_helpers, test_site_sector_scored_not_first_match, test_products_roles_from_real_pages, test_linkedin_whatsapp_links]:
         f()
     print("company check: all checks passed")

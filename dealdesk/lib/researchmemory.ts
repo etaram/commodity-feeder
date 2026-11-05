@@ -29,7 +29,7 @@ const SKIP_HOST = /(google|bing|wikipedia|linkedin|facebook|twitter|x\.com|youtu
 export type Subject = { kind: EntityKind; name: string; country?: string; key?: string };
 export type ResearchInput = {
   ws: string; by: string; job: string; subject: Subject; text: string; sources: { url: string; title?: string }[];
-  contacts?: { organisation?: string; website?: string; contacts?: { name?: string; role?: string; email?: string; phone?: string; channel?: string; source?: string }[] };
+  contacts?: { organisation?: string; website?: string; contacts?: { name?: string; role?: string; email?: string; phone?: string; whatsapp?: string; linkedin?: string; channel?: string; source?: string }[] };
   suppliers?: { name?: string; country?: string; type?: string; products?: string; website?: string; source?: string }[];
   product?: string;  // what was searched for (supplier search)
 };
@@ -93,6 +93,9 @@ export function extractFacts(r: ResearchInput, now = new Date()): Assertion[] {
       if (x.email) add(sk, key, "contact_email", x.email.toLowerCase(), `${who} ${x.email}`, src);
       if (x.phone) add(sk, key, "contact_phone", x.phone, `${who} ${x.phone}`, src);
       if (x.channel && !x.email) add(sk, key, "contact_channel", x.channel, `${who} ${x.channel}`, src);
+      if (x.linkedin && /^https:\/\/([a-z]{2,3}\.)?linkedin\.com\//i.test(x.linkedin)) add(sk, key, "contact_linkedin", x.linkedin, `${who} ${x.linkedin}`, src);
+      const wa = String(x.whatsapp || "").replace(/\D/g, "");
+      if (wa.length >= 8 && wa.length <= 15) add(sk, key, "contact_whatsapp", "+" + wa, `${who} WhatsApp +${wa}`, src);
     }
   }
   // 4. a supplier search's list: each company named, with what it was found for

@@ -19,6 +19,9 @@ async function fromResearch(name: string, country: string, ws: string): Promise<
   const em = pick("contact_email"), ph = pick("contact_phone"), web = pick("website");
   if (em.length) out.email = em.slice(0, 2).join("; ");
   if (ph.length) out.phone = ph[0];
+  const li = pick("contact_linkedin"), wa = pick("contact_whatsapp");
+  if (li.length) out.linkedin = li[0];
+  if (wa.length) out.whatsapp = wa.slice(0, 2).join(" ");
   if (web.length) { out.website = web[0]; out.website_source = "earlier research (not verified)"; }
   if (Object.keys(out).length) out.contact_source = "earlier research (not verified)";
   return out;
@@ -44,7 +47,7 @@ export async function POST(req: NextRequest) {
     if (Object.keys(rs).length) {
       const base: Record<string, string> = v || {};
       const filled = Object.fromEntries(Object.entries(rs).filter(([kk]) => !base[kk]));
-      if (Object.keys(filled).some((kk) => ["email", "phone", "website"].includes(kk))) v = { ...base, ...filled };
+      if (Object.keys(filled).some((kk) => ["email", "phone", "website", "linkedin", "whatsapp"].includes(kk))) v = { ...base, ...filled };
     }
     if (v && v.phone) v = { ...v, phone: cleanPhones(v.phone, String(v.country || country || "")) || v.phone };
     if (v && v.email) { const k = emailKind(v.email, v.website); v = { ...v, email_kind: k.kind, email_domain: k.domain }; }

@@ -2184,7 +2184,7 @@ async function fetchContacts(subject, ctx, country, force) {
   if (!window.DD_INSTANT) throw new Error("web only");
   const r = await window.DD_INSTANT({ id: "C" + Date.now().toString(36).toUpperCase(), type: "find_contact", target_id: "FC:" + key.slice(0, 120), target: String(subject).slice(0, 300), context: { ...ctx, country }, request: "", lang: LANG });
   const c = r.contacts && Array.isArray(r.contacts.contacts) ? r.contacts : { contacts: [], notes: "" };
-  c.contacts = c.contacts.filter(x => x && (x.email || x.phone || x.channel || x.name));
+  c.contacts = c.contacts.filter(x => x && (x.email || x.phone || x.channel || x.name || x.linkedin || x.whatsapp));
   S.fc[key] = c; return c;
 }
 const firstMail = c => (c?.contacts || []).map(x => String(x.email || "").trim()).find(e => /@/.test(e)) || "";
@@ -2196,7 +2196,7 @@ async function findContacts(subject, ctx, country, outSel, opts = {}) {
   catch (e) { out.innerHTML = `<div class="flash err">${esc(t("fc_err"))} ${esc(e.message || "")}</div>`; return; }
   const known = ctx && ctx.contact ? `<div class="note">${esc(t("fc_known"))}: <span dir="ltr">${esc(ctx.contact)}</span></div>` : "";
   const rows = c.contacts.map((x, i) => `<div class="card" style="margin:8px 0"><div class="t">${esc(x.name || x.role || subject)}${x.name && x.role ? ` <span class="sub">· ${esc(x.role)}</span>` : ""}</div>
-      <dl class="kv"><dt>Email</dt><dd dir="ltr">${esc(x.email) || "-"}</dd>${x.phone ? `<dt>Tel</dt><dd dir="ltr">${esc(x.phone)}</dd>` : ""}${x.channel ? `<dt>Channel</dt><dd dir="auto">${esc(x.channel)}</dd>` : ""}<dt>${esc(t("fc_src"))}</dt><dd>${link(x.source, x.source)} <span class="sub">(${esc(t("fc_conf"))}: ${esc(x.confidence || "?")})</span></dd></dl>
+      <dl class="kv"><dt>Email</dt><dd dir="ltr">${esc(x.email) || "-"}</dd>${x.phone ? `<dt>Tel</dt><dd dir="ltr">${esc(x.phone)}</dd>` : ""}${x.channel ? `<dt>Channel</dt><dd dir="auto">${/^https?:\/\//.test(x.channel) ? link(x.channel, x.channel) : esc(x.channel)}</dd>` : ""}${x.linkedin || x.whatsapp ? `<dt>LinkedIn / WhatsApp</dt><dd>${socialBtns(x.linkedin, x.whatsapp, "")}</dd>` : ""}<dt>${esc(t("fc_src"))}</dt><dd>${link(x.source, x.source)} <span class="sub">(${esc(t("fc_conf"))}: ${esc(x.confidence || "?")})</span></dd></dl>
       <div class="actions">${x.email ? `<button type="button" data-fc="mail" data-i="${i}" class="primary">${esc(t("fc_use"))}</button><button type="button" data-fc="copy" data-i="${i}">${esc(t("fc_copy"))}</button>` : ""}</div></div>`).join("");
   out.innerHTML = `<div class="section"><h3>${esc(t("fc_h"))}</h3>${known}${rows || `<div class="empty" style="padding:10px">${esc(t("fc_none"))}</div>`}${c.website ? `<div class="note">${link(c.website, c.website)}</div>` : ""}${c.notes ? `<div class="note" dir="auto">${esc(c.notes)}</div>` : ""}<div class="actions"><button type="button" id="fc-again">${esc(t("fc_again"))}</button></div><div id="fc-out"></div></div>`;
   $("#fc-again").onclick = () => findContacts(subject, ctx, country, outSel, { ...opts, force: true });
@@ -2564,9 +2564,11 @@ function renderCheck(s, c) {
       ${line(mt("Role", "תפקיד"), c.roles)}${line(mt("Certificates named", "תקנים שמוזכרים"), c.certificates)}
       ${line(mt("Export", "יצוא"), [c.export, c.export_countries].filter(Boolean).join(" · "))}${line(mt("Registration ids", "מספרי רישום"), c.legal_ids)}
       ${line(mt("E-mails on its own domain", "אימיילים בדומיין שלה"), c.emails)}${line(mt("Phones", "טלפונים"), c.phones)}
+      ${c.linkedin || c.whatsapp ? `<div class="sub"><b>${esc(mt("LinkedIn and WhatsApp on its site", "לינקדאין ווואטסאפ מהאתר שלה"))}:</b> ${socialBtns(c.linkedin, c.whatsapp, supMsg(s))}</div>` : ""}
       ${c.gaps ? `<div class="sub q-block"><b>${esc(mt("Missing", "חסר"))}:</b> ${esc(c.gaps)}</div>` : ""}
       <div class="sub muted">${esc(mt("Read by code from the company's own pages; a site's claim is the company's statement, not a verification.", "נקרא בקוד מהעמודים של החברה עצמה; מה שכתוב באתר הוא הצהרת החברה, לא אימות."))} ${ask}</div><div id="ck-out" class="sub"></div></details>`;
   }
+  const so = $("#c-social"); if (so && c && (c.linkedin || c.whatsapp)) { so.innerHTML = socialBtns(c.linkedin, c.whatsapp, supMsg(s)); }
   const b = $("#ck-ask"); if (b) b.onclick = async () => { b.disabled = true; try { await window.DD_CHECK.request(s.supplier, s.country); $("#ck-out").textContent = mt("Queued: checked in the next background run (every hour).", "בתור: ייבדק בריצת הרקע הבאה (כל שעה)."); track("company_check_request", s.supplier); } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; } };
 }
 /* facts on record (assertions ledger): each with its status, evidence and reviewer; an analyst can dispute or reject one line without touching the company */
@@ -2587,6 +2589,7 @@ function renderAssertions(s, rows) {
     $("#aq-go").onclick = async () => { const reason = $("#aq-reason").value.trim(); if (!reason) return; try { await window.DD_ASSERT.quarantine(id, st, reason); const j = await window.DD_ASSERT.list(s.supplier, s.country); renderAssertions(s, j.rows || []); track("assertion_" + st, s.supplier); } catch (e) { out.textContent = errText(e); } };
   });
 }
+const supMsg = s => `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${String(s.products || s.main_sector || "").slice(0, 120)}.`;
 function openSupplier(s) {
   trackOpen("company", s.name || s.supplier, s.name || s.supplier, s.sector || s.primary_group || s.group, s.country, "");
   S.sel.c = s;
@@ -2598,7 +2601,7 @@ function openSupplier(s) {
       ["products", s.products || s.web_title || t("not_known")], ["supplied", s.supplied || s.example_award || "-"], ["commodities", s.commodities || "-"],
       ["won", `<span class="num">${money(s.won_usd_est) || "-"}</span> · ${esc(s.wins)} ${esc(t("wins"))} · ${esc(s.buyers)} ${esc(t("buyers_n"))}${s.buyer_countries ? " · " + esc(t("in_")) + " " + esc(s.buyer_countries) : ""}`, true],
       ["website", (link(s.website, s.website) || "-") + (s.website_source ? ` <span class="sub">(${esc(s.website_source)})</span>` : ""), true],
-      ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span> ${contactBtns({ phone: s.phone, country: s.country }, `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${String(s.products || s.main_sector || "").slice(0, 120)}.`)}`, true],
+      ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span> ${contactBtns({ phone: s.phone, country: s.country }, supMsg(s))} <span id="c-social">${socialBtns(s.linkedin, s.whatsapp, supMsg(s))}</span>`, true],
       ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
     ${readinessHtml(s)}
     <div id="c-check"></div>
@@ -2615,7 +2618,7 @@ function openSupplier(s) {
   if (window.DD_CONTACT && !s._ct && !(s.email || s.phone || s.address)) {
     s._ct = 1;
     window.DD_CONTACT(s.supplier, s.country).then(c => {
-      if (!c) return; ["email", "phone", "website", "website_source", "address", "legal_id", "email_kind", "email_domain"].forEach(k => { if (c[k] && !s[k]) s[k] = c[k]; });
+      if (!c) return; ["email", "phone", "website", "website_source", "address", "legal_id", "email_kind", "email_domain", "linkedin", "whatsapp"].forEach(k => { if (c[k] && !s[k]) s[k] = c[k]; });
       if (S.sel.c === s) openSupplier(s);
     }).catch(() => {});
   }
@@ -3229,6 +3232,14 @@ const PSTATES = ["required", "candidate found", "identity verified", "capability
 // contact routes: e-mail draft, WhatsApp (any number with a country code), WeChat (copy the message and open the app;
 // WeChat has no public link to a phone number), and a call
 const digits = p => String(p || "").replace(/[^\d+]/g, "").replace(/^00/, "+");
+// LinkedIn and WhatsApp links where the company publishes them (its own site, or a contact search's source page)
+function socialBtns(li, was, text) {
+  const out = [];
+  if (li && /^https:\/\/([a-z]{2,3}\.)?linkedin\.com\//i.test(li)) out.push(`<a class="btn sm" href="${esc(li)}" target="_blank" rel="noopener">LinkedIn</a>`);
+  String(was || "").split(/[\s;,]+/).map(x => x.replace(/\D/g, "")).filter(d => d.length >= 8 && d.length <= 15).slice(0, 3)
+    .forEach(d => out.push(`<a class="btn wa sm" href="https://wa.me/${d}${text ? "?text=" + encodeURIComponent(text) : ""}" target="_blank" rel="noopener" dir="ltr">WhatsApp +${esc(d)}</a>`));
+  return out.join(" ");
+}
 function contactBtns(party, text) {
   const ph = digits(party.phone), out = [];
   if (ph && ph.replace(/\D/g, "").length >= 8) {

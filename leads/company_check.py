@@ -44,7 +44,7 @@ from .sectors import _KW, SECTORS
 CHECKS = DATA / "checks"
 OUT = CHECKS / "company_checks.jsonl"
 UA = "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0; +https://github.com/etaram/commodity-feeder)"
-VERSION = "check-3"
+VERSION = "check-4"
 RECHECK_DAYS = 90
 MAX_PAGES = 6
 PAGE_BYTES = 600_000
@@ -230,6 +230,27 @@ def emails_on(text, domain):
     return out[:6]
 
 
+# the company's own LinkedIn page and WhatsApp numbers, as linked from its own site (share buttons and personal profiles
+# are not the company's channel)
+LINKEDIN = re.compile(r"https?://(?:[a-z]{2,3}\.)?linkedin\.com/(company|school|showcase)/([A-Za-z0-9\-_%.]{2,100})", re.I)
+WHATSAPP = re.compile(r"(?:https?://)?(?:wa\.me/|(?:api|web)\.whatsapp\.com/send/?\?(?:[^\"'<>\s]*?&(?:amp;)?)?phone=|whatsapp://send/?\?phone=)\+?(\d[\d\s().-]{6,20}\d)", re.I)
+
+
+def social_on(raw_pages):
+    """raw_pages: html of one site's pages. Returns (linkedin url or "", [whatsapp numbers in +<digits> form])."""
+    li, wa = "", []
+    for page in raw_pages:
+        for kind, slug in LINKEDIN.findall(page):
+            slug = slug.strip(".").split("?")[0]
+            if not li and slug.lower() not in ("linkedin", "company", "showcase"):
+                li = f"https://www.linkedin.com/{kind.lower()}/{slug}"
+        for num in WHATSAPP.findall(page):
+            d = re.sub(r"\D", "", num)
+            if 8 <= len(d) <= 15 and "+" + d not in wa and not re.fullmatch(r"(\d)\1+", d):
+                wa.append("+" + d)
+    return li, wa[:3]
+
+
 # words every corporate site carries: they say nothing about what the company sells
 NOISE = re.compile(r"\b(investor relations?|information|solutions?|innovation|digital|services?|security|cookies?|privacy|"
                    r"sustainab\w*|careers?|news(room)?|media|licen[cs]e\w*|research|translational)\b", re.I)
@@ -295,6 +316,7 @@ def analyse(name, record_sector, pages):
                 ids.append({"kind": kind, "value": v})
     phones = list(dict.fromkeys(p.strip() for p in PHONE.findall(alltext)))[:4]
     mails = emails_on(" ".join(p for _, p in pages), domain)
+    linkedin, whatsapp = social_on([p for _, p in pages])
     gaps = []
     if nm == "none":
         gaps.append("the site does not name the company")
@@ -310,7 +332,7 @@ def analyse(name, record_sector, pages):
         "title": title, "description": desc[:500], "products": prods[:30], "domain": domain, "name_match": nm, "name_share": share,
         "sector": SECTORS.get(sec, "") if sec else "", "sector_basis": how, "sector_score": sec_score, "sector_conflict": conflict,
         "record_sector": record_sector or "", "roles": roles, "certificates": certs, "export_wording": exp.group(0) if exp else "",
-        "export_countries": named_countries, "legal_ids": ids[:6], "phones": phones, "emails": mails, "gaps": gaps,
+        "export_countries": named_countries, "legal_ids": ids[:6], "phones": phones, "emails": mails, "linkedin": linkedin, "whatsapp": whatsapp, "gaps": gaps,
         "verdict": "name mismatch" if nm == "none" else "ok",
     }
 
@@ -491,7 +513,7 @@ def push_sheet(checks):
         return
     head = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
             "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps",
-            "reason", "version", "content_hash"]
+            "reason", "version", "content_hash", "linkedin", "whatsapp"]
     rows = [head]
     for c in sorted(checks.values(), key=lambda c: c.get("checked", ""), reverse=True)[:30000]:
         rows.append([c.get("key", ""), c.get("supplier", ""), c.get("country", ""), c.get("checked", ""), c.get("verdict", ""), c.get("name_match", ""),
@@ -499,7 +521,8 @@ def push_sheet(checks):
                      c.get("record_sector", ""), "yes" if c.get("sector_conflict") else "", "; ".join(f"{x['role']}: {x['phrase']}" for x in c.get("roles", []))[:300],
                      "; ".join(c.get("certificates", [])), c.get("export_wording", ""), " ".join(c.get("export_countries", [])),
                      "; ".join(f"{x['kind']} {x['value']}" for x in c.get("legal_ids", [])), "; ".join(f"{x['email']} ({x['kind']})" for x in c.get("emails", [])),
-                     "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", "")])
+                     "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", ""),
+                     c.get("linkedin", ""), " ".join(c.get("whatsapp", []))])
     try:
         Sheets().replace_tab(UNIVERSE_SHEET, "Company checks", rows, raw=True)
         log.info("company checks: %d rows written to the sheet", len(rows) - 1)
