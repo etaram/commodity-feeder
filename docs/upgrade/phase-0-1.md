@@ -109,3 +109,7 @@ Not yet: per-workspace strategy (partners, margins and the dealfit preferences a
 | all 'supported' | 31 of 47 (66%, +/-14%) |
 
 So the 81% did not hold on unseen data. The cause is clear in the split: contract winners are often contractors, installers or distributors. match-1.3 keeps 'supported' for own-description evidence only and moves contract-only evidence to 'plausible' (ranked after shipment records). On this held-out sample that rule gives 17 of 20 (85%, +/-16%, small sample); not yet at the 90% gate. The 68 facts were added to Verified capabilities (194 rows in all).
+
+## Verification agent (5 November 2026)
+
+`lib/verify.ts`, `/api/cron/verify` (daily 06:20 UTC): takes the product searches people ran in the last 14 days (Activity log), the top results the search has not yet confirmed, and checks up to 8 (company, product) pairs per run on an authoritative source with one web search each. A verdict is stored only when its URL is one the search returned (checked in code), otherwise as unknown; pairs already in Verified capabilities are never checked again. Results show in the research screen as a "verified" badge with the source link. Cost: about 8 short model calls with 2 web searches each per day.
