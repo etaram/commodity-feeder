@@ -2503,6 +2503,24 @@ function readinessHtml(s) {
     <ul class="rd-list">${items.map(([v, k]) => { const [kk, extra] = String(k).split("|"); return `<li class="${v ? "ok" : "gap"}">${v ? "✓" : "○"} ${esc(t(kk))}${extra ? ` <span class="muted">(${esc(extra)})</span>` : ""}</li>`; }).join("")}</ul>
     <p class="note">${esc(t("rd_n"))}</p></details>`;
 }
+/* facts on record (assertions ledger): each with its status, evidence and reviewer; an analyst can dispute or reject one line without touching the company */
+function renderAssertions(s, rows) {
+  const el = $("#c-assert"); if (!el) return;
+  if (!rows.length) { el.innerHTML = ""; return; }
+  const pill = st => `<span class="pill ${st === "observed" ? "good" : st === "inferred" ? "info" : st === "rejected" ? "bad" : "warn"}">${esc(mt(st, { observed: "נצפה", inferred: "מוסק", disputed: "שנוי במחלוקת", rejected: "נדחה", expired: "פג תוקף" }[st] || st))}</span>`;
+  const n = c => rows.filter(r => r.status === c).length;
+  const canEdit = ["analyst", "admin"].includes(S.me?.role);
+  el.innerHTML = `<details class="section"><summary>${esc(mt("Facts on record", "עובדות ברשומות"))} <span class="pill good">${n("observed")}</span> <span class="pill warn">${n("disputed") + n("expired")}</span></summary>
+    ${rows.map(r => { let ev = {}; try { ev = typeof r.evidence === "string" ? JSON.parse(r.evidence) : (r.evidence || {}); } catch (_) {}
+      return `<div class="sub" style="margin:4px 0"><b>${esc(r.property)}</b>: ${esc(r.value)}${r.unit ? " " + esc(r.unit) : ""} ${pill(r.status)} ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(mt("source", "מקור"))}</a>` : ""} <span class="muted">${esc(r.review_method || "")} ${esc(String(r.reviewed_at || r.created || "").slice(0, 10))}${ev.reason ? " · " + esc(ev.reason) : ""}</span>
+      ${canEdit && !["rejected", "disputed", "expired"].includes(r.status) ? `<button type="button" class="sm" data-aq="${esc(r.id)}|disputed">${esc(mt("Dispute", "ערער"))}</button><button type="button" class="sm" data-aq="${esc(r.id)}|rejected">${esc(mt("Reject", "דחה"))}</button>` : ""}</div>`; }).join("")}
+    <div id="c-assert-out" class="sub q-block"></div></details>`;
+  el.querySelectorAll("[data-aq]").forEach(b => b.onclick = () => {
+    const [id, st] = b.dataset.aq.split("|"); const out = $("#c-assert-out");
+    out.innerHTML = `<input id="aq-reason" placeholder="${esc(mt("Reason (what the evidence shows)", "סיבה (מה הראיות מראות)"))}" style="width:60%"><button type="button" class="sm" id="aq-go">${esc(mt("Save", "שמור"))}</button>`;
+    $("#aq-go").onclick = async () => { const reason = $("#aq-reason").value.trim(); if (!reason) return; try { await window.DD_ASSERT.quarantine(id, st, reason); const j = await window.DD_ASSERT.list(s.supplier, s.country); renderAssertions(s, j.rows || []); track("assertion_" + st, s.supplier); } catch (e) { out.textContent = errText(e); } };
+  });
+}
 function openSupplier(s) {
   trackOpen("company", s.name || s.supplier, s.name || s.supplier, s.sector || s.primary_group || s.group, s.country, "");
   S.sel.c = s;
@@ -2517,12 +2535,14 @@ function openSupplier(s) {
       ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span> ${contactBtns({ phone: s.phone, country: s.country }, `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${String(s.products || s.main_sector || "").slice(0, 120)}.`)}`, true],
       ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
     ${readinessHtml(s)}
+    <div id="c-assert"></div>
     <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-bi">${esc(t("c_intel"))}</button><button type="button" id="c-contact">${esc(t("a_contact"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
     <div id="more-c" data-jobcard="${esc(s.legal_id || s.supplier)}">${cardHtml(s.legal_id || s.supplier)}</div><div id="more-c-flash"></div>
     <div id="more-ci" data-jobcard="${esc("BI:" + (s.legal_id || s.supplier))}">${cardHtml("BI:" + (s.legal_id || s.supplier))}</div><div id="more-ci-flash"></div>
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
     <div id="c-out"></div>`;
   $("#c-quick").onclick = () => quickCompany(s);
+  if (window.DD_ASSERT) window.DD_ASSERT.list(s.supplier, s.country).then(j => { if (S.sel.c === s) renderAssertions(s, j.rows || []); }).catch(() => {});
   $("#c-bi").onclick = e => moreInfo({ type: "company_intel", target_id: "BI:" + (s.legal_id || s.supplier), target: `Business intelligence: ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "region", "main_sector", "industries", "products", "website", "address", "legal_id", "wins", "won_usd_est", "buyers", "buyer_countries", "first_win", "last_win", "sources", "tier_reason"]) }, e.currentTarget, "#more-ci");
   if (window.DD_CONTACT && !s._ct && !(s.email || s.phone || s.address)) {
     s._ct = 1;

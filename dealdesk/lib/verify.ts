@@ -4,6 +4,7 @@ import { appendTo, readRanges, UNIVERSE } from "@/lib/sheets";
 import { supplierSearch } from "@/lib/panel";
 import { logEvent } from "@/lib/log";
 import { QUERIES } from "@/lib/evalqueries";
+import { importVerifiedCaps } from "@/lib/assertionstore";
 
 // The verification agent: grows 'Verified capabilities' where it changes decisions. It takes the product searches
 // people actually ran (Activity log, last 14 days), the top results the search could not yet confirm, and checks each
@@ -81,6 +82,8 @@ export async function runVerification(perRun = PER_RUN) {
       await logEvent("warn", "verify", `check failed: ${t.supplier} / ${t.product}`, String(e).slice(0, 200));
     }
   }
-  await logEvent("info", "verify", `verified ${out.length} pairs (${demand.length} demand queries, then the benchmark set)`, out.map((x) => `${x.supplier}:${x.label}`).join("; ").slice(0, 400));
+  // the same facts in the assertions ledger (idempotent: ids are content hashes), so disputes and expiry apply to them
+  const imp = await importVerifiedCaps(300).catch((e) => { void logEvent("warn", "verify", "assertions import failed", String(e).slice(0, 200)); return { imported: 0, skipped: 0 }; });
+  await logEvent("info", "verify", `verified ${out.length} pairs, ${imp.imported} facts copied to the assertions ledger (${demand.length} demand queries, then the benchmark set)`, out.map((x) => `${x.supplier}:${x.label}`).join("; ").slice(0, 400));
   return { demand, checked: out };
 }

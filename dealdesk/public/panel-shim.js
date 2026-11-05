@@ -127,6 +127,11 @@
   window.DD_LABEL = (b) => post("/api/panel/label", b, "Deal Desk");
   // World and project intelligence (events, project timelines, hypotheses), from the pipeline CSVs.
   window.DD_INTEL = (q) => getj("/api/panel/intel" + (q ? "?" + new URLSearchParams(q).toString() : ""));
+  window.DD_ASSERT = {
+    list: (entity, country, property) => getj("/api/panel/assertions?entity=" + encodeURIComponent(entity || "") + "&country=" + encodeURIComponent(country || "") + (property ? "&property=" + encodeURIComponent(property) : "")),
+    add: (a) => post("/api/panel/assertions", a, "Deal Desk"),
+    quarantine: (id, status, reason) => post("/api/panel/assertions", { quarantine: id, status, reason }, "Deal Desk"),
+  };
   window.DD_AI_USAGE = (days) => getj("/api/panel/ai-usage?days=" + (days || 7));
   window.DD_STRATEGY = { get: () => getj("/api/panel/strategy"), save: (b) => post("/api/panel/strategy", b, "Deal Desk") };
   // Client intake: dossiers from the client's own deck and site, target profiles and prospects. PUT returns the body
