@@ -918,6 +918,10 @@ const L = {
     sup_h: "Matching suppliers from the database", sup_wait: "Searching the whole supplier database…", sup_note_all: "Ranked over the whole database by the tender's product words, sector, HS chapter, export evidence and past sales in this country. Tick suppliers and press \"Draft outreach\" to prepare an RFQ; missing e-mails are looked up from official sources.", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
     e_sup_match: "No matching suppliers in the loaded set. Send a supplier search to the worker.", draft_sel: "Draft outreach to selected", deep_sup: "Deep supplier search on the web",
     tick_one: "Tick at least one supplier with an e-mail address.", sup_not_loaded: "The supplier database has not loaded yet.", select: "Select",
+    wc_copy: "Copy", wc_copied: "Copied", wc_h: "Reaching this company on WeChat", wc_why: "WeChat cannot open a chat with a stranger: you send a friend request and the company has to accept it. Until then, the channels below reach them directly.",
+    wc_s1: "In WeChat: + then Add contacts, and search", wc_noid: "(no WeChat ID or phone on record: ask for it by e-mail, or scan the QR code on their website)",
+    wc_s2: "In the friend request note, paste:", wc_s3: "Once they accept, send the full message:", wc_copy_msg: "Copy the message", wc_open: "Open WeChat",
+    wc_direct: "Channels that need no approval:", wc_direct_note: "On Alibaba.com and Made-in-China.com, 'Contact supplier' sends an inquiry straight to the company's sales team.",
     fc_first: "Finding the company's e-mail address first, then the draft is written…", m_lang: "Language of the e-mail", m_lang_mixed: "Recipients in several countries: one e-mail in English. To write in each company's language, send to one at a time.", m_review: "What the e-mail says (translation for you)", m_review_note: "Check names and numbers in the original before sending.",
     out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft…", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite",
     draft_note: "The draft is saved in your Gmail and not sent. With several recipients, each gets a separate draft.", hand_write: "Automatic drafting works inside Claude. You can write here by hand.",
@@ -1027,6 +1031,10 @@ const L = {
     sup_h: "ספקים מתאימים מהמאגר", sup_wait: "מחפש בכל מאגר הספקים…", sup_note_all: "מדורג מתוך כל המאגר לפי מילות המוצר במכרז, סקטור, פרק HS, עדות לייצוא ומכירות קודמות במדינה. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ; מייל חסר יאותר ממקורות רשמיים.", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
     e_sup_match: "לא נמצאו ספקים מתאימים בטעינה הנוכחית. שלח איתור ספקים לעובד.", draft_sel: "נסח פנייה לספקים המסומנים", deep_sup: "איתור ספקים מעמיק ברשת",
     tick_one: "סמן לפחות ספק אחד עם כתובת מייל.", sup_not_loaded: "מאגר הספקים עוד לא נטען.", select: "בחר",
+    wc_copy: "העתק", wc_copied: "הועתק", wc_h: "פנייה לחברה בוויצ'אט", wc_why: "בוויצ'אט אי אפשר לפתוח שיחה עם מישהו שלא מכיר אותך: שולחים בקשת חברות, והחברה צריכה לאשר. עד אז, הערוצים שלמטה מגיעים אליה ישירות.",
+    wc_s1: "בוויצ'אט: + ואז Add contacts, וחפש", wc_noid: "(אין מזהה ויצ'אט או טלפון: בקש אותו במייל, או סרוק את קוד ה-QR באתר שלהם)",
+    wc_s2: "בהערה של בקשת החברות, הדבק:", wc_s3: "אחרי שאישרו, שלח את ההודעה המלאה:", wc_copy_msg: "העתק את ההודעה", wc_open: "פתח את ויצ'אט",
+    wc_direct: "ערוצים שלא צריכים אישור:", wc_direct_note: "ב-Alibaba.com וב-Made-in-China.com, הכפתור Contact supplier שולח פנייה ישר לצוות המכירות של החברה.",
     fc_first: "קודם מאתר את כתובת המייל של החברה, ואחר כך נכתבת הטיוטה…", m_lang: "שפת המייל", m_lang_mixed: "הנמענים ממדינות שונות: מייל אחד באנגלית. כדי לכתוב לכל חברה בשפה שלה, שלח לכל אחת בנפרד.", m_review: "מה כתוב במייל (תרגום בשבילך)", m_review_note: "בדוק שמות ומספרים במקור לפני השליחה.",
     out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה…", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש",
     draft_note: "הטיוטה נשמרת ב-Gmail שלך ולא נשלחת. אם יש כמה נמענים, נוצרת טיוטה נפרדת לכל אחד.", hand_write: "ניסוח אוטומטי זמין בתוך Claude. אפשר לכתוב כאן ידנית.",
@@ -2699,7 +2707,7 @@ function openSupplier(s, keep) {
       ["products", s.products || s.web_title || t("not_known")], ["supplied", s.supplied || s.example_award || "-"], ["commodities", s.commodities || "-"],
       ["won", `<span class="num">${money(s.won_usd_est) || "-"}</span> · ${esc(s.wins)} ${esc(t("wins"))} · ${esc(s.buyers)} ${esc(t("buyers_n"))}${s.buyer_countries ? " · " + esc(t("in_")) + " " + esc(s.buyer_countries) : ""}`, true],
       ["website", (link(s.website, s.website) || "-") + (s.website_source ? ` <span class="sub">(${esc(s.website_source)})</span>` : ""), true],
-      ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span> ${contactBtns({ phone: s.phone, country: s.country }, supMsg(s))} <span id="c-social">${socialBtns(s.linkedin, s.whatsapp, supMsg(s))}</span>`, true],
+      ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span> ${contactBtns({ phone: s.phone, country: s.country, name: s.supplier, email: s.email }, supMsg(s))} <span id="c-social">${socialBtns(s.linkedin, s.whatsapp, supMsg(s))}</span>`, true],
       ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
     ${readinessHtml(s)}
     <div id="c-check"></div>
@@ -3345,14 +3353,37 @@ function contactBtns(party, text) {
     out.push(`<a class="btn wa sm" href="https://wa.me/${ph.replace(/\D/g, "")}?text=${encodeURIComponent(text || "")}" target="_blank" rel="noopener">${esc(t("db_wa"))}</a>`);
     out.push(`<a class="btn sm" href="tel:${esc(ph)}">${esc(t("db_call"))}</a>`);
   }
-  if (party.wechat || party.country === "CHN" || /^\+?86/.test(ph)) out.push(`<button type="button" class="sm" data-wechat="${esc(text || "")}" data-wid="${esc(party.wechat || ph || "")}">${esc(t("db_wechat"))}</button>`);
+  if (party.wechat || party.country === "CHN" || /^\+?86/.test(ph)) out.push(`<button type="button" class="sm" data-wechat="${esc(text || "")}" data-wid="${esc(party.wechat || ph || "")}" data-wname="${esc(party.name || "")}" data-wmail="${esc(String(party.email || "").split(/[;,\s]+/)[0])}" data-wph="${esc(ph || "")}">${esc(t("db_wechat"))}</button>`);
   return out.join("");
 }
+/* WeChat has no public API to start a chat: a personal account must send a friend request and the other side must
+   accept it. So the button opens a short guide: the ID or phone to search, a friend-request note in Chinese that fits
+   WeChat's short verification field, the full message for after acceptance, and the channels that reach a Chinese
+   supplier without anyone's approval (WhatsApp, e-mail, the inquiry forms of Alibaba.com and Made-in-China.com). */
+const WC_NOTE = "您好，我是Sinder国际采购的Etamar，想就贵司产品询价合作，谢谢！";
 document.addEventListener("click", async e => {
+  const cp = e.target.closest("[data-wccopy]");
+  if (cp) { try { await navigator.clipboard.writeText(cp.dataset.wccopy); cp.textContent = t("wc_copied"); } catch (er) {} return; }
   const b = e.target.closest("[data-wechat]"); if (!b) return;
-  try { await navigator.clipboard.writeText(b.dataset.wechat); } catch (er) {}
-  const id = b.dataset.wid; b.textContent = t("db_wechat_copied") + (id ? " · " + id : "");
-  setTimeout(() => { location.href = "weixin://"; }, 300);
+  const box = b.parentElement.querySelector(".wc-guide");
+  if (box) { box.remove(); return; }
+  const id = b.dataset.wid, name = b.dataset.wname, mail = b.dataset.wmail, ph = (b.dataset.wph || "").replace(/\D/g, "");
+  const q = encodeURIComponent(name || "");
+  const g = document.createElement("div"); g.className = "card wc-guide"; g.style.margin = "8px 0";
+  g.innerHTML = `<b>${esc(t("wc_h"))}</b><div class="sub">${esc(t("wc_why"))}</div>
+    <ol style="margin:6px 0;padding-inline-start:18px">
+      <li>${esc(t("wc_s1"))}${id ? ` <span dir="ltr"><b>${esc(id)}</b></span> <button type="button" class="sm" data-wccopy="${esc(id)}">${esc(t("wc_copy"))}</button>` : ` <span class="muted">${esc(t("wc_noid"))}</span>`}</li>
+      <li>${esc(t("wc_s2"))} <span dir="auto">${esc(WC_NOTE)}</span> <button type="button" class="sm" data-wccopy="${esc(WC_NOTE)}">${esc(t("wc_copy"))}</button></li>
+      <li>${esc(t("wc_s3"))} <button type="button" class="sm" data-wccopy="${esc(b.dataset.wechat)}">${esc(t("wc_copy_msg"))}</button></li>
+    </ol>
+    <div class="actions"><a class="btn sm" href="weixin://">${esc(t("wc_open"))}</a></div>
+    <div class="sub" style="margin-top:6px"><b>${esc(t("wc_direct"))}</b></div>
+    <div class="actions">${ph.length >= 8 ? `<a class="btn wa sm" href="https://wa.me/${ph}?text=${encodeURIComponent(b.dataset.wechat)}" target="_blank" rel="noopener">WhatsApp</a>` : ""}
+      ${mail ? `<a class="btn sm" href="mailto:${esc(mail)}">${esc(t("k_email"))}</a>` : ""}
+      ${q ? `<a class="btn sm" href="https://www.alibaba.com/trade/search?SearchText=${q}&tab=supplier" target="_blank" rel="noopener">Alibaba.com</a>
+      <a class="btn sm" href="https://www.made-in-china.com/companysearch.do?word=${q}" target="_blank" rel="noopener">Made-in-China.com</a>` : ""}</div>
+    <div class="sub">${esc(t("wc_direct_note"))}</div>`;
+  b.insertAdjacentElement("afterend", g);
 });
 const roleL = r => t("db_role_" + r), statL = s => t("db_st_" + s), stageL = s => t("db_stage_" + s);
 /* economics scenarios: the engine's assumptions shown as assumptions, with a low and a high around them (spec
