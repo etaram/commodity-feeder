@@ -59,7 +59,20 @@ def main(new_path, base_path=None):
             return f"{sum(1 for x in rev if x == 'yes')}/{len(rev)}" if rev else "-"
         bt = next(iter(b_by.get(q, {}).values()), {}).get("total", "")
         summ.append([q, rows[0].get("total", 0), bt, b["supported"], b["plausible"], b["related"], prec(5), prec(10), vprec(5), rows[0].get("ms", "")])
-    out = [["Supplier search benchmark: live search code on the real index, no model calls. Fill 'label' (yes / no / related); precision counts reviewed rows only."],
+    # precision by match bucket over every result that has a web-verified label (any rank shown)
+    import math
+    pb = defaultdict(lambda: defaultdict(int))
+    for r in new:
+        v = verified.get((r["query"].lower(), (r.get("supplier") or "").lower()))
+        if r.get("rank") and v and v != "unknown":
+            pb[r.get("match") or "-"][v] += 1
+    bucket_rows = []
+    for b in ("supported", "plausible", "related"):
+        d = sum(pb[b].values()); y = pb[b]["yes"]
+        if d:
+            p_ = y / d; ci = 1.96 * math.sqrt(p_ * (1 - p_) / d)
+            bucket_rows.append([f"bucket '{b}': {y} of {d} web-verified results can supply ({p_:.0%}, 95% interval +/-{ci:.0%}); related {pb[b]['related']}, no {pb[b]['no']}"])
+    out = [["Supplier search benchmark: live search code on the real index, no model calls. Fill 'label' (yes / no / related); precision counts reviewed rows only."], *bucket_rows,
            ["query", "results now", "results baseline", "top10 supported", "top10 plausible", "top10 related", "precision@5 human (yes/reviewed)", "precision@10 human", "precision@5 web-verified (yes/checked, model reviewer)", "ms"], *summ, [""],
            ["query", "rank", "supplier", "country", "tier", "kind", "match", "evidence", "conflicts", "gaps", "products", "label", "baseline at this rank", "baseline products"]]
     for r in new:
