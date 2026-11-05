@@ -3595,6 +3595,42 @@ async function renderOutreach(fresh) {
     $("#or-sa").onclick = async () => { const v = $("#or-sv").value.trim(); if (!v) return; try { await window.DD_OUTREACH.suppress({ value: v, reason: $("#or-sr").value.trim() || "manual" }); } catch (e) { orMsg(e.message || String(e), 1); } $("#or-supp").click(); };
   };
 }
+/* plan form: the fields a campaign needs, written into the plan; the JSON view keeps everything else */
+const PF = (id, label, v, ph, wide) => `<label style="display:block${wide ? ";flex:1 1 100%" : ""}"><span class="sub">${esc(label)}</span><input id="pf-${id}" value="${esc(v ?? "")}" placeholder="${esc(ph || "")}" style="width:100%"></label>`;
+const PFA = (id, label, v, rows) => `<label style="display:block;flex:1 1 100%"><span class="sub">${esc(label)}</span><textarea id="pf-${id}" rows="${rows || 3}" style="width:100%;height:${(rows || 3) * 1.7 + 1}em;min-height:0" dir="auto">${esc(v ?? "")}</textarea></label>`;
+function planFormHtml(p) {
+  const tpl = n => (p.templates || []).find(t => t.step === n && t.channel === (p.channel || "email")) || {};
+  const lines = a => (a || []).join("\n");
+  return `<div class="filters" style="align-items:stretch">
+    ${PF("name", mt("Campaign name", "שם הקמפיין"), p.name)}${PF("client", mt("Client (whose claims)", "לקוח (הטענות שלו)"), p.client)}${PF("segment", mt("Segment", "פלח"), p.segment, mt("e.g. water utilities, East Africa", "למשל תאגידי מים, מזרח אפריקה"))}
+    ${PFA("objective", mt("Objective", "מטרה"), p.objective, 2)}${PFA("target_profile", mt("Target profile (who gets this and why)", "פרופיל יעד (מי מקבל ולמה)"), p.target_profile, 2)}
+    ${PFA("exclusions", mt("Exclusions, one per line", "החרגות, אחת בכל שורה"), lines(p.exclusions), 2)}
+    <h4 style="flex:1 1 100%;margin:6px 0 0">${esc(mt("Sender", "שולח"))}</h4>
+    ${PF("s_name", mt("Name", "שם"), p.sender?.name)}${PF("s_email", mt("E-mail", "אימייל"), p.sender?.email)}${PF("s_org", mt("Organisation", "ארגון"), p.sender?.org)}${PF("s_title", mt("Title", "תפקיד"), p.sender?.title)}${PF("s_address", mt("Postal address (required by law in many markets)", "כתובת דואר (חובה חוקית בשווקים רבים)"), p.sender?.address, "", true)}
+    <h4 style="flex:1 1 100%;margin:6px 0 0">${esc(mt("Approved claims: one per line as 'text | source'", "טענות מאושרות: אחת בכל שורה בצורת 'טקסט | מקור'"))}</h4>
+    ${PFA("claims", mt("Claims", "טענות"), (p.claims || []).map(c => `${c.text} | ${c.source}`).join("\n"), 4)}
+    ${PFA("offer", mt("The ask (a call or a quote request; no prices or promises)", "הבקשה (שיחה או בקשת הצעה; בלי מחירים והבטחות)"), p.offer, 2)}
+    <h4 style="flex:1 1 100%;margin:6px 0 0">${esc(mt("Messages. Placeholders: {{first_name|there}}, {{company}}, {{claim:c1}}, {{offer}}, {{sender_name}}, {{sender_org}}", "הודעות. משתנים: {{first_name|there}}, {{company}}, {{claim:c1}}, {{offer}}, {{sender_name}}, {{sender_org}}"))}</h4>
+    ${PF("t0_subject", mt("First message: subject", "הודעה ראשונה: נושא"), tpl(0).subject, "", true)}${PFA("t0_body", mt("First message: body", "הודעה ראשונה: גוף"), tpl(0).body, 6)}
+    ${PF("t1_subject", mt("Follow-up: subject", "תזכורת: נושא"), tpl(1).subject, "", true)}${PFA("t1_body", mt("Follow-up: body (leave empty for no follow-up)", "תזכורת: גוף (ריק = בלי תזכורת)"), tpl(1).body, 4)}
+    ${PF("gap", mt("Days before the follow-up", "ימים עד התזכורת"), (p.cadence?.gap_days || [5])[0])}${PF("per_day", mt("Max per day", "מקסימום ביום"), p.volume?.per_day)}${PF("max_accounts", mt("Max accounts", "מקסימום חשבונות"), p.volume?.max_accounts)}${PF("recent", mt("Skip anyone contacted in the last N days", "דלג על מי שנפנה אליו ב-N הימים האחרונים"), p.recent_contact_days)}
+    ${PFA("stop", mt("Stop conditions, one per line", "תנאי עצירה, אחד בכל שורה"), lines(p.stop_conditions), 2)}${PFA("metrics", mt("Success metrics, one per line", "מדדי הצלחה, אחד בכל שורה"), lines(p.success_metrics), 2)}${PFA("review", mt("Review dates (YYYY-MM-DD), one per line", "מועדי בחינה (YYYY-MM-DD), אחד בכל שורה"), lines(p.review_dates), 2)}
+    ${PF("owner", mt("Owner", "אחראי"), p.owner)}${PF("pilot", mt("Pilot review note (needed above 20 accounts)", "הערת סיכום פיילוט (נדרש מעל 20 חשבונות)"), p.pilot_review_note, "", true)}
+  </div>`;
+}
+function planFromForm(p) {
+  const v = id => ($("#pf-" + id)?.value ?? "").trim(), ls = id => v(id).split("\n").map(x => x.trim()).filter(Boolean), n = (id, d) => { const x = Number(v(id)); return isFinite(x) && x > 0 ? x : d; };
+  const ch = p.channel || "email";
+  const claims = ls("claims").map((l, i) => { const [text, ...src] = l.split("|"); return { id: "c" + (i + 1), text: text.trim(), source: src.join("|").trim() }; });
+  const templates = (p.templates || []).filter(t => t.channel !== ch);
+  templates.push({ id: "t0", step: 0, channel: ch, kind: ch === "email" ? "email" : "message", subject: v("t0_subject"), body: v("t0_body") });
+  const fu = v("t1_body") ? 1 : 0;
+  if (fu) templates.push({ id: "t1", step: 1, channel: ch, kind: ch === "email" ? "email" : "message", subject: v("t1_subject"), body: v("t1_body") });
+  return Object.assign({}, p, { name: v("name"), client: v("client"), segment: v("segment"), objective: v("objective"), target_profile: v("target_profile"), exclusions: ls("exclusions"), owner: v("owner"),
+    sender: { name: v("s_name"), email: v("s_email"), org: v("s_org"), title: v("s_title"), address: v("s_address") }, claims, offer: v("offer"), templates, follow_up_limit: fu,
+    cadence: { gap_days: [n("gap", 5)] }, volume: Object.assign({}, p.volume, { per_day: n("per_day", 20), max_accounts: n("max_accounts", 20) }), recent_contact_days: n("recent", 90),
+    stop_conditions: ls("stop"), success_metrics: ls("metrics"), review_dates: ls("review"), pilot_review_note: v("pilot") });
+}
 async function renderCampaign(fresh) {
   const el = $("#or-out");
   if (OR.id !== "new" && (fresh || !OR.cur)) { el.innerHTML = `<div class="empty">${esc(t("loading"))}</div>`; try { OR.cur = await window.DD_OUTREACH.get(OR.id); } catch (e) { OR.id = ""; orMsg(e.message || String(e), 1); return renderOutreach(true); } }
@@ -3604,7 +3640,9 @@ async function renderCampaign(fresh) {
   const ctl = c.id ? [["start", admin, mt("Start", "התחל")], ["pause", true, mt("Pause", "השהה")], ["resume", admin, mt("Resume", "המשך")], ["cancel", true, mt("Cancel", "בטל")]].filter(x => x[1]).map(([a, , l]) => `<button type="button" data-oc="${a}">${esc(l)}</button>`).join("") : "";
   let body = "";
   if (OR.tab === "plan") body = `<p class="sub">${esc(mt("Every factual sentence in a message must be an approved claim with a source. Prices, discounts, guarantees and delivery promises are refused. The sender identity and opt-out line are added in code.", "כל משפט עובדתי בהודעה חייב להיות טענה מאושרת עם מקור. מחירים, הנחות, ערבויות והבטחות אספקה נחסמים. זהות השולח ושורת ההסרה מתווספות בקוד."))}</p>
-    <textarea id="or-plan" rows="22" spellcheck="false" style="width:100%;font-family:ui-monospace,monospace;font-size:12px" dir="ltr">${esc(JSON.stringify(c.plan, null, 2))}</textarea><div class="actions"><button type="button" class="primary" id="or-save">${esc(mt("Save plan", "שמור תוכנית"))}</button></div>`;
+    ${planFormHtml(c.plan)}
+    <details style="margin-top:10px"><summary class="sub">${esc(mt("Advanced: the full plan as JSON", "מתקדם: התוכנית המלאה כ-JSON"))}</summary><textarea id="or-plan" rows="18" spellcheck="false" style="width:100%;font-family:ui-monospace,monospace;font-size:12px" dir="ltr">${esc(JSON.stringify(c.plan, null, 2))}</textarea></details>
+    <div class="actions"><button type="button" class="primary" id="or-save">${esc(mt("Save plan", "שמור תוכנית"))}</button></div>`;
   if (OR.tab === "accounts") body = `<p class="sub">${esc(mt("One account per line: company, contact name, e-mail, country (ISO3), where the contact came from. Contacts are never invented: the source is required.", "חשבון אחד בכל שורה: חברה, איש קשר, אימייל, מדינה (ISO3), מאיפה הגיע איש הקשר. אנשי קשר לא מומצאים: המקור חובה."))}</p>
     <textarea id="or-acc" rows="4" style="width:100%" dir="ltr" placeholder="Acme Ltd, Dana Levi, dana@acme.com, KEN, company website contact page"></textarea><div class="actions"><button type="button" id="or-accadd">${esc(mt("Add accounts", "הוסף חשבונות"))}</button></div>
     <div class="tablewrap"><table class="tbl"><thead><tr><th>${esc(mt("Company", "חברה"))}</th><th>${esc(mt("Contact", "איש קשר"))}</th><th>${esc(mt("Stage", "שלב"))}</th><th></th></tr></thead><tbody>${accs.map(a => `<tr><td>${flag(a.country)}${txt(a.company)}</td><td class="sub">${esc(a.contact_name)} ${esc(a.email)}<div>${esc(a.contact_source)}</div></td><td><span class="pill info">${esc(a.stage)}</span></td><td>${["reviewed", "campaign_eligible", "contact_confirmed", "closed"].map(s2 => `<button type="button" data-st="${esc(a.id)}|${s2}">${esc(s2.replace(/_/g, " "))}</button>`).join(" ")}</td></tr>`).join("")}</tbody></table></div>`;
@@ -3620,6 +3658,7 @@ async function renderCampaign(fresh) {
   el.querySelectorAll("[data-oc]").forEach(b => b.onclick = async () => { try { const r = await window.DD_OUTREACH.control({ action: b.dataset.oc, campaign_id: c.id, reason: "from the panel" }); orMsg(r.enqueued !== undefined ? mt(`${r.enqueued} messages queued (recorded only).`, `${r.enqueued} הודעות בתור (רישום בלבד).`) : mt("Done.", "בוצע.")); } catch (e) { orMsg(e.message || String(e), 1); } renderCampaign(true); });
   const sv = $("#or-save"); if (sv) sv.onclick = async () => {
     let plan; try { plan = JSON.parse($("#or-plan").value); } catch (e) { orMsg(mt("The plan is not valid JSON: ", "התוכנית אינה JSON תקין: ") + e.message, 1); return renderCampaign(); }
+    if ($("#pf-name")) plan = planFromForm(plan);
     try { const r = await window.DD_OUTREACH.save(c.id || undefined, plan); OR.id = r.campaign.id; orMsg((r.errors || []).length ? mt("Saved as draft. Before authorization: ", "נשמר כטיוטה. לפני אישור: ") + r.errors.join("; ") : r.needs_reauthorization ? mt("Saved. The scope changed: sending is blocked until re-authorized.", "נשמר. ההיקף השתנה: השליחה חסומה עד אישור מחדש.") : mt("Saved.", "נשמר."), (r.errors || []).length > 0); track("outreach_plan_save", r.campaign.id); }
     catch (e) { orMsg(e.message || String(e), 1); }
     renderCampaign(true);
