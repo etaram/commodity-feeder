@@ -42,6 +42,9 @@ INSURER_ID = re.compile(r"\b(seguros?|reaseguros|insurance|assurances?|versicher
 GREEN_ID = re.compile(r"\b(landscap\w*|paysag\w*|grounds maintenance|green areas?|espaces verts|jardin\w*|gardening|tree (works|surgery|care)|arborist)\b", re.I)
 
 
+GUARD_ID = re.compile(r"\b(seguridad|guardian[ií]a|vigilancia|security services|guarding|gardiennage|bewachung)\b", re.I)
+
+
 def service_only(r):
     """A company that only delivers services on site (laundry, cleaning, maintenance, consulting, design): not a
     cross-border goods supplier for Sinder, however much it won."""
@@ -110,6 +113,22 @@ def self_sectors(text):
     return goods or hits
 
 
+# when neither the contracts (reference numbers only) nor the company's own text name a sector, its name often does
+NAME_HINT = [
+    (re.compile(r"\b(consorcio|constructora|construcci\w*|constru[cç][aã]o|builders?|contractors?|edificaciones|obras)\b", re.I), "BUILDING"),
+    (re.compile(r"\b(seguridad|guardian[ií]a|vigilancia|security services|guarding|seguran[cç]a)\b", re.I), "DEFENCE"),
+    (re.compile(r"\b(tecnolog\w*|technolog\w*|telecom\w*|software|inform[aá]tica|sistemas|systems|digital|networks?|telconet)\b", re.I), "ICT"),
+    (re.compile(r"\b(auto|autos|automotriz|motors?|veh[ií]culos|vehicles|camiones|trucks)\b", re.I), "TRANSPORT_EQ"),
+    (re.compile(r"\b(farma\w*|pharma\w*|m[eé]dic\w*|medical|salud|health|hospital\w*|laboratorios?)\b", re.I), "HEALTH"),
+    (re.compile(r"\b(agro\w*|alimentos|foods?|agr[ií]cola|av[ií]cola|l[aá]cteos)\b", re.I), "AGRI_FOOD"),
+    (re.compile(r"\b(el[eé]ctric\w*|energ[ií]a|energy|power|solar)\b", re.I), "POWER"),
+    (re.compile(r"\b(consult\w*|asesor\w*|advisory|auditor\w*)\b", re.I), "CONSULTING"),
+    (re.compile(r"\b(ingenier[ií]a|ingegneria|engineering|engenharia)\b", re.I), "ENGINEERING"),
+    (re.compile(r"\b(transport\w*|log[ií]stic\w*|cargo|freight)\b", re.I), "LOGISTICS"),
+    (re.compile(r"\b(limpieza|cleaning|mantenimiento|maintenance)\b", re.I), "ENV_WASTE"),
+]
+
+
 def main_sectors(x, name, site_title="", about=""):
     """(sector, score) best first, and why the first one was chosen: identity (name or declared industry), the
     company's own description, or the contracts it won."""
@@ -129,6 +148,10 @@ def main_sectors(x, name, site_title="", about=""):
         why.setdefault(sec, "own description")
         if why[sec] == "contracts won":
             why[sec] = "own description and contracts"
+    if not score:
+        hint = next((sec for rx, sec in NAME_HINT if rx.search(name)), "")
+        if hint:
+            score[hint] = 0.3; why[hint] = "name only (weak)"
     # a goods maker is not a consultancy because it also sold advice: a service sector leads only with a clear margin
     ranked = sorted(score.items(), key=lambda y: -y[1])
     if len(ranked) > 1 and ranked[0][0] != ident and ranked[0][0] in SERVICE_SECTORS and ranked[1][0] not in SERVICE_SECTORS and ranked[0][1] < ranked[1][1] * 1.5:
@@ -639,9 +662,12 @@ def build():
     for r in out:
         r["quality"] = quality(r)
         r["tier"], r["tier_reason"] = supplier_tier(r)
-        r["_svc"] = service_only(r)
+        r["_svc"] = service_only(r) or bool(GUARD_ID.search(r["supplier"]))
         if r["_svc"]:
             r["quality"] = round(r["quality"] * 0.6); r["type"] = "works/services"
+        elif not r["main_sector"] or r.get("sector_why") == "name only (weak)":
+            # nothing says what it sells (contracts known only by reference numbers): below the classified ones
+            r["quality"] = round(r["quality"] * 0.7); r["_svc"] = True
     # best tier first; goods suppliers before on-site service firms; then quality
     out.sort(key=lambda r: (r["tier"], r["_svc"], -r["quality"], -r["won_usd_est"]))
     for r in out:
