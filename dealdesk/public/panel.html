@@ -135,6 +135,12 @@ textarea{min-height:180px;resize:vertical;line-height:1.5}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{border:0;border-radius:0;background:none}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+/* a segmented control never squeezes or clips its buttons: on a narrow screen it takes its own row and scrolls sideways */
+.seg button{flex:0 0 auto;white-space:nowrap}
+.score:empty,.fm-score:empty{display:none}
+@media (max-width:760px){.seg.scrolls{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 28px);mask-image:linear-gradient(to left,transparent 0,#000 28px)}
+  [dir="ltr"] .seg.scrolls{-webkit-mask-image:linear-gradient(to right,transparent 0,#000 28px) ;mask-image:linear-gradient(to right,transparent 0,#000 28px)}
+  .filters>.seg,.seg{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-wrap:nowrap}.filters>.seg{flex:1 1 100%}.seg::-webkit-scrollbar{display:none}}
 .me{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)} .me .pill{text-transform:uppercase;letter-spacing:.3px}
 body.role-viewer .view:not(#v-forme) .actions,body.role-viewer #a-proj,body.role-viewer #jobform,body.role-viewer [data-pa],body.role-viewer [data-pc]{display:none !important}
 body.role-analyst [data-pa],body.role-analyst [data-pc],body.role-analyst .pclose{display:none !important}
@@ -394,8 +400,21 @@ ul.news{list-style:none;padding:0;margin:0}ul.news li{padding:5px 0;border-botto
 .pl-card{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;background:var(--card,#fff);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}
 .pl-card:hover{border-color:var(--gold,#d8b25a)}
 :root[data-ui="v3"] .pl-card{background:#121c33}
-/* phones: a compact header (one row of controls), no keyboard hints, tighter type and cards */
+/* phones: one header row. Mark and name at the start, a status dot, then the language toggle and three icon buttons.
+   The buttons keep their text for screen readers (font-size 0) and show a drawn icon instead. */
 @media (max-width:700px){
+  :root:not([data-ui="classic"]) header.top .bar{flex-wrap:nowrap !important;align-items:center;gap:6px !important;padding-block:8px 4px !important}
+  :root:not([data-ui="classic"]) header.top .bar::before{content:"";flex:0 0 26px;height:26px;border-radius:7px;background:url(/brand/mark.svg) center/cover no-repeat}
+  :root:not([data-ui="classic"]) header.top .status{order:0 !important;width:auto !important;flex:1 1 auto;min-width:0;flex-wrap:nowrap;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11.5px !important;color:var(--muted);margin:0 !important}
+  :root:not([data-ui="classic"]) header.top .seg.lang{flex:0 0 auto}
+  :root:not([data-ui="classic"]) header.top .seg.lang button[aria-pressed="true"]{display:none}
+  :root:not([data-ui="classic"]) header.top .seg.lang button{min-height:32px !important;padding:2px 10px !important;font-size:12.5px !important;background:var(--soft) !important;color:var(--ink) !important}
+  :root:not([data-ui="classic"]) header.top #refresh,:root:not([data-ui="classic"]) header.top #admin-go,:root:not([data-ui="classic"]) header.top #signout{flex:0 0 34px;width:34px;min-height:34px !important;height:34px;padding:0 !important;font-size:0 !important;position:relative;border-radius:9px}
+  :root:not([data-ui="classic"]) header.top #refresh::after,:root:not([data-ui="classic"]) header.top #admin-go::after,:root:not([data-ui="classic"]) header.top #signout::after{content:"";position:absolute;inset:8px;background:var(--ink);-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+  :root:not([data-ui="classic"]) header.top #refresh{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a9 9 0 1 1-2.64-6.36'/%3E%3Cpath d='M21 4v5h-5'/%3E%3C/svg%3E")}
+  :root:not([data-ui="classic"]) header.top #admin-go{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20V10M10 20V4M16 20v-7M22 20H2'/%3E%3C/svg%3E")}
+  :root:not([data-ui="classic"]) header.top #signout{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4'/%3E%3Cpath d='M10 17l-5-5 5-5M5 12h11'/%3E%3C/svg%3E")}
+  :root:not([data-ui="classic"]) nav.tabs button{padding:8px 12px 7px !important}
   :root:not([data-ui="classic"]) header.top .bar{flex-wrap:wrap;gap:6px !important;padding-block:6px 2px}
   :root:not([data-ui="classic"]) header.top .brand{display:none !important}
   :root:not([data-ui="classic"]) #me,:root:not([data-ui="classic"]) header.top a.btn[href="/today"]{display:none !important}
@@ -434,9 +453,14 @@ a.lnk{white-space:nowrap}
 :root[data-ui="v3"] .pulse .pk{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01))}
 :root[data-ui="v3"] .pulse .pk b{color:#f3dfa8}
 :root[data-ui="v3"] nav.tabs .count:not(:empty),:root[data-ui="v3"] nav.dest .count:not(:empty){display:inline-block;min-width:20px;padding:1px 7px;border-radius:999px;background:rgba(216,178,90,.18);color:#f3dfa8;font-weight:700;text-align:center}
-:root[data-ui="v3"] nav.tabs button[aria-selected="true"] .count:not(:empty){background:#1a1200;color:#f3dfa8}
 :root[data-ui="v2"] nav.tabs .count:not(:empty){display:inline-block;min-width:20px;padding:1px 7px;border-radius:999px;background:#0b1324;color:#fff;font-weight:700;text-align:center}
-:root[data-ui="v3"] .seg button[aria-pressed="true"],:root[data-ui="v3"] .fm-chips button[aria-pressed="true"],:root[data-ui="v3"] nav.tabs button[aria-selected="true"]{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+:root[data-ui="v3"] .seg button[aria-pressed="true"],:root[data-ui="v3"] .fm-chips button[aria-pressed="true"]{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+/* sub-tabs read as a place, not a button: text on the page background, the active one gold with a gold rule under it */
+:root[data-ui="v3"] nav.tabs{gap:0;border-bottom:0}
+:root[data-ui="v3"] nav.tabs button{background:none !important;border:0 !important;border-bottom:2px solid transparent !important;border-radius:0 !important;color:var(--muted);font-weight:500;padding:10px 14px 9px}
+:root[data-ui="v3"] nav.tabs button:hover{color:var(--ink)}
+:root[data-ui="v3"] nav.tabs button[aria-selected="true"]{color:var(--gold);font-weight:650;border-bottom-color:var(--gold) !important}
+:root[data-ui="v3"] nav.tabs button[aria-selected="true"] .count:not(:empty){background:rgba(216,178,90,.18);color:#f3dfa8}
 :root[data-ui="v3"] [data-oc][aria-pressed="true"]{background:var(--gold);color:#1a1200}
 .v2only{display:none}
 :root:not([data-ui="classic"]) .v2only{display:block}
@@ -2444,6 +2468,10 @@ async function moreInfo(job, btn, cardSel, force) {
 function setSeg() {
   $("#cs-sup").setAttribute("aria-pressed", S.compMode === "sup"); $("#cs-acc").setAttribute("aria-pressed", S.compMode === "acc");
   ["bd", "rep", "mkt", "ex", "ilx"].forEach(m => $("#ds-" + m).setAttribute("aria-pressed", S.dealMode === m));
+  // keep the chosen segment visible when the control scrolls sideways on a phone
+  document.querySelectorAll(".seg [aria-pressed=true]").forEach(b => { const g = b.parentElement; if (g && g.scrollWidth > g.clientWidth) b.scrollIntoView({ block: "nearest", inline: "nearest" }); });
+  // a fade at the far end says "there is more" when the control is wider than the screen; it goes once scrolled to the end
+  document.querySelectorAll(".seg").forEach(g => { const upd = () => g.classList.toggle("scrolls", g.scrollWidth - Math.abs(g.scrollLeft) - g.clientWidth > 4); upd(); if (!g.dataset.fw) { g.dataset.fw = 1; g.addEventListener("scroll", upd, { passive: true }); addEventListener("resize", upd); } });
 }
 const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;
 function renderCompanies() {
@@ -2661,7 +2689,7 @@ function renderDeals() {
     listInto("#dlist", rows, "d", r => `<span class="pill info num">${esc(r.next_expected || "?")}</span><div style="min-width:0"><div class="t">${flag(r.country)}${txt(tr(r.buyer))}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(r.awards_12m)} ${esc(t("awards"))} · ${esc(r.award_months)}</div></div><div class="right"><span class="num">${money(r.total_usd)}</span></div>`, r => openDeal("rep", r), S.err.repeat ? errText(S.err.repeat, SHEETS) : t("e_rep_all"), r => r === S.sel.d);
   } else {
     rows = (S.data.markets || []).filter(r => dealMatch(r) && (!q || Object.values(r).join(" ").toLowerCase().includes(q))).sort((a, b) => num(b.signal_score) - num(a.signal_score));
-    listInto("#dlist", rows, "d", r => `<span class="score ${num(r.signal_score) >= 70 ? "hi" : ""}">${esc(r.signal_score)}</span><div style="min-width:0"><div class="t">${flag(r.country)}${esc(r.product)}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(t("imports"))} ${money(r.imports_usd)} (${esc(r.year)})</div></div><div class="right">${growthHtml(r)}<span class="sub">${esc(t("premium"))} ${esc(r.premium_vs_benchmark_pct)}%</span></div>`, r => openDeal("mkt", r), S.err.markets ? errText(S.err.markets, SHEETS) : t("e_mkt"), r => r === S.sel.d);
+    listInto("#dlist", rows, "d", r => `${isFinite(num(r.signal_score)) && String(r.signal_score ?? "") !== "" ? `<span class="score ${num(r.signal_score) >= 70 ? "hi" : ""}">${esc(r.signal_score)}</span>` : ""}<div style="min-width:0"><div class="t">${flag(r.country)}${esc(r.product)}</div><div class="sub">${esc(r.country)} · ${esc(r.group)} · ${esc(t("imports"))} ${money(r.imports_usd)} (${esc(r.year)})</div></div><div class="right">${growthHtml(r)}<span class="sub">${esc(t("premium"))} ${esc(r.premium_vs_benchmark_pct)}%</span></div>`, r => openDeal("mkt", r), S.err.markets ? errText(S.err.markets, SHEETS) : t("e_mkt"), r => r === S.sel.d);
   }
 }
 const dealId = (mode, r) => mode + ":" + (mode === "mkt" ? `${r.hs6}|${r.country}` : mode === "rep" ? `${r.buyer}|${r.country}` : `${r.date}|${String(r.opportunity).slice(0, 40)}`);
@@ -3017,7 +3045,7 @@ async function bootMe() {
   const so = $("#signout"); so.hidden = false; so.onclick = () => window.DD_LOGOUT();
   if (me.role === "admin") { renderUsers(); } else if (S.view === "users") go("today");
   renderDest();
-  if (me.role === "admin") { const ag = $("#admin-go"); ag.hidden = false; ag.onclick = () => go("users"); }
+  if (me.role === "admin") { const ag = $("#admin-go"); ag.hidden = false; ag.onclick = () => go("ops"); }
   if (window.DD_PROFILE) { document.body.classList.add("has-profile-api"); await loadForMe(true); if (!S.prof && S.view === "today") go("forme"); else if (S.view === "forme") renderForMe(); }
 }
 function renderJobsCount() { const n = (S.data.jobs || []).filter(j => j.status === "queued" || j.status === "running").length; $("#c-jobs").textContent = n ? n : ""; }
