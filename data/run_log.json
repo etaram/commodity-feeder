@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-05T01:29:25",
+  "finished_utc": "2026-11-05T13:33:21",
   "fx_source": "ECB via Frankfurter 2026-11-04",
   "fx": {
     "EUR": 1.1266970874880289,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 25,
+      "sec": 26,
       "newest_date": "2026-11-05",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -40,27 +40,27 @@
     },
     "em_global": {
       "ok": true,
-      "prices": 19,
-      "sec": 37,
+      "prices": 21,
+      "sec": 60,
       "newest_date": "2026-11-05",
       "log": [
         "INFO em_global board: 620 rows",
-        "INFO em_global: 19 prices"
+        "INFO em_global: 21 prices"
       ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 4,
-      "newest_date": "2026-11-04",
+      "sec": 2,
+      "newest_date": "2026-11-05",
       "log": [
-        "INFO cn_spot: 52 prices (2026-11-04)"
+        "INFO cn_spot: 52 prices (2026-11-05)"
       ]
     },
     "eu_agri": {
       "ok": true,
       "prices": 63,
-      "sec": 14,
+      "sec": 16,
       "newest_date": "2026-11-30",
       "log": [
         "INFO eu_agri: 63 prices"
@@ -69,7 +69,7 @@
     "dtn": {
       "ok": true,
       "prices": 7,
-      "sec": 1,
+      "sec": 0,
       "newest_date": "2026-10-30",
       "log": [
         "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/11/04/uan28-continues-lead-fertilizer-week"
@@ -78,7 +78,7 @@
     "ssb": {
       "ok": true,
       "prices": 2,
-      "sec": 1,
+      "sec": 0,
       "newest_date": "2026-11-01",
       "log": [
         "INFO ssb_salmon: 2 prices (2026U44)"
@@ -87,7 +87,7 @@
     "scrapmonster": {
       "ok": true,
       "prices": 34,
-      "sec": 0,
+      "sec": 18,
       "newest_date": "2026-09-21",
       "log": [
         "INFO scrapmonster: 34 prices, 221 unmapped items"
@@ -105,7 +105,7 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 12,
+      "sec": 10,
       "newest_date": "2026-11-04",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -145,7 +145,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 16,
+      "sec": 13,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -155,13 +155,13 @@
     }
   },
   "rows_with_price": 1957,
-  "candidates": 2189,
-  "flagged": 264,
+  "candidates": 2191,
+  "flagged": 261,
   "by_source_selected": {
-    "yahoo": 32,
+    "yahoo": 31,
     "westmetall": 6,
-    "em_global": 3,
-    "cn_spot": 31,
+    "em_global": 4,
+    "cn_spot": 30,
     "eu_agri": 50,
     "dtn": 7,
     "ssb": 2,
@@ -171,12 +171,12 @@
     "census": 0,
     "comext": 1730,
     "comtrade": 3,
-    "derived": 30
+    "derived": 31
   },
   "by_tier": {
-    "T1 Exchange benchmark": 79,
+    "T1 Exchange benchmark": 80,
     "T2 Official market reporting": 73,
-    "T3 Industry assessment": 72,
+    "T3 Industry assessment": 71,
     "T4 Trade statistics (unit value)": 1733
   }
 }
