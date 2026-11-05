@@ -20,7 +20,7 @@ async function csv(name: string): Promise<Row[]> {
 }
 
 export type IntelQuery = { country?: string; type?: string; origin?: string; tier?: string };
-const EV_FIELDS = ["event_id", "type", "tags", "change", "change_note", "event_date", "first_seen", "last_seen", "title", "summary", "project_country",
+const EV_FIELDS = ["event_id", "type", "tags", "related_projects", "change", "change_note", "event_date", "first_seen", "last_seen", "title", "summary", "project_country",
   "buyer_country", "supplier_country", "publisher_country", "affected_markets", "value_usd", "buyer", "supplier", "actors", "sector", "project_key",
   "project_ref", "link_basis", "tender_id", "origin", "sources", "independent_sources", "mirrors", "republished_count", "url", "verified", "inferred",
   "what_changed", "why_matters", "sinder_angle", "confirm_by", "monitor_next", "tier"];

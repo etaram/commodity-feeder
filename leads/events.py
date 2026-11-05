@@ -349,7 +349,7 @@ def mdb_project(r):
 # ---------------------------------------------------------------- event construction
 COLS = ["event_id", "type", "tags", "change", "change_note", "event_date", "first_seen", "last_seen", "title", "summary",
         "project_country", "buyer_country", "supplier_country", "publisher_country", "affected_markets", "value_usd",
-        "buyer", "supplier", "actors", "sector", "project_key", "project_ref", "link_basis", "tender_id", "record_id",
+        "buyer", "supplier", "actors", "sector", "project_key", "project_ref", "link_basis", "related_projects", "tender_id", "record_id",
         "origin", "sources", "source_count", "independent_sources", "mirrors", "republished_count", "url",
         "status", "tender_deadline", "verified", "inferred", "what_changed", "why_matters", "sinder_angle", "confirm_by", "monitor_next",
         "tier", "content_hash"]
@@ -644,6 +644,112 @@ def link_news(events, projects):
     return links
 
 
+# ---------------------------------------------------------------- country fill and related projects
+_CN = None
+def country_names():
+    """ISO3 -> names (dealdesk/lib/countrynames.json, from pycountry) plus the spellings MDB records use."""
+    global _CN
+    if _CN is None:
+        import json as _j
+        from pathlib import Path
+        d = _j.loads(Path(__file__).resolve().parents[1].joinpath("dealdesk", "lib", "countrynames.json").read_text(encoding="utf-8"))
+        extra = {"CIV": ["Cote d'Ivoire", "Côte d'Ivoire", "Ivory Coast"], "COG": ["Republic of Congo", "Congo, Rep.", "Congo-Brazzaville"],
+                 "COD": ["DR Congo", "DRC", "Congo, Dem. Rep.", "Democratic Republic of the Congo"], "LAO": ["Lao PDR", "Laos"], "VNM": ["Viet Nam", "Vietnam"],
+                 "TZA": ["Tanzania"], "BOL": ["Bolivia"], "IRN": ["Iran"], "SYR": ["Syria"], "RUS": ["Russia"], "KOR": ["South Korea", "Korea, Rep."],
+                 "PRK": ["North Korea"], "TUR": ["Turkey", "Türkiye"], "VEN": ["Venezuela"], "MDA": ["Moldova"], "MKD": ["North Macedonia"],
+                 "USA": ["United States", "U.S.", "US"], "GBR": ["United Kingdom", "UK", "Britain"], "ARE": ["UAE", "United Arab Emirates"], "EGY": ["Egypt"],
+                 "GMB": ["The Gambia", "Gambia"], "BHS": ["The Bahamas", "Bahamas"], "CPV": ["Cabo Verde", "Cape Verde"], "STP": ["Sao Tome and Principe"],
+                 "SWZ": ["Eswatini"], "TLS": ["Timor-Leste"], "FSM": ["Micronesia"], "KGZ": ["Kyrgyz Republic", "Kyrgyzstan"], "SVK": ["Slovak Republic", "Slovakia"],
+                 "YEM": ["Yemen"], "PSE": ["West Bank and Gaza", "Palestine"], "KSV": ["Kosovo"], "BRN": ["Brunei"], "CZE": ["Czechia", "Czech Republic"]}
+        pats = []
+        for iso, names in d.items():
+            for n in set(names + extra.get(iso, [])):
+                if len(n) >= 3 and n not in ("US", "UK"):  # 2-letter forms match too much; "US" / "UK" are handled by the word-boundary pattern below
+                    pats.append((iso, re.compile(r"(?<![A-Za-z])" + re.escape(n) + r"(?![A-Za-z])")))
+        pats.append(("USA", re.compile(r"\bU\.S\.|\bUS\b(?![$\u20ac\u00a3])")))  # "US$475mn" is a currency, not a country
+        pats.append(("GBR", re.compile(r"\bUK\b")))
+        for iso, names in extra.items():
+            if iso not in d:
+                for n in names:
+                    pats.append((iso, re.compile(r"(?<![A-Za-z])" + re.escape(n) + r"(?![A-Za-z])")))
+        _CN = pats
+    return _CN
+
+
+def countries_in(text):
+    """ISO3 codes of the country names found in a text, longest names first so 'South Sudan' is not read as 'Sudan'."""
+    found = []
+    for iso, pat in country_names():
+        if pat.search(text):
+            found.append(iso)
+    return list(dict.fromkeys(found))
+
+
+def fill_countries(events, projects):
+    """A record on a regional programme or a news item often carries no project country. First the linked project's
+    country (any record on that project), then country names in the title and summary: one hit sets project_country,
+    every hit goes to affected_markets. Nothing is guessed from a region name."""
+    filled, markets = 0, 0
+    for e in events:
+        if not e["project_country"] and e.get("project_key") and (projects.get(e["project_key"]) or {}).get("country"):
+            e["project_country"] = projects[e["project_key"]]["country"]
+            e["buyer_country"] = e["buyer_country"] or e["project_country"]
+            filled += 1
+            continue
+        if e["project_country"] and e["affected_markets"]:
+            continue
+        cs = countries_in(f"{e['title']} {e['summary']}")
+        if not cs:
+            continue
+        if not e["project_country"] and len(cs) == 1 and e["origin"] == "record":
+            e["project_country"] = cs[0]
+            e["buyer_country"] = e["buyer_country"] or cs[0]
+            e["inferred"] = (e.get("inferred", "") + "; " if e.get("inferred") else "") + "project country from the title"
+            filled += 1
+        if e["origin"] != "news":
+            continue  # a record's project country is its market; names inside a project title are not extra markets
+        have = [c for c in e["affected_markets"].split(";") if c]
+        new = [c for c in cs if c not in have and c != e["project_country"]]
+        if new:
+            e["affected_markets"] = ";".join(have + new)[:80]
+            markets += 1
+    return filled, markets
+
+
+def related_projects(events, projects):
+    """For news that no strict rule links, the projects in the same country whose names share a distinctive word with
+    the headline: a candidate list for a reader, never a link (timelines and hypotheses ignore it)."""
+    # country names, demonyms and the words every policy headline carries are not distinctive
+    weak = set(toks(" ".join(n for _, pat in country_names() for n in [pat.pattern]))) | toks(
+        "chinese indian russian american canadian ukrainian african european asian british french german japanese korean brazilian mexican "
+        "trade deal tariff tariffs sanctions sanction export exports import imports economy economic market markets growth price prices "
+        "government minister ministry president congress election elections midterm midterms policy bank world fund billion million "
+        "network services limited company group firm firms authority board")
+    by_c = defaultdict(list)
+    for p in projects.values():
+        if p.get("name") and p.get("country"):
+            by_c[p["country"]].append((p["key"], p["name"], toks(p["name"]) - GENERIC_PROJ - weak))
+    n = 0
+    for e in events:
+        if e["origin"] != "news" or e["project_key"]:
+            continue
+        cs = [c for c in [e["project_country"]] + e["affected_markets"].split(";") if len(c) == 3 and c.isupper()]
+        nt = e["_toks"] - GENERIC_PROJ - weak
+        # a word that is capitalised inside the headline (not at its start) is a name: one such shared word is enough
+        caps = {w.lower() for w in re.findall(r"(?<!^)(?<![.:!?]\s)\b[A-Z][a-z]{3,}", e["title"])}
+        cands = []
+        for c in dict.fromkeys(cs):
+            for key, name, pt in by_c.get(c, []):
+                sh = nt & pt
+                if len(sh) >= 2 or (sh & caps):
+                    cands.append((len(sh), jacc(nt, pt), key, name))
+        if cands:
+            cands.sort(reverse=True)
+            e["related_projects"] = " | ".join(f"{k}: {nm[:60]}" for _, _, k, nm in cands[:3])
+            n += 1
+    return n
+
+
 # ---------------------------------------------------------------- change detection
 def change_detect(events, prev, t):
     """Mark new / updated / republished / seen against the previous events.csv; carry history."""
@@ -893,6 +999,8 @@ def build(write=True):
     events = dedup_rec + news
     l_bt = link_buyer_title(events, projects)
     l_news = link_news(events, projects)
+    c_filled, c_markets = fill_countries(events, projects)
+    n_related = related_projects(events, projects)
     prev = _rows("events.csv")
     for p in prev:  # previous rows lack the private fields
         p.setdefault("_toks", toks(p.get("title", "")))
@@ -912,7 +1020,7 @@ def build(write=True):
     linked = sum(1 for e in events if e.get("project_key"))
     stats = {"events": len(events), "by_type": dict(Counter(e["type"] for e in events).most_common()), "by_origin": dict(Counter(e["origin"] for e in events)),
              "by_tier": dict(Counter(e.get("tier") for e in events)), "change": dict(cstats), "news": nstats, "record_id_duplicates": rec_dups,
-             "linked_events": linked, "links_buyer_title": l_bt, "links_news_project": l_news, "timelines": len(tl),
+             "linked_events": linked, "links_buyer_title": l_bt, "links_news_project": l_news, "countries_filled": c_filled, "markets_added": c_markets, "news_with_related_projects": n_related, "timelines": len(tl),
              "timelines_multi_event": sum(1 for x in tl if x["n_events"] >= 2)}
     log.info("events: %s", json.dumps(stats))
     return events, tl, stats
