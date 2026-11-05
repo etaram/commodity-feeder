@@ -36,6 +36,12 @@ def test_vat():
     assert judge_vies("Acme GmbH", {"isValid": True, "name": "Other Trading SRL"})["vat_verdict"] == "conflict"
     assert judge_vies("Acme GmbH", {"isValid": False})["vat_verdict"] == "invalid"
     assert judge_vies("Acme GmbH", None)["vat_verdict"] == "unavailable"
+    # seen in the first run: legal forms written out in full are the same company, not a conflict
+    assert judge_vies("LEONARDO SPA", {"isValid": True, "name": "LEONARDO SOCIETA' PER AZIONI"})["vat_verdict"] == "verified"
+    assert judge_vies("Solaris Bus & Coach Sp. z o.o.", {"isValid": True, "name": "SOLARIS BUS & COACH SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOSCIĄ"})["vat_verdict"] == "verified"
+    assert judge_vies("IC Solutions Sp. z o.o.", {"isValid": True, "name": "IC SOLUTIONS SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ"})["vat_verdict"] == "verified"
+    assert judge_vies("Thermo Electron A/S", {"isValid": False}, printed_as_vat=False)["vat_verdict"] == "not a VAT number in VIES"
+    assert vat_parts("556577-2364", "SWE") == ("SE", "556577236401")
 
 
 def test_structured_data():

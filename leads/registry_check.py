@@ -26,7 +26,7 @@ from .common import DATA, PRIVATE, log
 CHECKS = DATA / "checks"
 OUT = CHECKS / "registry_checks.jsonl"
 COMPANY_CHECKS = CHECKS / "company_checks.jsonl"
-VERSION = "registry-1"
+VERSION = "registry-2"
 RECHECK_DAYS = 180
 GLEIF = "https://api.gleif.org/api/v1/lei-records"
 VIES = "https://ec.europa.eu/taxation_customs/vies/rest-api/ms/{cc}/vat/{num}"
@@ -39,11 +39,20 @@ LEGAL = re.compile(r"\b(s\.?a\.?s?|s\.?a\.?u|ltda|ltd|limited|llc|inc|incorporat
                    r"kft|zrt|d\.?o\.?o|a\.?s|s\.?r\.?o|jsc|pjsc|ooo|llp|lp|se|eirl|eurl|ug|e\.?k|ohg|gbr|bhd|sdn|tbk|pt|cv)\b\.?", re.I)
 
 
+# legal forms written out in full, as registers often print them (after accents are removed)
+LEGAL_LONG = re.compile(r"\b(societa per azioni|societa a responsabilita limitata|spolka z ograniczona odpowiedzialnoscia|spolka akcyjna|spolka komandytowa|"
+                        r"aktiengesellschaft|gesellschaft mit beschrankter haftung|kommanditgesellschaft|aktiebolag|aktieselskab|anpartsselskab|"
+                        r"osakeyhtio|sociedad anonima|sociedad limitada|sociedade anonima|societe anonyme|societe par actions simplifiee|"
+                        r"societe a responsabilite limitee|naamloze vennootschap|besloten vennootschap|anonim sirketi|spolecnost s rucenim omezenym|"
+                        r"akciova spolecnost|societate comerciala|unipessoal|sociedad anonima unipersonal|sociedad limitada unipersonal)\b", re.I)
+
+
 def norm(n):
     import html
     import unicodedata
-    n = unicodedata.normalize("NFKD", html.unescape(n or "")).encode("ascii", "ignore").decode().lower().replace("&", " and ")
-    n = LEGAL.sub(" ", re.sub(r"[^\w\s/]", " ", n))
+    n = unicodedata.normalize("NFKD", html.unescape(n or "").translate(str.maketrans("łŁøØđĐßæÆ", "lLoOdDsaA"))).encode("ascii", "ignore").decode().lower().replace("&", " and ")
+    n = re.sub(r"\s+", " ", re.sub(r"[^\w\s/]", " ", n.replace("'", "")))
+    n = LEGAL.sub(" ", LEGAL_LONG.sub(" ", n))
     return re.sub(r"\s+", " ", re.sub(r"\band\b", " ", n)).strip()
 
 
@@ -85,6 +94,8 @@ def vat_parts(v, country):
         v = v[2:]
     elif re.match(r"^[A-Z]{2}", v):
         return None  # another country's prefix: not this company's EU number
+    if cc == "SE" and re.fullmatch(r"\d{10}", v):
+        v += "01"  # a Swedish VAT number is the organisation number followed by 01
     return (cc, v) if re.fullmatch(r"[0-9A-Z]{8,12}", v) else None
 
 
@@ -115,7 +126,7 @@ def judge_lei(name, country, rec):
     return out
 
 
-def judge_vies(name, j):
+def judge_vies(name, j, printed_as_vat=True):
     """Verdict for a VIES answer (pure): the number is valid, and the registered name, where returned, matches."""
     if not j or "isValid" not in j:
         return {"vat_verdict": "unavailable"}
@@ -123,12 +134,13 @@ def judge_vies(name, j):
     reg_name = "" if reg_name in ("---", "") else reg_name
     out = {"vat_valid": bool(j.get("isValid")), "vat_name": reg_name[:150], "vat_address": re.sub(r"\s+", " ", j.get("address") or "").strip()[:250].replace("---", "")}
     if not j.get("isValid"):
-        out["vat_verdict"] = "invalid"
+        # a registration number on record is not always a VAT number: invalid then says nothing about identity
+        out["vat_verdict"] = "invalid" if printed_as_vat else "not a VAT number in VIES"
     elif not reg_name:
         out["vat_verdict"] = "valid (the register returns no name for this country)"
     else:
         sc = name_score(name, reg_name)
-        out["vat_verdict"] = "verified" if sc >= 1.0 else "likely" if sc >= 0.6 else "conflict"
+        out["vat_verdict"] = "verified" if sc >= 1.0 else "likely" if sc >= 0.34 else "conflict"
         if out["vat_verdict"] == "conflict":
             out["why"] = f"the VAT number is registered to {reg_name[:80]}"
     return out
@@ -230,7 +242,7 @@ def check_one(s, r, check):
     if vp:
         time.sleep(1.0)
         j = _get_json(s, VIES.format(cc=vp[0], num=vp[1]))
-        out.update({"vat": f"{vp[0]}{vp[1]}", "vat_from": "company website" if ids["vat"] else "record", **judge_vies(name, j),
+        out.update({"vat": f"{vp[0]}{vp[1]}", "vat_from": "company website" if ids["vat"] else "record", **judge_vies(name, j, printed_as_vat=bool(ids["vat"])),
                     "vat_evidence": "https://ec.europa.eu/taxation_customs/vies/"})
     # overall identity verdict: a register record or a valid VAT number in the company's name
     v = out.get("verdict"), out.get("vat_verdict", "")
