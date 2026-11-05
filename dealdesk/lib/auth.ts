@@ -8,7 +8,12 @@ export type Role = "viewer" | "analyst" | "admin";
 export const ROLES: Role[] = ["viewer", "analyst", "admin"];
 const RANK: Record<Role, number> = { viewer: 0, analyst: 1, admin: 2 };
 
-export type Session = { email: string; role: Role; name: string };
+// ws: the organisation (workspace) the user belongs to. Private data (deals, the owner's network, client material)
+// is scoped by it on the server; it is signed into the session and re-checked against the Users tab (lib/gate.ts),
+// never taken from the client. Legacy tokens and the bootstrap team login belong to the original workspace.
+export const DEFAULT_WS = "sinder";
+export type Session = { email: string; role: Role; name: string; ws: string };
+export const asWs = (v: unknown) => (/^[a-z0-9][a-z0-9-]{1,39}$/.test(String(v || "")) ? String(v) : DEFAULT_WS);
 
 export function asRole(v: unknown): Role {
   return ROLES.includes(v as Role) ? (v as Role) : "viewer";
@@ -16,9 +21,9 @@ export function asRole(v: unknown): Role {
 
 // Session token: base64url("email|exp|role|name") + "." + HMAC. The middleware checks the signature and expiry (field 2);
 // the role and name are read here on the server only.
-export function signSession(email: string, role: Role = "viewer", name = "", days = 30): string {
+export function signSession(email: string, role: Role = "viewer", name = "", days = 30, ws = DEFAULT_WS): string {
   const exp = Date.now() + days * 864e5;
-  const body = `${email}|${exp}|${role}|${name.replace(/[|\r\n]/g, " ").slice(0, 80)}`;
+  const body = `${email}|${exp}|${role}|${name.replace(/[|\r\n]/g, " ").slice(0, 80)}|${asWs(ws)}`;
   const sig = createHmac("sha256", SECRET()).update(body).digest("base64url");
   return Buffer.from(body).toString("base64url") + "." + sig;
 }
@@ -34,10 +39,10 @@ export function verifySession(token: string | undefined): Session | null {
   } catch {
     return null;
   }
-  const [email, exp, role, name] = body.split("|");
+  const [email, exp, role, name, ws] = body.split("|");
   if (!email || Number(exp) < Date.now()) return null;
   // Tokens issued before roles existed carry no role: treated as admin, since only the shared team login existed then.
-  return { email, role: role ? asRole(role) : "admin", name: name || "" };
+  return { email, role: role ? asRole(role) : "admin", name: name || "", ws: asWs(ws) };
 }
 
 export function hasRole(s: Session | null, min: Role): boolean {

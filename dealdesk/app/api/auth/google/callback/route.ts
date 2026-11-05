@@ -40,7 +40,7 @@ export async function GET(req: NextRequest) {
     touchLogin(u.email);
     await logActivity({ email: u.email, name: u.name, role: u.role }, "sign_in", "", "google");
     const res = NextResponse.redirect(`${origin}/`);
-    res.cookies.set("dd_session", signSession(u.email, u.role, u.name || String(p.name || "")), COOKIE);
+    res.cookies.set("dd_session", signSession(u.email, u.role, u.name || String(p.name || ""), 30, u.workspace), COOKIE);
     res.cookies.set("dd_oauth", "", { maxAge: 0, path: "/api/auth/google" });
     return res;
   } catch (e) {

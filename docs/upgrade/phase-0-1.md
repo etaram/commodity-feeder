@@ -84,3 +84,16 @@ What the review taught (now rules): processed forms (flour for wheat, degermed c
 
 - `leads/source_quality.py`: per source freshness, parse completeness, duplicates, mirrored notices, expired notices still listed, share useful to Sinder; shown on the status page next to delivery. First run: 71 of 132 notice sources flagged; about 6,000 expired notices were listed as open (now left out of the open list at each merge).
 - Supplier page: an engagement-readiness checklist (legal identity, official site, reachable channel, product fit, export evidence, role), separate from the match.
+
+## Phase 3 started: workspaces (5 November 2026)
+
+- `lib/auth.ts`: the signed session carries a workspace id (`ws`); legacy tokens and the bootstrap login belong to the original workspace (`sinder`). Ids are validated (`asWs`).
+- `lib/gate.ts`: every gated request re-reads role, status and workspace from the Users tab (cached 30 s), so a disabled account or a lowered role takes effect at once, not after the 30-day token expires.
+- `lib/scope.ts`: deny-by-default list of public collections; the original workspace's private tabs (BD, key accounts, intel, pursuits, jobs, contacts, projects, tasks, approvals, attention) are not served to, or writable by, another workspace (`/api/panel/get`, `/api/panel/append`).
+- Deals (`lib/deal.ts`): rows carry the workspace in column K; reads filter by it (legacy rows stay with the original); a guessed deal id from another workspace returns nothing.
+- The private network (`/api/panel/know`) is served only to the original workspace.
+- Users admin: an admin sees and changes only its own workspace's accounts; only the original workspace can move an account.
+- Sheets: `Users!M` and `Deal Records!K` columns added (header `workspace`).
+- Tests: `dealdesk/tests/scope.test.ts` (9 isolation checks, all pass).
+
+Not yet: per-workspace strategy (partners, margins and the dealfit preferences are still the original workspace's and are computed once for the shared tender list), client dossiers, saved views. Rollback: revert the commit; blank workspace columns read as the original workspace, so no data migration is needed either way.

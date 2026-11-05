@@ -3,6 +3,7 @@ import { gate } from "@/lib/gate";
 import { hasRole } from "@/lib/auth";
 import { appendRow, sheetsEnabled } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
+import { canWriteOwnerTabs } from "@/lib/scope";
 
 // The panel's writes: new research jobs and tracked pursuits. Only these two tabs can be written from the web.
 // Analysts and admins may write; approving a project action or closing a project is for admins only.
@@ -12,6 +13,7 @@ const ADMIN_JOBS = new Set(["approval", "project_close"]);
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("analyst");
   if (!s) return res;
+  if (!canWriteOwnerTabs(s.ws)) return NextResponse.json({ ok: false, code: "forbidden", error: "These records belong to another workspace" }, { status: 403 });
   const { range, values } = await req.json().catch(() => ({}));
   const tab = TABS[String(range)];
   if (!tab || !Array.isArray(values) || !Array.isArray(values[0])) return NextResponse.json({ ok: false, error: "not allowed" }, { status: 400 });

@@ -29,14 +29,14 @@ Rules: only requirements actually written in the document; mandatory = the docum
     const j = m ? JSON.parse(m[0]) : {};
     const items: Req[] = Array.isArray(j.requirements) ? j.requirements : [];
     if (!items.length) return NextResponse.json({ ok: true, added: 0, note: String(j.note || "no requirements found").slice(0, 300) });
-    const cur = await readDeal(dealId);
+    const cur = await readDeal(dealId, s.ws);
     const have = new Set(cur.records.filter((r) => r.kind === "requirement").map((r) => String(r.data.item || "").toLowerCase().slice(0, 80)));
     let added = 0;
     const doc = String(j.document || "").slice(0, 160) || url.split("/").pop() || "document";
     for (const it of items.slice(0, 40)) {
       const c = clean("requirement", { item: `${it.category ? "[" + it.category + "] " : ""}${it.item}`, source_doc: doc, page: it.page || "", mandatory: it.mandatory !== false, status: "unknown", evidence: "" });
       if (!c.ok || have.has(String(c.data.item).toLowerCase().slice(0, 80))) continue;
-      await saveRecord(dealId, "requirement", `R${Date.now().toString(36).toUpperCase()}${added}`, 1, "unknown", c.data, s.email, `from ${url.slice(0, 120)}`);
+      await saveRecord(dealId, "requirement", `R${Date.now().toString(36).toUpperCase()}${added}`, 1, "unknown", c.data, s.email, `from ${url.slice(0, 120)}`, s.ws);
       added++;
     }
     await logActivity(s, "deal_docs_done", dealId, `${added} requirements from ${doc}`);

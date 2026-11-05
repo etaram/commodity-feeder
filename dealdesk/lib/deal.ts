@@ -1,3 +1,4 @@
+import { asWs, DEFAULT_WS } from "@/lib/auth";
 import { intlPhone } from "@/lib/phone";
 import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 
@@ -78,8 +79,13 @@ export function clean(kind: Kind, d: Record<string, unknown>): { ok: true; data:
   return { ok: false, error: "unknown record kind" };
 }
 
-export async function readDeal(dealId: string): Promise<{ records: DealRecord[]; versions: number }> {
-  const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:J5000`]).catch(() => null))?.[0] || [];
+// Deal rows carry the workspace in column K; a row without one belongs to the original workspace (legacy data).
+// Every read filters by the caller's workspace, so a guessed deal id from another organisation returns nothing.
+export const rowWs = (r: string[]) => asWs(r[10]);
+export const inWs = (r: string[] | undefined, ws: string) => !!r && rowWs(r) === asWs(ws);
+
+export async function readDeal(dealId: string, ws = DEFAULT_WS): Promise<{ records: DealRecord[]; versions: number }> {
+  const rows = ((await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:K5000`]).catch(() => null))?.[0] || []).filter((r) => inWs(r, ws));
   const latest = new Map<string, DealRecord>();
   let versions = 0;
   for (const r of rows) {
@@ -95,14 +101,14 @@ export async function readDeal(dealId: string): Promise<{ records: DealRecord[];
   return { records: [...latest.values()].filter((r) => r.status !== "deleted"), versions };
 }
 
-export async function saveRecord(dealId: string, kind: Kind, recordId: string, version: number, status: string, data: Record<string, unknown>, by: string, note = "") {
+export async function saveRecord(dealId: string, kind: Kind, recordId: string, version: number, status: string, data: Record<string, unknown>, by: string, note = "", ws = DEFAULT_WS) {
   const time = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jerusalem" }).slice(0, 19);
-  await appendRow(TAB, [time, dealId.slice(0, 120), kind, recordId.slice(0, 60), version, status, JSON.stringify(data).slice(0, 45000), by.slice(0, 120), "panel", note.slice(0, 200)]);
+  await appendRow(TAB, [time, dealId.slice(0, 120), kind, recordId.slice(0, 60), version, status, JSON.stringify(data).slice(0, 45000), by.slice(0, 120), "panel", note.slice(0, 200), asWs(ws)]);
 }
 
 // The process board: every deal with a stage record, its latest stage and next step, and how many parties it has.
-export async function pipeline(): Promise<{ deal_id: string; stage: Record<string, unknown>; parties: Record<string, number>; updated: string; by: string }[]> {
-  const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:J5000`]).catch(() => null))?.[0] || [];
+export async function pipeline(ws = DEFAULT_WS): Promise<{ deal_id: string; stage: Record<string, unknown>; parties: Record<string, number>; updated: string; by: string }[]> {
+  const rows = ((await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:K5000`]).catch(() => null))?.[0] || []).filter((r) => inWs(r, ws));
   const stage = new Map<string, { v: number; data: Record<string, unknown>; time: string; by: string }>();
   const party = new Map<string, Map<string, { v: number; role: string; status: string }>>();
   for (const r of rows) {

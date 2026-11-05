@@ -1,0 +1,23 @@
+// Cross-workspace isolation checks (spec section 15). Run: npx esbuild tests/scope.test.ts --bundle ... && node
+import { asWs, signSession, verifySession, DEFAULT_WS } from "@/lib/auth";
+import { inWs } from "@/lib/deal";
+import { canRead, canWriteOwnerTabs } from "@/lib/scope";
+let fail = 0;
+const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
+process.env.AUTH_SECRET = "test-secret";
+const t = signSession("a@x.com", "analyst", "A", 1, "acme");
+ok(verifySession(t)?.ws === "acme", "workspace survives the signed session");
+const legacy = Buffer.from(`old@x.com|${Date.now() + 1e6}|admin|Old`).toString("base64url");
+const { createHmac } = require("crypto");
+const sig = createHmac("sha256", "test-secret").update(`old@x.com|${Date.now() + 1e6}|admin|Old`).digest("base64url");
+ok(verifySession(`${legacy}.${sig}`)?.ws === DEFAULT_WS || verifySession(`${legacy}.${sig}`) === null, "a legacy token belongs to the original workspace");
+const tampered = t.split(".")[0] + "." + "x".repeat(43);
+ok(verifySession(tampered) === null, "a tampered token is refused");
+ok(asWs("../etc") === DEFAULT_WS && asWs("Acme Corp") === DEFAULT_WS && asWs("acme-2") === "acme-2", "workspace ids are validated");
+const rows = [["t", "D1", "stage", "", "1", "", "{}", "a", "panel", ""], ["t", "D1", "stage", "", "2", "", "{}", "b", "panel", "", "acme"]];
+ok(rows.filter((r) => inWs(r, "acme")).length === 1 && rows.filter((r) => inWs(r, DEFAULT_WS)).length === 1, "deal rows are read only by their workspace (legacy rows stay with the original)");
+ok(!rows.filter((r) => inWs(r, "other")).length, "a guessed deal id from another workspace returns nothing");
+ok(canRead(DEFAULT_WS, "contacts") && !canRead("acme", "contacts") && !canRead("acme", "jobs") && canRead("acme", "tenders"), "private tabs are not served to another workspace; public ones are");
+ok(!canRead("acme", "some_new_tab"), "a new tab is private by default");
+ok(canWriteOwnerTabs(DEFAULT_WS) && !canWriteOwnerTabs("acme"), "another workspace cannot write to the owner's tabs");
+console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);

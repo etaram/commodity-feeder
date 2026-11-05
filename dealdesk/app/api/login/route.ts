@@ -21,12 +21,12 @@ export async function POST(req: NextRequest) {
   }
   if (u.status !== "active") { await logActivity({ email: u.email, name: u.name, role: u.role }, "sign_in_blocked", "", u.status); return NextResponse.json({ ok: false, code: u.status }, { status: 403 }); }
   touchLogin(u.email);
-  return done(u.email, u.role, u.name);
+  return done(u.email, u.role, u.name, u.workspace);
 }
 
-async function done(email: string, role: "viewer" | "analyst" | "admin", name: string) {
+async function done(email: string, role: "viewer" | "analyst" | "admin", name: string, ws = "") {
   await logActivity({ email, role, name }, "sign_in", "", "password");
   const res = NextResponse.json({ ok: true, role });
-  res.cookies.set("dd_session", signSession(email, role, name), COOKIE);
+  res.cookies.set("dd_session", signSession(email, role, name, 30, ws || undefined), COOKIE);
   return res;
 }

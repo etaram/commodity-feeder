@@ -8,11 +8,12 @@ import { asRole, type Role } from "./auth";
 export type User = {
   row: number; email: string; name: string; role: Role; status: "pending" | "active" | "disabled";
   pass_hash: string; via: string; created: string; approved_by: string; approved_at: string; last_login: string; notes: string; updated: string;
+  workspace: string; // M: the organisation; blank = the original workspace
 };
 export type PublicUser = Omit<User, "pass_hash" | "row">;
 
 const TAB = "Users";
-const COLS = ["email", "name", "role", "status", "pass_hash", "via", "created", "approved_by", "approved_at", "last_login", "notes", "updated"] as const;
+const COLS = ["email", "name", "role", "status", "pass_hash", "via", "created", "approved_by", "approved_at", "last_login", "notes", "updated", "workspace"] as const;
 
 export const now = () => new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jerusalem" }).slice(0, 16);
 export const normEmail = (e: string) => String(e || "").trim().toLowerCase();
@@ -22,7 +23,7 @@ let cache: { at: number; users: User[] } | null = null;
 
 export async function listUsers(fresh = false): Promise<User[]> {
   if (!fresh && cache && Date.now() - cache.at < 30_000) return cache.users;
-  const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:L500`]))?.[0] || [];
+  const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:M500`]))?.[0] || [];
   const users: User[] = [];
   rows.forEach((r, i) => {
     const email = normEmail(r[0]);
@@ -69,11 +70,11 @@ export async function createUser(email: string, name: string, via: "password" | 
   return (await findUser(email, true))!;
 }
 
-export async function updateUser(email: string, patch: Partial<Pick<User, "name" | "role" | "status" | "pass_hash" | "approved_by" | "approved_at" | "last_login" | "notes">>): Promise<User | null> {
+export async function updateUser(email: string, patch: Partial<Pick<User, "name" | "role" | "status" | "pass_hash" | "approved_by" | "approved_at" | "last_login" | "notes" | "workspace">>): Promise<User | null> {
   const u = await findUser(email, true);
   if (!u) return null;
   const next = { ...u, ...patch, updated: now() };
-  await writeRange(`'${TAB}'!A${u.row}:L${u.row}`, [COLS.map((c) => String(next[c] ?? ""))]);
+  await writeRange(`'${TAB}'!A${u.row}:M${u.row}`, [COLS.map((c) => String(next[c] ?? ""))]);
   cache = null;
   return next;
 }
