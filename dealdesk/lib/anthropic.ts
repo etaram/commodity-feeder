@@ -4,18 +4,22 @@ export const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
 
 type Block = { type: string; text?: string; citations?: { url?: string; title?: string }[] };
 
-export async function claude(body: Record<string, unknown>): Promise<{ text: string; sources: { url: string; title: string }[] }> {
+// Request headers shared by every Anthropic call in the app. A key that is not scoped to a workspace must name the
+// workspace in a header (ANTHROPIC_WORKSPACE_ID), otherwise the API refuses the request.
+export function anthropicHeaders(): Record<string, string> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("AI is not configured (ANTHROPIC_API_KEY)");
+  return { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json",
+    ...(process.env.ANTHROPIC_WORKSPACE_ID ? { "anthropic-workspace-id": process.env.ANTHROPIC_WORKSPACE_ID } : {}) };
+}
+
+export async function claude(body: Record<string, unknown>): Promise<{ text: string; sources: { url: string; title: string }[] }> {
   let messages = body.messages as unknown[];
   const out: Block[] = [];
   for (let turn = 0; turn < 3; turn++) {
     const r = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
-      headers: {
-        "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json",
-        ...(process.env.ANTHROPIC_WORKSPACE_ID ? { "anthropic-workspace-id": process.env.ANTHROPIC_WORKSPACE_ID } : {}),
-      },
+      headers: anthropicHeaders(),
       body: JSON.stringify({ model: MODEL, ...body, messages }),
     });
     const j = await r.json().catch(() => ({}));

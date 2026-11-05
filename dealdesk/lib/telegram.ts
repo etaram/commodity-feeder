@@ -1,3 +1,4 @@
+import { anthropicHeaders } from "@/lib/anthropic";
 import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 import { listUsers } from "./users";
 import { searchTenders, supplierSearch, getRange } from "./panel";
@@ -134,8 +135,7 @@ export async function handle(chatId: string, text: string, _from: string) {
     const msgs: Msg[] = [{ role: "user", content: t.slice(0, 500) }];
     let answer = "";
     for (let turn = 0; turn < 3; turn++) {
-      const key = process.env.ANTHROPIC_API_KEY; if (!key) throw new Error("AI is not configured");
-      const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(),
         body: JSON.stringify({ model: process.env.ANTHROPIC_MODEL || "claude-haiku-5-5", max_tokens: 1200, system: sys, tools, messages: msgs }) });
       const j = await r.json();
       if (!r.ok) throw new Error(String(j?.error?.message || r.status).slice(0, 200));
