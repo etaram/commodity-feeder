@@ -12,3 +12,20 @@ export function canRead(ws: string, key: string): boolean {
   return ownWorkspace(ws) || PUBLIC_KEYS.has(key);
 }
 export const canWriteOwnerTabs = (ws: string) => ownWorkspace(ws);
+
+// The shared tender ranking is computed once with the original workspace's strategy (its partner countries add
+// points). Another organisation must not inherit that: the partner credit is taken out of the score and the reason
+// line for it, and the row says which strategy ranked it. Evidence and penalties are untouched.
+const PARTNER_POINTS = 5; // leads/dealfit.py W["partner"]
+export function scrubTendersForWs(grid: string[][], ws: string): string[][] {
+  if (ownWorkspace(ws) || !grid.length) return grid;
+  const h = grid[0], iw = h.indexOf("fit_why"), isc = h.indexOf("score"), ifit = h.indexOf("fit");
+  return [h, ...grid.slice(1).map((r) => {
+    const why = iw >= 0 ? String(r[iw] || "") : "";
+    if (!/local partner/.test(why)) return r;
+    const x = [...r];
+    x[iw] = why.replace(/;?\s*local partner/g, "").trim();
+    for (const k of [isc, ifit]) if (k >= 0 && x[k] !== "" && Number.isFinite(Number(x[k]))) x[k] = String(Math.max(0, Number(x[k]) - PARTNER_POINTS));
+    return x;
+  })];
+}

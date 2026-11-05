@@ -1,7 +1,7 @@
 // Cross-workspace isolation checks (spec section 15). Run: npx esbuild tests/scope.test.ts --bundle ... && node
 import { asWs, signSession, verifySession, DEFAULT_WS } from "@/lib/auth";
 import { inWs } from "@/lib/deal";
-import { canRead, canWriteOwnerTabs } from "@/lib/scope";
+import { canRead, canWriteOwnerTabs, scrubTendersForWs } from "@/lib/scope";
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
 process.env.AUTH_SECRET = "test-secret";
@@ -20,4 +20,8 @@ ok(!rows.filter((r) => inWs(r, "other")).length, "a guessed deal id from another
 ok(canRead(DEFAULT_WS, "contacts") && !canRead("acme", "contacts") && !canRead("acme", "jobs") && canRead("acme", "tenders"), "private tabs are not served to another workspace; public ones are");
 ok(!canRead("acme", "some_new_tab"), "a new tab is private by default");
 ok(canWriteOwnerTabs(DEFAULT_WS) && !canWriteOwnerTabs("acme"), "another workspace cannot write to the owner's tabs");
+const g = [["id", "score", "fit_why"], ["T1", "70", "EV $1; emerging market; local partner"], ["T2", "60", "EV $2"]];
+const sc = scrubTendersForWs(g, "acme");
+ok(sc[1][1] === "65" && !/partner/.test(sc[1][2]) && sc[2][1] === "60", "another workspace does not inherit the owner's partner credit");
+ok(scrubTendersForWs(g, DEFAULT_WS)[1][1] === "70", "the owner keeps its own strategy");
 console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
