@@ -70,7 +70,17 @@ export async function financeFor(q: FinQuery) {
     out.push({ f, sc, why, flags });
   }
   out.sort((a, b) => (a.flags.includes("rules exclude Israeli firms") ? 1 : 0) - (b.flags.includes("rules exclude Israeli firms") ? 1 : 0) || b.sc - a.sc);
-  return out.slice(0, 12).map((x) => ({ ...pick(x.f), why: x.why, flags: x.flags }));
+  // eligibility is never assumed from a regional tag (spec phase 5): each suggestion says how strong its basis is
+  // and what must be confirmed before it can carry a deal
+  const conditions = (f: Fin) => [
+    "applicant or borrower type (exporter, buyer, bank)", "amount within the ticket range", "tenor and repayment",
+    ...(f.content_rule && !/^(none stated|not stated)$/i.test(f.content_rule) ? [`content rule: ${f.content_rule}`] : []),
+    ...(q.defence ? ["defence goods accepted"] : []), "eligible goods and destination (sanctions, country cover)"];
+  return out.slice(0, 12).map((x) => {
+    const basis = x.f.category === "ECA" && origins.has(x.f.country_hq) ? "conditional" : x.why.includes("sector") ? "plausible" : "directory";
+    const basis_note = basis === "conditional" ? `conditional: it covers exports from ${x.f.country_hq}; eligibility to confirm` : basis === "plausible" ? "plausible: active in this region and sector; eligibility to confirm" : "directory entry: active in the region; no evidence it finances this kind of deal";
+    return { ...pick(x.f), why: x.why, flags: x.flags, basis, basis_note, conditions: conditions(x.f) };
+  });
 }
 
 const KEEP = ["name", "short_name", "category", "country_hq", "owner", "products", "sectors", "regions", "eligibility", "content_rule", "defence_ok",

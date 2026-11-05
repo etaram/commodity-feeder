@@ -1,4 +1,13 @@
 import Papa from "papaparse";
+import NAMES from "@/lib/countrynames.json";
+
+// How strong the basis for a route is (spec phase 5): "active in Europe" is not a route. Per suggestion:
+//   required - the destination's own import programme (stops the shipment if missing)
+//   lane     - the provider names the destination or the origin in its lanes, ports or services
+//   region   - a directory entry that operates in the region only; a quote is the only proof of the lane
+const NM = NAMES as Record<string, string[]>;
+const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const mentions = (text: string, iso: string) => !!iso && (new RegExp(`\\b${iso}\\b`).test(text) || (NM[iso] || []).some((n) => new RegExp(`\\b${esc(n)}\\b`, "i").test(text)));
 
 // Logistics: who moves, clears, inspects and insures the goods of a deal.
 // Source: data/logistics/logistics_providers.csv, every row checked on the organisation's official site or the
@@ -64,8 +73,17 @@ export async function logisticsFor(q: LgQuery) {
   }
   out.sort((a, b) => b.sc - a.sc);
   const take = (g: string, n: number) => out.filter((x) => x.group === g).slice(0, n);
-  const pick = (x: { f: Lg; why: string[]; required: boolean; group: string }) => ({ ...x.f, why: x.why, required: x.required, group: x.group });
-  return [...take("required", 4), ...take("customs", 4), ...take("freight", 6), ...take("inspection", 3), ...take("insurance", 3)].map(pick);
+  const laneText = (f: Lg) => `${f.key_lanes || ""} ${f.ports || ""} ${f.services || ""} ${f.scale_note || ""}`;
+  const pick = (x: { f: Lg; why: string[]; required: boolean; group: string }) => {
+    const t = laneText(x.f), dst = mentions(t, dest), org = [...origins].find((o) => mentions(t, o));
+    const basis = x.required ? "required" : (dst || org) ? "lane" : x.group === "customs" && x.f.country_hq === dest ? "lane" : "region";
+    const basis_note = x.required ? `required by ${dest} import rules` : basis === "lane" ? `names ${[dst ? dest : "", org || ""].filter(Boolean).join(" and ") || dest} in its lanes or services` : "regional directory entry; no evidence for this exact lane";
+    return { ...x.f, why: x.why, required: x.required, group: x.group, basis, basis_note };
+  };
+  const BR: Record<string, number> = { required: 0, lane: 1, region: 2 };
+  // within each group, a provider with evidence for this lane comes before a regional directory entry
+  const grp = (g: string, n: number) => out.filter((x) => x.group === g).map(pick).sort((a, b) => BR[a.basis] - BR[b.basis]).slice(0, n);
+  return [...grp("required", 4), ...grp("customs", 4), ...grp("freight", 6), ...grp("inspection", 3), ...grp("insurance", 3)];
 }
 
 export async function logisticsList() {
