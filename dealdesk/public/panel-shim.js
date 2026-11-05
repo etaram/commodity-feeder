@@ -102,6 +102,7 @@
     preview: (profile) => post("/api/profile", { profile, preview: true }),
     save: (profile, inferSectors) => post("/api/profile", { profile, inferSectors: !!inferSectors }),
     feedback: (kind, id) => post("/api/profile", { [kind]: id }),
+    views: (views) => post("/api/profile", { views }),
   };
   window.DD_MATCH = (mode) => getj("/api/match?" + (mode === "saved" ? "saved=1" : "mode=" + encodeURIComponent(mode || "") + "&limit=150"));
   // Admin only: user accounts (list, approve, change role, disable).

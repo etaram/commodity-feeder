@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
-import { cleanProfile, getProfile, saveProfile } from "@/lib/profiles";
+import { cleanProfile, cleanViews, getProfile, saveProfile } from "@/lib/profiles";
 import { facets, inferSectors, matches } from "@/lib/match";
 import { logActivity } from "@/lib/activity";
 import { NON_LATIN, toEnglish } from "@/lib/qtranslate";
@@ -22,6 +22,13 @@ export async function POST(req: NextRequest) {
   if (!s) return res;
   const b = await req.json().catch(() => ({}));
   const prev = await getProfile(s.email).catch(() => null);
+  if (Array.isArray(b.views)) {
+    if (!prev) return NextResponse.json({ ok: false, error: "no profile yet" }, { status: 400 });
+    prev.views = cleanViews(b.views);
+    await saveProfile(s.email, prev);
+    await logActivity(s, "views_update", prev.views.map((v) => v.name).join(", ").slice(0, 200));
+    return NextResponse.json({ ok: true, profile: prev });
+  }
   if (b.hide || b.save || b.unsave) {
     if (!prev) return NextResponse.json({ ok: false, error: "no profile yet" }, { status: 400 });
     const id = String(b.hide || b.save || b.unsave).slice(0, 120);

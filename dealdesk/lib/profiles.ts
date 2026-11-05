@@ -22,6 +22,7 @@ export type Profile = {
   lang: string;               // UI and digest language (en, he; more as translations are added)
   hidden: string[];           // items marked not relevant (ids), newest last
   saved: string[];            // watchlist (ids)
+  views: { name: string; f: Record<string, string> }[];  // saved tender-list filter sets, per user
   lastDigest?: string;
   sent?: string[];            // ids already sent in a digest, newest last
 };
@@ -35,6 +36,16 @@ const TAB = "Profiles";
 const strs = (v: unknown, max = 60, len = 120) =>
   (Array.isArray(v) ? v : []).map((x) => String(x ?? "").trim().slice(0, len)).filter(Boolean).slice(0, max);
 const num = (v: unknown) => (v === null || v === "" || v === undefined || !isFinite(Number(v)) ? null : Math.max(0, Number(v)));
+
+const VIEW_KEYS = ["tq", "tsector", "tregion", "tcountry", "tsize", "tdec", "tdays", "tintl", "tsort"];
+export function cleanViews(v: unknown): Profile["views"] {
+  return (Array.isArray(v) ? v : []).slice(0, 20).map((x) => {
+    const o = (x && typeof x === "object" ? x : {}) as { name?: unknown; f?: Record<string, unknown> };
+    const f: Record<string, string> = {};
+    for (const k of VIEW_KEYS) if (o.f && o.f[k] !== undefined && o.f[k] !== "") f[k] = String(o.f[k]).slice(0, 80);
+    return { name: String(o.name ?? "").trim().slice(0, 40), f };
+  }).filter((x) => x.name);
+}
 
 export function cleanProfile(p: Partial<Profile> & Record<string, unknown>, prev?: Profile | null): Profile {
   return {
@@ -56,6 +67,7 @@ export function cleanProfile(p: Partial<Profile> & Record<string, unknown>, prev
     lang: (LANGS as readonly string[]).includes(String(p.lang)) ? String(p.lang) : prev?.lang || "en",
     hidden: strs(p.hidden ?? prev?.hidden, 2000, 120),
     saved: strs(p.saved ?? prev?.saved, 500, 120),
+    views: cleanViews(p.views ?? prev?.views),
     lastDigest: String(p.lastDigest ?? prev?.lastDigest ?? ""),
     sent: strs(p.sent ?? prev?.sent, 3000, 120),
   };
