@@ -2650,9 +2650,12 @@ function renderAssertions(s, rows) {
   });
 }
 const supMsg = s => `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${String(s.products || s.main_sector || "").slice(0, 120)}.`;
-function openSupplier(s) {
-  trackOpen("company", s.name || s.supplier, s.name || s.supplier, s.sector || s.primary_group || s.group, s.country, "");
+function openSupplier(s, keep) {
+  if (!keep) trackOpen("company", s.name || s.supplier, s.name || s.supplier, s.sector || s.primary_group || s.group, s.country, "");
   S.sel.c = s;
+  // re-rendering the same supplier (its contact details arriving) keeps what is open below it, such as an e-mail draft
+  const prevOut = keep ? $("#c-out") : null;
+  const kept = prevOut && prevOut.childNodes.length ? Array.from(prevOut.childNodes) : null;
   $("#cdetail").innerHTML = `
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span class="pill acc">${esc(t("quality"))} ${esc(s.quality)}</span>${supTier(s, true)}${s.exports ? `<span class="pill info">${esc(t("exporter"))}</span>` : ""}${s.trader === "yes" ? `<span class="pill warn">${esc(t("trader"))}</span>` : ""}${s.logistics_role ? `<span class="pill acc">${esc(s.logistics_role)}</span>` : ""}${s.epc ? `<span class="pill warn">${esc(s.epc)}</span>` : ""}</div>
     <h2>${flag(s.country)}${txt(s.supplier)}</h2>
@@ -2671,6 +2674,7 @@ function openSupplier(s) {
     <div id="more-ci" data-jobcard="${esc("BI:" + (s.legal_id || s.supplier))}">${cardHtml("BI:" + (s.legal_id || s.supplier))}</div><div id="more-ci-flash"></div>
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
     <div id="c-out"></div>`;
+  if (kept) $("#c-out").append(...kept);
   $("#c-quick").onclick = () => quickCompany(s);
   if (window.DD_CHECK) window.DD_CHECK.get(s.supplier, s.country).then(j => { if (S.sel.c === s) renderCheck(s, j.check, j.registry); }).catch(() => renderCheck(s, null));
   if (window.DD_ASSERT) window.DD_ASSERT.list(s.supplier, s.country).then(j => { if (S.sel.c === s) renderAssertions(s, j.rows || []); }).catch(() => {});
@@ -2679,7 +2683,7 @@ function openSupplier(s) {
     s._ct = 1;
     window.DD_CONTACT(s.supplier, s.country).then(c => {
       if (!c) return; ["email", "phone", "website", "website_source", "address", "legal_id", "email_kind", "email_domain", "linkedin", "whatsapp"].forEach(k => { if (c[k] && !s[k]) s[k] = c[k]; });
-      if (S.sel.c === s) openSupplier(s);
+      if (S.sel.c === s) openSupplier(s, true);
     }).catch(() => {});
   }
   $("#c-deep").onclick = e => moreInfo({ type: "company_research", target_id: s.legal_id || s.supplier, target: `${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "main_sector", "products", "supplied", "commodities", "website", "email", "phone", "address", "legal_id", "sources"]) }, e.currentTarget, "#more-c");
