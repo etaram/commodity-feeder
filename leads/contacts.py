@@ -74,3 +74,24 @@ def clean_phone(v, iso3):
         if p and p not in out:
             out.append(p)
     return "; ".join(out[:2])
+
+
+GENERIC_BOX = re.compile(r"^(info|sales|export|exports|contact|office|admin|mail|enquir\w*|inquir\w*|hello|marketing|support|service|trade|commercial|business|import|purchase|procurement|tender\w*)\b", re.I)
+
+
+def email_kind(emails, website=""):
+    """For the first address: 'generic sales channel' (info@, sales@), 'named contact' (a person's mailbox) or
+    'other'; and whether its domain matches the company's website domain ('aligned', 'different domain', 'free mail').
+    Valid syntax is not deliverability; a different domain is a reason to check, not a verdict."""
+    e = (emails or "").split(";")[0].strip().lower()
+    if "@" not in e:
+        return "", ""
+    box, dom = e.split("@", 1)
+    kind = "generic sales channel" if GENERIC_BOX.match(box) else "named contact" if re.match(r"^[a-z]+[._-][a-z]+$", box) else "other"
+    if re.search(r"(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|qq|163|126|sina)\.", dom):
+        align = "free mail"
+    else:
+        site = re.sub(r"^https?://(www\.)?", "", (website or "").lower()).split("/")[0]
+        root = lambda d: ".".join(d.split(".")[-2:]) if not re.search(r"\.(co|com|org|net|gov|ac)\.[a-z]{2}$", d) else ".".join(d.split(".")[-3:])
+        align = "aligned" if site and root(site) == root(dom) else "different domain" if site else ""
+    return kind, align

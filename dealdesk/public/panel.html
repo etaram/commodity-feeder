@@ -2481,11 +2481,11 @@ function readinessHtml(s) {
   const fit = s.match === "supported" ? (/verified/.test(s.match_evidence || "") ? 2 : 1) : s.match ? 0 : -1;
   const items = [
     [!!s.legal_id, "rd_legal"], [!!s.website, s.website_source && /verified|name/.test(s.website_source) ? "rd_site_v" : "rd_site"],
-    [!!(s.email || s.phone), "rd_contact"], [fit > 0, fit === 2 ? "rd_fit_v" : fit === 1 ? "rd_fit" : "rd_fit_no"],
+    [!!(s.email || s.phone), s.email_kind ? `rd_contact|${s.email_kind}${s.email_domain ? ", " + s.email_domain : ""}` : "rd_contact"], [fit > 0, fit === 2 ? "rd_fit_v" : fit === 1 ? "rd_fit" : "rd_fit_no"],
     [!!s.exports, "rd_export"], [!!s.kind, "rd_role"]];
   const ok = items.filter(x => x[0]).length;
   return `<details class="section rd"><summary><b>${esc(t("rd_h"))}</b> <span class="pill ${ok >= 5 ? "good" : ok >= 3 ? "info" : "warn"}">${ok}/${items.length}</span></summary>
-    <ul class="rd-list">${items.map(([v, k]) => `<li class="${v ? "ok" : "gap"}">${v ? "✓" : "○"} ${esc(t(k))}</li>`).join("")}</ul>
+    <ul class="rd-list">${items.map(([v, k]) => { const [kk, extra] = String(k).split("|"); return `<li class="${v ? "ok" : "gap"}">${v ? "✓" : "○"} ${esc(t(kk))}${extra ? ` <span class="muted">(${esc(extra)})</span>` : ""}</li>`; }).join("")}</ul>
     <p class="note">${esc(t("rd_n"))}</p></details>`;
 }
 function openSupplier(s) {
@@ -2512,7 +2512,7 @@ function openSupplier(s) {
   if (window.DD_CONTACT && !s._ct && !(s.email || s.phone || s.address)) {
     s._ct = 1;
     window.DD_CONTACT(s.supplier, s.country).then(c => {
-      if (!c) return; ["email", "phone", "website", "website_source", "address", "legal_id"].forEach(k => { if (c[k] && !s[k]) s[k] = c[k]; });
+      if (!c) return; ["email", "phone", "website", "website_source", "address", "legal_id", "email_kind", "email_domain"].forEach(k => { if (c[k] && !s[k]) s[k] = c[k]; });
       if (S.sel.c === s) openSupplier(s);
     }).catch(() => {});
   }

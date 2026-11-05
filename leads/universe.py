@@ -7,7 +7,7 @@ import re
 from collections import defaultdict
 
 from .common import AWARDS, LEADS, PRIVATE, log, today
-from .contacts import clean_email, clean_phone
+from .contacts import clean_email, clean_phone, email_kind
 from .regions import iso3, region
 from .sectors import SECTORS, classify, _KW as SECTOR_KW
 from .taxonomy import BY_ID, group_of_text
@@ -658,6 +658,9 @@ def build():
                               "phone" if x["phone"] else "website only" if x["website"] else "address only" if x["address"] else "none"),
             "shipments_12m": x.get("ship12", "") if x.get("ship_total") else "", "hs_codes": x.get("hs", ""),
             "sector_why": x.get("_sector_why", ""), "sector_check": x.get("_sector_check", ""),
+            # what kind of channel the e-mail is and whether its domain is the company's own (contact provenance)
+            "email_kind": email_kind(x["email"], x["website"])[0], "email_domain": email_kind(x["email"], x["website"])[1],
+            "contact_seen": today() if (x["email"] or x["phone"]) else "",  # last seen in a source, not a deliverability check
         })
     for r in out:
         r["quality"] = quality(r)
