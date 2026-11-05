@@ -206,6 +206,20 @@ def dup_groups(rows, keyf, sigs, best):
     return out
 
 
+def tender_dups(tenders):
+    """{id: (canonical id, group size, signal)} for the same notice listed twice (by two sources, or twice by one).
+    Same link with the same title, deadline and value; or the same title, buyer, country, deadline and value."""
+    title = lambda r: norm_name(r.get("title_en") or r.get("title", ""))  # noqa: E731
+    val = lambda r: round(num(r.get("est_value_usd")) or 0)  # noqa: E731
+    return dup_groups(
+        tenders, lambda r: r["id"],
+        lambda r: [("same notice link and title", ((r.get("link") or "").split("#")[0].rstrip("/").lower(), title(r), iso_date(r.get("deadline", "")), val(r))
+                    if url_ok(r.get("link")) and title(r) else ""),
+                   ("same title, buyer and deadline", (title(r), norm_name(r.get("buyer", ""))[:60], r.get("country", ""), iso_date(r.get("deadline", "")), val(r))
+                    if title(r) and r.get("deadline") else "")],
+        lambda r: (r.get("stage") == "tender", bool(r.get("est_value_usd")), bool(r.get("contact")), -int(re.sub(r"\D", "", str(r.get("first_seen", "")))[:8] or 0)))
+
+
 def link_verdict(info):
     """Conflict text for a checked link, or '' (pure). info: {"status": int|str, "checked": date}."""
     st = (info or {}).get("status")
@@ -555,7 +569,12 @@ def read_csv(p):
 def main(sample=0, link_budget=2500, site_budget=200, register_minutes=5, network=True):
     today = date.today()
     DIR.mkdir(parents=True, exist_ok=True); HIST.mkdir(parents=True, exist_ok=True); PUB.mkdir(parents=True, exist_ok=True)
+    # tenders_all.csv lives with the collection runs (not in git); elsewhere the open list in the sheet chunks is read
     tenders = read_csv(LEADS / "tenders_all.csv")
+    if not tenders:
+        import glob
+        for f in sorted(glob.glob(str(LEADS / "sheet" / "tenders_[0-9][0-9].csv"))):
+            tenders += read_csv(type(LEADS)(f))
     buyers = read_csv(LEADS / "buyers.csv")
     accounts = read_csv(LEADS / "accounts.csv")
     projects = read_csv(LEADS / "project_timelines.csv")
@@ -620,12 +639,7 @@ def main(sample=0, link_budget=2500, site_budget=200, register_minutes=5, networ
     for r in pick(tenders):
         bf = (bres.get((norm_name(r.get("buyer", "")), r.get("country", ""))) or {}).get("filled", {})
         tres[r["id"]] = refine_tender(r, today, links, bf)
-    dg = dup_groups(pick(tenders), lambda r: r["id"],
-                    lambda r: [("same notice link and title", ((r.get("link") or "").split("#")[0].rstrip("/").lower(), norm_name(r.get("title_en") or r.get("title", "")), iso_date(r.get("deadline", "")), round(num(r.get("est_value_usd")) or 0))
-                                if url_ok(r.get("link")) and (r.get("title_en") or r.get("title")) else ""),
-                               ("same title, buyer and deadline", (norm_name(r.get("title_en") or r.get("title", "")), norm_name(r.get("buyer", ""))[:60],
-                                                                   r.get("country", ""), iso_date(r.get("deadline", "")), round(num(r.get("est_value_usd")) or 0)) if (r.get("title_en") or r.get("title")) and r.get("deadline") else "")],
-                    lambda r: (r.get("stage") == "tender", bool(r.get("est_value_usd")), bool(r.get("contact")), -int(re.sub(r"\D", "", r.get("first_seen", ""))[:8] or 0)))
+    dg = tender_dups(pick(tenders))
     for k, (canon, size, why) in dg.items():
         if k in tres and k != canon:
             tres[k]["duplicate"] = {"canonical": canon, "size": size, "signal": why}

@@ -505,14 +505,17 @@ def write_sheet_chunks(tenders):
     """The Google Sheet imports tenders in fixed-size chunks (IMPORTDATA has a per-file size limit); every chunk file
     always exists so the sheet formula never breaks. Highest score first."""
     rows, expired = [], 0
-    from .refine_modules import load_overlay
+    import os
+    from .refine_modules import load_overlay, tender_dups
     ov = load_overlay("tenders")
     live = lambda r: not (isinstance(r.get("days_left"), (int, float)) and r["days_left"] < 0 and (r.get("stage") or "tender") != "planned")  # noqa: E731
-    ids = {r.get("id") for r in tenders if live(r)}
+    # the same notice listed twice: computed here on the open notices themselves, so it never depends on an older run
+    dupmap = {} if os.environ.get("REFINE_MODULES", "on") == "off" else tender_dups([r for r in tenders if live(r) and r.get("id")])
     dups = 0
     for r in tenders:
         o = ov.get(r.get("id")) or {}
-        if o.get("dup_of") and o["dup_of"] in ids and o["dup_of"] != r.get("id"):
+        d = dupmap.get(r.get("id"))
+        if d and d[0] != r.get("id"):
             dups += 1
             continue  # the same notice from another source: the canonical one stays in the open list (tenders_all keeps both)
         # a notice whose deadline has passed is not open: it stays in tenders_all.csv (history) but leaves the open
