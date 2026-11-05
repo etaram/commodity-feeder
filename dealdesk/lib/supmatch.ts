@@ -15,7 +15,7 @@ import type { Supplier } from "@/lib/index";
 //
 // The company name locates an entity; it never establishes product capability. HS/CPV codes are retrieval
 // signals, not proof of compatibility. Terms match on whole words ("corn" is not in "Corning").
-export const MATCH_VERSION = "match-1 (2026-11-05)";
+export const MATCH_VERSION = "match-1.1 (2026-11-05)";
 export type Bucket = "supported" | "plausible" | "related" | "incompatible";
 export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[] };
 
