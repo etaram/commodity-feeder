@@ -163,7 +163,7 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
 }
 
 export const BUCKET_RANK: Record<Bucket, number> = { supported: 0, plausible: 1, related: 2, incompatible: 3 };
-const EVIDENCE_RANK: Record<string, number> = { "company's own product description": 0, "own description and contract items": 1, "contract items": 2, "customs headings": 3, partial: 4, "company name only": 5, none: 6 };
+const EVIDENCE_RANK: Record<string, number> = { "verified on an authoritative source": -1, "company's own product description": 0, "own description and contract items": 1, "contract items": 2, "customs headings": 3, partial: 4, "company name only": 5, none: 6 };
 export const evidenceRank = (e: string) => EVIDENCE_RANK[e] ?? 6;
 
 /** one row per legal entity: same normalised name and country */

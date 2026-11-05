@@ -2,7 +2,7 @@ import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
 import { suppliers as supplierIndex, tenders as supplierIndexTenders, isClosed, type Supplier } from "@/lib/index";
-import { readRanges } from "@/lib/sheets";
+import { readRanges, UNIVERSE } from "@/lib/sheets";
 import { isServiceOnly, sectorOf } from "@/lib/supfit";
 import { BUCKET_RANK, MATCH_VERSION, classifyMatch, dedupeKey, evidenceRank, familiesFor, termRe, type MatchResult } from "@/lib/supmatch";
 import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
@@ -324,6 +324,28 @@ async function webSuppliers(): Promise<Supplier[]> {
   }
   return out;
 }
+// Verified capabilities (private Supplier Universe tab): a reviewer checked one company for one product on an
+// authoritative source. Reused across searches and users until it expires (365 days), so the same fact is not
+// researched again; a "no" is scoped to that product only and never blacklists the company.
+type Verified = { key: string; product: RegExp; label: string; url: string; note: string; checked: string };
+async function verifiedCaps(): Promise<Map<string, Verified[]>> {
+  return cached("verified-caps", 900_000, async () => {
+    const g = (await readRanges(UNIVERSE, ["'Verified capabilities'!A1:I20000"]).catch(() => null))?.[0] || [];
+    const m = new Map<string, Verified[]>();
+    if (g.length < 2) return m;
+    const h = g[0].map((x) => String(x).toLowerCase()), ix = (k: string) => h.indexOf(k);
+    const cutoff = new Date(Date.now() - 365 * 86400e3).toISOString().slice(0, 10);
+    for (const r of g.slice(1)) {
+      const sup = String(r[ix("supplier")] || ""), prod = String(r[ix("product")] || "").trim(), lab = String(r[ix("label")] || "").toLowerCase();
+      const checked = String(r[ix("checked")] || "");
+      if (!sup || !prod || !["yes", "no", "related"].includes(lab) || (checked && checked < cutoff)) continue;
+      const key = dedupeKey({ n: sup, c: String(r[ix("country")] || "") } as Supplier);
+      const v = { key, product: termRe(prod), label: lab, url: String(r[ix("evidence_url")] || ""), note: String(r[ix("evidence_note")] || ""), checked };
+      m.set(key, [...(m.get(key) || []), v]);
+    }
+    return m;
+  });
+}
 // word -> HS6 codes whose official name contains it (data/master_rows.csv, about 2,000 traded lines)
 async function hsWordMap(): Promise<(w: string) => Set<string>> {
   const rows = await cached("hs-names", 3_600_000, async () => {
@@ -385,6 +407,7 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   const res = concepts;
   const scored: { s: Supplier; sc: number; m: MatchResult }[] = [];
   const fams = familiesFor(`${query} ${o.text || ""}`), seenKey = new Set<string>();
+  const vcaps = process.env.SUPPLIER_VERIFIED === "off" ? new Map<string, Verified[]>() : await Promise.race([verifiedCaps().catch(() => new Map<string, Verified[]>()), new Promise<Map<string, Verified[]>>((r) => setTimeout(() => r(new Map()), 1500))]);
   const cTerms = concepts.map((c) => c.terms), cHs = concepts.map((c) => c.hs);
   const origins = new Map<string, number>();
   // web-found suppliers join only if their tab answers within 1.5 s; the search never waits on Sheets
@@ -418,9 +441,14 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     else if (o.region && s.rg === o.region) sc += 1;
     sc += (s.q || 0) / 50;
     // stage C: does the evidence support this requirement (supported / plausible / related / incompatible)
-    const m = res.length ? classifyMatch(s, cTerms, cHs, `${query} ${o.text || ""}`, fams) : { bucket: "plausible" as const, why: "sector match only", evidence: "sector", conflicts: [], gaps: ["no product terms in the request"] };
-    if (m.bucket === "incompatible") continue;
     const dk = dedupeKey(s);
+    let m: MatchResult = res.length ? classifyMatch(s, cTerms, cHs, `${query} ${o.text || ""}`, fams) : { bucket: "plausible" as const, why: "sector match only", evidence: "sector", conflicts: [], gaps: ["no product terms in the request"] };
+    // a reviewed fact for this company and this product outranks the text heuristics, in both directions
+    const vf = (vcaps.get(dk) || []).find((v) => v.product.test(`${query} ${o.text || ""}`));
+    if (vf) m = vf.label === "yes"
+      ? { bucket: "supported", why: `Verified ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [], gaps: m.gaps.filter((g) => !/product|terms|customs|contracts/.test(g)) }
+      : { bucket: vf.label === "no" ? "incompatible" : "related", why: `Checked ${vf.checked}: ${vf.note}`.slice(0, 220), evidence: "verified on an authoritative source", conflicts: [vf.note.slice(0, 120)], gaps: [] };
+    if (m.bucket === "incompatible") continue;
     if (seenKey.has(dk)) continue;
     seenKey.add(dk);
     scored.push({ s, sc, m });

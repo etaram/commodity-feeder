@@ -32,6 +32,13 @@ def main(new_path, base_path=None):
                     labels[(r[0], r[hd.index("supplier")])] = r[hd.index("label")]
     except Exception:  # noqa: BLE001  first run: no tab yet
         pass
+    verified = {}
+    try:
+        for r in s.values(UNIVERSE_SHEET, "'Verified capabilities'!A2:D20000"):
+            r = r + [""] * 4
+            verified[(r[2].lower(), r[0].lower())] = r[3]
+    except Exception:  # noqa: BLE001
+        pass
     b_by = defaultdict(dict)
     for r in base:
         b_by[r["query"]][r.get("rank", 0)] = r
@@ -47,10 +54,13 @@ def main(new_path, base_path=None):
         def prec(k):
             rev = [x for x in (labels.get((q, r["supplier"])) for r in top[:k]) if x]
             return f"{sum(1 for x in rev if x == 'yes')}/{len(rev)}" if rev else "not reviewed"
+        def vprec(k):
+            rev = [x for x in (verified.get((q.lower(), r["supplier"].lower())) for r in top[:k]) if x and x != "unknown"]
+            return f"{sum(1 for x in rev if x == 'yes')}/{len(rev)}" if rev else "-"
         bt = next(iter(b_by.get(q, {}).values()), {}).get("total", "")
-        summ.append([q, rows[0].get("total", 0), bt, b["supported"], b["plausible"], b["related"], prec(5), prec(10), rows[0].get("ms", "")])
+        summ.append([q, rows[0].get("total", 0), bt, b["supported"], b["plausible"], b["related"], prec(5), prec(10), vprec(5), rows[0].get("ms", "")])
     out = [["Supplier search benchmark: live search code on the real index, no model calls. Fill 'label' (yes / no / related); precision counts reviewed rows only."],
-           ["query", "results now", "results baseline", "top10 supported", "top10 plausible", "top10 related", "precision@5 (yes/reviewed)", "precision@10", "ms"], *summ, [""],
+           ["query", "results now", "results baseline", "top10 supported", "top10 plausible", "top10 related", "precision@5 human (yes/reviewed)", "precision@10 human", "precision@5 web-verified (yes/checked, model reviewer)", "ms"], *summ, [""],
            ["query", "rank", "supplier", "country", "tier", "kind", "match", "evidence", "conflicts", "gaps", "products", "label", "baseline at this rank", "baseline products"]]
     for r in new:
         if not r.get("rank"):

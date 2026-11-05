@@ -41,7 +41,7 @@ export async function readRanges(sid: string, ranges: string[]): Promise<string[
 
 // One supplier's official contact details from the private Supplier Universe sheet (columns B name, C country,
 // AA email, AB phone, AC website, AD website source, AE address, AF company ID), looked up with a server-side query.
-const UNIVERSE = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";
+export const UNIVERSE = "1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA";
 export async function lookupContact(name: string, country: string): Promise<Record<string, string> | null> {
   const jwt = await client();
   if (!jwt || !name) return null;
