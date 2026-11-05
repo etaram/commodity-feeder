@@ -46,7 +46,7 @@ OUT = CHECKS / "company_checks.jsonl"
 UA = "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0; +https://github.com/etaram/commodity-feeder)"
 VERSION = "check-4"
 RECHECK_DAYS = 90
-MAX_PAGES = 6
+MAX_PAGES = 8
 PAGE_BYTES = 600_000
 
 LEGAL = re.compile(r"\b(s\.?a\.?s?|ltda|ltd|limited|llc|inc|gmbh|ag|kg|srl|s\.?r\.?l|spa|s\.?p\.?a|bv|nv|plc|pty|cc|co|corp|"
@@ -251,6 +251,68 @@ def social_on(raw_pages):
     return li, wa[:3]
 
 
+# schema.org data a site publishes for search engines (JSON-LD): its own structured statement of name, address,
+# phone, registration ids, social profiles and products. More exact than headings, still the company's own claim.
+LDJSON = re.compile(r"<script[^>]+application/ld\+json[^>]*>(.*?)</script>", re.I | re.S)
+ORG_TYPES = re.compile(r"Organization|Corporation|LocalBusiness|Store|Manufacturer|Company|MedicalOrganization|NGO", re.I)
+PROD_TYPES = re.compile(r"^(Product|ProductModel|IndividualProduct|Service|Offer)$", re.I)
+
+
+def _ld_items(page):
+    out = []
+    for m in LDJSON.finditer(page):
+        raw = html.unescape(m.group(1).strip())
+        try:
+            j = json.loads(raw)
+        except ValueError:
+            continue
+        stack = [j]
+        while stack and len(out) < 300:
+            x = stack.pop()
+            if isinstance(x, list):
+                stack.extend(x)
+            elif isinstance(x, dict):
+                out.append(x)
+                for k in ("@graph", "itemListElement", "item", "mainEntity", "hasOfferCatalog", "makesOffer", "offers", "itemOffered", "brand", "manufacturer"):
+                    if k in x:
+                        stack.append(x[k])
+    return out
+
+
+def _s(v):
+    if isinstance(v, list):
+        v = v[0] if v else ""
+    if isinstance(v, dict):
+        v = v.get("name") or v.get("@id") or ""
+    return re.sub(r"\s+", " ", str(v or "")).strip()
+
+
+def structured_on(raw_pages):
+    """The site's own schema.org Organization record and product names (pure)."""
+    org, prods = {}, []
+    for page in raw_pages:
+        for x in _ld_items(page):
+            t = " ".join(x.get("@type")) if isinstance(x.get("@type"), list) else str(x.get("@type") or "")
+            if ORG_TYPES.search(t) and not org.get("name"):
+                a = x.get("address") or {}
+                if isinstance(a, list):
+                    a = a[0] if a else {}
+                addr = ", ".join(_s(a.get(k)) for k in ("streetAddress", "postalCode", "addressLocality", "addressRegion", "addressCountry") if isinstance(a, dict) and _s(a.get(k))) if isinstance(a, dict) else _s(a)
+                same = x.get("sameAs") or []
+                same = [same] if isinstance(same, str) else [u for u in same if isinstance(u, str)]
+                org = {k: v for k, v in {
+                    "name": _s(x.get("name"))[:150], "legal_name": _s(x.get("legalName"))[:150], "address": addr[:250],
+                    "telephone": _s(x.get("telephone"))[:40], "email": _s(x.get("email")).replace("mailto:", "")[:120],
+                    "vat": _s(x.get("vatID"))[:30], "tax_id": _s(x.get("taxID"))[:30], "lei": _s(x.get("leiCode"))[:20], "duns": _s(x.get("duns"))[:15],
+                    "founded": _s(x.get("foundingDate"))[:10], "employees": _s((x.get("numberOfEmployees") or {}).get("value") if isinstance(x.get("numberOfEmployees"), dict) else x.get("numberOfEmployees"))[:12],
+                    "same_as": [u[:200] for u in same[:12]]}.items() if v}
+            elif PROD_TYPES.search(t.strip()):
+                n = _s(x.get("name"))[:120]
+                if n and n not in prods and product_like(n):
+                    prods.append(n)
+    return org, prods[:40]
+
+
 # words every corporate site carries: they say nothing about what the company sells
 NOISE = re.compile(r"\b(investor relations?|information|solutions?|innovation|digital|services?|security|cookies?|privacy|"
                    r"sustainab\w*|careers?|news(room)?|media|licen[cs]e\w*|research|translational)\b", re.I)
@@ -317,6 +379,16 @@ def analyse(name, record_sector, pages):
     phones = list(dict.fromkeys(p.strip() for p in PHONE.findall(alltext)))[:4]
     mails = emails_on(" ".join(p for _, p in pages), domain)
     linkedin, whatsapp = social_on([p for _, p in pages])
+    org, ld_prods = structured_on([p for _, p in pages])
+    if not linkedin:
+        linkedin = next((u for u in org.get("same_as", []) if LINKEDIN.match(u)), "")
+        if linkedin:
+            m = LINKEDIN.match(linkedin); linkedin = f"https://www.linkedin.com/{m.group(1).lower()}/{m.group(2)}"
+    if ld_prods:  # the site's own product records first, then headings
+        prods = ld_prods + [p for p in prods if p not in ld_prods]
+    for kind, v in (("VAT", org.get("vat")), ("LEI", org.get("lei")), ("DUNS", org.get("duns")), ("Tax id", org.get("tax_id"))):
+        if v and v not in (x["value"] for x in ids):
+            ids.append({"kind": kind, "value": v, "basis": "structured data"})
     gaps = []
     if nm == "none":
         gaps.append("the site does not name the company")
@@ -332,7 +404,7 @@ def analyse(name, record_sector, pages):
         "title": title, "description": desc[:500], "products": prods[:30], "domain": domain, "name_match": nm, "name_share": share,
         "sector": SECTORS.get(sec, "") if sec else "", "sector_basis": how, "sector_score": sec_score, "sector_conflict": conflict,
         "record_sector": record_sector or "", "roles": roles, "certificates": certs, "export_wording": exp.group(0) if exp else "",
-        "export_countries": named_countries, "legal_ids": ids[:6], "phones": phones, "emails": mails, "linkedin": linkedin, "whatsapp": whatsapp, "gaps": gaps,
+        "export_countries": named_countries, "legal_ids": ids[:8], "phones": phones, "emails": mails, "linkedin": linkedin, "whatsapp": whatsapp, "structured": org, "products_basis": "structured data and headings" if ld_prods else "headings", "gaps": gaps,
         "verdict": "name mismatch" if nm == "none" else "ok",
     }
 
@@ -478,6 +550,12 @@ def queue(rows, checks, limit, today):
         cands = by_name.get(name, [])
         for r in ([x for x in cands if x["country"] == cty] or cands)[:2]:
             add(r, "opened in the panel")
+    # 2a. refresh: sites read correctly more than RECHECK_DAYS ago (oldest first, at most a quarter of a run), so a
+    # site that went down or changed its phones and mailboxes is caught
+    old = sorted((c.get("checked", ""), k) for k, c in checks.items() if c.get("verdict") == "ok" and str(c.get("checked", "")) < stale)
+    for _, k in old[: limit // 4]:
+        if k in by_key:
+            add(by_key[k], f"refresh: last read {checks[k].get('checked')}")
     # 2b. what the refinement asked for (leads/refine.py check_queue: proven suppliers first, then sites on record)
     rq = CHECKS / "refine" / "check_queue.txt"
     if rq.exists():
@@ -513,7 +591,7 @@ def push_sheet(checks):
         return
     head = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
             "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps",
-            "reason", "version", "content_hash", "linkedin", "whatsapp"]
+            "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"]
     rows = [head]
     for c in sorted(checks.values(), key=lambda c: c.get("checked", ""), reverse=True)[:30000]:
         rows.append([c.get("key", ""), c.get("supplier", ""), c.get("country", ""), c.get("checked", ""), c.get("verdict", ""), c.get("name_match", ""),
@@ -522,7 +600,8 @@ def push_sheet(checks):
                      "; ".join(c.get("certificates", [])), c.get("export_wording", ""), " ".join(c.get("export_countries", [])),
                      "; ".join(f"{x['kind']} {x['value']}" for x in c.get("legal_ids", [])), "; ".join(f"{x['email']} ({x['kind']})" for x in c.get("emails", [])),
                      "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", ""),
-                     c.get("linkedin", ""), " ".join(c.get("whatsapp", []))])
+                     c.get("linkedin", ""), " ".join(c.get("whatsapp", [])), "; ".join(c.get("changes") or [])[:300],
+                     "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400]])
     try:
         Sheets().replace_tab(UNIVERSE_SHEET, "Company checks", rows, raw=True)
         log.info("company checks: %d rows written to the sheet", len(rows) - 1)
@@ -547,12 +626,37 @@ def check_one(item, prev):
         base["discovered"] = True
     pages, why = fetch_site(website)
     if not pages:
-        return {**base, "verdict": why.split(" (")[0], "detail": why, "gaps": [why], "content_hash": ""}
+        out = {**base, "verdict": why.split(" (")[0], "detail": why, "gaps": [why], "content_hash": ""}
+        if prev and prev.get("verdict") == "ok":  # it worked before: keep what it said, and say since when it is down
+            out["last_good"] = {k: prev.get(k) for k in ("checked", "website", "emails", "phones", "linkedin", "whatsapp") if prev.get(k)}
+            out["changes"] = [f"site {why.split(' (')[0]} (it was read on {prev.get('checked')})"]
+        return out
     h = hashlib.sha1("".join(text_of(p)[:20000] for _, p in pages).encode("utf-8", "ignore")).hexdigest()[:16]
     if prev and prev.get("content_hash") == h and prev.get("version") == VERSION:
-        return {**prev, "checked": now[:10], "checked_at": now, "reason": reason, "unchanged": True}
+        return {**prev, "checked": now[:10], "checked_at": now, "reason": reason, "unchanged": True, "changes": []}
     res = analyse(name, rec_sector, pages)
+    res["changes"] = changes(prev, res) if prev and prev.get("verdict") == "ok" else []
     return {**base, **res, "website": pages[0][0], "pages": [u for u, _ in pages], "content_hash": h}
+
+
+def changes(prev, cur):
+    """What changed on a site since its last good read: contact channels and products (pure)."""
+    out = []
+    em = lambda c: {x["email"] for x in c.get("emails") or []}  # noqa: E731
+    for label, a, b in (("e-mails", em(prev), em(cur)), ("phones", set(prev.get("phones") or []), set(cur.get("phones") or [])),
+                        ("WhatsApp", set(prev.get("whatsapp") or []), set(cur.get("whatsapp") or []))):
+        if a - b:
+            out.append(f"{label} removed: {', '.join(sorted(a - b))[:120]}")
+        if b - a and a:
+            out.append(f"{label} added: {', '.join(sorted(b - a))[:120]}")
+    if prev.get("linkedin") and cur.get("linkedin") and prev["linkedin"] != cur["linkedin"]:
+        out.append(f"LinkedIn changed: {cur['linkedin']}")
+    pa, pb = set(prev.get("products") or []), set(cur.get("products") or [])
+    if pa and pb and len(pa & pb) < 0.5 * min(len(pa), len(pb)):
+        out.append("products changed (most product headings are new)")
+    if prev.get("website") and cur.get("domain") and site_domain(prev["website"]) != cur["domain"]:
+        out.append(f"website moved: {site_domain(prev['website'])} -> {cur['domain']}")
+    return out[:6]
 
 
 def main(limit=1500, minutes=45):
@@ -567,7 +671,7 @@ def main(limit=1500, minutes=45):
     deadline = time.time() + minutes * 60
     stats = defaultdict(int)
     # many companies in parallel; inside one company the pages are fetched one after another with a pause
-    with ThreadPoolExecutor(max_workers=48) as ex, open(OUT, "a", encoding="utf-8") as f:
+    with ThreadPoolExecutor(max_workers=96) as ex, open(OUT, "a", encoding="utf-8") as f:
         futs = []
         for item in todo:
             futs.append((item, ex.submit(lambda it: None if time.time() > deadline else check_one(it, checks.get(it[0])), item)))
@@ -594,6 +698,6 @@ if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.INFO)
     a = sys.argv[1:]
-    lim = int(a[a.index("--limit") + 1]) if "--limit" in a else 400
+    lim = int(a[a.index("--limit") + 1]) if "--limit" in a else 4000
     mins = int(a[a.index("--minutes") + 1]) if "--minutes" in a else 40
     print(main(lim, mins))

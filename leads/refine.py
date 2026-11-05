@@ -41,11 +41,12 @@ from datetime import date, datetime, timedelta, timezone
 from .common import DATA, LEADS, PRIVATE, log
 from .contacts import CC, clean_email, clean_phone, email_kind
 
-REFINE_VERSION = "refine-4"
+REFINE_VERSION = "refine-5"
 DIR = DATA / "checks" / "refine"  # kept with the website checks, in their Actions cache
 OUT = DIR / "refined.jsonl.gz"  # about 10x smaller than plain JSON lines; read and written as a stream
 HIST = DIR / "history"
 CHECKS = DATA / "checks" / "company_checks.jsonl"
+REGISTRY = DATA / "checks" / "registry_checks.jsonl"  # leads/registry_check.py (GLEIF, VIES)
 VALID_DAYS = 120  # a refined record is re-derived at least this often even if nothing changed
 
 LEGAL = re.compile(r"\b(s\.?a\.?s?|ltda|ltd|limited|llc|inc|gmbh|ag|kg|srl|s\.?r\.?l|spa|s\.?p\.?a|bv|nv|plc|pty|cc|co|corp|"
@@ -196,10 +197,10 @@ def duplicate_groups(rows):
 
 
 # ---------------------------------------------------------------- stages 1, 3-6 for one record
-def refine_one(r, check, ai, dup, namesakes, today):
+def refine_one(r, check, ai, dup, namesakes, today, reg=None):
     key, name, cty = r["_key"], r["supplier"], r["country"]
     now = today.isoformat()
-    filled, conflicts, gaps, cleaned = {}, [], [], {}
+    filled, conflicts, gaps, cleaned, notes = {}, [], [], {}, []
 
     def fill(field, value, source, basis):
         if value:
@@ -283,6 +284,27 @@ def refine_one(r, check, ai, dup, namesakes, today):
         if ai.get("belongs") == "no":
             conflicts.append("model reading: the site is not this company's")
 
+    # 4b identity from official registers (evidence: the register record and its date)
+    if reg:
+        rd = reg.get("checked", "")
+        if reg.get("verdict") in ("verified", "likely") and reg.get("lei"):
+            fill("lei", reg["lei"], reg.get("evidence", ""), f"GLEIF LEI register, {reg.get('verdict')} (name {reg.get('name_score')}), {rd}")
+            fill("legal_name", reg.get("legal_name", ""), reg.get("evidence", ""), f"GLEIF LEI register, {rd}")
+            fill("registered_address", reg.get("register_address", ""), reg.get("evidence", ""), f"GLEIF LEI register, {rd}")
+            if reg.get("registered_as"):
+                fill("registration_number", reg["registered_as"], reg.get("evidence", ""), f"local register number as held by GLEIF, {rd}")
+        if reg.get("vat_valid"):
+            fill("vat", reg.get("vat", ""), reg.get("vat_evidence", ""), f"EU VIES: valid, {reg.get('vat_verdict')}, {rd}")
+        if reg.get("identity") == "verified":
+            fill("identity", "verified in an official register", reg.get("evidence") or reg.get("vat_evidence", ""),
+                 ("GLEIF LEI record: active, same legal name, same country" if reg.get("verdict") == "verified" else "EU VIES: valid VAT number in the company's name") + f", {rd}")
+        elif reg.get("identity") == "conflict":
+            conflicts.append("official register: " + (reg.get("why") or "the record does not match"))
+        elif reg.get("identity") == "likely":
+            notes.append("official register: a close name match only (not marked verified)")
+    if check and check.get("changes"):
+        notes.extend(f"website: {c}" for c in check["changes"][:3])
+
     # 5 does the evidence belong to the company?
     if ck_ok and check.get("sector_conflict"):
         conflicts.append(f"site says {check.get('sector')}, record says {check.get('record_sector')}")
@@ -294,7 +316,6 @@ def refine_one(r, check, ai, dup, namesakes, today):
     if namesakes.get(norm_name(name), 0) > 1 and (r.get("shipments_12m") or r.get("hs_codes")):
         conflicts.append(f"the same name exists in {namesakes[norm_name(name)]} countries; shipment evidence matched by name may belong to a namesake")
     # soft checks: worth a look, not a contradiction (a group's .com mailbox for its .pl site, a head-office number)
-    notes = []
     best_mail = (filled.get("emails_own_domain") or {}).get("value") or em
     if best_mail and site and "@" in best_mail:
         md = best_mail.split(";")[0].strip().split("@")[1]
@@ -372,7 +393,7 @@ def main(sample=0):
     else:
         rows_s = rows
     today = date.today()
-    checks, ai, prev = load_jsonl(CHECKS), load_ai(), load_jsonl(OUT)
+    checks, ai, prev, regs = load_jsonl(CHECKS), load_ai(), load_jsonl(OUT), load_jsonl(REGISTRY)
     namesakes = Counter()
     seen_nc = set()
     for r in rows:
@@ -385,21 +406,23 @@ def main(sample=0):
     queue = []
     for r in rows_s:
         k = r["_key"]
-        ck, a, dp = checks.get(k), ai.get(k), dups.get(k)
+        ck, a, dp, rg = checks.get(k), ai.get(k), dups.get(k), regs.get(k)
         h = sha(REFINE_VERSION, r.get("website"), r.get("email"), r.get("phone"), r.get("legal_id"), r.get("products"), r.get("supplied"),
-                r.get("main_sector"), r.get("hs_codes"), (ck or {}).get("content_hash"), (ck or {}).get("verdict"), json.dumps(a or {}, sort_keys=True), json.dumps(dp or []))
+                r.get("main_sector"), r.get("hs_codes"), (ck or {}).get("content_hash"), (ck or {}).get("verdict"), json.dumps(a or {}, sort_keys=True), json.dumps(dp or []),
+                (rg or {}).get("checked"), (rg or {}).get("identity"), json.dumps((ck or {}).get("changes") or []))
         p = prev.get(k)
         if p and p.get("input_hash") == h and p.get("refined", "") >= stale:
             reused += 1
             res = p
         else:
-            res = refine_one(r, ck, a, dp, namesakes, today)
+            res = refine_one(r, ck, a, dp, namesakes, today, rg)
             res["input_hash"] = h
             out[k] = res
         stats["processed"] += 1
         stats["completed"] += bool(res["filled"])
         stats["contact_found"] += res["contact_found"]
         stats["website"] += "website" in res["filled"]
+        stats["identity_verified"] += "identity" in res["filled"]
         stats["with_conflicts"] += bool(res["conflicts"])
         stats["with_notes"] += bool(res.get("notes"))
         stats["with_gaps"] += bool(res["gaps"])
@@ -430,7 +453,7 @@ def main(sample=0):
     total = len(rows)
     prog = {"version": REFINE_VERSION, "at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ"), "universe": total, "sample": sample or None,
             "processed": stats["processed"], "reused_unchanged": reused, "completed": stats["completed"], "contact_found": stats["contact_found"],
-            "official_website": stats["website"], "with_conflicts": stats["with_conflicts"], "with_notes": stats["with_notes"], "with_gaps": stats["with_gaps"], "cleaned": stats["cleaned"],
+            "official_website": stats["website"], "identity_verified": stats["identity_verified"], "registry_checked": len(regs), "with_conflicts": stats["with_conflicts"], "with_notes": stats["with_notes"], "with_gaps": stats["with_gaps"], "cleaned": stats["cleaned"],
             "in_duplicate_groups": stats["duplicates"], "duplicate_groups": len({v[0] for v in dups.values()}), "needs_ai": stats["needs_ai"],
             "websites_checked": len(checks), "website_check_queue": len(queue),
             "gaps": {k[5:]: v for k, v in stats.most_common() if k.startswith("gap: ")},

@@ -2549,7 +2549,19 @@ function readinessHtml(s) {
     <p class="note">${esc(t("rd_n"))}</p></details>`;
 }
 /* website check (background job, code only): what the company's own site says, when it was read, and what is missing */
-function renderCheck(s, c) {
+/* identity in an official register (GLEIF LEI, EU VIES): verified only with an active record in the same name and country */
+function registryHtml(g) {
+  const cls = { verified: "good", likely: "info", conflict: "bad" }[g.identity] || "warn";
+  const lab = { verified: mt("verified in an official register", "מאומת במרשם רשמי"), likely: mt("close match only", "התאמה חלקית בלבד"), conflict: mt("register conflict", "סתירה מול המרשם"), "not found": mt("not found in the registers", "לא נמצא במרשמים") }[g.identity] || g.identity;
+  const row = (l, v) => v ? `<div class="sub"><b>${esc(l)}:</b> ${esc(v)}</div>` : "";
+  return `<details class="section" ${g.identity === "conflict" ? "open" : ""}><summary>${esc(mt("Official register", "מרשם רשמי"))} <span class="pill ${cls}">${esc(lab)}</span> <span class="muted">${esc(g.checked)}</span></summary>
+    ${g.lei ? `<div class="sub"><b>LEI:</b> ${link(g.evidence, g.lei)} · ${esc(g.entity_status)} · ${esc(g.lei_status)}</div>` : ""}
+    ${row(mt("Legal name", "שם משפטי"), g.legal_name)}${row(mt("Registered address", "כתובת רשומה"), g.register_address)}${row(mt("Local register number", "מספר במרשם המקומי"), g.registered_as)}
+    ${g.vat ? `<div class="sub"><b>VAT (VIES):</b> <span dir="ltr">${esc(g.vat)}</span> · ${esc(g.vat_verdict)}${g.vat_name ? " · " + esc(g.vat_name) : ""} <span class="muted">(${esc(g.vat_from)})</span></div>` : ""}
+    ${row(mt("Why", "למה"), g.why)}
+    <div class="sub muted">${esc(mt("Read in code from the register itself; verified only when the record is active and in the same name and country.", "נקרא בקוד מהמרשם עצמו; מסומן כמאומת רק כשהרשומה פעילה, באותו שם ובאותה מדינה."))}</div></details>`;
+}
+function renderCheck(s, c, g) {
   const el = $("#c-check"); if (!el) return;
   const canAsk = ["analyst", "admin"].includes(S.me?.role) && window.DD_CHECK;
   const ask = canAsk ? `<button type="button" class="sm" id="ck-ask">${esc(c ? mt("Check again", "בדוק שוב") : mt("Check the website", "בדוק את האתר"))}</button>` : "";
@@ -2565,9 +2577,12 @@ function renderCheck(s, c) {
       ${line(mt("Export", "יצוא"), [c.export, c.export_countries].filter(Boolean).join(" · "))}${line(mt("Registration ids", "מספרי רישום"), c.legal_ids)}
       ${line(mt("E-mails on its own domain", "אימיילים בדומיין שלה"), c.emails)}${line(mt("Phones", "טלפונים"), c.phones)}
       ${c.linkedin || c.whatsapp ? `<div class="sub"><b>${esc(mt("LinkedIn and WhatsApp on its site", "לינקדאין ווואטסאפ מהאתר שלה"))}:</b> ${socialBtns(c.linkedin, c.whatsapp, supMsg(s))}</div>` : ""}
+      ${c.changes ? `<div class="sub q-block"><b>${esc(mt("Changed since the last read", "השתנה מאז הקריאה הקודמת"))}:</b> ${esc(c.changes)}</div>` : ""}
+      ${line(mt("Structured data the site publishes", "נתונים מובנים שהאתר מפרסם"), c.structured)}
       ${c.gaps ? `<div class="sub q-block"><b>${esc(mt("Missing", "חסר"))}:</b> ${esc(c.gaps)}</div>` : ""}
       <div class="sub muted">${esc(mt("Read by code from the company's own pages; a site's claim is the company's statement, not a verification.", "נקרא בקוד מהעמודים של החברה עצמה; מה שכתוב באתר הוא הצהרת החברה, לא אימות."))} ${ask}</div><div id="ck-out" class="sub"></div></details>`;
   }
+  if (g) el.insertAdjacentHTML("beforeend", registryHtml(g));
   const so = $("#c-social"); if (so && c && (c.linkedin || c.whatsapp)) { so.innerHTML = socialBtns(c.linkedin, c.whatsapp, supMsg(s)); }
   const b = $("#ck-ask"); if (b) b.onclick = async () => { b.disabled = true; try { await window.DD_CHECK.request(s.supplier, s.country); $("#ck-out").textContent = mt("Queued: checked in the next background run (every hour).", "בתור: ייבדק בריצת הרקע הבאה (כל שעה)."); track("company_check_request", s.supplier); } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; } };
 }
@@ -2612,7 +2627,7 @@ function openSupplier(s) {
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
     <div id="c-out"></div>`;
   $("#c-quick").onclick = () => quickCompany(s);
-  if (window.DD_CHECK) window.DD_CHECK.get(s.supplier, s.country).then(j => { if (S.sel.c === s) renderCheck(s, j.check); }).catch(() => renderCheck(s, null));
+  if (window.DD_CHECK) window.DD_CHECK.get(s.supplier, s.country).then(j => { if (S.sel.c === s) renderCheck(s, j.check, j.registry); }).catch(() => renderCheck(s, null));
   if (window.DD_ASSERT) window.DD_ASSERT.list(s.supplier, s.country).then(j => { if (S.sel.c === s) renderAssertions(s, j.rows || []); }).catch(() => {});
   $("#c-bi").onclick = e => moreInfo({ type: "company_intel", target_id: "BI:" + (s.legal_id || s.supplier), target: `Business intelligence: ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "region", "main_sector", "industries", "products", "website", "address", "legal_id", "wins", "won_usd_est", "buyers", "buyer_countries", "first_win", "last_win", "sources", "tier_reason"]) }, e.currentTarget, "#more-ci");
   if (window.DD_CONTACT && !s._ct && !(s.email || s.phone || s.address)) {

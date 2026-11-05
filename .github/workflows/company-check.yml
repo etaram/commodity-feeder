@@ -1,5 +1,5 @@
 name: company-check
-# Background company checks and data refinement (leads/company_check.py, leads/refine.py): reads suppliers' own
+# Background company checks, official-register identity checks and data refinement (leads/company_check.py, leads/registry_check.py, leads/refine.py): reads suppliers' own
 # websites and refines every supplier record in code; only the counts (data/leads/refine_progress.json) are public.
 # Every hour (public repository: Actions minutes are free); the private supplier list is restored read-only from the suppliers workflow's cache, and the checks
 # keep their own cache, so this job never overwrites the suppliers workflow's private files.
@@ -10,7 +10,7 @@ on:
     inputs:
       limit:
         description: "companies to check this run"
-        default: "1500"
+        default: "4000"
       sample:
         description: "refine only a sample of N records (0 = all)"
         default: "0"
@@ -41,9 +41,12 @@ jobs:
           path: data/checks
           key: checks-${{ github.run_id }}
           restore-keys: checks-
-      - run: pip install requests google-auth
+      - run: pip install requests google-auth pycountry
       - name: Check companies
-        run: python -m leads.company_check --limit ${{ inputs.limit || '1500' }} --minutes 45 2>&1 | tail -20
+        run: python -m leads.company_check --limit ${{ inputs.limit || '4000' }} --minutes 30 2>&1 | tail -20
+        continue-on-error: true
+      - name: Official registers (GLEIF LEI, EU VIES)
+        run: python -m leads.registry_check --minutes 15 2>&1 | tail -5
         continue-on-error: true
       - name: Refine every supplier record (unchanged records are reused)
         run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5

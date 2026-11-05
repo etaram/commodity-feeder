@@ -63,7 +63,21 @@ def test_soft_notes_not_conflicts():
     assert any("not a POL number" in n for n in r["notes"])
 
 
+
+def test_register_identity_needs_a_record():
+    reg = {"checked": "2026-11-05", "identity": "verified", "verdict": "verified", "lei": "529900ABCDEFGHIJKL12", "legal_name": "ACME VALVES LTD",
+           "register_address": "1 Main St, Haifa, IL", "name_score": 1.0, "evidence": "https://search.gleif.org/#/record/529900ABCDEFGHIJKL12"}
+    r = refine_one(rec(), None, None, None, {}, T, reg)
+    assert r["filled"]["identity"]["source"].startswith("https://search.gleif.org") and r["filled"]["lei"]["value"] == "529900ABCDEFGHIJKL12"
+    r2 = refine_one(rec(), None, None, None, {}, T, {**reg, "identity": "likely", "verdict": "likely"})
+    assert "identity" not in r2["filled"] and any("close name match" in n for n in r2["notes"])  # close is never marked verified
+    r3 = refine_one(rec(), None, None, None, {}, T, {"checked": "2026-11-05", "identity": "conflict", "verdict": "not found", "vat_verdict": "conflict", "why": "the VAT number is registered to Other SRL"})
+    assert "identity" not in r3["filled"] and any("Other SRL" in c for c in r3["conflicts"])
+    r4 = refine_one(rec(), None, None, None, {}, T, None)
+    assert "identity" not in r4["filled"]
+
+
 if __name__ == "__main__":
-    for f in [test_websites, test_check_completes_with_provenance, test_evidence_mismatch_and_identity, test_duplicates_never_delete, test_soft_notes_not_conflicts]:
+    for f in [test_websites, test_check_completes_with_provenance, test_evidence_mismatch_and_identity, test_duplicates_never_delete, test_soft_notes_not_conflicts, test_register_identity_needs_a_record]:
         f()
     print("refine: all checks passed")

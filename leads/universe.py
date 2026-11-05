@@ -208,6 +208,7 @@ def apply_refined(out):
     import os
     for r in out:
         r.setdefault("website_basis", ""); r.setdefault("website_rejected", ""); r.setdefault("dup_of", ""); r.setdefault("refine", "")
+        r.setdefault("identity", ""); r.setdefault("lei", ""); r.setdefault("legal_name", "")
     if os.environ.get("REFINE", "on") == "off":
         return 0
     p = DATA / "checks" / "refine" / "refined.jsonl.gz"
@@ -243,6 +244,14 @@ def apply_refined(out):
             r["type"] = "goods supplier"
         elif role.startswith("trader") and r.get("trader") != "yes":
             r["trader"] = "yes"
+        if f.get("identity"):  # only with a register record behind it (leads/registry_check.py)
+            r["identity"] = f"{f['identity']['value']}: {f['identity']['basis']}"[:200]
+        if f.get("lei"):
+            r["lei"] = f["lei"]["value"]
+        if f.get("legal_name"):
+            r["legal_name"] = f["legal_name"]["value"][:150]
+        if not r.get("address") and f.get("registered_address"):
+            r["address"] = f["registered_address"]["value"]
         dup = d.get("duplicate") or {}
         if dup and dup.get("canonical") and dup["canonical"] != d["key"]:
             r["dup_of"] = dup["canonical"]
