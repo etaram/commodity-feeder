@@ -15,7 +15,7 @@ import type { Supplier } from "@/lib/index";
 //
 // The company name locates an entity; it never establishes product capability. HS/CPV codes are retrieval
 // signals, not proof of compatibility. Terms match on whole words ("corn" is not in "Corning").
-export const MATCH_VERSION = "match-1.1 (2026-11-05)";
+export const MATCH_VERSION = "match-1.2 (2026-11-05)";
 export type Bucket = "supported" | "plausible" | "related" | "incompatible";
 export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[] };
 
@@ -45,13 +45,20 @@ const FAMILIES: Family[] = [
       { rx: /\b(urea[- ]formaldehyde|resins?|adhesives?|glue)\b/i, label: "urea resin or adhesive", bucket: "related" },
       { rx: /\b(adblue|def\b|diesel exhaust fluid)\b/i, label: "automotive urea solution", bucket: "related" },
     ] },
-  { id: "maize", when: /\b(maize|corn)\b/i,
-    exact: /\b(maize|corn)\b/i, strip: /\b(maize|corn)[\s-]+(flour|meal|starch|syrup|gluten|bran|oil|flakes|grits|snacks?|chips|feed|silage)\b|\b(sweet ?corn|popcorn|corn ?flakes)\b/gi,
+  { id: "grain", when: /\b(maize|corn|wheat|rice|barley|sorghum|millet)\b/i,
+    exact: /\b(maize|corn|wheat|rice|barley|sorghum|millet)\b(?![\s-]+(flour|meal|starch|syrup|gluten|bran|oil|flakes|grits|snacks?|chips|feed|silage|noodles?|crackers?|cakes?|vinegar|wine|paper|husk|straw))/i,
+    strip: /\b(maize|corn|wheat|rice|barley)[\s-]+(flour|meal|starch|syrup|gluten|bran|oil|flakes|grits|snacks?|chips|feed|silage|noodles?|crackers?|cakes?|vinegar|wine|paper|husk|straw)\b|\b(sweet ?corn|popcorn|corn ?flakes|atta|maida|semolina)\b/gi,
     need: { rx: /\b(maize|corn)\b/i, gap: "maize not named in the company's own products" },
     rules: [
-      { rx: /\b(flour|meal|starch|snacks?|chips|syrup|gluten|bran|popcorn|tortillas?|sweet ?corn|canned|corn oil|cornflakes?|grits|dextrose)\b/i, label: "processed maize product, not whole grain", bucket: "related" },
+      { rx: /\b(flour|atta|maida|semolina|meal|starch|snacks?|chips|syrup|gluten|bran|popcorn|tortillas?|sweet ?corn|canned|corn oil|cornflakes?|grits|dextrose|noodles?|pasta|biscuits?|bakery)\b/i, label: "processed grain product, not the grain", bucket: "related" },
       { rx: /\b(animal feed|feed mill|silage|ddgs|by-?products?)\b/i, label: "feed or by-product", bucket: "related" },
     ] },
+  { id: "sugar", when: /\bsugar\b/i,
+    exact: /\b(cane sugar|beet sugar|white sugar|refined sugar|raw sugar|icumsa|sugar refin\w*|sugar mill)\b/i,
+    rules: [{ rx: /\b(coconut sugar|palm sugar|date (paste|syrup)|sugar[- ]free|sweeteners?|confectioner\w*|candy|candies)\b/i, label: "a different sweetener or a sugar product", bucket: "related" }] },
+  { id: "cement", when: /\bcement\b/i,
+    exact: /\b(portland|opc|ppc|cem ?i|clinker|grey cement|cement plant|cement manufactur\w*)\b/i,
+    rules: [{ rx: /\b(calcium aluminate|refractory|calcium carbonate|fillers?|cement boards?|fibre cement|fiber cement|adhesives?|grout)\b/i, label: "a specialty or related material, not bulk cement", bucket: "related" }] },
   { id: "ammonia", when: /\bammonia\b/i,
     rules: [
       { rx: /\b(ultra ?purity|ultima|electronic grade|reagent|laborator\w*|labochemicals|analytical grade|ammonium hydroxide|ammonia solution)\b/i, label: "laboratory or electronic grade, not bulk ammonia", bucket: "related" },
@@ -89,8 +96,18 @@ const FAMILIES: Family[] = [
     ] },
 ];
 
+// Rules for every request: the product named as the input of a machine, or around a project role, is not the
+// product sold (ammunition production lines, LPG engines, ammonia fuel cells, solar EPC, excavator attachments)
+const GENERIC: Family = { id: "generic", when: /./, rules: [
+  { rx: /\b(machines?|machinery|production lines?|lines?|plants?|equipment|test(ing)? (equipment|systems?)|engines?|fuel cells?|attachments?|tiltrotators?|storage tanks?|terminals?|boards?) (for|that (use|run on)|running on|using|to (make|produce))\b/i, label: "equipment or parts for the product, not the product", bucket: "related" },
+  { rx: /\b(fuel cells?|engines?) (powered by|fuel(l)?ed by)\b|\b(impregnated|coated) with\b/i, label: "uses the product as an input", bucket: "related" },
+  { rx: /\b(epc|turnkey|ppa|rooftop installer|installs?|installation services|contractor for|substations? construction|builds? (substations|plants))\b/i, label: "project execution role (installer or EPC)", bucket: "related" },
+  { rx: /\b(freight forward\w*|logistics provider|shipping agent|customs broker|household goods|personal effects)\b/i, label: "a logistics firm moving the goods", bucket: "related" },
+  { rx: /\b(procurement (agent|intermediary|services)|sourcing agent|relief aid)\b/i, label: "a procurement intermediary", bucket: "related" },
+] };
+
 export function familiesFor(query: string): Family[] {
-  return FAMILIES.filter((f) => f.when.test(query));
+  return [...FAMILIES.filter((f) => f.when.test(query)), GENERIC];
 }
 
 const SERVICE_TYPE = /services/i;
@@ -128,7 +145,11 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
   const viaCode = conceptHs.some((hs) => hs.length && codes.some((x) => hs.some((h) => (h.length === 4 ? x.startsWith(h) : x === h))));
   const anywhere = (txt: string) => conceptTerms.filter((t) => t.some((r) => r.test(txt))).length;
   let bucket: Bucket, evidence: string;
-  if (jo.clean) { bucket = "supported"; evidence = "company's own product description"; }
+  // product text built from shipment records (no site title or industry of its own) names cargo, not a catalogue:
+  // a T-shirt print or a forwarder's mixed load can carry the word. It is evidence, not proof.
+  const fromShipments = !!(s.hs || s.sh) && !s.wt && !s.in;
+  if (jo.clean && !fromShipments) { bucket = "supported"; evidence = "company's own product description"; }
+  else if (jo.clean) { bucket = "plausible"; evidence = "shipment records"; gaps.push("named in shipment records; verify that the company makes or sells it"); }
   else if (ja.clean && !isService) { bucket = "supported"; evidence = "contract items"; }
   else if (ja.clean) { bucket = "plausible"; evidence = "contract items"; gaps.push("named in contracts of a works or services firm"); }
   else if (jo.conflicted || ja.conflicted) {
@@ -142,6 +163,7 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
   else { bucket = "plausible"; evidence = "partial"; gaps.push(`${n - anywhere(`${own} ${award} ${customs}`)} of ${n} product terms not found`); }
   // a wrong product that the company states while not stating the right one (cosmetic urea, rails for PE pipe)
   for (const f of fams) {
+    if (f.id === "generic") continue; // generic rules judge the item that names the product, not the whole record
     const ownAward = `${own} ${award}`;
     const right = f.exact ? f.exact.test(f.strip ? ownAward.replace(f.strip, " ") : ownAward) : !!(f.need && f.need.rx.test(ownAward));
     for (const r of f.rules) {
@@ -151,6 +173,10 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
       else if (!conflicts.includes(r.label)) conflicts.push(`${r.label} (also listed)`);
     }
     if (f.need && bucket === "supported" && !f.need.rx.test(`${own} ${award} ${codes.join(" ")}`)) { bucket = "plausible"; gaps.push(f.need.gap); }
+  }
+  // a company whose own description is a project role (EPC, PPA, installer) and never says it makes anything
+  if (bucket === "supported" && /(?<!for |to |with )\b(epc|turnkey|ppa|installer|installation company)\b(?![\s-]+(contractors?|companies|clients|customers|partners))/i.test(own) && !/\b(manufactur\w*|produc(er|es|tion)|factory|maker|mills?|plant in)\b/i.test(own)) {
+    bucket = "related"; conflicts.push("project execution role (installer or EPC)");
   }
   const role = s.td === "yes" || /trader|distributor/i.test(String(s.ty || "")) ? "trader" : /manufactur|producer|goods/i.test(String(s.ty || "")) ? "goods supplier" : "";
   const why = bucket === "supported" ? `Fits because its ${evidence} names ${n > 1 ? "the whole product in one item" : "the product"}`
@@ -163,7 +189,7 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
 }
 
 export const BUCKET_RANK: Record<Bucket, number> = { supported: 0, plausible: 1, related: 2, incompatible: 3 };
-const EVIDENCE_RANK: Record<string, number> = { "verified on an authoritative source": -1, "company's own product description": 0, "own description and contract items": 1, "contract items": 2, "customs headings": 3, partial: 4, "company name only": 5, none: 6 };
+const EVIDENCE_RANK: Record<string, number> = { "verified on an authoritative source": -1, "company's own product description": 0, "shipment records": 1.5, "own description and contract items": 1, "contract items": 2, "customs headings": 3, partial: 4, "company name only": 5, none: 6 };
 export const evidenceRank = (e: string) => EVIDENCE_RANK[e] ?? 6;
 
 /** one row per legal entity: same normalised name and country */

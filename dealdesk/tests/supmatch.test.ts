@@ -39,4 +39,13 @@ T("power transformer", [["power transformer"]], { n: "Tanelec", sp: "Demoisturiz
 T("ammonia", [["ammonia"]], { n: "Acros", p: "Ammonia Solution, labochemicals", ty: "goods supplier" }, "related");
 T("ammonia", [["ammonia"]], { n: "Trinidad Nitrogen", p: "Bulk Anhydrous Ammonia", ty: "goods supplier", web: "x" }, "supported");
 T("white maize", [["white"], ["maize", "corn"]], { n: "KASHAKAT", sp: "DELIVERY OF EMERGENCY RELIEF FOOD (WHITE MAIZE AND BEANS)", ty: "goods supplier" }, "supported");
+// from the web-verified review (5 Nov 2026)
+T("ammunition", [["ammunition"]], { n: "New Lachaussee", p: "complete machine lines for small caliber ammunition", ty: "goods supplier", wt: "Lachaussee", in: "machinery" }, "related");
+T("LPG", [["lpg"]], { n: "Yanmar Power Technology", p: "industrial engines that run on LPG", ty: "goods supplier", wt: "Yanmar" }, "related");
+T("wheat", [["wheat"]], { n: "Farmvilla", p: "Sharbati atta wheat flour", ty: "goods supplier", wt: "Farmvilla" }, "related");
+T("solar panels", [["solar panel"]], { n: "CapSolar", p: "commercial solar EPC and PPA, rooftop solar panels", ty: "goods supplier", wt: "CapSolar" }, "related");
+T("sugar", [["sugar"]], { n: "Big Tree Farms", p: "organic coconut sugar", ty: "goods supplier", wt: "Big Tree" }, "related");
+T("cement", [["cement"]], { n: "Calucem", p: "calcium aluminate cement", ty: "goods supplier", wt: "Calucem" }, "related");
+T("excavator", [["excavator"]], { n: "One Composite Mills", p: "Knit T-shirt print excavator", hs: "6109", ty: "goods supplier" }, "plausible");
+T("power transformer", [["power transformer"]], { n: "Trafo AG", p: "power transformers up to 500 MVA, oil-immersed, for EPC contractors", ty: "goods supplier", web: "x", wt: "Trafo" }, "supported");
 console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
