@@ -23,6 +23,10 @@ const isDate = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v);
 export const STAGES = ["lead", "qualified", "sourcing", "financing", "logistics", "offer", "negotiation", "won", "lost"] as const;
 const ROLES = new Set(["supplier", "finance", "logistics", "buyer", "partner"]);
 const PARTY_STATUS = new Set(["candidate", "contacted", "replied", "quoted", "selected", "dropped"]);
+// Local partner ladder (spec section 12): each step needs its own reference, so a directory hit never reads as an
+// agreed partner. A partner candidate does not overcome a bidder restriction by itself.
+export const PARTNER_STATES = ["required", "candidate found", "identity verified", "capability reviewed", "engagement confirmed"] as const;
+const PARTNER_NEEDS: Record<string, string> = { "identity verified": "identity_ref", "capability reviewed": "capability_ref", "engagement confirmed": "engagement_ref" };
 function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
   if (kind === "stage") {
     const st = str(d.stage, 20);
@@ -36,6 +40,18 @@ function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
     email: str(d.email, 200), phone: intlPhone(str(d.phone, 40), str(d.country, 3)) || str(d.phone, 40), wechat: str(d.wechat, 60), website: str(d.website, 240), status: PARTY_STATUS.has(str(d.status, 20)) ? str(d.status, 20) : "candidate",
     note: str(d.note, 600), source: str(d.source, 300), last_contact: isDate(str(d.last_contact, 10)) ? str(d.last_contact, 10) : "" };
   if (!x.name) return { ok: false as const, error: "name is required" };
+  if (x.role === "partner") {
+    const ps = str(d.partner_state, 30);
+    const px = { partner_state: (PARTNER_STATES as readonly string[]).includes(ps) ? ps : "candidate found", identity_ref: str(d.identity_ref, 300), capability_ref: str(d.capability_ref, 300), engagement_ref: str(d.engagement_ref, 300) };
+    const need = PARTNER_NEEDS[px.partner_state];
+    // every reached step keeps the references of the steps below it
+    const order = PARTNER_STATES.indexOf(px.partner_state as (typeof PARTNER_STATES)[number]);
+    for (const [state, ref] of Object.entries(PARTNER_NEEDS)) {
+      if (PARTNER_STATES.indexOf(state as (typeof PARTNER_STATES)[number]) <= order && !(px as Record<string, string>)[ref]) return { ok: false as const, error: `"${state}" needs ${ref.replace("_ref", "")} evidence (registry id, document or call note)` };
+    }
+    void need;
+    return { ok: true as const, data: { ...x, ...px }, status: x.status };
+  }
   return { ok: true as const, data: x, status: x.status };
 }
 
