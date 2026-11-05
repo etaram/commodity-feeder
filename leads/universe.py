@@ -129,6 +129,9 @@ NAME_HINT = [
 ]
 
 
+REF_KIND = re.compile(r"^\s*\d{3,}/([GWCS])/(?:NCB|ICB|RFQ|RFP|QCBS|CQS|SSS|DC|NS|OT|LCS|FBS)\b", re.I)
+
+
 def main_sectors(x, name, site_title="", about=""):
     """(sector, score) best first, and why the first one was chosen: identity (name or declared industry), the
     company's own description, or the contracts it won."""
@@ -489,6 +492,14 @@ def build():
                 if sec:
                     x["sectors"][sec] += 1; x["sec_usd"][sec] += share
                     x["goods"] += 1 if sec in GOODS and not svc_cpv else 0
+                elif REF_KIND.search(a.get("title") or ""):
+                    # East African PPDA reference numbers carry the procurement kind: /G/ goods, /W/ works, /C/ or /S/ consultancy
+                    # and services. The sector stays unknown, but the kind is on record.
+                    k = REF_KIND.search(a.get("title") or "").group(1).upper()
+                    if k == "G":
+                        x["goods"] += 1
+                    elif k == "W":
+                        x["works"] += 1; x["works_usd"] += share
                 if sec in WORKS or str(a.get("nature", "")).lower().startswith("works"):
                     x["works"] += 1; x["works_usd"] += share
                 g = a.get("group") or _group(a.get("title") or "")
