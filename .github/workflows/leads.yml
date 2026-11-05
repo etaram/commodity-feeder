@@ -326,6 +326,10 @@ jobs:
       - name: health
         if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
         run: set -o pipefail; python -m leads.health 2>&1 | tee -a data/leads/run.log
+      - name: source quality (freshness, completeness, duplicates, expired)
+        if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
+        run: python -m leads.source_quality 2>&1 | tail -1 | tee -a data/leads/run.log
+        continue-on-error: true
       - name: registry
         if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
         run: python -m leads.registry 2>&1 | tee -a data/leads/run.log || true

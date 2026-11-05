@@ -36,6 +36,7 @@ export const getIsrael = () => csv("data/israel/items.csv");
 export const getCountries = () => csv("data/leads/countries.csv");
 export const getSectors = () => csv("data/leads/sectors.csv");
 export const getSources = () => csv("data/leads/status.csv");
+export const getSourceQuality = () => csv("data/leads/source_quality.csv");
 export const getTrends = () => csv("data/leads/price_trends.csv");
 export const getBuyers = () => csv("data/leads/buyers.csv");
 export const getAwards = () => csv("data/leads/awards.csv");

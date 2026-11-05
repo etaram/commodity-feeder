@@ -495,8 +495,14 @@ def _num(v):
 def write_sheet_chunks(tenders):
     """The Google Sheet imports tenders in fixed-size chunks (IMPORTDATA has a per-file size limit); every chunk file
     always exists so the sheet formula never breaks. Highest score first."""
-    rows = []
+    rows, expired = [], 0
     for r in tenders:
+        # a notice whose deadline has passed is not open: it stays in tenders_all.csv (history) but leaves the open
+        # list (6,000+ such rows were listed on 5 Nov 2026, mostly cached India and Chile notices)
+        d = r.get("days_left")
+        if isinstance(d, (int, float)) and d < 0 and (r.get("stage") or "tender") != "planned":
+            expired += 1
+            continue
         x = {c: r.get(c, "") for c in SHEET_COLS}
         x["title_en"] = (r.get("title_en") or r.get("title") or "")[:220]
         x["title_original"] = r.get("title", "")[:140] if r.get("lang") else ""
@@ -504,6 +510,7 @@ def write_sheet_chunks(tenders):
         x["contact"] = (r.get("contact") or "")[:80]
         x["why"] = (r.get("why") or "")[:160]; x["incumbent"] = (r.get("incumbent") or "")[:80]
         rows.append(x)
+    log.info("open list: %d notices, %d past their deadline left out", len(rows), expired)
     for i in range(CHUNKS):
         write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
     write("tenders.csv", rows[:CHUNK], SHEET_COLS)
