@@ -97,7 +97,7 @@ KW = [
                   r"[ée]quipements? agricoles"),
     ("LAB", r"laborator|scientific|measuring|instrument|meteorolog|calibration|spectromet|microscop"),
     ("AGRI_FOOD", r"\bfood|aliment|seeds?\b|semence|semilla|semente|fertili|engrais|fertilizante|livestock|"
-                  r"b[eé]tail|ganado|gado|wheat|maize|ma[iï]s|rice|\briz|arroz|flour|farin|harina|sugar|sucre|"
+                  r"b[eé]tail|ganado|gado|\bwheat\b|\bmaize\b|\bma[iï]s\b|\brice\b|\briz\b|\barroz\b|\bflour\b|\bfarin|\bharina|\bsugar\b|\bsucre\b|"
                   r"az[uú]car|a[cç][uú]car|vegetable oil|huile|aceite|[oó]leo|agri|fishing|p[eê]che|pesca|veterin"),
     ("CHEMICALS", r"chemical|chimique|qu[ií]mic|reagent|r[eé]actif|reactivo|reagente|chlorine|chlore|cloro|"
                   r"plastic|plastique|pl[aá]stico|polyethylene|resin"),
@@ -153,9 +153,9 @@ EXTRA = [
                   r"bunker|warehousing|cold storage|3pl|third-party logistics|supply chain|transitaire|despachante|"
                   r"agente de carga|naviera|armador|transporte mar[ií]timo|transporte de carga"),
     ("CONSUMER", r"signage|beschilderung|electoral material|ear tags|kits"),
-    ("AGRI_FOOD", r"bl[eé] tendre|bl[eé] dur|\btrigo|ma[iï]s|\bmilho|azúcar|ganader|apicult|beekeep|nursery|culinaire|\bfish|seafood|tuna\b|at[uú]n|thon\b|sardin|shrimp|prawn|"
-                  r"crustacean|mollus|\bmeat|poultry|dairy|cheese|coffee|cocoa|cacao|\btea\b|fruit|vegetable|\bnuts?\b|"
-                  r"cashew|spice|beverage|canned|cannery|frozen food|grain|cereal|oilseed|soybean|edible oil|bakery|"
+    ("AGRI_FOOD", r"bl[eé] tendre|bl[eé] dur|\btrigo\b|\bma[iï]s\b|\bmilho\b|azúcar|ganader|apicult|beekeep|nursery|culinaire|\bfish|seafood|tuna\b|\bat[uú]n\b|\bthon\b|sardin|shrimp|prawn|"
+                  r"crustacean|mollus|\bmeat\b|poultry|dairy|cheese|coffee|cocoa|cacao|\btea\b|fruit|vegetable|\bnuts?\b|"
+                  r"cashew|spice|beverage|canned|cannery|frozen food|\bgrains?\b|cereal|oilseed|soybean|edible oil|bakery|"
                   r"confection|animal feed|slaughter|abattoir"),
     ("MINING_METALS", r"\bmetals?\b|ferro|zinc|nickel|\bores?\b|smelt|foundr|\bscrap|alloy|non-?ferrous|precious metal"),
     ("CONSTR_MAT", r"quarr|crushed stone|aggregates?\b|asphalt|bitumen|ready-?mix|concrete product|glass|ceramic"),
