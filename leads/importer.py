@@ -131,6 +131,45 @@ def china_directory(path):
     return out
 
 
+TLD3 = {"de": "DEU", "jp": "JPN", "br": "BRA", "ma": "MAR", "ae": "ARE", "in": "IND", "cn": "CHN", "fr": "FRA", "it": "ITA", "es": "ESP",
+        "nl": "NLD", "uk": "GBR", "au": "AUS", "my": "MYS", "th": "THA", "sg": "SGP", "za": "ZAF", "no": "NOR", "fi": "FIN", "se": "SWE", "ch": "CHE"}
+SALES_ROLE = __import__("re").compile(r"\b(investor|ir\b|press|media|career|recruit|hr\b|privacy|data protection|ethics|compliance|support|whistle)", __import__("re").I)
+
+
+def commodity_seed(path):
+    """Sinder commodity databases seed -> supplier rows (official-page scope, sales-capable channels only) plus the
+    64-category catalog as rows of kind 'catalog' (kept with the drop; the universe skips rows without a supplier)."""
+    import re as _re
+    d = json.load(open(path, encoding="utf-8"))
+    cats = {c["database_id"]: c for c in d.get("database_catalog") or []}
+    out = []
+    for x in d.get("suppliers") or []:
+        ct = x.get("contacts") or {}
+        emails = [e["value"] for e in ct.get("emails") or [] if e.get("value") and not SALES_ROLE.search(str(e.get("role", "")))]
+        phones = [p["value"] for p in ct.get("phones") or [] if p.get("value") and not SALES_ROLE.search(str(p.get("role", "")))]
+        site = x.get("website") or ""
+        host = _re.sub(r"^https?://", "", site.lower()).split("/")[0]
+        cty = x.get("country_of_incorporation") or TLD3.get(host.rsplit(".", 1)[-1], "")
+        if not cty and phones:  # the switchboard's country code says where the published contact is
+            from .validate import phone_country
+            from .refine_modules import to_iso3
+            cty = to_iso3(phone_country(phones[0]))
+        names = [cats[c]["name_en"] for c in x.get("category_ids") or [] if c in cats]
+        out.append({"supplier": x["display_name_as_published"], "name_local": "", "country": cty, "industry": "; ".join(names)[:200],
+                    "products": ", ".join(x.get("published_product_scope_en") or [])[:300], "commodities": "; ".join(names),
+                    "website": site, "email": "; ".join(emails[:2]), "phone": "; ".join(phones[:2]), "address": x.get("registered_address") or "",
+                    "contact_page": ct.get("contact_page_url") or ct.get("contact_form_url") or "",
+                    "source": "Sinder commodity databases (official company pages)", "source_url": ct.get("contact_page_url") or site,
+                    "notable": True, "basis": f"published product scope; {x.get('entity_level', '')}", "id": x["supplier_id"],
+                    "categories": x.get("category_ids") or []})
+    for c in cats.values():
+        out.append({"kind": "catalog", **{k: c.get(k) for k in ("database_id", "database_type", "name_he", "name_en", "example_products_he", "geographic_scope",
+                                                               "specific_fields_to_collect", "search_queries", "supplier_ids", "recommended_refresh_cadence_days")}})
+    for r in d.get("discovery_resources") or []:
+        out.append({"kind": "discovery", **r})
+    return out
+
+
 if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.INFO)
@@ -139,8 +178,8 @@ if __name__ == "__main__":
         init()
     elif a[:1] == ["seal"]:
         print(seal(a[1], a[2]))
-    elif a[:1] == ["china"]:
-        rows_ = china_directory(a[1])
+    elif a[:1] in (["china"], ["commodities"]):
+        rows_ = china_directory(a[1]) if a[0] == "china" else commodity_seed(a[1])
         with open(a[2], "w", encoding="utf-8") as f:
             for r in rows_:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")

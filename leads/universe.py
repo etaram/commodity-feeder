@@ -704,16 +704,21 @@ def build():
         def _dom(u):
             h = re.sub(r"^https?://", "", (u or "").lower()).split("/")[0]
             return h[4:] if h.startswith("www.") else h
-        by_dom = {}
+        by_dom, by_name, by_dom_any = {}, {}, {}
         for kk, xx in sup.items():
             if xx.get("website"):
-                by_dom.setdefault((_dom(xx["website"]), kk[1]), kk)
+                by_dom.setdefault((_dom(xx["website"]), kk[1]), kk); by_dom_any.setdefault(_dom(xx["website"]), kk)
+            # a row with no country matches the record of that name that has won the most (its home record)
+            if kk[0] not in by_name or xx.get("wins", 0) > sup[by_name[kk[0]]].get("wins", 0):
+                by_name[kk[0]] = kk
         for c in drops:
             cty = iso3(c.get("country") or "") or ""
             keys = [(norm(c.get("supplier")), cty), (norm(c.get("name_local")), cty)]
             k = next((kk for kk in keys if len(kk[0]) >= 2 and kk in sup), None)
             if not k and c.get("website") and (_dom(c["website"]), cty) in by_dom:
                 k = by_dom[(_dom(c["website"]), cty)]
+            if not k and not cty:  # country not stated: the same name or the same website anywhere
+                k = by_name.get(keys[0][0]) or (by_dom_any.get(_dom(c["website"])) if c.get("website") else None)
             if not k:
                 k = keys[0] if len(keys[0][0]) >= 2 else keys[1]
                 if len(k[0]) < 2:
@@ -741,6 +746,8 @@ def build():
                     x[f_] = c[f_]
                     if f_ == "website":
                         x["_site_given"] = True  # from the drop's own source page: kept even when the name is in another script
+            if c.get("commodities"):
+                x["import_commodities"] = c["commodities"]
             if c.get("province") and not x.get("province"):
                 x["province"] = c["province"]
         log.info("imports: %d rows, %d new suppliers, %d merged into existing ones", len(drops), n_im_new, n_im_merged)
