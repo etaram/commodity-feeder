@@ -918,7 +918,7 @@ const L = {
     sup_h: "Matching suppliers from the database", sup_wait: "Searching the whole supplier database…", sup_note_all: "Ranked over the whole database by the tender's product words, sector, HS chapter, export evidence and past sales in this country. Tick suppliers and press \"Draft outreach\" to prepare an RFQ; missing e-mails are looked up from official sources.", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
     e_sup_match: "No matching suppliers in the loaded set. Send a supplier search to the worker.", draft_sel: "Draft outreach to selected", deep_sup: "Deep supplier search on the web",
     tick_one: "Tick at least one supplier with an e-mail address.", sup_not_loaded: "The supplier database has not loaded yet.", select: "Select",
-    m_lang: "Language of the e-mail", m_lang_mixed: "Recipients in several countries: one e-mail in English. To write in each company's language, send to one at a time.", m_review: "What the e-mail says (translation for you)", m_review_note: "Check names and numbers in the original before sending.",
+    fc_first: "Finding the company's e-mail address first, then the draft is written…", m_lang: "Language of the e-mail", m_lang_mixed: "Recipients in several countries: one e-mail in English. To write in each company's language, send to one at a time.", m_review: "What the e-mail says (translation for you)", m_review_note: "Check names and numbers in the original before sending.",
     out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft…", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite",
     draft_note: "The draft is saved in your Gmail and not sent. With several recipients, each gets a separate draft.", hand_write: "Automatic drafting works inside Claude. You can write here by hand.",
     add_email: "Add at least one e-mail address.", open_draft: "open draft", unclear_draft: "unclear whether it was created, check Gmail before trying again", drafts: "Gmail drafts:",
@@ -1027,7 +1027,7 @@ const L = {
     sup_h: "ספקים מתאימים מהמאגר", sup_wait: "מחפש בכל מאגר הספקים…", sup_note_all: "מדורג מתוך כל המאגר לפי מילות המוצר במכרז, סקטור, פרק HS, עדות לייצוא ומכירות קודמות במדינה. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ; מייל חסר יאותר ממקורות רשמיים.", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
     e_sup_match: "לא נמצאו ספקים מתאימים בטעינה הנוכחית. שלח איתור ספקים לעובד.", draft_sel: "נסח פנייה לספקים המסומנים", deep_sup: "איתור ספקים מעמיק ברשת",
     tick_one: "סמן לפחות ספק אחד עם כתובת מייל.", sup_not_loaded: "מאגר הספקים עוד לא נטען.", select: "בחר",
-    m_lang: "שפת המייל", m_lang_mixed: "הנמענים ממדינות שונות: מייל אחד באנגלית. כדי לכתוב לכל חברה בשפה שלה, שלח לכל אחת בנפרד.", m_review: "מה כתוב במייל (תרגום בשבילך)", m_review_note: "בדוק שמות ומספרים במקור לפני השליחה.",
+    fc_first: "קודם מאתר את כתובת המייל של החברה, ואחר כך נכתבת הטיוטה…", m_lang: "שפת המייל", m_lang_mixed: "הנמענים ממדינות שונות: מייל אחד באנגלית. כדי לכתוב לכל חברה בשפה שלה, שלח לכל אחת בנפרד.", m_review: "מה כתוב במייל (תרגום בשבילך)", m_review_note: "בדוק שמות ומספרים במקור לפני השליחה.",
     out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה…", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש",
     draft_note: "הטיוטה נשמרת ב-Gmail שלך ולא נשלחת. אם יש כמה נמענים, נוצרת טיוטה נפרדת לכל אחד.", hand_write: "ניסוח אוטומטי זמין בתוך Claude. אפשר לכתוב כאן ידנית.",
     add_email: "הוסף לפחות כתובת מייל אחת.", open_draft: "פתח טיוטה", unclear_draft: "לא ברור אם נוצרה, בדוק ב-Gmail לפני שתנסה שוב", drafts: "טיוטות ב-Gmail:",
@@ -2253,14 +2253,21 @@ async function compose({ kind, ctx, to }, outSel) {
     <div id="m-review"></div>
     <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
     <div class="note">${esc(t(window.DD_INSTANT ? "web_note" : "draft_note"))}</div><div id="m-flash"></div></div>`;
+  // no address yet: find it first (the draft is written after, addressed to the person found)
+  const toBox = out.querySelector("#m-to"), flash = out.querySelector("#m-flash"), bodyBox = out.querySelector("#m-body");
+  let finding = Promise.resolve();
   if (!recips.some(x => x.email) && window.DD_INSTANT && (ctx?.find || recips[0]?.name)) {
-    const subj = ctx?.find?.subject || recips[0].name, fctx = ctx?.find?.ctx || {}, fcty = ctx?.find?.country || "";
-    $("#m-flash").innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("fc_auto"))}</div>`;
-    fetchContacts(subj, fctx, fcty).then(c => {
-      const m = firstMail(c), box = $("#m-to");
-      if (m && box && !box.value.trim()) { box.value = m; const x = c.contacts.find(y => y.email === m); $("#m-flash").innerHTML = `<div class="flash ok">${esc(t("fc_found"))}: <span dir="ltr">${esc(m)}</span> ${x?.source ? link(x.source, t("fc_src")) : ""}</div>`; }
-      else if ($("#m-flash")) $("#m-flash").innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`;
-    }).catch(() => { if ($("#m-flash")) $("#m-flash").innerHTML = ""; });
+    const subj = ctx?.find?.subject || recips[0].name, fctx = ctx?.find?.ctx || {}, fcty = ctx?.find?.country || recips[0]?.country || "";
+    flash.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("fc_auto"))}</div>`;
+    toBox.placeholder = t("fc_auto"); bodyBox.value = t("fc_first");
+    finding = fetchContacts(subj, fctx, fcty).then(c => {
+      const m = firstMail(c);
+      if (m && !toBox.value.trim()) {
+        toBox.value = m; const x = c.contacts.find(y => y.email === m);
+        if (x?.name && recips[0]) recips[0].name = `${x.name}${x.role ? ", " + x.role : ""} (${recips[0].name || subj})`;
+        flash.innerHTML = `<div class="flash ok">${esc(t("fc_found"))}: <span dir="ltr">${esc(m)}</span> ${x?.source ? link(x.source, t("fc_src")) : ""}</div>`;
+      } else flash.innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`;
+    }).catch(() => { flash.innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`; });
   }
   const write = async (fresh) => {
     if (!sample) { $("#m-body").value = ""; $("#m-flash").innerHTML = `<div class="flash info">${esc(t("hand_write"))}</div>`; $("#m-draft").disabled = false; return; }
@@ -2274,7 +2281,7 @@ async function compose({ kind, ctx, to }, outSel) {
       : mode === "both" ? `first in ${L[1]} (the business language of the recipient's country, natural and polite as a native business writer would write it), then a line "----- English -----" and the same e-mail in English; the subject line in ${L[1]} followed by " / " and the English subject`
       : "in English (business e-mails to foreign companies are in English)";
     const review = mode === "en" ? "" : `, "review": "the full e-mail translated to ${outLang()} so the sender can check what it says"`;
-    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes. For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
+    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes. For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Greet the named person if one is given, else use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
 Return JSON only: {"subject": "…", "body": "…"${review}} (body as plain text with line breaks).
 Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", "sector", "commodity", "est_value_usd", "deadline", "link", "opportunity", "market", "commodity group", "product", "Account", "Primary commodity group", "products", "supplied", "supplier"]) : {})}`;
     try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || "";
@@ -2300,6 +2307,8 @@ Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", 
     }
     $("#m-flash").innerHTML = `<div class="flash ok">${esc(t("drafts"))}<br>${done.join("<br>")}</div>`;
   };
+  await finding;
+  bodyBox.value = t("writing");
   write(false);
 }
 
