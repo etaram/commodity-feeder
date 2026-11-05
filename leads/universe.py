@@ -691,6 +691,59 @@ def build():
             prods = ", ".join(p for p in [x.get("products", ""), *c["products"]] if p)
             x["products"] = prods[:300]
         x["address"] = x["address"] or c["address"]
+    # private data drops (leads/importer.py: sealed files the user handed over, such as a country directory).
+    # Duplicates: the same normalised name in the same country, the local-script name, or the same website domain
+    # all merge into one record; nothing is overwritten, only empty fields are filled.
+    n_im_new = n_im_merged = 0
+    try:
+        from .importer import rows as import_rows
+        drops = import_rows()
+    except Exception as e:  # noqa: BLE001
+        log.warning("imports skipped: %s", e); drops = []
+    if drops:
+        def _dom(u):
+            h = re.sub(r"^https?://", "", (u or "").lower()).split("/")[0]
+            return h[4:] if h.startswith("www.") else h
+        by_dom = {}
+        for kk, xx in sup.items():
+            if xx.get("website"):
+                by_dom.setdefault((_dom(xx["website"]), kk[1]), kk)
+        for c in drops:
+            cty = iso3(c.get("country") or "") or ""
+            keys = [(norm(c.get("supplier")), cty), (norm(c.get("name_local")), cty)]
+            k = next((kk for kk in keys if len(kk[0]) >= 2 and kk in sup), None)
+            if not k and c.get("website") and (_dom(c["website"]), cty) in by_dom:
+                k = by_dom[(_dom(c["website"]), cty)]
+            if not k:
+                k = keys[0] if len(keys[0][0]) >= 2 else keys[1]
+                if len(k[0]) < 2:
+                    continue
+                x = sup[k]; x["names"][c["supplier"]] += 1; x["country"][cty] += 1; x["tier_b"] = True; n_im_new += 1
+                sec = classify(f"{c.get('products', '')} {c.get('industry', '')}")[0]
+                if sec:
+                    x["sectors"][sec] += 1; x["goods"] += 1 if sec in GOODS else 0
+            else:
+                x = sup[k]; n_im_merged += 1
+            x["sources"].add(c.get("source") or "Import")
+            if c.get("notable"):
+                x["notable"] = True
+            if c.get("name_local") and not x.get("name_local"):
+                x["name_local"] = c["name_local"]
+            if c.get("products"):
+                prods = ", ".join(p for p in [x.get("products", ""), c["products"]] if p)
+                x["products"] = ", ".join(dict.fromkeys(p.strip() for p in prods.split(",") if p.strip()))[:300]
+            if c.get("industry") and not x.get("industries"):
+                x["industries"] = c["industry"]
+            if c.get("employees") and not x.get("employees"):
+                x["employees"] = str(c["employees"])
+            for f_ in ("website", "email", "phone", "address"):
+                if c.get(f_) and not x[f_]:
+                    x[f_] = c[f_]
+                    if f_ == "website":
+                        x["_site_given"] = True  # from the drop's own source page: kept even when the name is in another script
+            if c.get("province") and not x.get("province"):
+                x["province"] = c["province"]
+        log.info("imports: %d rows, %d new suppliers, %d merged into existing ones", len(drops), n_im_new, n_im_merged)
     web = _web_profiles()
     checks = _company_checks()
     out = []
@@ -708,7 +761,7 @@ def build():
                   "phone": wp.get("phone") or (ck.get("phones") or [""])[0]}
             x["_checked"] = ck.get("checked", "")
         site_src = "registry/notice" if x["website"] else ""
-        if x["website"] and not domain_matches(name, x["website"]):
+        if x["website"] and not x.get("_site_given") and not domain_matches(name, x["website"]):
             x["website"], site_src = "", ""  # a notice's website that is not the company's own (buyer, mail provider)
         if not x["website"] and wp.get("website"):
             if wp.get("discovered") or domain_matches(name, wp["website"]):
@@ -761,6 +814,7 @@ def build():
             # what kind of channel the e-mail is and whether its domain is the company's own (contact provenance)
             "email_kind": email_kind(x["email"], x["website"])[0], "email_domain": email_kind(x["email"], x["website"])[1],
             "contact_seen": today() if (x["email"] or x["phone"]) else "",  # last seen in a source, not a deliverability check
+            "name_local": x.get("name_local", ""), "province": x.get("province", ""),
         })
     n_ref = apply_refined(out)
     for r in out:

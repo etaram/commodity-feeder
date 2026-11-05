@@ -2233,7 +2233,7 @@ const TLD_CC = { cn: "CHN", tw: "TWN", hk: "HKG", jp: "JPN", kr: "KOR", vn: "VNM
   ru: "RUS", ua: "UKR", kz: "KAZ", sa: "SAU", ae: "ARE", qa: "QAT", kw: "KWT", om: "OMN", jo: "JOR", eg: "EGY", ma: "MAR", dz: "DZA", tn: "TUN", ir: "IRN", il: "ISR", sn: "SEN", ci: "CIV", cm: "CMR" };
 const mailCountry = e => { const tld = String(e || "").toLowerCase().split("@")[1]?.split(".").pop() || ""; return TLD_CC[tld] || ""; };
 const langField = (cs) => { const L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
-  let pref = "en"; try { pref = localStorage.getItem("dd-mail-lang") || "en"; } catch (e) {}
+  let pref = "both"; try { pref = localStorage.getItem("dd-mail-lang") || "both"; } catch (e) {}
   if (!L) pref = "en";
   return `<label for="m-lang">${esc(t("m_lang"))}</label><select id="m-lang">
     <option value="en"${pref === "en" ? " selected" : ""}>English</option>
@@ -2251,8 +2251,8 @@ async function compose({ kind, ctx, to }, outSel) {
   const out = $(outSel);
   const recips = (to || []).map(s => ({ name: s.supplier || s.Account || s.name, email: String(s.email || "").split(/[;,\s]+/)[0] }));
   out.innerHTML = `<div class="section"><h3>${esc(t("out_h"))}</h3>
-    <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
     <div class="field" id="m-langf">${langField(recipCountry(kind, ctx, to))}</div>
+    <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
     <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
     <div class="field"><label for="m-body">${esc(t("body"))}</label><div class="sub" id="m-status" aria-live="polite"></div><textarea id="m-body" dir="auto" placeholder="${esc(t("writing"))}"></textarea></div>
     <div id="m-review"></div>
@@ -2673,7 +2673,18 @@ function renderAssertions(s, rows) {
     $("#aq-go").onclick = async () => { const reason = $("#aq-reason").value.trim(); if (!reason) return; try { await window.DD_ASSERT.quarantine(id, st, reason); const j = await window.DD_ASSERT.list(s.supplier, s.country); renderAssertions(s, j.rows || []); track("assertion_" + st, s.supplier); } catch (e) { out.textContent = errText(e); } };
   });
 }
-const supMsg = s => `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${String(s.products || s.main_sector || "").slice(0, 120)}.`;
+const MSG_T = { zh: "您好，我是 Sinder（国际采购公司）的 Etamar Ramot Naaman。我们对贵公司的产品很感兴趣：{p}。", "zh-TW": "您好，我是 Sinder（國際採購公司）的 Etamar Ramot Naaman。我們對貴公司的產品很感興趣：{p}。",
+  ja: "こんにちは。Sinder（国際調達）の Etamar Ramot Naaman と申します。貴社の製品に関心があります：{p}。", ko: "안녕하세요. Sinder(국제 조달)의 Etamar Ramot Naaman입니다. 귀사의 제품에 관심이 있습니다: {p}.",
+  es: "Hola, soy Etamar Ramot Naaman de Sinder (compras internacionales). Nos interesan sus productos: {p}.", pt: "Olá, sou Etamar Ramot Naaman, da Sinder (compras internacionais). Temos interesse nos seus produtos: {p}.",
+  "pt-BR": "Olá, sou Etamar Ramot Naaman, da Sinder (compras internacionais). Temos interesse nos seus produtos: {p}.", fr: "Bonjour, je suis Etamar Ramot Naaman de Sinder (achats internationaux). Vos produits nous intéressent : {p}.",
+  de: "Guten Tag, hier ist Etamar Ramot Naaman von Sinder (internationaler Einkauf). Wir interessieren uns für Ihre Produkte: {p}.", it: "Buongiorno, sono Etamar Ramot Naaman di Sinder (acquisti internazionali). Siamo interessati ai vostri prodotti: {p}.",
+  ru: "Здравствуйте, меня зовут Etamar Ramot Naaman, компания Sinder (международные закупки). Нас интересует ваша продукция: {p}.", ar: "مرحباً، معكم Etamar Ramot Naaman من شركة Sinder (المشتريات الدولية). نحن مهتمون بمنتجاتكم: {p}.",
+  tr: "Merhaba, ben Sinder'den (uluslararası satın alma) Etamar Ramot Naaman. Ürünlerinizle ilgileniyoruz: {p}.", vi: "Xin chào, tôi là Etamar Ramot Naaman từ Sinder (mua sắm quốc tế). Chúng tôi quan tâm đến sản phẩm của quý công ty: {p}." };
+// the quick message for WhatsApp / WeChat: in the company's own language when there is a template for it, English below
+const supMsg = s => { const prod = String(s.products || s.main_sector || "").slice(0, 120);
+  const en = `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${prod}.`;
+  const L = BIZ_LANG[String(s.country || s.Country || "").toUpperCase()], tpl = L && MSG_T[L[0]];
+  return tpl ? `${tpl.replace("{p}", prod)}\n\n${en}` : en; };
 function openSupplier(s, keep) {
   if (!keep) trackOpen("company", s.name || s.supplier, s.name || s.supplier, s.sector || s.primary_group || s.group, s.country, "");
   S.sel.c = s;

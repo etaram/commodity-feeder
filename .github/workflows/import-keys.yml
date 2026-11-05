@@ -1,0 +1,24 @@
+# Once: the key pair for private data drops (leads/importer.py). The private key goes straight to the private
+# Supplier Universe sheet; only the public key is committed.
+name: import-keys
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  keys:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests google-auth cryptography
+      - run: python -m leads.importer init
+      - name: commit the public key
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/import/import_public_key.pem
+          git diff --cached --quiet || (git commit -q -m "import: public key for private data drops" && git pull -q --rebase origin main && git push -q origin HEAD:main)
