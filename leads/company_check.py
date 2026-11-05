@@ -386,6 +386,9 @@ def analyse(name, record_sector, pages):
             m = LINKEDIN.match(linkedin); linkedin = f"https://www.linkedin.com/{m.group(1).lower()}/{m.group(2)}"
     if ld_prods:  # the site's own product records first, then headings
         prods = ld_prods + [p for p in prods if p not in ld_prods]
+    from .validate import lei_ok
+    if org.get("lei") and not lei_ok(org["lei"]):
+        org.pop("lei")  # fails the ISO 17442 check digits: not an LEI
     for kind, v in (("VAT", org.get("vat")), ("LEI", org.get("lei")), ("DUNS", org.get("duns")), ("Tax id", org.get("tax_id"))):
         if v and v not in (x["value"] for x in ids):
             ids.append({"kind": kind, "value": v, "basis": "structured data"})

@@ -235,6 +235,12 @@ def refine_tender(r, today, links, buyer_fill):
     if r.get("deadline") and dl != r["deadline"][:10]:
         c["deadline"] = {"from": r["deadline"], "to": dl, "reason": "date normalised to YYYY-MM-DD" if dl else "not a date"}
     pub = iso_date(r.get("published", ""))
+    from .validate import date_ok
+    for v_, role in ((dl, "deadline"), (pub, "published")):
+        if v_:
+            ok, why = date_ok(v_, role, today)
+            if not ok:
+                out["conflicts"].append(why)
     v = num(r.get("est_value_usd"))
     if v is not None and (v < 0 or v > 5e10):
         c["est_value_usd"] = {"from": r["est_value_usd"], "to": "", "reason": "value outside any plausible tender (negative or above $50bn)"}
@@ -256,8 +262,11 @@ def refine_tender(r, today, links, buyer_fill):
     ems, phs = emails_in(r.get("contact", "")), [p.strip() for p in PHONE.findall(r.get("contact", ""))]
     if ems:
         fill(out, "contact_email", "; ".join(ems[:2]), r.get("link", ""), "contact printed in the notice", today)
-    if phs:
-        fill(out, "contact_phone", clean_phone(phs[0], r.get("country", "")) or phs[0], r.get("link", ""), "contact printed in the notice", today)
+    ph_ok = clean_phone("; ".join(phs[:3]), r.get("country", ""))  # only numbers that fit the country's numbering plan
+    if ph_ok:
+        fill(out, "contact_phone", ph_ok, r.get("link", ""), "contact printed in the notice, checked against the numbering plan", today)
+    elif phs:
+        out["notes"].append("the notice's phone number does not fit the numbering plan (left out)")
     if not ems and buyer_fill.get("email"):
         fill(out, "contact_email", buyer_fill["email"]["value"], buyer_fill["email"]["source"], "the buyer's own address from its other notices", today)
     out["contact_found"] = bool(out["filled"].get("contact_email") or out["filled"].get("contact_phone"))
@@ -290,14 +299,15 @@ def refine_buyer(r, key, today, tender_contacts, site, reg):
     personal = [e for e in ems if FREE.search(e)]
     own = [e for e in ems if not FREE.search(e)]
     if ems:
-        k = email_kind("; ".join(own or ems))
-        fill(out, "email", "; ".join((own or ems)[:2]), r.get("last_notice") or r.get("latest_notice") or "", f"procurement notice contact ({k.get('kind', '')})" if isinstance(k, dict) else "procurement notice contact", today)
+        kind, _ = email_kind("; ".join(own or ems))
+        fill(out, "email", "; ".join((own or ems)[:2]), r.get("last_notice") or r.get("latest_notice") or "", f"procurement notice contact ({kind or 'mailbox'})", today)
     elif tender_contacts:
         e, src = tender_contacts[0]
         fill(out, "email", e, src, "contact printed in one of its notices", today)
     phs = [p.strip() for p in PHONE.findall(r.get("contact", ""))]
-    if phs:
-        fill(out, "phone", clean_phone(phs[0], cty) or phs[0], r.get("latest_notice", ""), "contact printed in its notices", today)
+    ph_ok = clean_phone("; ".join(phs[:3]), cty)
+    if ph_ok:
+        fill(out, "phone", ph_ok, r.get("latest_notice", ""), "contact printed in its notices, checked against the numbering plan", today)
     # website: the domain of its own (non-free) mailbox; a public body's domain is its official site
     mail = (out["filled"].get("email") or {}).get("value", "").split(";")[0].strip()
     if "@" in mail and not FREE.search(mail):

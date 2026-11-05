@@ -96,7 +96,8 @@ def vat_parts(v, country):
         return None  # another country's prefix: not this company's EU number
     if cc == "SE" and re.fullmatch(r"\d{10}", v):
         v += "01"  # a Swedish VAT number is the organisation number followed by 01
-    return (cc, v) if re.fullmatch(r"[0-9A-Z]{8,12}", v) else None
+    from .validate import vat_format_ok
+    return (cc, v) if vat_format_ok(cc, v) else None  # the member state's own format, before asking VIES
 
 
 def judge_lei(name, country, rec):
@@ -168,7 +169,8 @@ def _get_json(s, url, params=None, accept="application/json"):
 
 
 def lei_lookup(s, name, country, lei=""):
-    if lei and re.fullmatch(r"[A-Z0-9]{20}", lei):
+    from .validate import lei_ok
+    if lei and lei_ok(lei):
         j = _get_json(s, f"{GLEIF}/{lei}", accept="application/vnd.api+json")
         recs = [j["data"]] if j and j.get("data") else []
     else:

@@ -45,7 +45,7 @@ jobs:
           path: data/checks
           key: checks-none
           restore-keys: checks-
-      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth cryptography
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth cryptography phonenumbers
       - run: mkdir -p data/leads && date -u > data/leads/run_suppliers.log
       - name: latam_awards
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',latam_awards,') }}

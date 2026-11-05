@@ -39,7 +39,7 @@ jobs:
           path: data/private
           key: private-${{ github.run_id }}
           restore-keys: private-
-      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth openpyxl cryptography
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth openpyxl cryptography phonenumbers
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: plan
         run: |

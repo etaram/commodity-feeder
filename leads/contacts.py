@@ -36,10 +36,11 @@ JUNK_MAIL = re.compile(r"^(no-?reply|donotreply|do-not-reply|example|test|user|n
 
 def clean_email(v):
     """Valid, distinct addresses (at most 3), lowercase, '; ' separated; placeholders and image names dropped."""
+    from .validate import email_ok
     out = []
     for m in EMAIL.finditer(str(v or "")):
         e = m.group(0).strip(".'").lower()
-        if not JUNK_MAIL.search(e) and e not in out:
+        if not JUNK_MAIL.search(e) and email_ok(e)[0] and e not in out:
             out.append(e)
     return "; ".join(out[:3])
 
@@ -63,7 +64,13 @@ def one_phone(p, iso3):
         return ""
     if not 8 <= len(d) <= 15 or len(set(d[-7:])) == 1:
         return ""
-    return "+" + d
+    from .validate import phone_ok
+    ok, _ = phone_ok("+" + d, iso3)  # the country's own numbering plan: length and prefixes
+    if not ok and cc and not raw.startswith("+") and not str(p).strip().startswith("00") and d.startswith(cc):
+        alt = cc + "0" + d[len(cc):]  # a few plans keep the trunk 0 (Italy, San Marino): retry before dropping
+        if phone_ok("+" + alt, iso3)[0]:
+            return "+" + alt
+    return "+" + d if ok else ""
 
 
 def clean_phone(v, iso3):

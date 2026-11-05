@@ -276,7 +276,10 @@ def refine_one(r, check, ai, dup, namesakes, today, reg=None):
         if own:
             fill("emails_own_domain", "; ".join(own[:3]), src, "on the company's own domain: " + ", ".join(x["kind"] for x in check["emails"][:3]))
         if check.get("phones"):
-            fill("phones_site", "; ".join(check["phones"][:2]), src, "on the company website")
+            good = clean_phone("; ".join(check["phones"][:4]), cty)  # only numbers that fit the country's numbering plan
+            fill("phones_site", good, src, "on the company website, checked against the numbering plan")
+            if not good:
+                notes.append("the site's phone numbers do not fit any numbering plan (left out)")
     if ai:
         for f_ in ("sector", "role"):
             if ai.get(f_):
