@@ -2228,6 +2228,17 @@ const BIZ_LANG = { CHN: ["zh", "Simplified Chinese (Mandarin)", "中文"], TWN: 
   RUS: ["ru", "Russian", "Русский"], BLR: ["ru", "Russian", "Русский"], KAZ: ["ru", "Russian", "Русский"], KGZ: ["ru", "Russian", "Русский"], UZB: ["ru", "Russian", "Русский"], UKR: ["uk", "Ukrainian", "Українська"], GEO: ["ka", "Georgian", "ქართული"], ARM: ["hy", "Armenian", "Հայերեն"], AZE: ["az", "Azerbaijani", "Azərbaycan"],
   SAU: ["ar", "Arabic", "العربية"], ARE: ["ar", "Arabic", "العربية"], QAT: ["ar", "Arabic", "العربية"], KWT: ["ar", "Arabic", "العربية"], BHR: ["ar", "Arabic", "العربية"], OMN: ["ar", "Arabic", "العربية"], JOR: ["ar", "Arabic", "العربية"], EGY: ["ar", "Arabic", "العربية"], MAR: ["ar", "Arabic", "العربية"], DZA: ["ar", "Arabic", "العربية"], TUN: ["ar", "Arabic", "العربية"], LBY: ["ar", "Arabic", "العربية"], IRQ: ["ar", "Arabic", "العربية"], SDN: ["ar", "Arabic", "العربية"], MRT: ["ar", "Arabic", "العربية"],
   IRN: ["fa", "Persian", "فارسی"], ISR: ["he", "Hebrew", "עברית"], ETH: ["am", "Amharic", "አማርኛ"], MNG: ["mn", "Mongolian", "Монгол"], KHM: ["km", "Khmer", "ខ្មែរ"], LAO: ["lo", "Lao", "ລາວ"], MMR: ["my", "Burmese", "မြန်မာ"], BGD: ["bn", "Bengali", "বাংলা"] };
+const TLD_CC = { cn: "CHN", tw: "TWN", hk: "HKG", jp: "JPN", kr: "KOR", vn: "VNM", th: "THA", id: "IDN", de: "DEU", at: "AUT", ch: "CHE", fr: "FRA", be: "BEL", es: "ESP", mx: "MEX", ar: "ARG", co: "COL", cl: "CHL", pe: "PER", ec: "ECU",
+  br: "BRA", pt: "PRT", it: "ITA", nl: "NLD", pl: "POL", cz: "CZE", sk: "SVK", hu: "HUN", ro: "ROU", bg: "BGR", hr: "HRV", si: "SVN", rs: "SRB", gr: "GRC", tr: "TUR", se: "SWE", no: "NOR", dk: "DNK", fi: "FIN", ee: "EST", lv: "LVA", lt: "LTU",
+  ru: "RUS", ua: "UKR", kz: "KAZ", sa: "SAU", ae: "ARE", qa: "QAT", kw: "KWT", om: "OMN", jo: "JOR", eg: "EGY", ma: "MAR", dz: "DZA", tn: "TUN", ir: "IRN", il: "ISR", sn: "SEN", ci: "CIV", cm: "CMR" };
+const mailCountry = e => { const tld = String(e || "").toLowerCase().split("@")[1]?.split(".").pop() || ""; return TLD_CC[tld] || ""; };
+const langField = (cs) => { const L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
+  let pref = "en"; try { pref = localStorage.getItem("dd-mail-lang") || "en"; } catch (e) {}
+  if (!L) pref = "en";
+  return `<label for="m-lang">${esc(t("m_lang"))}</label><select id="m-lang">
+    <option value="en"${pref === "en" ? " selected" : ""}>English</option>
+    ${L ? `<option value="native"${pref === "native" ? " selected" : ""}>${esc(L[2])} (${esc(L[1])})</option><option value="both"${pref === "both" ? " selected" : ""}>${esc(L[2])} + English</option>` : ""}
+  </select>${!L && cs.length > 1 ? `<div class="sub">${esc(t("m_lang_mixed"))}</div>` : ""}`; };
 const recipCountry = (kind, ctx, to) => {
   const cs = [...new Set((to || []).map(x => String(x.country || x.Country || "").toUpperCase()).filter(Boolean))];
   if (cs.length) return cs;
@@ -2241,18 +2252,15 @@ async function compose({ kind, ctx, to }, outSel) {
   const recips = (to || []).map(s => ({ name: s.supplier || s.Account || s.name, email: String(s.email || "").split(/[;,\s]+/)[0] }));
   out.innerHTML = `<div class="section"><h3>${esc(t("out_h"))}</h3>
     <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
-    ${(() => { const cs = recipCountry(kind, ctx, to), L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
-      let pref = "en"; try { pref = localStorage.getItem("dd-mail-lang") || "en"; } catch (e) {}
-      if (!L) pref = "en";
-      return `<div class="field"><label for="m-lang">${esc(t("m_lang"))}</label><select id="m-lang">
-        <option value="en"${pref === "en" ? " selected" : ""}>English</option>
-        ${L ? `<option value="native"${pref === "native" ? " selected" : ""}>${esc(L[2])} (${esc(L[1])})</option><option value="both"${pref === "both" ? " selected" : ""}>${esc(L[2])} + English</option>` : ""}
-      </select>${!L && cs.length > 1 ? `<div class="sub">${esc(t("m_lang_mixed"))}</div>` : ""}</div>`; })()}
+    <div class="field" id="m-langf">${langField(recipCountry(kind, ctx, to))}</div>
     <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
     <div class="field"><label for="m-body">${esc(t("body"))}</label><textarea id="m-body" dir="auto">${esc(t("writing"))}</textarea></div>
     <div id="m-review"></div>
     <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
     <div class="note">${esc(t(window.DD_INSTANT ? "web_note" : "draft_note"))}</div><div id="m-flash"></div></div>`;
+  // the recipient's country decides the language options; it can be learned from the address found below
+  let cs = recipCountry(kind, ctx, to);
+  if (!cs.length) { const c = mailCountry(recips.find(x => x.email)?.email); if (c) { cs = [c]; out.querySelector("#m-langf").innerHTML = langField(cs); } }
   // no address yet: find it first (the draft is written after, addressed to the person found)
   const toBox = out.querySelector("#m-to"), flash = out.querySelector("#m-flash"), bodyBox = out.querySelector("#m-body");
   let finding = Promise.resolve();
@@ -2266,6 +2274,7 @@ async function compose({ kind, ctx, to }, outSel) {
         toBox.value = m; const x = c.contacts.find(y => y.email === m);
         if (x?.name && recips[0]) recips[0].name = `${x.name}${x.role ? ", " + x.role : ""} (${recips[0].name || subj})`;
         flash.innerHTML = `<div class="flash ok">${esc(t("fc_found"))}: <span dir="ltr">${esc(m)}</span> ${x?.source ? link(x.source, t("fc_src")) : ""}</div>`;
+        if (!cs.length && mailCountry(m)) { cs = [mailCountry(m)]; out.querySelector("#m-langf").innerHTML = langField(cs); }
       } else flash.innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`;
     }).catch(() => { flash.innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`; });
   }
@@ -2274,7 +2283,7 @@ async function compose({ kind, ctx, to }, outSel) {
     $("#m-draft").disabled = $("#m-again").disabled = true;
     const party = ctx?.party || null;
     const what = kind === "finance" ? `an introduction e-mail to ${party?.name || "a trade finance institution"} asking whether it can finance or insure this cross-border supply deal (Sinder supplies the goods to the buyer below; ask which product fits: buyer credit, supplier credit, guarantee, credit or political risk insurance; what they need to assess it, typical timeline and indicative cost). Do not state any figure we do not have` : kind === "logistics" ? `a request for a freight quotation to ${party?.name || "a logistics provider"} for moving the goods of this deal from the supplier's country (${party?.country || "to be confirmed"}) to the buyer's country, asking for mode options, transit time, indicative cost, insurance and any inspection or certification required at destination` : kind === "rfq" ? `a request for quotation (RFQ) to supplier(s) for this opportunity` : kind === "buyer" ? `an introduction e-mail to this buyer / procurement unit offering Sinder as an international supplier and asking about supplier registration and upcoming needs` : `a first business introduction to this company exploring supply cooperation with Sinder`;
-    const cs = recipCountry(kind, ctx, to), L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
+    const L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
     const mode = L ? ($("#m-lang")?.value || "en") : "en";
     try { localStorage.setItem("dd-mail-lang", mode); } catch (e) {}
     const langLine = mode === "native" ? `in ${L[1]}, the business language of the recipient's country, natural and polite as a native business writer would write it (names, product codes, Incoterms and units stay in Latin script), with the subject line also in ${L[1]}`
@@ -2290,7 +2299,7 @@ Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", 
     $("#m-draft").disabled = $("#m-again").disabled = false;
   };
   $("#m-again").onclick = () => write(true);
-  const ml = $("#m-lang"); if (ml) ml.onchange = () => write(false);
+  out.querySelector("#m-langf").addEventListener("change", e => { if (e.target.id === "m-lang") write(false); });  // survives the field being rebuilt
   $("#m-draft").onclick = async e => {
     const btn = e.currentTarget, list = $("#m-to").value.split(/[,;\s]+/).filter(x => /@/.test(x));
     if (!list.length) { $("#m-flash").innerHTML = `<div class="flash err">${esc(t("add_email"))}</div>`; return; }
