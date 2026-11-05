@@ -3,6 +3,7 @@ import { readActivity } from "@/lib/activity";
 import { appendTo, readRanges, UNIVERSE } from "@/lib/sheets";
 import { supplierSearch } from "@/lib/panel";
 import { logEvent } from "@/lib/log";
+import { QUERIES } from "@/lib/evalqueries";
 
 // The verification agent: grows 'Verified capabilities' where it changes decisions. It takes the product searches
 // people actually ran (Activity log, last 14 days), the top results the search could not yet confirm, and checks each
@@ -50,7 +51,9 @@ Reply with JSON only: {"label": "...", "evidence_url": "<a URL you actually foun
 
 export async function runVerification(perRun = PER_RUN) {
   const known = await knownPairs();
-  const queries = await demandQueries();
+  // real demand first; then the benchmark queries, so the live (expanded) search gets labelled where people have not searched
+  const demand = await demandQueries();
+  const queries = [...demand, ...QUERIES.map((q) => q.toLowerCase()).filter((q) => !demand.includes(q))];
   const todo: { supplier: string; country: string; product: string }[] = [];
   for (const q of queries) {
     if (todo.length >= perRun) break;
@@ -78,6 +81,6 @@ export async function runVerification(perRun = PER_RUN) {
       await logEvent("warn", "verify", `check failed: ${t.supplier} / ${t.product}`, String(e).slice(0, 200));
     }
   }
-  await logEvent("info", "verify", `verified ${out.length} pairs from ${queries.length} demand queries`, out.map((x) => `${x.supplier}:${x.label}`).join("; ").slice(0, 400));
-  return { queries, checked: out };
+  await logEvent("info", "verify", `verified ${out.length} pairs (${demand.length} demand queries, then the benchmark set)`, out.map((x) => `${x.supplier}:${x.label}`).join("; ").slice(0, 400));
+  return { demand, checked: out };
 }
