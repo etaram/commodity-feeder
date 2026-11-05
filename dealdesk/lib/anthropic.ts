@@ -15,8 +15,8 @@ export function anthropicHeaders(): Record<string, string> {
 }
 
 // Cost discipline (spec section 14): every call is metered into the hidden 'AI Usage' tab (job, workspace, tokens,
-// web searches, estimated cost, latency) and refused once today's estimated spend reaches AI_DAILY_BUDGET_USD
-// (default 15). Prices are list prices per million tokens, overridable (AI_PRICE_IN, AI_PRICE_OUT, AI_PRICE_SEARCH per
+// web searches, estimated cost, latency); AI_DAILY_BUDGET_USD (default 15) is an alert line shown in the admin panel,
+// calls are never refused. Prices are list prices per million tokens, overridable (AI_PRICE_IN, AI_PRICE_OUT, AI_PRICE_SEARCH per
 // 1,000 searches); the ledger says "estimated" because the provider's invoice is the only measured figure.
 const PRICE = { in: Number(process.env.AI_PRICE_IN || 1), out: Number(process.env.AI_PRICE_OUT || 5), cacheRead: Number(process.env.AI_PRICE_CACHE_READ || 0.1), search: Number(process.env.AI_PRICE_SEARCH || 10) };
 const DAILY_BUDGET = Number(process.env.AI_DAILY_BUDGET_USD || 15);
@@ -24,6 +24,7 @@ export const estimateCost = (u: { input_tokens?: number; output_tokens?: number;
   ((u.input_tokens || 0) * PRICE.in + (u.output_tokens || 0) * PRICE.out + (u.cache_read_input_tokens || 0) * PRICE.cacheRead) / 1e6 + ((u.server_tool_use?.web_search_requests || 0) * PRICE.search) / 1000;
 
 let spendCache: { day: string; at: number; usd: number } | null = null;
+let alertedDay = "";
 const todayKey = () => new Date().toISOString().slice(0, 10);
 // Today's estimated spend across every instance: the ledger tab, cached 2 minutes, plus what this instance added since.
 export async function spentToday(fresh = false): Promise<number> {
@@ -35,14 +36,15 @@ export async function spentToday(fresh = false): Promise<number> {
   spendCache = { day, at: Date.now(), usd };
   return usd;
 }
-export async function budgetState() { const usd = await spentToday(); return { spent_usd: Math.round(usd * 1000) / 1000, budget_usd: DAILY_BUDGET, exhausted: usd >= DAILY_BUDGET, estimated: true }; }
+export async function budgetState() { const usd = await spentToday(); return { spent_usd: Math.round(usd * 1000) / 1000, alert_usd: DAILY_BUDGET, over_alert: usd >= DAILY_BUDGET, estimated: true }; }
 
 export type CallMeta = { job?: string; ws?: string };
 export async function claude(body: Record<string, unknown>, meta: CallMeta = {}): Promise<{ text: string; sources: { url: string; title: string }[] }> {
   const job = meta.job || "unnamed", t0 = Date.now();
-  if (DAILY_BUDGET > 0 && (await spentToday()) >= DAILY_BUDGET) {
-    void logEvent("warn", "ai", `budget reached: ${job} refused`, `AI_DAILY_BUDGET_USD=${DAILY_BUDGET}`);
-    throw new Error(`AI daily budget reached (${DAILY_BUDGET} USD); try again tomorrow or raise AI_DAILY_BUDGET_USD`);
+  // the budget is an alert, never a refusal: calls always go through; crossing it is logged once a day per instance
+  if (DAILY_BUDGET > 0 && alertedDay !== todayKey() && (await spentToday()) >= DAILY_BUDGET) {
+    alertedDay = todayKey();
+    void logEvent("warn", "ai", `daily AI spend passed the alert line (${DAILY_BUDGET} USD)`, `job ${job}; calls continue`);
   }
   let messages = body.messages as unknown[];
   const out: Block[] = [];
