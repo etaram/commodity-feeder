@@ -66,3 +66,21 @@ Not changed (recorded): broad sector supplier counts still feed the score (needs
 - Code: revert the phase-1 commit; `supmatch.ts` is additive and `supplierSearch` returns the old columns plus new ones, so callers that ignore the new columns are unaffected.
 - Data: no data migration; the supplier index and tenders are rebuilt by the scheduled workflows.
 - Search tuning switch: `SUPPLIER_STRICT=off` and `SUPPLIER_EXPAND=off` (existing environment flags).
+
+## Measured on 5 November 2026 (web-verified sample)
+
+181 top-5 results of 38 queries were checked by three independent model reviewers against official or authoritative sources (company sites, regulators, filings, tender awards). This is a model adjudication with new evidence, not a human one; 56 rows stayed unknown (23 of them never checked because the shared search budget ran out). The 125 decided facts are stored in the private tab **Verified capabilities** and reused by the live search for a year.
+
+| Version | 'supported' results that can supply | 95% interval |
+|---|---|---|
+| match-1.1 (before the review) | 84 of 115 (73%) | +/-8% |
+| match-1.2 (rules from the review) | 54 of 67 (81%) | +/-9% |
+
+Caveats: the rules for 1.2 were derived from the same labels they are measured on, so 81% is optimistic; a held-out set is needed before claiming the 90% gate. The benchmark runs without the AI query expansion the live app uses.
+
+What the review taught (now rules): processed forms (flour for wheat, degermed corn, date syrup, coconut sugar, specialty cement); equipment made for the product or that uses it (ammunition lines, LPG engines, ammonia fuel cells, battery testers, excavator attachments, bitumen boards); EPC and installers; forwarders; procurement intermediaries; shipment records that name cargo, not a catalogue.
+
+## Phase 2 started
+
+- `leads/source_quality.py`: per source freshness, parse completeness, duplicates, mirrored notices, expired notices still listed, share useful to Sinder; shown on the status page next to delivery. First run: 71 of 132 notice sources flagged; about 6,000 expired notices were listed as open (now left out of the open list at each merge).
+- Supplier page: an engagement-readiness checklist (legal identity, official site, reachable channel, product fit, export evidence, role), separate from the match.
