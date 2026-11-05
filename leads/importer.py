@@ -155,7 +155,9 @@ def commodity_seed(path):
             from .refine_modules import to_iso3
             cty = to_iso3(phone_country(phones[0]))
         names = [cats[c]["name_en"] for c in x.get("category_ids") or [] if c in cats]
-        out.append({"supplier": x["display_name_as_published"], "name_local": "", "country": cty, "industry": "; ".join(names)[:200],
+        # the stated incorporation country decides; a country read from the website or the switchboard number is only a
+        # hint for a new record (a regional office's number is not the group's home), so it never splits a duplicate
+        out.append({"supplier": x["display_name_as_published"], "name_local": "", "country": x.get("country_of_incorporation") or "", "country_hint": cty, "industry": "; ".join(names)[:200],
                     "products": ", ".join(x.get("published_product_scope_en") or [])[:300], "commodities": "; ".join(names),
                     "website": site, "email": "; ".join(emails[:2]), "phone": "; ".join(phones[:2]), "address": x.get("registered_address") or "",
                     "contact_page": ct.get("contact_page_url") or ct.get("contact_form_url") or "",

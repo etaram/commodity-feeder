@@ -723,6 +723,8 @@ def build():
                 k = keys[0] if len(keys[0][0]) >= 2 else keys[1]
                 if len(k[0]) < 2:
                     continue
+                if not cty and c.get("country_hint"):
+                    cty = iso3(c["country_hint"]) or ""; k = (k[0], cty)
                 x = sup[k]; x["names"][c["supplier"]] += 1; x["country"][cty] += 1; x["tier_b"] = True; n_im_new += 1
                 sec = classify(f"{c.get('products', '')} {c.get('industry', '')}")[0]
                 if sec:
