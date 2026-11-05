@@ -918,6 +918,7 @@ const L = {
     sup_h: "Matching suppliers from the database", sup_wait: "Searching the whole supplier database…", sup_note_all: "Ranked over the whole database by the tender's product words, sector, HS chapter, export evidence and past sales in this country. Tick suppliers and press \"Draft outreach\" to prepare an RFQ; missing e-mails are looked up from official sources.", sup_note: "From the top {n} suppliers, by sector, products and past supply. Tick suppliers and press \"Draft outreach\" to prepare an RFQ.",
     e_sup_match: "No matching suppliers in the loaded set. Send a supplier search to the worker.", draft_sel: "Draft outreach to selected", deep_sup: "Deep supplier search on the web",
     tick_one: "Tick at least one supplier with an e-mail address.", sup_not_loaded: "The supplier database has not loaded yet.", select: "Select",
+    m_lang: "Language of the e-mail", m_lang_mixed: "Recipients in several countries: one e-mail in English. To write in each company's language, send to one at a time.", m_review: "What the e-mail says (translation for you)", m_review_note: "Check names and numbers in the original before sending.",
     out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft…", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite",
     draft_note: "The draft is saved in your Gmail and not sent. With several recipients, each gets a separate draft.", hand_write: "Automatic drafting works inside Claude. You can write here by hand.",
     add_email: "Add at least one e-mail address.", open_draft: "open draft", unclear_draft: "unclear whether it was created, check Gmail before trying again", drafts: "Gmail drafts:",
@@ -1026,6 +1027,7 @@ const L = {
     sup_h: "ספקים מתאימים מהמאגר", sup_wait: "מחפש בכל מאגר הספקים…", sup_note_all: "מדורג מתוך כל המאגר לפי מילות המוצר במכרז, סקטור, פרק HS, עדות לייצוא ומכירות קודמות במדינה. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ; מייל חסר יאותר ממקורות רשמיים.", sup_note: "מבין {n} הספקים המובילים במאגר, לפי סקטור, מוצרים ומה שסיפקו בעבר. סמן ספקים ולחץ \"נסח פנייה\" כדי להכין RFQ.",
     e_sup_match: "לא נמצאו ספקים מתאימים בטעינה הנוכחית. שלח איתור ספקים לעובד.", draft_sel: "נסח פנייה לספקים המסומנים", deep_sup: "איתור ספקים מעמיק ברשת",
     tick_one: "סמן לפחות ספק אחד עם כתובת מייל.", sup_not_loaded: "מאגר הספקים עוד לא נטען.", select: "בחר",
+    m_lang: "שפת המייל", m_lang_mixed: "הנמענים ממדינות שונות: מייל אחד באנגלית. כדי לכתוב לכל חברה בשפה שלה, שלח לכל אחת בנפרד.", m_review: "מה כתוב במייל (תרגום בשבילך)", m_review_note: "בדוק שמות ומספרים במקור לפני השליחה.",
     out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה…", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש",
     draft_note: "הטיוטה נשמרת ב-Gmail שלך ולא נשלחת. אם יש כמה נמענים, נוצרת טיוטה נפרדת לכל אחד.", hand_write: "ניסוח אוטומטי זמין בתוך Claude. אפשר לכתוב כאן ידנית.",
     add_email: "הוסף לפחות כתובת מייל אחת.", open_draft: "פתח טיוטה", unclear_draft: "לא ברור אם נוצרה, בדוק ב-Gmail לפני שתנסה שוב", drafts: "טיוטות ב-Gmail:",
@@ -2213,14 +2215,42 @@ async function findContacts(subject, ctx, country, outSel, opts = {}) {
   });
 }
 
+/* ---------- the recipient's language: English, or the company's own language (business language of its country) ---------- */
+const BIZ_LANG = { CHN: ["zh", "Simplified Chinese (Mandarin)", "中文"], TWN: ["zh-TW", "Traditional Chinese", "繁體中文"], HKG: ["zh-TW", "Traditional Chinese", "繁體中文"], MAC: ["zh-TW", "Traditional Chinese", "繁體中文"],
+  JPN: ["ja", "Japanese", "日本語"], KOR: ["ko", "Korean", "한국어"], VNM: ["vi", "Vietnamese", "Tiếng Việt"], THA: ["th", "Thai", "ไทย"], IDN: ["id", "Indonesian", "Bahasa Indonesia"],
+  DEU: ["de", "German", "Deutsch"], AUT: ["de", "German", "Deutsch"], CHE: ["de", "German", "Deutsch"], LIE: ["de", "German", "Deutsch"], FRA: ["fr", "French", "Français"], BEL: ["fr", "French", "Français"], LUX: ["fr", "French", "Français"], MCO: ["fr", "French", "Français"],
+  SEN: ["fr", "French", "Français"], CIV: ["fr", "French", "Français"], CMR: ["fr", "French", "Français"], MLI: ["fr", "French", "Français"], BFA: ["fr", "French", "Français"], NER: ["fr", "French", "Français"], TCD: ["fr", "French", "Français"], GIN: ["fr", "French", "Français"], BEN: ["fr", "French", "Français"], TGO: ["fr", "French", "Français"], GAB: ["fr", "French", "Français"], COG: ["fr", "French", "Français"], COD: ["fr", "French", "Français"], MDG: ["fr", "French", "Français"], HTI: ["fr", "French", "Français"],
+  ESP: ["es", "Spanish", "Español"], MEX: ["es", "Spanish", "Español"], ARG: ["es", "Spanish", "Español"], COL: ["es", "Spanish", "Español"], CHL: ["es", "Spanish", "Español"], PER: ["es", "Spanish", "Español"], ECU: ["es", "Spanish", "Español"], BOL: ["es", "Spanish", "Español"], PRY: ["es", "Spanish", "Español"], URY: ["es", "Spanish", "Español"], VEN: ["es", "Spanish", "Español"], GTM: ["es", "Spanish", "Español"], HND: ["es", "Spanish", "Español"], SLV: ["es", "Spanish", "Español"], NIC: ["es", "Spanish", "Español"], CRI: ["es", "Spanish", "Español"], PAN: ["es", "Spanish", "Español"], DOM: ["es", "Spanish", "Español"], CUB: ["es", "Spanish", "Español"],
+  PRT: ["pt", "Portuguese", "Português"], BRA: ["pt-BR", "Brazilian Portuguese", "Português"], AGO: ["pt", "Portuguese", "Português"], MOZ: ["pt", "Portuguese", "Português"], ITA: ["it", "Italian", "Italiano"], SMR: ["it", "Italian", "Italiano"],
+  NLD: ["nl", "Dutch", "Nederlands"], POL: ["pl", "Polish", "Polski"], CZE: ["cs", "Czech", "Čeština"], SVK: ["sk", "Slovak", "Slovenčina"], HUN: ["hu", "Hungarian", "Magyar"], ROU: ["ro", "Romanian", "Română"], MDA: ["ro", "Romanian", "Română"], BGR: ["bg", "Bulgarian", "Български"],
+  HRV: ["hr", "Croatian", "Hrvatski"], SVN: ["sl", "Slovenian", "Slovenščina"], SRB: ["sr", "Serbian", "Srpski"], GRC: ["el", "Greek", "Ελληνικά"], CYP: ["el", "Greek", "Ελληνικά"], TUR: ["tr", "Turkish", "Türkçe"],
+  SWE: ["sv", "Swedish", "Svenska"], NOR: ["no", "Norwegian", "Norsk"], DNK: ["da", "Danish", "Dansk"], FIN: ["fi", "Finnish", "Suomi"], EST: ["et", "Estonian", "Eesti"], LVA: ["lv", "Latvian", "Latviešu"], LTU: ["lt", "Lithuanian", "Lietuvių"],
+  RUS: ["ru", "Russian", "Русский"], BLR: ["ru", "Russian", "Русский"], KAZ: ["ru", "Russian", "Русский"], KGZ: ["ru", "Russian", "Русский"], UZB: ["ru", "Russian", "Русский"], UKR: ["uk", "Ukrainian", "Українська"], GEO: ["ka", "Georgian", "ქართული"], ARM: ["hy", "Armenian", "Հայերեն"], AZE: ["az", "Azerbaijani", "Azərbaycan"],
+  SAU: ["ar", "Arabic", "العربية"], ARE: ["ar", "Arabic", "العربية"], QAT: ["ar", "Arabic", "العربية"], KWT: ["ar", "Arabic", "العربية"], BHR: ["ar", "Arabic", "العربية"], OMN: ["ar", "Arabic", "العربية"], JOR: ["ar", "Arabic", "العربية"], EGY: ["ar", "Arabic", "العربية"], MAR: ["ar", "Arabic", "العربية"], DZA: ["ar", "Arabic", "العربية"], TUN: ["ar", "Arabic", "العربية"], LBY: ["ar", "Arabic", "العربية"], IRQ: ["ar", "Arabic", "العربية"], SDN: ["ar", "Arabic", "العربية"], MRT: ["ar", "Arabic", "العربية"],
+  IRN: ["fa", "Persian", "فارسی"], ISR: ["he", "Hebrew", "עברית"], ETH: ["am", "Amharic", "አማርኛ"], MNG: ["mn", "Mongolian", "Монгол"], KHM: ["km", "Khmer", "ខ្មែរ"], LAO: ["lo", "Lao", "ລາວ"], MMR: ["my", "Burmese", "မြန်မာ"], BGD: ["bn", "Bengali", "বাংলা"] };
+const recipCountry = (kind, ctx, to) => {
+  const cs = [...new Set((to || []).map(x => String(x.country || x.Country || "").toUpperCase()).filter(Boolean))];
+  if (cs.length) return cs;
+  const c = ctx?.party?.country || ctx?.find?.country || (kind === "rfq" ? "" : ctx?.r?.country || ctx?.r?.Country) || "";
+  return c ? [String(c).toUpperCase()] : [];
+};
+
 /* ---------- outreach (Claude writes, you edit, Gmail stores a draft) ---------- */
 async function compose({ kind, ctx, to }, outSel) {
   const out = $(outSel);
   const recips = (to || []).map(s => ({ name: s.supplier || s.Account || s.name, email: String(s.email || "").split(/[;,\s]+/)[0] }));
   out.innerHTML = `<div class="section"><h3>${esc(t("out_h"))}</h3>
     <div class="field"><label for="m-to">${esc(t("recipients"))}</label><input id="m-to" dir="ltr" value="${esc(recips.map(x => x.email).filter(Boolean).join(", "))}" placeholder="name@company.com"></div>
+    ${(() => { const cs = recipCountry(kind, ctx, to), L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
+      let pref = "en"; try { pref = localStorage.getItem("dd-mail-lang") || "en"; } catch (e) {}
+      if (!L) pref = "en";
+      return `<div class="field"><label for="m-lang">${esc(t("m_lang"))}</label><select id="m-lang">
+        <option value="en"${pref === "en" ? " selected" : ""}>English</option>
+        ${L ? `<option value="native"${pref === "native" ? " selected" : ""}>${esc(L[2])} (${esc(L[1])})</option><option value="both"${pref === "both" ? " selected" : ""}>${esc(L[2])} + English</option>` : ""}
+      </select>${!L && cs.length > 1 ? `<div class="sub">${esc(t("m_lang_mixed"))}</div>` : ""}</div>`; })()}
     <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
     <div class="field"><label for="m-body">${esc(t("body"))}</label><textarea id="m-body" dir="auto">${esc(t("writing"))}</textarea></div>
+    <div id="m-review"></div>
     <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
     <div class="note">${esc(t(window.DD_INSTANT ? "web_note" : "draft_note"))}</div><div id="m-flash"></div></div>`;
   if (!recips.some(x => x.email) && window.DD_INSTANT && (ctx?.find || recips[0]?.name)) {
@@ -2237,14 +2267,23 @@ async function compose({ kind, ctx, to }, outSel) {
     $("#m-draft").disabled = $("#m-again").disabled = true;
     const party = ctx?.party || null;
     const what = kind === "finance" ? `an introduction e-mail to ${party?.name || "a trade finance institution"} asking whether it can finance or insure this cross-border supply deal (Sinder supplies the goods to the buyer below; ask which product fits: buyer credit, supplier credit, guarantee, credit or political risk insurance; what they need to assess it, typical timeline and indicative cost). Do not state any figure we do not have` : kind === "logistics" ? `a request for a freight quotation to ${party?.name || "a logistics provider"} for moving the goods of this deal from the supplier's country (${party?.country || "to be confirmed"}) to the buyer's country, asking for mode options, transit time, indicative cost, insurance and any inspection or certification required at destination` : kind === "rfq" ? `a request for quotation (RFQ) to supplier(s) for this opportunity` : kind === "buyer" ? `an introduction e-mail to this buyer / procurement unit offering Sinder as an international supplier and asking about supplier registration and upcoming needs` : `a first business introduction to this company exploring supply cooperation with Sinder`;
-    const prompt = `Write ${what}, in English (business e-mails to foreign companies are in English). Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes. For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
-Return JSON only: {"subject": "…", "body": "…"} (body as plain text with line breaks).
+    const cs = recipCountry(kind, ctx, to), L = cs.length === 1 ? BIZ_LANG[cs[0]] : null;
+    const mode = L ? ($("#m-lang")?.value || "en") : "en";
+    try { localStorage.setItem("dd-mail-lang", mode); } catch (e) {}
+    const langLine = mode === "native" ? `in ${L[1]}, the business language of the recipient's country, natural and polite as a native business writer would write it (names, product codes, Incoterms and units stay in Latin script), with the subject line also in ${L[1]}`
+      : mode === "both" ? `first in ${L[1]} (the business language of the recipient's country, natural and polite as a native business writer would write it), then a line "----- English -----" and the same e-mail in English; the subject line in ${L[1]} followed by " / " and the English subject`
+      : "in English (business e-mails to foreign companies are in English)";
+    const review = mode === "en" ? "" : `, "review": "the full e-mail translated to ${outLang()} so the sender can check what it says"`;
+    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes. For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
+Return JSON only: {"subject": "…", "body": "…"${review}} (body as plain text with line breaks).
 Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", "sector", "commodity", "est_value_usd", "deadline", "link", "opportunity", "market", "commodity group", "product", "Account", "Primary commodity group", "products", "supplied", "supplier"]) : {})}`;
-    try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || ""; }
+    try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || "";
+      $("#m-review").innerHTML = j.review ? `<details class="section" open><summary>${esc(t("m_review"))}</summary><div class="ai" dir="auto" style="white-space:pre-wrap">${esc(j.review)}</div><div class="sub">${esc(t("m_review_note"))}</div></details>` : ""; }
     catch (e) { $("#m-body").value = e.text || ""; $("#m-flash").innerHTML = `<div class="flash err">${esc(sampleErr(e))}</div>`; }
     $("#m-draft").disabled = $("#m-again").disabled = false;
   };
   $("#m-again").onclick = () => write(true);
+  const ml = $("#m-lang"); if (ml) ml.onchange = () => write(false);
   $("#m-draft").onclick = async e => {
     const btn = e.currentTarget, list = $("#m-to").value.split(/[,;\s]+/).filter(x => /@/.test(x));
     if (!list.length) { $("#m-flash").innerHTML = `<div class="flash err">${esc(t("add_email"))}</div>`; return; }
