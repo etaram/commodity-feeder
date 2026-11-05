@@ -139,6 +139,7 @@
     summary: () => getj("/api/panel/company-check?summary=1"),
   };
   window.DD_ADMIN = () => getj("/api/panel/admin");
+  window.DD_ADMIN_ACT = (action) => post("/api/panel/admin", { action }, "Deal Desk");
   window.DD_AI_USAGE = (days) => getj("/api/panel/ai-usage?days=" + (days || 7));
   window.DD_STRATEGY = { get: () => getj("/api/panel/strategy"), save: (b) => post("/api/panel/strategy", b, "Deal Desk") };
   // Client intake: dossiers from the client's own deck and site, target profiles and prospects. PUT returns the body

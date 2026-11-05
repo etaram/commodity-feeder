@@ -1,4 +1,4 @@
-import { appendRow, readRanges, ENGINE_SHEET, UNIVERSE } from "@/lib/sheets";
+import { appendRow, appendRows, readRanges, ENGINE_SHEET, UNIVERSE } from "@/lib/sheets";
 import { COLUMNS, assertionsFromVerifiedCaps, fromGrid, toRow, type Assertion } from "@/lib/assertions";
 
 // Storage for the assertions ledger: hidden tab 'Assertions' in the engine sheet, append-only, one row per version,
@@ -24,6 +24,15 @@ export async function readAssertions(fresh = false): Promise<Assertion[]> {
 
 // Appends one version. The in-memory cache is extended at once so a read right after a write sees the row on this
 // instance; other instances see it within TTL.
+export async function appendAssertions(list: Assertion[]): Promise<void> {
+  if (!list.length) return;
+  if (!cache) await readAssertions();
+  const rows = list.map(toRow);
+  if (cache && !cache.header) { rows.unshift([...COLUMNS]); cache.header = true; }
+  await appendRows(TAB, rows);
+  if (cache) cache.rows = [...cache.rows, ...list];
+}
+
 export async function appendAssertion(a: Assertion): Promise<void> {
   if (!cache) await readAssertions();
   if (cache && !cache.header) { await appendRow(TAB, [...COLUMNS]); cache.header = true; }

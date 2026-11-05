@@ -69,6 +69,24 @@ export async function appendRow(tab: string, row: (string | number)[]) {
   return append(tab, row);
 }
 
+// Several rows in one request (one API call instead of one per row); creates the hidden tab on first use.
+export async function appendRows(tab: string, rows: (string | number)[][]) {
+  if (!rows.length) return;
+  const jwt = await client();
+  if (!jwt) throw new Error("Sheets is not configured");
+  const range = encodeURIComponent(`'${tab}'!A1`);
+  const url = `${API}/${SHEET}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+  const values = rows.map((r) => r.slice(0, 40));
+  try {
+    await call(jwt, "POST", url, { values });
+  } catch (e: unknown) {
+    if (String(e).includes("Unable to parse range")) {
+      await call(jwt, "POST", `${API}/${SHEET}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
+      await call(jwt, "POST", url, { values });
+    } else throw e;
+  }
+}
+
 // Overwrites one range of the engine sheet (RAW, never evaluated as formulas). Used for the Users tab only.
 export async function writeRange(range: string, values: (string | number)[][]) {
   const jwt = await client();

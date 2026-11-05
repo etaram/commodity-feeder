@@ -1520,6 +1520,7 @@ function openTender(r, keep) {
     ${integrityHtml(r)}
     ${r.stage === "planned" ? projectStageHtml(r) : ""}
     ${fitWhyHtml(r)}
+    <div id="t-known"></div>
     <div id="know-line"></div>
     <dl class="kv">
       ${he && r.title_en ? `<dt>${esc(t("title_en"))}</dt><dd>${txt(r.title_en)}</dd>` : ""}
@@ -1572,6 +1573,7 @@ function openTender(r, keep) {
   $("#a-pur").onclick = e => addPursuit(r, e.currentTarget, "#t-out");
   if ($("#a-ws")) $("#a-ws").onclick = () => openDealWorkspace(r);
   wireFitWhy(r);
+  if (window.DD_ASSERT && r.id) window.DD_ASSERT.list("tender:" + r.id).then(j => { if ($("#t-known")) $("#t-known").innerHTML = knownHtml(j.rows || []); }).catch(() => {});
   knowLine("#know-line", [r.buyer, ...String(r.incumbent || "").split(";")].map(x => String(x || "").trim()).filter(Boolean));
   $("#a-proj").onclick = e => { if (!confirm(t("p_confirm"))) return; projectJob({ type: "project_start", target_id: "P:" + r.id, target: r.title_en, context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "why"]), title_he: he } }, e.currentTarget, "#t-out"); };
 }
@@ -1791,6 +1793,16 @@ async function knowLine(sel, names) {
   } catch (e) { el.innerHTML = ""; }
 }
 /* why this rank: the brain's reasons and penalties for one notice, with the owner's verdict logged for calibration */
+/* what earlier manual research found on this tender (research memory): requirements from its documents, notes, next steps */
+function knownHtml(rows) {
+  rows = rows.filter(r => !["rejected", "disputed"].includes(r.status));
+  if (!rows.length) return "";
+  const lab = p => p === "requirement" ? mt("Requirement (from the documents)", "דרישה (מהמסמכים)") : p === "next_step" ? mt("Next step", "הצעד הבא") : p.startsWith("research:") ? mt("Earlier research", "מחקר קודם") + " · " + p.slice(9).replace(/_/g, " ") : p.replace(/_/g, " ");
+  const ev = r => { try { return typeof r.evidence === "string" ? JSON.parse(r.evidence) : (r.evidence || {}); } catch (_) { return {}; } };
+  return `<details class="section" open><summary>${esc(mt("Already known from earlier research", "ידוע ממחקר קודם"))} <span class="pill info">${rows.length}</span></summary>
+    ${rows.slice(0, 40).map(r => `<div class="sub" style="margin:3px 0"><b>${esc(lab(r.property))}:</b> ${esc(r.value)} <span class="muted">${esc(String(r.created || "").slice(0, 10))} · ${esc(r.reviewed_by || "")}${ev(r).url ? ` · <a href="${esc(ev(r).url)}" target="_blank" rel="noopener">${esc(mt("source", "מקור"))}</a>` : ""}${r.status === "expired" ? " · " + esc(mt("expired", "פג תוקף")) : ""}</span></div>`).join("")}
+    <div class="sub muted">${esc(mt("Kept by the system from research people ran; not verified.", "נשמר אוטומטית ממחקר שאנשים הריצו; לא מאומת."))}</div></details>`;
+}
 function fitWhyHtml(r) {
   if (!r.fit_why && !r.fit_flags) return "";
   return `<section class="section fitwhy" aria-label="${esc(t("fw_h"))}"><h3>${esc(t("fw_h"))} <span class="num">${esc(r.fit || r.score || "")}</span></h3>
@@ -2538,7 +2550,7 @@ function renderAssertions(s, rows) {
   const canEdit = ["analyst", "admin"].includes(S.me?.role);
   el.innerHTML = `<details class="section"><summary>${esc(mt("Facts on record", "עובדות ברשומות"))} <span class="pill good">${n("observed")}</span> <span class="pill warn">${n("disputed") + n("expired")}</span></summary>
     ${rows.map(r => { let ev = {}; try { ev = typeof r.evidence === "string" ? JSON.parse(r.evidence) : (r.evidence || {}); } catch (_) {}
-      return `<div class="sub" style="margin:4px 0"><b>${esc(r.property)}</b>: ${esc(r.value)}${r.unit ? " " + esc(r.unit) : ""} ${pill(r.status)} ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(mt("source", "מקור"))}</a>` : ""} <span class="muted">${esc(r.review_method || "")} ${esc(String(r.reviewed_at || r.created || "").slice(0, 10))}${ev.reason ? " · " + esc(ev.reason) : ""}</span>
+      return `<div class="sub" style="margin:4px 0"><b>${esc(r.property.startsWith("research:") ? mt("Earlier research", "מחקר קודם") + " · " + r.property.slice(9).replace(/_/g, " ") : r.property.replace(/_/g, " "))}</b>: ${esc(r.value)}${r.unit ? " " + esc(r.unit) : ""} ${pill(r.status)} ${ev.url ? `<a href="${esc(ev.url)}" target="_blank" rel="noopener">${esc(mt("source", "מקור"))}</a>` : ""} <span class="muted">${esc(r.review_method || "")} ${esc(String(r.reviewed_at || r.created || "").slice(0, 10))}${ev.reason ? " · " + esc(ev.reason) : ""}</span>
       ${canEdit && !["rejected", "disputed", "expired"].includes(r.status) ? `<button type="button" class="sm" data-aq="${esc(r.id)}|disputed">${esc(mt("Dispute", "ערער"))}</button><button type="button" class="sm" data-aq="${esc(r.id)}|rejected">${esc(mt("Reject", "דחה"))}</button>` : ""}</div>`; }).join("")}
     <div id="c-assert-out" class="sub q-block"></div></details>`;
   el.querySelectorAll("[data-aq]").forEach(b => b.onclick = () => {
@@ -3801,6 +3813,7 @@ async function renderOps(fresh) {
       ${kpi(adNum(w.events), mt("World events", "אירועים בעולם"), `${adNum(w.actionable)} ${esc(mt("actionable", "בר ביצוע"))} · ${adNum(w.research)} ${esc(mt("research", "מחקר"))}`)}
       ${kpi(adNum(vf.total), mt("Verified capability facts", "עובדות יכולת מאומתות"), `${adNum((vf.by_label || {}).yes)} ${esc(mt("yes", "כן"))} · ${adNum((vf.by_label || {}).no)} ${esc(mt("no", "לא"))}`)}
       ${kpi(adNum(as.total), mt("Assertions on record", "טענות ברשומות"), Object.entries(as.by_status || {}).map(([k, n]) => `${esc(k)} ${n}`).join(" · "))}
+      ${(() => { const bp = as.by_property || {}; const rs = Object.entries(bp).filter(([k]) => k.startsWith("research:")).reduce((a, [, n]) => a + n, 0); const ct = (bp.contact_email || 0) + (bp.contact_phone || 0); return kpi(adNum(rs), mt("Research kept in memory", "מחקרים שנשמרו בזיכרון"), `${adNum(ct)} ${esc(mt("contacts", "פרטי קשר"))} · ${adNum(bp.requirement || 0)} ${esc(mt("requirements", "דרישות"))} · <button type="button" class="sm" id="ops-backfill">${esc(mt("Import past research now", "ייבא מחקרים קודמים עכשיו"))}</button>`); })()}
       ${(() => { const ck = d.company_checks || {}, bv = ck.by_verdict || {}, tot = Object.values(bv).reduce((a, n) => a + n, 0); return kpi(adNum(tot), mt("Websites checked", "אתרים שנבדקו"), tot ? `${adNum(bv.ok || 0)} ok · ${adNum(bv["name mismatch"] || 0)} ${esc(mt("name mismatch", "שם לא תואם"))} · ${adNum((bv.unreachable || 0) + (bv.parked || 0))} ${esc(mt("dead or parked", "לא פעיל"))}${ck.last ? " · " + esc(String(ck.last).slice(0, 10)) : ""}` : esc(mt("first run within 3 hours", "ריצה ראשונה בתוך 3 שעות"))); })()}
       ${kpi("$" + (b.spent_usd ?? 0), mt("AI spend today (estimated)", "הוצאת AI היום (אומדן)"), `${esc(mt("alert line", "קו התראה"))} $${esc(b.alert_usd ?? "")}${b.over_alert ? ` <span class="pill warn">${esc(mt("over", "מעל"))}</span>` : ""}`)}
     </div>
@@ -3836,6 +3849,7 @@ async function renderOps(fresh) {
     <section class="section"><h3>${esc(mt("Warnings and errors (recent, repeats collapsed)", "אזהרות ושגיאות (אחרונות, חזרות מאוחדות)"))}</h3>${adErr(d.warnings)}
       ${(Array.isArray(d.warnings) ? d.warnings : []).map(x => `<div class="sub" style="margin:3px 0"><span class="pill ${x.level === "error" ? "bad" : "warn"}">${esc(x.level)}</span> <span class="num">${esc(String(x.time).slice(5, 16))}</span> <b>${esc(x.area)}</b> ${esc(x.message)}${x.count > 1 ? ` <span class="pill">x${x.count}</span>` : ""}${x.detail ? `<div class="muted" style="margin-inline-start:12px">${esc(x.detail)}</div>` : ""}</div>`).join("") || `<div class="sub">${esc(mt("None.", "אין."))}</div>`}</section>`;
   $("#ops-refresh").onclick = () => renderOps(true);
+  const bf = $("#ops-backfill"); if (bf && window.DD_ADMIN_ACT) bf.onclick = async () => { bf.disabled = true; bf.textContent = t("loading"); try { const r = await window.DD_ADMIN_ACT("backfill_research"); bf.textContent = mt(`${r.facts} facts from ${r.jobs} jobs`, `${r.facts} עובדות מ-${r.jobs} מחקרים`); setTimeout(() => renderOps(true), 1500); } catch (e) { bf.textContent = errText(e); } };
 }
 
 /* ---------- navigation and wiring ---------- */

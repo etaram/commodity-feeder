@@ -73,3 +73,14 @@ export async function GET() {
     build: { commit: process.env.VERCEL_GIT_COMMIT_SHA || "local", supplier_match: MATCH_VERSION, model: MODEL },
     ai_budget: await budgetState().catch(() => null), volumes, world, classification: classif, search_eval: evalTab, verified, assertions, sources, source_quality: quality, ai, warnings: applog, company_checks: checks });
 }
+
+// POST {action: "backfill_research"} (admin): copies past research jobs into the research memory now, instead of
+// waiting for the daily run. Code only, idempotent.
+export async function POST(req: Request) {
+  const { s, res } = await gate("admin");
+  if (!s) return res;
+  const b = await req.json().catch(() => ({}));
+  if (b.action !== "backfill_research") return NextResponse.json({ ok: false, error: "unknown action" }, { status: 400 });
+  const { backfillJobs } = await import("@/lib/researchmemory");
+  return NextResponse.json({ ok: true, ...(await backfillJobs(500)) });
+}

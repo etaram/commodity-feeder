@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
+import { remember } from "@/lib/researchmemory";
 import { markets } from "@/lib/markets";
 import { claude } from "@/lib/anthropic";
 import { logActivity } from "@/lib/activity";
@@ -44,6 +45,7 @@ Write in ${he ? "Hebrew" : "English"}, at most 150 words, as 3 to 5 lines each s
     const out = (text + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 4000);
     if (cache.size > 100) cache.delete(cache.keys().next().value as string);
     cache.set(key, { text: out, at: Date.now() });
+    await remember({ ws: auth.s.ws, by: auth.s.email, job: "price_explanation", subject: { kind: "product", name: g.group, key: `commodity:${g.group}:${month}` }, text, sources });
     return NextResponse.json({ ok: true, text: out });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });

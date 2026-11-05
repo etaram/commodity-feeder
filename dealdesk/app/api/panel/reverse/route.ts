@@ -4,6 +4,7 @@ import { claude } from "@/lib/anthropic";
 import { supplierSearch, searchTenders, getRange } from "@/lib/panel";
 import { appendRow, sheetsEnabled } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
+import { remember } from "@/lib/researchmemory";
 
 // Deal reverse engineering: a screenshot or PDF of a (redacted) deal document comes in, a reconstruction comes out.
 // 1. Vision pass (one AI call, no web): the facts the document states, each marked read or inferred, redactions listed.
@@ -77,6 +78,8 @@ Never present a guess as a fact. Never invent company names, emails or prices. M
       try { await appendRow("Panel Jobs", ["RV" + Date.now().toString(36).toUpperCase(), stamp, "reverse", "", `Deal reconstruction: ${product || "document"}`, JSON.stringify(f).slice(0, 4000), "", "done", result.slice(0, 20000), r2.sources[0]?.url || "", stamp, `web instant; ${s.email}`]); } catch { /* the answer still returns */ }
     }
     await logActivity(s, "reverse_deal_done", product, `${sup.total} suppliers, ${tenders.length} tenders`);
+    // the reconstruction is kept on the product (code only): its gist, next step and any contacts or ids it printed
+    if (product) await remember({ ws: s.ws, by: s.email, job: "reverse", subject: { kind: "product", name: product, key: `product:${product.toLowerCase()}` }, text: r2.text, sources: r2.sources });
     return NextResponse.json({ ok: true, facts: f, text: result, suppliers: supRows, suppliers_total: sup.total, tenders, markets });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });

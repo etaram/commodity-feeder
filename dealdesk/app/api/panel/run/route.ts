@@ -5,6 +5,7 @@ import { appendRow, jobsToday, sheetsEnabled } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
 import { registryFacts } from "@/lib/registry";
 import { logActivity } from "@/lib/activity";
+import { remember, subjectOf } from "@/lib/researchmemory";
 
 // Runs a panel job (research, supplier search, eligibility, logistics, quote...) immediately on the server
 // with Claude Haiku 5.5 and web search, writes the finished job to 'Panel Jobs', and returns the answer.
@@ -79,7 +80,7 @@ After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array
       messages: [{ role: "user", content: prompt }],
     }, { job: "research job" });
     // web-found suppliers: saved to the Web Suppliers tab so the next supplier search finds them (marked unverified)
-    let body = text, saved = 0;
+    let body = text, saved = 0, foundList: Record<string, unknown>[] = [];
     if (type === "supplier_search") {
       const at = text.lastIndexOf("SUPPLIERS_JSON:");
       if (at >= 0) {
@@ -87,6 +88,7 @@ After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array
         try {
           const m = text.slice(at).match(/\[[\s\S]*\]/);
           const list = (m ? JSON.parse(m[0]) : []) as Record<string, unknown>[];
+          foundList = list;
           const stamp0 = new Date().toISOString().slice(0, 16).replace("T", " ");
           const str = (v: unknown, n: number) => String(v ?? "").replace(/[\r\n\t]+/g, " ").trim().slice(0, n);
           for (const x of list.slice(0, 12)) {
@@ -110,7 +112,10 @@ After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array
           JSON.stringify(context || {}).slice(0, 4000), String(request || "").slice(0, 2000), "done", result.slice(0, 20000), sources[0]?.url || "", stamp, `web instant; ${session.email || ""}`]);
       } catch (e) { await logEvent("error", "run", "sheet write failed", String(e).slice(0, 300), session.email); }
     }
-    return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp, contacts, saved });
+    // research memory: the facts in this answer go to the ledger for the next person and the next search (code only)
+    const kept = await remember({ ws: session.ws, by: session.email, job: String(type || "other"), subject: subjectOf(String(type || ""), String(target || ""), String(target_id || ""), context || {}),
+      text: body, sources, contacts: contacts as never, suppliers: foundList as never, product: type === "supplier_search" ? String(target || "").slice(0, 120) : undefined });
+    return NextResponse.json({ ok: true, text: result, link: sources[0]?.url || "", updated: stamp, contacts, saved, kept });
   } catch (e) {
     await logEvent("error", "run", `${type || "job"} failed`, String((e as Error).message || e), session.email);
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });

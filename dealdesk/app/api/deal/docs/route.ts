@@ -3,6 +3,7 @@ import { gate } from "@/lib/gate";
 import { claude } from "@/lib/anthropic";
 import { clean, readDeal, saveRecord } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
+import { remember } from "@/lib/researchmemory";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -40,6 +41,9 @@ Rules: only requirements actually written in the document; mandatory = the docum
       added++;
     }
     await logActivity(s, "deal_docs_done", dealId, `${added} requirements from ${doc}`);
+    // the requirements are also kept on the tender itself, so the next deal on the same tender starts with them
+    await remember({ ws: s.ws, by: s.email, job: "deal_docs", subject: { kind: "project", name: doc, key: `tender:${dealId}` },
+      text: items.slice(0, 40).map((it) => `- ${it.mandatory !== false ? "[mandatory] " : ""}${it.item} (${doc}${it.page ? ", " + it.page : ""})`).join("\n"), sources: [{ url }] });
     return NextResponse.json({ ok: true, added, document: doc, lang });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 });
