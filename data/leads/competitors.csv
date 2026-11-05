@@ -1,7 +1,6 @@
 supplier,group,supplier_country,wins_12m,won_usd_est,buyers,buyer_countries
 KEOLIS SA,Transport & logistics services,FRA,5,4648689927,3,FRA
 PAPREC Energies France,"Environment, waste & cleaning",FRA,2,2741305302,1,FRA
-"SIEMENS MOBILITY, SLU","Vehicles, rolling stock, ships & aircraft",ESP,2,2737612602,1,ESP
 Imprensa Nacional Casa da Moeda,"Repair, maintenance & installation",PRT,2,2604751930,1,PRT
 PORR CONSTRUCT,Transport & civil infrastructure works,ROU,43,2383145412,8,ROU
 VR Sverige AB,Transport & logistics services,SWE,4,2341506939,3,SWE
@@ -55,6 +54,7 @@ EREDI CAMPIDONICO SPA,"Energy, fuels & utilities",ITA,2,1420081789,1,ITA
 GARDEN CENTER GRUP S.R.L.,Agriculture & food,ROU,83,1405281173,11,ROU
 Computacenter AG & Co. oHG,ICT & telecom,DEU,51,1397986425,29,AUT DEU
 CRIS GARDEN,Agriculture & food,ROU,59,1392282928,5,ROU
+"SIEMENS MOBILITY, SLU","Vehicles, rolling stock, ships & aircraft",ESP,1,1368806301,1,ESP
 "CIQ – ENGENHARIA E CONSTRUÇÃO, LDA",Building construction works,PRT,2,1359562606,1,PRT
 MOL Downstream Zártkörűen Működő Részvénytársaság,"Energy, fuels & utilities",HUN,3,1358695510,2,HUN
 EIFFAGE CONSTRUCTION HABITAT,Building construction works,FRA,3,1341108725,2,FRA
@@ -73,7 +73,7 @@ COVERTECH Sp. z o.o.,Power & electrical equipment,POL,1,1164519653,1,POL
 "E-TRUST SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ, adres: ul. Pucka 59, 84-240 Reda, woj. Pomorskie, N",ICT & telecom,POL,1,1151457687,1,POL
 "SIEMENS HEALTHCARE, LDA.",Healthcare & pharmaceuticals,PRT,3,1139304665,2,PRT
 Vitol,"Energy, fuels & utilities",NLD,1,1138667103,1,NLD
-"TÉCNICA Y PROYECTOS, S.A. (TYPSA)",Engineering & architecture services,ESP,6,1137926061,4,ESP
+"TÉCNICA Y PROYECTOS, S.A. (TYPSA)",Engineering & architecture services,ESP,5,1137341734,4,ESP
 PILATUS Constructions Aéronautiques SA,Transport & logistics services,CHE,1,1134718458,1,BEL
 "Grandalvo – Empresa de Trabalho Temporário, Lda.","Consulting, business & financial services",PRT,2,1124830321,1,PRT
 FARMEXIM S.A.,Healthcare & pharmaceuticals,ROU,1795,1101365720,167,ROU
@@ -243,7 +243,7 @@ TELEFONICA SOLUCIONES DE INFORMÁTICA Y COMUNICACIONES DE ESPAÑA S.A.U.,ICT & t
 S u b t e r r a a.s.,Transport & civil infrastructure works,CZE,3,596036719,2,CZE
 Impel Facility Services Sp. z o.o.,"Environment, waste & cleaning",POL,46,595368641,43,POL
 CONCELEX,Building construction works,ROU,27,592490526,9,ROU
-Medtronic Iberica,Healthcare & pharmaceuticals,ESP,113,589954212,16,ESP
+Medtronic Iberica,Healthcare & pharmaceuticals,ESP,112,589923872,16,ESP
 Hitachi Rail Denmark A/S,ICT & telecom,DNK,1,589470943,1,DNK
 Diemme Soc. Coop. p.A,"Environment, waste & cleaning",ITA,2,587219111,1,ITA
 "Lockheed Martin Global, Incorporated",Defence & security,USA,1,586003097,1,DNK
@@ -373,7 +373,7 @@ ALPENSIDE,Building construction works,ROU,16,459206386,3,ROU
 CARDINAL HEALTH ITALY 509 SRL,Healthcare & pharmaceuticals,ITA,1,458960148,1,ITA
 Bialmed Sp. z o.o.,Healthcare & pharmaceuticals,POL,959,458444770,262,POL
 AstraZeneca Kft.,Healthcare & pharmaceuticals,HUN,146,458370764,63,POL
-"PRIM, S.A.",Healthcare & pharmaceuticals,ESP,118,457056860,31,ESP
+"PRIM, S.A.",Healthcare & pharmaceuticals,ESP,117,457053792,31,ESP
 "General Electric Healthcare Portugal, Sociedade Unipessoal, Lda",Healthcare & pharmaceuticals,PRT,7,456831685,6,PRT
 Driessen B.V.,"Consulting, business & financial services",NLD,17,452926587,16,NLD
 NDI S.A.,Transport & civil infrastructure works,POL,1,452860532,1,POL
@@ -480,7 +480,6 @@ DE_Losinger Marazzi AG,Building construction works,CHE,1,379768185,1,CHE
 Drum Concept,Building construction works,ROU,13,378730368,5,ROU
 Helfrich Ingenieure Projektierungsgesellschaft mbH,Engineering & architecture services,DEU,8,378083075,7,DEU
 LOGIC COMPUTER,ICT & telecom,ROU,72,378036753,17,ROU
-UTE CENTRO OPERACIONES LA ELIPA,Building construction works,ESP,3,377967609,1,ESP
 Fjordkraft AS,Power & electrical equipment,NOR,2,377746280,2,NOR
 Entelios AS,Power & electrical equipment,NOR,1,376938554,1,NOR
 OMV Downstream GmbH,"Energy, fuels & utilities",AUT,5,376875341,3,AUT
@@ -724,7 +723,7 @@ SAAB DYNAMICS AB,Defence & security,SWE,1,280926653,1,BEL
 GMB BioEnergie Zutphen B.V.,"Environment, waste & cleaning",NLD,1,280926653,1,NLD
 Bechtle AG - Public Sector Division,ICT & telecom,DEU,1,280926653,1,DEU
 Heijmans Infra B.V.,Water & wastewater,NLD,1,280926653,1,NLD
-"ACCORD HEALTHCARE, SLU",Healthcare & pharmaceuticals,ESP,29,280657172,10,ESP
+"ACCORD HEALTHCARE, SLU",Healthcare & pharmaceuticals,ESP,28,280657171,10,ESP
 Consorzio Stabile Europeo Costruttori Soc. Cons. a r.l.,Transport & civil infrastructure works,ITA,2,279768746,1,ITA
 Polskie Linie Lotnicze LOT S.A.,Transport & logistics services,POL,6,279394868,4,POL
 ABBOTT LABORATORIES S.A.,Healthcare & pharmaceuticals,ESP,4,279328462,4,ESP
@@ -783,7 +782,7 @@ Automagistral-Pivden,Transport & civil infrastructure works,ROU,2,266761386,2,RO
 De Staffing Groep Nederland B.V. h.o.d.n. Circle8,"Consulting, business & financial services",NLD,4,265794070,4,NLD
 Bechtle GmbH,ICT & telecom,DEU,59,265779313,41,AUT DEU MLT
 NOTARO GROUP SERVIZI SRL,"Education, social & hospitality services",ITA,1,265535999,1,ITA
-DEXTRO MEDICA S.L.,Healthcare & pharmaceuticals,ESP,23,265484757,6,ESP
+DEXTRO MEDICA S.L.,Healthcare & pharmaceuticals,ESP,21,265456077,6,ESP
 Ørsted Salg & Service A/S,"Consulting, business & financial services",DNK,1,263437773,1,DNK
 "UTE IVEMON CLM (Ivemon Ambulancias Egara, S.L. / Ivemon Servicios Sanitarios, S.L.)",Healthcare & pharmaceuticals,ESP,2,263139234,1,ESP
 "UTE PUENTES Y CALZADAS INFAESTRUCTURAS, S.L. (45%) - ROVER INFRAESTRUCTURAS, S.A. (45%) - GEOTUNEL, ",Building construction works,ESP,1,263084295,1,ESP
@@ -841,6 +840,7 @@ E4,ICT & telecom,ITA,2,252833988,1,LUX
 Travelcard B.V.,ICT & telecom,NLD,1,252833988,1,NLD
 ANTREPRIZA DE REPARATII SI LUCRARI A R L CLUJ,Transport & civil infrastructure works,ROU,60,252757327,10,ROU
 Avincis Aviation Italia spa,Transport & logistics services,ITA,1,252651182,1,ITA
+UTE CENTRO OPERACIONES LA ELIPA,Building construction works,ESP,2,251978406,1,ESP
 DE_voestalpine Turnout Technology Zeltweg GmbH,"Vehicles, rolling stock, ships & aircraft",AUT,50,251599421,4,CHE
 NV BESIX SA,Building construction works,FRA,1,251479903,1,FRA
 "Accelleron Iberia, S.L.U.",Industrial & construction machinery,ESP,1,251290838,1,ESP
@@ -933,7 +933,7 @@ LuxGovSat S.A.,ICT & telecom,LUX,1,241596922,1,LUX
 "LOGISTICA Y SUMINISTROS SANITARIOS, S.L",Healthcare & pharmaceuticals,ESP,1,241557883,1,ESP
 "IBERHOSPITEX, S.A",Healthcare & pharmaceuticals,ESP,1,241557883,1,ESP
 "MERCÉ V. ELECTROMEDICINA, S.L",Healthcare & pharmaceuticals,ESP,1,241557883,1,ESP
-Iberdrola Clientes Sau,Power & electrical equipment,ESP,99,241092388,1,ESP
+Iberdrola Clientes Sau,Power & electrical equipment,ESP,98,241062861,1,ESP
 TOTALENERGIES ELECTRICITE ET GAZ FRANCE,Power & electrical equipment,FRA,5,240948165,4,FRA
 PERN S.A.,Transport & logistics services,POL,4,240803040,1,POL
 СОФАРМА ТРЕЙДИНГ АД,Healthcare & pharmaceuticals,BGR,214,240791261,72,BGR
@@ -957,8 +957,8 @@ FR_Innovation Process Technology AG,ICT & telecom,CHE,1,237720352,1,CHE
 "R.T.I. Eteria Cons. Stabile Scarl (Mandataria) – Cons. esec: Itinera S.p.A., Vianini Lavori S.p.A., ",Transport & civil infrastructure works,ITA,1,237694631,1,ITA
 PROSPERIDAD SOCIAL,"Consulting, business & financial services",COL,1,237316547,1,COL
 "JANSSEN CILAG, SA",Healthcare & pharmaceuticals,ESP,22,237246071,1,ESP
-"EULEN, S.A.","Environment, waste & cleaning",ESP,8,236662627,5,ESP
 Isoplus Fernwärmetechnik Gesellschaft mbH,Construction materials & building systems,AUT,2,236566214,1,AUT
+"EULEN, S.A.","Environment, waste & cleaning",ESP,7,236476764,4,ESP
 McCann FitzGerald LLP,"Consulting, business & financial services",IRL,8,236315498,2,IRL
 Cisco Solutions GmbH,ICT & telecom,DEU,2,235978389,1,DEU
 ΠΑΠΑΠΟΣΤΟΛΟΥ Ν. Α.Ε.,Healthcare & pharmaceuticals,GRC,6,235439468,3,GRC
@@ -1169,7 +1169,7 @@ GRUPO AMIAB SERVICIOS INTEGRADOS S.L.U.,"Environment, waste & cleaning",ESP,4,20
 Metan Alpi Sestriere Teleriscaldamento srl,"Consulting, business & financial services",ITA,1,204211203,1,ITA
 Ecotermica Servizi Spa,"Consulting, business & financial services",ITA,1,204211203,1,ITA
 Einar Kornerup A/S,Building construction works,DNK,3,204153355,3,DNK
-"Compañia Privada para el desarrollo de Servicios Publicos, S.L","Environment, waste & cleaning",ESP,3,204001520,2,ESP
+"Compañia Privada para el desarrollo de Servicios Publicos, S.L","Environment, waste & cleaning",ESP,2,203999141,2,ESP
 Central de limpiezas para la mancha s.a. (CELIMASA),"Environment, waste & cleaning",ESP,1,203996762,1,ESP
 DSV Air & Sea sp. z o.o.,Transport & logistics services,POL,1,203988692,1,POL
 Wijnen Trucking Service,Transport & logistics services,NLD,1,203952750,1,NLD
@@ -1250,7 +1250,7 @@ SAFETY PRO s.r.o.,Engineering & architecture services,CZE,110,197268914,23,CZE
 ELECTROMONTAJ,Water & wastewater,ROU,4,197251395,3,ROU
 MEDICAL DEVICES & DIAGNOSTICS,Healthcare & pharmaceuticals,ROU,119,197161208,22,ROU
 QUAVITAE SERVICIOS ASISTENCIALES SAU,Healthcare & pharmaceuticals,ESP,5,197110280,5,ESP
-"CANTERAS DE ALMARGEN, S.L.",Building construction works,ESP,3,197037423,2,ESP
+"CANTERAS DE ALMARGEN, S.L.",Building construction works,ESP,2,196843040,2,ESP
 ARIDOS ANFERSA S.L.,Building construction works,ESP,1,196648657,1,ESP
 "ASFALTOS GARRUCHO, S.A.",Building construction works,ESP,1,196648657,1,ESP
 "ASFALTOS LOS SANTOS, SA",Building construction works,ESP,1,196648657,1,ESP
@@ -1302,14 +1302,14 @@ UCPlus A/S,"Education, social & hospitality services",DNK,1,189259661,1,DNK
 "BENCOM-ARMAZENAGEM E COMÉRCIO DE COMBUSTÍVEIS, S.A.","Energy, fuels & utilities",PRT,1,189155444,1,PRT
 GRUPO RENDER INDUSTRIAL SL,Building construction works,ESP,2,189128202,1,ESP
 "OBRASCON HUARTE LAIN S.A - Construcciones Sán.chez Dominguez-SANDO, S.A.U. - INNOVACIONES TÉCNICAS Y",Building construction works,ESP,2,189128202,1,ESP
-"VIGILANTES ASOCIADOS AL SERVICIO DE BANCA Y EMPRESAS, VASBE, S.L.",Defence & security,ESP,40,188588975,10,ESP
 DE_Freestar-Informatik AG,ICT & telecom,CHE,2,188506733,2,CHE
 SEPUR,"Environment, waste & cleaning",FRA,24,188434122,23,FRA
 Randstad Uitzendbureau b.v.,"Consulting, business & financial services",NLD,11,188239017,11,NLD
-"COX ENERGIA COMERCIALIZADORA ESPAÑA, S.L.U.",Power & electrical equipment,ESP,4,188197892,3,ESP
+"COX ENERGIA COMERCIALIZADORA ESPAÑA, S.L.U.",Power & electrical equipment,ESP,3,188197892,3,ESP
 QUALIRENOV,Building construction works,FRA,3,188102977,3,FRA
 Novartis Healthcare A/S,Healthcare & pharmaceuticals,DNK,9,187990700,1,DNK
 Chambre de Commerce et d’Industrie Nice Côte d’Azur,Transport & logistics services,FRA,1,187659004,1,FRA
+"VIGILANTES ASOCIADOS AL SERVICIO DE BANCA Y EMPRESAS, VASBE, S.L.",Defence & security,ESP,39,187637739,10,ESP
 EDENRED FRANCE,ICT & telecom,FRA,28,187455085,28,FRA
 Getec Energia Sp. z o.o.,Power & electrical equipment,POL,1,187361671,1,POL
 Modulacc Limited,Building construction works,IRL,1,187284436,1,IRL
@@ -1371,7 +1371,7 @@ MEDIPLUS EXIM,Healthcare & pharmaceuticals,ROU,338,182027212,34,ROU
 EDENRED BELGIUM,"Education, social & hospitality services",BEL,2,181952373,1,BEL
 "FOURHEKA UNIPESSOAL, LDA.,","Vehicles, rolling stock, ships & aircraft",PRT,1,181933607,1,PRT
 "EXTINCÊNDIOS - EQUIPAMENTOS DE PROTECÇÃO E SEGURANÇA, S.A.","Vehicles, rolling stock, ships & aircraft",PRT,1,181933607,1,PRT
-"IBERDROLA CLIENTES, SAU",Power & electrical equipment,ESP,14,181920381,5,ESP
+"IBERDROLA CLIENTES, SAU",Power & electrical equipment,ESP,13,181920381,5,ESP
 "SERVICIOS SOCIO SANITARIOS GENERALES SPAIN, S.L.",Healthcare & pharmaceuticals,ESP,1,181734584,1,ESP
 Medinco Sp. z o.o.,Healthcare & pharmaceuticals,POL,40,181601822,26,POL
 CORDIS FRANCE SAS,Healthcare & pharmaceuticals,FRA,6,181568968,4,FRA
@@ -1429,7 +1429,6 @@ Sereni Orizzonti 1 Spa Suc. En España,Healthcare & pharmaceuticals,ESP,1,176395
 "Optima Consulting 2024, S.L.U",Healthcare & pharmaceuticals,ESP,1,176395234,1,ESP
 "Centro Geriatrico Campodon, S.A.",Healthcare & pharmaceuticals,ESP,1,176395234,1,ESP
 "Residencia San Marcos Acqua,S.L.",Healthcare & pharmaceuticals,ESP,1,176395234,1,ESP
-CLECE S.A.,"Environment, waste & cleaning",ESP,14,176255733,3,ESP
 M.J. Eriksson A/S,Building construction works,DNK,4,175982643,4,DNK
 Enemærke & Petersen A/S,Building construction works,DNK,2,175891252,2,DNK
 "SIA ""Adaptive""",ICT & telecom,LVA,8,175835890,5,LVA
@@ -1439,6 +1438,7 @@ Ersta Diakoni,Healthcare & pharmaceuticals,SWE,2,175613021,2,SWE
 ADVENS,ICT & telecom,FRA,3,175414280,3,FRA
 TRANSDEV,Transport & logistics services,FRA,5,175346943,5,FRA
 "SACYR CONSTRUCCIÓN, S.A.-GEVORA CONSTRUCCIONES, S.A.",Building construction works,ESP,1,175326033,1,ESP
+CLECE S.A.,"Environment, waste & cleaning",ESP,11,175310680,2,ESP
 Przedsiębiorstwo Sprzętu Ochronnego MASKPOL S.A.,Defence & security,POL,4,175006589,2,POL
 NCC Industry Aktiebolag,Transport & civil infrastructure works,SWE,20,175004607,7,SWE
 "FUJITSU TECHNOLOGY SOLUTIONS, S.A.U.",ICT & telecom,ESP,3,174817011,3,ESP
@@ -1520,7 +1520,7 @@ FILDAS TRADING S.R.L.,Healthcare & pharmaceuticals,ROU,116,169209386,27,ROU
 Frankensolar Eastern Europe s.r.o.,Power & electrical equipment,CZE,3,169153286,2,CZE
 Coöperatieve Ondernemers in de Kleinschalige Zorg in Zeeland UA,Healthcare & pharmaceuticals,NLD,2,169036358,2,NLD
 "DEALPOINT - MOBILIÁRIO, LDA","Furniture, appliances & consumer goods",PRT,3,168986948,2,PRT
-"ORANGE ESPAGNE, S.A.U.",ICT & telecom,ESP,84,168843160,54,ESP
+"ORANGE ESPAGNE, S.A.U.",ICT & telecom,ESP,84,168678897,54,ESP
 GWA mbH NL Institut für Wasser- und Umweltanalytik,"Environment, waste & cleaning",DEU,2,168678279,1,DEU
 THALES SERVICES NUMERIQUES,ICT & telecom,FRA,1,168555992,1,FRA
 pilatus aircraft ltd,Engineering & architecture services,CHE,1,168555992,1,ESP
@@ -1640,7 +1640,6 @@ ZDT TOP Poręba Spółka z ograniczoną odpowiedzialnością spółka komandytow
 Geotronics Spółka z ograniczoną odpowiedzialnością,"Furniture, appliances & consumer goods",POL,2,158425560,1,POL
 PHARMAMED-MADO d.o.o.,Healthcare & pharmaceuticals,HRV,59,158056152,9,HRV
 Martin &amp; Servera Restauranghandel AB,Agriculture & food,SWE,10,157949021,10,SWE
-Ilunion Seguridad SA,Defence & security,ESP,4,157640596,1,ESP
 "BOSTON SCIENTIFIC IBÉRICA, S.A.",Healthcare & pharmaceuticals,ESP,36,157620478,22,ESP
 Net Brinel,ICT & telecom,ROU,12,157583603,9,ROU
 "POMGRAD, gradbeno podjetje d.d.",Building construction works,SVN,10,157557976,6,SVN
@@ -1752,7 +1751,6 @@ RESSOURCES FORMATION,"Education, social & hospitality services",FRA,1,149827548,
 BUTARD ENESCOT,Building construction works,FRA,1,149452980,1,FRA
 Groupement RHENUS PARTNERSHIP FRANCE,Transport & logistics services,FRA,1,149441744,1,FRA
 "Beltrão Coelho – Sistemas de Escritório, Lda",ICT & telecom,PRT,2,149390316,1,PRT
-Indra Sistemas S.A.,"Vehicles, rolling stock, ships & aircraft",ESP,20,149324836,2,ESP POL
 ΥΑΔΕΣ ΟΛΟΚΛΗΡΩΜΕΝΕΣ ΥΠΗΡΕΣΙΕΣ ΕΚΓΑΤΑΣΤΑΣΕΩΝ ΧΩΡΩΝ ΑΕ,"Environment, waste & cleaning",GRC,1,148991671,1,GRC
 NOVOGLANZ AE,"Environment, waste & cleaning",GRC,1,148991671,1,GRC
 PROTECTION UNIT,"Consulting, business & financial services",BEL,1,148947312,1,BEL
@@ -1773,9 +1771,9 @@ URTICA Sp. z o.o.,Healthcare & pharmaceuticals,POL,161,148110486,39,POL
 UTEXBEL,"Textiles, apparel & leather",BEL,1,147954704,1,FRA
 TISSAGE MOULINE THILLOT SAS,"Textiles, apparel & leather",BEL,1,147954704,1,FRA
 MANUFACTURE HARTMANN EURO TF,"Textiles, apparel & leather",BEL,1,147954704,1,FRA
-Endesa Energia,Power & electrical equipment,ESP,119,147782146,1,ESP
 CALZATURIFICIO MONTEBOVE SRL,Defence & security,ITA,2,147775087,2,ITA
 Accenture Limited (Primary Account),ICT & telecom,IRL,6,147762181,4,IRL
+Endesa Energia,Power & electrical equipment,ESP,118,147611184,1,ESP
 Le groupement entre la Société d’Aménagement et de gestion du Marché d’Intérêt National de Strasbour,Agriculture & food,FRA,1,147422972,1,FRA
 CBRE Inc.,"Repair, maintenance & installation",USA,1,146923009,1,"DNK,GBR,IMN,IRL,DEU,POL,NLD"
 "TAKEDA FARMACEUTICA ESPAÑA, S.A.",Healthcare & pharmaceuticals,ESP,15,146805010,11,ESP
@@ -1811,7 +1809,7 @@ Wills Bros,Water & wastewater,IRL,1,144628345,1,IRL
 PHOENIX Pharma Gyógyszerkereskedelmi Zártkörűen Működő Részvénytársaság,Healthcare & pharmaceuticals,HUN,37,144599403,23,HUN
 WIRZ Werbeagentur GmbH,"Consulting, business & financial services",AUT,10,144396301,1,AUT
 StaffingNow B.V.,"Consulting, business & financial services",NLD,4,144396300,3,NLD
-SPIE SAG GmbH,Power & electrical equipment,DEU,10,144211916,7,DEU
+SPIE SAG GmbH,Power & electrical equipment,DEU,9,144211916,7,DEU
 MIRBUD S.A.,Building construction works,POL,6,144181307,3,POL
 CSL Behring SpA,Healthcare & pharmaceuticals,ITA,2,144177793,2,ITA
 Asclepios SA,Healthcare & pharmaceuticals,POL,40,143914186,10,POL
@@ -1849,7 +1847,7 @@ RWE Supply & Trading,Power & electrical equipment,BEL,1,141845935,1,BEL
 PRAGOIMEX a.s.,"Vehicles, rolling stock, ships & aircraft",CZE,13,141831360,4,CZE
 Metrostav TBR a.s.,Transport & civil infrastructure works,CZE,5,141817143,3,CZE
 "SISTEMAS INTEGRALES DE REDES Y TELECOMUNICACIONES S.L. – FIBRA Y SISTEMAS, S.L., UNIÓN TEMPORAL DE E",ICT & telecom,ESP,1,141733021,1,ESP
-"LABORATORIOS INDAS, S.A.U.",Healthcare & pharmaceuticals,ESP,29,141709467,11,ESP
+"LABORATORIOS INDAS, S.A.U.",Healthcare & pharmaceuticals,ESP,13,141709467,10,ESP
 ДАНСОН ТРЕЙДИНГ ООД,Healthcare & pharmaceuticals,BGR,165,141702089,75,BGR
 EIFFAGE ROUTE SUD OUEST,Transport & civil infrastructure works,FRA,10,141434168,9,FRA
 POŠTA SLOVENIJE d.o.o.,ICT & telecom,SVN,4,141326506,4,SVN
@@ -1928,7 +1926,7 @@ Sopra Steria Nederland B.V.,ICT & telecom,NLD,9,137517300,6,NLD
 Fa. Gebr. Van der Lee,Transport & civil infrastructure works,NLD,4,137071976,4,NLD
 DIFERIT AG,Transport & civil infrastructure works,ROU,35,137059862,7,ROU
 SUNTAR Sp. z o.o.,ICT & telecom,POL,70,137055321,22,POL
-LIESNO BUNO SL,Healthcare & pharmaceuticals,ESP,9,137034032,6,ESP
+LIESNO BUNO SL,Healthcare & pharmaceuticals,ESP,7,137011934,5,ESP
 ELECNOR SERVICIOS y PROYECTOS S.A.U,Power & electrical equipment,ESP,1,136995734,1,ITA
 Brännehylte Lagersystem AB,Construction materials & building systems,SWE,1,136930230,1,SWE
 Constructor Sverige AB,Construction materials & building systems,SWE,1,136930230,1,SWE
@@ -2074,10 +2072,10 @@ SIEMENS HEALTHCARE S.R.L.,Healthcare & pharmaceuticals,ITA,8,129096916,7,ITA
 ΜΑΡΑΓΚΟΣ Θ ΚΑΙ ΣΙΑ ΟΕ,"Repair, maintenance & installation",GRC,1,128972752,1,GRC
 "TELEFÓNICA SOLUCIONES DE INFORMÁTICA Y COMUNICACIONES DE ESPAÑA, S.A.U.",ICT & telecom,ESP,20,128970026,13,ESP
 SOC D'EXPLOITATION BV GUYANE,ICT & telecom,FRA,1,128967808,1,FRA
-"SOCIEDAD ESTATAL CORREOS Y TELEGRAFOS, S.A. S.M.E.",ICT & telecom,ESP,20,128917737,16,ESP
 ALTHEA SRL,"Education, social & hospitality services",ITA,2,128867100,2,ITA
 BieGe SWS-VE06 Rückbau Erdbau,Building construction works,DEU,1,128824329,1,DEU
 Stryker Polska sp. z o.o.,Healthcare & pharmaceuticals,POL,20,128670095,11,POL
+"SOCIEDAD ESTATAL CORREOS Y TELEGRAFOS, S.A. S.M.E.",ICT & telecom,ESP,19,128651317,15,ESP
 "Construções Corte Recto - Engenharia e Construção, S.A.,",Building construction works,PRT,14,128588964,1,PRT
 OLIVETTI,ICT & telecom,ITA,1,128540076,1,ITA
 LADISA S.r.l.,"Education, social & hospitality services",ITA,1,128448270,1,ITA
@@ -2098,8 +2096,8 @@ CFSP (mandataire)/OTV/NALDEO/ATELIER RVL/PHARO'OUEST/EIFFAGE CONSTRUCTION ENVIRO
 TRANSFACTOR SP. z o.o.,"Vehicles, rolling stock, ships & aircraft",POL,5,128099279,1,POL
 BANCO BILBAO VIZCAYA ARGENTARIA S.A. (OFICIAL),"Consulting, business & financial services",COL,11,127857860,9,COL
 Klebl GmbH,Building construction works,DEU,2,127849504,1,DEU
-"Vodafone España, S.A.U.",ICT & telecom,ESP,62,127802472,39,ESP
 Erbe Polska Sp. z o.o.,Healthcare & pharmaceuticals,POL,96,127784702,69,POL
+"Vodafone España, S.A.U.",ICT & telecom,ESP,61,127674707,39,ESP
 DE_Eurobus welti-furrer AG,Transport & logistics services,CHE,6,127639877,5,CHE
 Bilfinger Industrial Services GmbH,"Repair, maintenance & installation",AUT,4,127608778,4,AUT DEU
 TM Crusoe,Building construction works,BEL,1,127369340,1,BEL
@@ -2124,6 +2122,7 @@ AZZURRA S.C.,"Consulting, business & financial services",ITA,1,126413348,1,ITA
 Modertrans Poznań Sp. z o.o.,"Vehicles, rolling stock, ships & aircraft",POL,1,126408405,1,POL
 BAXTER FACONNAGE,Healthcare & pharmaceuticals,FRA,1,126345122,1,FRA
 DATANET SYSTEMS,ICT & telecom,ROU,54,126177496,12,ROU
+Indra Sistemas S.A.,"Vehicles, rolling stock, ships & aircraft",ESP,18,126080068,2,ESP POL
 Ed. Züblin AG - Bereich Süderelbe-Weser,Building construction works,DEU,1,125992233,1,DEU
 Alstom Ferroviaria SpA,"Repair, maintenance & installation",ITA,1,125976979,1,ITA
 MONDIAL CUP SRL,Defence & security,ITA,5,125898828,2,ITA
@@ -2459,7 +2458,7 @@ Takeda Pharma A/S,Healthcare & pharmaceuticals,DNK,7,110364802,1,DNK
 Consid AB,ICT & telecom,SWE,17,110266034,11,SWE
 SWIETELSKY CONSTRUCT,Transport & civil infrastructure works,ROU,2,110264894,1,ROU
 BAWI CONSTRUCTION,Transport & civil infrastructure works,ROU,2,110264894,1,ROU
-"PALEX MEDICAL, S.A.",Healthcare & pharmaceuticals,ESP,120,110209170,51,ESP
+"PALEX MEDICAL, S.A.",Healthcare & pharmaceuticals,ESP,118,110174971,50,ESP
 AŽD Praha s.r.o.,"Vehicles, rolling stock, ships & aircraft",CZE,27,110108386,12,CZE LTU
 Doxa Communicatie B.V.,"Consulting, business & financial services",NLD,2,110090099,2,NLD
 SIVECO TECHNOLOGY S.R.L.,ICT & telecom,ROU,24,110047720,4,ROU
@@ -2659,6 +2658,7 @@ CITADIN PREST,Transport & civil infrastructure works,ROU,9,101059089,2,ROU
 TREKVILA s.r.o.,"Environment, waste & cleaning",CZE,6,101020168,6,CZE
 Ferðaskrifstofa Icelandia ehf.,"Consulting, business & financial services",ISL,1,101010581,1,ISL
 "Overwan, Lda",ICT & telecom,PRT,1,100938102,1,PRT
+"FUJITSU TECHNOLOGY SOLUTIONS, S.A.",ICT & telecom,ESP,14,100914744,7,ESP
 URBASER SA,"Environment, waste & cleaning",ESP,3,100762249,3,ESP
 Meyra Retail & Services B.V.,Healthcare & pharmaceuticals,NLD,8,100758090,8,NLD
 ENV mont s.r.o.,Power & electrical equipment,CZE,29,100755624,1,CZE
@@ -2672,7 +2672,6 @@ Dolomiti Energia Mercato SpA,Power & electrical equipment,ITA,1,100437908,1,ITA
 INSTITUTO PARA EL DESARROLLO DE ANTIOQUIA IDEA,"Consulting, business & financial services",COL,16,100437355,10,COL
 Janssen-Cilag Polska Sp. z o.o.,Healthcare & pharmaceuticals,POL,109,100425897,58,POL
 SMAC,Building construction works,FRA,41,100351641,36,FRA
-"FUJITSU TECHNOLOGY SOLUTIONS, S.A.",ICT & telecom,ESP,8,100212876,7,ESP
 Aleris Sjukvård AB,Healthcare & pharmaceuticals,SWE,4,100201306,3,SWE
 DRUMURI SI PODURI BANAT S.R.L.,Transport & civil infrastructure works,ROU,22,100195623,2,ROU
 Macure Pharma ApS,Healthcare & pharmaceuticals,DNK,19,100157197,4,DNK SWE
@@ -2790,7 +2789,6 @@ Strawberry Services AS,"Education, social & hospitality services",NOR,3,96011634
 MARK MEDICAL d.o.o.,Healthcare & pharmaceuticals,HRV,57,95886819,7,HRV
 Skanska Talonrakennus Oy,Building construction works,FIN,5,95854556,5,FIN
 URBAN SCOPE,Engineering & architecture services,ROU,26,95781485,5,ROU
-ORTIZ CONSTRUCCIONES Y PROYECTOS SA,Building construction works,ESP,25,95744255,8,ESP
 KOMTUR POLSKA Sp. z o.o.,Healthcare & pharmaceuticals,POL,24,95630877,9,POL
 LA SOCIETE DES CREMATORIUMS DE FRANCE,"Education, social & hospitality services",FRA,4,95598923,2,FRA
 Gilead Sciences s.r.o.,Healthcare & pharmaceuticals,CZE,29,95534090,16,CZE
@@ -2810,12 +2808,13 @@ ART INSTAL,Transport & civil infrastructure works,ROU,6,95252404,3,ROU
 Impel Provider Sp. z o.o. – Lider Konsorcjum,Defence & security,POL,3,95223733,1,POL
 СОЛОМЕД ЕООД,Healthcare & pharmaceuticals,BGR,99,95222140,35,BGR
 FR_Siemens Energy AG,Power & electrical equipment,CHE,9,95201887,4,CHE
-"FCC CONSTRUCCION, S.A.",Building construction works,ESP,10,95164889,4,ESP
+"FCC CONSTRUCCION, S.A.",Building construction works,ESP,9,95117715,4,ESP
 "GILEAD SCIENCES, S.L.U.",Healthcare & pharmaceuticals,ESP,2,95053113,1,ESP
 PUREN Pharma GmbH & Co. KG,Healthcare & pharmaceuticals,DEU,4,95029159,2,DEU
 BG ALIUD / STADAPHARM GbR,Healthcare & pharmaceuticals,DEU,3,95029159,1,DEU
 Wietmarscher Ambulanz und Sonderfahrzeug GmbH,"Vehicles, rolling stock, ships & aircraft",DEU,23,95018808,20,DEU
 FUNDACIÓN HOSPITALARIAS,Healthcare & pharmaceuticals,ESP,7,94934574,3,ESP
+ORTIZ CONSTRUCCIONES Y PROYECTOS SA,Building construction works,ESP,21,94838986,8,ESP
 STADA Nordic ApS,Healthcare & pharmaceuticals,DNK,9,94838377,1,DNK
 AIRBUS HELICOPTERS ROMANIA,"Vehicles, rolling stock, ships & aircraft",ROU,2,94827724,1,ROU
 Dragados-CHM-Rubau Tarres,Transport & civil infrastructure works,ESP,1,94766151,1,ESP
@@ -2847,7 +2846,6 @@ Wojewódzkie Pogotowie Ratunkowe w Katowicach,Healthcare & pharmaceuticals,POL,1
 Vattenfall Services Nordic AB,Building construction works,SWE,5,94026566,4,SWE
 MODERTRANS POZNAŃ Spółka z ograniczoną odpowiedzialnością,"Vehicles, rolling stock, ships & aircraft",POL,1,94010133,1,POL
 DXC TECHNOLOGY SERVICIOS ESPAÑA S.L.U.,ICT & telecom,ESP,3,93980886,3,ESP
-LIRECAN SERVICIOS INTEGRALES S.A.,"Environment, waste & cleaning",ESP,12,93962330,7,ESP
 Mercedes-Benz Österreich GmbH,"Vehicles, rolling stock, ships & aircraft",AUT,4,93943280,3,AUT
 EMITEL S.A.,ICT & telecom,POL,4,93885757,4,POL
 Deutsche Post InHaus Services,ICT & telecom,DEU,6,93852186,6,DEU
@@ -2999,7 +2997,6 @@ Strabag AG,Transport & civil infrastructure works,AUT,8,89669351,6,AUT DEU
 STRABAG,Building construction works,ROU,1,89648841,1,ROU
 "KGM AUTO SPAIN, S.A.","Vehicles, rolling stock, ships & aircraft",ESP,3,89627264,2,ESP
 Ortopedia Wojewódzka Sp. z o.o.,Healthcare & pharmaceuticals,POL,1,89624322,1,POL
-ESCRIBANO MECHANICAL & ENGINEERING S.L.,"Repair, maintenance & installation",ESP,5,89587510,1,ESP
 NAUTILUS S.R.L.,"Environment, waste & cleaning",SVK,2,89586378,1,SVK
 ESPRI RESTAURATION,Agriculture & food,FRA,10,89397358,10,FRA
 Stiftelsen Kanvas,"Consulting, business & financial services",NOR,1,89388286,1,NOR
@@ -3008,7 +3005,6 @@ Gebr. Griekspoor B.V.,Building construction works,NLD,2,89344040,2,NLD
 SWIETELSKY stavební s.r.o.,Transport & civil infrastructure works,CZE,31,89256151,10,CZE
 Rosenbauer Deutschland GmbH,"Vehicles, rolling stock, ships & aircraft",DEU,202,89242706,155,DEU
 SiteLog GmbH,Construction materials & building systems,DEU,6,89222305,1,DEU
-MAN Truck & Bus Deutschland GmbH,"Vehicles, rolling stock, ships & aircraft",DEU,246,89157973,138,DEU
 Reimert Bouw en Infrastructuur B.V.,Building construction works,NLD,2,89157564,2,NLD
 GFM Bau- und Umweltingenieure GmbH,Engineering & architecture services,DEU,5,89096037,4,DEU
 mentalis GmbH (Preisangabe brutto),Healthcare & pharmaceuticals,DEU,1,89040930,1,DEU
@@ -3017,6 +3013,7 @@ Pohjola Vakuutus Oy,"Consulting, business & financial services",FIN,17,89003059,
 PAREDES DISTRIBUTION FRANCE,"Textiles, apparel & leather",FRA,4,88981494,4,FRA
 Compagnie des Eaux et de l'Ozone Procédés MP OTTO CEO,"Environment, waste & cleaning",FRA,1,88886496,1,FRA
 "China Construction Third Engineering Bureau Group Co., Ltd (CCTEB)",Transport & civil infrastructure works,,1,88878555,1,PAK
+MAN Truck & Bus Deutschland GmbH,"Vehicles, rolling stock, ships & aircraft",DEU,244,88796023,138,DEU
 SIRIO SRL,Agriculture & food,ITA,1,88688241,1,ITA
 "GlobalTel, a.s.",ICT & telecom,SVK,6,88657103,2,SVK
 Nova Auto Kukiełka Sp.J.,"Repair, maintenance & installation",POL,1,88654476,1,POL
@@ -3195,7 +3192,7 @@ DMI GmbH & Co. KG,"Consulting, business & financial services",DEU,2,83647293,2,D
 Sichting Leger des Heils Welzijns-en Gezondheidszorg,Healthcare & pharmaceuticals,NLD,2,83641229,2,NLD
 Meditech S.r.l.,Healthcare & pharmaceuticals,ITA,3,83600603,1,ITA
 "MOTA ENGIL – ENGENHARIA E CONSTRUÇÃO, S.A.",Transport & civil infrastructure works,PRT,3,83554084,1,PRT
-Lindner SE,Building construction works,DEU,87,83534158,56,AUT DEU
+Lindner SE,Building construction works,DEU,85,83534158,56,AUT DEU
 Wismo Automotive AB,"Vehicles, rolling stock, ships & aircraft",SWE,5,83527440,2,SWE
 Forum réfugiés,Healthcare & pharmaceuticals,FRA,3,83521211,1,FRA
 CCPHB Aquatique,"Education, social & hospitality services",FRA,1,83491401,1,FRA
@@ -3392,6 +3389,7 @@ Paper&Nonwoven Mem Group Sp. z o.o. Sp. K,Healthcare & pharmaceuticals,POL,1,790
 AB INDUSTRY S.A.,Power & electrical equipment,POL,1,79004454,1,POL
 Swietelsky Vasúttechnika Korlátolt Felelősségű Társaság,Transport & civil infrastructure works,HUN,3,78899050,3,HUN
 France horizon,Healthcare & pharmaceuticals,FRA,2,78847141,1,FRA
+Ilunion Seguridad SA,Defence & security,ESP,2,78820298,1,ESP
 FONBONNE,Building construction works,FRA,2,78789370,2,FRA
 De Vizia Transfer SpA,"Environment, waste & cleaning",ITA,3,78732453,3,ITA
 Orange Business Services SA,ICT & telecom,FRA,2,78659463,2,FRA
@@ -3407,7 +3405,7 @@ BAM Infra B.V.,Building construction works,NLD,4,78631746,4,NLD
 Lineas,Transport & logistics services,BEL,1,78630804,1,BEL
 "FERROVIAL CONSTRUCCIÓN, S.A. y HELIOPOL, S.A.U.",Transport & civil infrastructure works,ESP,1,78613299,1,ESP
 DE_Voith Hydro GmbH & Co. KG,Industrial & construction machinery,DEU,1,78604853,1,CHE
-"MEDTRONIC IBERICA, S.A.",Healthcare & pharmaceuticals,ESP,51,78600744,24,ESP
+"MEDTRONIC IBERICA, S.A.",Healthcare & pharmaceuticals,ESP,50,78575258,24,ESP
 Akcinė bendrovė ORLEN Lietuva,"Energy, fuels & utilities",LTU,5,78540175,4,LTU
 ALIANZA PUBLICA PARA EL DESARROLLO INTEGRAL ALDESARROLLO - PROVEEDOR,"Consulting, business & financial services",COL,20,78530796,15,COL
 LEGENDRE ILE DE FRANCE,Building construction works,FRA,2,78509786,2,FRA
@@ -3609,7 +3607,6 @@ MIRBUD SPÓŁKA AKCYJNA,Transport & civil infrastructure works,POL,3,74849072,3,
 Adamietz Spółka Akcyjna,Building construction works,POL,2,74783163,2,POL
 Havas Media,"Consulting, business & financial services",BEL,6,74777057,5,"BEL,DEU IRL"
 SITE RUNGIS - ABBOTT MEDICAL FRANCE,Healthcare & pharmaceuticals,FRA,2,74776431,2,FRA
-"Roche Diagnostics, S.L.",Healthcare & pharmaceuticals,ESP,17,74659000,11,ESP
 SAET S.P.A.,Power & electrical equipment,ITA,1,74580408,1,ITA
 STRABAG AG,Water & wastewater,DEU,10,74563447,8,AUT DEU SRB
 GALAXY Systemy Informatyczne Sp. z o.o.,ICT & telecom,POL,3,74557171,2,POL
@@ -3632,7 +3629,6 @@ Ballyclare GmbH,"Textiles, apparel & leather",DEU,1,74164637,1,DEU
 "Distrauma Medical, S.L.",Healthcare & pharmaceuticals,ESP,3,74129927,3,ESP
 "JALSOSA, S.L.",Healthcare & pharmaceuticals,ESP,2,74111092,2,ESP
 GAMA Healthcare Europe S.L.,Healthcare & pharmaceuticals,ESP,1,74064943,1,ESP
-"Solred, S.A.","Energy, fuels & utilities",ESP,21,74036482,3,ESP
 Dura Vermeer Infra Regionale Projecten BV,Building construction works,NLD,3,73999826,3,NLD
 Arrow ECS GmbH,ICT & telecom,AUT,4,73977352,2,AUT
 ENERSENSE SIA,Building construction works,SWE,1,73942324,1,SWE
@@ -3645,6 +3641,7 @@ AFRY Digital Solutions AB,ICT & telecom,SWE,4,73865880,4,SWE
 METAMINDS,ICT & telecom,ROU,28,73862371,9,ROU
 AGAT S.A.,Building construction works,POL,1,73850203,1,POL
 Skanska Infra Oy,Building construction works,FIN,2,73849070,2,FIN
+idverde Realisatie B.V.,Agriculture & food,NLD,10,73828674,9,NLD
 Octopus Energy France,Power & electrical equipment,FRA,3,73780308,3,FRA
 SECURITAS SEGURIDAD ESPAÑA SA,Defence & security,ESP,3,73779725,3,ESP
 FR_BiGe baeriswyl tschanz & partner ag / msg systems ag,ICT & telecom,CHE,2,73763875,1,CHE
@@ -3666,8 +3663,8 @@ SODEXO ITALIA S.P.A.,"Education, social & hospitality services",ITA,15,73379248,
 CHALLANCIN PREVENTION ET SECURITE,Defence & security,FRA,9,73341067,9,FRA
 C. C. Contractor A/S,Building construction works,DNK,2,73340625,2,DNK
 Strabag Sp. z o.o.,Transport & civil infrastructure works,POL,4,73304660,4,POL
-"ABBOTT LABORATORIES, SA",Healthcare & pharmaceuticals,ESP,7,73287837,5,ESP
 CHANTIERS D'AQUITAINE,Water & wastewater,FRA,4,73265671,2,FRA
+"Solred, S.A.","Energy, fuels & utilities",ESP,20,73239970,3,ESP
 Hent AS,Building construction works,NOR,1,73233776,1,NOR
 BUREAU VERITAS EXPLOITATION,Engineering & architecture services,FRA,41,73211976,37,FRA
 Sanofi s.r.o.,Healthcare & pharmaceuticals,CZE,32,73202429,19,CZE
@@ -3720,9 +3717,9 @@ FR_Sword Services SA,ICT & telecom,CHE,29,72470937,5,CHE
 BOUYGUES BATIMENT GRAND OUEST,Building construction works,FRA,6,72423266,6,FRA
 IBG Česko s.r.o.,Power & electrical equipment,CZE,15,72418889,6,CZE
 Pintér Művek Korlátolt Felelősségű Társaság,Building construction works,HUN,1,72394702,1,HUN
+"ABBOTT LABORATORIES, SA",Healthcare & pharmaceuticals,ESP,4,72386798,3,ESP
 FSAS TECHNOLOGIES SL,ICT & telecom,ESP,1,72362368,1,LUX
 TELEFONICA SOLUCIONES DE INFORMATICA Y COMUNICACIONES DE ESPANA SA,ICT & telecom,ESP,1,72362368,1,LUX
-"NTT DATA SPAIN, S.L.U.",ICT & telecom,ESP,41,72357700,32,BEL ESP
 ABBOTT MEDICAL ITALIA SRL,Healthcare & pharmaceuticals,ITA,7,72325200,7,ITA
 "MOTA-ENGIL RAILWAY ENGINEERING, S.A.",Transport & civil infrastructure works,PRT,2,72317376,1,PRT
 "Taihan Cable & Solution Co., Ltd.",Power & electrical equipment,KOR,1,72257555,1,DNK
@@ -3750,6 +3747,7 @@ Relyens Mutual Insurance,"Consulting, business & financial services",FRA,5,71731
 BRODOMETALURGIJA d.o.o.,Power & electrical equipment,HRV,29,71638333,3,HRV
 Axus Nederland N.V.,"Consulting, business & financial services",NLD,3,71636297,3,NLD
 Skanska Industrial Solutions AB,Building construction works,SWE,5,71546045,5,SWE
+"Roche Diagnostics, S.L.",Healthcare & pharmaceuticals,ESP,15,71496858,11,ESP
 FR_Bietergemeinschaft BIT 609 Vorhabensaufgleisende Ressourcen,ICT & telecom,CHE,3,71448417,1,CHE
 M - SILNICE a.s.,Building construction works,CZE,7,71446843,3,CZE
 Fiera a.s.,Power & electrical equipment,CZE,14,71424841,1,CZE
@@ -3758,7 +3756,6 @@ ASTEN,Building construction works,FRA,11,71360435,11,FRA
 EUROCHEF,"Furniture, appliances & consumer goods",FRA,2,71355370,2,FRA
 "MERCK, S.L.",Healthcare & pharmaceuticals,ESP,16,71343762,10,ESP
 CONSORCIO ESTRATEGIA VIAL,Building construction works,COL,1,71306779,1,COL
-idverde Realisatie B.V.,Agriculture & food,NLD,9,71300334,8,NLD
 FONTENAT TP (+sous-traitant COLAS FRANCE),Building construction works,FRA,1,71237077,1,FRA
 Tietze Medical Sp. z o.o.,Healthcare & pharmaceuticals,POL,17,71169787,14,POL
 SOFMEDICA ΕΛΛΑΣ ΙΑΤΡΙΚΗ ΤΕΧΝΟΛΟΓΙΑ ΑΕ,Healthcare & pharmaceuticals,GRC,3,71167202,2,GRC
@@ -3906,6 +3903,7 @@ KZN - Bahntechnik GmbH,"Vehicles, rolling stock, ships & aircraft",CHN,1,6870988
 voestalpine Turnout Technology - Germany GmbH,"Vehicles, rolling stock, ships & aircraft",CHN,1,68709887,1,DEU
 Vossloh Switch Systems France SA,"Vehicles, rolling stock, ships & aircraft",CHN,1,68709887,1,DEU
 "China Railway Shanhaiguan Bridge - Group Co., Ltd","Vehicles, rolling stock, ships & aircraft",CHN,1,68709887,1,DEU
+"NTT DATA SPAIN, S.L.U.",ICT & telecom,ESP,39,68687678,32,BEL ESP
 GENERIS SAS,"Environment, waste & cleaning",FRA,2,68687384,2,FRA
 Equans Regeneration Ltd,Construction materials & building systems,,1,68678261,1,GBR
 BIO VASCULAR GROUP,Healthcare & pharmaceuticals,ITA,2,68667424,2,ITA
@@ -3962,7 +3960,6 @@ H.S. Srl,Healthcare & pharmaceuticals,ITA,1,67679470,1,ITA
 Kesko Oyj Kespro,Agriculture & food,FIN,13,67635029,10,FIN
 Havas Paris,"Consulting, business & financial services",BEL,3,67602190,2,"BEL,DEU FRA"
 GEIGER BRASOV,Transport & civil infrastructure works,ROU,24,67596424,3,ROU
-"SIEMENS HEALTHCARE, S.L.U.",Healthcare & pharmaceuticals,ESP,53,67588078,18,ESP
 TELENET,ICT & telecom,BEL,4,67571288,3,BEL
 Miroslav Juhás - MIVE Pek,Agriculture & food,SVK,3,67542657,1,SVK
 Γ.ΠΑΥΛΟΣ Π. ΧΟΛΗΣ ΟΕ / ΦΥΤA 4 ΕΠΟΧΕΣ,Agriculture & food,GRC,1,67526620,1,GRC
@@ -3998,8 +3995,8 @@ Swarco Belgium N.V.,"Repair, maintenance & installation",BEL,1,67422397,1,BEL
 Nomios N.V.,"Repair, maintenance & installation",BEL,1,67422397,1,BEL
 Jarmila Szegéňová,Agriculture & food,SVK,2,67422396,1,SVK
 "BIGAS GLOBAL,S.A.","Repair, maintenance & installation",ESP,2,67396662,2,ESP
-"CONSTRUCCIONES ELFIDIO PEREZ, S.L.-CONSTRUCCIONES DARIAS, S.L.",Building construction works,ESP,2,67355003,1,ESP
-"CONSERVACIÓN, ASFALTO Y CONSTRUCCIÓN S.A.U.",Building construction works,ESP,2,67354996,1,ESP
+"CONSERVACIÓN, ASFALTO Y CONSTRUCCIÓN S.A.U.",Building construction works,ESP,1,67354974,1,ESP
+"CONSTRUCCIONES ELFIDIO PEREZ, S.L.-CONSTRUCCIONES DARIAS, S.L.",Building construction works,ESP,1,67354974,1,ESP
 TEHNOZAVOD d.o.o.,Building construction works,HRV,1,67353476,1,HRV
 Respect Energy S.A.,"Energy, fuels & utilities",POL,21,67350643,10,POL
 Domingos da Silva Teixeira S.A.,Transport & civil infrastructure works,PRT,1,67317526,1,PRT
@@ -4102,10 +4099,10 @@ Get There Holding B.V.,"Consulting, business & financial services",NLD,1,6554955
 Wojewódzka Stacja Pogotowia Ratunkowego,Healthcare & pharmaceuticals,POL,1,65537921,1,POL
 ELECNOR SERVICIOS y PROYECTOS S.A.U.,Power & electrical equipment,ITA,2,65536054,2,ITA
 Swietelsky Rail Benelux B.V.,Transport & civil infrastructure works,NLD,4,65499735,1,NLD
-"SERVEO SERVICIOS, S.A.U.",Building construction works,ESP,13,65478343,9,ESP
 EUROVIA GRANDS PROJETS FRANCE,Transport & civil infrastructure works,FRA,4,65449712,1,FRA
 Hellrein Reinigungsdienst Gesellschaft m.b.H.,"Environment, waste & cleaning",AUT,2,65443556,2,AUT
 Eviden Austria GmbH,ICT & telecom,AUT,7,65431162,3,AUT
+"SERVEO SERVICIOS, S.A.U.",Building construction works,ESP,12,65426700,8,ESP
 Di Vincenzo Dino & C. S.p.A.,Building construction works,ITA,1,65419398,1,ITA
 UCB PHARMA SA,Healthcare & pharmaceuticals,ESP,1,65414070,1,ESP
 ALMIRALL SA,Healthcare & pharmaceuticals,ESP,1,65414070,1,ESP
@@ -4115,6 +4112,7 @@ JCDECAUX STREET FURNITURE BELGIUM,"Consulting, business & financial services",BE
 eircom Limited (t/a eir business)_18711,ICT & telecom,IRL,10,65368699,10,IRL
 AUREUS + a. s.,ICT & telecom,SVK,2,65357243,2,SVK
 Energa Obrót S.A.,"Energy, fuels & utilities",POL,24,65265980,20,POL
+"SIEMENS HEALTHCARE, S.L.U.",Healthcare & pharmaceuticals,ESP,50,65255263,18,ESP
 Travvant,Healthcare & pharmaceuticals,BEL,2,65254430,2,BEL
 Kristian Rytter A/S,Building construction works,DNK,1,65232210,1,DNK
 BMS A/S,Building construction works,DNK,1,65232210,1,DNK
@@ -4179,7 +4177,6 @@ Progress Rail Signaling S.p.A.,Transport & civil infrastructure works,ITA,1,6438
 MJ Eriksson A/S,Building construction works,DNK,2,64362661,2,DNK
 A.M.S. 2000 TRADING IMPEX,Healthcare & pharmaceuticals,ROU,205,64318536,41,ROU
 AIGLON (ΑΙΓΚΛΟΝ) ΑΝΩΝΥΜΗ ΒΙΟΜΗΧΑΝΙΚΗ ΚΑΙ ΕΜΠΟΡΙΚΗ ΕΤΑΙΡΕΙΑ ΑΥΤΟΚΙΝΗΤΩΝ,"Vehicles, rolling stock, ships & aircraft",GRC,10,64317440,1,GRC
-UTE Hitachi-sistem,Transport & civil infrastructure works,ESP,2,64285354,1,ESP
 Drum Concept,Transport & civil infrastructure works,ROU,3,64273312,2,ROU
 "SANOFI AVENTIS, S.A",Healthcare & pharmaceuticals,ESP,8,64242433,3,ESP
 Altium International Sp. z o.o.,Scientific & measuring instruments,POL,33,64230786,27,POL
@@ -4278,7 +4275,6 @@ LARZUL,Agriculture & food,FRA,1,62811941,1,FRA
 D'AUCY France,Agriculture & food,FRA,1,62811941,1,FRA
 FR_ti&m AG Bern,ICT & telecom,CHE,3,62796290,2,CHE
 FR_AVS Systeme AG,ICT & telecom,CHE,2,62784637,2,CHE
-GESTIÓN Y EJECUCIÓN DE OBRA CIVIL S.A.U.,Building construction works,ESP,3,62784128,3,ESP
 "SANOLABOR, podjetje za prodajo medicinskih, laboratorijskih in farmacevtskih proizvodov, d.d.",Healthcare & pharmaceuticals,SVN,150,62715939,52,SVN
 HECKLER & KOCH GMBH,Defence & security,DEU,3,62697432,2,ESP LVA
 AB Industry S.A.,Water & wastewater,POL,1,62662850,1,POL
@@ -4375,8 +4371,8 @@ TÜV NORD EnSys GmbH & Co. KG,Engineering & architecture services,DEU,5,61200121
 SEIDOR SOLUTIONS SL,ICT & telecom,ESP,5,61158914,2,ESP
 "UTE ALSTOM INTEL VALCHILLÓN (constituida por ALSTOM TRANSPORTE, S.A.U. e INSTALACIONES Y TÉCNICAS EL",Transport & civil infrastructure works,ESP,1,61154345,1,ESP
 "Jemnická Stavba, a.s.",Power & electrical equipment,CZE,21,61143417,1,CZE
-IBERDROLA CLIENTES S.A.U,Power & electrical equipment,ESP,3,61136114,3,ESP
 Fresenius Medical Care (Ireland) Ltd,Healthcare & pharmaceuticals,IRL,1,61129286,1,IRL
+IBERDROLA CLIENTES S.A.U,Power & electrical equipment,ESP,2,61127124,2,ESP
 "NEXUS ENERGIA, S.A",Power & electrical equipment,ESP,1,61127116,1,ESP
 ARROW DIAGNOSTICS SRL,Healthcare & pharmaceuticals,ITA,15,61117369,14,ITA
 Cygate AB,ICT & telecom,SWE,7,61062059,3,SWE
@@ -4435,7 +4431,6 @@ DIAG-MED Grażyna Konecka,"Repair, maintenance & installation",POL,1,60187450,1,
 "„Greenpol” Instytut Kształtowania Środowiska Sp. z o.o. ul. S. Żeromskiego 10/4, 65-066 Zielona Góra","Repair, maintenance & installation",POL,1,60187450,1,POL
 "PLS SERVICES Spółka z o.o. ul. Bukszpanowa 4/15, 15-585 Białystok","Repair, maintenance & installation",POL,1,60187450,1,POL
 "Arthrex Polska Sp. z o.o. ul. Karczunkowska 42, 02-871 Warszawa","Repair, maintenance & installation",POL,1,60187450,1,POL
-UTE Alstom-inst-syneox,Transport & civil infrastructure works,ESP,1,60184168,1,ESP
 RENTING DE ANTIOQUIA,"Consulting, business & financial services",COL,8,60167436,3,COL
 Savonlinja Oy,Transport & logistics services,FIN,8,60136500,7,FIN
 SIEMENS HEALTHINEERS ΕΛΛΑΣ ΜΟΝΟΠΡΟΣΩΠΗ ΑΝΩΝΥΜΗ ΕΤΑΙΡΕΙΑ,Healthcare & pharmaceuticals,GRC,5,60115895,4,GRC
@@ -4466,7 +4461,6 @@ RTI Intellera Consulting S.p.A. (Mandataria) - Accenture S.p.A. - DS Tech S.r.l.
 RTI KPMG Advisory S.p.A. (Mandataria) - EY Advisory S.p.A. - Mckinsey & Company Inc. Italy - Archida,ICT & telecom,ITA,1,59871088,1,ITA
 Vertex Pharmaceuticals (Ireland) Limited,Healthcare & pharmaceuticals,IRL,3,59860964,3,CZE DNK
 UTE PSISE-ESC ADIF LOTE 6 SUR,Defence & security,ESP,1,59845831,1,ESP
-UTE Prosegur Soluciones-esc,Defence & security,ESP,2,59815752,1,ESP
 IDEMIA IDENTITY & SECURITY SUCURSAL COLOMBIA,Engineering & architecture services,COL,1,59758843,1,COL
 VIVISOL S.r.l.,Healthcare & pharmaceuticals,ITA,1,59748401,1,ITA
 LINDE MEDICALE S.R.L.,Healthcare & pharmaceuticals,ITA,1,59748401,1,ITA
@@ -4616,7 +4610,6 @@ Editions Dalloz,"Consulting, business & financial services",FRA,1,57309037,1,FRA
 HAPAM BV,Power & electrical equipment,NLD,1,57309037,1,DNK
 Corendon Village Exploitatie B.V.,"Education, social & hospitality services",NLD,1,57309037,1,NLD
 LEONARDO SOCIETA PER AZIONI,ICT & telecom,ITA,1,57308769,1,BEL
-"MOEVE PRO SERVICES, S.A.U.","Energy, fuels & utilities",ESP,29,57303752,19,ESP
 Garðlist ehf.,"Environment, waste & cleaning",ISL,1,57299805,1,ISL
 Garðaþjónusta Sigurjóns ehf.,"Environment, waste & cleaning",ISL,1,57299805,1,ISL
 CONSORZIO BLU SOCIETA' COOPERATIVA SOCIALE,Healthcare & pharmaceuticals,ITA,4,57295062,4,ITA
@@ -4629,6 +4622,7 @@ UTE SUBFLUVIAL BALLONTI (CAMPEZO - ALTUNA URIA - SOBRINO),Transport & civil infr
 Kancelaria Radcy Prawnego Katarzyna Podyma,"Consulting, business & financial services",POL,1,57168748,1,POL
 Exclusive Networks Austria GmbH,ICT & telecom,AUT,1,57121753,1,AUT
 IBM Österreich Internationale Büromaschinen Gesellschaft m.b.H.,ICT & telecom,AUT,1,57121753,1,AUT
+"MOEVE PRO SERVICES, S.A.U.","Energy, fuels & utilities",ESP,26,57117238,17,ESP
 GAZ DE BORDEAUX,Power & electrical equipment,FRA,4,57081722,4,FRA
 Magnetic Media Network SpA,ICT & telecom,ITA,5,57078479,4,ITA
 SAMMIS s.r.o.,Transport & civil infrastructure works,CZE,16,57065352,1,CZE
@@ -4701,7 +4695,6 @@ FCC ENVIRONNEMENT FRANCE,"Environment, waste & cleaning",FRA,1,56343773,1,FRA
 AVR S.p.A.,Transport & civil infrastructure works,ITA,2,56337664,2,ITA
 BOSTON SCIENTIFIC ROMANIA,Healthcare & pharmaceuticals,ROU,122,56303595,22,ROU
 RTI MIORELLI SERVICE SPA A SOCIO UNICO - FIDENTE SPA,"Environment, waste & cleaning",ITA,1,56289167,1,ITA
-"AT CAPITAL, S.L.","Vehicles, rolling stock, ships & aircraft",ESP,16,56265426,11,ESP
 Philippe Vediaud Publicité,"Education, social & hospitality services",FRA,1,56258866,1,FRA
 CARGOUNIT sp. z o.o.,"Vehicles, rolling stock, ships & aircraft",POL,1,56257248,1,POL
 Newag Spółka Akcyjna,"Repair, maintenance & installation",POL,1,56211396,1,POL
@@ -4753,12 +4746,14 @@ Bietergemeinschaft PTKR,"Consulting, business & financial services",DEU,1,559819
 GAPIT s. r. o.,ICT & telecom,SVK,5,55980580,1,SVK
 COMPLIMED Sp. z o.o.,Healthcare & pharmaceuticals,POL,21,55975176,14,POL
 SWARCO FUTURIT Verkehrssignalsysteme Ges.m.b.H.,"Vehicles, rolling stock, ships & aircraft",AUT,1,55960589,1,AUT
+"AT CAPITAL, S.L.","Vehicles, rolling stock, ships & aircraft",ESP,15,55958196,11,ESP
 REPONT s.r.o.,Transport & civil infrastructure works,CZE,5,55932231,1,CZE
 Roskopf Caroline,"Education, social & hospitality services",AUT,1,55926430,1,AUT
 DUSTY SRL,"Environment, waste & cleaning",ITA,1,55921400,1,ITA
 ENGIE HOME SERVICES,"Repair, maintenance & installation",FRA,26,55909242,25,FRA
 ORANGE BUSINESS SERVICES (Mandataire du groupement),ICT & telecom,FRA,1,55904404,1,FRA
 Pogotowie Ratunkowe we Wrocławiu,Healthcare & pharmaceuticals,POL,1,55899605,1,POL
+Dalgas A/S,Agriculture & food,DNK,10,55894114,6,DNK
 ROMARM,Defence & security,ROU,2,55868076,1,ROU
 MAINTENANCE INDUSTRIE,"Environment, waste & cleaning",FRA,13,55862945,13,FRA
 EDENRED FRANCE,"Consulting, business & financial services",FRA,19,55835707,19,FRA
@@ -4786,7 +4781,6 @@ INGEROP CONSEIL ET INGENIERIE (ICI),Engineering & architecture services,FRA,20,5
 ETHIAS SA,"Consulting, business & financial services",BEL,9,55656318,9,BEL
 "UTE ELECNOR SERVICIOS Y PROYECTOS, S.A.U. - SYNEOX RAIL, S.L.U. - ELECTREN, S.A. - TELEFONOS LINEAS ",Transport & civil infrastructure works,ESP,1,55616545,1,ESP
 Van Boekel Bouw & Infra,Building construction works,NLD,1,55613888,1,NLD
-Dalgas A/S,Agriculture & food,DNK,9,55611995,5,DNK
 CONSTRUCTII ERBASU S.A.,Building construction works,ROU,1,55608840,1,ROU
 "PETROGAL, S.A.","Energy, fuels & utilities",PRT,7,55604884,7,PRT
 straehuber AG,Building construction works,DEU,4,55582735,3,DEU
@@ -4839,7 +4833,6 @@ OMEXOM ELEKTROTRANS a.s.,Transport & civil infrastructure works,CZE,2,55053179,1
 SOCIETE BOURBONNAISE DE TRAVAUX PUBLICS ET DE CONSTRUCTIONS,Water & wastewater,FRA,2,55052544,2,FRA
 CS Computer Systems d.o.o.,ICT & telecom,HRV,24,55046669,11,HRV
 Bull GmbH,ICT & telecom,AUT,3,55006221,3,AUT DEU
-"UAB ""Ecoservice""","Environment, waste & cleaning",LTU,17,55005808,13,LTU
 VEOLIA EAU - COMPAGNIE GENERALE DES EAUX,"Environment, waste & cleaning",FRA,10,55004012,10,FRA
 Citracc Rail SA,Transport & civil infrastructure works,ESP,2,54989022,1,ESP
 SF3M - SERVICES FUNERAIRES DE MONTPELLIER MEDITERRANEE METROPOLE,"Education, social & hospitality services",FRA,1,54936362,1,FRA
@@ -4849,6 +4842,7 @@ AMLI,Healthcare & pharmaceuticals,FRA,2,54844651,1,FRA
 "PromiNet, s.r.o.",ICT & telecom,SVK,3,54835703,2,SVK
 "TECNOLOGIA DE LA CONSTRUCCION Y OBRAS PUBLICAS, S.A.",Transport & civil infrastructure works,ESP,8,54827652,3,ESP
 Porsche Austria GmbH & Co OG,"Vehicles, rolling stock, ships & aircraft",AUT,3,54817218,2,AUT
+"UAB ""Ecoservice""","Environment, waste & cleaning",LTU,16,54803541,12,LTU
 7 MG Sp. z o. o.,"Environment, waste & cleaning",POL,4,54800060,4,POL
 Knowit Connectivity AB,ICT & telecom,SWE,3,54750268,2,SWE
 "Biomasa Lah, proizvodnja biomase in druge storitve d.o.o.",Agriculture & food,SVN,1,54687055,1,SVN
@@ -4937,7 +4931,7 @@ E.LU.S. SRL,Transport & civil infrastructure works,ITA,1,53792874,1,ITA
 Moree B.V.,Agriculture & food,NLD,6,53772810,6,NLD
 CRIO - 2 S.R.L.,Healthcare & pharmaceuticals,ROU,257,53758548,51,ROU
 DEENOVA SPA,Healthcare & pharmaceuticals,ITA,1,53748164,1,ITA
-Hitzler Ingenieure GmbH & Co. KG,Engineering & architecture services,DEU,24,53732031,19,DEU
+Hitzler Ingenieure GmbH & Co. KG,Engineering & architecture services,DEU,23,53732031,19,DEU
 Siemens Industry Software Netherlands B.V.,ICT & telecom,NLD,1,53690687,1,NLD
 Tauron Sprzedaż Sp. z o.o.,Power & electrical equipment,POL,6,53672213,5,POL
 "l’impresa CMC Ravenna S.p.A., con la società ICOM S.r.l, che ha indicato per la progettazione il RTI",Transport & civil infrastructure works,ITA,1,53657263,1,ITA
@@ -4999,3 +4993,9 @@ Louhintahiekka Oy,Building construction works,FIN,6,53095214,4,FIN
 UT NCCTS 2026,Water & wastewater,COL,1,53060446,1,COL
 ZAB-BUD Sp. z o.o.,Building construction works,POL,7,53057723,4,POL
 Urtica Sp.z o.o.,Healthcare & pharmaceuticals,POL,19,53057201,2,POL
+Volvo Maskin AS,"Vehicles, rolling stock, ships & aircraft",NOR,8,53031875,7,NOR
+SAFRAN AIRCRAFT ENGINES,Engineering & architecture services,FRA,1,53027778,1,FRA
+VINCEK d.o.o.,Transport & logistics services,HRV,23,53013317,9,HRV
+SoftwareOne Polska Sp. z o.o,ICT & telecom,POL,3,53012780,1,POL
+WEST HUNGÁRIA BAU Építőipari Szolgáltató Korlátolt Felelősségű Társaság,Building construction works,HUN,3,53004619,3,HUN
+Pittel+Brausewetter Gesellschaft m.b.H.,Building construction works,AUT,7,52971813,6,AUT
