@@ -21,8 +21,16 @@ export const validEmail = (e: string) => /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,}
 
 let cache: { at: number; users: User[] } | null = null;
 
+// One read in flight per instance (a cold instance used to start one read per concurrent request); on a failed read
+// the last good list is kept.
+let inflight: Promise<User[]> | null = null;
 export async function listUsers(fresh = false): Promise<User[]> {
   if (!fresh && cache && Date.now() - cache.at < 30_000) return cache.users;
+  if (inflight && !fresh) return inflight;
+  inflight = readUsers().catch((e) => { if (cache) return cache.users; throw e; }).finally(() => { inflight = null; });
+  return inflight;
+}
+async function readUsers(): Promise<User[]> {
   const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:M500`]))?.[0] || [];
   const users: User[] = [];
   rows.forEach((r, i) => {

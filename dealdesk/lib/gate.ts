@@ -11,7 +11,8 @@ export async function gate(min: Role = "viewer"): Promise<{ s: Session; res: nul
   // so a revoked membership or a lowered role takes effect at once. The bootstrap team login has no row and keeps
   // its token (as does any token without a row: disabling an account, not deleting its row, is how access is removed);
   // a Users-tab outage keeps the token rather than locking everyone out.
-  const u = await findUser(s.email).catch(() => undefined);
+  // bounded: a slow Users read never holds the request; the signed token stands in until the next read
+  const u = await Promise.race([findUser(s.email).catch(() => undefined), new Promise<undefined>((r) => setTimeout(() => r(undefined), 3000))]);
   if (u) {
     if (u.status !== "active") return { s: null, res: NextResponse.json({ ok: false, code: "revoked" }, { status: 401 }) };
     s = { ...s, role: u.role, ws: asWs(u.workspace) };

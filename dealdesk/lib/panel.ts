@@ -33,7 +33,7 @@ function decrypt(b: Buffer): Buffer {
 
 async function snapshot(part: "static" | "live"): Promise<Snap> {
   return cached(`snap-${part}`, part === "live" ? 120_000 : 600_000, async () => {
-    const r = await fetch(`${RAW}/web/panel_${part}.enc`, { cache: "no-store" });
+    const r = await fetch(`${RAW}/web/panel_${part}.enc`, { cache: "no-store", signal: AbortSignal.timeout(20000) });
     if (!r.ok) return {} as Snap;
     return JSON.parse(decrypt(Buffer.from(await r.arrayBuffer())).toString("utf-8")) as Snap;
   });
@@ -97,7 +97,7 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
   return cached("tenders-full", 900_000, async () => {
     const pool = new Map<string, string>();
     const iv = (v: string) => { let x = pool.get(v); if (x === undefined) { x = own(v); pool.set(x, x); } return x; };
-    const fitText = await fetch(`${RAW}/leads/fit.csv`, { cache: "no-store" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+    const fitText = await fetch(`${RAW}/leads/fit.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
     const fit = new Map<string, [string, string, string]>();
     if (fitText) Papa.parse<Record<string, string>>(fitText, { header: true, skipEmptyLines: true, step: (res) => { const x = res.data; if (x.id) fit.set(own(x.id), [own((x.fit_why || "").slice(0, 160)), own((x.fit_flags || "").slice(0, 160)), iv(x.route || "")]); } });
     const sfit = (((await snapshot("static").catch(() => ({} as Snap))).fit) || {}) as Record<string, string[]>;
@@ -105,7 +105,7 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
     const rows: TRow[] = [];
     for (let i = 1; i <= 65; i++) {
       // one chunk at a time: the raw text of all 65 files is never held at once
-      const text = await fetch(`${RAW}/leads/sheet/tenders_${String(i).padStart(2, "0")}.csv`, { cache: "no-store" }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+      const text = await fetch(`${RAW}/leads/sheet/tenders_${String(i).padStart(2, "0")}.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
       if (!text) continue;
       const p = Papa.parse<string[]>(text, { header: false, skipEmptyLines: true }).data;
       if (!p.length) continue;
@@ -144,7 +144,7 @@ const PUBLIC_CSV: Record<string, string> = { plays: "leads/plays.csv", fx: "lead
 
 async function csvGrid(path: string): Promise<Grid> {
   return cached(`csv-${path}`, 600_000, async () => {
-    const r = await fetch(`${RAW}/${path}`, { cache: "no-store" });
+    const r = await fetch(`${RAW}/${path}`, { cache: "no-store", signal: AbortSignal.timeout(20000) });
     if (!r.ok) return [];
     return (Papa.parse<string[]>(await r.text(), { skipEmptyLines: true }).data || []) as Grid;
   });
@@ -351,7 +351,7 @@ async function verifiedCaps(): Promise<Map<string, Verified[]>> {
 // word -> HS6 codes whose official name contains it (data/master_rows.csv, about 2,000 traded lines)
 async function hsWordMap(): Promise<(w: string) => Set<string>> {
   const rows = await cached("hs-names", 3_600_000, async () => {
-    const r = await fetch(`${RAW}/master_rows.csv`, { cache: "no-store" }).catch(() => null);
+    const r = await fetch(`${RAW}/master_rows.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).catch(() => null);
     if (!r || !r.ok) return [] as [string, string][];
     return (Papa.parse<Record<string, string>>(await r.text(), { header: true, skipEmptyLines: true }).data || [])
       .filter((x) => /^\d{6}$/.test(x.hs6 || "")).map((x) => [x.hs6, ` ${String(x.name || "").toLowerCase()} `] as [string, string]);

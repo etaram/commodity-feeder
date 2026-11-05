@@ -19,12 +19,16 @@ async function client(): Promise<JWT | null> {
   return jwtClient;
 }
 
+// Every Sheets request has a hard time limit: a stalled Google API must never hold a request until the 60 s function
+// limit (on 5 November a stall made every panel read time out together). Callers already fall back to a copy.
+const SHEETS_TIMEOUT_MS = Number(process.env.SHEETS_TIMEOUT_MS || 12000);
 async function call(jwt: JWT, method: string, url: string, body?: unknown) {
   const { token } = await jwt.getAccessToken();
   const r = await fetch(url, {
     method,
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(SHEETS_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Sheets ${r.status}: ${(await r.text()).slice(0, 300)}`);
   return r.json();
@@ -51,7 +55,7 @@ export async function lookupContact(name: string, country: string): Promise<Reco
   const tq = `select B,C,AA,AB,AC,AD,AE,AF where B = ${lit(name)}${country ? ` and C = ${lit(country)}` : ""} limit 1`;
   const { token } = await jwt.getAccessToken();
   const url = `https://docs.google.com/spreadsheets/d/${UNIVERSE}/gviz/tq?sheet=Suppliers&tqx=out:json&tq=${encodeURIComponent(tq)}`;
-  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(SHEETS_TIMEOUT_MS) });
   if (!r.ok) throw new Error(`lookup ${r.status}`);
   const txt = await r.text();
   const j = JSON.parse(txt.slice(txt.indexOf("{"), txt.lastIndexOf("}") + 1));
