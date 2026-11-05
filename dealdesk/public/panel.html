@@ -814,6 +814,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div class="filters"><h2 style="margin-inline-end:auto" data-i="users_h">User accounts</h2><button type="button" id="users-refresh" data-i="refresh">Refresh</button></div>
     <p class="note" data-i="users_note"></p>
     <div id="ulist"></div>
+    <div id="ai-usage" class="section"></div>
     <div class="filters" style="margin-top:22px"><h2 style="margin-inline-end:auto" data-i="int_h">What interests your users</h2><select id="int-days"><option value="7" data-i="int_7">Last 7 days</option><option value="30" selected data-i="int_30">Last 30 days</option><option value="90" data-i="int_90">Last 90 days</option></select></div>
     <div id="int-list"></div>
     <div class="filters" style="margin-top:22px"><h2 style="margin-inline-end:auto" data-i="act_h">Activity</h2><select id="act-user"><option value="" data-i="act_all">All users</option></select><input id="act-q" data-ph="act_q_ph" style="max-width:220px"><button type="button" id="act-refresh" data-i="refresh">Refresh</button></div>
@@ -2809,7 +2810,19 @@ function openGrant(g) {
 /* ---------- JOBS ---------- */
 const statusPill = s => s === "done" ? `<span class="pill good">${esc(t("ready"))}</span>` : s === "running" ? `<span class="pill info">${esc(t("running"))}</span>` : s === "queued" ? `<span class="pill warn">${esc(t("queued"))}</span>` : s === "error" ? `<span class="pill bad">${esc(t("error"))}</span>` : `<span class="pill">${esc(s)}</span>`;
 /* ---------- USERS: admin only, served by /api/users (never from the sheet snapshot) ---------- */
+async function renderAiUsage() {
+  const el = $("#ai-usage"); if (!el || !window.DD_AI_USAGE) return;
+  try {
+    const j = await window.DD_AI_USAGE(7); const b = j.budget || {};
+    el.innerHTML = `<h3>${esc(mt("Model cost, last 7 days (estimated)", "עלות מודל, 7 ימים אחרונים (אומדן)"))}</h3>
+      <div class="sub">${esc(mt("Today", "היום"))}: $${esc(b.spent_usd)} / $${esc(b.budget_usd)}${b.exhausted ? ` <span class="pill bad">${esc(mt("budget reached, calls refused until tomorrow", "התקציב נגמר, קריאות נדחות עד מחר"))}</span>` : ""}</div>
+      <div class="tablewrap"><table class="tbl"><thead><tr><th>${esc(mt("Job", "משימה"))}</th><th>${esc(mt("Calls", "קריאות"))}</th><th>${esc(mt("Searches", "חיפושים"))}</th><th>USD</th><th>${esc(mt("Avg ms", "ממוצע ms"))}</th><th>${esc(mt("Per outcome", "לתוצאה"))}</th></tr></thead><tbody>
+      ${(j.jobs || []).map(x => `<tr><td>${esc(x.job)}</td><td class="num">${x.calls}${x.errors ? ` <span class="pill bad">${x.errors} err</span>` : ""}</td><td class="num">${x.searches}</td><td class="num">${x.usd}</td><td class="num">${x.avg_ms}</td><td class="sub">${x.per_outcome ? esc(`$${x.per_outcome.usd_each} per ${x.per_outcome.outcome} (${x.per_outcome.n})`) : ""}</td></tr>`).join("") || `<tr><td colspan="6" class="sub">${esc(mt("No metered calls yet.", "עדיין אין קריאות מדודות."))}</td></tr>`}</tbody></table></div>
+      <p class="note">${esc(j.note || "")}</p>`;
+  } catch (e) { el.innerHTML = `<div class="sub">${esc(e.message || String(e))}</div>`; }
+}
 async function renderUsers(fresh) {
+  renderAiUsage();
   const el = $("#ulist"); if (!el || !window.DD_USERS) return;
   if (fresh || !S.users) { el.innerHTML = `<div class="empty">${esc(t("loading"))}</div>`; try { S.users = await window.DD_USERS.list(); } catch (e) { el.innerHTML = `<div class="empty">${esc(errText(e))}</div>`; return; } }
   const rows = S.users.slice().sort((a, b) => ({ pending: 0, active: 1, disabled: 2 }[a.status] - { pending: 0, active: 1, disabled: 2 }[b.status]) || a.email.localeCompare(b.email));

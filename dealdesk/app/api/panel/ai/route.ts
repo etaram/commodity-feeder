@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   if (used >= DAILY_LIMIT) return NextResponse.json({ ok: false, error: "Daily AI limit reached. It resets at midnight UTC." }, { status: 429 });
   used++;
   try {
-    const { text } = await claude({ max_tokens: MAX_OUT, messages: [{ role: "user", content: input }] });
+    const { text } = await claude({ max_tokens: MAX_OUT, messages: [{ role: "user", content: input }] }, { job: "panel ai" });
     if (cache.size > 500) cache.delete(cache.keys().next().value as string);
     cache.set(h, { text, at: Date.now() });
     return NextResponse.json({ ok: true, text });

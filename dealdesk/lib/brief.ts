@@ -51,7 +51,7 @@ Format (Markdown, headings exactly as given, each section 2-5 bullets, skip a se
 ## ${he ? "מה זה אומר לנו" : "What it means for us"}
 (3 bullets at most: a concrete action for a sourcing firm, each tied to a source number or to one of the engine's plays below)`;
   const user = `Date: ${d}\n\nSources (last 48 hours):\n${src}\n\nThe engine's current deal theses (for the last section only):\n${pl || "- none"}`;
-  const { text } = await claude({ max_tokens: 2500, system, messages: [{ role: "user", content: user }] });
+  const { text } = await claude({ max_tokens: 2500, system, messages: [{ role: "user", content: user }] }, { job: "daily brief" });
   const links = fresh.map((x, i) => `[${i + 1}] ${x.url}`).join("\n");
   const full = `${text.trim()}\n\n---\n${he ? "מקורות" : "Sources"}:\n${links}`;
   try { await appendRow(TAB, [d, lang, full.slice(0, 45000), fresh.length, by]); } catch { /* the brief still returns */ }
@@ -75,7 +75,7 @@ Format (Markdown):
 (4-7 bullets, most important first: "**topic**: what happened")
 ## ${he ? "מה זה משנה לנו" : "What it changes for us"}
 (3-5 bullets: the concrete effect on trade, prices, currencies, defence budgets, sanctions risk or markets to watch)`;
-  const { text, sources } = await claude({ max_tokens: 2200, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 6 }], messages: [{ role: "user", content: prompt }] });
+  const { text, sources } = await claude({ max_tokens: 2200, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 6 }], messages: [{ role: "user", content: prompt }] }, { job: "geopolitics" });
   const uniq = [...new Map(sources.filter((x) => x.url).map((x) => [x.url, x])).values()].slice(0, 20);
   const full = `${text.trim()}\n\n---\n${he ? "מקורות" : "Sources"}:\n${uniq.map((x, i) => `[${i + 1}] ${x.url}`).join("\n")}`;
   try { await appendRow(TAB, [d, key, full.slice(0, 45000), uniq.length, by]); } catch { /* still returns */ }

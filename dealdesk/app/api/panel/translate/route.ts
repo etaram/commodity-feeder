@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 Reply with JSON only: {"<id>": "<translation>", ...}
 
 ${need.map((x: { id: string; text: string }) => `${x.id}\t${x.text}`).join("\n")}` }],
-    });
+    }, { job: "translate" });
     const m = text.match(/\{[\s\S]*\}/);
     const j = m ? JSON.parse(m[0]) as Record<string, unknown> : {};
     for (const x of need) {

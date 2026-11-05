@@ -127,6 +127,7 @@
   window.DD_LABEL = (b) => post("/api/panel/label", b, "Deal Desk");
   // World and project intelligence (events, project timelines, hypotheses), from the pipeline CSVs.
   window.DD_INTEL = (q) => getj("/api/panel/intel" + (q ? "?" + new URLSearchParams(q).toString() : ""));
+  window.DD_AI_USAGE = (days) => getj("/api/panel/ai-usage?days=" + (days || 7));
   window.DD_STRATEGY = { get: () => getj("/api/panel/strategy"), save: (b) => post("/api/panel/strategy", b, "Deal Desk") };
   // Client intake: dossiers from the client's own deck and site, target profiles and prospects. PUT returns the body
   // with its HTTP status (409 stale version, 422 blockers) so the screen can show why a change was refused.

@@ -395,7 +395,7 @@ ${body}
 }
 
 export type ModelFn = (prompt: string) => Promise<string>;
-const defaultModel: ModelFn = async (prompt) => (await claude({ max_tokens: 6000, messages: [{ role: "user", content: prompt }] })).text;
+const defaultModel: ModelFn = async (prompt) => (await claude({ max_tokens: 6000, messages: [{ role: "user", content: prompt }] }, { job: "client dossier" })).text;
 // model answers per chunk, keyed by workspace, client and content hash: identical text is not sent twice, and one
 // client's cached answer is never served to another client
 const chunkCache = new Map<string, unknown>();

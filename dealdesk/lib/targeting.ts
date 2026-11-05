@@ -86,7 +86,7 @@ export function validateProfiles(raw: unknown, d: Dossier): { profiles: Profile[
   return { profiles: out, rejected };
 }
 
-const defaultModel: ModelFn = async (prompt) => (await claude({ max_tokens: 6000, messages: [{ role: "user", content: prompt }] })).text;
+const defaultModel: ModelFn = async (prompt) => (await claude({ max_tokens: 6000, messages: [{ role: "user", content: prompt }] }, { job: "target profiles" })).text;
 export async function draftProfiles(d: Dossier, model: ModelFn = defaultModel) {
   if (!groundingClaims(d).length) return { profiles: [] as Profile[], rejected: [{ item: null, reason: "the dossier has no usable claims" }] };
   return validateProfiles(parseJson(await model(profilePrompt(d))), d);

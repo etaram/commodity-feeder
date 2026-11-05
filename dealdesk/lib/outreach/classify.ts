@@ -55,7 +55,7 @@ export async function classifyReply(text: string, subject = "", model?: Classify
 
 export async function defaultClassifyModel(prompt: string): Promise<string> {
   const { claude } = await import("@/lib/anthropic");
-  const { text } = await claude({ max_tokens: 60, messages: [{ role: "user", content: prompt }] });
+  const { text } = await claude({ max_tokens: 60, messages: [{ role: "user", content: prompt }] }, { job: "reply classify" });
   return text;
 }
 

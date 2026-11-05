@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 Return JSON ONLY, no prose, no code fences: {"document": "<short document name>", "requirements": [{"item": "<one requirement, as the document states it, max 200 chars>", "page": "<page or section, or empty>", "mandatory": true|false, "category": "eligibility|technical|financial|documents|delivery|commercial|other"}]}
 Rules: only requirements actually written in the document; mandatory = the document says must / shall / required / minimum / pass-fail; keep numbers, dates, certificates and thresholds exactly; at most 40 items, the mandatory ones first; if the document cannot be opened or holds no requirements, return {"document": "", "requirements": [], "note": "<why>"}.`;
   try {
-    const { text } = await claude({ max_tokens: 4000, tools: [{ type: "web_fetch_20250910", name: "web_fetch", max_uses: 2 }], messages: [{ role: "user", content: prompt }] });
+    const { text } = await claude({ max_tokens: 4000, tools: [{ type: "web_fetch_20250910", name: "web_fetch", max_uses: 2 }], messages: [{ role: "user", content: prompt }] }, { job: "deal docs" });
     const m = text.match(/\{[\s\S]*\}/);
     const j = m ? JSON.parse(m[0]) : {};
     const items: Req[] = Array.isArray(j.requirements) ? j.requirements : [];

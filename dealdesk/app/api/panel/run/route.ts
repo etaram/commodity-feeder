@@ -77,7 +77,7 @@ After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array
         ? [{ type: "web_fetch_20250910", name: "web_fetch", max_uses: 2 }]
         : [{ type: "web_search_20250305", name: "web_search", max_uses: type === "company_intel" || type === "find_contact" ? 6 : 3 }],
       messages: [{ role: "user", content: prompt }],
-    });
+    }, { job: "research job" });
     // web-found suppliers: saved to the Web Suppliers tab so the next supplier search finds them (marked unverified)
     let body = text, saved = 0;
     if (type === "supplier_search") {

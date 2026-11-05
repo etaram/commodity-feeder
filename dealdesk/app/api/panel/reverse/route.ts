@@ -38,7 +38,7 @@ Rules: quote the document; never invent a name behind a redaction; inferences go
     if (data) content.push(mime === "application/pdf" ? { type: "document", source: { type: "base64", media_type: "application/pdf", data } } : { type: "image", source: { type: "base64", media_type: mime || "image/png", data } });
     if (text) content.push({ type: "text", text: `Document text:\n${text}` });
     content.push({ type: "text", text: ask });
-    const r1 = await claude({ max_tokens: 2000, messages: [{ role: "user", content }] });
+    const r1 = await claude({ max_tokens: 2000, messages: [{ role: "user", content }] }, { job: "reverse read" });
     const m = r1.text.match(/\{[\s\S]*\}/);
     const f: Facts = m ? JSON.parse(m[0]) : {};
     const product = String(f.product || f.chemical_or_grade || "").slice(0, 120);
@@ -69,7 +69,7 @@ Write in ${he ? "Hebrew" : "English"} (names and products in Latin script), Mark
 ## ${he ? "בדיקת מחיר" : "Price check"} (current market price range for the product with sources; compare with any price in the document)
 ## ${he ? "איך Sinder נכנסת" : "How Sinder gets in"} (3 bullets: supply the buyer from our proven suppliers, broker between the parties, or sell the same product to similar buyers; name the first concrete step)
 Never present a guess as a fact. Never invent company names, emails or prices. Mark unknowns.`;
-    const r2 = await claude({ max_tokens: 3500, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 5 }], messages: [{ role: "user", content: prompt }] });
+    const r2 = await claude({ max_tokens: 3500, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 5 }], messages: [{ role: "user", content: prompt }] }, { job: "reverse research" });
     const src = r2.sources.slice(0, 8).map((x) => `- ${x.title}: ${x.url}`).join("\n");
     const result = (r2.text + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 45000);
     const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");

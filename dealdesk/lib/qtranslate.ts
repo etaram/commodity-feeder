@@ -44,7 +44,7 @@ export async function toEnglish(q: string): Promise<{ text: string; how: "none" 
     const { text } = await claude({
       max_tokens: 60,
       messages: [{ role: "user", content: `Translate this search for public tenders or suppliers into English search keywords: the product, service or place names a tender title or a supplier catalogue would use. 1 to 6 words, lower case, no quotes, no explanation. Keep country names. Search: ${raw}` }],
-    });
+    }, { job: "translate query" });
     const en = text.replace(/["'\n]/g, " ").replace(/\s+/g, " ").trim().toLowerCase().slice(0, 80);
     if (!en || NON_LATIN.test(en)) return { text: raw, how: "failed" };
     if (cache.size > 2000) cache.delete(cache.keys().next().value as string);

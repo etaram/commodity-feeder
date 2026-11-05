@@ -169,6 +169,6 @@ export async function adaptWording(plan: CampaignPlan, acc: Account, step: numbe
 // Default model hook for routes: one bounded call through the shared client.
 export async function defaultModel(prompt: string): Promise<string> {
   const { claude } = await import("@/lib/anthropic");
-  const { text } = await claude({ max_tokens: 700, messages: [{ role: "user", content: prompt }] });
+  const { text } = await claude({ max_tokens: 700, messages: [{ role: "user", content: prompt }] }, { job: "outreach adapt" });
   return text;
 }

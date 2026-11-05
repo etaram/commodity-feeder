@@ -39,7 +39,7 @@ ${rows}
 Explain why prices of this group moved this way. Use web search for what is happening now (supply, demand, weather, policy, sanctions, shipping, currency, energy costs), and name which component drove most of the move.
 Write in ${he ? "Hebrew" : "English"}, at most 150 words, as 3 to 5 lines each starting with "- ". Separate what is confirmed by sources from what is your inference, and say so if you could not find a clear reason. No emojis, no em-dashes. Never invent figures. End with one line "For a buyer:" with one practical implication for contracts and quotes.`;
   try {
-    const { text, sources } = await claude({ max_tokens: 1500, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }], messages: [{ role: "user", content: prompt }] });
+    const { text, sources } = await claude({ max_tokens: 1500, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }], messages: [{ role: "user", content: prompt }] }, { job: "tender why" });
     const src = sources.slice(0, 4).map((s) => `- ${s.title}: ${s.url}`).join("\n");
     const out = (text + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 4000);
     if (cache.size > 100) cache.delete(cache.keys().next().value as string);
