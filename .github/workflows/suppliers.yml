@@ -39,6 +39,12 @@ jobs:
           path: data/private
           key: private-${{ github.run_id }}
           restore-keys: private-
+      - name: Company checks (read-only, written by the company-check workflow)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/checks
+          key: checks-none
+          restore-keys: checks-
       - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth cryptography
       - run: mkdir -p data/leads && date -u > data/leads/run_suppliers.log
       - name: latam_awards

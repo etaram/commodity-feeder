@@ -78,6 +78,23 @@ export async function writeRange(range: string, values: (string | number)[][]) {
 
 export const ENGINE_SHEET = SHEET;
 
+// A server-side query on one tab of a spreadsheet (Google Visualization query language): returns the matching rows
+// only, so a lookup in a 30,000-row tab does not download the tab. The caller builds the query from fixed column
+// letters; values go through q() below.
+export const gvizLit = (v: string) => { const c = String(v).replace(/[\\\r\n\t]/g, " "); return c.includes("'") ? `"${c.replace(/"/g, "")}"` : `'${c}'`; };
+export async function gviz(sid: string, sheet: string, tq: string): Promise<string[][]> {
+  const jwt = await client();
+  if (!jwt) return [];
+  const { token } = await jwt.getAccessToken();
+  const url = `https://docs.google.com/spreadsheets/d/${sid}/gviz/tq?sheet=${encodeURIComponent(sheet)}&tqx=out:json&tq=${encodeURIComponent(tq)}`;
+  const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(SHEETS_TIMEOUT_MS) });
+  if (!r.ok) throw new Error(`gviz ${r.status}`);
+  const txt = await r.text();
+  const j = JSON.parse(txt.slice(txt.indexOf("{"), txt.lastIndexOf("}") + 1));
+  if (j.status === "error") throw new Error(`gviz: ${String(j.errors?.[0]?.detailed_message || j.errors?.[0]?.message || "error").slice(0, 160)}`);
+  return (j?.table?.rows || []).map((row: { c: ({ v?: unknown; f?: string } | null)[] }) => (row.c || []).map((c) => String(c?.f ?? c?.v ?? "")));
+}
+
 // RAW: a cell typed by a user is stored as text and never evaluated as a formula (=, +, -, @ at the start are harmless).
 // Appends one row to a tab of another spreadsheet the service account can edit (the private Supplier Universe).
 export async function appendTo(sid: string, tab: string, row: (string | number)[]) {

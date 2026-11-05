@@ -6,7 +6,7 @@ import json
 import re
 from collections import defaultdict
 
-from .common import AWARDS, LEADS, PRIVATE, log, today
+from .common import AWARDS, DATA, LEADS, PRIVATE, log, today
 from .contacts import clean_email, clean_phone, email_kind
 from .regions import iso3, region
 from .sectors import SECTORS, classify, _KW as SECTOR_KW
@@ -198,6 +198,21 @@ def _item(title):
                                    r"suministro|fornecimento|aquisi[cç][aã]o|fourniture|achat|lieferung) (of|de|du|des|"
                                    r"von)?\s*", "", (title or "").strip(), flags=re.I)).strip(" .,-:;")
     return t[:70] if len(t) >= 4 else ""
+
+
+def _company_checks():
+    """Latest company check per supplier key (leads/company_check.py), only where the site names the company."""
+    out = {}
+    p = DATA / "checks" / "company_checks.jsonl"
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            try:
+                d = json.loads(line)
+            except ValueError:
+                continue
+            if d.get("verdict") == "ok" and d.get("name_match") in ("high", "partial"):
+                out[d.get("key")] = d
+    return out
 
 
 def _web_profiles():
@@ -612,12 +627,21 @@ def build():
             x["products"] = prods[:300]
         x["address"] = x["address"] or c["address"]
     web = _web_profiles()
+    checks = _company_checks()
     out = []
     for (k, wc), x in sup.items():
         name = max(x["names"].items(), key=lambda y: y[1])[0]
         if NOT_SUPPLIER.search(name):
             continue  # UN agencies, ministries, councils: buyers or implementers, not suppliers
         wp = web.get(f"{name[:120]}|{wc}") or {}
+        ck = checks.get(f"{name[:120]}|{wc}")
+        if ck:  # a checked site that names the company outranks the light profile: its own description and product headings
+            own = "; ".join([ck.get("description") or ""] + (ck.get("products") or [])[:12]).strip("; ")
+            wp = {**wp, "website": ck.get("website") or wp.get("website", ""), "title": ck.get("title") or wp.get("title", ""),
+                  "about": own or wp.get("about", ""), "discovered": wp.get("discovered") or ck.get("name_match") == "high",
+                  "email": wp.get("email") or "; ".join(e["email"] for e in (ck.get("emails") or []) if e.get("kind") == "generic")[:120],
+                  "phone": wp.get("phone") or (ck.get("phones") or [""])[0]}
+            x["_checked"] = ck.get("checked", "")
         site_src = "registry/notice" if x["website"] else ""
         if x["website"] and not domain_matches(name, x["website"]):
             x["website"], site_src = "", ""  # a notice's website that is not the company's own (buyer, mail provider)

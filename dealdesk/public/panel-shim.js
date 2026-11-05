@@ -133,6 +133,11 @@
     quarantine: (id, status, reason) => post("/api/panel/assertions", { quarantine: id, status, reason }, "Deal Desk"),
   };
   window.DD_COMMODITIES = (q) => getj("/api/panel/commodities?" + new URLSearchParams({ product: (q && q.product) || "", hs6: (q && q.hs6) || "", limit: String((q && q.limit) || 200) }));
+  window.DD_CHECK = {
+    get: (name, country) => getj("/api/panel/company-check?name=" + encodeURIComponent(name || "") + "&country=" + encodeURIComponent(country || "")),
+    request: (name, country) => post("/api/panel/company-check", { name, country }, "Deal Desk"),
+    summary: () => getj("/api/panel/company-check?summary=1"),
+  };
   window.DD_ADMIN = () => getj("/api/panel/admin");
   window.DD_AI_USAGE = (days) => getj("/api/panel/ai-usage?days=" + (days || 7));
   window.DD_STRATEGY = { get: () => getj("/api/panel/strategy"), save: (b) => post("/api/panel/strategy", b, "Deal Desk") };

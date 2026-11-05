@@ -2508,6 +2508,27 @@ function readinessHtml(s) {
     <ul class="rd-list">${items.map(([v, k]) => { const [kk, extra] = String(k).split("|"); return `<li class="${v ? "ok" : "gap"}">${v ? "✓" : "○"} ${esc(t(kk))}${extra ? ` <span class="muted">(${esc(extra)})</span>` : ""}</li>`; }).join("")}</ul>
     <p class="note">${esc(t("rd_n"))}</p></details>`;
 }
+/* website check (background job, code only): what the company's own site says, when it was read, and what is missing */
+function renderCheck(s, c) {
+  const el = $("#c-check"); if (!el) return;
+  const canAsk = ["analyst", "admin"].includes(S.me?.role) && window.DD_CHECK;
+  const ask = canAsk ? `<button type="button" class="sm" id="ck-ask">${esc(c ? mt("Check again", "בדוק שוב") : mt("Check the website", "בדוק את האתר"))}</button>` : "";
+  if (!c) { el.innerHTML = `<div class="section"><div class="sub">${esc(mt("Website not checked yet.", "האתר עדיין לא נבדק."))} ${ask}</div><div id="ck-out" class="sub"></div></div>`; }
+  else {
+    const ok = c.verdict === "ok";
+    const line = (l, v) => v ? `<div class="sub"><b>${esc(l)}:</b> ${esc(v)}</div>` : "";
+    el.innerHTML = `<details class="section" ${ok ? "" : "open"}><summary>${esc(mt("Website check", "בדיקת אתר"))} <span class="pill ${ok ? "good" : "warn"}">${esc(c.verdict)}</span> <span class="pill ${c.name_match === "high" ? "good" : c.name_match === "partial" ? "info" : "bad"}">${esc(mt("name", "שם"))}: ${esc(c.name_match || "-")}</span> <span class="muted">${esc(c.checked)}</span></summary>
+      ${c.website ? `<div class="sub"><a href="${esc(c.website)}" target="_blank" rel="noopener" dir="ltr">${esc(c.domain || c.website)}</a></div>` : ""}
+      ${line(mt("Says", "מה כתוב באתר"), c.description)}${line(mt("Products on the site", "מוצרים באתר"), c.products)}
+      ${line(mt("Sector from the site", "סקטור לפי האתר"), c.sector + (c.sector_conflict === "yes" ? `  (${mt("record says", "ברשומה")}: ${c.record_sector})` : ""))}
+      ${line(mt("Role", "תפקיד"), c.roles)}${line(mt("Certificates named", "תקנים שמוזכרים"), c.certificates)}
+      ${line(mt("Export", "יצוא"), [c.export, c.export_countries].filter(Boolean).join(" · "))}${line(mt("Registration ids", "מספרי רישום"), c.legal_ids)}
+      ${line(mt("E-mails on its own domain", "אימיילים בדומיין שלה"), c.emails)}${line(mt("Phones", "טלפונים"), c.phones)}
+      ${c.gaps ? `<div class="sub q-block"><b>${esc(mt("Missing", "חסר"))}:</b> ${esc(c.gaps)}</div>` : ""}
+      <div class="sub muted">${esc(mt("Read by code from the company's own pages; a site's claim is the company's statement, not a verification.", "נקרא בקוד מהעמודים של החברה עצמה; מה שכתוב באתר הוא הצהרת החברה, לא אימות."))} ${ask}</div><div id="ck-out" class="sub"></div></details>`;
+  }
+  const b = $("#ck-ask"); if (b) b.onclick = async () => { b.disabled = true; try { await window.DD_CHECK.request(s.supplier, s.country); $("#ck-out").textContent = mt("Queued: checked in the next background run (every 3 hours).", "בתור: ייבדק בריצת הרקע הבאה (כל 3 שעות)."); track("company_check_request", s.supplier); } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; } };
+}
 /* facts on record (assertions ledger): each with its status, evidence and reviewer; an analyst can dispute or reject one line without touching the company */
 function renderAssertions(s, rows) {
   const el = $("#c-assert"); if (!el) return;
@@ -2540,6 +2561,7 @@ function openSupplier(s) {
       ["email", `<span dir="ltr">${esc(s.email) || "-"}</span>`, true], ["phone", `<span dir="ltr">${esc(s.phone) || "-"}</span> ${contactBtns({ phone: s.phone, country: s.country }, `Hello, this is Etamar Ramot Naaman from Sinder (international procurement). We are interested in your products: ${String(s.products || s.main_sector || "").slice(0, 120)}.`)}`, true],
       ["address", s.address || "-"], ["company_id", s.legal_id || "-"], ["sources", s.sources], ["st_n", s.tier_reason || "-"]])}</dl>
     ${readinessHtml(s)}
+    <div id="c-check"></div>
     <div id="c-assert"></div>
     <div class="actions"><button class="primary" type="button" id="c-quick">${esc(t("c_quick"))}</button><button type="button" id="c-deep">${esc(t("more_info"))}</button><button type="button" id="c-bi">${esc(t("c_intel"))}</button><button type="button" id="c-contact">${esc(t("a_contact"))}</button><button type="button" id="c-mail">${esc(t("c_mail"))}</button><button type="button" id="c-similar">${esc(t("c_similar"))}</button><button type="button" id="c-log">${esc(t("a_log"))}</button></div>
     <div id="more-c" data-jobcard="${esc(s.legal_id || s.supplier)}">${cardHtml(s.legal_id || s.supplier)}</div><div id="more-c-flash"></div>
@@ -2547,6 +2569,7 @@ function openSupplier(s) {
     <div id="more-cl" data-jobcard="${esc("L:" + (s.legal_id || s.supplier))}">${cardHtml("L:" + (s.legal_id || s.supplier))}</div><div id="more-cl-flash"></div>
     <div id="c-out"></div>`;
   $("#c-quick").onclick = () => quickCompany(s);
+  if (window.DD_CHECK) window.DD_CHECK.get(s.supplier, s.country).then(j => { if (S.sel.c === s) renderCheck(s, j.check); }).catch(() => renderCheck(s, null));
   if (window.DD_ASSERT) window.DD_ASSERT.list(s.supplier, s.country).then(j => { if (S.sel.c === s) renderAssertions(s, j.rows || []); }).catch(() => {});
   $("#c-bi").onclick = e => moreInfo({ type: "company_intel", target_id: "BI:" + (s.legal_id || s.supplier), target: `Business intelligence: ${s.supplier} (${s.country})`, context: pick(s, ["supplier", "country", "region", "main_sector", "industries", "products", "website", "address", "legal_id", "wins", "won_usd_est", "buyers", "buyer_countries", "first_win", "last_win", "sources", "tier_reason"]) }, e.currentTarget, "#more-ci");
   if (window.DD_CONTACT && !s._ct && !(s.email || s.phone || s.address)) {
@@ -3778,6 +3801,7 @@ async function renderOps(fresh) {
       ${kpi(adNum(w.events), mt("World events", "אירועים בעולם"), `${adNum(w.actionable)} ${esc(mt("actionable", "בר ביצוע"))} · ${adNum(w.research)} ${esc(mt("research", "מחקר"))}`)}
       ${kpi(adNum(vf.total), mt("Verified capability facts", "עובדות יכולת מאומתות"), `${adNum((vf.by_label || {}).yes)} ${esc(mt("yes", "כן"))} · ${adNum((vf.by_label || {}).no)} ${esc(mt("no", "לא"))}`)}
       ${kpi(adNum(as.total), mt("Assertions on record", "טענות ברשומות"), Object.entries(as.by_status || {}).map(([k, n]) => `${esc(k)} ${n}`).join(" · "))}
+      ${(() => { const ck = d.company_checks || {}, bv = ck.by_verdict || {}, tot = Object.values(bv).reduce((a, n) => a + n, 0); return kpi(adNum(tot), mt("Websites checked", "אתרים שנבדקו"), tot ? `${adNum(bv.ok || 0)} ok · ${adNum(bv["name mismatch"] || 0)} ${esc(mt("name mismatch", "שם לא תואם"))} · ${adNum((bv.unreachable || 0) + (bv.parked || 0))} ${esc(mt("dead or parked", "לא פעיל"))}${ck.last ? " · " + esc(String(ck.last).slice(0, 10)) : ""}` : esc(mt("first run within 3 hours", "ריצה ראשונה בתוך 3 שעות"))); })()}
       ${kpi("$" + (b.spent_usd ?? 0), mt("AI spend today (estimated)", "הוצאת AI היום (אומדן)"), `${esc(mt("alert line", "קו התראה"))} $${esc(b.alert_usd ?? "")}${b.over_alert ? ` <span class="pill warn">${esc(mt("over", "מעל"))}</span>` : ""}`)}
     </div>
 
