@@ -39,12 +39,12 @@ from urllib.parse import urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 from .common import DATA, PRIVATE, log
-from .sectors import SECTORS, classify
+from .sectors import _KW, SECTORS
 
 CHECKS = DATA / "checks"
 OUT = CHECKS / "company_checks.jsonl"
 UA = "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0; +https://github.com/etaram/commodity-feeder)"
-VERSION = "check-1"
+VERSION = "check-2"
 RECHECK_DAYS = 90
 MAX_PAGES = 6
 PAGE_BYTES = 600_000
@@ -195,6 +195,34 @@ def emails_on(text, domain):
     return out[:6]
 
 
+# words every corporate site carries: they say nothing about what the company sells
+NOISE = re.compile(r"\b(investor relations?|information|solutions?|innovation|digital|services?|security|cookies?|privacy|"
+                   r"sustainab\w*|careers?|news(room)?|media|licen[cs]e\w*|research|translational)\b", re.I)
+
+
+def site_sector(lead, products):
+    """Sector from the site's own words by scoring every sector's keywords (not the first one that matches): the title
+    and description count double, product headings once; a winner needs 2 points and a clear lead, else unclear."""
+    lead_t, prod_t = NOISE.sub(" ", lead), NOISE.sub(" ", " ; ".join(products[:25]))
+    score = defaultdict(float)
+    # the tender keyword lists match word stems; on prose a stem inside a word misleads ("contractor" is not a
+    # tractor, "translational" is not translation), so a hit must start a word here
+    starts = lambda rx, t: sum(1 for m in rx.finditer(t) if m.start() == 0 or not t[m.start() - 1].isalpha())  # noqa: E731
+    for sec, rx in _KW:
+        score[sec] += 2 * starts(rx, lead_t) + starts(rx, prod_t)
+    ranked = sorted(((v, k) for k, v in score.items() if v > 0), reverse=True)
+    if not ranked or ranked[0][0] < 2:
+        return "", "unclear (too few product words)", ranked[0][0] if ranked else 0
+    if len(ranked) > 1 and ranked[0][0] < 1.5 * ranked[1][0]:
+        return "", f"unclear ({SECTORS.get(ranked[0][1], ranked[0][1])} vs {SECTORS.get(ranked[1][1], ranked[1][1])})", ranked[0][0]
+    return ranked[0][1], "site text", ranked[0][0]
+
+
+BOTWALL = re.compile(r"pardon our interruption|made us think you were a bot|are you a robot|checking your browser|"
+                     r"attention required|cf-browser-verification|access denied|request unsuccessful|captcha", re.I)
+CSSLIKE = re.compile(r"@font-face|font-family|\{[^}]*:[^}]*;|var\(--|function\s*\(|=>")
+
+
 def analyse(name, record_sector, pages):
     """pages: [(url, html)] of one site, home first. Returns the check fields (pure: no network)."""
     home_url, home = pages[0]
@@ -203,15 +231,14 @@ def analyse(name, record_sector, pages):
     title = title_of(home)
     desc = meta_description(home)
     if not desc:
-        para = next((x.strip() for x in texts[0].split("\n") if 80 <= len(x.strip()) <= 600 and not EMAIL.search(x)), "")
+        para = next((x.strip() for x in texts[0].split("\n") if 80 <= len(x.strip()) <= 600 and not EMAIL.search(x) and not CSSLIKE.search(x)), "")
         desc = para
     domain = site_domain(home_url)
     nm, share = name_match(name, title, alltext)
     prods = []
     for _, p in pages:
         prods += [h for h in headings(p) if h not in prods]
-    own = " ".join([title, desc] + prods[:25])
-    sec, how = classify(own, None)
+    sec, how, sec_score = site_sector(f"{title}. {desc}", prods)
     roles = []
     for role, rx in ROLE_RULES:
         m = rx.search(alltext)
@@ -242,7 +269,7 @@ def analyse(name, record_sector, pages):
     conflict = bool(sec and rec_id and sec != rec_id)
     return {
         "title": title, "description": desc[:500], "products": prods[:30], "domain": domain, "name_match": nm, "name_share": share,
-        "sector": SECTORS.get(sec, "") if sec else "", "sector_basis": how and "site text", "sector_conflict": conflict,
+        "sector": SECTORS.get(sec, "") if sec else "", "sector_basis": how, "sector_score": sec_score, "sector_conflict": conflict,
         "record_sector": record_sector or "", "roles": roles, "certificates": certs, "export_wording": exp.group(0) if exp else "",
         "export_countries": named_countries, "legal_ids": ids[:6], "phones": phones, "emails": mails, "gaps": gaps,
         "verdict": "name mismatch" if nm == "none" else "ok",
@@ -302,6 +329,8 @@ def fetch_site(url):
         return None, "blocked by robots.txt"
     if PARKED.search(text_of(home)[:6000]):
         return None, "parked or placeholder page"
+    if BOTWALL.search(text_of(home)[:4000]) and len(text_of(home)) < 6000:
+        return None, "blocked by bot protection"
     pages = [(final, home)]
     for u in links(base, home):
         if len(pages) >= MAX_PAGES:
@@ -343,7 +372,8 @@ def queue(rows, checks, limit, today):
     for r in rows:
         by_name[r["supplier"].strip().lower()].append(r)
     stale = (today - timedelta(days=RECHECK_DAYS)).isoformat()
-    due = lambda k: k not in checks or str(checks[k].get("checked", "")) < stale  # noqa: E731
+    # due: never checked, checked before the recheck window, or checked by an older version of these rules
+    due = lambda k: k not in checks or str(checks[k].get("checked", "")) < stale or checks[k].get("version") != VERSION  # noqa: E731
     picked, seen = [], set()
 
     def add(r, reason, force=False):

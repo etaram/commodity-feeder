@@ -1,5 +1,5 @@
 """Company check parsing (no network): python3 tests/test_company_check.py"""
-from leads.company_check import analyse, emails_on, links, name_match, PARKED, text_of
+from leads.company_check import analyse, emails_on, links, name_match, PARKED, site_sector, text_of
 
 PAGE = """<html><head><title>Acme Valves Ltd - Butterfly valves manufacturer</title>
 <meta name="description" content="Acme Valves is a leading manufacturer of butterfly and gate valves for water utilities."></head>
@@ -43,7 +43,16 @@ def test_helpers():
     assert emails_on("x@sub.acme.com y@acme.com z@other.com", "acme.com") == [{"email": "x@sub.acme.com", "kind": "named"}, {"email": "y@acme.com", "kind": "named"}]
 
 
+def test_site_sector_scored_not_first_match():
+    # real pages from the first run: a first-match keyword gave Fertiglobe ICT, Lockheed ICT, STRABAG furniture
+    assert site_sector("Philadelphia Solar delivers high-efficiency PV modules and reliable mounting systems", ["PV Modules", "Steel Mounting Structures"])[0] == "POWER"
+    assert site_sector("The fire truck manufacturer Rosenbauer, unique firefighting technology", ["Vehicle of the month"])[0] == "TRANSPORT_EQ"
+    assert site_sector("Eakin Healthcare is a UK manufacturer of respiratory products for Critical and Neonatal Care", ["Ventilator Circuits"])[0] == "HEALTH"
+    assert site_sector("STRABAG ist Österreichs größtes Bauunternehmen", ["Impressum"])[0] == ""  # too few words: unclear, not a guess
+    assert site_sector("a leading global security, defense and aerospace contractor", ["Air", "Land"])[0] != "MACHINERY"  # contractor is not tractor
+
+
 if __name__ == "__main__":
-    for f in [test_analyse, test_mismatch_and_gaps, test_links_same_site_only, test_helpers]:
+    for f in [test_analyse, test_mismatch_and_gaps, test_links_same_site_only, test_helpers, test_site_sector_scored_not_first_match]:
         f()
     print("company check: all checks passed")
