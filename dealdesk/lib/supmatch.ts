@@ -15,7 +15,7 @@ import type { Supplier } from "@/lib/index";
 //
 // The company name locates an entity; it never establishes product capability. HS/CPV codes are retrieval
 // signals, not proof of compatibility. Terms match on whole words ("corn" is not in "Corning").
-export const MATCH_VERSION = "match-1.2 (2026-11-05)";
+export const MATCH_VERSION = "match-1.3 (2026-11-05)";
 export type Bucket = "supported" | "plausible" | "related" | "incompatible";
 export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[] };
 
@@ -150,8 +150,9 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
   const fromShipments = !!(s.hs || s.sh) && !s.wt && !s.in;
   if (jo.clean && !fromShipments) { bucket = "supported"; evidence = "company's own product description"; }
   else if (jo.clean) { bucket = "plausible"; evidence = "shipment records"; gaps.push("named in shipment records; verify that the company makes or sells it"); }
-  else if (ja.clean && !isService) { bucket = "supported"; evidence = "contract items"; }
-  else if (ja.clean) { bucket = "plausible"; evidence = "contract items"; gaps.push("named in contracts of a works or services firm"); }
+  // a public contract it won names the product, but the winner is often a contractor, installer or distributor
+  // (held-out check, 5 Nov 2026: 14 of 27 such "fits" could actually supply, against 17 of 20 from own descriptions)
+  else if (ja.clean) { bucket = "plausible"; evidence = "contract items"; gaps.push(isService ? "named in contracts of a works or services firm" : "named in a public contract it won; verify that it makes or sells the product"); }
   else if (jo.conflicted || ja.conflicted) {
     const c = jo.conflicted || ja.conflicted;
     bucket = c.startsWith("!") ? "incompatible" : "related"; evidence = jo.conflicted ? "company's own product description" : "contract items";
@@ -189,7 +190,7 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
 }
 
 export const BUCKET_RANK: Record<Bucket, number> = { supported: 0, plausible: 1, related: 2, incompatible: 3 };
-const EVIDENCE_RANK: Record<string, number> = { "verified on an authoritative source": -1, "company's own product description": 0, "shipment records": 1.5, "own description and contract items": 1, "contract items": 2, "customs headings": 3, partial: 4, "company name only": 5, none: 6 };
+const EVIDENCE_RANK: Record<string, number> = { "verified on an authoritative source": -1, "company's own product description": 0, "shipment records": 1.5, "own description and contract items": 1, partial: 2, "contract items": 2.5, "customs headings": 3, "company name only": 5, none: 6 };
 export const evidenceRank = (e: string) => EVIDENCE_RANK[e] ?? 6;
 
 /** one row per legal entity: same normalised name and country */

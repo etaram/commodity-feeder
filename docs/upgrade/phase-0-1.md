@@ -76,7 +76,7 @@ Not changed (recorded): broad sector supplier counts still feed the score (needs
 | match-1.1 (before the review) | 84 of 115 (73%) | +/-8% |
 | match-1.2 (rules from the review) | 54 of 67 (81%) | +/-9% |
 
-Caveats: the rules for 1.2 were derived from the same labels they are measured on, so 81% is optimistic; a held-out set is needed before claiming the 90% gate. The benchmark runs without the AI query expansion the live app uses.
+Caveats: the rules for 1.2 were derived from the same labels they are measured on, so 81% is optimistic (confirmed below); a held-out set is needed before claiming the 90% gate. The benchmark runs without the AI query expansion the live app uses.
 
 What the review taught (now rules): processed forms (flour for wheat, degermed corn, date syrup, coconut sugar, specialty cement); equipment made for the product or that uses it (ammunition lines, LPG engines, ammonia fuel cells, battery testers, excavator attachments, bitumen boards); EPC and installers; forwarders; procurement intermediaries; shipment records that name cargo, not a catalogue.
 
@@ -97,3 +97,15 @@ What the review taught (now rules): processed forms (flour for wheat, degermed c
 - Tests: `dealdesk/tests/scope.test.ts` (9 isolation checks, all pass).
 
 Not yet: per-workspace strategy (partners, margins and the dealfit preferences are still the original workspace's and are computed once for the shared tender list), client dossiers, saved views. Rollback: revert the commit; blank workspace columns read as the original workspace, so no data migration is needed either way.
+
+## Held-out check (5 November 2026)
+
+89 results the rules had never seen (ranks up to 10, not in the first sample), checked the same way; 68 decided.
+
+| Evidence behind a 'supported' result (match-1.2) | Can supply |
+|---|---|
+| the company's own product description | 17 of 20 (85%) |
+| a public contract it won | 14 of 27 (52%) |
+| all 'supported' | 31 of 47 (66%, +/-14%) |
+
+So the 81% did not hold on unseen data. The cause is clear in the split: contract winners are often contractors, installers or distributors. match-1.3 keeps 'supported' for own-description evidence only and moves contract-only evidence to 'plausible' (ranked after shipment records). On this held-out sample that rule gives 17 of 20 (85%, +/-16%, small sample); not yet at the 90% gate. The 68 facts were added to Verified capabilities (194 rows in all).
