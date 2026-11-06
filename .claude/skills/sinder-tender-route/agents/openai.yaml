@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sinder Tender Routes"
+  short_description: "Assess bidder and local-partner entry routes"
+  default_prompt: "Use $sinder-tender-route to complete the relevant Sinder workflow with evidence, explicit gaps and a concrete next action."

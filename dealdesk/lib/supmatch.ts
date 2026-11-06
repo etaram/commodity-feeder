@@ -15,7 +15,7 @@ import type { Supplier } from "@/lib/index";
 //
 // The company name locates an entity; it never establishes product capability. HS/CPV codes are retrieval
 // signals, not proof of compatibility. Terms match on whole words ("corn" is not in "Corning").
-export const MATCH_VERSION = "match-1.3 (2026-11-05)";
+export const MATCH_VERSION = "match-1.4 (2026-11-06)";
 export type Bucket = "supported" | "plausible" | "related" | "incompatible";
 export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[]; url?: string };
 
@@ -94,6 +94,22 @@ const FAMILIES: Family[] = [
       { rx: /\b(cable|couplings?|ducts?)\b/i, label: "cable or coupling products", bucket: "related" },
       { rx: /\b(water services?|leak detection|meter reading|installation|maintenance)\b/i, label: "water service provider", bucket: "related" },
     ] },
+  // RO water treatment (skill sinder-counterpart-match, 6 Nov 2026): "RO" and "filters" pull in automotive filter makers
+  { id: "ro-water", when: /\b(reverse osmosis|ro (plants?|systems?|units?|membranes?)|desalinat\w*)\b/i,
+    exact: /\b(reverse osmosis|ro (plants?|systems?|units?|membranes?)|desalinat\w*|water treatment (plants?|systems?))\b/i,
+    need: { rx: /\b(reverse osmosis|ro (plants?|systems?|units?|membranes?)|desalinat\w*|water treatment|membranes?)\b/i, gap: "RO water treatment not stated" },
+    rules: [
+      { rx: /\b(oil filters?|air filters?|fuel filters?|cabin filters?|automotive|auto parts|car parts|spare parts for (cars|trucks|vehicles)|for (cars|trucks|vehicles|motorcycles))\b/i, label: "automotive filters, not RO water treatment", bucket: "incompatible" },
+      { rx: /\b(household|domestic|home|under[- ]sink|countertop|kitchen) (water )?(purifiers?|filters?|systems?)\b|\bwater dispensers?\b/i, label: "household purifier, not an industrial RO system", bucket: "related" },
+      { rx: /\b(bottled water|mineral water|drinking water brand)\b/i, label: "bottled water producer", bucket: "related" },
+    ] },
+  // maize color is a specification, not a synonym: a yellow-maize seller is not an exact fit for white maize
+  { id: "white-maize", when: /\bwhite (maize|corn)\b/i, exact: /\bwhite (maize|corn)\b/i,
+    need: { rx: /\bwhite (maize|corn)\b/i, gap: "maize color not stated (white requested)" },
+    rules: [{ rx: /\byellow (maize|corn)\b/i, label: "yellow maize, white requested", bucket: "related" }] },
+  { id: "yellow-maize", when: /\byellow (maize|corn)\b/i, exact: /\byellow (maize|corn)\b/i,
+    need: { rx: /\byellow (maize|corn)\b/i, gap: "maize color not stated (yellow requested)" },
+    rules: [{ rx: /\bwhite (maize|corn)\b/i, label: "white maize, yellow requested", bucket: "related" }] },
 ];
 
 // Rules for every request: the product named as the input of a machine, or around a project role, is not the

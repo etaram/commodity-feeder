@@ -48,4 +48,11 @@ T("sugar", [["sugar"]], { n: "Big Tree Farms", p: "organic coconut sugar", ty: "
 T("cement", [["cement"]], { n: "Calucem", p: "calcium aluminate cement", ty: "goods supplier", wt: "Calucem" }, "related");
 T("excavator", [["excavator"]], { n: "One Composite Mills", p: "Knit T-shirt print excavator", hs: "6109", ty: "goods supplier" }, "plausible");
 T("power transformer", [["power transformer"]], { n: "Trafo AG", p: "power transformers up to 500 MVA, oil-immersed, for EPC contractors", ty: "goods supplier", web: "x", wt: "Trafo" }, "supported");
+// skills package (6 Nov 2026): RO water treatment and maize color
+T("RO system", [["reverse osmosis", "ro system"]], { n: "Filtro Auto", p: "oil filters, air filters, RO system filters for cars", ty: "goods supplier", wt: "Filtro" }, "incompatible");
+T("reverse osmosis plant", [["reverse osmosis"]], { n: "AquaTech", p: "industrial reverse osmosis plants and desalination units", ty: "goods supplier", web: "x", wt: "AquaTech" }, "supported");
+T("reverse osmosis", [["reverse osmosis"]], { n: "HomePure", p: "household water purifiers with reverse osmosis", ty: "goods supplier", web: "x", wt: "HomePure" }, "related");
+T("white maize", [["white"], ["maize", "corn"]], { n: "Grain Co", p: "yellow maize, white sorghum", ty: "goods supplier", web: "x", wt: "Grain Co" }, "related");
+T("white maize", [["white"], ["maize", "corn"]], { n: "Grain SA", p: "white maize grade 1, non-GMO", ty: "goods supplier", web: "x", wt: "Grain SA" }, "supported");
+T("yellow corn", [["yellow"], ["maize", "corn"]], { n: "Corn Ltd", p: "white maize for milling", ty: "goods supplier", web: "x", wt: "Corn" }, "related");
 console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);

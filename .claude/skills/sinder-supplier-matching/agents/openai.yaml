@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sinder Supplier Matching"
+  short_description: "Match exact products to evidenced suppliers"
+  default_prompt: "Use $sinder-supplier-matching to complete the relevant Sinder workflow with evidence, explicit gaps and a concrete next action."

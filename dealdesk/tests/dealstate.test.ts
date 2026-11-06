@@ -1,0 +1,58 @@
+// Entry routes and readiness gates (skills sinder-tender-route, sinder-deal-orchestrator). Run: npx esbuild ... && node
+import { routeOptions, routesHe } from "@/lib/routes";
+import { readiness, cashCheck, usableSupplier } from "@/lib/dealstate";
+import type { DealRecord } from "@/lib/deal";
+let fail = 0;
+const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
+const v = (rows: ReturnType<typeof routeOptions>, id: string) => rows.find((r) => r.route === id)!.verdict;
+
+const dom = routeOptions({ country: "KEN", access: "This tender is open to national bidders only, registered with the Kenyan registry", title: "Supply of white maize", stage: "tender" });
+ok(v(dom, "direct") === "blocked" && /national bidders only/.test(dom[0].basis), "a domestic clause blocks the direct route and is quoted");
+ok(v(dom, "local_partner") === "conditional" && v(dom, "agency") === "conditional", "a direct block is not a blanket rejection: partner and agency stay conditional");
+const open = routeOptions({ country: "GHA", access: "International Competitive Bidding (ICB)", title: "Supply of urea", stage: "tender" });
+ok(v(open, "direct") === "conditional" && open[0].missing.length > 0, "an open international notice: direct is conditional on portal and bid security rules");
+ok(v(open, "local_partner") === "unknown", "no partner on record: the partner route is unknown, not invented");
+const none = routeOptions({ country: "NGA", title: "Supply of cement", stage: "tender" });
+ok(v(none, "direct") === "unknown", "no eligibility wording: unknown, not supported");
+const home = routeOptions({ country: "ISR", title: "Supply of pipes", stage: "tender" });
+ok(v(home, "direct") === "supported", "home market: direct supported");
+const works = routeOptions({ country: "TZA", access: "ICB", title: "Construction of water treatment plant", stage: "tender" });
+ok(v(works, "sub_supply") === "conditional", "works scope: sub-supply to the contractor is conditional");
+const aw = routeOptions({ country: "TZA", title: "Supply of transformers", stage: "awarded", awarded_to: "ABC Power" });
+ok(v(aw, "direct") === "blocked" && v(aw, "sub_supply") === "conditional" && /ABC Power/.test(aw[3].next), "after award: direct closed, sub-supply to the named winner");
+const lad = routeOptions({ country: "KEN", access: "national bidders only", stage: "tender", partner_state: "engagement confirmed" });
+ok(v(lad, "local_partner") === "supported", "only a confirmed partner engagement makes the partner route supported");
+const lad2 = routeOptions({ country: "KEN", access: "national bidders only", stage: "tender", partner_state: "candidate identified" });
+ok(v(lad2, "local_partner") === "conditional", "an unverified partner is not a workaround: conditional");
+
+const R = (kind: string, id: string, data: Record<string, unknown>, version = 1, status = "active"): DealRecord => ({ time: "", deal_id: "D1", kind: kind as DealRecord["kind"], record_id: id, version, status, data, by: "t", source: "test" });
+ok(readiness([], open).reached === "" && readiness([], open).next === "research", "empty deal: research not reached");
+const req = R("requirement", "r1", { name: "white maize", mandatory: true, status: "unknown" });
+const r1 = readiness([req], open);
+ok(r1.reached === "research" && r1.next === "ready_for_rfq" && r1.missing.some((m) => /supplier/.test(m)), "requirement only: research reached, supplier missing");
+ok(!usableSupplier({ role: "supplier", email: "sales@x", source: "site" }) && !usableSupplier({ role: "supplier", email: "a@b.com" }), "an invalid email or an unsourced contact is not usable");
+const sup = R("party", "p1", { role: "supplier", name: "Grain SA", email: "sales@grainsa.co.za", source: "https://grainsa.co.za/contact" });
+const r2 = readiness([req, sup], open);
+ok(r2.reached === "ready_for_rfq" && r2.missing.some((m) => /actual offer/.test(m)), "sourced supplier with a valid channel: ready for RFQ");
+ok(readiness([req, sup], open.map((r) => ({ ...r, verdict: "blocked" as const }))).reached === "research", "no feasible route: not ready for RFQ");
+const q = R("quote", "q1", { availability: "indicative", price: 300 });
+ok(readiness([req, sup, q], open).reached === "ready_for_rfq", "an indicative price is not an actual offer");
+const q2 = R("quote", "q1", { availability: "confirmed", price: 300, source_ref: "email 2026-11-06", valid_until: "2099-01-01" }, 2);
+const r3 = readiness([req, sup, q2], open);
+ok(r3.reached === "quoted" && r3.missing.some((m) => /economics/.test(m)), "a documented, current offer: quoted");
+const exp = R("quote", "q1", { availability: "confirmed", source_ref: "x", valid_until: "2020-01-01" }, 3);
+ok(readiness([req, sup, exp], open).reached === "ready_for_rfq", "an expired offer does not count");
+const done = readiness([req, sup, q2, R("economics", "e", { sale_price: 330 }), R("stage", "s", { stage: "offer" })], open);
+ok(done.reached === "reviewed" && done.next === "" && done.execution_approved === false, "all gates passed: reviewed, still no execution approval");
+const del = R("party", "p1", { role: "supplier" }, 2, "deleted");
+ok(readiness([req, sup, del], open).reached === "research", "a deleted record version supersedes the earlier one");
+
+const c = cashCheck([{ day: 0, amount: -100000 }, { day: 60, amount: 110000 }], 0.1, 50000);
+ok(Math.abs(c.finance_cost - 100000 * 0.1 * 60 / 365) < 0.01, "daily simple interest on the negative balance");
+ok(c.peak_funding > 100000 && c.funding_capacity === "exceeds the stated limit" && c.warnings.length === 1, "peak above the limit is warned");
+const neg = cashCheck([{ day: 0, amount: -100 }], 0.1, null);
+ok(neg.funding_capacity === "unknown" && neg.warnings.some((w) => /negative/.test(w)), "final negative cash is warned; no limit gives unknown capacity");
+const all = [dom, open, none, home, works, aw, lad, lad2].flatMap(routesHe);
+const left = all.flatMap((r) => [r.basis, r.next, ...r.assumptions, ...r.missing]).filter((x) => /^[a-z][a-z ]+[a-z]/i.test(x.replace(/"[^"]*"/g, "")) && !/[\u0590-\u05FF]/.test(x));
+ok(!left.length, "every route string has Hebrew: " + left.slice(0, 3).join(" | "));
+console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);

@@ -85,7 +85,7 @@ export function clean(kind: Kind, d: Record<string, unknown>): { ok: true; data:
   }
   if (kind === "economics") {
     const keys = ["role", "sale_price", "cost_goods", "freight", "insurance", "inspection", "duty_pct", "bank_pct", "fin_rate_pct", "deposit_pct",
-      "deposit_day", "balance_day", "delivery_day", "customer_day", "commission_pct", "contingency_pct", "freight_in_quote", "insurance_in_quote", "notes"];
+      "deposit_day", "balance_day", "delivery_day", "customer_day", "commission_pct", "contingency_pct", "funding_limit", "freight_in_quote", "insurance_in_quote", "notes"];
     const e: Record<string, unknown> = {};
     for (const k of keys) e[k] = ["role", "notes"].includes(k) ? str(d[k], 300) : ["freight_in_quote", "insurance_in_quote"].includes(k) ? d[k] === true : numOrNull(d[k]);
     if (Object.values(e).some((v) => typeof v === "number" && Number.isNaN(v))) return { ok: false, error: "economics inputs must be numbers" };

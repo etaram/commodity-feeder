@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { clean, pipeline, readDeal, saveRecord, type Kind } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
+import { tenders } from "@/lib/index";
+import { routeOptions, routesHe } from "@/lib/routes";
+import { readiness } from "@/lib/dealstate";
+import { PARTNER_STATES, type DealRecord } from "@/lib/deal";
+
+// Entry routes and readiness gates for the deal workspace (skills package, 6 Nov 2026). DEAL_GATES=off removes them.
+async function gates(id: string, records: DealRecord[]) {
+  if (process.env.DEAL_GATES === "off") return {};
+  const t = (await tenders().catch(() => [])).find((x) => x.id === id);
+  const st = records.find((r) => r.kind === "stage")?.data || {};
+  const partners = records.filter((r) => r.kind === "party" && r.data.role === "partner").map((r) => String(r.data.partner_state || ""));
+  const best = partners.sort((a, b) => PARTNER_STATES.indexOf(b as never) - PARTNER_STATES.indexOf(a as never))[0] || "";
+  const access = t ? (t.acc === "set-aside" ? "reserved for local bidders (set-aside)" : t.acc === "intl" ? "international bidding" : "") : "";
+  const routes = routeOptions({ country: String(t?.c || st.country || ""), access, title: String(t?.t || st.title || ""), sector: String(t?.s || st.sector || ""),
+    value_usd: (t?.v ?? (st.value_usd as number | null)) || null, stage: t?.st || "", partner_state: best });
+  return { routes, routes_he: routesHe(routes), readiness: readiness(records, routes) };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +34,7 @@ export async function GET(req: NextRequest) {
   if (!id) return NextResponse.json({ ok: false, error: "deal id is required" }, { status: 400 });
   try {
     const r = await readDeal(id, s.ws);
-    return NextResponse.json({ ok: true, ...r });
+    return NextResponse.json({ ok: true, ...r, ...(await gates(id, r.records)) });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });
   }

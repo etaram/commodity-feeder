@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sinder Deal Builder"
+  short_description: "Coordinate evidence-backed trade deal workflows"
+  default_prompt: "Use $sinder-deal-orchestrator to complete the relevant Sinder workflow with evidence, explicit gaps and a concrete next action."

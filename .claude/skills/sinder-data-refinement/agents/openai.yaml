@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sinder Data Refinement"
+  short_description: "Refine the full database with traceable evidence"
+  default_prompt: "Use $sinder-data-refinement to complete the relevant Sinder workflow with evidence, explicit gaps and a concrete next action."

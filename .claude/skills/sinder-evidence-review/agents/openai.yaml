@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sinder Evidence Review"
+  short_description: "Challenge claims and deal readiness with evidence"
+  default_prompt: "Use $sinder-evidence-review to complete the relevant Sinder workflow with evidence, explicit gaps and a concrete next action."
