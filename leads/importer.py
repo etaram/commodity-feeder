@@ -172,6 +172,39 @@ def commodity_seed(path):
     return out
 
 
+def global_suppliers(path):
+    """Sinder Global Supplier Database (directories, trade profiles, earlier Sinder records) -> rows. Refined on the way:
+    country names to ISO3 (so 'United States' and 'United States of America' are one), names unescaped, placeholder
+    countries dropped, phones and e-mails kept only when they pass the field rules, products de-duplicated. Each row
+    keeps its source and the file's own quality status; nothing becomes verified."""
+    import html as _h
+    import re as _re
+    from .contacts import clean_email, clean_phone
+    from .refine_modules import name_to_iso3, to_iso3
+    d = json.load(open(path, encoding="utf-8"))
+    out = []
+    for x in d["suppliers"]:
+        name = _re.sub(r"\s+", " ", _h.unescape(_h.unescape(x.get("company_name") or ""))).strip().strip('"').strip()
+        if len(name) < 2:
+            continue
+        cn = (x.get("country") or "").strip()
+        cty = (to_iso3(cn) if len(cn) <= 3 else name_to_iso3(cn)) if cn and not _re.search(r"[\u0590-\u05FF]", cn) else ""
+        ct = x.get("contacts") or {}
+        email = clean_email("; ".join(ct.get("emails") or []))
+        phone = clean_phone("; ".join(ct.get("phones") or []), cty)
+        prods = list(dict.fromkeys(p.strip() for p in (x.get("products") or []) + (x.get("chemical_product_families") or []) + (x.get("defense_product_categories") or []) if p and p.strip()))
+        ev = (x.get("evidence") or [{}])[0]
+        role = x.get("supplier_role") or ""
+        out.append({"supplier": name, "name_local": "", "country": cty, "industry": "; ".join(x.get("sectors") or [])[:120],
+                    "products": ", ".join(prods)[:300], "commodities": "; ".join(x.get("commodity_categories") or []),
+                    "website": ct.get("website") or "", "email": email, "phone": phone, "address": ct.get("address") or "",
+                    "source": {"APEDA AgriXchange registered exporter directory": "APEDA registered exporters (India)", "ChemicalRegister": "ChemicalRegister directory",
+                               "Sinder existing supplier record": "Sinder supplier master"}.get(ev.get("source"), ev.get("source") or "Global supplier database"),
+                    "source_url": ev.get("url") or "", "notable": False, "basis": f"{role[:80]}; {(x.get('quality') or {}).get('status', '')}",
+                    "defense": "defense" in (x.get("sectors") or []), "id": x.get("id"), "legacy_id": x.get("legacy_id") or ""})
+    return out
+
+
 if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.INFO)
@@ -180,8 +213,8 @@ if __name__ == "__main__":
         init()
     elif a[:1] == ["seal"]:
         print(seal(a[1], a[2]))
-    elif a[:1] in (["china"], ["commodities"]):
-        rows_ = china_directory(a[1]) if a[0] == "china" else commodity_seed(a[1])
+    elif a[:1] in (["china"], ["commodities"], ["global"]):
+        rows_ = {"china": china_directory, "commodities": commodity_seed, "global": global_suppliers}[a[0]](a[1])
         with open(a[2], "w", encoding="utf-8") as f:
             for r in rows_:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")

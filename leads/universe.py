@@ -701,12 +701,33 @@ def build():
     except Exception as e:  # noqa: BLE001
         log.warning("imports skipped: %s", e); drops = []
     if drops:
+        SHARED = re.compile(r"(^|\.)(alibaba|1688|made-in-china|indiamart|tradeindia|exportersindia|globalsources|ec21|go4worldbusiness|justdial|infoline|corporatedir|zaubacorp|"
+                            r"chemicalregister|facebook|linkedin|instagram|twitter|x|youtube|google|sites\.google|wix|wixsite|blogspot|wordpress|weebly|"
+                            r"yellowpages|kompass|europages|dnb|zoominfo|gmail|yahoo|hotmail|outlook|qq|163|126|sina)\.", re.I)
+
         def _dom(u):
-            h = re.sub(r"^https?://", "", (u or "").lower()).split("/")[0]
-            return h[4:] if h.startswith("www.") else h
+            h = re.sub(r"^https?://", "", (u or "").lower()).split("/")[0].split(":")[0]
+            h = h[4:] if h.startswith("www.") else h
+            return "" if not h or "." not in h or SHARED.search(h + ".") or h in crowded else h  # a marketplace or a free host is not one company
+
+        # a host given for more than 3 different names in the drops is a directory or a group site, not an identity
+        _hn = defaultdict(set)
+        for c in drops:
+            hh = re.sub(r"^https?://", "", (c.get("website") or "").lower()).split("/")[0].split(":")[0]
+            if hh:
+                _hn[hh[4:] if hh.startswith("www.") else hh].add(norm(c.get("supplier")))
+        crowded = {h for h, ns in _hn.items() if len(ns) > 3}
+        GENERIC = {"group", "international", "industries", "industry", "chemical", "chemicals", "company", "trading", "exports", "export", "global",
+                   "enterprises", "enterprise", "india", "china", "corporation", "holdings", "technology", "technologies", "products", "foods", "agro"}
+
+        def _same_firm(a, b):
+            """Same website is the same company only when the names also share a distinctive word (subsidiaries share a group site)."""
+            ta = {w for w in norm(a).split() if len(w) > 2 and w not in GENERIC}
+            tb = {w for w in norm(b).split() if len(w) > 2 and w not in GENERIC}
+            return bool(ta & tb) or not ta or not tb
         by_dom, by_name, by_dom_any = {}, {}, {}
         for kk, xx in sup.items():
-            if xx.get("website"):
+            if _dom(xx.get("website")):
                 by_dom.setdefault((_dom(xx["website"]), kk[1]), kk); by_dom_any.setdefault(_dom(xx["website"]), kk)
             # a row with no country matches the record of that name that has won the most (its home record)
             if kk[0] not in by_name or xx.get("wins", 0) > sup[by_name[kk[0]]].get("wins", 0):
@@ -715,10 +736,13 @@ def build():
             cty = iso3(c.get("country") or "") or ""
             keys = [(norm(c.get("supplier")), cty), (norm(c.get("name_local")), cty)]
             k = next((kk for kk in keys if len(kk[0]) >= 2 and kk in sup), None)
-            if not k and c.get("website") and (_dom(c["website"]), cty) in by_dom:
-                k = by_dom[(_dom(c["website"]), cty)]
+            if not k and _dom(c.get("website")) and (_dom(c["website"]), cty) in by_dom:
+                cand = by_dom[(_dom(c["website"]), cty)]
+                k = cand if _same_firm(c.get("supplier"), cand[0]) else None
             if not k and not cty:  # country not stated: the same name or the same website anywhere
-                k = by_name.get(keys[0][0]) or (by_dom_any.get(_dom(c["website"])) if c.get("website") else None)
+                k = by_name.get(keys[0][0])
+                if not k and _dom(c.get("website")) and by_dom_any.get(_dom(c["website"])) and _same_firm(c.get("supplier"), by_dom_any[_dom(c["website"])][0]):
+                    k = by_dom_any[_dom(c["website"])]
             if not k:
                 k = keys[0] if len(keys[0][0]) >= 2 else keys[1]
                 if len(k[0]) < 2:
@@ -726,6 +750,11 @@ def build():
                 if not cty and c.get("country_hint"):
                     cty = iso3(c["country_hint"]) or ""; k = (k[0], cty)
                 x = sup[k]; x["names"][c["supplier"]] += 1; x["country"][cty] += 1; x["tier_b"] = True; n_im_new += 1
+                # a record made from one drop is found again by the next drop (same name or same website)
+                if k[0] not in by_name:
+                    by_name[k[0]] = k
+                if _dom(c.get("website")):
+                    by_dom.setdefault((_dom(c["website"]), cty), k); by_dom_any.setdefault(_dom(c["website"]), k)
                 sec = classify(f"{c.get('products', '')} {c.get('industry', '')}")[0]
                 if sec:
                     x["sectors"][sec] += 1; x["goods"] += 1 if sec in GOODS else 0
