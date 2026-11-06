@@ -575,6 +575,13 @@ def queue(rows, checks, limit, today):
                 continue
             n_disc += nosite
             add(r, "refinement: " + ("find the official website" if nosite else "confirm the website on record"), discover=nosite)
+    # 2c. companies known only by a Chinese name (imported directories): a tenth of each run looks for their site in
+    # pinyin (Fortune China 500 first), since the generic queue would reach them only after every proven supplier
+    from .zh_names import is_cjk
+    zh = [r for r in rows if not (r.get("website") or "").strip() and is_cjk(r.get("supplier", "")) and due(f"{r['supplier']}|{r['country']}")]
+    zh.sort(key=lambda r: ("Fortune" not in (r.get("sources") or ""), r.get("supplier", "")))
+    for r in zh[: limit // 10]:
+        add(r, "Chinese name: find the official website", discover=True)
     # 3. proven suppliers with an unknown or flagged sector; 4. proven, never checked; 5. the rest, best first
     proven = [r for r in rows if r.get("tier") in ("1", "2")]
     for r in proven:
