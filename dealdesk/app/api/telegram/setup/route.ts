@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   if (!token || !secret) return NextResponse.json({ ok: false, error: "TELEGRAM_BOT_TOKEN or TELEGRAM_WEBHOOK_SECRET is not set in Vercel" }, { status: 400 });
   const origin = req.nextUrl.origin.includes("vercel.app") ? "https://desk.sinder.pro" : req.nextUrl.origin;
   const r = await fetch(api("setWebhook"), { method: "POST", headers: { "content-type": "application/json" },
-    body: JSON.stringify({ url: `${origin}/api/telegram`, secret_token: secret, allowed_updates: ["message", "edited_message"], drop_pending_updates: true }) });
+    body: JSON.stringify({ url: `${origin}/api/telegram`, secret_token: secret, allowed_updates: ["message", "edited_message", "callback_query"], drop_pending_updates: true }) });
   const j = await r.json().catch(() => ({}));
   await logActivity(s, "telegram_setup", `${origin}/api/telegram`, j.ok ? "webhook set" : String(j.description || "failed"));
   return NextResponse.json({ ok: !!j.ok, result: j.description || "", url: `${origin}/api/telegram` });

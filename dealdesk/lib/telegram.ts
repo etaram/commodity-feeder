@@ -7,6 +7,35 @@ import { readBrief, buildBrief } from "./brief";
 import { claude } from "./anthropic";
 import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
+import { startRun, resume, waitingRun, stopLatest, decide, type Io } from "./dealagent";
+
+// The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
+// (answered at once, the work runs after the answer), authenticated with the webhook secret.
+const BASE = process.env.AGENT_BASE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "https://desk.sinder.pro");
+export const agentIo: Io = {
+  send: (chat, text, extra) => send(chat, text, extra),
+  kick: async (id) => { await fetch(`${BASE}/api/agent/step`, { method: "POST", headers: { "content-type": "application/json", "x-agent-secret": process.env.TELEGRAM_WEBHOOK_SECRET || "" }, body: JSON.stringify({ id }), signal: AbortSignal.timeout(8000) }).catch(() => null); },
+};
+// The approval buttons need callback_query updates; a webhook set before the agent existed did not ask for them.
+// Checked once per instance and widened in place (same URL and secret, no pending update dropped).
+let hookChecked = false;
+export async function ensureCallbacks() {
+  if (hookChecked || !tgEnv().token || !process.env.TELEGRAM_WEBHOOK_SECRET) return;
+  hookChecked = true;
+  const h = await fetch(API("getWebhookInfo")).then((r) => r.json()).catch(() => null);
+  const url = h?.result?.url, allowed: string[] = h?.result?.allowed_updates || [];
+  if (url && !allowed.includes("callback_query")) {
+    await fetch(API("setWebhook"), { method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ url, secret_token: process.env.TELEGRAM_WEBHOOK_SECRET, allowed_updates: ["message", "edited_message", "callback_query"], drop_pending_updates: false }) }).catch(() => null);
+  }
+}
+export async function agentCallback(chatId: string, data: string, queryId: string) {
+  await fetch(API("answerCallbackQuery"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ callback_query_id: queryId }) }).catch(() => null);
+  const m = data.match(/^ag:(ok|no):([A-Z0-9]+)$/);
+  if (!m) return;
+  if (!(await links()).some((l) => l.chat_id === chatId)) return;
+  await decide(agentIo, chatId, m[2], m[1] === "ok");
+}
 
 // Talking to the Deal Desk from Telegram. A chat is linked to a system user once, with a code the user takes from
 // the panel (Settings > Telegram); until then the bot answers only /start. Every answer comes from the system's
@@ -64,7 +93,9 @@ const HELP_HE = `פקודות:
 /suppliers <מוצר> - ספקים מוכחים
 /brief - התקציר העולמי של היום
 /alerts on|off - התראות (תזות בביטחון גבוה, תקציר)
-או פשוט לכתוב שאלה.`;
+/deal <בקשה> - סוכן עסקאות: מריץ עסקה מההתחלה עד הסוף ומבקש אישור לפני כל פנייה
+/stop - עצירת הסוכן
+או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
 /tenders <words> [ISO3] - open tenders by fit
 /country <ISO3> - country intelligence
@@ -72,7 +103,9 @@ const HELP_EN = `Commands:
 /suppliers <product> - proven suppliers
 /brief - today's world brief
 /alerts on|off
-Or just write a question.`;
+/deal <request> - deal agent: runs a deal end to end, asks approval before any message
+/stop - stop the agent
+Or just write a question or a request.`;
 
 type Row = Record<string, string>;
 const toObjects = (g: string[][]): Row[] => { const h = g[0] || []; return g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))); };
@@ -101,6 +134,7 @@ async function country(c: string): Promise<string> {
 }
 
 export async function handle(chatId: string, text: string, _from: string) {
+  await ensureCallbacks();
   const all = await links();
   const link = all.find((l) => l.chat_id === chatId);
   const t = text.trim();
@@ -116,6 +150,14 @@ export async function handle(chatId: string, text: string, _from: string) {
   const iso = (s: string) => (s.match(/\b([A-Z]{3})\b/) || [])[1] || "";
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
+    if (/^\/stop/.test(cmd)) { const n = await stopLatest(chatId); return send(chatId, n ? (he ? "הסוכן נעצר." : "Agent stopped.") : (he ? "אין סוכן פעיל." : "No agent running.")); }
+    if (/^\/deal/.test(cmd)) {
+      if (!arg.trim()) return send(chatId, he ? "כתוב מה לעשות, למשל: /deal תמצא לי 5,000 טון תירס לבן לקניה" : "Write the request, e.g. /deal find 5,000 t of white maize for Kenya");
+      await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: arg });
+      return send(chatId, he ? "התחלתי לעבוד על העסקה. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "Started on the deal. I will update you here and ask approval before any message.");
+    }
+    // an answer to the agent's open question goes back to the agent
+    if (!t.startsWith("/")) { const w = await waitingRun(chatId); if (w) { await resume(agentIo, w, t); return send(chatId, he ? "קיבלתי, ממשיך." : "Got it, continuing."); } }
     if (/^\/alerts/.test(cmd)) { await appendRow(TAB, [chatId, link.email, link.name, new Date().toISOString().slice(0, 16), link.lang, /off/i.test(arg) ? "off" : "on"]); return send(chatId, /off/i.test(arg) ? (he ? "התראות כבויות." : "Alerts off.") : (he ? "התראות פועלות." : "Alerts on.")); }
     if (/^\/tenders/.test(cmd)) { await logActivity(who, "tg_tenders", arg); const c = iso(arg.toUpperCase()); return send(chatId, await tenders(arg.replace(c, "").trim(), c)); }
     if (/^\/country/.test(cmd)) { const c = iso(arg.toUpperCase()); if (!c) return send(chatId, he ? "קוד מדינה בן 3 אותיות, למשל /country KEN" : "3-letter code, e.g. /country KEN"); await logActivity(who, "tg_country", c); return send(chatId, await country(c)); }
@@ -129,6 +171,7 @@ export async function handle(chatId: string, text: string, _from: string) {
       { name: "country_intel", description: "Country intelligence summary for an ISO3 country code.", input_schema: { type: "object", properties: { country: { type: "string" } }, required: ["country"] } },
       { name: "plays", description: "Deal theses (supply the winner, arbitrage gap, pre-tender, news lead, procurement plan), optionally for one ISO3 country.", input_schema: { type: "object", properties: { country: { type: "string" } } } },
       { name: "suppliers", description: "Proven suppliers for an English product phrase.", input_schema: { type: "object", properties: { product: { type: "string" } }, required: ["product"] } },
+      { name: "start_deal_agent", description: "Start the deal agent when the user asks to build, run or work on a deal end to end: source a product for a buyer, prepare a bid on a tender, find suppliers and contact them. request: the user's full request.", input_schema: { type: "object", properties: { request: { type: "string" } }, required: ["request"] } },
     ];
     const sys = `You answer a Sinder analyst on Telegram from the Deal Desk's own data only, through the tools. Call one or two tools, then answer in ${he ? "Hebrew" : "English"} in at most 12 lines, plain text with HTML <b> for names only, citing figures exactly as the tools returned them. If the tools return nothing, say so. Never invent companies, prices or dates.`;
     type Msg = { role: "user" | "assistant"; content: unknown };
@@ -152,6 +195,10 @@ export async function handle(chatId: string, text: string, _from: string) {
           else if (u.name === "country_intel") out = await country((u.input.country || "").toUpperCase().slice(0, 3));
           else if (u.name === "plays") out = await plays((u.input.country || "").toUpperCase().slice(0, 3), 5);
           else if (u.name === "suppliers") out = await suppliers(u.input.product || "", 5);
+          else if (u.name === "start_deal_agent") {
+            await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: u.input.request || t });
+            return send(chatId, he ? "פתחתי סוכן עסקאות לבקשה הזו. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "I opened a deal agent for this request. I will update you here and ask approval before any message.");
+          }
         } catch (e) { out = "error: " + String(e).slice(0, 120); }
         results.push({ type: "tool_result", tool_use_id: u.id, content: out.replace(/<[^>]+>/g, "") });
       }
