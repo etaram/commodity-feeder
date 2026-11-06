@@ -1,50 +1,50 @@
 source,last_run_utc,rows,note,detail
-ted,2026-11-06T04:21,22687,OK,fetched=7175; days=3; cache=22687
-fts,2026-11-06T04:21,171,OK,pages=1
-sam,2026-11-06T04:21,7565,OK,fetched=2128; set_aside=11690; open_to_foreign=5528; full=0
-canadabuys,2026-11-06T04:23,805,OK,
+ted,2026-11-06T06:40,22687,OK,fetched=6250; days=3; cache=22687
+fts,2026-11-06T06:40,171,OK,pages=1
+sam,2026-11-06T06:40,7569,OK,fetched=2134; set_aside=11690; open_to_foreign=5532; full=0
+canadabuys,2026-11-06T06:40,805,OK,
 za,2026-11-06T04:23,807,OK,
 worldbank,2026-11-06T05:31,682,OK,new=338; cache=682; days=10
-ebrd,2026-11-06T04:23,42,OK,
+ebrd,2026-11-06T06:40,42,OK,
 mrgov,2026-11-06T05:32,190,OK,
-ungm,2026-11-06T04:25,1152,OK,new=581; total_active=1802; pages=44
-undp,2026-11-06T04:25,14,OK,new=20; cache=14
-aiib,2026-11-06T04:25,175,OK,new=174; awards=292
-isdb,2026-11-06T04:25,39,OK,new=40
-etimad,2026-11-06T04:58,589,OK,new=119; pages=14
-prozorro,2026-11-06T04:59,1023,OK,candidates=2819; fetched=61
-pncp,2026-11-06T05:03,4637,OK,new=1134
-secop,2026-11-06T05:03,754,OK,new=69
+ungm,2026-11-06T06:42,1159,OK,new=588; total_active=1792; pages=44
+undp,2026-11-06T06:42,14,OK,new=20; cache=14
+aiib,2026-11-06T06:42,175,OK,new=174; awards=292
+isdb,2026-11-06T06:42,39,OK,new=40
+etimad,2026-11-06T06:44,589,OK,new=119; pages=14
+prozorro,2026-11-06T06:44,1023,OK,candidates=2824; fetched=49
+pncp,2026-11-06T06:59,4637,OK,new=1393
+secop,2026-11-06T06:57,754,OK,new=69
 germany,2026-11-06T05:04,11594,OK,new=1287; awards_seen=603; awards_saved=221
-contractsfinder,2026-11-06T05:04,92,OK,new=27
+contractsfinder,2026-11-06T06:57,92,OK,new=27
 paraguay,2026-11-06T05:15,164,OK,new=0
 dominican,2026-11-06T05:17,660,OK,new=111; listed=1000
-austender,2026-11-06T05:17,158,OK,new=127
-oman,2026-11-06T05:17,483,OK,new=50
+austender,2026-11-06T07:00,158,OK,new=127
+oman,2026-11-06T07:00,483,OK,new=50
 france,2026-11-06T05:17,6812,OK,new=919
 spain,2026-11-06T05:20,3930,OK,new=1543; pages=14; awards_seen=3172
-kenya,2026-11-06T05:20,304,OK,new=0
-moldova,2026-11-06T05:05,1033,OK,new=435
-uruguay,2026-11-06T05:06,529,OK,new=50
+kenya,2026-11-06T07:00,304,OK,new=0
+moldova,2026-11-06T06:58,1041,OK,new=437
+uruguay,2026-11-06T06:59,529,OK,new=0
 bahrain,2026-11-06T05:06,16,OK,new=7
-malaysia,2026-11-06T05:07,422,OK,new=423
-qatar,2026-11-06T00:41,263,OK,new=160
+malaysia,2026-11-06T07:00,422,OK,new=423
+qatar,2026-11-06T07:11,263,OK,new=200
 israel,2026-11-05T13:46,936,OK,bodies_scanned=912; open_notices=936
 nyc,2026-11-06T04:21,196,OK,open=196
 us_cities,2026-11-06T04:23,274,OK,Los_Angeles=190 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-11-06T05:31,949,OK,projects=949
 ocdr_tenders,2026-11-04T21:37,1574,OK,publications=29; read=29; releases=1140551; open_tenders=1574; countries=6
-afdb,2026-11-06T04:25,42,OK,new=0
-iadb,2026-11-06T04:25,104,OK,new=104
+afdb,2026-11-06T06:42,42,OK,new=0
+iadb,2026-11-06T06:42,104,OK,new=104
 chile,2026-11-06T04:25,4369,OK,new=4348
-simap,2026-11-06T04:26,580,OK,new=240
-gets,2026-11-06T04:26,421,OK,new=398
+simap,2026-11-06T06:43,580,OK,new=240
+gets,2026-11-06T06:43,422,OK,new=399
 india,2026-11-06T04:57,60126,OK,new=56929
-rwanda,2026-11-06T05:21,272,OK,new=272
-uganda,2026-11-06T05:21,40,OK,new=36
-ghana,2026-11-06T05:22,93,OK,new=93
-malawi,2026-11-06T05:22,48,OK,new=38
-mozambique,2026-11-06T05:22,68,OK,new=69
-dubai,2026-11-06T05:22,313,OK,new=273
-philippines,2026-11-06T05:24,1518,OK,new=1200
+rwanda,2026-11-06T07:00,272,OK,new=272
+uganda,2026-11-06T07:01,40,OK,new=36
+ghana,2026-11-06T07:01,93,OK,new=93
+malawi,2026-11-06T07:01,48,OK,new=38
+mozambique,2026-11-06T07:01,70,OK,new=71
+dubai,2026-11-06T07:01,329,OK,new=257
+philippines,2026-11-06T07:05,1518,OK,new=1200
 importyeti,2026-11-06T05:32,1,OK,"1 HS headings cached; this run 0, due 681"
