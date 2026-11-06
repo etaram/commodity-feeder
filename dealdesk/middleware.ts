@@ -26,14 +26,16 @@ async function valid(token: string | undefined): Promise<boolean> {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/login") || pathname.startsWith("/api/register") || pathname.startsWith("/api/auth/") || pathname.startsWith("/api/logout") || pathname.startsWith("/api/cron/") || pathname === "/api/telegram" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+  if (pathname.startsWith("/login") || pathname.startsWith("/api/login") || pathname.startsWith("/api/register") || pathname.startsWith("/api/auth/") || pathname.startsWith("/api/logout") || pathname.startsWith("/api/cron/") || pathname === "/api/telegram" || pathname === "/api/agent/step" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
     return NextResponse.next();
   }
   if (!(await valid(req.cookies.get("dd_session")?.value))) {
     if (pathname.startsWith("/api/")) return NextResponse.json({ ok: false, error: "signed out" }, { status: 401 });
     const url = req.nextUrl.clone();
+    // a link from Telegram (/?open=t:ID) survives the sign-in: the login page returns to it
+    const back = pathname === "/" && req.nextUrl.search ? `/${req.nextUrl.search}` : "";
     url.pathname = "/login";
-    url.search = "";
+    url.search = back ? `?next=${encodeURIComponent(back)}` : "";
     return NextResponse.redirect(url);
   }
   return NextResponse.next();

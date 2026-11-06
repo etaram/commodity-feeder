@@ -1,6 +1,7 @@
 // Deal agent loop with a scripted model: tools run, ask_owner pauses, an answer resumes, propose_message waits for
 // approval and nothing is sent until the owner approves. Build: node tests/build-agent-test.mjs && node <out>
 import { startRun, step, loadRun, resume, decide } from "@/lib/dealagent";
+import { richText, supplierUrl } from "@/lib/links";
 import { TABS } from "./mocks/sheets";
 import { SAVED } from "./mocks/deal";
 let fail = 0;
@@ -51,5 +52,10 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
   ok(sent.length === before + 2 && /<pre>/.test(sent[sent.length - 1].text) && TABS["Agent Approvals"][1][4] === "approved", "approval hands the ready message to the owner (no mailbox connected)");
   ok(SAVED.length >= 2, "the deal is saved in the deal records");
   ok(cur.usd > 0 && (TABS["AI Usage"] || []).length === 5, "every model turn is metered");
+  ok(richText("ראה [Grain SA](https://desk.sinder.pro/?open=s:Grain%20SA) <b>") === 'ראה <a href="https://desk.sinder.pro/?open=s:Grain%20SA">Grain SA</a> &lt;b&gt;', "model links become Telegram links, other markup is escaped");
+  ok(!richText("[x](javascript:alert(1))").includes("<a"), "only http and https links");
+  ok(JSON.stringify(seen[1].messages).includes(supplierUrl("Grain SA", "ZAF").replace(/"/g, "")), "supplier rows carry the link to their page");
+  const sum = sent.find((m) => /סיכום העסקה/.test(m.text));
+  ok(!!sum && JSON.stringify(sum.extra).includes("open=d%3AAGENT-") || JSON.stringify(sum?.extra).includes("open=d:AGENT-"), "the summary has a button to the deal page");
   console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
 })();

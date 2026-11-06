@@ -6,6 +6,7 @@ import { logEvent } from "@/lib/log";
 import { logActivity } from "@/lib/activity";
 import { countryIntel } from "@/lib/country";
 import { links as tgLinks, send as tgSend } from "@/lib/telegram";
+import { a, countryUrl } from "@/lib/links";
 import { getRange } from "@/lib/panel";
 import { tgEnv } from "@/lib/tgenv";
 import { pushAll } from "@/lib/push";
@@ -35,7 +36,7 @@ export async function GET(req: NextRequest) {
       if (rows.length && process.env.VAPID_PRIVATE_KEY) { for (const lg of ["he", "en"] as const) await pushAll({ title: lg === "he" ? "תזות העסקה של הבוקר" : "This morning's deal theses", body: rows.map((p) => `${p.kind}: ${p.title}`).join(" · ").slice(0, 160), url: "/#today", tag: "plays" }, lg); }
       if (rows.length) for (const l of await tgLinks()) if (l.alerts !== "off") {
         const he = l.lang === "he";
-        await tgSend(l.chat_id, (he ? "<b>תזות העסקה של הבוקר</b>\n" : "<b>This morning's deal theses</b>\n") + rows.map((p) => `• <b>${p.kind}</b> ${p.country} · ${p.title}\n  ${String(p.next_step).slice(0, 160)}`).join("\n") + (he ? "\n/plays לעוד" : "\n/plays for more"));
+        await tgSend(l.chat_id, (he ? "<b>תזות העסקה של הבוקר</b>\n" : "<b>This morning's deal theses</b>\n") + rows.map((p) => `• <b>${p.kind}</b> ${p.country ? a(countryUrl(p.country), p.country) : ""} · ${p.title}\n  ${String(p.next_step).slice(0, 160)}`).join("\n") + (he ? "\n/plays לעוד" : "\n/plays for more"));
       }
     } catch (e) { await logEvent("warn", "telegram", "morning plays failed", String(e).slice(0, 200)); }
   }

@@ -7,6 +7,7 @@ import { readBrief, buildBrief } from "./brief";
 import { claude } from "./anthropic";
 import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
+import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { startRun, resume, waitingRun, stopLatest, decide, type Io } from "./dealagent";
 
 // The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
@@ -114,20 +115,20 @@ async function tenders(q: string, cty: string, n = 6): Promise<string> {
   const v = [[q, "", cty], ["", "", ""], ["", "", ""], ["", "", ""], ["", "", ""]];
   const rows = toObjects(await searchTenders(v)).slice(0, n);
   if (!rows.length) return "-";
-  return rows.map((r) => `• <b>${esc(r.title_en || r.title || "")}</b>\n  ${esc(r.buyer || "")} · ${esc(r.country)} · ${money(Number(String(r.est_value_usd || "").replace(/[^0-9.]/g, "")))} · ${esc(r.deadline || "")} · fit ${esc(r.fit || r.score || "")}${r.link ? `\n  ${esc(r.link)}` : ""}`).join("\n");
+  return rows.map((r) => `• <b>${r.id ? a(tenderUrl(r.id), esc(r.title_en || r.title || "")) : esc(r.title_en || r.title || "")}</b>\n  ${esc(r.buyer || "")} · ${esc(r.country)} · ${money(Number(String(r.est_value_usd || "").replace(/[^0-9.]/g, "")))} · ${esc(r.deadline || "")} · fit ${esc(r.fit || r.score || "")}${r.link ? `\n  ${a(r.link, "המכרז באתר המקור")}` : ""}`).join("\n");
 }
 async function plays(cty: string, n = 6): Promise<string> {
   const rows = toObjects(await getRange("plays")).filter((p) => !cty || p.country === cty).slice(0, n);
-  return rows.length ? rows.map((p) => `• <b>${esc(p.kind)}</b> ${esc(p.country)} · ${esc(p.title)}\n  ${esc(p.thesis).slice(0, 220)}\n  ${esc(p.next_step).slice(0, 160)}`).join("\n") : "-";
+  return rows.length ? rows.map((p) => `• <b>${esc(p.kind)}</b> ${p.country ? a(countryUrl(p.country), esc(p.country)) : ""} · ${esc(p.title)}\n  ${esc(p.thesis).slice(0, 220)}\n  ${esc(p.next_step).slice(0, 160)}`).join("\n") : "-";
 }
 async function suppliers(q: string, n = 6): Promise<string> {
   const r = await supplierSearch({ text: q, strict: true });
   const rows = toObjects(r.values).slice(0, n);
-  return rows.length ? `${r.total} proven suppliers\n` + rows.map((s) => `• <b>${esc(s.supplier)}</b> (${esc(s.country)}, tier ${esc(s.tier)}) ${esc((s.products || s.supplied || "").slice(0, 100))}${s.website ? `\n  ${esc(s.website)}` : ""}`).join("\n") : "-";
+  return rows.length ? `${r.total} proven suppliers\n` + rows.map((s) => `• <b>${a(supplierUrl(s.supplier, s.country), esc(s.supplier))}</b> (${esc(s.country)}, tier ${esc(s.tier)}) ${esc((s.products || s.supplied || "").slice(0, 100))}${s.website ? `\n  ${a(/^https?:/.test(s.website) ? s.website : "https://" + s.website, esc(s.website))}` : ""}`).join("\n") : "-";
 }
 async function country(c: string): Promise<string> {
   const d = await countryIntel(c);
-  return `<b>${esc(d.country)}</b> ${esc(d.region)}\n${d.open} open tenders (${money(d.open_usd)}), ${d.intl} open to foreign bidders, ${d.pursue} Pursue, ${d.planned} planned projects (${money(d.planned_usd)})\n`
+  return `<b>${a(countryUrl(d.country), esc(d.country))}</b> ${esc(d.region)}\n${d.open} open tenders (${money(d.open_usd)}), ${d.intl} open to foreign bidders, ${d.pursue} Pursue, ${d.planned} planned projects (${money(d.planned_usd)})\n`
     + `Top sectors: ${d.sectors.slice(0, 4).map((s) => `${s.sector} ${s.n}`).join("; ")}\n`
     + (d.plays.length ? `Plays:\n${d.plays.slice(0, 3).map((p) => `• ${esc(p.kind)}: ${esc(p.title)}`).join("\n")}\n` : "")
     + (d.news.length ? `News:\n${d.news.slice(0, 4).map((x) => `• ${esc(x.title)} (${esc(x.domain)})`).join("\n")}` : "");
@@ -173,7 +174,7 @@ export async function handle(chatId: string, text: string, _from: string) {
       { name: "suppliers", description: "Proven suppliers for an English product phrase.", input_schema: { type: "object", properties: { product: { type: "string" } }, required: ["product"] } },
       { name: "start_deal_agent", description: "Start the deal agent when the user asks to build, run or work on a deal end to end: source a product for a buyer, prepare a bid on a tender, find suppliers and contact them. request: the user's full request.", input_schema: { type: "object", properties: { request: { type: "string" } }, required: ["request"] } },
     ];
-    const sys = `You answer a Sinder analyst on Telegram from the Deal Desk's own data only, through the tools. Call one or two tools, then answer in ${he ? "Hebrew" : "English"} in at most 12 lines, plain text with HTML <b> for names only, citing figures exactly as the tools returned them. If the tools return nothing, say so. Never invent companies, prices or dates.`;
+    const sys = `You answer a Sinder analyst on Telegram from the Deal Desk's own data only, through the tools. Call one or two tools, then answer in ${he ? "Hebrew" : "English"} in at most 12 lines, plain text with HTML <b> for names only; when a tool row has an "open" link, make the name a link: <a href="that link">name</a>. Cite figures exactly as the tools returned them. If the tools return nothing, say so. Never invent companies, prices or dates.`;
     type Msg = { role: "user" | "assistant"; content: unknown };
     const msgs: Msg[] = [{ role: "user", content: t.slice(0, 500) }];
     let answer = "";
@@ -200,7 +201,7 @@ export async function handle(chatId: string, text: string, _from: string) {
             return send(chatId, he ? "פתחתי סוכן עסקאות לבקשה הזו. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "I opened a deal agent for this request. I will update you here and ask approval before any message.");
           }
         } catch (e) { out = "error: " + String(e).slice(0, 120); }
-        results.push({ type: "tool_result", tool_use_id: u.id, content: out.replace(/<[^>]+>/g, "") });
+        results.push({ type: "tool_result", tool_use_id: u.id, content: out.replace(/<a href="([^"]+)">([^<]*)<\/a>/g, "$2 (open: $1)").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&") });
       }
       msgs.push({ role: "user", content: results });
     }

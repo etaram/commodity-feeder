@@ -26,7 +26,7 @@ export default function LoginForm({ google, notice }: { google: boolean; notice:
       const r = await fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, passcode }) });
       const j = await r.json().catch(() => ({}));
       setBusy(false);
-      if (r.ok) window.location.href = "/";
+      if (r.ok) { const n = new URLSearchParams(window.location.search).get("next") || "/"; window.location.href = /^\/(?![/\\])/.test(n) ? n : "/"; }
       else if (j.code === "pending") setErr(NOTICE.pending);
       else if (j.code === "disabled") setErr(NOTICE.disabled);
       else setErr("Wrong email or password.");

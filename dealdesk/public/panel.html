@@ -1923,6 +1923,24 @@ function dwEconWarn(x, base) {
   if (x.funding_limit === "" || !(lim > 0)) w.push(t("dw_w_nolim"));
   return `<p class="note"><span class="pill">${esc(t("dw_e_kind"))}</span> ${w.map(esc).join(" · ")}</p>`;
 }
+// A link from Telegram or a message: /?open=t:<tender id> | d:<deal id> | s:<supplier>|<ISO3> | c:<ISO3> opens that page.
+async function openFromLink() {
+  let v = ""; try { v = new URLSearchParams(location.search).get("open") || ""; } catch (e) {}
+  if (!v || v.indexOf(":") < 1) return;
+  try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
+  const k = v.slice(0, v.indexOf(":")), x = v.slice(v.indexOf(":") + 1).trim();
+  if (!x) return;
+  if (k === "t") return openTenderById(x);
+  if (k === "d") { go("tenders"); return openDealWorkspace({ id: x, title: "" }); }
+  if (k === "c" && /^[A-Z]{3}$/.test(x)) { CI.c = x; CI.data = null; go("country"); return; }
+  if (k === "s") {
+    const [name, cc] = x.split("|"); go("companies");
+    let s = null;
+    try { const j = await window.DD_SEARCH({ kind: "c", q: name }); const rows = toObjects(j.values || []), lc = name.toLowerCase(), nm = r => String(r.supplier || r.name || "").toLowerCase();
+      s = rows.find(r => nm(r) === lc && (!cc || r.country === cc)) || rows.find(r => nm(r) === lc) || null; } catch (e) {}
+    openSupplier(s || { supplier: name, country: cc || "", region: "", quality: "-", tier: "", main_sector: "", wins: "", buyers: "", sources: t("c_nf_src"), _virtual: true });
+  }
+}
 async function openDealWorkspace(r) {
   const el = $("#tdetail"); if (!el || !window.DD_DEAL) return;
   el.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("loading"))}</div>`;
@@ -4198,6 +4216,7 @@ window.addEventListener("hashchange", () => { const v = location.hash.slice(1); 
   if (!mcp) { showNoConn("need_connectors"); return; }
   bootMe();
   loadAll(false);
+  openFromLink().catch(() => {});
   setInterval(async () => { if (document.hidden || !mcp) return; if (!(S.data.jobs || []).some(j => j.status === "queued" || j.status === "running")) return; await load("jobs", true); renderJobs(); renderToday(); renderCards(); }, 30000);
 })();
 })();

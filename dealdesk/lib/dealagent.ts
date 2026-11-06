@@ -16,6 +16,7 @@ import { cashCheck } from "@/lib/dealstate";
 import { clean, readDeal, saveRecord, type Kind } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
 import { DEFAULT_WS } from "@/lib/auth";
+import { dealUrl, richText, supplierUrl, tenderUrl } from "@/lib/links";
 
 export const RUNS = "Agent Runs", APPROVALS = "Agent Approvals";
 const MAX_TURNS = Number(process.env.AGENT_MAX_TURNS || 24);
@@ -70,7 +71,7 @@ function system(r: Run) {
   return `You are Sinder's deal agent. Sinder is an Israeli international procurement and trading firm. The owner gave you one request and you run the deal end to end by yourself, without asking him to use any system.
 Work in this order, skipping what does not apply: 1) state the requirement (product, grade, quantity, destination, timing) and record it; ask_owner only for facts that change the work and cannot be found; 2) if it is a tender, read it (search_tenders) and check entry routes (tender_routes); 3) find suppliers (search_suppliers), keep only those whose match is supported or plausible, prefer makers, and get their contacts (supplier_contact; web search for the official sales contact when the system has none); record the usable ones as parties; 4) compute indicative economics when you have a price basis (deal_economics); 5) propose_message one request for quotation per selected supplier (3 to 6 suppliers), in English or the supplier's business language, saying it is a request for information and not an order; 6) finish.
 Rules: facts only from the tools and web search results, with the source; never invent a company, contact, price or date; a directory row, a name match or an indicative price is not a verified fact; never call a fit "verified"; a restriction on one route is not a rejection of the deal. Nothing is ever sent by you: propose_message only prepares it for the owner's approval. Never commit, bid, accept terms or create accounts.
-Talk to the owner (report, ask_owner, finish) in ${he ? "simple, plain Hebrew, short lines, no jargon, no English terms where a Hebrew word exists, no em-dashes, no emojis" : "plain English, short lines"}. Use report after each main stage. The deal id is ${r.deal_id}. Today is ${now().slice(0, 10)}.`;
+Talk to the owner (report, ask_owner, finish) in ${he ? "simple, plain Hebrew, short lines, no jargon, no English terms where a Hebrew word exists, no em-dashes, no emojis" : "plain English, short lines"}. Use report after each main stage. Make names clickable: write a supplier, a tender or the deal as [name](open link), using the "open" links the tools return; the deal page is ${dealUrl(r.deal_id)}. The deal id is ${r.deal_id}. Today is ${now().slice(0, 10)}.`;
 }
 
 async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>): Promise<string> {
@@ -78,18 +79,18 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
   if (name === "search_suppliers") {
     const res = await supplierSearch({ text: s("product", 160), strict: true, n: 12, originCountry: s("origin_country", 3).toUpperCase(), kind: (["maker", "trader"].includes(s("kind")) ? s("kind") : "") as "maker" | "trader" | "" } as never);
     const rows = toObjects(res.values).filter((y) => y.match !== "incompatible").slice(0, 12);
-    return JSON.stringify({ total: res.total, suppliers: rows.map((y) => pick(y, ["supplier", "country", "type", "tier", "products", "website", "match", "match_why", "match_gaps", "match_conflicts"])) });
+    return JSON.stringify({ total: res.total, suppliers: rows.map((y) => ({ ...pick(y, ["supplier", "country", "type", "tier", "products", "website", "match", "match_why", "match_gaps", "match_conflicts"]), open: supplierUrl(y.supplier, y.country) })) });
   }
   if (name === "supplier_contact") return JSON.stringify((await lookupContact(s("company"), s("country", 3).toUpperCase()).catch(() => null)) || { note: "no contact on record; try web search for the official sales contact" });
   if (name === "search_tenders") {
     const g = await searchTenders([[s("words", 160), "", s("country", 3).toUpperCase()], ["", "", ""], ["", "", ""], ["", "", ""], ["", "", ""]]);
-    return JSON.stringify(toObjects(g).slice(0, 8).map((y) => pick(y, ["id", "title_en", "title", "buyer", "country", "est_value_usd", "deadline", "access", "route", "fit", "link"])));
+    return JSON.stringify(toObjects(g).slice(0, 8).map((y) => ({ ...pick(y, ["id", "title_en", "title", "buyer", "country", "est_value_usd", "deadline", "access", "route", "fit", "link"]), open: y.id ? tenderUrl(y.id) : "" })));
   }
   if (name === "tender_routes") {
     const t = (await tenders()).find((y) => y.id === s("tender_id", 120));
     if (!t) return "tender not found in the system";
     const routes = routeOptions({ country: t.c, access: t.acc === "set-aside" ? "reserved for local bidders (set-aside)" : t.acc === "intl" ? "international bidding" : "", title: t.t, sector: t.s, value_usd: t.v, stage: t.st });
-    return JSON.stringify({ tender: { id: t.id, title: t.t, country: t.c, buyer: t.b, value_usd: t.v, deadline: t.dl, link: t.l }, routes });
+    return JSON.stringify({ tender: { id: t.id, title: t.t, country: t.c, buyer: t.b, value_usd: t.v, deadline: t.dl, link: t.l, open: tenderUrl(t.id) }, routes });
   }
   if (name === "deal_economics") {
     const n = (k: string, d = 0) => (Number.isFinite(Number(x[k])) && x[k] !== "" && x[k] != null ? Number(x[k]) : d);
@@ -113,14 +114,17 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
     await appendRow(APPROVALS, [id, r.id, r.chat, now(), "pending", JSON.stringify(m)]);
     const he = r.lang === "he";
     await io.send(r.chat, `${he ? "<b>פנייה לאישור</b>" : "<b>Message for approval</b>"}\n${esc(he ? "אל" : "To")}: ${esc(m.to_name)}${m.to_email ? ` &lt;${esc(m.to_email)}&gt;` : ""}\n${esc(he ? "למה" : "Why")}: ${esc(m.why)}\n\n<b>${esc(m.subject)}</b>\n${esc(m.body)}`,
-      { reply_markup: { inline_keyboard: [[{ text: he ? "אשר" : "Approve", callback_data: `ag:ok:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }]] } });
+      { reply_markup: { inline_keyboard: [[{ text: he ? "אשר" : "Approve", callback_data: `ag:ok:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }],
+        [{ text: he ? "פתח את הספק במערכת" : "Open the supplier", url: supplierUrl(m.to_name) }, { text: he ? "פתח את העסקה" : "Open the deal", url: dealUrl(r.deal_id) }]] } });
     return `proposed ${id}; waiting for the owner's approval (not sent). Continue with the rest of the work.`;
   }
-  if (name === "report") { await io.send(r.chat, esc(s("text", 2000))); return "reported"; }
+  if (name === "report") { await io.send(r.chat, richText(s("text", 2000)), dealButton(r)); return "reported"; }
   return "unknown tool";
 }
 
 // ---- running -----------------------------------------------------------------------------------------------
+const dealButton = (r: Run) => ({ reply_markup: { inline_keyboard: [[{ text: r.lang === "he" ? "פתח את העסקה במערכת" : "Open the deal", url: dealUrl(r.deal_id) }]] } });
+
 export async function startRun(io: Io, o: { chat: string; email: string; name: string; lang: "he" | "en"; ws?: string; request: string }) {
   const id = "AG" + Date.now().toString(36).toUpperCase();
   const r: Run = { id, chat: o.chat, email: o.email, name: o.name, lang: o.lang, ws: o.ws || DEFAULT_WS, deal_id: "AGENT-" + id, request: o.request.slice(0, 1500),
@@ -176,7 +180,7 @@ export async function step(io: Io, id: string, budgetMs = 200_000) {
       if (!uses.length) {
         // the model answered in text without finishing: treat the text as the summary
         const txt = content.map((b) => String(b.text || "")).join("\n").trim();
-        if (txt) await io.send(r.chat, esc(txt));
+        if (txt) await io.send(r.chat, richText(txt), dealButton(r));
         r.status = "done"; break;
       }
       const results: Block[] = [];
@@ -189,7 +193,7 @@ export async function step(io: Io, id: string, budgetMs = 200_000) {
         results.push({ type: "tool_result", tool_use_id: u.id, content: out.slice(0, 6000) });
       }
       r.msgs.push({ role: "user", content: results });
-      if (finished) { await io.send(r.chat, `<b>${he ? "סיכום העסקה" : "Deal summary"}</b>\n${esc(finished)}`); r.status = "done"; break; }
+      if (finished) { await io.send(r.chat, `<b>${he ? "סיכום העסקה" : "Deal summary"}</b>\n${richText(finished)}`, dealButton(r)); r.status = "done"; break; }
       if (waiting) { r.status = "waiting"; break; }
     }
   } catch (e) {
