@@ -2654,6 +2654,7 @@ function renderCheck(s, c, g) {
       ${line(mt("Export", "יצוא"), [c.export, c.export_countries].filter(Boolean).join(" · "))}${line(mt("Registration ids", "מספרי רישום"), c.legal_ids)}
       ${line(mt("E-mails on its own domain", "אימיילים בדומיין שלה"), c.emails)}${line(mt("Phones", "טלפונים"), c.phones)}
       ${c.linkedin || c.whatsapp ? `<div class="sub"><b>${esc(mt("LinkedIn and WhatsApp on its site", "לינקדאין ווואטסאפ מהאתר שלה"))}:</b> ${socialBtns(c.linkedin, c.whatsapp, supMsg(s))}</div>` : ""}
+      ${!c.linkedin && /^https:\/\/www\.linkedin\.com\/search\/results\/companies\//.test(c.linkedin_search || "") ? `<div class="sub"><b>${esc(mt("LinkedIn (search, not on its site)", "לינקדאין (חיפוש, לא מופיע באתר שלה)"))}:</b> <a class="btn sm" href="${esc(c.linkedin_search)}" target="_blank" rel="noopener">LinkedIn</a></div>` : ""}
       ${c.changes ? `<div class="sub q-block"><b>${esc(mt("Changed since the last read", "השתנה מאז הקריאה הקודמת"))}:</b> ${esc(c.changes)}</div>` : ""}
       ${line(mt("Structured data the site publishes", "נתונים מובנים שהאתר מפרסם"), c.structured)}
       ${c.gaps ? `<div class="sub q-block"><b>${esc(mt("Missing", "חסר"))}:</b> ${esc(c.gaps)}</div>` : ""}

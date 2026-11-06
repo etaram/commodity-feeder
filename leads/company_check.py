@@ -35,7 +35,7 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import quote, urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 from .common import DATA, PRIVATE, log
@@ -407,7 +407,7 @@ def analyse(name, record_sector, pages):
         "title": title, "description": desc[:500], "products": prods[:30], "domain": domain, "name_match": nm, "name_share": share,
         "sector": SECTORS.get(sec, "") if sec else "", "sector_basis": how, "sector_score": sec_score, "sector_conflict": conflict,
         "record_sector": record_sector or "", "roles": roles, "certificates": certs, "export_wording": exp.group(0) if exp else "",
-        "export_countries": named_countries, "legal_ids": ids[:8], "phones": phones, "emails": mails, "linkedin": linkedin, "whatsapp": whatsapp, "structured": org, "products_basis": "structured data and headings" if ld_prods else "headings", "gaps": gaps,
+        "export_countries": named_countries, "legal_ids": ids[:8], "phones": phones, "emails": mails, "linkedin": linkedin, "linkedin_search": "https://www.linkedin.com/search/results/companies/?keywords=" + quote(name or ""), "whatsapp": whatsapp, "structured": org, "products_basis": "structured data and headings" if ld_prods else "headings", "gaps": gaps,
         "verdict": "name mismatch" if nm == "none" else "ok",
     }
 
@@ -594,7 +594,7 @@ def push_sheet(checks):
         return
     head = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
             "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps",
-            "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"]
+            "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured", "linkedin_search"]
     rows = [head]
     for c in sorted(checks.values(), key=lambda c: c.get("checked", ""), reverse=True)[:30000]:
         rows.append([c.get("key", ""), c.get("supplier", ""), c.get("country", ""), c.get("checked", ""), c.get("verdict", ""), c.get("name_match", ""),
@@ -604,7 +604,8 @@ def push_sheet(checks):
                      "; ".join(f"{x['kind']} {x['value']}" for x in c.get("legal_ids", [])), "; ".join(f"{x['email']} ({x['kind']})" for x in c.get("emails", [])),
                      "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", ""),
                      c.get("linkedin", ""), " ".join(c.get("whatsapp", [])), "; ".join(c.get("changes") or [])[:300],
-                     "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400]])
+                     "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400],
+                     c.get("linkedin_search", "")])
     try:
         Sheets().replace_tab(UNIVERSE_SHEET, "Company checks", rows, raw=True)
         log.info("company checks: %d rows written to the sheet", len(rows) - 1)
