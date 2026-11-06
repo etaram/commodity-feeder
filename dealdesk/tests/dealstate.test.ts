@@ -14,6 +14,8 @@ ok(v(open, "direct") === "conditional" && open[0].missing.length > 0, "an open i
 ok(v(open, "local_partner") === "unknown", "no partner on record: the partner route is unknown, not invented");
 const none = routeOptions({ country: "NGA", title: "Supply of cement", stage: "tender" });
 ok(v(none, "direct") === "unknown", "no eligibility wording: unknown, not supported");
+const gpa = routeOptions({ country: "ROU", title: "Transformer station", stage: "tender" });
+ok(v(gpa, "direct") === "conditional" && gpa[0].assumptions.some((a) => /covered entity/.test(a)), "a GPA country: direct conditional on coverage, never supported");
 const home = routeOptions({ country: "ISR", title: "Supply of pipes", stage: "tender" });
 ok(v(home, "direct") === "supported", "home market: direct supported");
 const works = routeOptions({ country: "TZA", access: "ICB", title: "Construction of water treatment plant", stage: "tender" });
@@ -52,7 +54,7 @@ ok(Math.abs(c.finance_cost - 100000 * 0.1 * 60 / 365) < 0.01, "daily simple inte
 ok(c.peak_funding > 100000 && c.funding_capacity === "exceeds the stated limit" && c.warnings.length === 1, "peak above the limit is warned");
 const neg = cashCheck([{ day: 0, amount: -100 }], 0.1, null);
 ok(neg.funding_capacity === "unknown" && neg.warnings.some((w) => /negative/.test(w)), "final negative cash is warned; no limit gives unknown capacity");
-const all = [dom, open, none, home, works, aw, lad, lad2].flatMap(routesHe);
+const all = [gpa, dom, open, none, home, works, aw, lad, lad2].flatMap(routesHe);
 const left = all.flatMap((r) => [r.basis, r.next, ...r.assumptions, ...r.missing]).filter((x) => /^[a-z][a-z ]+[a-z]/i.test(x.replace(/"[^"]*"/g, "")) && !/[\u0590-\u05FF]/.test(x));
 ok(!left.length, "every route string has Hebrew: " + left.slice(0, 3).join(" | "));
 console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);

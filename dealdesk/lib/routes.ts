@@ -23,6 +23,10 @@ export type RouteInput = {
 
 const OPEN = /\b(international|icb|global tender|gpa|open to (all|foreign)|foreign (bidders|firms|companies) (may|are eligible|can)|trade agreements?|eligible countries)\b/i;
 const DOMESTIC = /\b(national (bidders|firms|companies|suppliers) only|local (bidders|firms|companies|suppliers) only|domestic (bidders|firms|suppliers|competition)|ncb|national competitive bidding|registered (in|with)[^.;]{0,40}(registry|register|chamber|ministry)|reserved for (local|national|domestic|sme|small)|nationals only|restricted to (local|national|domestic)|local content (of|at least|minimum))\b/i;
+// WTO GPA parties (Israel is one): a covered entity above the threshold may not exclude Israeli bidders. Coverage
+// (entity, threshold, goods or works) is not known from the notice fields, so it stays an assumption, never support.
+const GPA = new Set(["AUT","BEL","BGR","HRV","CYP","CZE","DNK","EST","FIN","FRA","DEU","GRC","HUN","IRL","ITA","LVA","LTU","LUX","MLT","NLD","POL","PRT","ROU","SVK","SVN","ESP","SWE",
+  "GBR","CHE","NOR","ISL","LIE","USA","CAN","JPN","KOR","TWN","HKG","SGP","AUS","NZL","ARM","MDA","UKR","MNE","MKD","ABW"]);
 const WORKS = /\b(works?|construction|civil|epc|turnkey|design and build|installation|infrastructure|plant|rehabilitation|building)\b/i;
 
 export function routeOptions(x: RouteInput): RouteRow[] {
@@ -41,6 +45,7 @@ export function routeOptions(x: RouteInput): RouteRow[] {
   if (closed) rows.push({ route: "direct", verdict: "blocked", basis: `notice is ${x.stage}: no open bid`, assumptions: [], missing: [], next: "Use the award to research the contractor's sub-supply needs." });
   else if (domestic) rows.push({ route: "direct", verdict: "blocked", basis: `eligibility wording ${quote(DOMESTIC)}`, assumptions: ["the clause applies to the bidder, not only to product origin"], missing: ["the full eligibility clause and any amendments"], next: "Have the clause read in the tender documents; if it binds the bidder, use a local partner or agency route." });
   else if (open) rows.push({ route: "direct", verdict: isHome ? "supported" : "conditional", basis: isHome ? "home market" : `access wording ${quote(OPEN)}`, assumptions: isHome ? [] : ["registration on the buyer's portal is open to foreign firms"], missing: isHome ? [] : ["portal registration requirements", "bid security form and local documents"], next: isHome ? "Check the eligibility documents and request supplier quotes." : "Confirm portal registration and bid-security rules for a foreign bidder, then request quotes." });
+  else if (home === "ISR" && GPA.has(cty)) rows.push({ route: "direct", verdict: "conditional", basis: "the buyer's country is a WTO GPA party, as is Israel", assumptions: ["the buyer is a covered entity and the value is above the GPA threshold"], missing: ["the GPA coverage of this buyer and contract", "portal registration requirements"], next: "Check GPA coverage and portal registration, then request supplier quotes." });
   else rows.push({ route: "direct", verdict: "unknown", basis: "the notice fields we hold do not state who may bid", assumptions: [], missing: ["eligibility clause (bidder nationality, registration, local content)"], next: "Read the eligibility section of the tender documents before any spend." });
 
   // agency
@@ -80,6 +85,10 @@ const HE: Record<string, string> = {
   "bid security form and local documents": "נוסח ערבות ההצעה ומסמכים מקומיים",
   "eligibility clause (bidder nationality, registration, local content)": "סעיף הזכאות (אזרחות המציע, רישום, תוכן מקומי)",
   "home market": "שוק הבית",
+  "the buyer's country is a WTO GPA party, as is Israel": "מדינת הקונה חברה בהסכם הרכש הממשלתי (GPA), כמו ישראל",
+  "the buyer is a covered entity and the value is above the GPA threshold": "הקונה הוא גוף מכוסה והערך מעל סף ה-GPA",
+  "the GPA coverage of this buyer and contract": "כיסוי ה-GPA של הקונה והחוזה הזה",
+  "Check GPA coverage and portal registration, then request supplier quotes.": "לבדוק כיסוי GPA ורישום בפורטל, ואז לבקש הצעות מספקים.",
   "its capability for this scope": "יכולתו בהיקף הזה",
   "large contract: the winner buys sub-packages": "חוזה גדול: הזוכה רוכש חבילות משנה",
   "no open bid": "אין הגשה פתוחה",

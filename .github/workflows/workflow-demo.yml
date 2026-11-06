@@ -1,0 +1,25 @@
+name: workflow-demo
+# Sandbox run of the deal-agent workflows (leads/workflow_demo.py) on the private supplier list. Manual only.
+# Sends nothing; results go to the private sheet tab 'Workflow demos', the log shows counts only.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Private supplier list (read-only)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/private
+          key: private-none
+          restore-keys: private-
+      - run: pip install requests google-auth pycountry phonenumbers
+      - run: python -m leads.workflow_demo 2>&1 | grep -E "workflow demo|Error|Traceback" | cut -c1-1500
