@@ -112,6 +112,10 @@ def site_rejection(url, name):
 
 def name_in_domain(name, host):
     label = re.sub(r"[^a-z0-9]", "", ".".join(host.split(".")[:-1]) or host)
+    from .zh_names import domain_candidates, is_cjk
+    if is_cjk(name):  # a Chinese name: the domain carries the pinyin of its core name or its initials
+        slugs = {d.split(".")[0] for d in domain_candidates(name)}
+        return bool(label) and any(sl and (label.startswith(sl) or sl in label) for sl in slugs)
     words = [w for w in re.split(r"[^a-z0-9]+", norm_name(name)) if len(w) >= 3]
     if not words or not label:
         return False

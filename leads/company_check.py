@@ -192,6 +192,9 @@ def product_like(t):
 
 
 def name_match(name, title, text):
+    from .zh_names import is_cjk, page_names
+    if is_cjk(name):
+        return page_names(name, title, text)  # Chinese names: the full name or a core name shown on the page
     tk = tokens(name)
     if not tk:
         return "unknown", 0
@@ -619,8 +622,9 @@ def check_one(item, prev):
             "reason": reason, "version": VERSION, "record_sector": rec_sector}
     if not website:
         try:
-            from .web_contacts import discover
-            website = discover(name, country) or ""
+            from .web_contacts import discover, discover_zh
+            from .zh_names import is_cjk
+            website = (discover_zh(name) if is_cjk(name) else discover(name, country)) or ""
         except Exception:  # noqa: BLE001
             website = ""
         base["website"] = website

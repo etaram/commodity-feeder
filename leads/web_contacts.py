@@ -151,6 +151,27 @@ def discover(name, country):
     return None
 
 
+def discover_zh(name):
+    """Website for a company known only by its Chinese name: pinyin domain candidates (leads/zh_names.py), accepted
+    only when the page itself shows the Chinese core name."""
+    from .zh_names import domain_candidates, page_names
+    s = _session()
+    for dom in domain_candidates(name):
+        r = _get(s, f"http://{dom}/")
+        if r is None:
+            continue
+        try:
+            txt = r.content[:300_000].decode(r.encoding if r.encoding and r.encoding.lower() not in ("iso-8859-1", "latin-1") else "utf-8", "replace")
+        except LookupError:
+            txt = r.content[:300_000].decode("utf-8", "replace")
+        low = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", txt))
+        if PARKED.search(low[:5000].lower()):
+            continue
+        if page_names(name, _title(txt), low)[0] in ("high", "partial"):
+            return "{0.scheme}://{0.netloc}/".format(urlsplit(r.url))
+    return None
+
+
 DEADLINE = [float("inf")]
 
 

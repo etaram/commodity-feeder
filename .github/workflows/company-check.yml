@@ -41,7 +41,7 @@ jobs:
           path: data/checks
           key: checks-${{ github.run_id }}
           restore-keys: checks-
-      - run: pip install requests google-auth pycountry phonenumbers
+      - run: pip install requests google-auth pycountry phonenumbers pypinyin
       - name: Check companies
         run: python -m leads.company_check --limit ${{ inputs.limit || '4000' }} --minutes 25 2>&1 | tail -20
         continue-on-error: true
