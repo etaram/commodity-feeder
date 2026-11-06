@@ -22,9 +22,9 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           now=$(date -u +%s)
-          for spec in "feed.yml:14" "leads.yml:5" "suppliers.yml:14"; do
+          for spec in "feed.yml:14" "leads.yml:4" "suppliers.yml:14" "company-check.yml:3"; do
             wf=${spec%%:*}; max_h=${spec##*:}
-            group="$wf"; [ "$wf" != "feed.yml" ] && group="leads.yml suppliers.yml"   # these two share one queue
+            group="$wf"; { [ "$wf" = "leads.yml" ] || [ "$wf" = "suppliers.yml" ]; } && group="leads.yml suppliers.yml"   # these two share one queue
             busy=0
             for g in $group; do
               n=$(gh api "repos/$REPO/actions/workflows/$g/runs?per_page=5" --jq '[.workflow_runs[]|select(.status!="completed")]|length')
