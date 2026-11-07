@@ -1,30 +1,74 @@
-// Outgoing mail for the deal agent, from the owner's Zoho mailbox over SMTP. Used only after the owner presses
-// Approve on a specific message in Telegram; nothing else in the system calls it. AGENT_MAIL_LIVE=0 turns sending
-// off (the approved text is then handed to the owner, as before).
-import nodemailer from "nodemailer";
+// Outgoing mail for the deal agent, from the owner's Zoho mailbox over SMTP (SSL, port 465). Used only after the
+// owner presses Approve on a specific message in Telegram; nothing else in the system calls it. AGENT_MAIL_LIVE=0
+// turns sending off (the approved text is then handed to the owner). A small built-in SMTP client: the deployment
+// installs the original package list, so no new dependency is added.
+import tls from "node:tls";
+import crypto from "node:crypto";
 
-const EMAIL = /^[^\s@<>,;]+@[^\s@<>,;]+\.[a-z]{2,}$/i;
+const EMAIL = /^[^\s@<>,;"]+@[^\s@<>,;"]+\.[a-z]{2,}$/i;
 export const mailReady = () => !!(process.env.ZOHO_SMTP_USER && process.env.ZOHO_SMTP_PASS) && process.env.AGENT_MAIL_LIVE !== "0";
+const host = () => process.env.ZOHO_SMTP_HOST || "smtp.zoho.com";
 
-function transport(host = process.env.ZOHO_SMTP_HOST || "smtp.zoho.com") {
-  return nodemailer.createTransport({ host, port: 465, secure: true, auth: { user: process.env.ZOHO_SMTP_USER, pass: process.env.ZOHO_SMTP_PASS },
-    connectionTimeout: 15000, greetingTimeout: 15000, socketTimeout: 30000 });
+type Conn = { cmd: (line: string | null, expect: number) => Promise<string>; end: () => void };
+function connect(h: string): Promise<Conn> {
+  return new Promise((resolve, reject) => {
+    const sock = tls.connect({ host: h, port: Number(process.env.ZOHO_SMTP_PORT || 465), servername: h, timeout: 20000 });
+    let buf = "", waiter: ((s: string) => void) | null = null;
+    const done = () => { const m = buf.match(/(?:^|\r\n)(\d{3}) [^\r\n]*\r\n$/); if (m && waiter) { const w = waiter; waiter = null; const out = buf; buf = ""; w(out); } };
+    sock.on("data", (d) => { buf += d.toString("utf8"); done(); });
+    sock.on("timeout", () => { sock.destroy(new Error("SMTP timeout")); });
+    const fail = (e: Error) => reject(e);
+    sock.once("error", fail);
+    const read = () => new Promise<string>((res) => { waiter = res; done(); });
+    const cmd = async (line: string | null, expect: number) => {
+      if (line !== null) sock.write(line + "\r\n");
+      const r = await Promise.race([read(), new Promise<string>((_, rj) => sock.once("error", rj))]);
+      const lines = r.trim().split("\r\n"), code = Number(lines[lines.length - 1].slice(0, 3));
+      if (code !== expect) throw new Error(`SMTP ${code}: ${r.trim().split("\r\n").pop()?.slice(0, 160)}`);
+      return r;
+    };
+    sock.once("secureConnect", () => { sock.off("error", fail); resolve({ cmd, end: () => { try { sock.write("QUIT\r\n"); } catch { /* closing */ } sock.end(); } }); });
+  });
+}
+
+async function login(h: string) {
+  const c = await connect(h);
+  await c.cmd(null, 220);
+  await c.cmd("EHLO desk.sinder.pro", 250);
+  await c.cmd("AUTH LOGIN", 334);
+  await c.cmd(Buffer.from(process.env.ZOHO_SMTP_USER || "").toString("base64"), 334);
+  await c.cmd(Buffer.from(process.env.ZOHO_SMTP_PASS || "").toString("base64"), 235);
+  return c;
 }
 
 /** Sign-in check against the mail server. Sends nothing. */
 export async function mailCheck(): Promise<{ ok: boolean; host: string; error?: string }> {
-  const host = process.env.ZOHO_SMTP_HOST || "smtp.zoho.com";
-  try { await transport(host).verify(); return { ok: true, host }; }
-  catch (e) { return { ok: false, host, error: String((e as Error).message || e).slice(0, 200) }; }
+  const h = host();
+  try { const c = await login(h); c.end(); return { ok: true, host: h }; }
+  catch (e) { return { ok: false, host: h, error: String((e as Error).message || e).slice(0, 200) }; }
 }
+
+const b64 = (s: string) => Buffer.from(s, "utf8").toString("base64");
+const wrap = (s: string) => s.replace(/.{1,76}/g, "$&\r\n");
+const hdr = (s: string) => (/^[\x20-\x7e]*$/.test(s) ? s : `=?UTF-8?B?${b64(s)}?=`);
 
 export async function sendMail(m: { to: string; subject: string; text: string }): Promise<{ ok: boolean; id?: string; error?: string }> {
   if (!mailReady()) return { ok: false, error: "mailbox not configured" };
-  const to = m.to.trim();
+  const to = m.to.trim(), from = String(process.env.ZOHO_SMTP_USER);
   if (!EMAIL.test(to)) return { ok: false, error: "invalid recipient address" };
-  const from = process.env.ZOHO_SMTP_USER!;
+  const id = `<${crypto.randomUUID()}@${from.split("@")[1] || "sinder.pro"}>`;
+  const name = process.env.ZOHO_FROM_NAME ? `${hdr(process.env.ZOHO_FROM_NAME)} <${from}>` : from;
+  const msg = [`From: ${name}`, `To: ${to}`, `Reply-To: ${from}`, `Subject: ${hdr(m.subject.replace(/[\r\n]+/g, " ").slice(0, 200))}`,
+    `Date: ${new Date().toUTCString()}`, `Message-ID: ${id}`, "MIME-Version: 1.0", "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: base64", "",
+    wrap(b64(m.text))].join("\r\n");
+  let c: Conn | null = null;
   try {
-    const r = await transport().sendMail({ from: process.env.ZOHO_FROM_NAME ? `"${process.env.ZOHO_FROM_NAME}" <${from}>` : from, to, subject: m.subject.slice(0, 200), text: m.text, replyTo: from });
-    return { ok: true, id: r.messageId };
-  } catch (e) { return { ok: false, error: String((e as Error).message || e).slice(0, 200) }; }
+    c = await login(host());
+    await c.cmd(`MAIL FROM:<${from}>`, 250);
+    await c.cmd(`RCPT TO:<${to}>`, 250);
+    await c.cmd("DATA", 354);
+    await c.cmd(msg + "\r\n.", 250);
+    c.end();
+    return { ok: true, id };
+  } catch (e) { c?.end(); return { ok: false, error: String((e as Error).message || e).slice(0, 200) }; }
 }

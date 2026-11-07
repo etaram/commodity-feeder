@@ -923,7 +923,7 @@ const L = {
     wc_s2: "In the friend request note, paste:", wc_s3: "Once they accept, send the full message:", wc_copy_msg: "Copy the message", wc_open: "Open WeChat",
     wc_direct: "Channels that need no approval:", wc_direct_note: "On Alibaba.com and Made-in-China.com, 'Contact supplier' sends an inquiry straight to the company's sales team.",
     fc_first: "Finding the company's e-mail address first, then the draft is written…", m_lang: "Language of the e-mail", m_lang_mixed: "Recipients in several countries: one e-mail in English. To write in each company's language, send to one at a time.", m_review: "What the e-mail says (translation for you)", m_review_note: "Check names and numbers in the original before sending.",
-    out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft…", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite",
+    out_h: "Outreach draft", recipients: "Recipients", subject: "Subject", body: "Body", writing: "Claude is writing a draft…", create_draft: "Create Gmail draft", web_mail: "Open in your mail app", web_note: "Opens your mail app with the text filled in and copies it. Nothing is sent from here.", rewrite: "Rewrite", m_send: "Send from the Sinder mailbox", m_send_confirm: "Press again to send to: {to}", m_sending: "Sending…", m_sent_to: "Sent to {to} from {from}. The reply will reach the mailbox.", m_send_fail: "Not sent to {to}: {e}",
     draft_note: "The draft is saved in your Gmail and not sent. With several recipients, each gets a separate draft.", hand_write: "Automatic drafting works inside Claude. You can write here by hand.",
     add_email: "Add at least one e-mail address.", open_draft: "open draft", unclear_draft: "unclear whether it was created, check Gmail before trying again", drafts: "Gmail drafts:",
     job_not_saved: "The job was not saved: ", maybe_saved: " It may have been recorded anyway, check the Jobs tab before sending again.",
@@ -1036,7 +1036,7 @@ const L = {
     wc_s2: "בהערה של בקשת החברות, הדבק:", wc_s3: "אחרי שאישרו, שלח את ההודעה המלאה:", wc_copy_msg: "העתק את ההודעה", wc_open: "פתח את ויצ'אט",
     wc_direct: "ערוצים שלא צריכים אישור:", wc_direct_note: "ב-Alibaba.com וב-Made-in-China.com, הכפתור Contact supplier שולח פנייה ישר לצוות המכירות של החברה.",
     fc_first: "קודם מאתר את כתובת המייל של החברה, ואחר כך נכתבת הטיוטה…", m_lang: "שפת המייל", m_lang_mixed: "הנמענים ממדינות שונות: מייל אחד באנגלית. כדי לכתוב לכל חברה בשפה שלה, שלח לכל אחת בנפרד.", m_review: "מה כתוב במייל (תרגום בשבילך)", m_review_note: "בדוק שמות ומספרים במקור לפני השליחה.",
-    out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה…", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש",
+    out_h: "טיוטת פנייה", recipients: "נמענים", subject: "נושא", body: "גוף המייל", writing: "Claude כותב טיוטה…", create_draft: "צור טיוטה ב-Gmail", web_mail: "פתח באפליקציית המייל", web_note: "פותח את אפליקציית המייל עם הטקסט ומעתיק אותו. שום דבר לא נשלח מכאן.", rewrite: "נסח מחדש", m_send: "שלח מהמייל של Sinder", m_send_confirm: "לחץ שוב כדי לשלוח אל: {to}", m_sending: "שולח…", m_sent_to: "נשלח אל {to} מ-{from}. התשובה תגיע לתיבה.", m_send_fail: "לא נשלח אל {to}: {e}",
     draft_note: "הטיוטה נשמרת ב-Gmail שלך ולא נשלחת. אם יש כמה נמענים, נוצרת טיוטה נפרדת לכל אחד.", hand_write: "ניסוח אוטומטי זמין בתוך Claude. אפשר לכתוב כאן ידנית.",
     add_email: "הוסף לפחות כתובת מייל אחת.", open_draft: "פתח טיוטה", unclear_draft: "לא ברור אם נוצרה, בדוק ב-Gmail לפני שתנסה שוב", drafts: "טיוטות ב-Gmail:",
     job_not_saved: "המשימה לא נשמרה: ", maybe_saved: " ייתכן שבכל זאת נרשמה, בדוק בלשונית משימות לפני שתשלח שוב.",
@@ -2326,7 +2326,7 @@ async function compose({ kind, ctx, to }, outSel) {
     <div class="field"><label for="m-sub">${esc(t("subject"))}</label><input id="m-sub" dir="auto"></div>
     <div class="field"><label for="m-body">${esc(t("body"))}</label><div class="sub" id="m-status" aria-live="polite"></div><textarea id="m-body" dir="auto" placeholder="${esc(t("writing"))}"></textarea></div>
     <div id="m-review"></div>
-    <div class="actions"><button class="primary" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
+    <div class="actions">${window.DD_SENDMAIL && ["analyst", "admin"].includes(S.me?.role) ? `<button class="primary" type="button" id="m-send" disabled>${esc(t("m_send"))}</button>` : ""}<button class="${window.DD_SENDMAIL ? "" : "primary"}" type="button" id="m-draft" disabled>${esc(t(window.DD_INSTANT ? "web_mail" : "create_draft"))}</button><button type="button" id="m-again" disabled>${esc(t("rewrite"))}</button></div>
     <div class="note">${esc(t(window.DD_INSTANT ? "web_note" : "draft_note"))}</div><div id="m-flash"></div></div>`;
   // the recipient's country decides the language options; it can be learned from the address found below
   let cs = recipCountry(kind, ctx, to);
@@ -2371,9 +2371,24 @@ Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", 
     catch (e) { $("#m-body").value = e.text || ""; $("#m-flash").innerHTML = `<div class="flash err">${esc(sampleErr(e))}</div>`; }
     clearInterval(timer); if (st) st.innerHTML = "";
     $("#m-draft").disabled = $("#m-again").disabled = false;
+    if ($("#m-send")) $("#m-send").disabled = false;
   };
   $("#m-again").onclick = () => write(true);
   out.querySelector("#m-langf").addEventListener("change", e => { if (e.target.id === "m-lang") write(false); });  // survives the field being rebuilt
+  // send from the connected mailbox: the first press shows exactly who gets it, the second press sends
+  const sendBtn = $("#m-send");
+  if (sendBtn) { let armed = false; sendBtn.onclick = async () => {
+    const list = $("#m-to").value.split(/[,;\s]+/).filter(x => /@/.test(x)).slice(0, 5);
+    if (!list.length) { $("#m-flash").innerHTML = `<div class="flash err">${esc(t("add_email"))}</div>`; return; }
+    if (!armed) { armed = true; sendBtn.textContent = t("m_send_confirm", { to: list.join(", ") }); setTimeout(() => { if (armed) { armed = false; sendBtn.textContent = t("m_send"); } }, 8000); return; }
+    armed = false; sendBtn.disabled = true; sendBtn.textContent = t("m_sending");
+    try {
+      const j = await window.DD_SENDMAIL({ to: list, subject: $("#m-sub").value, body: $("#m-body").value, context: ctx?.title || ctx?.supplier || kind || "" });
+      $("#m-flash").innerHTML = `<div class="flash ${j.ok ? "ok" : "err"}">${(j.results || []).map(x => esc(x.ok ? t("m_sent_to", { to: x.to, from: j.from || "" }) : t("m_send_fail", { to: x.to, e: x.error }))).join("<br>")}</div>`;
+      track("mail_send", list.join(","), kind || "");
+    } catch (e) { $("#m-flash").innerHTML = `<div class="flash err">${esc(errText(e))}</div>`; }
+    sendBtn.textContent = t("m_send"); sendBtn.disabled = false;
+  }; }
   $("#m-draft").onclick = async e => {
     const btn = e.currentTarget, list = $("#m-to").value.split(/[,;\s]+/).filter(x => /@/.test(x));
     if (!list.length) { $("#m-flash").innerHTML = `<div class="flash err">${esc(t("add_email"))}</div>`; return; }

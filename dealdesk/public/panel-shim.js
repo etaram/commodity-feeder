@@ -126,6 +126,7 @@
   window.DD_TG_SETUP = { get: () => getj("/api/telegram/setup"), set: () => post("/api/telegram/setup", {}, "Deal Desk") };
   window.DD_LABEL = (b) => post("/api/panel/label", b, "Deal Desk");
   window.DD_COSTS = (b) => post("/api/panel/costs", b, "Deal Desk AI");
+  window.DD_SENDMAIL = (b) => post("/api/panel/sendmail", b, "Deal Desk");
   // World and project intelligence (events, project timelines, hypotheses), from the pipeline CSVs.
   window.DD_INTEL = (q) => getj("/api/panel/intel" + (q ? "?" + new URLSearchParams(q).toString() : ""));
   window.DD_ASSERT = {
