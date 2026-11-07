@@ -959,7 +959,7 @@ const L = {
     a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
     est_ptw: "Estimated price to win: {lo} to {mid} (from {src}, about {n} bidders). The worker's price quote checks this against real prices.",
     est_noval: "No budget or award history for this tender, so no price to win yet. Use Price quote to research it.",
-    est_cost: "Supplier cost USD", est_freight: "Freight USD", est_duty: "Duty %", est_other: "Other costs %", est_margin: "Gross margin %", est_profit: "Gross profit", est_mm: "Gross margin {gm}% of the price = markup {mu}% on cost.", est_mbad: "Gross margin must be between 0% and 95%.",
+    est_cost: "Supplier cost USD", est_freight: "Freight USD", est_frp: "Freight and insurance %", est_prep: "Bid preparation USD", est_find: "Find customs and freight again (AI)", est_finding: "Looking up the import duty, freight and other costs for this tender (about 20 seconds)…", est_found: "Found on the web (estimates, change any of them):", est_exempt: "public tenders are often duty-exempt", est_inco: "Likely delivery term", est_origin: "likely origin", est_slide: "Move your bid price", est_chart: "Expected profit by bid price", est_legend: "Blue: expected profit by bid price. Green: the best bid. White ring: your bid. Gold line: price to win; grey line: your cost.", est_note2: "Win chance is modelled from the price to win and the number of bidders: at the price to win it is 1 / bidders, higher below it, falling fast above it, and almost none above a published budget. Expected profit = win chance × profit if won - bid preparation.", est_maxcost2: "Enter the supplier cost. To make a profit at the price to win, the supplier cost has to stay below about {v}.", est_needcost: "Enter the supplier cost to see the profit.", est_profit_w: "Profit if won", est_gm: "margin", est_win: "Win chance", est_ev: "Expected profit", est_best: "Best bid", est_vs_ptw: "vs the price to win", est_v_yes: "Worth bidding at this price", est_v_move: "Not at this price: the best expected profit is at about {b}", est_v_no: "Not worth bidding: the cost has to fall by about {c} to profit at the price to win", est_v_nop: "Profitable if won (no price to win to compare with)", est_v_loss: "Loss at this price", est_v_over: "Above the published budget: the bid is likely to be rejected", est_duty: "Duty %", est_other: "Other costs %", est_margin: "Gross margin %", est_profit: "Gross profit", est_mm: "Gross margin {gm}% of the price = markup {mu}% on cost.", est_mbad: "Gross margin must be between 0% and 95%.",
     est_note: "Other costs: insurance, guarantees, financing, FX buffer and contingency (about 7% by default). Duty only if you deliver duty paid.",
     est_maxcost: "To win with this margin, the total supplier cost should stay under about {v}.", est_landed: "Landed cost", est_bid: "Bid price",
     est_ok: "Inside the price to win; you keep about {m}% at the price-to-win level.", est_tight: "Above the price to win at this margin; bidding at the price to win leaves about {m}%.",
@@ -1072,7 +1072,7 @@ const L = {
     a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
     est_ptw: "מחיר משוער לזכייה: {lo} עד {mid} (לפי {src}, כ-{n} מציעים). הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
     est_noval: "אין תקציב או היסטוריית זכיות למכרז הזה, ולכן עוד אין מחיר לזכייה. לחץ על הצעת מחיר כדי לחקור.",
-    est_cost: "עלות ספק USD", est_freight: "הובלה USD", est_duty: "מכס %", est_other: "עלויות נוספות %", est_margin: "רווח גולמי %", est_profit: "רווח גולמי", est_mm: "רווח גולמי {gm}% ממחיר ההצעה = תוספת (markup) של {mu}% על העלות.", est_mbad: "הרווח הגולמי חייב להיות בין 0% ל-95%.",
+    est_cost: "עלות ספק USD", est_freight: "הובלה USD", est_frp: "הובלה וביטוח %", est_prep: "עלות הכנת ההצעה USD", est_find: "אתר שוב מכס והובלה (AI)", est_finding: "מאתר מכס, הובלה ועלויות נוספות למכרז הזה (כ-20 שניות)…", est_found: "נמצא ברשת (הערכות, אפשר לשנות כל אחת):", est_exempt: "במכרזים ציבוריים יש לעיתים פטור ממכס", est_inco: "תנאי מסירה סבירים", est_origin: "מקור סביר", est_slide: "הזז את מחיר ההצעה", est_chart: "תוחלת רווח לפי מחיר הצעה", est_legend: "כחול: תוחלת הרווח לפי מחיר ההצעה. ירוק: ההצעה הטובה ביותר. טבעת לבנה: ההצעה שלך. קו זהב: המחיר לזכייה; קו אפור: העלות שלך.", est_note2: "סיכוי הזכייה מחושב מהמחיר לזכייה וממספר המציעים: במחיר לזכייה הוא 1 חלקי מספר המציעים, גבוה יותר מתחתיו, יורד מהר מעליו, וכמעט אפסי מעל תקציב שפורסם. תוחלת רווח = סיכוי זכייה × רווח אם זוכים - עלות הכנת ההצעה.", est_maxcost2: "הזן את עלות הספק. כדי להרוויח במחיר לזכייה, עלות הספק צריכה להישאר מתחת לכ-{v}.", est_needcost: "הזן את עלות הספק כדי לראות את הרווח.", est_profit_w: "רווח אם זוכים", est_gm: "מרווח", est_win: "סיכוי זכייה", est_ev: "תוחלת רווח", est_best: "ההצעה הטובה ביותר", est_vs_ptw: "מול המחיר לזכייה", est_v_yes: "משתלם לגשת במחיר הזה", est_v_move: "לא במחיר הזה: תוחלת הרווח הגבוהה ביותר בסביבות {b}", est_v_no: "לא משתלם לגשת: העלות צריכה לרדת בכ-{c} כדי להרוויח במחיר לזכייה", est_v_nop: "רווחי אם זוכים (אין מחיר לזכייה להשוואה)", est_v_loss: "הפסד במחיר הזה", est_v_over: "מעל התקציב שפורסם: ההצעה צפויה להיפסל", est_duty: "מכס %", est_other: "עלויות נוספות %", est_margin: "רווח גולמי %", est_profit: "רווח גולמי", est_mm: "רווח גולמי {gm}% ממחיר ההצעה = תוספת (markup) של {mu}% על העלות.", est_mbad: "הרווח הגולמי חייב להיות בין 0% ל-95%.",
     est_note: "עלויות נוספות: ביטוח, ערבויות, מימון, כרית מט\"ח ובלת\"מ (כ-7% כברירת מחדל). מכס רק אם מספקים כולל מכס (DDP).",
     est_maxcost: "כדי לזכות במרווח הזה, עלות הספק הכוללת צריכה להישאר מתחת לכ-{v}.", est_landed: "עלות נחיתה", est_bid: "מחיר הצעה",
     est_ok: "בתוך המחיר לזכייה; במחיר הזכייה נשאר מרווח של כ-{m}%.", est_tight: "מעל המחיר לזכייה במרווח הזה; הצעה במחיר הזכייה משאירה כ-{m}%.",
@@ -2469,17 +2469,31 @@ function ptw(r) {
   return { ref, src: isFinite(budget) && budget > 0 ? t("ptw_budget") : t("ptw_median"), lo: ref * (1 - disc - 0.05), mid: ref * (1 - disc), bidders };
 }
 function estimateHtml(r) {
-  const p = ptw(r);
+  const p = ptw(r), ai = window.DD_COSTS && ["analyst", "admin"].includes(S.me?.role);
   return `<div class="section"><h3>${esc(t("est_h"))}</h3>
     <p class="note">${p ? esc(t("est_ptw", { lo: money(p.lo), mid: money(p.mid), src: p.src, n: p.bidders })) : esc(t("est_noval"))}</p>
     <div class="filters" style="margin-top:6px">
       <label>${esc(t("est_cost"))} <input type="number" id="e-cost" min="0" step="1000" style="width:120px"></label>
-      <label>${esc(t("est_freight"))} <input type="number" id="e-fr" min="0" step="500" value="0" style="width:100px"></label>
+      <label>${esc(t("est_frp"))} <input type="number" id="e-fr" min="0" step="0.5" value="8" style="width:64px"></label>
       <label>${esc(t("est_duty"))} <input type="number" id="e-duty" min="0" step="0.5" value="0" style="width:64px"></label>
       <label>${esc(t("est_other"))} <input type="number" id="e-oth" min="0" step="0.5" value="7" style="width:64px"></label>
-      <label>${esc(t("est_margin"))} <input type="number" id="e-m" min="0" step="0.5" value="10" style="width:64px"></label>
+      <label>${esc(t("est_prep"))} <input type="number" id="e-prep" min="0" step="500" value="0" style="width:90px"></label>
     </div>
-    <div id="e-out" class="note"></div><p class="note">${esc(t("est_note"))}</p></div>`;
+    ${ai ? `<div class="actions"><button type="button" class="sm" id="e-find">${esc(t("est_find"))}</button></div>` : ""}
+    <div id="e-src" class="note"></div>
+    <div id="e-slide" hidden><label class="sub" for="e-bid">${esc(t("est_slide"))}</label>
+      <input type="range" id="e-bid" style="width:100%" dir="ltr"><div id="e-chart" dir="ltr"></div></div>
+    <div id="e-out" class="note"></div><p class="note">${esc(t("est_note2"))}</p></div>`;
+}
+/* Win chance at a bid price, from the price to win and the expected number of bidders: at the price to win it is
+   1 / bidders, it rises to at most 2 / bidders (85% cap) well below it and falls fast above it; above the published
+   budget most buyers reject the bid. A model of the data we hold, not a forecast. */
+function winChance(bid, p) {
+  if (!p || !(bid > 0)) return NaN;
+  const pmax = Math.min(0.85, 2 / Math.max(1, p.bidders)), x = bid / p.mid;
+  let w = pmax / (1 + Math.exp(12 * (x - 1)));
+  if (p.src === t("ptw_budget") && bid > p.ref) w *= 0.1;
+  return w;
 }
 /* Economics, kept as plain functions so they can be tested:
    markup = (price - cost) / cost; gross margin = (price - cost) / price; price at gross margin m = cost / (1 - m). */
@@ -2523,17 +2537,78 @@ const ECON = {
   },
 };
 function wireEstimate(r) {
-  const p = ptw(r), ids = ["#e-cost", "#e-fr", "#e-duty", "#e-oth", "#e-m"];
-  const calc = () => {
-    const c = num($("#e-cost").value), fr = num($("#e-fr").value) || 0, du = (num($("#e-duty").value) || 0) / 100, ot = (num($("#e-oth").value) || 0) / 100, m = (num($("#e-m").value) || 0) / 100;
-    if (!(m >= 0 && m < 0.95)) { $("#e-out").innerHTML = esc(t("est_mbad")); return; }
-    if (!isFinite(c) || c <= 0) { $("#e-out").innerHTML = p ? esc(t("est_maxcost", { v: money(p.mid * (1 - m) / (1 + ot) / (1 + du)) })) : ""; return; }
-    const landed = ECON.landed(c, fr, du, ot), bid = ECON.priceAtMargin(landed, m), profit = bid - landed;
-    let verdict = "";
-    if (p) { const gm = ECON.margin(p.mid, landed); verdict = bid <= p.mid ? t("est_ok", { m: (gm * 100).toFixed(1) }) : gm > 0.02 ? t("est_tight", { m: (gm * 100).toFixed(1) }) : t("est_no", { v: money(landed - p.mid * 0.98) }); }
-    $("#e-out").innerHTML = `<b>${esc(t("est_landed"))}</b> <span class="num">${money(landed)}</span> · <b>${esc(t("est_bid"))}</b> <span class="num">${money(bid)}</span> · <b>${esc(t("est_profit"))}</b> <span class="num">${money(profit)}</span><br><span class="muted">${esc(t("est_mm", { gm: (ECON.margin(bid, landed) * 100).toFixed(1), mu: (ECON.markup(bid, landed) * 100).toFixed(1) }))}</span>${verdict ? `<br>${esc(verdict)}` : ""}`;
+  const p = ptw(r), ids = ["#e-cost", "#e-fr", "#e-duty", "#e-oth", "#e-prep"], bidEl = $("#e-bid");
+  if (!bidEl) return;
+  let lastCost = NaN;
+  const vals = () => ({ c: num($("#e-cost").value), fr: (num($("#e-fr").value) || 0) / 100, du: (num($("#e-duty").value) || 0) / 100, ot: (num($("#e-oth").value) || 0) / 100, prep: num($("#e-prep").value) || 0 });
+  const at = (bid, landed, prep) => { const w = winChance(bid, p), pr = bid - landed; return { bid, w, pr, ev: isFinite(w) ? w * pr - prep : NaN, gm: ECON.margin(bid, landed) }; };
+  const pct = x => isFinite(x) ? (x * 100).toFixed(1) + "%" : "-";
+  const sm = x => !isFinite(x) ? "-" : x < 0 ? "-" + (money(-x) || "$0") : (money(x) || "$0");
+  const chart = (lo, hi, landed, prep, cur, best) => {
+    if (!p) return "";
+    const W = 320, H = 90, n = 80, pts = [];
+    for (let i = 0; i <= n; i++) { const bid = lo + (hi - lo) * i / n; pts.push([bid, at(bid, landed, prep).ev]); }
+    const evs = pts.map(x => x[1]), top = Math.max(...evs, 0), bot = Math.min(...evs, 0), sp = (top - bot) || 1;
+    const X = b => (b - lo) / (hi - lo) * W, Y = v => H - 6 - (v - bot) / sp * (H - 12);
+    const path = pts.map((q, i) => `${i ? "L" : "M"}${X(q[0]).toFixed(1)},${Y(q[1]).toFixed(1)}`).join("");
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="${esc(t("est_chart"))}"><line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="currentColor" stroke-opacity=".3"/>
+      <line x1="${X(landed)}" x2="${X(landed)}" y1="0" y2="${H}" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="3 3"/>
+      <line x1="${X(p.mid)}" x2="${X(p.mid)}" y1="0" y2="${H}" stroke="#d4a72c" stroke-opacity=".7" stroke-dasharray="3 3"/>
+      <path d="${path}" fill="none" stroke="#5aa0ff" stroke-width="2"/>
+      <circle cx="${X(best.bid)}" cy="${Y(best.ev)}" r="4" fill="#3fb950"/><circle cx="${X(cur.bid)}" cy="${Y(cur.ev)}" r="5" fill="none" stroke="#fff" stroke-width="2"/></svg>
+      <div class="sub">${esc(t("est_legend"))}</div>`;
   };
-  ids.forEach(i => $(i)?.addEventListener("input", calc)); calc();
+  const calc = (fromSlider) => {
+    const v = vals(), out = $("#e-out"), box = $("#e-slide");
+    if (!isFinite(v.c) || v.c <= 0) {
+      box.hidden = true;
+      out.innerHTML = p ? esc(t("est_maxcost2", { v: money(p.mid * 0.9 / (1 + v.ot) / (1 + v.du) / (1 + v.fr)) })) : esc(t("est_needcost"));
+      return;
+    }
+    const landed = ECON.landed(v.c, v.c * v.fr, v.du, v.ot);
+    const lo = Math.max(landed * 0.9, p ? Math.min(landed, p.lo) * 0.95 : landed), hi = p ? Math.max(p.ref * 1.1, landed * 1.3) : landed * 1.6;
+    bidEl.min = Math.round(lo); bidEl.max = Math.round(hi); bidEl.step = Math.max(1, Math.round((hi - lo) / 400));
+    let best = at(lo, landed, v.prep);
+    for (let i = 0; i <= 400; i++) { const x = at(lo + (hi - lo) * i / 400, landed, v.prep); if (!(best.ev >= x.ev)) best = x; }
+    if (!fromSlider || landed !== lastCost) bidEl.value = Math.round(p && isFinite(best.ev) ? best.bid : landed / 0.9);
+    lastCost = landed; box.hidden = false;
+    const cur = at(+bidEl.value, landed, v.prep);
+    $("#e-chart").innerHTML = p ? chart(lo, hi, landed, v.prep, cur, best) : "";
+    let verdict, cls;
+    if (!p) { verdict = cur.pr > 0 ? t("est_v_nop") : t("est_v_loss"); cls = cur.pr > 0 ? "" : "bad"; }
+    else if (!(best.ev > 0) || best.w < 0.05) { verdict = t("est_v_no", { c: money(Math.max(0, landed - p.mid * 0.95)) || "$0" }); cls = "bad"; }
+    else if (p.src === t("ptw_budget") && cur.bid > p.ref) { verdict = t("est_v_over"); cls = "bad"; }
+    else if (cur.ev > 0 && cur.gm >= 0.03 && cur.w >= 0.05 && cur.ev >= best.ev * 0.5) { verdict = t("est_v_yes"); cls = "good"; }
+    else { verdict = t("est_v_move", { b: money(best.bid) }); cls = "warn"; }
+    out.innerHTML = `<div class="tbl"><table><tbody>
+      <tr><td>${esc(t("est_bid"))}</td><td class="num"><b>${money(cur.bid)}</b>${p ? ` <span class="sub">(${pct(cur.bid / p.mid - 1)} ${esc(t("est_vs_ptw"))})</span>` : ""}</td></tr>
+      <tr><td>${esc(t("est_landed"))}</td><td class="num">${money(landed)}</td></tr>
+      <tr><td>${esc(t("est_profit_w"))}</td><td class="num">${sm(cur.pr)} <span class="sub">(${esc(t("est_gm"))} ${pct(cur.gm)})</span></td></tr>
+      ${p ? `<tr><td>${esc(t("est_win"))}</td><td class="num">${pct(cur.w)}</td></tr>
+      <tr><td><b>${esc(t("est_ev"))}</b></td><td class="num"><b>${sm(cur.ev)}</b></td></tr>
+      <tr><td>${esc(t("est_best"))}</td><td class="num">${money(best.bid)} · ${esc(t("est_ev"))} ${sm(best.ev)} · ${esc(t("est_win"))} ${pct(best.w)}</td></tr>` : ""}
+      </tbody></table></div><p><span class="pill ${cls}">${esc(verdict)}</span></p>`;
+  };
+  ids.forEach(i => $(i)?.addEventListener("input", () => calc(false)));
+  bidEl.addEventListener("input", () => calc(true));
+  calc(false);
+  // customs, freight and other costs found on the web for this tender, with their basis and sources
+  const fill = (j) => {
+    if (j.freight_pct != null) $("#e-fr").value = j.freight_pct;
+    if (j.duty_pct != null) $("#e-duty").value = j.duty_pct;
+    if (j.other_pct != null) $("#e-oth").value = j.other_pct;
+    const src = (j.sources || []).slice(0, 4).map(x => link(x.url, x.title || x.url)).join(" · ");
+    $("#e-src").innerHTML = `<b>${esc(t("est_found"))}</b><br>${esc(t("est_duty"))}: ${esc(j.duty_pct ?? "-")} · ${esc(j.duty_basis || "")}${j.duty_exempt_possible ? ` <span class="pill">${esc(t("est_exempt"))}</span>` : ""}<br>${esc(t("est_frp"))}: ${esc(j.freight_pct ?? "-")} · ${esc(j.freight_basis || "")}<br>${esc(t("est_other"))}: ${esc(j.other_pct ?? "-")} · ${esc(j.other_basis || "")}${j.incoterm ? `<br>${esc(t("est_inco"))}: ${esc(j.incoterm)}${j.origin ? " · " + esc(t("est_origin")) + ": " + esc(j.origin) : ""}` : ""}${src ? `<br><span class="sub">${src}</span>` : ""}`;
+    calc(false);
+  };
+  const find = async () => {
+    const key = "dd-costs:" + r.id;
+    try { const c = JSON.parse(localStorage.getItem(key) || "null"); if (c && Date.now() - c.at < 7 * 864e5) { fill(c.j); return; } } catch (e) {}
+    $("#e-src").innerHTML = `<span class="spin"></span> ${esc(t("est_finding"))}`;
+    try { const j = await window.DD_COSTS({ id: r.id, title: r.title_en || r.title, country: r.country, value_usd: num(r.est_value_usd) || null }); fill(j); try { localStorage.setItem(key, JSON.stringify({ at: Date.now(), j })); } catch (e) {} }
+    catch (e) { $("#e-src").innerHTML = `<span class="flash err">${esc(errText(e))}</span>`; }
+  };
+  const fb = $("#e-find"); if (fb) { fb.onclick = find; find(); }
 }
 
 /* ---------- free-language search: Claude turns the request into keywords (with synonyms) and filters ---------- */
