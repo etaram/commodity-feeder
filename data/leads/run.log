@@ -1,105 +1,6 @@
-Sat Nov  7 08:46:31 UTC 2026
-INFO TED total matching notices: 5530
-INFO TED fetched 5530 notices (24 pages, 3 days) -> 5324 new rows, cache 21900 open (15153482 bytes)
-INFO ted: 21900 rows
-INFO FTS new 23, open 177 (pages 1)
-INFO fts: 177 rows
-INFO SAM incremental: fetched 2591, open 8057 (5802 open to foreign firms)
-INFO sam: 8057 rows
-INFO CanadaBuys rows 821
-INFO canadabuys: 821 rows
-INFO EBRD rows 43
-INFO ebrd: 43 rows
-INFO UNGM total active 1753, new 648, cache 1180 (pages 48)
-INFO ungm: 1180 rows
-INFO UNDP new 18, open 12
-INFO undp: 12 rows
-INFO AIIB new 174, kept 175, awards 292
-INFO aiib: 175 rows
-INFO IsDB new 41, open 38
-INFO isdb: 38 rows
-WARNING AfDB project: not well-formed (invalid token): line 1, column 1341
-WARNING AfDB corporate: not well-formed (invalid token): line 1, column 1341
-INFO AfDB new 0, open 42
-INFO afdb: 42 rows
-INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1438572', 'noticeid': '39505', 'type': 'AWARD', 'countryname': 'REGIONAL', 'projectnumber': 'RG-L1131', 'proyecturl': 'https://www.iadb.org/en/project/RG-L1131', 'loannumber': '4822/OC-RG', 'noticetitle': 'Diseño y Construcción de Nueva Planta de', 'ezshareid': 'EZIDB0000470-314865798-1440', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Programa de Saneamiento Integral de las ', 'publicationyear': '2026', 'publicationdate': '2026-11-05 12:00:00.000000000', 'deadline': ''}
-INFO IDB dates min=2026-07-10 max=2026-11-05 sample=['2026-11-05 12:00:00.000000000', '2026-11-05 08:00:00.000000000', '2026-11-05 08:00:00.000000000'] deadlines=['', '2026-11-23', '2026-11-23']
-INFO IDB page 0: 1000 recs, 0 old, kept so far 101
-INFO IDB dates min=2026-03-25 max=2026-07-10 sample=['2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000'] deadlines=['2026-07-24', '', '2026-08-04']
-INFO IDB page 1: 1000 recs, 656 old, kept so far 101
-INFO IDB new 101, open 101
-INFO iadb: 101 rows
-INFO SIMAP new 240, open 594
-INFO simap: 594 rows
-INFO GETS new 399, open 401
-INFO gets: 401 rows
-INFO Etimad new 66, open 584 (pages 8)
-INFO etimad: 584 rows
-INFO Prozorro feed pages 42, candidates 2807, fetched 53, open kept 1130
-INFO prozorro: 1130 rows
-WARNING PNCP 429 mode 4 p8
-WARNING PNCP 429 mode 6 p8
-INFO PNCP new 267, open 5011
-INFO pncp: 5011 rows
-INFO SECOP new 97, open 793
-INFO secop: 793 rows
-INFO Contracts Finder new 26, open 93
-INFO contractsfinder: 93 rows
-INFO MTender new 370, open 1076 (ocids 1838, pages 20)
-INFO moldova: 1076 rows
-INFO Uruguay new 0, open 545 (fetched 700 of 1899; categories {'award': 6722, 'tender': 1899, 'tenderUpdate': 3572, 'tenderAmendment': 1637, 'awardUpdate': 322, 'tenderCancellation': 19})
-INFO uruguay: 545 rows
-INFO Malaysia page 1: 100 blocks, 100 new, first T/582/11/2026 
-INFO Malaysia page 2: 100 blocks, 99 new, first QT260000000029541 
-INFO Malaysia page 3: 100 blocks, 95 new, first TENDER/LPP(HQ)BIL.06/2026 
-INFO Malaysia page 4: 100 blocks, 54 new, first QT260000000010950 
-INFO Malaysia page 5: 100 blocks, 26 new, first T3/26/BMH001/JPPF/43 
-INFO Malaysia page 6: 100 blocks, 13 new, first QT260000000029459 
-INFO Malaysia page 7: 100 blocks, 39 new, first T/1/9/2026(27) 
-INFO Malaysia page 8: 100 blocks, 3 new, first QT260000000019798 
-INFO Malaysia page 9: 100 blocks, 3 new, first JKR/CKUB/24818/2026 
-INFO Malaysia page 10: 76 blocks, 2 new, first QT260000000016607 
-INFO Malaysia new 434, open 433
-INFO malaysia: 433 rows
-INFO AusTender new 130, open 166
-INFO austender: 166 rows
-INFO Oman new 50, open 484
-INFO oman: 484 rows
-WARNING Kenya 429 page 6
-INFO Kenya new 50, open 202 (pages 6)
-INFO kenya: 202 rows
-INFO Rwanda new 272, open 272 (pages 10)
-INFO rwanda: 272 rows
-INFO Uganda new 39, open 41 (pages 2, titles looked up 0)
-INFO uganda: 41 rows
-WARNING ghana page 1: Failed to perform, curl: (6) Could not resolve host: www.ghaneps.gov.gh (Timeout while contacting DNS servers). See http
-INFO ghana new 0, open 99 (pages 1)
-INFO ghana: 99 rows
-INFO Malawi new 40, open 37
-INFO malawi: 37 rows
-WARNING Mozambique: Failed to perform, curl: (6) Could not resolve host: www.ufsa.gov.mz (DNS server returned general failure). See https://
-INFO Mozambique new 0, open 77
-INFO mozambique: 77 rows
-INFO Dubai new 267, open 260 (pages 4)
-INFO dubai: 260 rows
-INFO Philippines new 1200, open 1282 (pages 60)
-INFO philippines: 1282 rows
-WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/3 attempt 1: Failed to perform, curl: (28) Connection timed out after 60000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/5 attempt 1: Failed to perform, curl: (28) Connection timed out after 60000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/5 attempt 2: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/5 attempt 3: Failed to perform, curl: (28) Connection timeout after 59999 ms. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-INFO Qatar new 80, open 263
-INFO qatar: 263 rows
+Sat Nov  7 10:48:20 UTC 2026
 INFO initializing identifier
-[0;93m2026-11-07 09:05:12.027997892 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-11-07 10:49:07.256399018 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['EJECUCIÓN DE LA MODALIDAD DE ATENCIÓN COMPLEMENTACIÓN NUTRICIONAL - ALIMENTO PREPARADO CALIENTE DIRIGIDA A FAMILIAS VULNERABLES DEL DEPARTAMENTO DE RISARALDA - EJECUCIÓN DE LA MODALIDAD DE ATENCIÓN COMPLEMENTACIÓN NUTRICIONAL - ALIMENTO PREPARADO CALIENTE DIRIGIDA A FAMILIAS VULNERABLES DEL DEPARTAM'])
 INFO ('apply_packaged_translation', 'EJECUCIÓN DE LA MODALIDAD DE ATENCIÓN COMPLEMENTACIÓN NUTRICIONAL - ALIMENTO PREPARADO CALIENTE DIRIGIDA A FAMILIAS VULNERABLES DEL DEPARTAMENTO DE RISARALDA - EJECUCIÓN DE LA MODALIDAD DE ATENCIÓN COMPLEMENTACIÓN NUTRICIONAL - ALIMENTO PREPARADO CALIENTE DIRIGIDA A FAMILIAS VULNERABLES DEL DEPARTAM')
@@ -2011,21 +1912,19 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['Moldova', '-', 'D@@
 INFO ('value_hypotheses:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
 INFO ('translated_paragraphs:', [[('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)]])
 INFO ('hypotheses_to_return:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
-INFO ('Get https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
-INFO ('Got https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
-INFO translations: 1 new, 0 pending, cache 56713, 639s
+INFO translations: 0 new, 0 pending, cache 56713, 630s
 INFO awards 413111 (12m), recent 3000, buyers 54165, competitors 299113
 WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/work/commodity-feeder/commodity-feeder/leads/sanctions.py)
 INFO integrity: 207 countries profiled, tenders {'open': 58982, 'no data': 233, 'high risk': 62219, 'caution': 12733}
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 0 items (0 reddit, 0 hn, 0 telegram)
-INFO briefing: 662 items, 10 news leads
+INFO briefing: 654 items, 10 news leads
 INFO wb procurement plans: 1115 projects with a plan in the last 90 days
 INFO wb contract awards: 22403 rows (FY2026-2027)
 INFO plays: 468 (supply the winner=70, arbitrage gap=206, pre-tender approach=62, news lead=7, procurement plan=123)
 INFO gdelt news: 287 headlines for 13 countries
-INFO lei: 1 new lookups, 1562 cached, 423 with an LEI, 178 with a parent
+INFO lei: 0 new lookups, 1562 cached, 423 with an LEI, 178 with a parent
 INFO ecb fx: 15 currencies
 INFO trends rss IL: 10 items
 WARNING trends rss CN: HTTP 400
@@ -2040,28 +1939,28 @@ INFO trends rss DO: 10 items
 INFO trends rss CO: 10 items
 WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
-INFO attention: 4 rows (3 trending, 1 wikipedia)
+INFO attention: 11 rows (1 trending, 10 wikipedia)
 INFO market signals rows 2767
 INFO opportunities.csv trimmed for the sheet: 3961 of 21056 rows
 INFO opportunities 21056
 INFO exempt buys: 724 notices
-INFO archive: 8 closed notices moved to the archive (12418 there in total); 0 closed ones kept because we worked on them
-INFO open list: 133440 notices, 0 past their deadline left out, 719 duplicates of another source's notice left out
+INFO archive: 7 closed notices moved to the archive (12418 there in total); 0 closed ones kept because we worked on them
+INFO open list: 133441 notices, 0 past their deadline left out, 719 duplicates of another source's notice left out
 INFO sheet/tenders_08.csv trimmed for the sheet: 1987 of 2000 rows
 INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 0 new, 6981 total, 2 pending, 3s
+INFO hebrew titles: 0 new, 6982 total, 2 pending, 3s
 INFO accounts 30055
 INFO importers.csv trimmed for the sheet: 3988 of 5470 rows
-INFO tenders 134159, importers 5470, suppliers 3282
+INFO tenders 134160, importers 5470, suppliers 3282
 commodity_norm: 1838 rows, 1838 with a known price type {'futures': 60, 'spot': 62, 'index': 1680, 'assessment': 36}, physical 98, futures 60, unit conversions to USD/t 1608, grade stated 62, origin stated 17, delivery stated 1760, incoterm stated 42
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 214 with a change, 49 with volatility, 32 with seasonality, 46 anomalies {'stale': 36, 'jump15': 9, 'sigma3': 1}
-WARNING:leads:gdelt "Amgros I/S": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Τμήμα Υπηρεσιών Πληροφορικής": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22Auftrag: TypeError: fetch failed
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: ConnectionError
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 INFO:leads:news: 731 deals checked, 6 GDELT queries, 59 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
@@ -2089,16 +1988,16 @@ wrote 530 rows x 12 cols to Grants
 wrote 469 rows x 14 cols to Plays
 wrote 288 rows x 5 cols to Country News
 wrote 16 rows x 7 cols to FX
-wrote 5 rows x 7 cols to Attention
+wrote 12 rows x 7 cols to Attention
 wrote 1116 rows x 9 cols to WB Plans
 wrote 601 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
-wrote 6982 rows x 2 cols to Titles HE
+wrote 6983 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
 INFO:leads:web index: 129987 tenders, 90.3 MB raw, 11.2 MB gz
-INFO:leads:web panel static: tenders 1500, titles 6982, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.0 MB encrypted
+INFO:leads:web panel static: tenders 1500, titles 6983, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.0 MB encrypted
 INFO:leads:web panel live: unchanged
 health: 49 sources, 0 alerts
 {'source': 'UNGM (UNV)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
@@ -2106,6 +2005,6 @@ health: 49 sources, 0 alerts
  "timelines_multi_event": 716
 }
  ],
- "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 132 projects in this data (recent approvals only, so biased short)"
+ "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 123 projects in this data (recent approvals only, so biased short)"
 }
 registry {'active': 83, 'implemented': 4, 'degraded': 2, 'discovered': 28}
