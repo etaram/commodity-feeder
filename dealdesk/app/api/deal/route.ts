@@ -6,6 +6,7 @@ import { tenders } from "@/lib/index";
 import { routeOptions, routesHe } from "@/lib/routes";
 import { readiness } from "@/lib/dealstate";
 import { PARTNER_STATES, type DealRecord } from "@/lib/deal";
+import { canMoveDeal, canMoveParty } from "@/lib/transitions";
 
 // Entry routes and readiness gates for the deal workspace (skills package, 6 Nov 2026). DEAL_GATES=off removes them.
 async function gates(id: string, records: DealRecord[]) {
@@ -59,6 +60,11 @@ export async function POST(req: NextRequest) {
     }
     const c = clean(kind, (b.data || {}) as Record<string, unknown>);
     if (!c.ok) return NextResponse.json({ ok: false, error: c.error }, { status: 400 });
+    if (prev && prev.status !== "deleted") {
+      const mv = kind === "stage" ? canMoveDeal(String(prev.data.stage || ""), String(c.data.stage || ""))
+        : kind === "party" ? canMoveParty(String(prev.data.status || prev.status || ""), String(c.data.status || c.status || "")) : { ok: true };
+      if (!mv.ok) return NextResponse.json({ ok: false, error: mv.why }, { status: 409 });
+    }
     await saveRecord(dealId, kind, recordId, version, c.status, c.data, s.email, "", s.ws);
     await logActivity(s, "deal_" + kind, dealId, `${recordId} v${version}`);
     return NextResponse.json({ ok: true, record_id: recordId, version });

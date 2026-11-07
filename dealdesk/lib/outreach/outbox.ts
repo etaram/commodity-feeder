@@ -1,7 +1,7 @@
 import { asWs } from "@/lib/auth";
 import {
   audienceKey, cancelQueued, iso, killSwitch, logEvent, needsReauthorization, planHash, put, readAccounts, readCampaign,
-  scopeSummary, writeAccount, writeCampaign, CONTROL_ID, canMoveCampaign, type Ctx,
+  scopeSummary, writeAccount, writeCampaign, engineMove, CONTROL_ID, canMoveCampaign, type Ctx,
 } from "./campaign";
 import { classifyReply, replyEffect, type ClassifyModel } from "./classify";
 import { adaptWording, passes, renderMessage, validateAdaptation, validateMessage, withFooter, type ModelFn } from "./draft";
@@ -169,7 +169,7 @@ async function autoStop(deps: Deps, ws: string, campaignId: string) {
 }
 
 async function closeAccount(deps: Deps, a: Account, reason: string) {
-  if (a.stage !== "closed") await writeAccount(deps, { ...a, stage: "closed", stage_reason: reason }, "system");
+  await engineMove(deps, a, "closed", reason, "system");
 }
 
 // ---------------- the tick ----------------
@@ -256,7 +256,7 @@ async function processItem(deps: Deps, snap: Snapshot, it: OutboxItem): Promise<
   if (res.ok) {
     await writeItem(deps, { ...sending, status: "sent", sent_at: iso(now), provider_id: res.provider_id });
     await logEvent(deps, ws, c.id, "sent", { account_id: a.id, to: a.email, linkedin_url: a.linkedin_url, outbox_id: it.id, idem_key: it.idem_key, step: it.step, subject, body_hash: sha(body).slice(0, 16), claims_used: r.claims_used, transport: deps.transport.name, provider_id: res.provider_id });
-    if (it.step === 0) await writeAccount(deps, { ...a, stage: "contacted", stage_reason: `first message ${iso(now).slice(0, 10)}` }, "system");
+    if (it.step === 0) await engineMove(deps, a, "contacted", `first message ${iso(now).slice(0, 10)}`, "system");
     if (it.step < c.plan.follow_up_limit) {
       const gap = c.plan.cadence.gap_days[it.step] ?? 7;
       await enqueue(deps, ws, { campaign_id: c.id, account_id: a.id, step: it.step + 1, due_at: iso(now + gap * DAY) }, "system").catch(() => null);
@@ -354,7 +354,7 @@ export async function handleReply(deps: Deps, ws: string, req: { campaign_id: st
   const eff = replyEffect(cls.category);
   await logEvent(deps, ws, c.id, "reply", { account_id: a.id, category: cls.category, classified_by: cls.by, channel: req.channel || "email", excerpt: String(req.text || "").slice(0, 500), to: a.email }, by);
   if (eff.suppress && a.email) await addSuppression(deps, ws, a.email, cls.category, `reply in ${c.id}`, by);
-  if (eff.stage && a.stage !== "closed") await writeAccount(deps, { ...a, stage: eff.stage, stage_reason: `reply: ${cls.category}` }, by);
+  if (eff.stage) await engineMove(deps, a, eff.stage, `reply: ${cls.category}`, by);
   let cancelled = 0;
   if (eff.stop) {
     const fresh = await deps.store.load();

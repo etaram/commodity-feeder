@@ -246,6 +246,18 @@ async function main() {
     w2.clock.t += 5 * D;
     await tick(w2.deps, { enabled: true });
     ok(w2.transport.sent.length === 1, "no follow-up after a reply needing human handling");
+    // the engine moves accounts only along the stage table: a booked meeting goes contacted -> response_classified -> qualified,
+    // and a closed account is never reopened by a later reply
+    const mb = await handleReply(w2.deps, "sinder", { campaign_id: c2.id, account_id: c2.accounts[0].id, text: "x", category: "meeting_booked" } as any, "x");
+    const st2 = () => readAccounts(await_snap, "sinder", c2.id).find((a) => a.id === c2.accounts[0].id)!.stage;
+    let await_snap = await w2.deps.store.load();
+    ok(mb.category === "meeting_booked" && st2() === "qualified", "a booked meeting reaches qualified through the stage table");
+    await handleReply(w2.deps, "sinder", { campaign_id: c2.id, account_id: c2.accounts[0].id, text: "unsubscribe" }, "x");
+    await_snap = await w2.deps.store.load();
+    ok(st2() === "closed", "an opt-out after qualifying closes the account");
+    await handleReply(w2.deps, "sinder", { campaign_id: c2.id, account_id: c2.accounts[0].id, text: "x", category: "meeting_booked" } as any, "x");
+    await_snap = await w2.deps.store.load();
+    ok(st2() === "closed", "a closed account is not reopened by a later reply");
     // a bounce notice pasted as a reply
     const w3 = world();
     const c3 = await setup(w3.deps, "sinder", 1);

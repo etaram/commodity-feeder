@@ -17,6 +17,7 @@ import { clean, readDeal, saveRecord, type Kind } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
 import { DEFAULT_WS } from "@/lib/auth";
 import { mailReady, sendMail } from "@/lib/mailer";
+import { claim } from "@/lib/claims";
 import { dealUrl, richText, supplierUrl, tenderUrl } from "@/lib/links";
 
 export const RUNS = "Agent Runs", APPROVALS = "Agent Approvals";
@@ -151,8 +152,16 @@ export async function resume(io: Io, r: Run, answer: string) {
 
 /** One step: up to a few model turns within the time budget, then save and chain the next step. */
 export async function step(io: Io, id: string, budgetMs = 200_000) {
+  // one step of a run at a time: a duplicate kick or a Telegram retry finds the run claimed and does nothing
+  const lock = await claim(`run:${id}`, budgetMs + 60_000).catch(() => ({ ok: true, release: async () => {} }));
+  if (!lock.ok) return;
+  let again = false;
+  try { again = await stepLocked(io, id, budgetMs); } finally { await lock.release(); }
+  if (again) await io.kick(id);  // the next step claims the run after this one released it
+}
+async function stepLocked(io: Io, id: string, budgetMs: number): Promise<boolean> {
   const r = await loadRun(id);
-  if (!r || r.status !== "running") return;
+  if (!r || r.status !== "running") return false;
   const t0 = Date.now(), he = r.lang === "he";
   try {
     while (Date.now() - t0 < budgetMs - 60_000) {
@@ -202,29 +211,65 @@ export async function step(io: Io, id: string, budgetMs = 200_000) {
     await io.send(r.chat, (he ? "הסוכן נעצר בגלל תקלה: " : "The agent stopped on an error: ") + esc(r.note));
   }
   await saveRun(r);
-  if (r.status === "running") await io.kick(r.id);
+  return r.status === "running";
 }
 
 // ---- approvals ---------------------------------------------------------------------------------------------
-export async function decide(io: Io, chat: string, approvalId: string, ok: boolean) {
+const STUCK_MS = 10 * 60_000;
+const label = (st: string, he: boolean) => (he ? ({ sent: "נשלחה", rejected: "נדחתה", send_failed: "לא נשלחה (נמסרה לך לשליחה ידנית)", sending: "בשליחה", needs_review: "ממתינה לבדיקה שלך", approved: "אושרה" } as Record<string, string>)[st] || st : st);
+
+/** The owner's decision on one proposed message. States: pending → sending → sent | send_failed, or pending → rejected.
+ *  A message is sent at most once: the decision is claimed first (a double press or a retry finds it claimed), and a
+ *  send that never reported back (the call died mid-way) becomes needs_review, never a silent second send. */
+export async function decide(io: Io, chat: string, approvalId: string, ok: boolean, again = false) {
   const g = (await readRanges(ENGINE_SHEET, [`'${APPROVALS}'!A2:F5000`]).catch(() => null))?.[0] || [];
-  const row = [...g].reverse().find((x) => x[0] === approvalId);
+  const mine = g.filter((x) => x[0] === approvalId);
+  const row = mine[mine.length - 1], first = mine[0];
   if (!row || row[2] !== chat) return io.send(chat, "-");
-  const m = JSON.parse(row[5] || "{}");
+  const m = JSON.parse(first[5] || "{}");
   const run = await loadRun(row[1]);
   const he = run ? run.lang === "he" : true;
-  // one decision per message: a second press (or a Telegram retry) never sends twice
-  if (row[4] !== "pending") return io.send(chat, he ? `כבר טופל: ${esc(row[4])}.` : `Already handled: ${esc(row[4])}.`);
-  if (!ok) { await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "rejected", row[5]]); return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`); }
-  await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "approved", row[5]]);
-  const ready = mailReady() && !!m.to_email;
-  const res = ready ? await sendMail({ to: m.to_email, subject: m.subject || "", text: m.body || "" }) : { ok: false as const, error: m.to_email ? "mailbox not configured" : "no recipient address" };
-  await appendRow(APPROVALS, [approvalId, row[1], chat, now(), res.ok ? "sent" : "send_failed", JSON.stringify({ ...m, mail_id: res.ok ? res.id : "", error: res.ok ? "" : res.error })]);
-  if (run) await saveRecord(run.deal_id, "party", "P" + approvalId, 1, "candidate", { role: "supplier", name: m.to_name || "-", email: m.to_email || "",
-    note: `RFQ ${res.ok ? "sent" : "approved, not sent"} ${now().slice(0, 10)}`, source: "deal agent" }, run.email, "deal agent", run.ws).catch(() => {});
-  if (res.ok) return io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
-  return io.send(chat, (he ? `אושרה, אבל לא נשלחה (${esc(res.error)}). הנה ההודעה לשליחה ידנית${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved but not sent (${esc(res.error)}). Here is the message to send yourself${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
-    + `\n\n<b>${esc(m.subject)}</b>\n<pre>${esc(m.body)}</pre>`);
+  let st = row[4];
+  // a send that started and never finished: say so, and let the owner decide after checking his Sent folder
+  if (st === "sending" && Date.now() - Date.parse(row[3] || "") > STUCK_MS) {
+    await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "needs_review", first[5]]);
+    st = "needs_review";
+  }
+  if (st === "needs_review" && again) st = "pending";
+  if (st === "needs_review") return io.send(chat, he ? `השליחה אל ${esc(m.to_name)} לא דיווחה אם הסתיימה. בדוק בתיקיית "נשלח" ב-Zoho. אם המייל לא שם, אפשר לשלוח שוב.` : `The send to ${esc(m.to_name)} never reported back. Check the Sent folder in Zoho; if it is not there, send again.`,
+    { reply_markup: { inline_keyboard: [[{ text: he ? "שלח שוב" : "Send again", callback_data: `ag:re:${approvalId}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${approvalId}` }]] } });
+  if (st !== "pending") return io.send(chat, he ? `כבר טופל: ${label(st, true)}.` : `Already handled: ${st}.`);
+  const lock = await claim(`appr:${approvalId}`, STUCK_MS);
+  if (!lock.ok) return io.send(chat, he ? "ההחלטה על הפנייה הזו כבר בטיפול." : "This message is already being handled.");
+  try {
+    if (!ok) { await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "rejected", first[5]]); return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`); }
+    const ready = mailReady() && !!m.to_email;
+    if (ready) await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "sending", first[5]]);
+    const res = ready ? await sendMail({ to: m.to_email, subject: m.subject || "", text: m.body || "" }) : { ok: false as const, error: m.to_email ? "mailbox not configured" : "no recipient address" };
+    await appendRow(APPROVALS, [approvalId, row[1], chat, now(), res.ok ? "sent" : "send_failed", JSON.stringify({ ...m, mail_id: res.ok ? res.id : "", error: res.ok ? "" : res.error })]);
+    if (run) {
+      // the supplier moves to contacted when the request actually left; a failed send leaves it a candidate
+      const cur = (await readDeal(run.deal_id, run.ws).catch(() => ({ records: [] as { kind: string; record_id: string; version: number; status: string }[] }))).records;
+      const prev = cur.filter((x) => x.kind === "party" && x.record_id === "P" + approvalId).sort((x, y) => y.version - x.version)[0];
+      const status = res.ok ? "contacted" : (prev?.status || "candidate");
+      await saveRecord(run.deal_id, "party", "P" + approvalId, (prev?.version || 0) + 1, status, { role: "supplier", name: m.to_name || "-", email: m.to_email || "", status,
+        note: `RFQ ${res.ok ? "sent" : "approved, not sent"} ${now().slice(0, 10)}`, source: "deal agent" }, run.email, "deal agent", run.ws).catch(() => {});
+    }
+    if (res.ok) return io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
+    return io.send(chat, (he ? `אושרה, אבל לא נשלחה (${esc(res.error)}). הנה ההודעה לשליחה ידנית${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved but not sent (${esc(res.error)}). Here is the message to send yourself${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
+      + `\n\n<b>${esc(m.subject)}</b>\n<pre>${esc(m.body)}</pre>`);
+  } finally { await lock.release(); }
+}
+
+/** A run that stopped on an error goes on from where it stopped (the owner's /retry). */
+export async function retryLatest(io: Io, chat: string) {
+  const r = (await loadRuns()).filter((x) => x.chat === chat && x.status === "error").sort((a, b) => (a.started < b.started ? 1 : -1))[0];
+  if (!r) return false;
+  r.status = "running"; r.note = "";
+  if (r.turns >= MAX_TURNS) r.turns = MAX_TURNS - 6;
+  await saveRun(r);
+  await io.kick(r.id);
+  return true;
 }
 
 export async function stopLatest(chat: string) {

@@ -184,6 +184,27 @@ export async function writeCampaign(ctx: Ctx, c: Campaign, by: string) {
   await put(ctx, "campaigns", { ws: c.ws, campaign_id: c.id, id: c.id, status: c.status, data: c, by });
 }
 
+/** A move made by the engine (a send, a reply, a logged LinkedIn contact). It follows STAGE_NEXT; when the target is
+ *  two steps away through response_classified (a reply that books a meeting), both steps are written. A move the
+ *  table does not allow is skipped and logged, so the engine never pulls an account backwards or out of closed. */
+export async function engineMove(ctx: Ctx, a: Account, to: AccountStage, reason: string, by: string): Promise<Account> {
+  if (a.stage === to) return a;
+  const path: AccountStage[] = canMoveStage(a.stage, to) ? [to]
+    : canMoveStage(a.stage, "response_classified") && canMoveStage("response_classified", to) ? ["response_classified", to] : [];
+  if (!path.length) {
+    await logEvent(ctx, a.ws, a.campaign_id, "stage_skipped", { account_id: a.id, from: a.stage, to, reason: str(reason, 200) }, by);
+    return a;
+  }
+  let cur = a;
+  for (const st of path) {
+    const next = { ...cur, stage: st, stage_reason: str(reason, 300) };
+    await writeAccount(ctx, next, by);
+    await logEvent(ctx, a.ws, a.campaign_id, "stage", { account_id: a.id, from: cur.stage, to: st, reason: next.stage_reason }, by);
+    cur = next;
+  }
+  return cur;
+}
+
 export async function writeAccount(ctx: Ctx, a: Account, by: string) {
   a.updated_at = iso(ctx.now());
   await put(ctx, "accounts", { ws: a.ws, campaign_id: a.campaign_id, id: a.id, status: a.stage, data: a, by });
@@ -332,7 +353,7 @@ export async function authorizeCampaign(ctx: Ctx, transport: Transport, ws: stri
   const authorization: Authorization = { by, at: iso(ctx.now()), scope_hash: hash, plan_hash: planHash(c.plan), audience: keys };
   const next: Campaign = { ...c, authorization, status: c.status === "draft" || c.status === "stopped" ? "authorized" : c.status, status_reason: "authorized" };
   await writeCampaign(ctx, next, by);
-  for (const a of aud) if (a.stage === "contact_confirmed") await writeAccount(ctx, { ...a, stage: "outreach_authorized", stage_reason: `authorized by ${by}` }, by);
+  for (const a of aud) if (a.stage === "contact_confirmed") await engineMove(ctx, a, "outreach_authorized", `authorized by ${by}`, by);
   await logEvent(ctx, ws, c.id, "authorize", { scope_hash: hash, plan_hash: authorization.plan_hash, audience_size: keys.length }, by);
   return { ok: true, authorization };
 }

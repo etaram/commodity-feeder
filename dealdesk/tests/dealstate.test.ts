@@ -2,6 +2,7 @@
 import { routeOptions, routesHe } from "@/lib/routes";
 import { readiness, cashCheck, usableSupplier } from "@/lib/dealstate";
 import type { DealRecord } from "@/lib/deal";
+import { canMoveDeal, canMoveParty, advanceParty } from "@/lib/transitions";
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
 const v = (rows: ReturnType<typeof routeOptions>, id: string) => rows.find((r) => r.route === id)!.verdict;
@@ -57,4 +58,9 @@ ok(neg.funding_capacity === "unknown" && neg.warnings.some((w) => /negative/.tes
 const all = [gpa, dom, open, none, home, works, aw, lad, lad2].flatMap(routesHe);
 const left = all.flatMap((r) => [r.basis, r.next, ...r.assumptions, ...r.missing]).filter((x) => /^[a-z][a-z ]+[a-z]/i.test(x.replace(/"[^"]*"/g, "")) && !/[\u0590-\u05FF]/.test(x));
 ok(!left.length, "every route string has Hebrew: " + left.slice(0, 3).join(" | "));
+ok(!canMoveDeal("lead", "won").ok && canMoveDeal("offer", "won").ok && canMoveDeal("lead", "offer").ok && canMoveDeal("offer", "sourcing").ok, "deal: won only after an offer; working stages move freely");
+ok(!canMoveDeal("won", "lead").ok && canMoveDeal("lost", "negotiation").ok && canMoveDeal(undefined, "won").ok, "deal: a closed deal reopens only into negotiation");
+ok(canMoveParty("candidate", "quoted").ok && canMoveParty("quoted", "replied").ok && !canMoveParty("quoted", "candidate").ok, "party: forward freely, one step back by hand");
+ok(!canMoveParty("dropped", "selected").ok && canMoveParty("dropped", "candidate").ok && canMoveParty("selected", "dropped").ok, "party: a dropped party returns as a candidate");
+ok(advanceParty("replied", "contacted") === "replied" && advanceParty("candidate", "contacted") === "contacted" && advanceParty("dropped", "contacted") === "contacted", "a system event never moves a party backwards");
 console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);

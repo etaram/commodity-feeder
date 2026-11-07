@@ -3,6 +3,7 @@
 import { startRun, step, loadRun, resume, decide } from "@/lib/dealagent";
 import { richText, supplierUrl } from "@/lib/links";
 import { TABS } from "./mocks/sheets";
+import { MAIL } from "./mocks/mailer";
 import { SAVED } from "./mocks/deal";
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
@@ -49,11 +50,33 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
   await decide(io, "C2", id, true);
   ok(sent[sent.length - 1].text === "-" && (TABS["Agent Approvals"] || []).length === 1, "another chat cannot approve the message");
   await decide(io, "C1", id, true);
-  ok(sent.length === before + 2 && /<pre>/.test(sent[sent.length - 1].text) && TABS["Agent Approvals"][1][4] === "approved" && TABS["Agent Approvals"][2][4] === "send_failed", "without a mailbox the approved message is handed to the owner");
+  const ap = () => (TABS["Agent Approvals"] || []).filter((x) => x[0] === id).map((x) => String(x[4]));
+  ok(sent.length === before + 2 && /<pre>/.test(sent[sent.length - 1].text) && ap().join() === "pending,send_failed", "without a mailbox the approved message is handed to the owner");
   await decide(io, "C1", id, true);
-  ok(/כבר טופל/.test(sent[sent.length - 1].text) && TABS["Agent Approvals"].length === 3, "a second press never sends again");
+  ok(/כבר טופל/.test(sent[sent.length - 1].text) && ap().length === 2, "a second press never sends again");
+  // with a mailbox: two presses at the same moment send exactly one mail
+  MAIL.ready = true;
+  TABS["Agent Approvals"].push(["M2", r.id, "C1", new Date().toISOString(), "pending", JSON.stringify({ to_name: "Grain SA", to_email: "sales@grainsa.co.za", subject: "RFQ", body: "b" })]);
+  await Promise.all([decide(io, "C1", "M2", true), decide(io, "C1", "M2", true)]);
+  const m2 = () => TABS["Agent Approvals"].filter((x) => x[0] === "M2").map((x) => String(x[4]));
+  ok(MAIL.sent.length === 1 && m2().join() === "pending,sending,sent", "a double press sends one mail: " + m2().join());
+  const party = (SAVED as unknown[][]).filter((x) => x[1] === "party" && x[2] === "PM2").pop();
+  ok(!!party && party[4] === "contacted", "the supplier moves to contacted when the request left");
+  // a send that never reported back becomes needs_review, and goes out again only on the owner's press
+  TABS["Agent Approvals"].push(["M3", r.id, "C1", new Date(Date.now() - 3600e3).toISOString(), "pending", JSON.stringify({ to_name: "X", to_email: "x@x.com", subject: "s", body: "b" })]);
+  TABS["Agent Approvals"].push(["M3", r.id, "C1", new Date(Date.now() - 3600e3).toISOString(), "sending", ""]);
+  await decide(io, "C1", "M3", true);
+  ok(/תיקיית "נשלח"/.test(sent[sent.length - 1].text) && MAIL.sent.length === 1 && JSON.stringify(sent[sent.length - 1].extra).includes("ag:re:M3"), "a stuck send asks the owner instead of sending again");
+  await decide(io, "C1", "M3", true, true);
+  ok(MAIL.sent.length === 2, "Send again sends it");
+  // two step calls for one run at the same moment: only one runs the model
+  const r2 = await startRun(io, { chat: "C1", email: "o@x.com", name: "Owner", lang: "he", request: "בדיקה" });
+  script.push([{ type: "tool_use", id: "v1", name: "finish", input: { summary: "סיום" } }]);
+  const calls0 = seen.length;
+  await Promise.all([step(io, r2.id, 120_000), step(io, r2.id, 120_000)]);
+  ok(seen.length === calls0 + 1 && (await loadRun(r2.id))!.status === "done", "a duplicate step does not run the run twice");
   ok(SAVED.length >= 2, "the deal is saved in the deal records");
-  ok(cur.usd > 0 && (TABS["AI Usage"] || []).length === 5, "every model turn is metered");
+  ok(cur.usd > 0 && (TABS["AI Usage"] || []).length === seen.length, "every model turn is metered");
   ok(richText("ראה [Grain SA](https://desk.sinder.pro/?open=s:Grain%20SA) <b>") === 'ראה <a href="https://desk.sinder.pro/?open=s:Grain%20SA">Grain SA</a> &lt;b&gt;', "model links become Telegram links, other markup is escaped");
   ok(!richText("[x](javascript:alert(1))").includes("<a"), "only http and https links");
   ok(JSON.stringify(seen[1].messages).includes(supplierUrl("Grain SA", "ZAF").replace(/"/g, "")), "supplier rows carry the link to their page");

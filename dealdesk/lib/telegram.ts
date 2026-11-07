@@ -8,7 +8,7 @@ import { claude } from "./anthropic";
 import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
-import { startRun, resume, waitingRun, stopLatest, decide, type Io } from "./dealagent";
+import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
 
 // The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
@@ -33,10 +33,10 @@ export async function ensureCallbacks() {
 }
 export async function agentCallback(chatId: string, data: string, queryId: string) {
   await fetch(API("answerCallbackQuery"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ callback_query_id: queryId }) }).catch(() => null);
-  const m = data.match(/^ag:(ok|no):([A-Z0-9]+)$/);
+  const m = data.match(/^ag:(ok|no|re):([A-Z0-9]+)$/);
   if (!m) return;
   if (!(await links()).some((l) => l.chat_id === chatId)) return;
-  await decide(agentIo, chatId, m[2], m[1] === "ok");
+  await decide(agentIo, chatId, m[2], m[1] !== "no", m[1] === "re");
 }
 
 // Talking to the Deal Desk from Telegram. A chat is linked to a system user once, with a code the user takes from
@@ -97,6 +97,8 @@ const HELP_HE = `פקודות:
 /alerts on|off - התראות (תזות בביטחון גבוה, תקציר)
 /deal <בקשה> - סוכן עסקאות: מריץ עסקה מההתחלה עד הסוף ומבקש אישור לפני כל פנייה
 /stop - עצירת הסוכן
+/retry - המשך ריצה שנעצרה בתקלה
+/mailcheck - בדיקת החיבור לתיבת המייל (לא שולח)
 או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
 /tenders <words> [ISO3] - open tenders by fit
@@ -107,6 +109,8 @@ const HELP_EN = `Commands:
 /alerts on|off
 /deal <request> - deal agent: runs a deal end to end, asks approval before any message
 /stop - stop the agent
+/retry - continue a run that stopped on an error
+/mailcheck - check the mailbox sign-in (sends nothing)
 Or just write a question or a request.`;
 
 type Row = Record<string, string>;
@@ -153,6 +157,7 @@ export async function handle(chatId: string, text: string, _from: string) {
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
     if (/^\/mailcheck/.test(cmd)) { const r = await mailCheck(); return send(chatId, r.ok ? (he ? `תיבת המייל מחוברת (${esc(r.host)}). לא נשלח שום מייל בבדיקה.` : `The mailbox signs in (${esc(r.host)}). No mail was sent.`) : (he ? `החיבור לתיבה נכשל (${esc(r.host)}): ${esc(r.error || "")}` : `Mailbox sign-in failed (${esc(r.host)}): ${esc(r.error || "")}`)); }
+    if (/^\/retry/.test(cmd)) { const ok = await retryLatest(agentIo, chatId); return send(chatId, ok ? (he ? "ממשיך מהמקום שבו הסוכן נעצר." : "Continuing from where the agent stopped.") : (he ? "אין ריצה שנעצרה בתקלה." : "No run stopped on an error.")); }
     if (/^\/stop/.test(cmd)) { const n = await stopLatest(chatId); return send(chatId, n ? (he ? "הסוכן נעצר." : "Agent stopped.") : (he ? "אין סוכן פעיל." : "No agent running.")); }
     if (/^\/deal/.test(cmd)) {
       if (!arg.trim()) return send(chatId, he ? "כתוב מה לעשות, למשל: /deal תמצא לי 5,000 טון תירס לבן לקניה" : "Write the request, e.g. /deal find 5,000 t of white maize for Kenya");

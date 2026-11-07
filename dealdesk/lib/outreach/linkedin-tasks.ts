@@ -1,5 +1,5 @@
 import { asWs } from "@/lib/auth";
-import { audienceKey, iso, logEvent, needsReauthorization, put, readAccounts, readCampaign, writeAccount, type Ctx } from "./campaign";
+import { audienceKey, iso, logEvent, needsReauthorization, put, readAccounts, readCampaign, engineMove, type Ctx } from "./campaign";
 import { passes, renderMessage, validateMessage } from "./draft";
 import { handleReply, logRows, type Deps } from "./outbox";
 import { latest, sha, type Snapshot } from "./store";
@@ -76,8 +76,9 @@ export async function logLinkedInTask(deps: Deps, ws: string, req: { task_id: st
   await logEvent(deps, ws, t.campaign_id, contact ? "linkedin_contact" : req.interaction === "meeting_booked" ? "meeting" : req.interaction === "reply_received" ? "linkedin_reply_logged" : "linkedin_activity",
     { account_id: t.account_id, task_id: t.id, interaction: req.interaction, linkedin_url: t.profile_url, to: a?.email || "", note: t.note.slice(0, 300), channel: "linkedin" }, by);
   let reply = null;
-  if (a && contact && a.stage === "outreach_authorized") await writeAccount(deps, { ...a, stage: "contacted", stage_reason: `LinkedIn ${req.interaction}` }, by);
-  if (a && req.interaction === "meeting_booked" && a.stage !== "closed") await writeAccount(deps, { ...a, stage: "qualified", stage_reason: "meeting booked (LinkedIn)" }, by);
+  let acc = a;
+  if (acc && contact && acc.stage === "outreach_authorized") acc = await engineMove(deps, acc, "contacted", `LinkedIn ${req.interaction}`, by);
+  if (acc && req.interaction === "meeting_booked") acc = await engineMove(deps, acc, "qualified", "meeting booked (LinkedIn)", by);
   if (a && req.interaction === "reply_received") {
     reply = await handleReply(deps, ws, { campaign_id: t.campaign_id, account_id: a.id, text: String(req.reply_text || ""), channel: "linkedin", category: req.reply_category }, by);
   }
