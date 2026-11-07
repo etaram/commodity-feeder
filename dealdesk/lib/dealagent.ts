@@ -16,6 +16,7 @@ import { cashCheck } from "@/lib/dealstate";
 import { clean, readDeal, saveRecord, type Kind } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
 import { DEFAULT_WS } from "@/lib/auth";
+import { mailReady, sendMail } from "@/lib/mailer";
 import { dealUrl, richText, supplierUrl, tenderUrl } from "@/lib/links";
 
 export const RUNS = "Agent Runs", APPROVALS = "Agent Approvals";
@@ -212,12 +213,17 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
   const m = JSON.parse(row[5] || "{}");
   const run = await loadRun(row[1]);
   const he = run ? run.lang === "he" : true;
-  await appendRow(APPROVALS, [approvalId, row[1], chat, now(), ok ? "approved" : "rejected", row[5]]);
-  if (!ok) return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`);
-  // no mailbox is connected yet: the approved message is handed to the owner ready to send from his own mailbox
-  const live = process.env.AGENT_MAIL_LIVE === "1";
-  if (run) await saveRecord(run.deal_id, "party", "P" + approvalId, 1, "candidate", { role: "supplier", name: m.to_name || "-", email: m.to_email || "", note: `RFQ approved ${now().slice(0, 10)}${live ? "" : " (to send from the owner's mailbox)"}`, source: "deal agent" }, run.email, "deal agent", run.ws).catch(() => {});
-  return io.send(chat, (he ? `אושרה. עדיין אין תיבת דואר מחוברת לסוכן, אז הנה ההודעה מוכנה לשליחה מהמייל שלך${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved. No mailbox is connected to the agent yet, so here is the message ready to send from your mailbox${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
+  // one decision per message: a second press (or a Telegram retry) never sends twice
+  if (row[4] !== "pending") return io.send(chat, he ? `כבר טופל: ${esc(row[4])}.` : `Already handled: ${esc(row[4])}.`);
+  if (!ok) { await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "rejected", row[5]]); return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`); }
+  await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "approved", row[5]]);
+  const ready = mailReady() && !!m.to_email;
+  const res = ready ? await sendMail({ to: m.to_email, subject: m.subject || "", text: m.body || "" }) : { ok: false as const, error: m.to_email ? "mailbox not configured" : "no recipient address" };
+  await appendRow(APPROVALS, [approvalId, row[1], chat, now(), res.ok ? "sent" : "send_failed", JSON.stringify({ ...m, mail_id: res.ok ? res.id : "", error: res.ok ? "" : res.error })]);
+  if (run) await saveRecord(run.deal_id, "party", "P" + approvalId, 1, "candidate", { role: "supplier", name: m.to_name || "-", email: m.to_email || "",
+    note: `RFQ ${res.ok ? "sent" : "approved, not sent"} ${now().slice(0, 10)}`, source: "deal agent" }, run.email, "deal agent", run.ws).catch(() => {});
+  if (res.ok) return io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
+  return io.send(chat, (he ? `אושרה, אבל לא נשלחה (${esc(res.error)}). הנה ההודעה לשליחה ידנית${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved but not sent (${esc(res.error)}). Here is the message to send yourself${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
     + `\n\n<b>${esc(m.subject)}</b>\n<pre>${esc(m.body)}</pre>`);
 }
 

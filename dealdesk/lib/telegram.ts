@@ -9,6 +9,7 @@ import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { startRun, resume, waitingRun, stopLatest, decide, type Io } from "./dealagent";
+import { mailCheck } from "./mailer";
 
 // The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
 // (answered at once, the work runs after the answer), authenticated with the webhook secret.
@@ -151,6 +152,7 @@ export async function handle(chatId: string, text: string, _from: string) {
   const iso = (s: string) => (s.match(/\b([A-Z]{3})\b/) || [])[1] || "";
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
+    if (/^\/mailcheck/.test(cmd)) { const r = await mailCheck(); return send(chatId, r.ok ? (he ? `תיבת המייל מחוברת (${esc(r.host)}). לא נשלח שום מייל בבדיקה.` : `The mailbox signs in (${esc(r.host)}). No mail was sent.`) : (he ? `החיבור לתיבה נכשל (${esc(r.host)}): ${esc(r.error)}` : `Mailbox sign-in failed (${esc(r.host)}): ${esc(r.error || "")}`)); }
     if (/^\/stop/.test(cmd)) { const n = await stopLatest(chatId); return send(chatId, n ? (he ? "הסוכן נעצר." : "Agent stopped.") : (he ? "אין סוכן פעיל." : "No agent running.")); }
     if (/^\/deal/.test(cmd)) {
       if (!arg.trim()) return send(chatId, he ? "כתוב מה לעשות, למשל: /deal תמצא לי 5,000 טון תירס לבן לקניה" : "Write the request, e.g. /deal find 5,000 t of white maize for Kenya");

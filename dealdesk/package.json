@@ -8,8 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/nodemailer": "^6.4.17",
     "google-auth-library": "^9.15.0",
     "next": "15.5.28",
+    "nodemailer": "^6.9.16",
     "papaparse": "^5.4.1",
     "react": "19.0.0",
     "react-dom": "19.0.0"
