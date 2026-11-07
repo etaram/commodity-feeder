@@ -1,31 +1,31 @@
 source,type,status,prices,expected_min,previous_prices,newest_date,age_days,max_age_days,http_status,latency_ms,changed,last_change_utc,message,url
-yahoo,feed,OK,33,25,33,2026-11-06,0,4,,25000,,,,https://finance.yahoo.com/markets/commodities/
-westmetall,feed,OK,6,6,6,2026-11-05,1,5,,8000,,,,https://www.westmetall.com/en/markdaten.php
-em_global,feed,OK,21,15,20,2026-11-06,0,4,,39000,,,,https://quote.eastmoney.com/center/gridlist.html#futures_global
-cn_spot,feed,OK,52,45,52,2026-11-06,0,6,,2000,,,,https://www.100ppi.com/sf/
-eu_agri,feed,DOWN,0,50,62,,,21,,50000,,,"WARNING eu_agri cereal/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/cereal/prices?beginDate=22%2F09%2F2026&endDate=06%2F11%2F2026 (Caused by ResponseError('too many 500 error responses')) | WARNING eu_agri sugar: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/sugar/prices",https://agridata.ec.europa.eu/extensions/DataPortal/prices.html
-dtn,feed,OK,7,7,7,2026-10-30,7,14,,1000,,,,https://www.dtnpf.com/agriculture/web/ag/crops
-ssb,feed,OK,2,2,2,2026-11-01,5,21,,1000,,,,https://www.ssb.no/en/statbank1/table/03024/
-scrapmonster,feed,STALE,34,30,34,2026-09-21,46,45,,0,,,,https://www.scrapmonster.com/metal-prices/minor-metals
-smi,feed,OK,5,5,5,2026-11-05,1,5,,1000,,,,https://strategicmetalsinvest.com/current-strategic-metals-prices/
-usda,feed,OK,52,20,52,2026-11-05,1,35,,11000,,,,https://www.ams.usda.gov/market-news
-census,feed,DOWN,0,800,0,,,120,,1000,,,WARNING census 2026-06: Expecting value: line 1 column 1 (char 0) | WARNING census 2026-05: Expecting value: line 1 column 1 (char 0) | WARNING census: no data,https://api.census.gov/data/timeseries/intltrade/imports/hs
-comext,feed,OK,1913,800,1913,2026-08-31,67,120,,61000,,,,https://ec.europa.eu/eurostat/comext/newxtweb/
-comtrade,feed,DEGRADED,3,300,3,2026-08-31,67,150,,19000,,,,https://comtradeplus.un.org/
-World Bank Pink Sheet,watch,UNCHANGED,,,,,,,200,133,,2026-11-04T01:18,,https://www.worldbank.org/en/research/commodity-markets
-China NBS 10-day prices,watch,UNCHANGED,,,,,,,200,1895,,2026-11-04T13:21,,https://www.stats.gov.cn/english/PressRelease/
-ICO coffee prices,watch,UNCHANGED,,,,,,,200,634,,,,https://ico.org/resources/public-market-information/
-FAO Food Price Index,watch,UNCHANGED,,,,,,,200,98,,,,https://www.fao.org/worldfoodsituation/foodpricesindex/en/
-Global Dairy Trade,watch,UNCHANGED,,,,,,,200,1424,,,,https://www.globaldairytrade.info/en/product-results/
-USDA FV shipping point,watch,UNCHANGED,,,,,,,200,278,,2026-11-04T01:18,,https://www.ams.usda.gov/mnreports/fvwtrds.pdf
-USDA feedstuffs AMS_3668,watch,UNCHANGED,,,,,,,200,98,,2026-11-06T01:33,,https://www.ams.usda.gov/mnreports/ams_3668.pdf
-USDA boxed beef AMS_2461,watch,UNCHANGED,,,,,,,200,108,,2026-10-31T00:46,,https://www.ams.usda.gov/mnreports/ams_2461.pdf
-IMF primary commodity prices,watch,DOWN,,,,,,,403,61,,,"<HTML><HEAD>
+yahoo,feed,OK,33,25,33,2026-11-06,1,4,,26000,,,,https://finance.yahoo.com/markets/commodities/
+westmetall,feed,OK,6,6,6,2026-11-06,1,5,,8000,,,,https://www.westmetall.com/en/markdaten.php
+em_global,feed,OK,21,15,21,2026-11-07,0,4,,27000,,,,https://quote.eastmoney.com/center/gridlist.html#futures_global
+cn_spot,feed,OK,52,45,52,2026-11-06,1,6,,2000,,,,https://www.100ppi.com/sf/
+eu_agri,feed,DOWN,0,50,0,,,21,,40000,,,"WARNING eu_agri cereal/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/cereal/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses')) | WARNING eu_agri sugar: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/sugar/prices",https://agridata.ec.europa.eu/extensions/DataPortal/prices.html
+dtn,feed,OK,7,7,7,2026-10-30,8,14,,0,,,,https://www.dtnpf.com/agriculture/web/ag/crops
+ssb,feed,OK,2,2,2,2026-11-01,6,21,,1000,,,,https://www.ssb.no/en/statbank1/table/03024/
+scrapmonster,feed,STALE,34,30,34,2026-09-21,47,45,,0,,,,https://www.scrapmonster.com/metal-prices/minor-metals
+smi,feed,OK,5,5,5,2026-11-06,1,5,,1000,,,,https://strategicmetalsinvest.com/current-strategic-metals-prices/
+usda,feed,OK,52,20,52,2026-11-06,1,35,,11000,,,,https://www.ams.usda.gov/market-news
+census,feed,DOWN,0,800,0,,,120,,0,,,WARNING census 2026-06: Expecting value: line 1 column 1 (char 0) | WARNING census 2026-05: Expecting value: line 1 column 1 (char 0) | WARNING census: no data,https://api.census.gov/data/timeseries/intltrade/imports/hs
+comext,feed,OK,1913,800,1913,2026-08-31,68,120,,61000,,,,https://ec.europa.eu/eurostat/comext/newxtweb/
+comtrade,feed,DEGRADED,3,300,3,2026-08-31,68,150,,20000,,,,https://comtradeplus.un.org/
+World Bank Pink Sheet,watch,UNCHANGED,,,,,,,200,204,,2026-11-04T01:18,,https://www.worldbank.org/en/research/commodity-markets
+China NBS 10-day prices,watch,UNCHANGED,,,,,,,200,5059,,2026-11-04T13:21,,https://www.stats.gov.cn/english/PressRelease/
+ICO coffee prices,watch,UNCHANGED,,,,,,,200,444,,,,https://ico.org/resources/public-market-information/
+FAO Food Price Index,watch,UNCHANGED,,,,,,,200,170,,,,https://www.fao.org/worldfoodsituation/foodpricesindex/en/
+Global Dairy Trade,watch,UNCHANGED,,,,,,,200,1567,,,,https://www.globaldairytrade.info/en/product-results/
+USDA FV shipping point,watch,UNCHANGED,,,,,,,200,461,,2026-11-04T01:18,,https://www.ams.usda.gov/mnreports/fvwtrds.pdf
+USDA feedstuffs AMS_3668,watch,UNCHANGED,,,,,,,200,70,,2026-11-06T01:33,,https://www.ams.usda.gov/mnreports/ams_3668.pdf
+USDA boxed beef AMS_2461,watch,CHANGED,,,,,,,200,105,yes,2026-11-07T00:55,,https://www.ams.usda.gov/mnreports/ams_2461.pdf
+IMF primary commodity prices,watch,DOWN,,,,,,,403,208,,,"<HTML><HEAD>
 <TITLE>Access Denied</TITLE>
 </HEAD><BODY>
 <H1>Access Denied</H1>
  
 You don't have permission to access ""http&#58;&#47;&#47;www&#46;imf&#",https://www.imf.org/en/Research/commodity-prices
-LME homepage,watch,DOWN,,,,,,,403,102,,,"<!DOCTYPE html><html lang=""en-US""><head><title>Just a moment...</title><meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8""><meta http-e",https://www.lme.com/
-Spices Board India,watch,CHANGED,,,,,,,200,1336,yes,2026-11-06T13:18,,https://www.indianspices.com/marketing/price/domestic/current-market-price.html
-MPOB palm oil,watch,UNCHANGED,,,,,,,200,1199,,,,https://bepi.mpob.gov.my/
+LME homepage,watch,DOWN,,,,,,,403,99,,,"<!DOCTYPE html><html lang=""en-US""><head><title>Just a moment...</title><meta http-equiv=""Content-Type"" content=""text/html; charset=UTF-8""><meta http-e",https://www.lme.com/
+Spices Board India,watch,UNCHANGED,,,,,,,200,648,,2026-11-06T13:18,,https://www.indianspices.com/marketing/price/domestic/current-market-price.html
+MPOB palm oil,watch,UNCHANGED,,,,,,,200,3252,,,,https://bepi.mpob.gov.my/
