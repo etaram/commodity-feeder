@@ -1,10 +1,18 @@
-Fri Nov  6 20:08:30 UTC 2026
-INFO LatAm awards: Brazil 826 (4 days), Colombia 540
+Sat Nov  7 13:11:30 UTC 2026
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO relay used for https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=20261106&dat (ConnectionError)
+INFO LatAm awards: Brazil 845 (4 days), Colombia 492
 INFO latam_awards: 0 rows
-INFO Prozorro awards: 41526 candidates, 2513 read, 2527 awards
+INFO Prozorro awards: 40582 candidates, 2604 read, 2618 awards
 INFO prozorro_awards: 0 rows
 INFO OCDR 141 ITA 2024: 44 releases, 30 awards, 0 contacts
-INFO OCDR 87 ITA 2024: 94694 releases, 52321 awards, 22236 contacts
+INFO OCDR 87 ITA 2024: 94463 releases, 52138 awards, 22177 contacts
 INFO OCDR 115 SRB 2024: 10793 releases, 0 awards, 0 contacts
 INFO OCDR 60 LVA 2024: 2052 releases, 8572 awards, 8573 contacts
 INFO OCDR 68 LTU 2024: 4801 releases, 11570 awards, 11369 contacts
@@ -32,14 +40,14 @@ INFO OCDR 88 SVK 2024: 1823 releases, 2904 awards, 2957 contacts
 INFO OCDR 82 SVN 2024: 643 releases, 1893 awards, 3366 contacts
 INFO OCDR 93 SVN 2024: 2824 releases, 10758 awards, 12870 contacts
 INFO OCDR 1 ESP 2024: 184 releases, 143 awards, 0 contacts
-INFO OCDR 89 ESP 2024: 110221 releases, 81734 awards, 33560 contacts
-INFO OCDR {'files': 30, 'awards': 289773, 'contacts': 218940, 'pending': 8}
+INFO OCDR 89 ESP 2024: 107593 releases, 79804 awards, 32798 contacts
+INFO OCDR {'files': 30, 'awards': 287660, 'contacts': 218119, 'pending': 8}
 INFO ocdr: 0 rows
 INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
 INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
-INFO OCDR tenders 110 ECU 2026: 161 open of 121705 releases
-INFO OCDR tenders 142 GTM 2026: 1149 open of 375170 releases
-INFO OCDR tenders 122 HND 2026: 24 open of 46752 releases
+INFO OCDR tenders 110 ECU 2026: 84 open of 121705 releases
+INFO OCDR tenders 142 GTM 2026: 1101 open of 375170 releases
+INFO OCDR tenders 122 HND 2026: 22 open of 46752 releases
 INFO OCDR tenders 123 HND 2026: 0 open of 43975 releases
 INFO OCDR tenders 156 LBR 2026: 7 open of 1283 releases
 INFO OCDR tenders 127 NGA 2025: 0 open of 3 releases
@@ -49,10 +57,10 @@ INFO OCDR tenders 118 NGA 2026: 0 open of 3 releases
 INFO OCDR tenders 125 NGA 2025: 0 open of 122 releases
 INFO OCDR tenders 135 PER 2026: 36 open of 134917 releases
 INFO OCDR tenders 152 TZA 2026: 0 open of 62293 releases
-INFO OCDR tenders 43 URY 2026: 27 open of 64000 releases
+INFO OCDR tenders 43 URY 2026: 21 open of 64000 releases
 INFO OCDR tenders 3 ZMB 2026: 0 open of 26157 releases
 INFO OCDR tenders 101 IDN 2120: 0 open of 1 releases
-INFO OCDR tenders 160 TWN 2026: 0 open of 6 releases
+INFO OCDR tenders 160 TWN 2026: 0 open of 8 releases
 INFO OCDR tenders 158 THA 2026: 0 open of 208218 releases
 INFO OCDR tenders 134 ALB 2025: 0 open of 722 releases
 INFO OCDR tenders 52 GEO 2025: 0 open of 10 releases
@@ -64,8 +72,8 @@ INFO OCDR tenders 149 MEX 2026: 0 open of 4256 releases
 INFO OCDR tenders 32 MEX 2025: 0 open of 26 releases
 INFO OCDR tenders 132 MEX 2025: 0 open of 702 releases
 INFO OCDR tenders 34 MDA 2026: 0 open of 47356 releases
-INFO OCDR tenders {'publications': 29, 'read': 29, 'releases': 1140551, 'open_tenders': 1404, 'countries': 6}
-INFO ocdr_tenders: 1404 rows
+INFO OCDR tenders {'publications': 29, 'read': 29, 'releases': 1140553, 'open_tenders': 1271, 'countries': 6}
+INFO ocdr_tenders: 1271 rows
 INFO IL exemptions: 5000/165705 read, 0 kept
 INFO IL exemptions: 10000/165705 read, 0 kept
 INFO IL exemptions: 15000/165705 read, 0 kept
@@ -104,7 +112,7 @@ INFO IL exemptions {'read': 165705, 'kept': 143, 'next 6 months': 58, 'ended - r
 INFO il_exemptions: 0 rows
 INFO World Bank awards: 81805 kept of 296832, reached 300000
 INFO USAspending foreign: 10000
-INFO USAspending 11: 2744
+INFO USAspending 11: 2740
 INFO USAspending 21: 312
 INFO USAspending 31: 8000
 Traceback (most recent call last):
@@ -201,7 +209,9 @@ WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
-INFO wikidata companies: 6 countries refreshed (428 companies), 45 countries cached
+WARNING wikidata 504
+WARNING wikidata 504
+INFO wikidata companies: 2 countries refreshed (516 companies), 47 countries cached
 INFO wikidata_companies: 0 rows
 INFO listed companies: 0 countries refreshed (0 companies), 202 cached
 INFO listed_companies: 0 rows
@@ -336,9 +346,9 @@ INFO web_contacts: 0 rows
 INFO:leads:import china-directory-2026-11-05: 19837 rows
 INFO:leads:import commodity-databases-2026-11-05: 135 rows
 INFO:leads:import global-suppliers-2026-11: 58151 rows
-INFO:leads:imports: 78123 rows, 76144 new suppliers, 1900 merged into existing ones
-INFO:leads:refined layer applied to 931285 suppliers
-INFO:leads:classification check: 24 sectors, 6556 flagged
-INFO:leads:universe {'awards': 4446121, 'suppliers': 1007268, 'with_email': 394074, 'with_phone': 313543, 'exporters': 60509, 'goods': 349897, 'contacts_matched': 1023195, 'customs_exporters': 18225, 'customs_new': 17851, 'tier_A': 902012, 'tier_B_notable': 9502, 'tier_1_strategic': 27030, 'tier_2_proven': 107857, 'tier_3_qualified': 203333, 'tier_4_unproven': 669048, 'with_website': 246619, 'notable_total': 12265, 'notable_with_email': 3031, 'notable_with_phone': 2588, 'notable_with_website': 7712, 'quality_40_plus': 140947, 'with_any_contact': 675318, 'region: Europe': 484038, 'region: Latin America': 207547, 'region: Sub-Saharan Africa': 83008, 'region: North America': 57712, 'region: South Asia': 47055, 'region: East Asia': 41770, 'region: Oceania': 34842, 'region: unknown': 24623, 'region: Southeast Asia': 11800, 'region: CIS & Central Asia': 7367, 'region: Middle East & North Africa': 5062, 'region: Other': 1489, 'region: Israel': 955}
+INFO:leads:imports: 78123 rows, 76143 new suppliers, 1901 merged into existing ones
+INFO:leads:refined layer applied to 931240 suppliers
+INFO:leads:classification check: 24 sectors, 6857 flagged
+INFO:leads:universe {'awards': 4449517, 'suppliers': 1008377, 'with_email': 395061, 'with_phone': 314978, 'exporters': 60509, 'goods': 352059, 'contacts_matched': 1024676, 'customs_exporters': 18225, 'customs_new': 17850, 'tier_A': 902816, 'tier_B_notable': 9812, 'tier_1_strategic': 26982, 'tier_2_proven': 108176, 'tier_3_qualified': 203295, 'tier_4_unproven': 669924, 'with_website': 248603, 'notable_total': 12576, 'notable_with_email': 3195, 'notable_with_phone': 2841, 'notable_with_website': 7845, 'quality_40_plus': 141300, 'with_any_contact': 676122, 'region: Europe': 484301, 'region: Latin America': 208086, 'region: Sub-Saharan Africa': 83008, 'region: North America': 57712, 'region: South Asia': 47055, 'region: East Asia': 41770, 'region: Oceania': 34842, 'region: unknown': 24623, 'region: Southeast Asia': 12036, 'region: CIS & Central Asia': 7367, 'region: Middle East & North Africa': 5133, 'region: Other': 1489, 'region: Israel': 955}
 wrote 150001 rows to Supplier Universe
-INFO:leads:web index: 250000 suppliers, 24.1 MB encrypted
+INFO:leads:web index: 250000 suppliers, 24.8 MB encrypted
