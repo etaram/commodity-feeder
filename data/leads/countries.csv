@@ -1,16 +1,16 @@
 country,region,open_notices,total_value_usd,sources
 IND,South Asia,63398,12522077720,AIIB; India e-procurement (Assam); India e-procurement (Central (CPPP)); India e-procurement (Central PSUs); India e-procurement (Chandigarh); India e
 DEU,Europe,14794,6225235323,SAM.gov (USA); TED (EU); UNGM (UNDP); UNGM (UNV); oeffentlichevergabe (Germany)
-FRA,Europe,9191,7865817438,BOAMP (France); SAM.gov (USA); TED (EU); UNGM (COE); UNGM (UNESCO)
-USA,North America,6432,6749622,NYC City Record (USA); SAM.gov (USA); TED (EU); UNDP; UNGM (UN-Women); UNGM (UNOPS); US city - Austin; US city - Charlotte; US city - Chicago; US city
+FRA,Europe,9141,7865817438,BOAMP (France); SAM.gov (USA); TED (EU); UNGM (COE); UNGM (UNESCO)
+USA,North America,6430,6749622,NYC City Record (USA); SAM.gov (USA); TED (EU); UNDP; UNGM (UN-Women); UNGM (UNOPS); US city - Austin; US city - Charlotte; US city - Chicago; US city
 ESP,Europe,5677,20341610572,PLACSP (Spain); SAM.gov (USA); TED (EU); UNGM (UNDP)
 BRA,Latin America,4783,16950461475,AIIB; IDB; PNCP (Brazil); UNGM (PAHO); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS); World Bank; World Bank pipeline
 CHL,Latin America,4462,0,ChileCompra; UNGM (FAO); UNGM (IAEA); UNGM (ILO); UNGM (UNICEF); UNGM (UNIDO); UNGM (WIPO)
 POL,Europe,2996,2090963180,TED (EU); World Bank pipeline
 PHL,Southeast Asia,1312,11080320112,AIIB; PhilGEPS (Philippines); SAM.gov (USA); UNGM (FAO); UNGM (ILO); UNGM (UN Secretariat); UNGM (UNICEF); UNGM (UNIDO); UNGM (WHO); World Bank; World
 ISR,Israel,1124,0,Israel - academic institution; Israel - city_association; Israel - cluster of authorities; Israel - company; Israel - drainage authority; Israel - gov
+UKR,Europe,1104,7519819294,Prozorro (Ukraine); TED (EU); UNGM (IDLO); UNGM (ILO); UNGM (IOM); UNGM (OSCE); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); UNGM (WFP); Wo
 GTM,Latin America,1103,1105000000,IDB; OCDS: Guatemala: Ministerio de Finanzas Públicas; UNGM (ILO); UNGM (IOM); UNGM (UNDP); World Bank; World Bank pipeline
-UKR,Europe,1101,7518611454,Prozorro (Ukraine); TED (EU); UNGM (IDLO); UNGM (ILO); UNGM (IOM); UNGM (OSCE); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); UNGM (WFP); Wo
 ZAF,Sub-Saharan Africa,948,4633820000,UNGM (ILO); UNGM (UN-Women); UNGM (UNDP); World Bank pipeline; eTenders (South Africa)
 CHE,Europe,909,0,TED (EU); UNGM (ILO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UN-Women); UNGM (WHO); UNGM (WIPO); simap.ch
 ITA,Europe,870,13975477119,SAM.gov (USA); TED (EU); UNGM (UN Secretariat)
@@ -36,7 +36,7 @@ RWA,Sub-Saharan Africa,298,901000000,AIIB; UNGM (ILO); UNGM (UNDP); Umucyo (Rwan
 GBR,Europe,286,8719936577,Contracts Finder (UK); Find a Tender (UK); SAM.gov (USA); TED (EU); UNGM (FAO); UNGM (IMO); UNGM (UNICEF); UNGM (UNOPS); World Bank
 HRV,Europe,281,1295464426,TED (EU); World Bank pipeline
 BGR,Europe,275,427872025,TED (EU); UNGM (IOM)
-KEN,Sub-Saharan Africa,268,5457200000,AIIB; PPIP (Kenya); UNGM (FAO); UNGM (ILO); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNIDO); World Bank; World Bank pipeline
+KEN,Sub-Saharan Africa,271,5457200000,AIIB; PPIP (Kenya); UNGM (FAO); UNGM (ILO); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNIDO); World Bank; World Bank pipeline
 GRC,Europe,266,2384942802,SAM.gov (USA); TED (EU)
 SVN,Europe,262,37858462,TED (EU)
 ARE,Middle East & North Africa,262,0,SAM.gov (USA); UNGM (IRENA); UNGM (UNHCR); eSupply (Dubai)
@@ -46,7 +46,7 @@ LVA,Europe,241,199913954,TED (EU)
 LTU,Europe,229,648678628,TED (EU); UNGM (IAEA)
 HUN,Europe,212,37150699,TED (EU); UNGM (ILO)
 DNK,Europe,209,1904701715,TED (EU); UNGM (IOM); UNGM (UNDP); UNGM (UNOPS)
-PRY,Latin America,183,1183363755,DNCP (Paraguay); IDB; UNGM (FAO); UNGM (IAEA); UNGM (ILO); World Bank; World Bank pipeline
+PRY,Latin America,180,1180138040,DNCP (Paraguay); IDB; UNGM (FAO); UNGM (IAEA); UNGM (ILO); World Bank; World Bank pipeline
 AUS,Oceania,169,0,AusTender (Australia); SAM.gov (USA)
 IRL,Europe,162,3212959468,SAM.gov (USA); TED (EU)
 EST,Europe,129,625418903,TED (EU)
@@ -59,7 +59,7 @@ BGD,South Asia,84,4059249984,AIIB; IsDB; UNGM (FAO); UNGM (ILO); UNGM (IOM); UNG
 ETH,Sub-Saharan Africa,83,5120000000,UNGM (FAO); UNGM (ILO); UNGM (UN Secretariat); UNGM (UNCDF); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); World Bank; World B
 MDG,Sub-Saharan Africa,83,1583000000,AIIB; AfDB; UNGM (FAO); UNGM (ILO); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS); World Bank; World Bank pipeline
 UZB,CIS & Central Asia,73,3573000000,AIIB; UNGM (FAO); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
-MWI,Sub-Saharan Africa,69,480000000,AfDB; PPDA (Malawi); UNGM (FAO); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
+MWI,Sub-Saharan Africa,70,480000000,AfDB; PPDA (Malawi); UNGM (FAO); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
 PER,Latin America,69,1231449016,IDB; OCDS: Peru: Organismo Especializado para las Contratacio; UNGM (ILO); UNGM (UNDP); UNGM (UNFPA); UNGM (UNHCR); UNGM (UNIDO); UNGM (UNOPS); World 
 MLT,Europe,67,225564928,TED (EU); World Bank pipeline
 MKD,Europe,64,2406028980,TED (EU); UNGM (ILO); UNGM (UNDP); World Bank; World Bank pipeline
