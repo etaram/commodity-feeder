@@ -35,7 +35,9 @@ export function joinRows(norm: Row[], stats: Row[], q: CommodityQuery = {}): Com
   const hs = String(q.hs6 || "").replace(/\D/g, "");
   const limit = Math.min(500, Math.max(1, q.limit || 200));
   const out: CommodityStat[] = [];
-  for (const r of norm) {
+  // physical prices by origin and grade (ids "O:") come first: they are what a search for a product usually means
+  const ordered = [...norm.filter((r) => String(r.id).startsWith("O:")), ...norm.filter((r) => !String(r.id).startsWith("O:"))];
+  for (const r of ordered) {
     if (hs && !String(r.hs6 || "").startsWith(hs)) continue;
     if (words.length && !words.every((w) => w.test(`${r.product} ${r.commodity} ${r.grade} ${r.origin} ${r.delivery_location} ${r.source}`))) continue;
     const s = byId.get(r.id) || {};

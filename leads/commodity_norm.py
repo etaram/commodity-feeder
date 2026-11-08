@@ -235,6 +235,10 @@ def load_norm(path=OUT):
 def main():
     rows = list(csv.DictReader(open(SRC, encoding="utf-8")))
     out = [normalise(r) for r in rows]
+    # physical prices by origin and grade (leads/origin_prices.py) arrive already normalised: grade, origin, place stated
+    origin = ROOT / "data/leads/origin_prices.csv"
+    if origin.exists():
+        out += [{k: r.get(k, "") for k in FIELDS} for r in csv.DictReader(open(origin, encoding="utf-8"))]
     with open(OUT, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         w.writeheader()
