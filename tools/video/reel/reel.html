@@ -1,0 +1,182 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Serif;src:url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2)}
+@font-face{font-family:Serif;font-style:italic;src:url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2)}
+@font-face{font-family:Tight;font-weight:500;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-500-normal.woff2)}
+@font-face{font-family:Tight;font-weight:600;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-600-normal.woff2)}
+@font-face{font-family:Tight;font-weight:700;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-700-normal.woff2)}
+:root{--ink:#05080f;--gold:#d8b25a;--gold2:#f0cf7a;--mute:#8d9ab3}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);color:#fff;font-family:Tight,sans-serif}
+canvas{position:absolute;inset:0}
+.abs{position:absolute}
+#V{position:absolute;inset:0;transform-origin:540px 1100px}
+#vign{position:absolute;inset:0;background:radial-gradient(900px 1300px at 50% 52%,transparent 45%,rgba(0,0,0,.6) 100%);z-index:80;pointer-events:none}
+#grain{position:absolute;inset:-50%;z-index:81;opacity:.07;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:90}
+#cap{position:absolute;left:60px;right:60px;top:300px;height:330px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;align-content:center;gap:0 26px;z-index:70;text-align:center}
+.w{display:inline-block;font:700 96px/1.08 Tight;letter-spacing:-2.5px;text-shadow:0 10px 40px rgba(0,0,0,.7)}
+.frag{position:absolute;font:600 34px Tight;padding:18px 26px;border-radius:16px;background:#121a2c;border:1px solid #2a3756;color:#cfd7e6;white-space:nowrap}
+.chip{position:absolute;font:600 28px Tight;padding:12px 20px;border-radius:12px;background:#111a2e;border:1px solid #2b3a5c;color:#d5ddeb;white-space:nowrap}
+#card{position:absolute;border-radius:28px;overflow:hidden;background:#0e1526;box-shadow:0 60px 140px rgba(0,0,0,.75),0 0 0 2px rgba(216,178,90,.45),0 0 80px rgba(216,178,90,.12)}
+#card img{position:absolute;left:0;top:0;transform-origin:0 0}
+#sweep{position:absolute;inset:0;pointer-events:none}
+#cur{position:absolute;width:56px;height:56px;z-index:60}
+#rip{position:absolute;width:110px;height:110px;border-radius:50%;border:4px solid var(--gold2);z-index:59;opacity:0}
+.num{font-variant-numeric:tabular-nums}
+</style></head><body>
+<canvas id="bg" width="1080" height="1920"></canvas>
+<div id="V"><canvas id="map" width="1080" height="1920"></canvas><div id="L" class="abs" style="inset:0"></div>
+<div id="card" style="display:none"><img id="scr"><div id="sweep"></div></div></div>
+<svg id="cur" viewBox="0 0 24 24" style="opacity:0"><path d="M3 2l7 19 2.6-7.4L20 11z" fill="#fff" stroke="#0b1324" stroke-width="1.3" stroke-linejoin="round"/></svg><div id="rip"></div>
+<div id="cap"></div>
+<div id="vign"></div><div id="grain"></div><div id="flash"></div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),p=(t,a,b)=>cl((t-a)/(b-a)),lerp=(a,b,k)=>a+(b-a)*k;
+const eo=x=>1-Math.pow(1-cl(x),3),ei=x=>Math.pow(cl(x),3),eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=cl(x);const c=1.7,c3=c+1;return 1+c3*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const pad=n=>String(n).padStart(4,'0');
+const SH='file:///tmp/claude-0/-home-claude/ee7d08a5-56d0-5999-9485-3d08067cc70c/scratchpad/promo/shots/';
+const MARK=(sz,id)=>`<svg viewBox="0 0 64 64" width="${sz}" height="${sz}"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2d52"/><stop offset="1" stop-color="#0b1324"/></linearGradient><linearGradient id="d${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0cf7a"/><stop offset="1" stop-color="#b8902e"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g${id})" stroke="#3a5488"/><path id="mp${id}" d="M44 20c-2.5-4-7-6-12-6-7 0-12 4-12 9.5 0 11 24 7 24 18 0 6-5.5 10-13 10-6 0-10.5-2.5-13-6.5" fill="none" stroke="url(#d${id})" stroke-width="5.5" stroke-linecap="round"/><circle cx="45" cy="16.5" r="3.4" fill="#f0cf7a"/><circle cx="19" cy="47.5" r="3.4" fill="#f0cf7a"/></svg>`;
+let MAP,TL,SC;
+window.setup=(map,tl)=>{MAP=map;TL=tl;SC=tl.scenes.map(([id,t0,t1])=>({id,t0,t1}));window.TOTAL=tl.total};
+const B=()=>TL.beat;const LT=()=>TL.words.i12.find(w=>/^Let/.test(w[0]))[1];
+const kickK=t=>{const ph=(t%B())/B();return Math.exp(-ph*7)};
+// ---------- background: drifting gold light, dot grid, beat pulse ----------
+function bg(t,pump){
+  const c=$('bg'),x=c.getContext('2d');x.fillStyle='#05080f';x.fillRect(0,0,1080,1920);
+  const gx=540+Math.sin(t*.35)*300,gy=1000+Math.cos(t*.27)*500;
+  let g=x.createRadialGradient(gx,gy,0,gx,gy,900);g.addColorStop(0,`rgba(216,178,90,${.10+.05*pump})`);g.addColorStop(1,'rgba(216,178,90,0)');x.fillStyle=g;x.fillRect(0,0,1080,1920);
+  g=x.createRadialGradient(1080-gx*.6,1920-gy*.7,0,1080-gx*.6,1920-gy*.7,800);g.addColorStop(0,'rgba(60,90,170,.16)');g.addColorStop(1,'rgba(60,90,170,0)');x.fillStyle=g;x.fillRect(0,0,1080,1920);
+  x.fillStyle=`rgba(140,160,205,${.10+.05*pump})`;const off=(t*14)%60;
+  for(let yy=-60;yy<1980;yy+=60)for(let xx=0;xx<1100;xx+=60){x.fillRect(xx,yy+off,2,2)}
+}
+// ---------- map (vertical crop) ----------
+function drawMap(t,alpha,glowAt,zoom,cx0){
+  const c=$('map'),x=c.getContext('2d');x.clearRect(0,0,1080,1920);if(alpha<=0)return;
+  x.save();x.globalAlpha=alpha;x.translate(540,1150);x.scale(zoom,zoom);x.translate(-cx0,-540);
+  for(const [px,py,h,f] of MAP.dots){const on=h>0&&t>=glowAt+f*.9;
+    if(on){const k=p(t,glowAt+f*.9,glowAt+f*.9+.3);const r=1.6+h*1.6;x.fillStyle=`rgba(240,207,122,${(.5+.5*h)*k})`;x.beginPath();x.arc(px,py,r*(1+(1-k)*1.5),0,6.283);x.fill();
+      if(h>.5){x.fillStyle=`rgba(240,207,122,${.08*k})`;x.beginPath();x.arc(px,py,r*3.2,0,6.283);x.fill()}}
+    else{x.fillStyle='rgba(130,150,195,.38)';x.beginPath();x.arc(px,py,1.2,0,6.283);x.fill()}}
+  x.restore();
+}
+// ---------- captions: rolling chunks of the narration, word by word ----------
+const NOCAP={logo:1};
+function captions(t,sc){
+  const el=$('cap');if(NOCAP[sc.id]||(sc.id==='cta'&&t>=LT()-.05)){el.innerHTML='';return}
+  const key={hook:'i2',chaos:'i3',tend:'i5',sup:'i6',price:'i7',est:'i8',engine:'e1',pocket:'e3',cta:'i12'}[sc.id];const ws=TL.words[key];if(!ws){el.innerHTML='';return}
+  const ch=[];let cur=[];ws.forEach((w,i)=>{cur.push([...w,i]);const end=/[.,?]$/.test(w[0]);if(cur.length>=3&&(end||cur.length>=4)||end&&cur.length>=2){ch.push(cur);cur=[]}});if(cur.length)ch.push(cur);
+  let ci=0;for(let i=0;i<ch.length;i++)if(t>=ch[i][0][1]-.05)ci=i;
+  const c=ch[ci];const vEnd=TL.vo[key][0]+TL.vo[key][1];const fade=1-p(t,vEnd+.25,vEnd+.55);
+  if(t<c[0][1]-.05){el.innerHTML='';return}
+  const c0=c[0][1];el.innerHTML=c.map(([w,wt],j)=>{const k=p(t,c0-.04+j*.05,c0+.14+j*.05);const next=c[j+1]?c[j+1][1]:vEnd;const act=t>=wt&&t<next;
+    const gold=/^(34|thirty|software|evidence|source|bid|agents|hundreds|seconds|meeting|talk|thousand|every|price|supplier|contact)/i.test(w);
+    return `<span class="w" style="opacity:${k*fade};transform:translateY(${(1-back(k))*40}px) scale(${lerp(.7,1,back(k))});color:${gold?'var(--gold2)':'#fff'};opacity:${k*fade*(act||t>=wt?1:.45)}">${w}</span>`}).join('');
+}
+// ---------- real Deal Desk screens (public tenders, real prices, invented suppliers) ----------
+function frameAt(k,t){if(t<=k[0][0])return k[0][1];for(let i=1;i<k.length;i++)if(t<=k[i][0]){const[a,f0]=k[i-1],[b,f1]=k[i];return Math.round(lerp(f0,f1,(t-a)/(b-a)))}return k[k.length-1][1]}
+function camAt(k,t){if(t<=k[0][0])return k[0].slice(1);for(let i=1;i<k.length;i++)if(t<=k[i][0]){const a=k[i-1],b=k[i],q=eio((t-a[0])/(b[0]-a[0]));return a.slice(1).map((v,j)=>lerp(v,b[j+1],q))}return k[k.length-1].slice(1)}
+const SHOTS={
+ tend:{shot:'tlist',stat:['34,644','open tenders · 195 countries'],frames:[[0.15,0],[1.3,57],[1.5,61],[1.6,63],[9,77]],cam:[[0,1.25,800,450,-6],[1.2,1.25,800,450,0],[1.9,1.8,1250,330,0],[3.4,1.8,1250,430,0],[9,1.7,1200,470,3]],clicks:[[1.5,577,376]]},
+ sup:{shot:'sup',stat:['250,000','suppliers, matched by evidence'],frames:[[0.1,26],[0.5,41],[0.8,55],[1.1,56],[1.2,58],[1.9,66],[2.3,84],[2.5,85],[2.6,88],[9,95]],cam:[[0,1.5,700,330,6],[0.8,1.55,700,330,0],[1.2,1.85,560,450,0],[2.1,1.85,560,480,0],[2.6,1.85,600,560,0],[9,1.75,620,520,-3]],clicks:[[1.1,407,464],[2.5,636,584]]},
+ price:{shot:'prices',stat:['18','official price sources'],frames:[[0.1,5],[0.5,22],[0.7,30],[1.5,32],[1.7,42],[1.9,46],[3.4,83],[9,83]],cam:[[0,1.5,800,300,-6],[0.6,1.55,800,330,0],[1.0,2.1,1030,300,0],[1.6,2.1,1030,300,0],[2.0,1.5,800,450,0],[9,1.6,800,520,3]],clicks:[]},
+ est:{shot:'est',stat:['EV','expected value · win chance · verdict'],frames:[[0.05,22],[0.3,29],[2.4,99],[2.7,105],[9,117]],cam:[[0,1.8,1210,330,6],[0.5,1.85,1210,330,0],[2.4,1.85,1210,380,0],[2.9,2.0,1200,660,0],[9,1.9,1180,700,-3]],clicks:[],knob:[0.3,2.4]},
+};
+async function screen(id,t,D,pump){
+  const s=SHOTS[id];const img=$('scr');const f=frameAt(s.frames,t);const src=SH+s.shot+'/'+pad(f)+'.jpg';
+  if(img.dataset.src!==src){img.src=src;img.dataset.src=src;await img.decode().catch(()=>{})}
+  const CW=980,CH=900,X0=50,Y0=700;const [z0,fx,fy,ry]=camAt(s.cam,t);const z=z0*1.2;const S=CW/1600*z;
+  let tx=CW/2-fx*S,ty=CH/2-fy*S;tx=Math.min(0,Math.max(CW-1600*S,tx));ty=Math.min(0,Math.max(CH-900*S,ty));
+  img.style.width='3200px';img.style.height='1800px';img.style.transform=`translate(${tx}px,${ty}px) scale(${S/2})`;
+  const card=$('card');card.style.display='block';card.style.width=CW+'px';card.style.height=CH+'px';card.style.left=X0+'px';card.style.top=Y0+'px';
+  const ein=eo(p(t,0,.28)),eout=ei(p(t,D-.18,D));
+  card.style.transform=`perspective(2200px) translateY(${(1-ein)*260}px) rotateX(${(1-ein)*18}deg) rotateY(${ry*.6}deg) scale(${lerp(.86,1,ein)*(1+eout*.25)})`;card.style.opacity=ein*(1-eout);card.style.filter=`blur(${(1-ein)*10+eout*14}px)`;
+  const sw=p(t,.25,1.05);$('sweep').style.background=`linear-gradient(105deg,transparent ${lerp(-30,110,sw)-14}%,rgba(255,240,200,.16) ${lerp(-30,110,sw)}%,transparent ${lerp(-30,110,sw)+14}%)`;
+  const toScreen=(x,y)=>({x:X0+tx+x*S,y:Y0+ty+y*S});
+  let vis=0,cx=0,cy=0,rip=-1;
+  for(const[tc,x,y] of s.clicks){if(t>=tc-.45&&t<=tc+.35){const b=toScreen(x,y);const k=eio(p(t,tc-.45,tc-.05));cx=lerp(b.x+200,b.x,k);cy=lerp(b.y+200,b.y,k);vis=1;if(t>=tc)rip=p(t,tc,tc+.35)}}
+  if(s.knob&&t>=s.knob[0]-.2&&t<=s.knob[1]+.2){const kn=window.KNOB[f];if(kn){const q=toScreen(kn.x,kn.y);cx=q.x;cy=q.y;vis=1}}
+  const c=$('cur');c.style.left=(cx-8)+'px';c.style.top=(cy-5)+'px';c.style.opacity=vis*(1-eout);
+  const r=$('rip');if(rip>=0&&rip<1){r.style.left=(cx-55)+'px';r.style.top=(cy-55)+'px';r.style.opacity=1-rip;r.style.transform=`scale(${.3+rip})`}else r.style.opacity=0;
+  const sk=p(t,.45,.8);
+  $('L').innerHTML=`<div class="abs" style="left:0;right:0;top:1640px;text-align:center;opacity:${sk*(1-eout)};transform:scale(${lerp(.6,1,back(sk))})">
+     <span class="num" style="font:700 120px Tight;color:var(--gold2);letter-spacing:-3px;text-shadow:0 0 50px rgba(240,207,122,.35)">${s.stat[0]}</span>
+     <div style="font:600 32px Tight;color:#c9d2e3;margin-top:2px">${s.stat[1]}</div></div>`;
+}
+// ---------- scenes ----------
+const FRAGS=['RFQ_final_v7.pdf','price??','call me back','Tender_EN(2).docx','who makes this?','FOB or CFR?','missed the deadline','Re: Re: Re: quote','is this supplier real?','landed cost?','send again pls','fax attached'];
+const SRC=['TED (EU)','World Bank','PNCP Brazil','SECOP II Colombia','BOAMP France','Find a Tender UK','Prozorro Ukraine','MyProcurement Malaysia','AIIB','UNGM','DNCP Paraguay','MTender Moldova','simap.ch','mr.gov.il','Uganda Coffee (UCDA)','FNC Colombia','MPOB Malaysia','US EIA','ECX Ethiopia','AfDB','EBRD','IDB','Etimad Saudi Arabia','AusTender','CanadaBuys','DGCP Dominican Rep.','Tridge directory','GDELT'];
+function phone(x0,y0,w,h,inner,op,sc){return `<div class="abs" style="left:${x0}px;top:${y0}px;width:${w}px;height:${h}px;border-radius:72px;background:#03060c;border:4px solid #2a3f66;padding:20px;opacity:${op};transform:scale(${sc});box-shadow:0 70px 160px rgba(0,0,0,.7),0 0 90px rgba(216,178,90,.12)"><div style="width:100%;height:100%;border-radius:54px;background:#0d1525;overflow:hidden;position:relative">
+  <div style="height:110px;background:#16223a;display:flex;align-items:center;gap:18px;padding:0 30px">${MARK(64,'p')}<div><div style="font:700 28px Tight">Sinder Deal Agent</div><div style="font:500 20px Tight;color:#7f90ad">bot</div></div></div>
+  <div style="position:absolute;left:0;right:0;top:110px;bottom:0;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px">${inner}</div></div></div>`}
+async function frame(t){
+  $('card').style.display='none';$('cur').style.opacity=0;$('rip').style.opacity=0;$('L').innerHTML='';$('flash').style.opacity=0;drawMap(0,0,0,1,0);
+  const sc=SC.find(s=>t>=s.t0&&t<s.t1)||SC[SC.length-1];const lt=t-sc.t0,D=sc.t1-sc.t0;
+  const drums=!(sc.id==='hook'&&lt<2.0)&&sc.id!=='chaos'&&!(sc.id==='cta'&&lt>1.0);const pump=drums?kickK(t):0;
+  bg(t,pump);$('V').style.transform=`scale(${1+.012*pump})`;
+  // cut flash on every scene start
+  const fk=p(lt,0,.12);if(['logo','tend','engine','cta','hook'].includes(sc.id)&&lt<.12)$('flash').style.opacity=(sc.id==='hook'?0:.45)*(1-fk);
+  captions(t,sc);
+  if(sc.id==='hook'){
+    drawMap(lt,p(lt,0,.6),.2,lerp(1.05,1.25,eo(p(lt,0,D))),1000);
+    const n=Math.round(34644*eio(p(lt,.2,2.4)));const k=p(lt,0,.4),out=1-p(lt,D-.2,D);
+    $('L').innerHTML=`<div class="abs" style="left:0;right:0;top:1540px;text-align:center;opacity:${k*out}"><div class="num" style="font:700 190px Tight;letter-spacing:-6px;color:var(--gold2);text-shadow:0 0 70px rgba(240,207,122,.4)">${n.toLocaleString('en-US')}</div><div style="font:600 36px Tight;color:#c9d2e3;margin-top:-6px">open tenders · 195 countries · live</div></div>`;
+  } else if(sc.id==='chaos'){
+    const coll=p(lt,D-.7,D-.05);let h='';
+    FRAGS.forEach((f,i)=>{const a=i*2.399,r=300+((i*137)%160);const k=p(lt,.05+i*.16,.25+i*.16);
+      let x=540+Math.cos(a)*r*.95+Math.sin(lt*2.3+i)*12,y=1150+Math.sin(a)*r*1.35+Math.cos(lt*1.9+i)*10;x=lerp(x,540,ei(coll));y=lerp(y,1150,ei(coll));
+      h+=`<div class="frag" style="left:${x}px;top:${y}px;transform:translate(-50%,-50%) rotate(${(i%2?-1:1)*(4+i%5)*(1-coll)}deg) scale(${lerp(1.4,1,eo(k))*(1-coll*.95)});opacity:${k*(1-coll)}">${f}</div>`});
+    const sh=Math.sin(lt*50)*3*p(lt,1,D-.7);$('V').style.transform=`translate(${sh}px,${-sh}px)`;
+    $('L').innerHTML=h;
+  } else if(sc.id==='logo'){
+    const k=p(lt,0,.45),k2=p(lt,.25,.75),k3=p(lt,TL.vo.i4[0]-sc.t0+.9,TL.vo.i4[0]-sc.t0+1.5),out=1-p(lt,D-.25,D);
+    const ring=p(lt,0,.9);
+    $('L').innerHTML=`<div class="abs" style="left:540px;top:820px;width:${200+ring*1100}px;height:${200+ring*1100}px;transform:translate(-50%,-50%);border-radius:50%;border:${6*(1-ring)}px solid rgba(240,207,122,${.8*(1-ring)})"></div>
+      <div class="abs" style="left:0;right:0;top:620px;display:flex;justify-content:center;opacity:${k*out};transform:scale(${lerp(2.2,1,back(k))})">${MARK(220,'a')}</div>
+      <div class="abs" style="left:0;right:0;top:880px;text-align:center;font:400 230px Serif;letter-spacing:${lerp(40,0,eo(k2))}px;opacity:${k2*out}">Sinder</div>
+      <div class="abs" style="left:80px;right:80px;top:1170px;text-align:center;font:italic 400 76px/1.1 Serif;color:#d9e0ec;opacity:${k3*out};transform:translateY(${(1-eo(k3))*30}px)">The trading desk that<br><span style="color:var(--gold2)">runs on software.</span></div>`;
+    const path=document.getElementById('mpa');if(path){path.style.strokeDasharray=120;path.style.strokeDashoffset=120*(1-eo(p(lt,.05,.6)))}
+  } else if(SHOTS[sc.id]){await screen(sc.id,lt,D,pump);
+  } else if(sc.id==='engine'){
+    const out=1-p(lt,D-.25,D);const GY=1150;let h='';
+    // sources rain down into the gate in 4 columns
+    for(let col=0;col<4;col++)for(let j=0;j<3;j++){const cyc=1.5,u=lt/cyc+col*.29+j/3,ph=u%1,n=SRC[(Math.floor(u)*12+col*3+j)%SRC.length];
+      const x=150+col*260+Math.sin(u*2+col)*20,y=lerp(660,GY-40,ei(ph));const a=p(lt,.05+col*.08,.3+col*.08)*p(ph,0,.12)*(1-p(ph,.85,1));
+      h+=`<div class="chip" style="left:${x}px;top:${y}px;transform:translate(-50%,-50%) scale(${lerp(1,.75,ph)});opacity:${a*out}">${n}</div>`}
+    const gk=eo(p(lt,.1,.6));h+=`<div class="abs" style="left:${540-500*gk}px;top:${GY}px;width:${1000*gk}px;height:4px;background:linear-gradient(90deg,transparent,var(--gold2),transparent);box-shadow:0 0 40px rgba(240,207,122,.8);opacity:${out}"></div>`;
+    const REJ=[['closed',-1],['duplicate',1],['out of scope',-1],['deadline passed',1]];
+    REJ.forEach(([n,d],i)=>{const k=p(lt,1.2+i*.75,2.2+i*.75);if(k<=0||k>=1)return;h+=`<div class="chip" style="left:${540+d*ei(k)*700}px;top:${GY-30+i*6}px;transform:translate(-50%,-50%) rotate(${d*k*25}deg);opacity:${(1-k)*out};color:#ef8f8f;border-color:#6a2a2a;background:#1d1214;text-decoration:line-through">${n}</div>`});
+    const ROWS=[['85','Green hydrogen to ISO 14687','United Kingdom · $40.1M'],['83','Power transformers','Dominican Republic · $7.8M'],['83','High-voltage cable','Malta · $7.1M'],['80','Heat-exchange units','Sweden · $28.3M']];
+    ROWS.forEach(([s2,t2,c2],i)=>{const k=p(lt,1.0+i*.55,1.35+i*.55);if(k<=0)return;
+      h+=`<div class="abs" style="left:60px;top:${GY+50+i*118}px;width:960px;height:102px;border-radius:20px;background:#0f1930;border:1.5px solid rgba(216,178,90,${i==0?.7:.3});display:flex;align-items:center;gap:26px;padding:0 30px;opacity:${k*out};transform:translateY(${(1-back(k))*-50}px)">
+        <div class="num" style="font:700 52px Tight;color:var(--gold2);width:80px">${s2}</div><div style="flex:1;min-width:0"><div style="font:700 34px Tight;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t2}</div><div style="font:500 24px Tight;color:var(--mute);margin-top:2px">${c2} · open</div></div></div>`});
+    h+=`<div class="abs" style="left:0;right:0;top:${GY+540}px;text-align:center;font:600 30px Tight;color:#c9d2e3;opacity:${p(lt,3.2,3.7)*out}">Only open and relevant. Ranked by fit.</div>`;
+    $('L').innerHTML=h;
+  } else if(sc.id==='pocket'){
+    const ein=eo(p(lt,0,.35)),out=1-p(lt,D-.25,D);const vo=TL.vo.e3[0]-sc.t0;
+    const CHAT=[[.35,'me',"Arabica exporters in Uganda, and today's price?"],[vo+2.0,'bot','4 exporters listed. Top match: <b>Elgon Highland Coffee</b>, Mbale. Export manager, email on file.'],[vo+3.6,'bot','Bugisu AA: <b style="color:#f0cf7a;font-size:34px">$2.72/lb</b> FOT Kampala<br><span style="color:#7f90ad;font-size:22px">Uganda Coffee Development Authority, 6 Nov</span>'],[vo+5.6,'draft','Draft an intro?']];
+    let h='';for(const[tc,w,x] of CHAT){const k=p(lt,tc,tc+.2);if(k<=0)continue;const st=`opacity:${k};transform:translateY(${(1-back(k))*30}px) scale(${lerp(.9,1,k)})`;
+      if(w=='me')h+=`<div style="${st};align-self:flex-end;max-width:86%;background:#2b5278;padding:18px 22px;border-radius:24px 24px 6px 24px;font:600 28px/1.3 Tight">${x}<span style="font-size:18px;color:#a9c3e6;margin-left:10px">14:21</span></div>`;
+      else if(w=='bot')h+=`<div style="${st};align-self:flex-start;max-width:92%;background:#182540;padding:18px 22px;border-radius:24px 24px 24px 6px;font:500 28px/1.35 Tight">${x}<span style="font-size:18px;color:#7f90ad;margin-left:10px">14:21</span></div>`;
+      else{const ap=lt>vo+6.9;h+=`<div style="${st};align-self:flex-start;width:92%"><div style="background:#182540;padding:18px 22px;border-radius:24px 24px 24px 6px;font:500 28px Tight">${x}</div><div style="display:flex;gap:10px;margin-top:10px"><div id="apb" style="flex:1;text-align:center;padding:18px;border-radius:16px;background:${ap?'#3ec28a':'#22345a'};font:700 26px Tight">${ap?'Approved':'Approve'}</div><div style="flex:1;text-align:center;padding:18px;border-radius:16px;background:#22345a;font:700 26px Tight">Reject</div></div></div>`}}
+    for(const[tc,w] of CHAT){if(w=='me')continue;if(lt>tc-.8&&lt<tc){h+=`<div style="align-self:flex-start;background:#182540;padding:20px 24px;border-radius:24px;display:flex;gap:8px">${[0,1,2].map(j=>`<i style="width:12px;height:12px;border-radius:50%;background:#8da0c2;opacity:${.3+.7*Math.abs(Math.sin(lt*7+j))}"></i>`).join('')}</div>`;break}}
+    const mk=p(lt,.1,.5);
+    $('L').innerHTML=`<div class="abs" style="left:0;right:0;top:648px;display:flex;justify-content:center;opacity:${mk*out}"><div style="display:flex;align-items:center;gap:14px;padding:14px 28px;border-radius:999px;background:#101a31;border:1.5px solid #2a3f66"><i style="width:16px;height:16px;border-radius:50%;background:#e5534b;opacity:${.5+.5*Math.abs(Math.sin(lt*3))}"></i><span style="font:600 30px Tight;color:#d5ddeb">In a meeting with a buyer</span></div></div>`
+      +phone(170,740,740,1060,h,ein*out,lerp(.9,1,ein))
+      +`<div class="abs" style="left:0;right:0;top:1820px;text-align:center;font:600 28px Tight;color:#c9d2e3;opacity:${p(lt,vo+6.0,vo+6.4)*out}">Nothing goes out without your approval.</div>`;
+    const ab=document.getElementById('apb');const AP=vo+6.9;if(ab&&lt>AP-.6&&lt<AP+.5){const r=ab.getBoundingClientRect();const k=eio(p(lt,AP-.6,AP-.05));const c=$('cur');c.style.opacity=1-p(lt,AP+.3,AP+.5);c.style.left=lerp(r.left+r.width/2+220,r.left+r.width/2,k)+'px';c.style.top=lerp(r.top+260,r.top+r.height/2,k)+'px';
+      if(lt>=AP){const q=p(lt,AP,AP+.35),rp=$('rip');rp.style.left=(r.left+r.width/2-55)+'px';rp.style.top=(r.top+r.height/2-55)+'px';rp.style.opacity=1-q;rp.style.transform=`scale(${.3+q})`}}
+  } else if(sc.id==='cta'){
+    const vo=LT()-sc.t0-1.75;const k2=p(lt,vo+1.75,vo+2.15),k3=p(lt,vo+2.5,vo+2.9),k4=p(lt,vo+3.0,vo+3.4);
+    drawMap(40,.3*p(lt,0,1),0,1.05,1000);
+    $('L').innerHTML=`<div class="abs" style="left:0;right:0;top:760px;text-align:center;font:italic 400 210px Serif;color:var(--gold2);opacity:${k2};transform:scale(${lerp(1.6,1,back(k2))});text-shadow:0 0 80px rgba(240,207,122,.35)">Let's talk.</div>
+      <div class="abs" style="left:0;right:0;top:1060px;text-align:center;opacity:${k3};transform:translateY(${(1-eo(k3))*30}px)"><div class="num" style="display:inline-block;font:700 60px Tight;padding:26px 50px;border:2px solid rgba(240,207,122,.75);border-radius:999px;background:rgba(14,24,48,.9);box-shadow:0 0 60px rgba(240,207,122,.2)">Etamar@sinder.pro</div></div>
+      <div class="abs" style="left:0;right:0;top:1260px;display:flex;justify-content:center;align-items:center;gap:20px;opacity:${k4}">${MARK(70,'c')}<span style="font:400 70px Serif">Sinder</span></div>`;
+    if(lt>=vo+1.75&&lt<vo+1.87)$('flash').style.opacity=.5*(1-p(lt,vo+1.75,vo+1.87));
+  }
+}
+window.frame=frame;
+</script></body></html>
