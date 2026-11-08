@@ -1,50 +1,50 @@
 source,last_run_utc,rows,note,detail
-ted,2026-11-08T01:28,21864,OK,fetched=3770; days=3; cache=21864
-fts,2026-11-08T01:28,177,OK,pages=1
-sam,2026-11-08T01:31,7986,OK,fetched=9236; set_aside=12040; open_to_foreign=5742; full=1
-canadabuys,2026-11-08T01:31,866,OK,
-za,2026-11-07T20:34,939,OK,
-worldbank,2026-11-07T21:17,722,OK,new=351; cache=722; days=10
-ebrd,2026-11-08T01:31,43,OK,
-mrgov,2026-11-07T21:18,190,OK,
-ungm,2026-11-08T01:33,1166,OK,new=547; total_active=1747; pages=41
-undp,2026-11-08T01:33,12,OK,new=18; cache=12
-aiib,2026-11-08T01:33,175,OK,new=174; awards=292
-isdb,2026-11-08T01:33,37,OK,new=41
-etimad,2026-11-08T01:34,583,OK,new=5; pages=2
-prozorro,2026-11-08T01:35,1111,OK,candidates=1852; fetched=29
-pncp,2026-11-08T01:35,5011,OK,new=150
-secop,2026-11-08T01:35,865,OK,new=92
-germany,2026-11-07T21:05,11594,OK,new=857; awards_seen=313; awards_saved=45
-contractsfinder,2026-11-08T01:35,93,OK,new=0
-paraguay,2026-11-07T21:13,166,OK,new=0
-dominican,2026-11-07T21:13,628,OK,new=0; listed=1000
-austender,2026-11-08T01:38,166,OK,new=129
-oman,2026-11-08T01:38,483,OK,new=50
-france,2026-11-07T21:13,6819,OK,new=1007
-spain,2026-11-07T21:16,4421,OK,new=1533; pages=13; awards_seen=3002
-kenya,2026-11-08T01:43,607,OK,new=600
-moldova,2026-11-08T01:36,1064,OK,new=296
-uruguay,2026-11-08T01:37,546,OK,new=0
-bahrain,2026-11-07T21:05,16,OK,new=7
-malaysia,2026-11-08T01:38,433,OK,new=432
-qatar,2026-11-07T22:21,266,OK,new=248
+ted,2026-11-08T06:09,21864,OK,fetched=3770; days=3; cache=21864
+fts,2026-11-08T06:09,177,OK,pages=1
+sam,2026-11-08T06:09,8048,OK,fetched=1324; set_aside=12040; open_to_foreign=5766; full=0
+canadabuys,2026-11-08T06:11,866,OK,
+za,2026-11-08T06:11,947,OK,
+worldbank,2026-11-08T07:18,718,OK,new=298; cache=718; days=10
+ebrd,2026-11-08T06:11,43,OK,
+mrgov,2026-11-08T07:19,188,OK,
+ungm,2026-11-08T06:13,1168,OK,new=549; total_active=1745; pages=41
+undp,2026-11-08T06:13,12,OK,new=18; cache=12
+aiib,2026-11-08T01:33,175,OK,"new=174; awards=292 | last error: TP header field was received: frame type: 1, stream: 1, name: [upgrade], value: [h2]. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. "
+isdb,2026-11-08T06:13,37,OK,new=41
+etimad,2026-11-08T06:47,586,OK,new=8; pages=2
+prozorro,2026-11-08T06:47,1113,OK,candidates=1831; fetched=42
+pncp,2026-11-08T06:48,5011,OK,new=107
+secop,2026-11-08T06:48,865,OK,new=92
+germany,2026-11-08T06:48,11594,OK,new=0; awards_seen=0; awards_saved=45
+contractsfinder,2026-11-08T06:48,93,OK,new=18
+paraguay,2026-11-08T06:59,166,OK,new=0
+dominican,2026-11-08T06:59,628,OK,new=0; listed=749
+austender,2026-11-08T06:59,166,OK,new=129
+oman,2026-11-08T06:59,506,OK,new=50
+france,2026-11-08T07:00,6819,OK,new=760
+spain,2026-11-08T07:07,4415,OK,new=845; pages=7; awards_seen=1541
+kenya,2026-11-08T07:07,607,OK,new=80
+moldova,2026-11-08T06:49,1064,OK,new=290
+uruguay,2026-11-08T06:49,546,OK,new=0
+bahrain,2026-11-08T06:50,15,OK,new=7
+malaysia,2026-11-08T06:51,433,OK,new=432
+qatar,2026-11-08T01:56,266,OK,new=140
 israel,2026-11-07T10:44,931,OK,bodies_scanned=912; open_notices=931
-nyc,2026-11-07T20:32,198,OK,open=198
-us_cities,2026-11-07T20:34,283,OK,Los_Angeles=197 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
-wb_pipeline,2026-11-07T21:16,949,OK,projects=949
+nyc,2026-11-08T06:09,0,EMPTY,open=0
+us_cities,2026-11-08T06:11,284,OK,Los_Angeles=198 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
+wb_pipeline,2026-11-08T07:18,954,OK,projects=954
 ocdr_tenders,2026-11-07T14:04,1271,OK,publications=29; read=29; releases=1140553; open_tenders=1271; countries=6
-afdb,2026-11-08T01:34,42,OK,new=0
-iadb,2026-11-08T01:34,101,OK,new=100
-chile,2026-11-07T20:34,4469,OK,new=4446
-simap,2026-11-08T01:34,594,OK,new=240
-gets,2026-11-08T01:34,401,OK,new=399
-india,2026-11-07T21:04,65709,OK,new=56956
-rwanda,2026-11-08T01:44,274,OK,new=274
-uganda,2026-11-08T01:44,41,OK,new=39
-ghana,2026-11-08T01:45,100,OK,new=100
-malawi,2026-11-08T01:45,41,OK,new=44
-mozambique,2026-11-08T01:45,77,OK,new=0
-dubai,2026-11-08T01:45,257,OK,new=262
-philippines,2026-11-08T01:47,1284,OK,new=1200
-importyeti,2026-11-07T21:18,1,OK,"1 HS headings cached; this run 0, due 681"
+afdb,2026-11-08T06:13,42,OK,new=0
+iadb,2026-11-08T06:13,101,OK,new=100
+chile,2026-11-08T06:13,4472,OK,new=4449
+simap,2026-11-08T06:14,594,OK,new=240
+gets,2026-11-08T06:14,401,OK,new=398
+india,2026-11-08T06:46,61929,OK,new=53912
+rwanda,2026-11-08T07:08,274,OK,new=274
+uganda,2026-11-08T07:08,41,OK,new=39
+ghana,2026-11-08T07:09,100,OK,new=100
+malawi,2026-11-08T07:09,41,OK,new=44
+mozambique,2026-11-08T07:09,77,OK,new=0
+dubai,2026-11-08T07:09,257,OK,new=261
+philippines,2026-11-08T07:11,1284,OK,new=1200
+importyeti,2026-11-08T07:19,1,OK,"1 HS headings cached; this run 0, due 681"
