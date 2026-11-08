@@ -105,8 +105,13 @@ jobs:
         if: ${{ env.GOOGLE_SERVICE_ACCOUNT_JSON != '' && (inputs.only == '' || contains(format(',{0},', inputs.only), ',push,')) }}
         run: set -o pipefail; python -m leads.push universe 2>&1 | tee -a data/leads/run_suppliers.log
         continue-on-error: true
+      - name: origin exporters (trade directories, resumes weekly)
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',origin_exporters,') }}
+        run: set -o pipefail; python -m leads.origin_exporters 2>&1 | tail -5 | tee -a data/leads/run_suppliers.log
+        timeout-minutes: 45
+        continue-on-error: true
       - name: webindex
-        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',webindex,') || contains(format(',{0},', inputs.only), ',universe,') }}
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',webindex,') || contains(format(',{0},', inputs.only), ',universe,') || contains(format(',{0},', inputs.only), ',origin_exporters,') }}
         run: set -o pipefail; python -m leads.webindex suppliers 2>&1 | tee -a data/leads/run_suppliers.log
         continue-on-error: true
       - name: commit

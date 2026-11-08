@@ -58,7 +58,7 @@ export function supplierKind(s: Supplier): "maker" | "trader" | "" {
 }
 const KIND_RANK = { maker: 0, "": 1, trader: 2 } as const;
 const SUP_HEAD = [...SUP_COLS.map(([k]) => k), "sources", "kind"];
-const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), "public award records", supplierKind(s)];
+const supRow = (s: Supplier) => [...SUP_COLS.map(([, k]) => (s[k] == null ? "" : String(s[k]))), s.ds ? `${s.ds} listing` : "public award records", supplierKind(s)];
 
 async function allSuppliers(): Promise<Supplier[]> {
   return cached("sup-sorted", 900_000, async () => {
@@ -484,6 +484,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     if (m.bucket === "incompatible") continue;
     // the refinement found a conflict on this record (another company's evidence, a site that disagrees): never proof
     if (s.rc) m = { ...m, gaps: [...m.gaps, "the record has an open conflict (refinement): check before relying on it"] };
+    // a trade-directory listing is the company's own claim: at most "plausible", with the listing as the link to check
+    if (s.ds && !vf) m = { ...m, bucket: m.bucket === "supported" ? "plausible" : m.bucket, evidence: "trade directory listing (self-declared)",
+      gaps: [...m.gaps.filter((g) => !/directory/.test(g)), `listed in ${s.ds}: check the company before relying on it`], url: m.url || s.du };
     if (seenKey.has(dk)) continue;
     seenKey.add(dk);
     scored.push({ s, sc, m });

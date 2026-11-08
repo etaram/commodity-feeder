@@ -136,6 +136,24 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             x["wb"] = r["website_basis"][:80]
         if x.get("n") and x.get("tr") in ("1", "2", "3"):  # proven (tier 1-2) and qualified (tier 3); tier 4 stays out
             out.append(x)
+    # origin exporters from trade directories (leads/origin_exporters.py): searchable, but a directory listing is the
+    # company's own claim, so the app caps these at "plausible: check" and links the listing ("ds", "du")
+    oe = PRIVATE / "origin_exporters.csv"
+    if oe.exists():
+        have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
+        added = 0
+        for r in csv.DictReader(open(oe, encoding="utf-8")):
+            key = (r["supplier"].lower(), r["country"])
+            if not r["supplier"] or key in have:
+                continue
+            have.add(key)
+            ty = r.get("type", "")
+            out.append({"n": r["supplier"][:CUT["n"]], "c": r["country"], "tr": "3", "s": r.get("main_sector") or "Agriculture & food",
+                        "ty": "manufacturer" if re.search(r"manufactur|producer", ty) else "trader", "td": "1" if "trader" in ty or "distributor" in ty else "",
+                        "p": r.get("products", "")[:CUT["p"]], "x": "exporter (directory listing)", "why": "listed in a trade directory",
+                        "ds": r.get("source", "")[:40], "du": r.get("source_url", "")[:160], "qv": 2})
+            added += 1
+        log.info("web index: %d origin exporters from directories", added)
     raw = gzip.compress(json.dumps(out, ensure_ascii=False, separators=(",", ":")).encode(), 9)
     nonce = os.urandom(12)
     enc = nonce + AESGCM(base64.b64decode(key)).encrypt(nonce, raw, None)

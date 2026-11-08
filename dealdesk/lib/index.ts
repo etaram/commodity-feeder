@@ -15,6 +15,7 @@ export type Supplier = {
   epc?: string; lg?: string; p?: string; cm?: string; x?: string; w?: number; u?: number; bc?: string; web?: string; lw?: string; why?: string;
   sh?: number; hs?: string; sp?: string; in?: string; wt?: string; hd?: string;
   rc?: number; wb?: string;  // refined layer (leads/refine.py): an open conflict; the basis of the official website
+  ds?: string; du?: string;  // origin exporters from a trade directory (leads/origin_exporters.py): the directory and the listing
 };
 
 const mem: Record<string, { at: number; data: unknown }> = {};
