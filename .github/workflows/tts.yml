@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install edge-tts
-      - run: python tools/video/tts_words.py tools/video/reel.json pages/reel en-US-ChristopherNeural +4%
+      - run: pip install edge-tts || true
+      - run: python tools/video/fetch_music.py pages/music
       - name: Push to the scratch branch
         run: |
           git config user.name "tts"; git config user.email "actions@users.noreply.github.com"
