@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-07T12:00:07",
+  "finished_utc": "2026-11-08T00:31:05",
   "fx_source": "ECB via Frankfurter 2026-11-06",
   "fx": {
     "EUR": 1.1164950985865172,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 27,
+      "sec": 25,
       "newest_date": "2026-11-06",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -32,7 +32,7 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 8,
+      "sec": 7,
       "newest_date": "2026-11-06",
       "log": [
         "INFO westmetall: 6 prices"
@@ -41,8 +41,8 @@
     "em_global": {
       "ok": true,
       "prices": 21,
-      "sec": 48,
-      "newest_date": "2026-11-07",
+      "sec": 31,
+      "newest_date": "2026-11-08",
       "log": [
         "INFO em_global board: 620 rows",
         "INFO em_global: 21 prices"
@@ -51,7 +51,7 @@
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 4,
+      "sec": 2,
       "newest_date": "2026-11-06",
       "log": [
         "INFO cn_spot: 52 prices (2026-11-06)"
@@ -60,22 +60,22 @@
     "eu_agri": {
       "ok": true,
       "prices": 0,
-      "sec": 73,
+      "sec": 39,
       "newest_date": null,
       "log": [
-        "WARNING eu_agri dairy/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/dairy/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri dairy/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/dairy/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
         "WARNING eu_agri rawMilk/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/rawMilk/prices?years=2025%2C2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri oilseeds/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/oilseeds/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri oliveOil/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/oliveOil/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri rice/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/rice/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri poultry/egg/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/poultry/egg/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri poultry/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/poultry/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri pigmeat/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/pigmeat/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri beef/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/beef/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri sheepAndGoat/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/sheepAndGoat/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri cereal/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/cereal/prices?beginDate=23%2F09%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 429 error responses'))",
+        "WARNING eu_agri oilseeds/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/oilseeds/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri oliveOil/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/oliveOil/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri rice/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/rice/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri poultry/egg/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/poultry/egg/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri poultry/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/poultry/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri pigmeat/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/pigmeat/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri beef/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/beef/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri sheepAndGoat/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/sheepAndGoat/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri cereal/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/cereal/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
         "WARNING eu_agri sugar: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/sugar/prices?marketingYears=2025%2F2026%2C2026%2F2027 (Caused by ResponseError('too many 500 error responses'))",
-        "WARNING eu_agri F&V: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/fruitAndVegetable/pricesSupplyChain?beginDate=08%2F10%2F2026&endDate=07%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
+        "WARNING eu_agri F&V: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/fruitAndVegetable/pricesSupplyChain?beginDate=09%2F10%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
         "INFO eu_agri: 0 prices"
       ]
     },
@@ -118,7 +118,7 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 11,
+      "sec": 10,
       "newest_date": "2026-11-06",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -148,7 +148,7 @@
     "comext": {
       "ok": true,
       "prices": 1913,
-      "sec": 58,
+      "sec": 59,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -158,7 +158,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 15,
+      "sec": 43,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -169,12 +169,12 @@
   },
   "rows_with_price": 1957,
   "candidates": 2128,
-  "flagged": 298,
+  "flagged": 301,
   "by_source_selected": {
     "yahoo": 31,
     "westmetall": 6,
     "em_global": 4,
-    "cn_spot": 30,
+    "cn_spot": 31,
     "eu_agri": 0,
     "dtn": 7,
     "ssb": 2,
@@ -184,12 +184,12 @@
     "census": 0,
     "comext": 1759,
     "comtrade": 3,
-    "derived": 31
+    "derived": 30
   },
   "by_tier": {
-    "T1 Exchange benchmark": 80,
+    "T1 Exchange benchmark": 79,
     "T2 Official market reporting": 44,
-    "T3 Industry assessment": 71,
+    "T3 Industry assessment": 72,
     "T4 Trade statistics (unit value)": 1762
   }
 }
