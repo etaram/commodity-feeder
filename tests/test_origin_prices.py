@@ -30,4 +30,5 @@ ah = "Price (&euro;/tonne) Sep-2026 Aug-2026 Monthly change Sep-2025 Annual chan
 assert o.parse_ahdb(ah) == ("2026-09-01", {"Butter": 4170.0, "SMP": 3110.0})
 assert o.parse_energy_charts({"unix_seconds": [1794092400 + 3600 * i for i in range(24)], "price": [100.0] * 23 + [124.0]}) == (101.0, "2026-11-08")
 assert o.parse_energy_charts({"unix_seconds": [1794092400], "price": [100.0]}) is None, "a partial day is not a daily price"
+assert o.parse_giacaphe("Giá cà phê hôm nay ngày 07/11/2026 Chia sẻ Trung bình 84,600 đ/kg 300") == (84600.0, "2026-11-07")
 print("origin prices: all passed")

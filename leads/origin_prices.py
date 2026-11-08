@@ -22,6 +22,7 @@ A source that fails keeps its last good rows (dated as published), so a broken p
   Forbes & Walker       Colombo tea auction averages by elevation (LKR/kg), weekly
   AHDB / EU MMO         EU wholesale butter, SMP, WMP, whey, cheese (EUR/t), monthly
   Energy-Charts         German/Luxembourg day-ahead power, daily base (EUR/MWh), daily
+  giacaphe.com           Vietnam domestic robusta, Central Highlands average (VND/kg), daily
   EU Weekly Oil Bulletin  gasoline, diesel, heating oil, fuel oil before taxes, per EU country (EUR per 1000 l or t), weekly
 
 Run: python -m leads.origin_prices   (writes data/leads/origin_prices.csv; commodity_norm merges it)."""
@@ -569,11 +570,30 @@ def eu_oil_bulletin():
     return out
 
 
+def parse_giacaphe(t):
+    m = re.search(r"Giá cà phê hôm nay ngày (\d{2})/(\d{2})/(\d{4}).{0,40}?Trung bình ([\d,.]+) đ/kg", t)
+    if not m:
+        return None
+    dd, mm, yy, v = m.groups()
+    return num(v.replace(".", ",")), f"{yy}-{mm}-{dd}"
+
+
+def vietnam_coffee():
+    url = "https://giacaphe.com/gia-ca-phe-noi-dia/"
+    got = parse_giacaphe(text_of(get(url).text))
+    if not got:
+        return []
+    return [row("vncoffee", "Coffee Robusta - Vietnam Central Highlands farm-gate average", "Coffee Robusta", got[0], "VND", "kg", 1, got[1],
+                "giacaphe.com daily domestic coffee prices (Dak Lak, Lam Dong, Gia Lai, Dak Nong average)", url, grade="Robusta green coffee, domestic",
+                origin="VNM", place="Vietnam Central Highlands, at the buying agent", hs6="090111", kind="spot", tier="T3 Trade press",
+                basis="average of the provinces' daily buying prices, as published by a trade site")]
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee"}
 
 
 # ---------------------------------------------------------------- build
