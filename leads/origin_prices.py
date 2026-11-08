@@ -273,9 +273,9 @@ def cac_rosario():
 EIA = [("ng/hist/rngwhhdD.htm", "Natural gas - Henry Hub spot", "Natural gas", "USD", "MMBtu", None, "Henry Hub, Louisiana", "271121"),
        ("pet/hist/RWTCD.htm", "Crude oil WTI - Cushing spot", "Crude oil", "USD", "bbl", None, "Cushing, Oklahoma", "270900"),
        ("pet/hist/RBRTED.htm", "Crude oil Brent - Europe spot", "Crude oil", "USD", "bbl", None, "North Sea (FOB)", "270900"),
-       ("pet/hist/EER_EPD2DXL0_PF4_Y35NY_DPG.htm", "Diesel ULSD - New York Harbor spot", "Diesel", "USD", "gal", None, "New York Harbor", "271019"),
-       ("pet/hist/EER_EPJK_PF4_RGC_DPG.htm", "Jet fuel - US Gulf Coast spot", "Jet fuel", "USD", "gal", None, "US Gulf Coast", "271019"),
-       ("pet/hist/EER_EPLLPA_PF4_Y44MB_DPG.htm", "Propane - Mont Belvieu spot", "Propane", "USD", "gal", None, "Mont Belvieu, Texas", "271112")]
+       ("pet/hist/EER_EPD2DXL0_PF4_Y35NY_DPGD.htm", "Diesel ULSD - New York Harbor spot", "Diesel", "USD", "gal", None, "New York Harbor", "271019"),
+       ("pet/hist/EER_EPJK_PF4_RGC_DPGD.htm", "Jet fuel - US Gulf Coast spot", "Jet fuel", "USD", "gal", None, "US Gulf Coast", "271019"),
+       ("pet/hist/EER_EPLLPA_PF4_Y44MB_DPGD.htm", "Propane - Mont Belvieu spot", "Propane", "USD", "gal", None, "Mont Belvieu, Texas", "271112")]
 
 
 def eia():
@@ -292,12 +292,14 @@ def eia():
         if not rows:
             continue
         last = rows[-1]
-        vals = [v for v in last.group(6).split() if re.match(r"\d+\.\d+$", v)]
-        if not vals:
+        toks = last.group(6).split()
+        idx = [i for i, v in enumerate(toks) if re.match(r"\d+\.\d+$", v)]
+        if not idx:
             continue
+        vals = [toks[idx[-1]]]
         yy, mon, start = int(last.group(1)), MONTHS[last.group(2).lower()], int(last.group(3))
         from datetime import timedelta
-        d = (date(yy, mon, start) + timedelta(days=len(last.group(6).split()) - 1)).isoformat()
+        d = (date(yy, mon, start) + timedelta(days=idx[-1])).isoformat()  # the day of the last published value, not of a trailing "-"
         out.append(row("eia", name, prod, float(vals[-1]), ccy, unit, kg, d, "US Energy Information Administration, daily spot prices", url,
                        origin="USA", place=place, hs6=hs, kind="spot", tier="T1 Official statistics"))
     return out
