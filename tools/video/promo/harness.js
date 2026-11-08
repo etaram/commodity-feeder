@@ -20,7 +20,7 @@ async function open(opts = {}) {
     }
     let body = {}; try { body = JSON.parse(req.postData() || '{}'); } catch (e) {}
     if (p === '/api/me') return json({ ok: true, email: 'etamar@sinder.pro', name: 'Etamar', role: 'admin' });
-    if (p === '/api/panel/search') { if (body.kind === 't') return json({ ok: true, values: tenders, total: 1294 }); return json({ ok: true, values: [[]], total: 0 }); }
+    if (p === '/api/panel/search') { if (body.kind === 't') return json({ ok: true, values: tenders, total: 34644 }); return json({ ok: true, values: [[]], total: 0 }); }
     if (p.startsWith('/api/panel/brief')) return json({ ok: false, error: 'not in demo' }, 503);
     if (p === '/api/panel/get') return json({ ok: true, values: body.key === 'tenders' ? tenders : [[]], at: Date.now() });
     if (p === '/api/panel/commodities') { const q = (u.searchParams.get('product') || '').toLowerCase(); return json({ ok: true, ...(cm[q] || cm['']) }); }

@@ -69,7 +69,7 @@ function camAt(keys,t){ // [t, z, fx, fy, ry, rx]
   if(t<=keys[0][0])return keys[0].slice(1); for(let i=1;i<keys.length;i++){ if(t<=keys[i][0]){const a=keys[i-1],b=keys[i],k=eio((t-a[0])/(b[0]-a[0]));return a.slice(1).map((v,j)=>lerp(v,b[j+1],k))} } return keys[keys.length-1].slice(1); }
 // clicks: [t, x, y] in viewport coords (1600x900); cursor glides in during 0.45 s before each
 const SEGS=[
- {id:'tend',t0:8,t1:14,shot:'tlist',k:'01 · FIND',cap:'<b id="counter">1,294</b> live tenders, ranked for you',
+ {id:'tend',t0:8,t1:14,shot:'tlist',k:'01 · FIND',cap:'<b id="counter">34,644</b> live tenders, ranked for you',
   frames:[[8.3,0],[10.3,57],[10.55,60],[10.62,61],[10.75,63],[14,77]],
   cam:[[8,1.0,800,450,-14,4],[9.2,1.0,800,450,-4,1],[10.5,1.0,800,450,0,0],[11.3,1.55,1250,330,0,0],[12.6,1.55,1250,420,0,0],[14,1.3,1150,470,6,-1]],
   clicks:[[10.62,577,376]], badges:[[11.6,13.6,'Scored for fit · win chance · expected value',1180,930]]},
@@ -119,7 +119,7 @@ async function showShot(seg,t){
   // caption
   const kin=p(t,seg.t0+.1,seg.t0+.5);$('capk').textContent=seg.k;$('capt').innerHTML=seg.cap;
   $('cap').style.opacity=kin*(1-eout);$('cap').style.transform=`translateY(${(1-eo(kin))*-40}px)`;$('capt').style.clipPath=`inset(0 ${100-100*eo(p(t,seg.t0+.15,seg.t0+.7))}% 0 0)`;
-  if(seg.id==='tend'){const n=Math.round(1294*eo(p(t,8.3,9.6)));const e=document.getElementById('counter');if(e)e.textContent=n.toLocaleString('en-US')}
+  if(seg.id==='tend'){const n=Math.round(34644*eo(p(t,8.3,9.8)));const e=document.getElementById('counter');if(e)e.textContent=n.toLocaleString('en-US')}
 }
 function bigWords(html,opacity,scale,dy=0){const b=$('big');b.innerHTML=html;b.style.opacity=opacity;b.style.transform=`translateY(${dy}px) scale(${scale})`}
 const MONT=[['tlist',20],['prices',80],['sup',53],['est',110],['rfq',57],['tlist',70],['prices',35],['sup',90]];
