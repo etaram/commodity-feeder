@@ -3,7 +3,7 @@ name: dump-prices
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   dump:
     runs-on: ubuntu-latest
@@ -14,5 +14,7 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install requests
       - run: python tools/dump_pages.py tools/dump_urls.txt pages
-      - uses: actions/upload-artifact@v4
-        with: { name: pages, path: pages, retention-days: 3 }
+      - name: Push the pages to a scratch branch (deleted after use)
+        run: |
+          git config user.name "price-dump"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan scratch-pages; git rm -rq --cached . ; git add -f pages; git commit -qm "sample pages"; git push -qf origin scratch-pages
