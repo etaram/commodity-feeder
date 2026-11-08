@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-08T00:31:05",
+  "finished_utc": "2026-11-08T12:16:53",
   "fx_source": "ECB via Frankfurter 2026-11-06",
   "fx": {
     "EUR": 1.1164950985865172,
@@ -32,7 +32,7 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 7,
+      "sec": 8,
       "newest_date": "2026-11-06",
       "log": [
         "INFO westmetall: 6 prices"
@@ -41,7 +41,7 @@
     "em_global": {
       "ok": true,
       "prices": 21,
-      "sec": 31,
+      "sec": 36,
       "newest_date": "2026-11-08",
       "log": [
         "INFO em_global board: 620 rows",
@@ -51,7 +51,7 @@
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 2,
+      "sec": 4,
       "newest_date": "2026-11-06",
       "log": [
         "INFO cn_spot: 52 prices (2026-11-06)"
@@ -60,7 +60,7 @@
     "eu_agri": {
       "ok": true,
       "prices": 0,
-      "sec": 39,
+      "sec": 74,
       "newest_date": null,
       "log": [
         "WARNING eu_agri dairy/prices: HTTPSConnectionPool(host='api.tech.ec.europa.eu', port=443): Max retries exceeded with url: /agrifood/api/dairy/prices?beginDate=24%2F09%2F2026&endDate=08%2F11%2F2026 (Caused by ResponseError('too many 500 error responses'))",
@@ -82,7 +82,7 @@
     "dtn": {
       "ok": true,
       "prices": 7,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-10-30",
       "log": [
         "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/11/04/uan28-continues-lead-fertilizer-week"
@@ -109,7 +109,7 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-11-06",
       "log": [
         "INFO smi: 5 prices (as of 2026-11-06)"
@@ -118,7 +118,7 @@
     "usda": {
       "ok": true,
       "prices": 52,
-      "sec": 10,
+      "sec": 11,
       "newest_date": "2026-11-06",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -133,7 +133,7 @@
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 0,
+      "sec": 1,
       "newest_date": null,
       "log": [
         "WARNING census 2026-10: Expecting value: line 1 column 1 (char 0)",
@@ -158,7 +158,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 43,
+      "sec": 24,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -169,11 +169,11 @@
   },
   "rows_with_price": 1957,
   "candidates": 2128,
-  "flagged": 301,
+  "flagged": 308,
   "by_source_selected": {
-    "yahoo": 31,
+    "yahoo": 28,
     "westmetall": 6,
-    "em_global": 4,
+    "em_global": 7,
     "cn_spot": 31,
     "eu_agri": 0,
     "dtn": 7,
@@ -182,14 +182,14 @@
     "smi": 3,
     "usda": 42,
     "census": 0,
-    "comext": 1759,
+    "comext": 1762,
     "comtrade": 3,
-    "derived": 30
+    "derived": 27
   },
   "by_tier": {
-    "T1 Exchange benchmark": 79,
+    "T1 Exchange benchmark": 76,
     "T2 Official market reporting": 44,
     "T3 Industry assessment": 72,
-    "T4 Trade statistics (unit value)": 1762
+    "T4 Trade statistics (unit value)": 1765
   }
 }
