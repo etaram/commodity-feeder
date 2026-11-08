@@ -1,0 +1,179 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Inter;src:url(file:///usr/share/fonts/opentype/inter/Inter-Medium.otf);font-weight:500}
+@font-face{font-family:Inter;src:url(file:///usr/share/fonts/opentype/inter/Inter-SemiBold.otf);font-weight:600}
+@font-face{font-family:Inter;src:url(file:///usr/share/fonts/opentype/inter/Inter-Bold.otf);font-weight:700}
+@font-face{font-family:ID;src:url(file:///usr/share/fonts/opentype/inter/InterDisplay-Black.otf);font-weight:900}
+@font-face{font-family:ID;src:url(file:///usr/share/fonts/opentype/inter/InterDisplay-ExtraBold.otf);font-weight:800}
+@font-face{font-family:ID;src:url(file:///usr/share/fonts/opentype/inter/InterDisplay-Bold.otf);font-weight:700}
+:root{--gold:#d8b25a;--gold2:#f0cf7a;--ink:#f3f6fb;--mute:#93a3bf}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#070c18;font-family:Inter,sans-serif;color:var(--ink)}
+#bg{position:absolute;inset:0;overflow:hidden;background:radial-gradient(1400px 900px at 50% 60%,#13244a 0%,#0a1226 55%,#060a15 100%)}
+.streak{position:absolute;width:2600px;height:2px;background:linear-gradient(90deg,transparent,rgba(216,178,90,.55),transparent);transform-origin:left center}
+#grid{position:absolute;inset:-200px;background-image:linear-gradient(rgba(91,140,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(91,140,255,.07) 1px,transparent 1px);background-size:80px 80px}
+#card{position:absolute;left:240px;top:205px;width:1440px;height:810px;border-radius:22px;overflow:hidden;box-shadow:0 60px 140px rgba(0,0,0,.65),0 0 0 1px rgba(216,178,90,.25),0 0 80px rgba(216,178,90,.12);background:#0e1526;transform-style:preserve-3d}
+#card img{position:absolute;left:0;top:0;width:1440px;height:810px;transform-origin:0 0}
+#glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.10) 0%,transparent 35%);pointer-events:none}
+#cur{position:absolute;width:44px;height:44px;z-index:30}
+#rip{position:absolute;width:90px;height:90px;border-radius:50%;border:4px solid var(--gold2);z-index:29;opacity:0}
+#cap{position:absolute;left:240px;top:58px;right:240px;height:130px;display:flex;align-items:center;gap:26px}
+#capk{font:800 24px Inter;letter-spacing:6px;color:var(--gold);white-space:nowrap}
+#capt{font:900 76px ID;letter-spacing:-1.5px;white-space:nowrap;line-height:1}
+#capt b{color:var(--gold2)}
+#big{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.bw{font:900 150px ID;letter-spacing:-4px;line-height:1.02;white-space:nowrap}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:90}
+#fade{position:absolute;inset:0;background:#000;opacity:0;z-index:95}
+#logo{position:absolute;left:50%;top:50%;width:0;height:0}
+#phone{position:absolute;left:1040px;top:70px;width:520px;height:960px;border-radius:66px;background:#04070d;border:3px solid #2a3f66;padding:20px;box-shadow:0 60px 140px rgba(0,0,0,.6)}
+#chat{position:absolute;left:0;right:0;top:92px;bottom:0;padding:18px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px}
+.mono{font-family:'DejaVu Sans Mono',monospace}
+#counter{font-variant-numeric:tabular-nums}
+.badge{position:absolute;padding:14px 22px;border-radius:16px;background:rgba(10,18,38,.92);border:1px solid rgba(216,178,90,.5);font:700 26px Inter;box-shadow:0 20px 50px rgba(0,0,0,.5);z-index:31;white-space:nowrap}
+</style></head><body>
+<div id="bg"><div id="grid"></div><div id="streaks"></div></div>
+<div id="montage" style="position:absolute;inset:0"></div>
+<div id="cardwrap" style="position:absolute;inset:0;perspective:2200px"><div id="card"><img id="scr"><div id="glare"></div></div></div>
+<svg id="cur" viewBox="0 0 24 24"><path d="M3 2l7 19 2.6-7.4L20 11z" fill="#fff" stroke="#0b1324" stroke-width="1.3" stroke-linejoin="round"/></svg>
+<div id="rip"></div>
+<div id="badge" class="badge" style="opacity:0"></div>
+<div id="cap"><div id="capk"></div><div id="capt"></div></div>
+<div id="tg" style="position:absolute;inset:0;display:none">
+  <div style="position:absolute;left:200px;top:300px;width:760px" id="tgpts"></div>
+  <div id="phone"><div style="width:100%;height:100%;border-radius:48px;background:#0e1626;overflow:hidden;position:relative">
+    <div style="height:92px;background:#17233b;display:flex;align-items:center;gap:16px;padding:0 24px">
+      <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#1b2d52,#0b1324);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font:800 26px ID;color:var(--gold2)">S</div>
+      <div><div style="font:600 22px Inter">Sinder Deal Agent</div><div style="font:500 16px Inter;color:#7f90ad">bot</div></div></div>
+    <div id="chat"></div></div></div>
+</div>
+<div id="big"></div>
+<div id="flash"></div><div id="fade"></div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const p=(t,a,b)=>cl((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-cl(x),3), ei=x=>Math.pow(cl(x),3), eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=cl(x);const c=1.7,c3=c+1;return 1+c3*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const lerp=(a,b,k)=>a+(b-a)*k;
+const SH='file://'+location.pathname.replace(/promo\.html$/,'')+'shots/';
+const pad=n=>String(n).padStart(4,'0');
+// streaks
+(function(){let h='';for(let i=0;i<14;i++)h+=`<div class="streak" id="st${i}"></div>`;$('streaks').innerHTML=h})();
+function bg(t){ $('grid').style.transform=`translate(${-(t*40)%80}px,${-(t*22)%80}px) perspective(900px) rotateX(${8+2*Math.sin(t*.4)}deg)`;
+  for(let i=0;i<14;i++){const e=$('st'+i);const sp=300+i*37, y=(i*97+((t*sp*(i%3+1))%1600))%1300-100;e.style.top=y+'px';e.style.left=(-400+((i*313)%600))+'px';e.style.transform=`rotate(${-18}deg)`;e.style.opacity=.25+.25*Math.sin(t*2+i)} }
+// ---------------- shot timing: keyframes [t, frame] ----------------
+function frameAt(keys,t){ if(t<=keys[0][0])return keys[0][1]; for(let i=1;i<keys.length;i++){ if(t<=keys[i][0]){const [t0,f0]=keys[i-1],[t1,f1]=keys[i];return Math.round(lerp(f0,f1,(t-t0)/(t1-t0)))} } return keys[keys.length-1][1]; }
+function camAt(keys,t){ // [t, z, fx, fy, ry, rx]
+  if(t<=keys[0][0])return keys[0].slice(1); for(let i=1;i<keys.length;i++){ if(t<=keys[i][0]){const a=keys[i-1],b=keys[i],k=eio((t-a[0])/(b[0]-a[0]));return a.slice(1).map((v,j)=>lerp(v,b[j+1],k))} } return keys[keys.length-1].slice(1); }
+// clicks: [t, x, y] in viewport coords (1600x900); cursor glides in during 0.45 s before each
+const SEGS=[
+ {id:'tend',t0:8,t1:14,shot:'tlist',k:'01 · FIND',cap:'<b id="counter">1,294</b> live tenders, ranked for you',
+  frames:[[8.3,0],[10.3,57],[10.55,60],[10.62,61],[10.75,63],[14,77]],
+  cam:[[8,1.0,800,450,-14,4],[9.2,1.0,800,450,-4,1],[10.5,1.0,800,450,0,0],[11.3,1.55,1250,330,0,0],[12.6,1.55,1250,420,0,0],[14,1.3,1150,470,6,-1]],
+  clicks:[[10.62,577,376]], badges:[[11.6,13.6,'Scored for fit · win chance · expected value',1180,930]]},
+ {id:'sup',t0:14,t1:20,shot:'sup',k:'02 · SOURCE',cap:'Who <b>really</b> makes it',
+  frames:[[14.3,0],[14.45,3],[15.85,41],[16.1,44],[16.6,55],[16.9,56],[17.0,58],[17.9,66],[18.3,84],[18.55,85],[18.7,88],[20,95]],
+  cam:[[14,1.0,800,450,14,3],[14.6,1.7,560,230,0,0],[15.7,1.7,560,230,0,0],[16.2,1.2,700,330,0,0],[16.6,1.55,560,440,0,0],[17.8,1.55,560,480,0,0],[18.4,1.55,600,560,0,0],[20,1.35,620,520,-5,0]],
+  clicks:[[14.45,529,200],[16.9,407,464],[18.55,636,584]], badges:[[17.1,17.9,'Learned: moves up in every search',900,720],[18.8,19.8,'Learned: never shown again for this product',900,780]]},
+ {id:'price',t0:20,t1:26,shot:'prices',k:'03 · PRICE',cap:'Physical prices, by <b>origin</b> and <b>grade</b>',
+  frames:[[20.3,0],[20.45,5],[21.0,22],[21.4,26],[21.6,30],[22.9,32],[23.2,42],[23.5,46],[25.2,83],[26,83]],
+  cam:[[20,1.0,800,450,-14,3],[20.6,1.3,800,240,0,0],[21.5,1.3,800,330,0,0],[22.0,1.8,1030,300,0,0],[22.9,1.8,1030,300,0,0],[23.4,1.15,800,450,0,0],[26,1.25,800,520,5,0]],
+  clicks:[[20.45,870,230]], badges:[[22.0,22.9,'As published: 4,204.50 MYR/t  →  $1,037/t',980,640]]},
+ {id:'est',t0:26,t1:32,shot:'est',k:'04 · DECIDE',cap:'Slide. See. <b>Decide.</b>',
+  frames:[[26.3,0],[26.9,12],[27.0,16],[27.4,22],[27.6,29],[29.9,99],[30.4,105],[32,117]],
+  cam:[[26,1.0,800,450,14,3],[26.7,1.7,1150,190,0,0],[27.5,1.55,1210,330,0,0],[29.7,1.55,1210,380,0,0],[30.6,1.7,1200,660,0,0],[32,1.6,1180,700,-4,0]],
+  clicks:[[27.0,1079,100]], badges:[], knob:[27.6,29.9]},
+ {id:'rfq',t0:32,t1:36,shot:'rfq',k:'05 · ASK',cap:'Request quotes in <b>one click</b>',
+  frames:[[32.25,0],[32.45,5],[32.6,7],[33.4,22],[33.6,27],[33.75,30],[34.4,41],[34.55,44],[36,57]],
+  cam:[[32,1.0,800,450,-14,3],[32.5,1.4,520,250,0,0],[33.2,1.15,880,560,0,0],[33.7,1.6,560,760,0,0],[34.8,1.75,620,850,0,0],[36,1.6,640,840,3,0]],
+  clicks:[[32.45,332,793],[33.6,343,767],[34.4,557,767]], badges:[[33.85,34.4,'Press again to confirm',660,760]]},
+];
+const CHAT=[[36.5,'me','/deal white maize 5,000 t CFR Mombasa'],[37.0,'bot','Deal run started. Searching suppliers and open tenders.'],[37.5,'bot','Found <u>12 suppliers</u>, 3 fit. Best route: <u>local partner</u>.'],
+ [38.0,'bot','Landed cost $303/t. Best offer $322, expected profit $56k. <u>Open the deal</u>'],[38.5,'draft','Draft RFQ to <b>Northfield Grains</b>, 5,000 t white maize.'],[40.4,'bot','Sent from the Sinder mailbox. Supplier moved to <i>contacted</i>.']];
+const APPROVE=39.7;
+let cur={x:-200,y:-200};
+async function showShot(seg,t){
+  const f=frameAt(seg.frames,t); const src=SH+seg.shot+'/'+pad(f)+'.jpg'; const img=$('scr');
+  if(img.dataset.src!==src){img.src=src;img.dataset.src=src;await img.decode().catch(()=>{});}
+  let [z,fx,fy,ry,rx]=camAt(seg.cam,t);
+  const S=0.9*z; let tx=720-fx*S, ty=405-fy*S; tx=Math.min(0,Math.max(1440-1600*S,tx)); ty=Math.min(0,Math.max(810-900*S,ty));
+  img.style.transform=`translate(${tx}px,${ty}px) scale(${S/2*1.0})`; img.style.width='3200px'; img.style.height='1800px';
+  // entrance / exit whip
+  const ein=eo(p(t,seg.t0,seg.t0+.4)), eout=ei(p(t,seg.t1-.28,seg.t1));
+  const X=(1-ein)*1500-eout*1700, blur=(1-ein)*24+eout*30, sc=lerp(.86,1,ein)*lerp(1,.9,eout);
+  $('card').style.transform=`translateX(${X}px) rotateY(${ry}deg) rotateX(${rx}deg) scale(${sc})`; $('card').style.filter=`blur(${blur}px)`; $('card').style.opacity=1;
+  const toScreen=(x,y)=>{const r=$('card').getBoundingClientRect();return {x:r.left+ (tx+x*S)*(r.width/1440), y:r.top+(ty+y*S)*(r.height/810)}};
+  // cursor
+  let vis=0,cx=cur.x,cy=cur.y,rip=-1;
+  for(let i=0;i<seg.clicks.length;i++){const [tc,x,y]=seg.clicks[i];if(t>=tc-.55&&t<=tc+.45){const prev=i?seg.clicks[i-1]:[0,x+180,y+160];const k=eio(p(t,tc-.55,tc-.05));const a=toScreen(prev[1],prev[2]),b=toScreen(x,y);
+     cx=i?lerp(a.x,b.x,k):lerp(b.x+260,b.x,k);cy=i?lerp(a.y,b.y,k):lerp(b.y+200,b.y,k);vis=1;if(t>=tc)rip=p(t,tc,tc+.4)}}
+  if(seg.knob&&t>=seg.knob[0]-.3&&t<=seg.knob[1]+.2){ // cursor rides the slider knob
+     const kn=window.KNOB[Math.min(window.KNOB.length-1,Math.max(0,frameAt(seg.frames,t)))]; if(kn){const s=toScreen(kn.x,kn.y);cx=s.x;cy=s.y;vis=1;} }
+  const c=$('cur');c.style.left=(cx-6)+'px';c.style.top=(cy-4)+'px';c.style.opacity=vis*(1-eout);
+  const r=$('rip');if(rip>=0&&rip<1){r.style.left=(cx-45)+'px';r.style.top=(cy-45)+'px';r.style.opacity=1-rip;r.style.transform=`scale(${.3+rip})`}else r.style.opacity=0;
+  // badges
+  const bd=$('badge');bd.style.opacity=0;
+  for(const [a,b,txt,x,y] of seg.badges){if(t>=a&&t<=b){const k=back(p(t,a,a+.3));bd.innerHTML=txt;bd.style.left=x+'px';bd.style.top=y+'px';bd.style.opacity=Math.min(1,p(t,a,a+.15))*(1-p(t,b-.12,b));bd.style.transform=`scale(${lerp(.7,1,k)})`}}
+  // caption
+  const kin=p(t,seg.t0+.1,seg.t0+.5);$('capk').textContent=seg.k;$('capt').innerHTML=seg.cap;
+  $('cap').style.opacity=kin*(1-eout);$('cap').style.transform=`translateY(${(1-eo(kin))*-40}px)`;$('capt').style.clipPath=`inset(0 ${100-100*eo(p(t,seg.t0+.15,seg.t0+.7))}% 0 0)`;
+  if(seg.id==='tend'){const n=Math.round(1294*eo(p(t,8.3,9.6)));const e=document.getElementById('counter');if(e)e.textContent=n.toLocaleString('en-US')}
+}
+function bigWords(html,opacity,scale,dy=0){const b=$('big');b.innerHTML=html;b.style.opacity=opacity;b.style.transform=`translateY(${dy}px) scale(${scale})`}
+const MONT=[['tlist',20],['prices',80],['sup',53],['est',110],['rfq',57],['tlist',70],['prices',35],['sup',90]];
+async function frame(t){
+  bg(t);
+  $('cardwrap').style.display='none';$('cur').style.opacity=0;$('rip').style.opacity=0;$('badge').style.opacity=0;$('cap').style.opacity=0;$('tg').style.display='none';$('montage').innerHTML='';
+  bigWords('',0,1);$('flash').style.opacity=0;$('fade').style.opacity=0;
+  // flashes at cuts
+  for(const c of [6,8,14,20,26,32,36,42]){const k=p(t,c,c+.18);if(t>=c&&k<1)$('flash').style.opacity=.55*(1-k)}
+  if(t<4.05){ // hook
+    const w1=p(t,.3,.7),w2=p(t,1.45,1.8),w3=p(t,2.2,2.5),w4=p(t,3.0,3.3);
+    bigWords(`<div class="bw" style="font-size:60px;letter-spacing:8px;font-weight:800;color:#93a3bf;opacity:${w1};transform:translateY(${(1-eo(w1))*20}px)">SOMEWHERE, RIGHT NOW</div>
+      <div class="bw" style="margin-top:22px;opacity:${w2};transform:scale(${lerp(1.3,1,eo(w2))})">a buyer needs</div>
+      <div class="bw" style="color:var(--gold2);font-size:230px;opacity:${w3};transform:scale(${lerp(1.6,1,back(w3))})">5,000 t</div>
+      <div class="bw" style="opacity:${w4};transform:translateY(${(1-eo(w4))*30}px)">of maize.</div>`,1-p(t,3.85,4.05),lerp(1,1.06,t/4));
+  } else if(t<6){ // montage: who gets there first
+    const i=Math.floor((t-4)/.25)%MONT.length;const [s,f]=MONT[i];
+    $('montage').innerHTML=`<img src="${SH+s+'/'+pad(f)+'.jpg'}" style="position:absolute;left:50%;top:50%;width:1800px;transform:translate(-50%,-50%) rotate(${(i%2?-1:1)*4}deg) scale(${1.05+.1*((t-4)%.25)});filter:brightness(.45) saturate(1.2)">`;
+    await Promise.all([...$('montage').querySelectorAll('img')].map(im=>im.decode().catch(()=>{})));
+    $('montage').querySelector('img').style.filter='brightness(.4)';
+    const k=p(t,4.1,4.35);bigWords(`<div class="bw" style="font-size:170px;text-shadow:0 10px 60px rgba(0,0,0,.8)">Who gets there</div><div class="bw" style="font-size:210px;color:var(--gold2);text-shadow:0 10px 60px rgba(0,0,0,.8)">first?</div>`,k,lerp(1.25,1,back(k))*(1+.04*(t-4)));
+  } else if(t<8){ // drop: logo
+    const k=p(t,6,6.45),k2=p(t,6.5,7.0);
+    bigWords(`<svg viewBox="0 0 64 64" width="260" height="260" style="transform:scale(${lerp(3,1,back(k))}) rotate(${lerp(-20,0,eo(k))}deg);opacity:${k}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2d52"/><stop offset="1" stop-color="#0b1324"/></linearGradient><linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0cf7a"/><stop offset="1" stop-color="#b8902e"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)" stroke="#3a5488"/><path d="M44 20c-2.5-4-7-6-12-6-7 0-12 4-12 9.5 0 11 24 7 24 18 0 6-5.5 10-13 10-6 0-10.5-2.5-13-6.5" fill="none" stroke="url(#gd)" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="${120*(1-eo(p(t,6.1,6.7)))}"/><circle cx="45" cy="16.5" r="3.4" fill="#f0cf7a"/><circle cx="19" cy="47.5" r="3.4" fill="#f0cf7a"/></svg>
+      <div style="width:${lerp(0,900,eo(p(t,6,6.6)))}px;height:${lerp(0,900,eo(p(t,6,6.6)))}px;border-radius:50%;border:3px solid rgba(240,207,122,${.6*(1-p(t,6,6.8))});position:absolute"></div>
+      <div class="bw" style="font-size:150px;letter-spacing:${lerp(60,20,eo(k2))}px;margin-top:20px;opacity:${k2}">SINDER</div>
+      <div style="font:700 40px Inter;letter-spacing:${lerp(30,18,eo(k2))}px;color:#aebbd0;opacity:${p(t,6.8,7.2)}">DEAL DESK</div>`,1-p(t,7.75,8),1+.03*(t-6));
+  } else if(t<36){
+    const seg=SEGS.find(s=>t>=s.t0&&t<s.t1);$('cardwrap').style.display='block';await showShot(seg,t);
+  } else if(t<42){ // telegram agent
+    $('tg').style.display='block';const ein=eo(p(t,36,36.4)),eout=ei(p(t,41.72,42));
+    $('tg').style.transform=`translateX(${(1-ein)*1500-eout*1700}px)`;$('tg').style.filter=`blur(${(1-ein)*20+eout*24}px)`;
+    $('capk').textContent='06 · DELEGATE';$('capt').innerHTML='Your <b>deal agent</b>';const kin=p(t,36.1,36.5);$('cap').style.opacity=kin*(1-eout);$('capt').style.clipPath=`inset(0 ${100-100*eo(p(t,36.15,36.7))}% 0 0)`;
+    const pts=['Researches suppliers and tenders','Works out cost, cash and profit','Drafts every message','Sends only when you approve'];
+    $('tgpts').innerHTML=pts.map((s,i)=>{const k=p(t,36.6+i*.5,36.9+i*.5);return `<div style="display:flex;gap:20px;align-items:center;margin:0 0 34px;font:700 40px Inter;opacity:${k};transform:translateX(${(1-eo(k))*-60}px)"><span style="width:18px;height:18px;border-radius:50%;background:${i==3?'#3ec28a':'var(--gold)'}"></span>${s}</div>`}).join('');
+    let h='';for(const [tc,who,txt] of CHAT){const k=p(t,tc,tc+.25);if(k<=0)continue;const st=`opacity:${k};transform:translateY(${(1-back(k))*30}px) scale(${lerp(.9,1,eo(k))})`;
+      if(who=='me')h+=`<div style="${st};align-self:flex-end;max-width:84%;background:#2b5278;padding:14px 18px;border-radius:20px 20px 4px 20px;font:500 22px Inter">${txt}</div>`;
+      else if(who=='bot')h+=`<div style="${st};align-self:flex-start;max-width:88%;background:#182540;padding:14px 18px;border-radius:20px 20px 20px 4px;font:500 22px Inter;line-height:1.35">${txt.replace(/<u>/g,'<u style="color:#8fb4ff">')}</div>`;
+      else{const ap=t>=APPROVE;h+=`<div style="${st};align-self:flex-start;max-width:92%"><div style="background:#182540;padding:14px 18px;border-radius:20px 20px 20px 4px;font:500 22px Inter;line-height:1.35">${txt}</div>
+        <div style="display:flex;gap:8px;margin-top:8px"><div id="apb" style="flex:1;text-align:center;padding:14px;border-radius:12px;background:${ap?'#3ec28a':'#22345a'};font:700 21px Inter;transform:scale(${ap?lerp(1.12,1,eo(p(t,APPROVE,APPROVE+.3))):1})">${ap?'Approved':'Approve'}</div><div style="flex:1;text-align:center;padding:14px;border-radius:12px;background:#22345a;font:700 21px Inter">Reject</div></div>
+        <div style="margin-top:8px;text-align:center;padding:14px;border-radius:12px;background:#22345a;font:700 21px Inter;color:#8fb4ff">Open supplier</div></div>`}}
+    $('chat').innerHTML=h;
+    const ab=document.getElementById('apb');if(ab&&t>APPROVE-.7&&t<APPROVE+.6){const r=ab.getBoundingClientRect();const k=eio(p(t,APPROVE-.7,APPROVE-.05));const c=$('cur');c.style.opacity=1-p(t,APPROVE+.4,APPROVE+.6);c.style.left=lerp(r.left+r.width/2+260,r.left+r.width/2,k)+'px';c.style.top=lerp(r.top+260,r.top+r.height/2,k)+'px';
+      if(t>=APPROVE){const q=p(t,APPROVE,APPROVE+.4),rp=$('rip');rp.style.left=(r.left+r.width/2-45)+'px';rp.style.top=(r.top+r.height/2-45)+'px';rp.style.opacity=1-q;rp.style.transform=`scale(${.3+q})`}}
+  } else { // outro
+    const w=[[43.7,'FIND IT.','#fff'],[44.45,'PRICE IT.','#fff'],[45.2,'WIN IT.','var(--gold2)']];
+    const lg=p(t,46.0,46.5);
+    let h=`<div style="position:absolute;top:150px;left:0;right:0;font:800 30px Inter;letter-spacing:14px;color:#93a3bf;opacity:${p(t,42.2,42.6)*(1-lg)}">SINDER DEAL DESK</div>`;
+    h+=w.map(([tc,s,c])=>{const k=p(t,tc,tc+.22);return `<div class="bw" style="font-size:190px;color:${c};opacity:${k*(1-lg)};transform:scale(${lerp(1.8,1,back(k))*lerp(1,.8,lg)})">${s}</div>`}).join('');
+    bigWords(h,1,1+.02*(t-42));
+    if(t>=46){const k=eo(lg);$('big').innerHTML+=`<div style="position:absolute;display:flex;align-items:center;gap:40px;opacity:${k};transform:scale(${lerp(1.2,1,k)})"><svg viewBox="0 0 64 64" width="200" height="200"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2d52"/><stop offset="1" stop-color="#0b1324"/></linearGradient><linearGradient id="gd2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0cf7a"/><stop offset="1" stop-color="#b8902e"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g2)" stroke="#3a5488"/><path d="M44 20c-2.5-4-7-6-12-6-7 0-12 4-12 9.5 0 11 24 7 24 18 0 6-5.5 10-13 10-6 0-10.5-2.5-13-6.5" fill="none" stroke="url(#gd2)" stroke-width="5.5" stroke-linecap="round"/><circle cx="45" cy="16.5" r="3.4" fill="#f0cf7a"/><circle cx="19" cy="47.5" r="3.4" fill="#f0cf7a"/></svg><div style="text-align:left"><div class="bw" style="font-size:130px;letter-spacing:16px">SINDER</div><div style="font:700 36px Inter;letter-spacing:18px;color:#aebbd0">DEAL DESK</div></div></div>
+        <div style="position:absolute;top:780px;font:700 46px Inter;color:var(--gold2);letter-spacing:3px;opacity:${p(t,46.6,47.0)}">desk.sinder.pro</div>`}
+    $('fade').style.opacity=p(t,48.6,50);
+  }
+}
+window.frame=frame;
+</script></body></html>
