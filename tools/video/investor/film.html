@@ -1,0 +1,177 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Serif;src:url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2)}
+@font-face{font-family:Serif;font-style:italic;src:url(node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2)}
+@font-face{font-family:Tight;font-weight:400;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-400-normal.woff2)}
+@font-face{font-family:Tight;font-weight:500;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-500-normal.woff2)}
+@font-face{font-family:Tight;font-weight:600;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-600-normal.woff2)}
+@font-face{font-family:Tight;font-weight:700;src:url(node_modules/@fontsource/inter-tight/files/inter-tight-latin-700-normal.woff2)}
+:root{--ink:#060a14;--navy:#0e1830;--gold:#d8b25a;--gold2:#f0cf7a;--paper:#f3efe6;--mute:#8d9ab3}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--ink);color:#fff;font-family:Tight,sans-serif}
+.layer{position:absolute;inset:0}
+#vign{position:absolute;inset:0;background:radial-gradient(1500px 900px at 55% 50%,transparent 40%,rgba(0,0,0,.55) 100%);pointer-events:none;z-index:80}
+#grain{position:absolute;inset:-50%;z-index:81;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+canvas{position:absolute;inset:0}
+.serif{font-family:Serif,serif;font-weight:400;letter-spacing:-.5px}
+.h{position:absolute;font-family:Serif,serif;line-height:1.02;letter-spacing:-1px}
+.lbl{font:500 22px Tight;color:var(--mute);letter-spacing:.3px}
+#card{position:absolute;border-radius:18px;overflow:hidden;box-shadow:0 70px 160px rgba(0,0,0,.7),0 0 0 1px rgba(216,178,90,.28);background:#0e1526}
+#card img{position:absolute;left:0;top:0;transform-origin:0 0}
+#cur{position:absolute;width:42px;height:42px;z-index:60}
+#rip{position:absolute;width:86px;height:86px;border-radius:50%;border:3px solid var(--gold2);z-index:59;opacity:0}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:90}
+#black{position:absolute;inset:0;background:#000;opacity:0;z-index:95}
+.frag{position:absolute;font:500 26px Tight;padding:14px 20px;border-radius:12px;background:#141c2e;border:1px solid #2a3756;color:#cfd7e6;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+</style></head><body>
+<canvas id="map" width="1920" height="1080"></canvas>
+<div class="layer" id="L"></div>
+<div id="card" style="display:none"><img id="scr"></div>
+<svg id="cur" viewBox="0 0 24 24" style="opacity:0"><path d="M3 2l7 19 2.6-7.4L20 11z" fill="#fff" stroke="#0b1324" stroke-width="1.3" stroke-linejoin="round"/></svg>
+<div id="rip"></div>
+<div id="vign"></div><div id="grain"></div><div id="flash"></div><div id="black"></div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), p=(t,a,b)=>cl((t-a)/(b-a)), lerp=(a,b,k)=>a+(b-a)*k;
+const eo=x=>1-Math.pow(1-cl(x),3), ei=x=>Math.pow(cl(x),3), eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const back=x=>{x=cl(x);const c=1.4,c3=c+1;return 1+c3*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const pad=n=>String(n).padStart(4,'0');
+const SH='file:///tmp/claude-0/-home-claude/ee7d08a5-56d0-5999-9485-3d08067cc70c/scratchpad/promo/shots/';
+const MARK=(sz,id)=>`<svg viewBox="0 0 64 64" width="${sz}" height="${sz}"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2d52"/><stop offset="1" stop-color="#0b1324"/></linearGradient><linearGradient id="d${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0cf7a"/><stop offset="1" stop-color="#b8902e"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g${id})" stroke="#3a5488"/><path id="mp${id}" d="M44 20c-2.5-4-7-6-12-6-7 0-12 4-12 9.5 0 11 24 7 24 18 0 6-5.5 10-13 10-6 0-10.5-2.5-13-6.5" fill="none" stroke="url(#d${id})" stroke-width="5.5" stroke-linecap="round"/><circle cx="45" cy="16.5" r="3.4" fill="#f0cf7a"/><circle cx="19" cy="47.5" r="3.4" fill="#f0cf7a"/></svg>`;
+let MAP=null, T={}, VO={};
+window.setup=(map,vo)=>{MAP=map;VO=vo;build()};
+// ---------- timeline from narration durations ----------
+const SC=[];
+function build(){
+  let t=0; const add=(id,dur)=>{SC.push({id,t0:t,t1:t+dur});t+=dur};
+  T.i1=0.9; T.i2=T.i1+VO.i1+0.25; add('map',T.i2+VO.i2+0.7);
+  T.i3=t+0.25; add('chaos',VO.i3+0.85);
+  T.i4=t+1.0; add('logo',1.0+VO.i4+1.0);
+  for(const [k,id] of [['i5','tend'],['i6','sup'],['i7','price'],['i8','est']]){T[k]=t+0.35;add(id,Math.max(4.4,VO[k]+1.2))}
+  T.i9=t+0.35; add('agent',Math.max(6.2,VO.i9+1.6));
+  T.i10=t+0.4; add('model',VO.i10+1.0);
+  T.i11=t+0.4; add('founder',VO.i11+1.0);
+  T.i12=t+0.5; add('cta',VO.i12+5.0);
+  window.TOTAL=t; window.TIMES=T; window.SCENES=SC.map(s=>[s.id,+s.t0.toFixed(2),+s.t1.toFixed(2)]);
+}
+// ---------- map ----------
+function drawMap(t,alpha,glowAt,zoom=1){
+  const c=$('map'),x=c.getContext('2d');x.clearRect(0,0,1920,1080);if(alpha<=0)return;
+  x.save();x.globalAlpha=alpha;x.translate(960,540);x.scale(zoom,zoom);x.translate(-960,-540);
+  let lit=0;
+  for(const [px,py,h,f] of MAP.dots){
+    const on=h>0&&t>=glowAt+f*1.0;
+    if(on){lit++;const k=p(t,glowAt+f*1.0,glowAt+f*1.0+.35);const pulse=.75+.25*Math.sin(t*3+px*.05);
+      const r=1.9+h*1.7;x.fillStyle=`rgba(240,207,122,${(.45+.55*h)*k*pulse})`;x.beginPath();x.arc(px,py,r*(1+(1-k)*1.2),0,6.283);x.fill();
+      if(h>.6){x.fillStyle=`rgba(240,207,122,${.07*k})`;x.beginPath();x.arc(px,py,r*3,0,6.283);x.fill()}}
+    else{x.fillStyle='rgba(130,150,195,.34)';x.beginPath();x.arc(px,py,1.3,0,6.283);x.fill()}
+  }
+  x.restore();return lit;
+}
+// ---------- screen shots (real Deal Desk panel, fixtures: public tenders, real prices, invented suppliers) ----------
+function frameAt(k,t){if(t<=k[0][0])return k[0][1];for(let i=1;i<k.length;i++)if(t<=k[i][0]){const[a,f0]=k[i-1],[b,f1]=k[i];return Math.round(lerp(f0,f1,(t-a)/(b-a)))}return k[k.length-1][1]}
+function camAt(k,t){if(t<=k[0][0])return k[0].slice(1);for(let i=1;i<k.length;i++)if(t<=k[i][0]){const a=k[i-1],b=k[i],q=eio((t-a[0])/(b[0]-a[0]));return a.slice(1).map((v,j)=>lerp(v,b[j+1],q))}return k[k.length-1].slice(1)}
+const SHOTS={
+ tend:{shot:'tlist',h:'It reads every tender, in every market.',stat:['34,644','open tenders, 195 countries'],
+   frames:[[0.15,0],[1.5,57],[1.75,61],[1.85,63],[9,77]],cam:[[0,1,800,450,-10],[1.4,1,800,450,0],[2.2,1.6,1250,330,0],[3.6,1.6,1250,430,0],[9,1.45,1200,470,3]],clicks:[[1.75,577,376]]},
+ sup:{shot:'sup',h:'Finds who really makes it, with the evidence.',stat:['250,000','suppliers, matched by evidence'],
+   frames:[[0.1,26],[0.6,41],[0.9,55],[1.3,56],[1.4,58],[2.2,66],[2.6,84],[2.8,85],[2.95,88],[9,95]],cam:[[0,1.2,700,330,10],[0.9,1.25,700,330,0],[1.4,1.6,560,450,0],[2.4,1.6,560,480,0],[2.9,1.6,600,560,0],[9,1.45,620,520,-3]],clicks:[[1.3,407,464],[2.8,636,584]]},
+ price:{shot:'prices',h:'Prices it from the source, by origin and grade.',stat:['18','official price sources'],
+   frames:[[0.1,5],[0.6,22],[0.8,30],[1.9,32],[2.1,42],[2.3,46],[4.2,83],[9,83]],cam:[[0,1.25,800,300,-10],[0.7,1.3,800,330,0],[1.1,1.85,1030,300,0],[1.9,1.85,1030,300,0],[2.4,1.15,800,450,0],[9,1.3,800,520,3]],clicks:[]},
+ est:{shot:'est',h:'Models the bid before a dollar is at risk.',stat:['EV','expected value, win chance, verdict'],
+   frames:[[0.05,22],[0.3,29],[2.7,99],[3.1,105],[9,117]],cam:[[0,1.5,1210,330,10],[0.5,1.55,1210,330,0],[2.7,1.55,1210,380,0],[3.4,1.7,1200,660,0],[9,1.6,1180,700,-3]],clicks:[],knob:[0.3,2.7]},
+};
+async function screenScene(id,t,D){
+  const s=SHOTS[id];const img=$('scr');const f=frameAt(s.frames,t);const src=SH+s.shot+'/'+pad(f)+'.jpg';
+  if(img.dataset.src!==src){img.src=src;img.dataset.src=src;await img.decode().catch(()=>{})}
+  const CW=1180,CH=664;const [z,fx,fy,ry]=camAt(s.cam,t);const S=CW/1600*z;
+  let tx=CW/2-fx*S,ty=CH/2-fy*S;tx=Math.min(0,Math.max(CW-1600*S,tx));ty=Math.min(0,Math.max(CH-900*S,ty));
+  img.style.width='3200px';img.style.height='1800px';img.style.transform=`translate(${tx}px,${ty}px) scale(${S/2})`;
+  const card=$('card');card.style.display='block';card.style.width=CW+'px';card.style.height=CH+'px';card.style.left='650px';card.style.top='230px';
+  const ein=eo(p(t,0,.55)),eout=ei(p(t,D-.35,D));
+  card.style.transform=`perspective(2400px) translateY(${(1-ein)*80-eout*0}px) translateX(${-eout*40}px) rotateY(${ry-(1-ein)*12}deg) scale(${lerp(.94,1,ein)})`;card.style.opacity=ein*(1-eout);
+  const toScreen=(x,y)=>{const r=card.getBoundingClientRect();return{x:r.left+(tx+x*S)*(r.width/CW),y:r.top+(ty+y*S)*(r.height/CH)}};
+  let vis=0,cx=0,cy=0,rip=-1;
+  for(let i=0;i<s.clicks.length;i++){const[tc,x,y]=s.clicks[i];if(t>=tc-.5&&t<=tc+.4){const b=toScreen(x,y);const k=eio(p(t,tc-.5,tc-.05));cx=lerp(b.x+220,b.x,k);cy=lerp(b.y+180,b.y,k);vis=1;if(t>=tc)rip=p(t,tc,tc+.4)}}
+  if(s.knob&&t>=s.knob[0]-.2&&t<=s.knob[1]+.2){const kn=window.KNOB[f];if(kn){const q=toScreen(kn.x,kn.y);cx=q.x;cy=q.y;vis=1}}
+  const c=$('cur');c.style.left=(cx-6)+'px';c.style.top=(cy-4)+'px';c.style.opacity=vis*(1-eout);
+  const r=$('rip');if(rip>=0&&rip<1){r.style.left=(cx-43)+'px';r.style.top=(cy-43)+'px';r.style.opacity=1-rip;r.style.transform=`scale(${.3+rip})`}else r.style.opacity=0;
+  // left column: headline and one number
+  const hk=p(t,.15,.75),sk=p(t,.9,1.5);
+  $('L').innerHTML=`<div class="h" style="left:110px;top:270px;width:540px;font-size:64px;opacity:${hk*(1-eout)};transform:translateY(${(1-eo(hk))*24}px)">${s.h}</div>
+    <div style="position:absolute;left:112px;top:640px;width:500px;opacity:${sk*(1-eout)};transform:translateY(${(1-eo(sk))*16}px)">
+      <div class="num" style="font:600 64px Tight;color:var(--gold2);letter-spacing:-1px">${s.stat[0]}</div><div class="lbl" style="margin-top:6px">${s.stat[1]}</div></div>`;
+}
+// ---------- scenes ----------
+const FRAGS=['RFQ_final_v7.pdf','price??','call me back','Tender_EN_translated(2).docx','who makes this?','FOB or CFR?','missed the deadline','Re: Re: Re: quotation','fax attached','is this supplier real?','what does it cost landed?','send again pls'];
+async function frame(t){
+  $('card').style.display='none';$('cur').style.opacity=0;$('rip').style.opacity=0;$('L').innerHTML='';$('flash').style.opacity=0;$('black').style.opacity=0;drawMap(0,0,0);
+  const sc=SC.find(s=>t>=s.t0&&t<s.t1)||SC[SC.length-1];const lt=t-sc.t0,D=sc.t1-sc.t0;
+  for(const s of SC){const k=p(t,s.t0,s.t0+.16);if(t>=s.t0&&k<1&&s.id!=='map'&&['logo','tend','agent','cta'].includes(s.id))$('flash').style.opacity=.35*(1-k)}
+  if(sc.id==='map'){
+    const zoom=1.08-0.08*eo(p(lt,0,D));drawMap(lt,p(lt,0,.9)*(1-p(lt,D-.5,D)),0.6,zoom);
+    const n=Math.round(MAP.total*eio(p(lt,T.i2-.2,T.i2+1.6)));const k1=p(lt,T.i1,T.i1+.6),k2=p(lt,T.i2-.2,T.i2+.4),out=1-p(lt,D-.5,D);
+    $('L').innerHTML=`<div class="h" style="left:110px;top:740px;font-size:68px;opacity:${k1*out}">Right now, governments and companies are buying.</div>
+      <div style="position:absolute;left:112px;top:840px;display:flex;align-items:baseline;gap:22px;opacity:${k2*out}"><span class="num" style="font:600 92px Tight;color:var(--gold2);letter-spacing:-2px">${n.toLocaleString('en-US')}</span><span style="font:500 30px Tight;color:#c9d2e3">open tenders, ${MAP.countries} countries, this week</span></div>`;
+  } else if(sc.id==='chaos'){
+    const coll=p(lt,D-.75,D-.1);let h='';
+    FRAGS.forEach((f,i)=>{const a=i*2.399,r=420+((i*137)%180);const k=p(lt,.05+i*.12,.35+i*.12);
+      let x=960+Math.cos(a)*r*1.5+Math.sin(lt*1.3+i)*14,y=520+Math.sin(a)*r*.82+Math.cos(lt*1.1+i)*10;x=lerp(x,960,ei(coll));y=lerp(y,540,ei(coll));
+      h+=`<div class="frag" style="left:${x}px;top:${y}px;transform:translate(-50%,-50%) rotate(${(i%2?-1:1)*(3+i%4)*(1-coll)}deg) scale(${lerp(.8,1,eo(k))*(1-coll*.9)});opacity:${k*(1-coll)}">${f}</div>`});
+    h+=`<div class="h" style="left:0;right:0;top:440px;text-align:center;font-size:96px;z-index:5;opacity:${p(lt,.5,1.1)*(1-coll)};text-shadow:0 8px 40px #000">Still run on phone calls,<br>PDFs and gut feel.</div>`;
+    $('L').innerHTML=h;
+  } else if(sc.id==='logo'){
+    const k=p(lt,.05,.7),k2=p(lt,.5,1.2),k3=p(lt,T.i4-sc.t0+.3,T.i4-sc.t0+1.1),out=1-p(lt,D-.4,D);
+    $('L').innerHTML=`<div style="position:absolute;left:0;right:0;top:250px;display:flex;justify-content:center;opacity:${k*out};transform:scale(${lerp(1.6,1,back(k))})">${MARK(170,'a')}</div>
+      <div class="serif" style="position:absolute;left:0;right:0;top:440px;text-align:center;font-size:190px;letter-spacing:${lerp(30,2,eo(k2))}px;opacity:${k2*out}">Sinder</div>
+      <div class="serif" style="position:absolute;left:0;right:0;top:680px;text-align:center;font-size:58px;color:#c9d2e3;opacity:${k3*out}"><i>The trading desk that runs on software.</i></div>`;
+    const path=document.getElementById('mpa');if(path){path.style.strokeDasharray=120;path.style.strokeDashoffset=120*(1-eo(p(lt,.1,.9)))}
+  } else if(SHOTS[sc.id]){ await screenScene(sc.id,lt,D);
+  } else if(sc.id==='agent'){
+    const ein=eo(p(lt,0,.5)),out=1-p(lt,D-.4,D);const AP=Math.min(D-1.2,4.6);
+    const CHAT=[[.5,'me','/deal white maize 5,000 t CFR Mombasa'],[1.1,'bot','Searching suppliers and open tenders.'],[1.7,'bot','12 suppliers, 3 fit. Best route: <u>local partner</u>.'],[2.3,'bot','Landed $303/t · best offer $322 · expected profit $56k.'],[2.9,'draft','Draft RFQ to <b>Northfield Grains</b>, 5,000 t white maize.'],[AP+.5,'bot','Sent from the Sinder mailbox. Supplier moved to <i>contacted</i>.']];
+    let h='';for(const[tc,w,x] of CHAT){const k=p(lt,tc,tc+.25);if(k<=0)continue;const st=`opacity:${k};transform:translateY(${(1-back(k))*24}px)`;
+      if(w=='me')h+=`<div style="${st};align-self:flex-end;max-width:84%;background:#2b5278;padding:13px 17px;border-radius:18px 18px 4px 18px;font:500 21px Tight">${x}</div>`;
+      else if(w=='bot')h+=`<div style="${st};align-self:flex-start;max-width:88%;background:#182540;padding:13px 17px;border-radius:18px 18px 18px 4px;font:500 21px Tight;line-height:1.35">${x.replace(/<u>/g,'<u style="color:#8fb4ff">')}</div>`;
+      else{const ap=lt>=AP;h+=`<div style="${st};align-self:flex-start;max-width:92%"><div style="background:#182540;padding:13px 17px;border-radius:18px 18px 18px 4px;font:500 21px Tight">${x}</div><div style="display:flex;gap:8px;margin-top:8px"><div id="apb" style="flex:1;text-align:center;padding:13px;border-radius:12px;background:${ap?'#3ec28a':'#22345a'};font:700 20px Tight">${ap?'Approved':'Approve'}</div><div style="flex:1;text-align:center;padding:13px;border-radius:12px;background:#22345a;font:700 20px Tight">Reject</div></div></div>`}}
+    const hk=p(lt,.15,.75);
+    $('L').innerHTML=`<div class="h" style="left:110px;top:300px;width:700px;font-size:74px;opacity:${hk*out}">An AI agent runs the deal.<br><span style="color:var(--gold2)">A human approves every message.</span></div>
+      <div style="position:absolute;left:1120px;top:${lerp(140,90,ein)}px;width:500px;height:900px;border-radius:62px;background:#04070d;border:3px solid #2a3f66;padding:18px;opacity:${ein*out};box-shadow:0 60px 140px rgba(0,0,0,.6)">
+        <div style="width:100%;height:100%;border-radius:46px;background:#0e1626;overflow:hidden;position:relative">
+          <div style="height:86px;background:#17233b;display:flex;align-items:center;gap:14px;padding:0 22px">${MARK(50,'t')}<div><div style="font:600 21px Tight">Sinder Deal Agent</div><div style="font:500 15px Tight;color:#7f90ad">bot</div></div></div>
+          <div style="position:absolute;left:0;right:0;top:86px;bottom:0;padding:16px;display:flex;flex-direction:column;justify-content:flex-end;gap:11px">${h}</div></div></div>`;
+    const ab=document.getElementById('apb');if(ab&&lt>AP-.7&&lt<AP+.6){const r=ab.getBoundingClientRect();const k=eio(p(lt,AP-.7,AP-.05));const c=$('cur');c.style.opacity=1-p(lt,AP+.4,AP+.6);c.style.left=lerp(r.left+r.width/2+240,r.left+r.width/2,k)+'px';c.style.top=lerp(r.top+240,r.top+r.height/2,k)+'px';
+      if(lt>=AP){const q=p(lt,AP,AP+.4),rp=$('rip');rp.style.left=(r.left+r.width/2-43)+'px';rp.style.top=(r.top+r.height/2-43)+'px';rp.style.opacity=1-q;rp.style.transform=`scale(${.3+q})`}}
+  } else if(sc.id==='model'){
+    const out=1-p(lt,D-.4,D);const vo=T.i10-sc.t0;
+    const nodes=[['Deals',.0],['Data',.25],['Sharper engine',.5],['Better deals',.75]];const R=230,cx=1300,cy=560;const spin=lt*.25;
+    let s=`<svg width="1920" height="1080" style="position:absolute;inset:0"><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="rgba(216,178,90,.35)" stroke-width="3" stroke-dasharray="${2*Math.PI*R}" stroke-dashoffset="${2*Math.PI*R*(1-eo(p(lt,vo+.2,vo+2.2)))}"/>`;
+    const pa=spin*2*Math.PI;s+=`<circle cx="${cx+Math.cos(pa)*R}" cy="${cy+Math.sin(pa)*R}" r="9" fill="#f0cf7a" opacity="${p(lt,vo+2,vo+2.4)}"/></svg>`;
+    nodes.forEach(([n,a],i)=>{const ang=a*2*Math.PI-Math.PI/2;const k=p(lt,vo+.4+i*.45,vo+.8+i*.45);s+=`<div style="position:absolute;left:${cx+Math.cos(ang)*R}px;top:${cy+Math.sin(ang)*R}px;transform:translate(-50%,-50%) scale(${lerp(.7,1,back(k))});opacity:${k};padding:16px 26px;border-radius:40px;background:#101a31;border:1px solid rgba(216,178,90,.5);font:600 30px Tight;white-space:nowrap">${n}</div>`});
+    s+=`<div style="position:absolute;left:${cx}px;top:${cy}px;transform:translate(-50%,-50%);text-align:center;opacity:${p(lt,vo+2.2,vo+2.8)}"><div class="serif" style="font-size:54px">Sinder</div><div class="lbl">our own desk</div></div>`;
+    const k1=p(lt,.1,.7),k2=p(lt,D-2.6,D-2.0);
+    s+=`<div class="h" style="left:110px;top:330px;width:700px;font-size:84px;opacity:${k1*out}">Desk first.</div><div class="h" style="left:110px;top:430px;width:700px;font-size:84px;color:var(--gold2);opacity:${k2*out}">Platform next.</div>
+       <div class="lbl" style="position:absolute;left:112px;top:560px;width:560px;font-size:28px;line-height:1.45;color:#c9d2e3;opacity:${p(lt,1.2,1.8)*out}">We trade on the engine ourselves. Every deal makes it sharper. Then we open it to the market.</div>`;
+    $('L').innerHTML=`<div style="position:absolute;inset:0;opacity:${out}">${s}</div>`;
+  } else if(sc.id==='founder'){
+    const out=1-p(lt,D-.4,D);const k=p(lt,.1,.8),k2=p(lt,.7,1.4);
+    const stats=[['34,644','open tenders'],['195','countries'],['250,000','suppliers'],['18','official price sources']];
+    $('L').innerHTML=`<div class="lbl" style="position:absolute;left:110px;top:250px;font-size:26px;opacity:${k*out}">Founder</div>
+      <div class="h" style="left:108px;top:290px;font-size:128px;opacity:${k*out};transform:translateX(${(1-eo(k))*-30}px)">Etamar Ramot Naaman</div>
+      <div style="position:absolute;left:112px;top:450px;width:1100px;font:500 36px Tight;color:#c9d2e3;line-height:1.4;opacity:${k2*out}">Fifteen years of cross-border deals across Asia and Africa.</div>
+      <div style="position:absolute;left:112px;top:640px;display:flex;gap:90px">${stats.map(([n,l],i)=>{const q=p(lt,1.4+i*.3,1.9+i*.3);return `<div style="opacity:${q*out};transform:translateY(${(1-eo(q))*20}px)"><div class="num" style="font:600 72px Tight;color:var(--gold2);letter-spacing:-1.5px">${n}</div><div class="lbl" style="margin-top:4px">${l}</div></div>`}).join('')}</div>
+      <div style="position:absolute;left:110px;top:600px;width:${1700*eo(p(lt,1.2,2.2))}px;height:1px;background:rgba(216,178,90,.4);opacity:${out}"></div>`;
+  } else if(sc.id==='cta'){
+    const vo=T.i12-sc.t0;const k=p(lt,.1,.8),k2=p(lt,vo+1.6,vo+2.3),k3=p(lt,vo+2.4,vo+3.1);
+    drawMap(40,.35*p(lt,0,1.5),0,1.0);
+    $('L').innerHTML=`<div class="h" style="left:0;right:0;top:240px;text-align:center;font-size:84px;opacity:${k}">We're bringing on partners and investors.</div>
+      <div class="h" style="left:0;right:0;top:360px;text-align:center;font-size:150px;color:var(--gold2);opacity:${k2};transform:scale(${lerp(1.15,1,eo(k2))})"><i>Let's talk.</i></div>
+      <div style="position:absolute;left:0;right:0;top:640px;text-align:center;opacity:${k3}"><div class="num" style="display:inline-block;font:600 66px Tight;letter-spacing:.5px;padding:22px 46px;border:1.5px solid rgba(240,207,122,.7);border-radius:999px;background:rgba(14,24,48,.85)">Etamar@sinder.pro</div></div>
+      <div style="position:absolute;left:0;right:0;top:880px;display:flex;justify-content:center;align-items:center;gap:18px;opacity:${k3}">${MARK(54,'c')}<span class="serif" style="font-size:52px">Sinder</span></div>`;
+    $('black').style.opacity=p(lt,D-.8,D);
+  }
+}
+window.frame=frame;
+</script></body></html>
