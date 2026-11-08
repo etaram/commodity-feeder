@@ -55,7 +55,7 @@ add(pad([56, 57, 63], c1 - c0 + .3, 1200, .045), c0); add(riser(c1 - c0, .5), c0
 l0, l1 = SCN["logo"]; add(impact(1.0), l0); add(pad([45, 52, 57, 64, 69], l1 - l0 + 1, 2400, .055), l0)
 add(piano(81, 3, .07), l0 + .4, 1, .6); add(piano(76, 3, .06), l0 + 1.0, 1, .4)
 # 4. product run: driving beat at 100 BPM from 'tend' to the end of 'model'
-p0 = SCN["tend"][0]; p1 = SCN["model"][1]; t = p0; b = 0
+p0 = SCN["tend"][0]; p1 = SCN["pocket"][1]; t = p0; b = 0
 while t < p1 - 1e-6:
     ch, rt = (A[b % 4], RT[b % 4]) if t < SCN["model"][0] else (B[b % 4], RB[b % 4])
     for q in range(4):
@@ -67,10 +67,8 @@ while t < p1 - 1e-6:
     for i in range(8): add(piano(ch[i % 3] + 12 * (1 + (i // 3) % 2), .5, .045), t + i * bt / 2, 1, .3 + .4 * (i % 2))
     add(pad([m + 12 for m in ch], bar + .4, 2200, .03), t)
     t += bar; b += 1
-for k in ("tend", "sup", "price", "est", "agent", "model"): add(whoosh(), SCN[k][0] - .3)
-# 5. founder: drums stop, piano and strings
-f0, f1 = SCN["founder"]; add(pad([48, 55, 60, 64], f1 - f0 + .8, 1600, .055), f0)
-for i, n in enumerate([72, 76, 79, 76, 74, 72, 71, 72]): add(piano(n, 2.5, .08), f0 + .3 + i * (f1 - f0 - .6) / 8, 1, .4 + .05 * i)
+for k in ("tend", "sup", "price", "est", "agent", "model", "engine", "pocket"): add(whoosh(), SCN[k][0] - .3)
+# 5. engine and Telegram scenes ride the same beat (section above runs to the end of 'pocket')
 # 6. CTA: swell, impact on "Let's talk", final chord
 q0, q1 = SCN["cta"]; add(riser(T["i12"] + 1.6 - q0, .35), q0); add(impact(.9), T["i12"] + 1.6)
 add(pad([45, 52, 57, 60, 64, 69], q1 - q0 + 1.5, 3000, .06), q0)
