@@ -1,0 +1,18 @@
+name: dump-prices
+# Manual: save sample pages of candidate price sources as an artifact (tools/dump_urls.txt), for writing parsers.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests
+      - run: python tools/dump_pages.py tools/dump_urls.txt pages
+      - uses: actions/upload-artifact@v4
+        with: { name: pages, path: pages, retention-days: 3 }
