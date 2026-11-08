@@ -37,7 +37,7 @@ export function joinRows(norm: Row[], stats: Row[], q: CommodityQuery = {}): Com
   const out: CommodityStat[] = [];
   for (const r of norm) {
     if (hs && !String(r.hs6 || "").startsWith(hs)) continue;
-    if (words.length && !words.every((w) => w.test(`${r.product} ${r.commodity} ${r.grade}`))) continue;
+    if (words.length && !words.every((w) => w.test(`${r.product} ${r.commodity} ${r.grade} ${r.origin} ${r.delivery_location} ${r.source}`))) continue;
     const s = byId.get(r.id) || {};
     let season: number[] | null = null;
     try { season = s.season_idx ? (JSON.parse(s.season_idx) as number[]) : null; } catch { season = null; }
