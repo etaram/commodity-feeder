@@ -1,44 +1,26 @@
-Sun Nov  8 08:33:02 UTC 2026
+Sun Nov  8 10:23:44 UTC 2026
 INFO TED total matching notices: 3770
-INFO TED fetched 3770 notices (17 pages, 3 days) -> 3638 new rows, cache 21864 open (15128870 bytes)
+WARNING TED 429: <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.6</center>
+</body>
+</html>
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page --
+INFO TED fetched 3770 notices (16 pages, 3 days) -> 3638 new rows, cache 21864 open (15128870 bytes)
 INFO ted: 21864 rows
 INFO FTS new 17, open 177 (pages 1)
 INFO fts: 177 rows
-INFO SAM incremental: fetched 1562, open 8322 (6040 open to foreign firms)
-INFO sam: 8322 rows
-INFO NYC City Record open solicitations: 198
-INFO nyc: 198 rows
-INFO US city Los Angeles: 198 (open data API)
-INFO US city Chicago: 2 (web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html)
-INFO US city Houston: 4 (web page ok: https://www.houstontx.gov/obo/current_contracting_opportunities.html)
-INFO US city Phoenix: 3 (web page ok: https://solicitations.phoenix.gov/)
-INFO US city Philadelphia: 0 (web page ok: https://www.phila.gov/departments/procurement-department/)
-INFO US city San Antonio: 5 (web page ok: https://webapp1.sanantonio.gov/BidContractOpps/Default.aspx)
-INFO US city San Diego: 1 (web page ok: https://www.sandiego.gov/purchasing/bids-contracts)
-INFO US city Dallas: 0 (web page ok: https://dallascityhall.com/departments/procurement/Pages/default.aspx)
-INFO US city Jacksonville: 1 (web page ok: https://www.jacksonville.gov/departments/office-of-administrative-services/procurement)
-INFO US city Fort Worth: 24 (Bonfire portal)
-INFO US city Austin: 23 (web page ok: https://financeonline.austintexas.gov/afo/account_services/solicitation/solicitations.cfm)
-INFO US city San Jose: 0 (web page http-404: https://www.sanjoseca.gov/your-government/departments-offices/finance/purchasing/bid-opportunities)
-INFO US city Charlotte: 26 (Bonfire portal)
-INFO US city Columbus: 0 (web page ok: https://www.columbus.gov/Government/Departments/Finance-and-Management/Purchasing-Office)
-INFO US city Indianapolis: 0 (web page ok: https://www.indy.gov/activity/bid-on-city-contracts)
-INFO US city San Francisco: 0 (portal needs a browser (JavaScript): not scanned)
-INFO US city Seattle: 2 (web page ok: https://www.seattle.gov/purchasing-and-contracting)
-INFO US city Denver: 9 (web page ok: https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Economic-Development-Opportunity/Bidding-Opportunities)
-INFO US city Oklahoma City: 0 (bids hosted on a commercial platform that requires registration: not scanned)
-INFO US city Nashville: 1 (web page ok: https://www.nashville.gov/departments/finance/procurement)
-INFO US cities: 284 open solicitations from 13 cities
-INFO us_cities: 284 rows
+INFO SAM incremental: fetched 1562, open 8323 (6041 open to foreign firms)
+INFO sam: 8323 rows
 INFO CanadaBuys rows 866
 INFO canadabuys: 866 rows
-INFO ZA awards 0
-INFO ZA new 366, open 947 (pages 4)
-INFO za: 947 rows
 INFO EBRD rows 43
 INFO ebrd: 43 rows
-INFO UNGM total active 1740, new 551, cache 1171 (pages 41)
-INFO ungm: 1171 rows
+INFO UNGM total active 1733, new 551, cache 1172 (pages 41)
+INFO ungm: 1172 rows
 INFO UNDP new 18, open 12
 INFO undp: 12 rows
 INFO AIIB new 174, kept 175, awards 292
@@ -52,122 +34,29 @@ INFO afdb: 42 rows
 INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1438572', 'noticeid': '39505', 'type': 'AWARD', 'countryname': 'REGIONAL', 'projectnumber': 'RG-L1131', 'proyecturl': 'https://www.iadb.org/en/project/RG-L1131', 'loannumber': '4822/OC-RG', 'noticetitle': 'Diseño y Construcción de Nueva Planta de', 'ezshareid': 'EZIDB0000470-314865798-1440', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Programa de Saneamiento Integral de las ', 'publicationyear': '2026', 'publicationdate': '2026-11-05 12:00:00.000000000', 'deadline': ''}
 INFO IDB dates min=2026-07-10 max=2026-11-05 sample=['2026-11-05 12:00:00.000000000', '2026-11-05 08:00:00.000000000', '2026-11-05 08:00:00.000000000'] deadlines=['', '2026-11-23', '2026-11-23']
 INFO IDB page 0: 1000 recs, 0 old, kept so far 100
-INFO IDB dates min=2026-03-25 max=2026-07-10 sample=['2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000'] deadlines=['2026-07-28', '2026-07-24', '2026-08-04']
+INFO IDB dates min=2026-03-25 max=2026-07-10 sample=['2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000'] deadlines=['2026-07-10', '2026-07-28', '2026-07-28']
 INFO IDB page 1: 1000 recs, 674 old, kept so far 100
 INFO IDB new 100, open 101
 INFO iadb: 101 rows
-INFO Chile: 5286 active, 4449 of kept types
-INFO Chile new 4449, open 4472, details 0
-INFO chile: 4472 rows
 INFO SIMAP new 240, open 594
 INFO simap: 594 rows
 INFO GETS new 398, open 401
 INFO gets: 401 rows
-INFO India Central (CPPP): 253 organisations with active tenders
-WARNING India Central (CPPP): time budget reached
-INFO India Central (CPPP): 1317 open tenders
-INFO India Central PSUs: 76 organisations with active tenders
-INFO India Central PSUs: 1855 open tenders
-INFO India Defence: 10 organisations with active tenders
-INFO India Defence: 5075 open tenders
-INFO India Maharashtra: 186 organisations with active tenders
-WARNING India Maharashtra: time budget reached
-INFO India Maharashtra: 1827 open tenders
-INFO India Tamil Nadu: 79 organisations with active tenders
-INFO India Tamil Nadu: 7866 open tenders
-INFO India Kerala: 148 organisations with active tenders
-WARNING India Kerala: time budget reached
-INFO India Kerala: 1461 open tenders
-INFO India Uttar Pradesh: 131 organisations with active tenders
-WARNING India Uttar Pradesh: time budget reached
-INFO India Uttar Pradesh: 10405 open tenders
-WARNING relay https://haryanaeprocurement.gov.in/nicgep/app?page=FrontEndT: TypeError: fetch failed
-WARNING India portal Haryana failed: ConnectTimeout and relay unavailable for https://haryanaeprocurement.gov.in/nicgep/app?page=FrontEndTendersByOr
-INFO India West Bengal: 92 organisations with active tenders
-INFO India West Bengal: 2767 open tenders
-INFO India Odisha: 66 organisations with active tenders
-INFO India Odisha: 3237 open tenders
-INFO India Jharkhand: 56 organisations with active tenders
-INFO India Jharkhand: 608 open tenders
-INFO India Himachal Pradesh: 45 organisations with active tenders
-INFO India Himachal Pradesh: 1094 open tenders
-INFO India Uttarakhand: 82 organisations with active tenders
-INFO India Uttarakhand: 857 open tenders
-INFO India Assam: 50 organisations with active tenders
-INFO India Assam: 372 open tenders
-INFO India Madhya Pradesh: 98 organisations with active tenders
-WARNING India Madhya Pradesh: time budget reached
-INFO India Madhya Pradesh: 5021 open tenders
-INFO India Rajasthan: 92 organisations with active tenders
-INFO India Rajasthan: 1811 open tenders
-INFO India Punjab: 32 organisations with active tenders
-INFO India Punjab: 3033 open tenders
-INFO India Jammu and Kashmir: 31 organisations with active tenders
-INFO India Jammu and Kashmir: 4268 open tenders
-INFO India Chandigarh: 3 organisations with active tenders
-INFO India Chandigarh: 105 open tenders
-INFO India Tripura: 39 organisations with active tenders
-INFO India Tripura: 258 open tenders
-INFO India Meghalaya: 4 organisations with active tenders
-INFO India Meghalaya: 5 open tenders
-INFO India Nagaland: 3 organisations with active tenders
-INFO India Nagaland: 1 open tenders
-INFO India Manipur: 0 organisations with active tenders
-INFO India Manipur: 0 open tenders
-INFO India Mizoram: 0 organisations with active tenders
-INFO India Mizoram: 0 open tenders
-INFO India Goa: 36 organisations with active tenders
-INFO India Goa: 323 open tenders
-INFO India PMGSY rural roads: 15 organisations with active tenders
-INFO India PMGSY rural roads: 235 open tenders
-INFO India new 53801, open 61938
-INFO india: 61938 rows
-INFO grants.gov: 272 calls
-INFO EU calls: 256
-INFO Israel calls: 1
-INFO grants {'calls': 529, 'grants.gov': 272, 'EU': 256, 'data.gov.il': 1}
-INFO grants: 0 rows
-INFO Etimad new 21, open 599 (pages 4)
-INFO etimad: 599 rows
-INFO Prozorro feed pages 20, candidates 1621, fetched 32, open kept 1114
+INFO Etimad new 23, open 601 (pages 4)
+INFO etimad: 601 rows
+INFO Prozorro feed pages 17, candidates 1458, fetched 31, open kept 1114
 INFO prozorro: 1114 rows
-WARNING PNCP 429 mode 4 p6
-WARNING PNCP 429 mode 6 p6
-INFO PNCP new 194, open 5011
+WARNING PNCP 429 mode 6 p3
+INFO PNCP new 150, open 5011
 INFO pncp: 5011 rows
 INFO SECOP new 92, open 865
 INFO secop: 865 rows
-INFO Germany new 0, open 11594, award releases seen 0
-INFO germany: 11594 rows
 INFO Contracts Finder new 18, open 93
 INFO contractsfinder: 93 rows
-INFO MTender new 262, open 1066 (ocids 1189, pages 13)
-INFO moldova: 1066 rows
+INFO MTender new 242, open 1067 (ocids 1076, pages 12)
+INFO moldova: 1067 rows
 INFO Uruguay new 0, open 546 (fetched 700 of 1901; categories {'award': 6724, 'awardUpdate': 324, 'tender': 1901, 'tenderUpdate': 3575, 'tenderAmendment': 1637, 'tenderCancellation': 19})
 INFO uruguay: 546 rows
-INFO installing scrapling
-
-[notice] A new release of pip is available: 26.2.2 -> 26.3
-[notice] To update, run: pip install --upgrade pip
-
-Running kernel seems to be up-to-date.
-
-Restarting services...
-
-Service restarts being deferred:
- systemctl restart hosted-compute-agent.service
-
-No containers need to be restarted.
-
-No user sessions are running outdated binaries.
-
-No VM guests are running outdated hypervisor (qemu) binaries on this host.
-Installing Installing browsers...
-Installing Installing browsers dependencies...
-[2026-11-08 09:15:02] INFO: Fetched (200) <GET https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR> (referer: https://www.google.com/)
-INFO Fetched (200) <GET https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR> (referer: https://www.google.com/)
-INFO Bahrain new 7, open 15
-INFO bahrain: 15 rows
 INFO Malaysia page 1: 100 blocks, 100 new, first QT260000000026832 
 INFO Malaysia page 2: 100 blocks, 97 new, first QT260000000000091 
 INFO Malaysia page 3: 100 blocks, 95 new, first QT260000000000583 
@@ -180,20 +69,12 @@ INFO Malaysia page 9: 100 blocks, 3 new, first UITM/B4/PER/T/B/0826/0001
 INFO Malaysia page 10: 56 blocks, 2 new, first QT260000000016920 
 INFO Malaysia new 432, open 433
 INFO malaysia: 433 rows
-INFO Paraguay new 0, open 166 (fetched 438)
-INFO paraguay: 166 rows
-INFO Dominican listed 749, fetched 8, new 0, open 628
-INFO dominican: 628 rows
 INFO AusTender new 129, open 166
 INFO austender: 166 rows
-INFO Oman new 50, open 537
-INFO oman: 537 rows
-INFO BOAMP new 783, open 6842
-INFO france: 6842 rows
-INFO PLACSP pages 7, new 845, open 4415, award entries 1541
-INFO spain: 4415 rows
-WARNING Kenya 429 page 42
-INFO Kenya new 410, open 607 (pages 42)
+INFO Oman new 50, open 548
+INFO oman: 548 rows
+WARNING Kenya 429 page 1
+INFO Kenya new 0, open 607 (pages 1)
 INFO kenya: 607 rows
 INFO Rwanda new 274, open 274 (pages 10)
 INFO rwanda: 274 rows
@@ -203,7 +84,7 @@ INFO ghana new 100, open 100 (pages 13)
 INFO ghana: 100 rows
 INFO Malawi new 44, open 41
 INFO malawi: 41 rows
-WARNING Mozambique: Failed to perform, curl: (6) Could not resolve host: www.ufsa.gov.mz (DNS server returned general failure). See https://
+WARNING Mozambique: Failed to perform, curl: (6) Could not resolve host: www.ufsa.gov.mz (Timeout while contacting DNS servers). See https:/
 INFO Mozambique new 0, open 77
 INFO mozambique: 77 rows
 INFO Dubai new 261, open 257 (pages 4)
@@ -221,68 +102,13 @@ WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO TED awards: 3 days fetched, 1304 notices, 0 days still to back-fill
-INFO awards: 0 rows
-INFO World Bank pipeline: 954 projects (pipeline + recently approved)
-INFO wb_pipeline: 954 rows
-INFO World Bank new 298, open cache 718
-INFO worldbank: 718 rows
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO Qatar new 304, open 275
-INFO qatar: 275 rows
-INFO mr.gov.il rows: 199
-INFO mrgov: 199 rows
-WARNING IY 0309: HTTP 404
-WARNING IY 2404: HTTP 404
-WARNING IY 8485: HTTP 404
-WARNING IY: stopping after repeated failures (rate limit)
-INFO ImportYeti headings scanned: 0 (due 681)
-INFO importyeti: 0 rows
-INFO market signals: 0 codes refreshed, 0 due
-INFO markets: 0 rows
-INFO enrich: looked up 0, cached 4096
-WARNING:leads:USAspending 504 <html>
-<head><title>504 Gateway Time-out</title></head>
-<body>
-<center><h1>504 Gateway Time-out</h1></center>
-<hr><center>nginx</center>
-</body>
-</html>
-<!-- a padding to disable MSIE and Chrom
-INFO:leads:US awards (USAspending): 3572 recent contract awards (last 90 days)
-3572 awards; median 480.0 foreign winners 22
+WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/9 attempt 1: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/9 attempt 2: Failed to perform, curl: (28) Connection timed out after 60000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
 INFO initializing identifier
-[0;93m2026-11-08 09:45:23.426730751 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/9 attempt 3: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+INFO Qatar new 160, open 281
+INFO qatar: 281 rows
+[0;93m2026-11-08 10:41:36.283805627 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['CONSTRUCCIÓN DEL PUENTE VEHICULAR SOBRE EL RIO ARIARI PARA MEJORAR LA INTERCOMUNICACIÓN TERRESTRE ENTRE LAS VEREDAS DEL MUNICIPIO DE PUERTO RICO; META - CONSTRUCCIÓN DEL PUENTE VEHICULAR SOBRE EL RIO ARIARI PARA MEJORAR LA INTERCOMUNICACIÓN TERRESTRE ENTRE LAS VEREDAS DEL MUNICIPIO DE PUERTO RICO, M'])
 INFO ('apply_packaged_translation', 'CONSTRUCCIÓN DEL PUENTE VEHICULAR SOBRE EL RIO ARIARI PARA MEJORAR LA INTERCOMUNICACIÓN TERRESTRE ENTRE LAS VEREDAS DEL MUNICIPIO DE PUERTO RICO; META - CONSTRUCCIÓN DEL PUENTE VEHICULAR SOBRE EL RIO ARIARI PARA MEJORAR LA INTERCOMUNICACIÓN TERRESTRE ENTRE LAS VEREDAS DEL MUNICIPIO DE PUERTO RICO, M')
@@ -2136,31 +1962,37 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['Moldova', '-', 'D@@
 INFO ('value_hypotheses:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
 INFO ('translated_paragraphs:', [[('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)]])
 INFO ('hypotheses_to_return:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
-INFO translations: 81 new, 0 pending, cache 57061, 649s
-INFO awards 416134 (12m), recent 3000, buyers 54747, competitors 300240
+INFO ('paragraphs:', ['Rechizite și accesorii de birou | Lotul nr.1-pixuri și creioane Lotul nr.2-Capsator Lotul nr.3-Capse, clame, clipsuri Lotul nr.4-Breloc Lorul nr.5-Mape, registre, agende Lotul nr.6-Accesorii de birou (clei uscat, rigle, bandă adezivă, folii, corector, foarfece,ascuțitori, radiere, cerneală) Lot nr.7'])
+INFO ('apply_packaged_translation', 'Rechizite și accesorii de birou | Lotul nr.1-pixuri și creioane Lotul nr.2-Capsator Lotul nr.3-Capse, clame, clipsuri Lotul nr.4-Breloc Lorul nr.5-Mape, registre, agende Lotul nr.6-Accesorii de birou (clei uscat, rigle, bandă adezivă, folii, corector, foarfece,ascuțitori, radiere, cerneală) Lot nr.7')
+INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
+INFO ('sentences', ['Rechizite și accesorii de birou | Lotul nr.1-pixuri și creioane Lotul nr.2-Capsator Lotul nr.3-Capse, clame, clipsuri Lotul nr.4-Breloc Lorul nr.5-Mape, registre, agende Lotul nr.6-Accesorii de birou (clei uscat, rigle, bandă adezivă, folii, corector, foarfece,ascuțitori, radiere, cerneală) Lot nr.7'])
+INFO ('tokenized', [['R@@', 'echi@@', 'zi@@', 'te', 'și', 'accesorii', 'de', 'birou', '&#@@', '12@@', '4@@', ';', 'L@@', 'otul', 'nr.@@', '1@@', '-@@', 'pix@@', 'uri', 'și', 'crei@@', 'oane', 'L@@', 'otul', 'nr.@@', '2@@', '-@@', 'Cap@@', 's@@', 'ator', 'L@@', 'otul', 'nr.@@', '3@@', '-@@', 'Cap@@', 'se', ',', 'cl@@', 'ame', ',', 'cli@@', 'p@@', 'suri', 'L@@', 'otul', 'nr.@@', '4@@', '-@@', 'Bre@@', 'loc', 'L@@', 'orul', 'nr.@@', '5@@', '-@@', 'M@@', 'ape', ',', 'registre', ',', 'agen@@', 'de', 'L@@', 'otul', 'nr.@@', '6@@', '-@@', 'Acce@@', 'sorii', 'de', 'birou', '(', 'c@@', 'lei', 'uscat', ',', 'ri@@', 'gle', ',', 'bandă', 'adezi@@', 'vă', ',', 'fo@@', 'lii', ',', 'corec@@', 'tor', ',', 'foar@@', 'fec@@', 'e', ',', 'ascu@@', 'ț@@', 'itori', ',', 'radi@@', 'ere', ',', 'cerneală', ')', 'Lot', 'nr.@@', '7']])
+INFO ('translated_batches', [TranslationResult(hypotheses=[['Requi@@', 'red', 'and', 'office', 'accessories', 'n.e.@@', '12@@', '4@@', ';', 'Lot', 'no.@@', '1@@', '-', 'pens', 'and', 'p@@', 'encils', 'Lot', 'no.@@', '2@@', '-', 'Sta@@', 'pler', 'Lot', 'no.@@', '3@@', '-', 'Sta@@', 'ples', ',', 'clam@@', 'ps', ',', 'clips', 'Lot', 'no.@@', '4@@', '-', 'B@@', 'rec@@', 'lo@@', 'c', 'L@@', 'or', 'no.@@', '5@@', '-', 'M@@', 'ape', ',', 'regi@@', 'stries', ',', 'agenda', 'Lot', 'no.@@', '6@@', '-', 'Des@@', 'ktop', 'accessories', '(', 'dry', 'glue', ',', 'r@@', 'ig@@', 'les', ',', 'adhesive', 'tape', ',', 'foil', ',', 'correction', ',', 'scissors', ',', 'shar@@', 'pen@@', 'ers', ',', 'er@@', 'as@@', 'ers', ',', 'ink', ')', 'Lot', 'no.@@', '7']], scores=[-20.419950485229492], attention=[], logits=[])])
+INFO ('value_hypotheses:', [('Required and office accessories n.e.124; Lot no.1- pens and pencils Lot no.2- Stapler Lot no.3- Staples, clamps, clips Lot no.4- Brecloc Lor no.5- Mape, registries, agenda Lot no.6- Desktop accessories (dry glue, rigles, adhesive tape, foil, correction, scissors, sharpeners, erasers, ink) Lot no.7', -20.419950485229492)])
+INFO ('translated_paragraphs:', [[('Required and office accessories n.e.124; Lot no.1- pens and pencils Lot no.2- Stapler Lot no.3- Staples, clamps, clips Lot no.4- Brecloc Lor no.5- Mape, registries, agenda Lot no.6- Desktop accessories (dry glue, rigles, adhesive tape, foil, correction, scissors, sharpeners, erasers, ink) Lot no.7', -20.419950485229492)]])
+INFO ('hypotheses_to_return:', [('Required and office accessories n.e.124; Lot no.1- pens and pencils Lot no.2- Stapler Lot no.3- Staples, clamps, clips Lot no.4- Brecloc Lor no.5- Mape, registries, agenda Lot no.6- Desktop accessories (dry glue, rigles, adhesive tape, foil, correction, scissors, sharpeners, erasers, ink) Lot no.7', -20.419950485229492)])
+INFO ('paragraphs:', ['Lucrări de amenajare a teritoriului prin pavarea unei porțiuni de acces către Punctul Medical și trotuarului adiacent Grădiniței «Albinuța» din s.Cupcui, rl Leova'])
+INFO ('apply_packaged_translation', 'Lucrări de amenajare a teritoriului prin pavarea unei porțiuni de acces către Punctul Medical și trotuarului adiacent Grădiniței «Albinuța» din s.Cupcui, rl Leova')
+INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
+INFO ('sentences', ['Lucrări de amenajare a teritoriului prin pavarea unei porțiuni de acces către Punctul Medical și trotuarului adiacent Grădiniței «Albinuța» din s.Cupcui, rl Leova'])
+INFO ('tokenized', [['Lucr@@', 'ări', 'de', 'amenaj@@', 'are', 'a', 'teritoriului', 'prin', 'p@@', 'av@@', 'area', 'unei', 'por@@', 'țiuni', 'de', 'acces', 'către', 'Punctul', 'Medic@@', 'al', 'și', 'trotu@@', 'arului', 'adi@@', 'ac@@', 'ent', 'Gră@@', 'din@@', 'i@@', 'ței', '&quot;', 'Al@@', 'bin@@', 'u@@', 'ța', '&quot;', 'din', 's.@@', 'Cu@@', 'p@@', 'cui', ',', 'r@@', 'l', 'Le@@', 'o@@', 'va']])
+INFO ('translated_batches', [TranslationResult(hypotheses=[['Land@@', 'scape', 'planning', 'works', 'by', 'pa@@', 'ving', 'a', 'portion', 'of', 'access', 'to', 'the', 'Medical', 'Point', 'and', 'the', 'adjacent', 'pa@@', 'vement', 'of', 'the', '&quot;', 'Alb@@', 'in@@', 'u@@', 'ţ@@', 'a', '&quot;', 'kindergarten', 'in', 's.@@', 'Cu@@', 'p@@', 'cu@@', 'i', ',', 'r@@', 'l', 'Le@@', 'ova']], scores=[-11.227452278137207], attention=[], logits=[])])
+INFO ('value_hypotheses:', [('Landscape planning works by paving a portion of access to the Medical Point and the adjacent pavement of the "Albinuţa" kindergarten in s.Cupcui, rl Leova', -11.227452278137207)])
+INFO ('translated_paragraphs:', [[('Landscape planning works by paving a portion of access to the Medical Point and the adjacent pavement of the "Albinuţa" kindergarten in s.Cupcui, rl Leova', -11.227452278137207)]])
+INFO ('hypotheses_to_return:', [('Landscape planning works by paving a portion of access to the Medical Point and the adjacent pavement of the "Albinuţa" kindergarten in s.Cupcui, rl Leova', -11.227452278137207)])
+INFO translations: 60 new, 0 pending, cache 57040, 616s
+INFO awards 415435 (12m), recent 3000, buyers 54747, competitors 300222
 WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/work/commodity-feeder/commodity-feeder/leads/sanctions.py)
-INFO integrity: 207 countries profiled, tenders {'open': 59267, 'no data': 237, 'caution': 12755, 'high risk': 62212}
+INFO integrity: 207 countries profiled, tenders {'open': 59104, 'no data': 237, 'caution': 12752, 'high risk': 62207}
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 0 items (0 reddit, 0 hn, 0 telegram)
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-WARNING feed https://news.google.com/rss/search: HTTP 503
-INFO briefing: 0 items, 0 news leads
+INFO briefing: 528 items, 8 news leads
 INFO wb procurement plans: 1117 projects with a plan in the last 90 days
 INFO wb contract awards: 22400 rows (FY2026-2027)
-INFO plays: 462 (supply the winner=70, arbitrage gap=206, pre-tender approach=63, news lead=0, procurement plan=123)
+INFO plays: 470 (supply the winner=70, arbitrage gap=206, pre-tender approach=63, news lead=8, procurement plan=123)
 INFO gdelt news: 293 headlines for 13 countries
-INFO lei: 0 new lookups, 1571 cached, 424 with an LEI, 179 with a parent
+INFO lei: 1 new lookups, 1572 cached, 424 with an LEI, 179 with a parent
 INFO ecb fx: 15 currencies
 INFO trends rss IL: 10 items
 WARNING trends rss CN: HTTP 400
@@ -2175,29 +2007,31 @@ INFO trends rss DO: 10 items
 INFO trends rss CO: 10 items
 WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
-INFO attention: 11 rows (1 trending, 10 wikipedia)
+INFO attention: 10 rows (0 trending, 10 wikipedia)
 INFO market signals rows 2767
 INFO opportunities.csv trimmed for the sheet: 3965 of 21030 rows
 INFO opportunities 21030
 INFO exempt buys: 736 notices
-INFO open list: 133745 notices, 0 past their deadline left out, 726 duplicates of another source's notice left out
+INFO open list: 133574 notices, 0 past their deadline left out, 726 duplicates of another source's notice left out
 INFO sheet/tenders_08.csv trimmed for the sheet: 1979 of 2000 rows
 INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 3 new, 6979 total, 2 pending, 3s
-INFO accounts 30074
+INFO hebrew titles: 0 new, 6968 total, 2 pending, 3s
+INFO accounts 30048
 INFO importers.csv trimmed for the sheet: 3988 of 5470 rows
-INFO tenders 134471, importers 5470, suppliers 3282
+INFO tenders 134300, importers 5470, suppliers 3282
 WARNING:origin_prices:eia pet/hist/EER_EPJK_PF4_RGC_DPG.htm: 404 Client Error: Not Found for url: https://www.eia.gov/dnav/pet/hist/EER_EPJK_PF4_RGC_DPG.htm
 WARNING:origin_prices:eia pet/hist/EER_EPLLPA_PF4_Y44MB_DPG.htm: 404 Client Error: Not Found for url: https://www.eia.gov/dnav/pet/hist/EER_EPLLPA_PF4_Y44MB_DPG.htm
 origin prices: {"fnc_colombia": 1, "uganda_coffee": 9, "ecx_2merkato": 5, "cepea": 4, "cai_cotton": 11, "tea_board": 14, "spices_cardamom": 1, "cac_rosario": 3, "eia": 3, "steelbenchmarker": 12, "drewry_wci": 5} total 68
 commodity_norm: 1905 rows, 1905 with a known price type {'futures': 59, 'spot': 99, 'index': 1689, 'assessment': 58}, physical 161, futures 59, unit conversions to USD/t 1676, grade stated 127, origin stated 83, delivery stated 1828, incoterm stated 60
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 214 with a change, 49 with volatility, 32 with seasonality, 47 anomalies {'stale': 36, 'jump15': 9, 'sigma3': 2}
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: ConnectionError
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 740 deals checked, 3 GDELT queries, 55 linked articles
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as P
+INFO:leads:news: 740 deals checked, 5 GDELT queries, 55 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
 wrote 80001 rows x 28 cols to Tenders
@@ -2221,12 +2055,12 @@ wrote 56 rows x 7 cols to Press
 wrote 208 rows x 14 cols to Integrity
 wrote 737 rows x 17 cols to Exempt Buys
 wrote 530 rows x 12 cols to Grants
-wrote 463 rows x 14 cols to Plays
+wrote 471 rows x 14 cols to Plays
 wrote 294 rows x 5 cols to Country News
 wrote 16 rows x 7 cols to FX
-wrote 12 rows x 7 cols to Attention
+wrote 11 rows x 7 cols to Attention
 wrote 1118 rows x 9 cols to WB Plans
-skip Briefing Items (no data)
+wrote 529 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
 wrote 6980 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
@@ -2235,12 +2069,13 @@ wrote 59 rows x 1 cols to Digest
 INFO:leads:web index: 129979 tenders, 90.3 MB raw, 11.2 MB gz
 INFO:leads:web panel static: tenders 1500, titles 6980, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.0 MB encrypted
 INFO:leads:web panel live: bd 38, accounts 51, intel 85, pursuits 37, jobs 53, contacts 481, projects 1, ptasks 1, approvals 1, stats 37, 0.3 MB encrypted
-health: 49 sources, 0 alerts
+HEALTH ALERT nyc: EMPTY, zero rows
+health: 49 sources, 1 alerts
 {'source': 'UNGM (UNV)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
- "timelines": 2598,
- "timelines_multi_event": 721
+ "timelines": 2597,
+ "timelines_multi_event": 718
 }
  ],
  "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 104 projects in this data (recent approvals only, so biased short)"
 }
-registry {'active': 83, 'implemented': 4, 'degraded': 2, 'discovered': 28}
+registry {'active': 82, 'degraded': 3, 'implemented': 4, 'discovered': 28}
