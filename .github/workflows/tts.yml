@@ -1,0 +1,20 @@
+name: tts
+# Manual: narration audio for the explainer video (tools/video), pushed to a scratch branch that is deleted after use.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  tts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install edge-tts
+      - run: python tools/video/tts.py tools/video/narration.json pages/andrew en-US-AndrewNeural && python tools/video/tts.py tools/video/narration.json pages/guy en-US-GuyNeural
+      - name: Push to the scratch branch
+        run: |
+          git config user.name "tts"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan scratch-pages; git rm -rq --cached . ; git add -f pages; git commit -qm "narration"; git push -qf origin scratch-pages
