@@ -16,6 +16,13 @@ A source that fails keeps its last good rows (dated as published), so a broken p
   EIA                   Henry Hub gas, WTI, Brent, NY Harbor ULSD, Gulf Coast jet, Mont Belvieu propane, daily
   SteelBenchmarker      US, China, W. Europe, world export steel and US scrap (USD/t), twice a month
   Drewry WCI            container freight Shanghai to 8 ports and composite (USD per 40 ft), weekly
+  MPOB                  Malaysian crude palm oil (MYR/t), daily
+  DTN                   US retail fertilizer: DAP, MAP, potash, urea, 10-34-0, anhydrous, UAN28/32 (USD per short ton), weekly
+  Nairobi Coffee Exch.  Kenya auction average and top lot (USD per 50 kg bag), weekly, as reported by Kilimo News
+  Forbes & Walker       Colombo tea auction averages by elevation (LKR/kg), weekly
+  AHDB / EU MMO         EU wholesale butter, SMP, WMP, whey, cheese (EUR/t), monthly
+  Energy-Charts         German/Luxembourg day-ahead power, daily base (EUR/MWh), daily
+  EU Weekly Oil Bulletin  gasoline, diesel, heating oil, fuel oil before taxes, per EU country (EUR per 1000 l or t), weekly
 
 Run: python -m leads.origin_prices   (writes data/leads/origin_prices.csv; commodity_norm merges it)."""
 import csv
@@ -338,7 +345,233 @@ def drewry_wci():
     return out
 
 
-ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci]
+# ---------------------------------------------------------------- batch 2 (Nov 2026)
+def parse_mpob(h):
+    m = re.search(r"CRUDE PALM OIL-(\d{4})", h)
+    cats = re.findall(r"'([A-Z][a-z]{2}) (\d{2})'", h.split("categories", 1)[1]) if "categories" in h else []
+    data = re.search(r"data:\s*\[([^\]]+)\]", h.split("series", 1)[1]) if "series" in h else None
+    vals = [float(v) for v in re.findall(r"[\d.]+", data.group(1))] if data else []
+    if not (m and cats and vals and len(cats) == len(vals)):
+        return None
+    mon, day = cats[-1]
+    return vals[-1], date(int(m.group(1)), MONTHS[mon.lower()], int(day)).isoformat()
+
+
+def mpob_cpo():
+    url = "https://bepi.mpob.gov.my/admin2/chart_cpomsia_mini.php"
+    got = parse_mpob(get(url).text)
+    if not got:
+        return []
+    return [row("mpob", "Palm oil, crude (CPO) - Malaysia daily", "Palm oil", got[0], "MYR", "t", 1000, got[1],
+                "Malaysian Palm Oil Board, daily CPO price", url, grade="Crude palm oil", origin="MYS", place="Malaysia, local delivered",
+                hs6="151110", kind="spot", tier="T1 Official statistics", basis="MPOB daily average price of crude palm oil traded locally")]
+
+
+DTN_FERT = {"DAP": ("Diammonium phosphate (DAP)", "310530"), "MAP": ("Monoammonium phosphate (MAP)", "310540"),
+            "POTASH": ("Potash (MOP)", "310420"), "UREA": ("Urea", "310210"), "10-34-0": ("Ammonium polyphosphate 10-34-0", "310559"),
+            "ANHYD": ("Anhydrous ammonia", "281410"), "UAN28": ("UAN 28% solution", "310280"), "UAN32": ("UAN 32% solution", "310280")}
+
+
+def parse_dtn(t):
+    out = []
+    for blk in re.finditer(r"(?:Dry|Liquid) Date Range ((?:[A-Z0-9-]+ ){4})(.*?)(?=Liquid Date Range|Todd|\(c\)|$)", t):
+        heads = blk.group(1).split()
+        rows_ = re.findall(r"([A-Z][a-z]{2}) (\d{1,2})-(?:([A-Z][a-z]{2}) )?(\d{1,2}) (\d{4}) (\d+) (\d+) (\d+) (\d+)", blk.group(2))
+        if not rows_:
+            continue
+        m1, _d1, m2, d2, yy, *vals = rows_[-1]
+        d = date(int(yy), MONTHS[(m2 or m1).lower()], int(d2)).isoformat()
+        out += [(h, float(v), d) for h, v in zip(heads, vals)]
+    return out
+
+
+def dtn_fertilizer():
+    lst = get("https://www.dtnpf.com/agriculture/web/ag/crops").text
+    arts = sorted(set(re.findall(r"/agriculture/web/ag/crops/article/(\d{4}/\d{2}/\d{2})/([a-z0-9-]*fertilizer[a-z0-9-]*)", lst)), reverse=True)
+    out = []
+    for day, slug in arts[:3]:
+        url = f"https://www.dtnpf.com/agriculture/web/ag/crops/article/{day}/{slug}"
+        got = parse_dtn(text_of(get(url).text))
+        if got:
+            for h, v, d in got:
+                name, hs = DTN_FERT.get(h, (h, "3105"))
+                out.append(row("dtn", f"Fertilizer {name} - US retail average", "Fertilizer", v, "USD", "short ton", 907.185, d,
+                               "DTN retail fertilizer trends (weekly survey of US retailers)", url, grade=name, origin="USA",
+                               place="USA, retail (national average)", hs6=hs, kind="spot", tier="T2 Independent benchmark",
+                               basis="average retail bid price reported by about 300 US agricultural retailers for the week"))
+            break
+    return out
+
+
+def parse_nce(t):
+    a = re.search(r"average of US\$([\d,.]+) per 50 ?kg bag", t)
+    dm = re.search(r"\bon (?:[A-Z][a-z]+day), (\d{1,2}) ([A-Z][a-z]+)", t)
+    ym = re.search(r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, (\d{4})", t)
+    sale = re.search(r"Sale (\d+)", t)
+    if not (a and dm and ym):
+        return None
+    d = date(int(ym.group(1)), MONTHS[dm.group(2)[:3].lower()], int(dm.group(1)))
+    top = re.search(r"highest price went to [^.]*?(AA|AB|PB|C|E|TT|T)\b[^.]*\.[^.]*?at US\$([\d,.]+)", t)
+    return {"avg": num(a.group(1)), "date": d.isoformat(), "sale": sale.group(1) if sale else "",
+            "top": (top.group(1), num(top.group(2))) if top else None}
+
+
+def kilimo_nce():
+    lst = get("https://kilimonews.co.ke/?s=nairobi+coffee+exchange").text
+    links = [u for u in dict.fromkeys(re.findall(r"https://kilimonews\.co\.ke/agricultural-products/[a-z0-9-]+/", lst))
+             if "sale-" in u and "coffee" in u]
+    for url in links[:3]:
+        p = parse_nce(text_of(get(url).text))
+        if not p:
+            continue
+        src = f"Nairobi Coffee Exchange auction results, sale {p['sale']} (as reported by Kilimo News)"
+        out = [row("nce", "Coffee Arabica - Kenya NCE auction average", "Coffee Arabica", p["avg"], "USD", "50 kg bag", 50, p["date"], src, url,
+                   grade="All grades, sale average (clean coffee)", origin="KEN", place="Nairobi Coffee Exchange", hs6="090111", kind="auction",
+                   tier="T2 Primary physical (press report)", basis="volume-weighted average of the weekly auction")]
+        if p["top"]:
+            out.append(row("nce", f"Coffee Arabica - Kenya NCE top lot ({p['top'][0]})", "Coffee Arabica", p["top"][1], "USD", "50 kg bag", 50,
+                           p["date"], src, url, grade=f"{p['top'][0]}, highest-priced lot of the sale", origin="KEN", place="Nairobi Coffee Exchange",
+                           hs6="090111", kind="auction", tier="T2 Primary physical (press report)", basis="single top lot, not an average"))
+        return out
+    return []
+
+
+def parse_colombo(t):
+    last = None
+    for m in re.finditer(r"^(\d{2})-([A-Z]{3})[A-Z]*-(\d{4}) [\d,]+ [\d,]+ [\d,]+ [\d,]+ ([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)$", t, re.M):
+        last = m
+    if not last:
+        return None
+    dd, mon, yy, hi, med, lo, tot = last.groups()
+    yy = min(int(yy), date.today().year)  # the sheet has a typo year (2027) on one July row
+    return date(yy, MONTHS[mon.lower()], int(dd)).isoformat(), {"High grown": float(hi), "Medium grown": float(med), "Low grown": float(lo), "All elevations": float(tot)}
+
+
+def forbes_colombo():
+    page = get("https://www.forbestea.com/statistics-weekly-tea-auction-quantities-&-averages").text
+    yr = date.today().year
+    pdfs = re.findall(r"href=\"([^\"]*Weekly Tea Auction Quantities[^\"]*?(\d{4})[^\"]*\.pdf)\"", page)
+    pdfs = sorted([(int(y), u) for u, y in pdfs if int(y) <= yr], reverse=True)
+    if not pdfs:
+        return []
+    url = urljoin("https://www.forbestea.com/", pdfs[0][1].replace("&amp;", "&")).replace(" ", "%20")
+    got = parse_colombo(pdf_text(get(url).content))
+    if not got:
+        return []
+    d, vals = got
+    return [row("forbes", f"Tea - Sri Lanka Colombo auction, {k.lower()}", "Tea", v, "LKR", "kg", 1, d,
+                "Forbes & Walker Tea Brokers, weekly Colombo tea auction averages", url, grade=f"Ceylon tea, {k.lower()}", origin="LKA",
+                place="Colombo Tea Auction", hs6="090240", kind="auction", tier="T2 Primary physical (broker)", basis="weekly auction average, all teas sold")
+            for k, v in vals.items()]
+
+
+def parse_ahdb(t):
+    m = re.search(r"Price \(\S+/tonne\) ([A-Z][a-z]{2})-(\d{4})", t)
+    if not m:
+        return None
+    d = date(int(m.group(2)), MONTHS[m.group(1).lower()], 1).isoformat()
+    out = {}
+    for name in ("Butter", "SMP", "WMP", "Whey", "Average cheese"):
+        v = re.search(rf"{name}\*? ([\d,]+) [\d,]+ ", t[m.end():m.end() + 600])
+        if v:
+            out[name] = num(v.group(1))
+    return d, out
+
+
+def ahdb_dairy():
+    url = "https://ahdb.org.uk/dairy/eu-wholesale-prices"
+    got = parse_ahdb(text_of(get(url).text))
+    if not got:
+        return []
+    d, vals = got
+    meta = {"Butter": ("Butter", "040510"), "SMP": ("Skimmed milk powder (SMP)", "040210"), "WMP": ("Whole milk powder (WMP)", "040221"),
+            "Whey": ("Whey powder", "040410"), "Average cheese": ("Cheese (avg Emmental, Gouda, Edam, Cheddar)", "040690")}
+    return [row("ahdb", f"Dairy {meta[k][0]} - EU wholesale", "Dairy products", v, "EUR", "t", 1000, d,
+                "AHDB from the EU Milk Market Observatory, EU (ex UK) wholesale prices", url, grade=meta[k][0], origin="EU", place="EU (ex UK), wholesale",
+                hs6=meta[k][1], kind="assessment", tier="T1 Official statistics", basis="monthly average wholesale price (the month is the date)")
+            for k, v in vals.items()]
+
+
+def parse_energy_charts(j):
+    from zoneinfo import ZoneInfo
+    ts, pr = j.get("unix_seconds") or [], j.get("price") or []
+    pts = [(datetime.fromtimestamp(t, ZoneInfo("Europe/Berlin")).date(), p) for t, p in zip(ts, pr) if p is not None]
+    if not pts:
+        return None
+    by = {}
+    for d, p in pts:
+        by.setdefault(d, []).append(p)
+    full = [d for d, v in by.items() if len(v) >= 23]
+    if not full:
+        return None
+    d = max(full)
+    return round(sum(by[d]) / len(by[d]), 2), d.isoformat()
+
+
+def energy_charts():
+    url = "https://api.energy-charts.info/price?bzn=DE-LU"
+    got = parse_energy_charts(get(url).json())
+    if not got:
+        return []
+    return [row("echarts", "Electricity - Germany/Luxembourg day-ahead (daily base)", "Electricity", got[0], "EUR", "MWh", None, got[1],
+                "Energy-Charts (Fraunhofer ISE), day-ahead auction, data Bundesnetzagentur/SMARD (CC BY 4.0)", url, grade="Base load, daily average",
+                origin="DEU", place="DE-LU bidding zone", hs6="271600", kind="spot", tier="T1 Official statistics",
+                basis="simple average of the day's day-ahead prices")]
+
+
+EU_ISO = {"AT": "AUT", "BE": "BEL", "BG": "BGR", "CY": "CYP", "CZ": "CZE", "DE": "DEU", "DK": "DNK", "EE": "EST", "ES": "ESP", "FI": "FIN",
+          "FR": "FRA", "GR": "GRC", "HR": "HRV", "HU": "HUN", "IE": "IRL", "IT": "ITA", "LT": "LTU", "LU": "LUX", "LV": "LVA", "MT": "MLT",
+          "NL": "NLD", "PL": "POL", "PT": "PRT", "RO": "ROU", "SE": "SWE", "SI": "SVN", "SK": "SVK", "EU": "EU"}
+WOB = {"euro95": ("Gasoline Euro-super 95", "1000 l", None, "271012"), "diesel": ("Diesel (automotive gas oil)", "1000 l", None, "271019"),
+       "heating_oil": ("Heating gas oil", "1000 l", None, "271019"), "fuel_oil_1": ("Fuel oil, sulphur up to 1%", "t", 1000, "271019")}
+
+
+def parse_wob(content):
+    import openpyxl
+    wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+    ws = wb["Prices wo taxes"]
+    head, latest = None, None
+    for r in ws.iter_rows(max_row=8, values_only=True):
+        if head is None:
+            head = r
+        elif isinstance(r[0], datetime):
+            latest = r
+            break
+    if not (head and latest):
+        return None
+    out = []
+    for i, h in enumerate(head):
+        m = re.match(r"([A-Z]{2})_price_wo_tax_(euro95|diesel|heating_oil|fuel_oil_1)$", str(h or ""))
+        if m and m.group(1) in EU_ISO and isinstance(latest[i], (int, float)):
+            out.append((m.group(1), m.group(2), float(latest[i])))
+    return latest[0].date().isoformat(), out
+
+
+def eu_oil_bulletin():
+    page = get("https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en").text
+    m = re.search(r"href=\"([^\"]*Prices_History[^\"]*\.xlsx)\"", page)
+    url = urljoin("https://energy.ec.europa.eu/", m.group(1) if m else
+                  "/document/download/906e60ca-8b6a-44e7-8589-652854d2fd3f_en?filename=Weekly_Oil_Bulletin_Prices_History_maticni_4web.xlsx")
+    got = parse_wob(get(url).content)
+    if not got:
+        return []
+    d, vals = got
+    out = []
+    for cc, key, v in vals:
+        name, unit, kg, hs = WOB[key]
+        where = "EU-27 weighted average" if cc == "EU" else cc
+        out.append(row("wob", f"{name} - {where}, before taxes", "Refined fuels", v, "EUR", unit, kg, d,
+                       "European Commission, Weekly Oil Bulletin (consumer prices net of duties and taxes)", url, grade=name, origin=EU_ISO[cc],
+                       place=f"{where}, consumer price net of taxes", hs6=hs, kind="spot", tier="T1 Official statistics",
+                       basis="weekly national average consumer price, excluding duties and taxes"))
+    return out
+
+
+ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin]
+KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
+        "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob"}
 
 
 # ---------------------------------------------------------------- build
@@ -405,9 +638,7 @@ def main():
             rows += got
             report[name] = len(got)
         else:  # keep the last good rows of this source, still dated as published
-            old = [r for k, v in prev.items() for r in v if k == {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea",
-                   "cai_cotton": "cai", "tea_board": "teaboard", "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia",
-                   "steelbenchmarker": "steelbench", "drewry_wci": "drewry"}.get(name)]
+            old = prev.get(KEYS.get(name), [])
             rows += old
             report[name] = f"0 (kept {len(old)} previous)"
         _ = key
@@ -420,6 +651,17 @@ def main():
     return rows
 
 
+def complete():
+    """True when the saved file already holds rows from every source (a new source triggers a refresh)."""
+    if not OUT.exists():
+        return False
+    have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
+    return set(KEYS.values()) <= have
+
+
 if __name__ == "__main__":
+    import sys
+    if "--complete" in sys.argv:
+        sys.exit(0 if complete() else 1)
     logging.basicConfig(level=logging.INFO)
     main()

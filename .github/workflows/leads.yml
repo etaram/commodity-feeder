@@ -306,8 +306,9 @@ jobs:
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,') }}
         run: |
           set -o pipefail
-          # physical prices by origin and grade: refreshed when older than 6 hours (sources publish daily or weekly)
-          if [ ! -f data/leads/origin_prices.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/origin_prices.csv 2>/dev/null || echo 0) )) -gt 21600 ]; then
+          # physical prices by origin and grade: refreshed when older than 6 hours or when a new source was added
+          AGE=$(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/origin_prices.csv 2>/dev/null || echo 0) ))
+          if [ ! -f data/leads/origin_prices.csv ] || [ $AGE -gt 21600 ] || ! python -m leads.origin_prices --complete; then
             pip install -q pdfplumber beautifulsoup4 lxml && python -m leads.origin_prices 2>&1 | tail -3 | tee -a data/leads/run.log || true
           fi
           python -m leads.commodity_norm 2>&1 | tail -2 | tee -a data/leads/run.log
