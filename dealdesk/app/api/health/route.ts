@@ -17,6 +17,8 @@ type Check = { name: string; method?: "GET" | "POST"; path: string; body?: unkno
 const CHECKS: Check[] = [
   ...KEYS.map((k) => ({ name: `get:${k}`, method: "POST" as const, path: "/api/panel/get", body: { key: k } })),
   { name: "search tenders", method: "POST", path: "/api/panel/search", body: { kind: "t", values: [["\\bsolar"]] } },
+  { name: "search tenders he", method: "POST", path: "/api/panel/search", body: { kind: "t", values: [["\\bדאטה סנטר", "country", ""], ["", "min value", ""], ["", "max value", ""], ["", "", ""], [7, "", ""], [2000, "fit", ""]] } },
+  { name: "search tenders en7", method: "POST", path: "/api/panel/search", body: { kind: "t", values: [["\\bsolar", "country", ""], ["", "min value", ""], ["", "max value", ""], ["", "", ""], [7, "", ""], [2000, "fit", ""]] } },
   { name: "search suppliers", method: "POST", path: "/api/panel/search", body: { kind: "s", values: [["\\btransformer"]] } },
   { name: "suppliers-for", method: "POST", path: "/api/panel/suppliers-for", body: { sector: "", text: "power transformer", country: "", region: "", hs: "", n: 10 } },
   { name: "commodities coffee", path: "/api/panel/commodities?product=coffee&limit=60" },
