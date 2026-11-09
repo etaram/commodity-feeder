@@ -57,9 +57,13 @@ export async function toEnglish(q: string): Promise<{ text: string; how: "none" 
 }
 
 // A regex that needs every word (word start, any order), for short searches.
-export function allWordsRe(text: string): RegExp | null {
+// Every word must appear at a word start, in any order. One small regex per word (the text is lower-cased by the
+// caller): a single regex of ".*" lookaheads with the unicode and ignore-case flags took about a minute over all
+// open tenders, so a Hebrew search in the panel ran into the time limit.
+export function allWordsRe(text: string): { test: (s: string) => boolean } | null {
   const w = [...new Set(text.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((x) => x.length >= 2))].slice(0, 6);
   if (!w.length) return null;
   const stem = (x: string) => (x.length > 4 && x.endsWith("s") && !x.endsWith("ss") ? x.slice(0, -1) : x); // plural = singular
-  return new RegExp(w.map((x) => `(?=.*(?:^|[^\\p{L}])${stem(x)})`).join(""), "iu");
+  const res = w.map((x) => { const st = stem(x).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); return { lit: stem(x), re: new RegExp(`(?:^|[^\\p{L}])${st}`, "u") }; });
+  return { test: (s: string) => res.every((r) => s.includes(r.lit) && r.re.test(s)) };
 }
