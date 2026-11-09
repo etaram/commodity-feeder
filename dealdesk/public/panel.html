@@ -2132,7 +2132,7 @@ Tender data (JSON): ${JSON.stringify(pick(r, ["title_en", "title_original", "buy
     if (v && eng && v !== eng) $("#qa").insertAdjacentHTML("beforebegin", `<div class="flash info">${esc(t("qa_conflict", { a: v, d: r.decision }))}</div>`);
     const kw = (text.match(/KEYWORDS:\s*(.*)$/m) || [])[1] || "";
     if (kw) { const b = document.createElement("button"); b.type = "button"; b.textContent = t("sup_for") + kw.slice(0, 60); b.style.marginTop = "8px"; b.onclick = () => showSuppliers(r.sector, kw + " " + r.title_en, "#t-out", { kind: "tender", r }); $("#qa").after(b); }
-  } catch (e) { $("#qa").textContent = (e.text || "") + "\n" + sampleErr(e); }
+  } catch (e) { ($("#qa") || {}).textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 function sampleErr(e) { return t(({ server_unavailable: "s_unavail", not_granted: "s_not_granted", rate_limited: "s_rate", sampling_disabled: "s_disabled", session_expired: "s_expired", cancelled: "s_cancel" })[e?.code] || "s_other"); }
 
@@ -2928,7 +2928,7 @@ async function quickCompany(s) {
   out.innerHTML = `<div class="section"><h3>${esc(t("c_quick"))}</h3><div class="ai" dir="auto" id="cq-out"><span class="spin"></span> ${esc(t("thinking"))}</div><p class="note">${esc(t("quick_note"))}</p></div>`;
   const prompt = `In ${outLang()}, concise lines starting with "- ", no emojis, no em-dashes. From the data below about a company in Sinder's supplier database, explain: what it most likely makes or supplies, how strong the evidence is (public contract wins, values, buyers, exports), which kinds of Sinder deals it fits (as a supplier for which tenders or buyers), and what to ask in a first call. Say what is unknown. Data: ${JSON.stringify(pick(s, ["supplier", "country", "region", "main_sector", "other_sectors", "type", "logistics_role", "products", "web_title", "supplied", "commodities", "wins", "won_usd_est", "buyers", "buyer_countries", "exports", "first_win", "last_win", "website", "sources", "industries", "employees", "example_award"]))}`;
   try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#cq-out").textContent = text; }, modelTier: "quick", cache: { gcTime: 3600000 } }); $("#cq-out").innerHTML = mdHtml(text); }
-  catch (e) { $("#cq-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
+  catch (e) { ($("#cq-out") || {}).textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 
 /* ---------- DEALS ---------- */
@@ -2972,7 +2972,7 @@ async function quickDeal(mode, r) {
   const kind = mode === "bd" ? "a trade opportunity found by the BD research agent" : mode === "rep" ? "a public buyer that buys the same goods repeatedly (from award history) and is expected to tender again" : "an import market signal (customs data: import value, growth, unit price vs a world benchmark price)";
   const prompt = `You are Sinder's deal strategist (Israeli international procurement and commodity trading firm that connects global manufacturers with buyers). This is ${kind}. In ${outLang()}, no emojis, no em-dashes, short lines starting with "- ", under these headings: 1. What the deal is (who buys what, roughly how much) 2. Why it can make money (price gap, demand growth, weak competition, timing), with the numbers from the data 3. Realistic economics (deal size, likely gross margin range for this kind of trade, cash and guarantees needed) 4. Main risks 5. The 3 next steps for Sinder this week. Say clearly what is an estimate. Data (JSON): ${JSON.stringify(r).slice(0, 6000)}`;
   try { const { text } = await sample(prompt, { onText: ({ text }) => { $("#dq-out").textContent = text; }, cache: { gcTime: 3600000 } }); $("#dq-out").innerHTML = mdHtml(text); }
-  catch (e) { $("#dq-out").textContent = (e.text || "") + "\n" + sampleErr(e); }
+  catch (e) { ($("#dq-out") || {}).textContent = (e.text || "") + "\n" + sampleErr(e); }
 }
 function gotoDeal(mode, r) { S.dealMode = mode; setSeg(); go("deals"); renderDeals(); openDeal(mode, r); }
 function openDeal(mode, r) {
