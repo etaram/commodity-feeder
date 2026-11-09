@@ -10,8 +10,11 @@ const LANG = process.env.LANG_UI || "he";
 const VIEWS = ((process.env.VIEWS || "").trim() || "today,forme,desk,tenders,deals,pipeline,projects,companies,contacts,markets,world,country,research,reverse,finance,logistics,grants,intel,jobs,clients,outreach,users,ops").split(",");
 fs.mkdirSync("audit", { recursive: true });
 const b = await chromium.launch();
-const ctx = await b.newContext({ ...devices["iPhone 13"], deviceScaleFactor: 1, extraHTTPHeaders: { "x-dd-audit": TOKEN }, locale: LANG === "he" ? "he-IL" : "en-US" });
+const ctx = await b.newContext({ ...devices["iPhone 13"], deviceScaleFactor: 1, locale: LANG === "he" ? "he-IL" : "en-US" });
 await ctx.addInitScript((lang) => { try { localStorage.setItem("sinder-panel-lang", lang); localStorage.setItem("lang", lang); } catch (e) {} }, LANG);
+// the audit header goes to the panel's own host only (fonts and other sites never see it)
+const HOST = new URL(BASE).host;
+await ctx.route("**/*", (route) => { const u = new URL(route.request().url()); return u.host === HOST ? route.continue({ headers: { ...route.request().headers(), "x-dd-audit": TOKEN } }) : route.continue(); });
 const page = await ctx.newPage();
 let cur = "load";
 const rep = {};

@@ -115,8 +115,16 @@ def today():
     return dt.date.today()
 
 
+_TAG = re.compile(r"</?[a-zA-Z][a-zA-Z0-9]*(?:\s[^<>]{0,300})?/?>")
+
+
 def clean(s, n=None):
-    s = re.sub(r"\s+", " ", str(s or "")).strip()
+    # source pages leak markup into titles ("limited to: <br/>• Pump"): tags out, entities decoded, spaces collapsed
+    s = str(s or "")
+    if "<" in s or "&" in s:
+        import html as _html
+        s = _html.unescape(_TAG.sub(" ", s))
+    s = re.sub(r"\s+", " ", s).strip()
     return s[:n] if n else s
 
 

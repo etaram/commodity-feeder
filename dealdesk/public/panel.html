@@ -22,6 +22,10 @@ table.mk tr:last-child td{border-bottom:0}
 .rd-list{list-style:none;padding:0;margin:6px 0}.rd-list li{padding:2px 0}.rd-list li.gap{color:var(--muted,#8a96ad)}.rd summary{cursor:pointer}
 .cov{width:100%;border-collapse:collapse;font-size:.9em}.cov th,.cov td{padding:6px 8px;border-bottom:1px solid var(--line,#2a3550);text-align:start}.cov tr.gap td:last-child{color:var(--warn,#e0a84a)}
 .tablewrap{overflow-x:auto;max-width:100%}
+/* Hebrew UI: a meta line that starts in English (buyer, country, sector) reads left to right, still aligned right */
+:root[dir="rtl"] div.sub{unicode-bidi:plaintext;text-align:right}
+/* a long label never pushes the page wider than the screen */
+.pill{max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
 table.cmt td .sub{white-space:normal}table.cmt td.cm-links{white-space:nowrap}
 @media (max-width:700px){table.cmt thead{display:none}table.cmt,table.cmt tbody{display:block}
 table.cmt tr{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 4px;border-bottom:1px solid var(--line)}
@@ -1183,7 +1187,9 @@ const daysBetween = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5
 const url = u => /^https?:\/\//i.test(String(u || "").trim()) ? String(u).trim() : "";
 const link = (u, label) => url(u) ? `<a href="${esc(url(u))}" target="_blank" rel="noopener" dir="auto">${esc(label || u)}</a>` : "";
 const heb = s => /[֐-׿]/.test(String(s || ""));
-const txt = s => `<span dir="auto"${heb(s) ? ' class="he"' : ""}>${esc(s)}</span>`;
+// text from sources: markup some pages leak into titles ("<br/>") is dropped before escaping
+const untag = s => String(s ?? "").replace(/<\/?[a-zA-Z][a-zA-Z0-9]*(?:\s[^<>]{0,300})?\/?>/g, " ").replace(/&nbsp;/g, " ").replace(/\s{2,}/g, " ");
+const txt = s => { s = untag(s); return `<span dir="auto"${heb(s) ? ' class="he"' : ""}>${esc(s)}</span>`; };
 // tender title in the panel's language: English titles come from the pipeline, Hebrew ones from 'Titles HE'
 const heTitle = r => S.he.get(r.id) || (heb(r.title_original) ? r.title_original : "");
 /* titles still in Spanish, Portuguese, French or German are translated on display (DD_TX, cached here and on the server) */
@@ -3379,7 +3385,7 @@ async function openTenderById(id, btn) {
   if (r) { go("tenders"); openTender(r); }
 }
 const tItemRow = x => [`<span class="score ${x.fit >= 80 ? "hi" : ""}">${esc(Math.round(x.fit) || "-")}</span>`,
-  `<div class="t">${flag(x.c)}${txt(S.tx[LANG === "he" ? "he" : "en"].get(x.id) || x.t)}</div><div class="sub"><bdi>${txt(x.b)}</bdi> · ${esc(x.c)} · ${esc(x.s)}${x.lensWhy ? ` · <span class="muted">${esc(t(x.lensWhy === "sector and product" ? "fl_by_both" : x.lensWhy === "sector" ? "fl_by_sector" : "fl_by_product"))}</span>` : ""}</div>`,
+  `<div class="t">${flag(x.c)}${txt(S.tx[LANG === "he" ? "he" : "en"].get(x.id) || x.t)}</div><div class="sub">${[x.b ? `<bdi>${txt(x.b)}</bdi>` : "", x.c ? `<bdi>${esc(x.c)}</bdi>` : "", x.s ? `<bdi>${esc(x.s)}</bdi>` : ""].filter(Boolean).join(" · ")}${x.lensWhy ? ` · <bdi class="muted">${esc(t(x.lensWhy === "sector and product" ? "fl_by_both" : x.lensWhy === "sector" ? "fl_by_sector" : "fl_by_product"))}</bdi>` : ""}</div>`,
   `<div class="num">${money(x.v) || ""}</div>${x.dd != null ? daysPill(String(x.dd)) : ""}`];
 const newsRow = n => [`<span class="pill">${esc(n.country || "")}</span>`, `<div class="t"><a href="${esc(url(n.url) || "#")}" target="_blank" rel="noopener">${txt(n.title)}</a></div><div class="sub">${esc(n.domain || n.source || "")} · ${esc(n.date || "")}</div>`, ``];
 const playRow = p => [`<span class="pill acc">${esc(p.kind || "")}</span>`, `<div class="t">${flag(p.country)}${txt(p.title)}</div><div class="sub">${txt(String(p.thesis || "").slice(0, 160))}</div>`, `<div class="num">${money(p.value_usd)}</div>`];

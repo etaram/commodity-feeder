@@ -254,7 +254,7 @@ async function lastTender(chatId: string): Promise<string> {
 }
 async function country(c: string): Promise<string> {
   const d = await countryIntel(c);
-  return `<b>${a(countryUrl(d.country), esc(d.country))}</b> ${esc(d.region)}\n${d.open} open tenders (${money(d.open_usd)}), ${d.intl} open to foreign bidders, ${d.pursue} Pursue, ${d.planned} planned projects (${money(d.planned_usd)})\n`
+  return `<b>${a(countryUrl(d.country), esc(d.country))}</b> ${esc(d.region)}\n${d.open} open tenders${money(d.open_usd) ? ` (${money(d.open_usd)} known value)` : ""}, ${d.intl} open to foreign bidders, ${d.pursue} Pursue, ${d.planned} planned projects${money(d.planned_usd) ? ` (${money(d.planned_usd)})` : ""}\n`
     + `Top sectors: ${d.sectors.slice(0, 4).map((s) => `${s.sector} ${s.n}`).join("; ")}\n`
     + (d.plays.length ? `Plays:\n${d.plays.slice(0, 3).map((p) => `• ${esc(p.kind)}: ${esc(p.title)}`).join("\n")}\n` : "")
     + (d.news.length ? `News:\n${d.news.slice(0, 4).map((x) => `• ${esc(x.title)} (${esc(x.domain)})`).join("\n")}` : "");

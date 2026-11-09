@@ -15,7 +15,7 @@ from collections import defaultdict
 from statistics import median
 from urllib.parse import quote_plus
 
-from .common import DATA, LEADS, PARTIAL, benchmarks, fmt_bench, log, master_rows, save_partial, today
+from .common import DATA, LEADS, PARTIAL, benchmarks, clean, fmt_bench, log, master_rows, save_partial, today
 from .taxonomy import refine_group, BY_ID, CH2GROUP, match_cpv
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
@@ -525,7 +525,7 @@ def write_sheet_chunks(tenders):
             expired += 1
             continue
         x = {c: r.get(c, "") for c in SHEET_COLS}
-        x["title_en"] = (r.get("title_en") or r.get("title") or "")[:220]
+        x["title_en"] = clean(r.get("title_en") or r.get("title") or "", 220)
         x["title_original"] = r.get("title", "")[:140] if r.get("lang") else ""
         x["buyer"] = (r.get("buyer") or "")[:90]
         x["contact"] = (r.get("contact") or o.get("contact_email") or "")[:80]  # else the buyer's own address from its other notices

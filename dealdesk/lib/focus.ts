@@ -46,7 +46,9 @@ async function csv(name: string): Promise<Row[]> {
   return rows;
 }
 
-const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender|open to foreign/i;
+// open to a foreign supplier by the notice's own access wording: development-bank and UN rules, GPA and trade
+// agreements, open procedures, "foreign firms may bid" (the Indian "check whether" notices are not counted)
+const INTL = /^international|world bank|\(icb\)|\bicb\b|^global tender|open to foreign|\bgpa\b|trade agreements|^open\b|^open procedure|foreign firms may bid|full and open competition/i;
 export type TItem = { id: string; t: string; b: string; c: string; s: string; v: number; dd: number | null; fit: number; d: string; acc: string; why: string; lensWhy?: string };
 const item = (r: Row): TItem => ({ id: r.id, t: r.title_en || r.title_original || "", b: r.buyer || "", c: r.country || "", s: r.sector || "", v: num(r.est_value_usd),
   dd: Number.isFinite(days(r)) ? days(r) : null, fit: num(r.fit || r.score), d: r.decision || "", acc: r.access || "", why: r.fit_why || "" });
