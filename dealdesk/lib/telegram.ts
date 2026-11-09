@@ -12,6 +12,7 @@ import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
+import { addWatch, listProjects, listWatches, openProject, projectCallback, watchCallback } from "./projects";
 
 // The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
 // (answered at once, the work runs after the answer), authenticated with the webhook secret.
@@ -29,7 +30,7 @@ export async function ensureCallbacks() {
   const h = await fetch(API("getWebhookInfo")).then((r) => r.json()).catch(() => null);
   const url = h?.result?.url, allowed: string[] = h?.result?.allowed_updates || [];
   const cmds = (he: boolean) => [["tenders", he ? "מכרזים פתוחים לפי התאמה" : "Open tenders by fit"], ["suppliers", he ? "ספקים מוכחים למוצר" : "Proven suppliers"], ["country", he ? "מודיעין מדינה (קוד 3 אותיות)" : "Country intelligence"],
-    ["deal", he ? "סוכן עסקאות: מריץ עסקה מקצה לקצה" : "Deal agent, end to end"], ["brief", he ? "התקציר העולמי של היום" : "Today's world brief"], ["plays", he ? "תזות עסקה" : "Deal theses"], ["new", he ? "שיחה חדשה (שוכח את ההקשר)" : "New conversation"], ["help", he ? "עזרה" : "Help"]].map(([command, description]) => ({ command, description }));
+    ["projects", he ? "פרויקטי המכרזים שלי" : "My tender projects"], ["watch", he ? "מעקב אחרי מכרזים חדשים" : "Watch for new tenders"], ["deal", he ? "סוכן עסקאות: מריץ עסקה מקצה לקצה" : "Deal agent, end to end"], ["brief", he ? "התקציר העולמי של היום" : "Today's world brief"], ["plays", he ? "תזות עסקה" : "Deal theses"], ["new", he ? "שיחה חדשה (שוכח את ההקשר)" : "New conversation"], ["help", he ? "עזרה" : "Help"]].map(([command, description]) => ({ command, description }));
   await fetch(API("setMyCommands"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ commands: cmds(true) }) }).catch(() => null);
   await fetch(API("setMyCommands"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ commands: cmds(false), language_code: "en" }) }).catch(() => null);
   if (url && !allowed.includes("callback_query")) {
@@ -45,6 +46,9 @@ export async function agentCallback(chatId: string, data: string, queryId: strin
   const he = link.lang === "he";
   const qq = data.match(/^qq:(\d)$/);
   if (qq) { const q = (await lastQuestions(chatId))[Number(qq[1])]; if (q) { await send(chatId, `<i>${esc(q)}</i>`); return handle(chatId, q, "", langCode); } return; }
+  const who = { chat: chatId, email: link.email, name: link.name, lang: link.lang };
+  const pm = data.match(/^(p[a-z]|w[vx]):(.+)$/);
+  if (pm) { if (await projectCallback(who, pm[1], pm[2])) return; if (await watchCallback(who, pm[1], pm[2])) return; }
   const tm = data.match(/^(tn|ts|td):(.+)$/);
   if (tm) {
     const t = await findTender(tm[2]);
@@ -52,8 +56,7 @@ export async function agentCallback(chatId: string, data: string, queryId: strin
     if (tm[1] !== "td") await remember(chatId, `tn:${t.id}`, "");
     if (tm[1] === "tn") { await logActivity({ email: link.email, name: link.name }, "tg_tender", t.id); return sendCard(chatId, tenderDetail(t, he), tenderButtons(t.id, he)); }
     if (tm[1] === "ts") { await typing(chatId); return send(chatId, await tenderSuppliers(t, 6, he)); }
-    await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: `Build a deal on tender ${t.id}: ${t.title_en || t.title} (${t.country}, buyer ${t.buyer})` });
-    return send(chatId, he ? "פתחתי סוכן עסקאות על המכרז הזה. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "Opened a deal agent on this tender. I will update you here and ask approval before any message.");
+    return openProject(who, t.id);
   }
   const m = data.match(/^ag:(ok|no|re):([A-Z0-9]+)$/);
   if (!m) return;
@@ -130,6 +133,9 @@ const HELP_HE = `פקודות:
 /suppliers <מוצר> - ספקים מוכחים
 /brief - התקציר העולמי של היום
 /alerts on|off - התראות (תזות בביטחון גבוה, תקציר)
+/projects - פרויקטי המכרזים שלך (פותחים מכרטיס מכרז, בכפתור "פתח פרויקט")
+/watch <מילים> [מדינה] - מעקב: הודעה כל בוקר על מכרזים חדשים
+/watches - המעקבים שלך
 /deal <בקשה> - סוכן עסקאות: מריץ עסקה מההתחלה עד הסוף ומבקש אישור לפני כל פנייה
 /stop - עצירת הסוכן
 /retry - המשך ריצה שנעצרה בתקלה
@@ -143,6 +149,9 @@ const HELP_EN = `Commands:
 /suppliers <product> - proven suppliers
 /brief - today's world brief
 /alerts on|off
+/projects - your tender projects (open one from a tender card with "Open project")
+/watch <words> [ISO3] - a morning message on new matching tenders
+/watches - your watches
 /deal <request> - deal agent: runs a deal end to end, asks approval before any message
 /stop - stop the agent
 /retry - continue a run that stopped on an error
@@ -159,12 +168,12 @@ const daysLeft = (dl: string) => { const d = Date.parse(dl); return Number.isFin
 const due = (dl: string, he: boolean) => { const d = daysLeft(dl); return d === null ? "" : d <= 0 ? (he ? "נסגר היום" : "closes today") : he ? `נסגר בעוד ${d} ימים` : `closes in ${d} days`; };
 const pct = (v: unknown) => { const n = num(v); return n ? `${Math.round(n <= 1 ? n * 100 : n)}%` : ""; };
 export async function typing(chatId: string) { if (tgEnv().token) await fetch(API("sendChatAction"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ chat_id: chatId, action: "typing" }) }).catch(() => null); }
-async function sendCard(chatId: string, text: string, keyboard?: { text: string; callback_data: string }[][]) { return send(chatId, text, keyboard ? { reply_markup: { inline_keyboard: keyboard } } : {}); }
+export async function sendCard(chatId: string, text: string, keyboard?: { text: string; callback_data: string }[][]) { return send(chatId, text, keyboard ? { reply_markup: { inline_keyboard: keyboard } } : {}); }
 const cb = (k: string, id: string) => `${k}:${id}`.slice(0, 64);
-async function findTender(id: string) { const { rows, byId } = await allTenders(); return (byId.get(id) || rows.find((r) => r.id.startsWith(id))) as unknown as Row | undefined; }
-const tenderButtons = (id: string, he: boolean) => [[{ text: he ? "ספקים מתאימים" : "Matching suppliers", callback_data: cb("ts", id) }, { text: he ? "בנה עסקה" : "Build a deal", callback_data: cb("td", id) }]];
+export async function findTender(id: string) { const { rows, byId } = await allTenders(); return (byId.get(id) || rows.find((r) => r.id.startsWith(id))) as unknown as Row | undefined; }
+const tenderButtons = (id: string, he: boolean) => [[{ text: he ? "ספקים מתאימים" : "Matching suppliers", callback_data: cb("ts", id) }, { text: he ? "פתח פרויקט" : "Open project", callback_data: cb("pj", id) }]];
 
-function tenderLine(r: Row, i: number, he: boolean) {
+export function tenderLine(r: Row, i: number, he: boolean) {
   const title = esc(r.title_en || r.title || "");
   const facts = [esc(r.buyer || ""), esc(r.country || ""), money(num(r.est_value_usd)), due(r.deadline || "", he), r.fit || r.score ? `${he ? "התאמה" : "fit"} ${esc(r.fit || r.score)}` : ""].filter(Boolean).join(" · ");
   return `<b>${i}. ${r.id ? a(tenderUrl(r.id), title) : title}</b>\n${facts}`;
@@ -181,7 +190,7 @@ async function tenders(q: string, cty: string, n = 6): Promise<string> {
   if (!rows.length) return `0 open tenders (searched: ${q}${cty ? ", " + cty : ""}; matched: ${res.how})`;
   return `${res.rows.length} open tenders (matched: ${res.how})\n` + rows.map((r) => `- id ${r.id} | ${r.title_en || r.title} | ${r.buyer} | ${r.country} | ${money(num(r.est_value_usd))} | deadline ${r.deadline} | fit ${r.fit || r.score} | open: ${r.id ? tenderUrl(r.id) : ""}`).join("\n");
 }
-function tenderDetail(r: Row, he: boolean): string {
+export function tenderDetail(r: Row, he: boolean): string {
   const L = (h: string, e: string, v: string) => (v ? `${he ? h : e}: ${v}\n` : "");
   const routes = routeOptions({ country: r.country, access: r.access, title: r.title_en, sector: r.sector, value_usd: num(r.est_value_usd), stage: r.stage } as never);
   const best = routes.find((x) => x.verdict === "supported") || routes.find((x) => x.verdict === "conditional");
@@ -207,7 +216,7 @@ async function suppliers(q: string, n = 6, he = false): Promise<string> {
 }
 // Suppliers for one tender, ranked the way the web panel does it: the tender's sector, customs code, country and
 // title words together (a long title never has to match word for word)
-async function tenderSuppliers(t: Record<string, string>, n = 6, he = false): Promise<string> {
+export async function tenderSuppliers(t: Record<string, string>, n = 6, he = false): Promise<string> {
   const r = await supplierSearch({ sector: t.sector || "", text: `${t.title_en || t.title || ""} ${t.commodity || ""}`.slice(0, 400), country: t.country || "", region: t.region || "", hs: t.hs || "", n: 15 });
   const rows = toObjects(r.values).filter((y) => y.match !== "incompatible").slice(0, n);
   const title = esc((t.title_en || t.title || "").slice(0, 90));
@@ -295,6 +304,11 @@ export async function handle(chatId: string, text: string, _from: string, langCo
     // an answer to the agent's open question goes back to the agent
     if (!t.startsWith("/")) { const w = await waitingRun(chatId); if (w) { await resume(agentIo, w, t); return send(chatId, he ? "קיבלתי, ממשיך." : "Got it, continuing."); } }
     if (/^\/alerts/.test(cmd)) { await appendRow(TAB, [chatId, link.email, link.name, new Date().toISOString().slice(0, 16), link.lang, /off/i.test(arg) ? "off" : "on"]); return send(chatId, /off/i.test(arg) ? (he ? "התראות כבויות." : "Alerts off.") : (he ? "התראות פועלות." : "Alerts on.")); }
+    const me = { chat: chatId, email: link.email, name: link.name, lang: link.lang };
+    if (/^\/projects?\b/.test(cmd)) { await logActivity(who, "tg_projects", arg); return listProjects(me); }
+    if (/^\/watches\b/.test(cmd)) return listWatches(me);
+    if (/^\/unwatch\b/.test(cmd)) return listWatches(me);
+    if (/^\/watch\b/.test(cmd)) { await logActivity(who, "tg_watch", arg); await typing(chatId); const c = iso(arg.toUpperCase()); return addWatch(me, arg.replace(new RegExp(`\\b${c}\\b`, "i"), "").trim() || (c ? "" : arg), c); }
     if (/^\/tenders/.test(cmd)) {
       await logActivity(who, "tg_tenders", arg); await typing(chatId);
       const c = iso(arg.toUpperCase()), q = arg.replace(c, "").trim();
@@ -324,6 +338,9 @@ export async function handle(chatId: string, text: string, _from: string, langCo
       { name: "supplier_contact", description: "Contact details on record for one supplier (name and ISO3 country as returned by suppliers).", input_schema: { type: "object", properties: { company: { type: "string" }, country: { type: "string" } }, required: ["company"] } },
       { name: "country_intel", description: "Country intelligence summary for an ISO3 country code: open tenders and value, sectors, theses, news.", input_schema: { type: "object", properties: { country: { type: "string" } }, required: ["country"] } },
       { name: "plays", description: "Deal theses (supply the winner, arbitrage gap, pre-tender, news lead, procurement plan), optionally for one ISO3 country.", input_schema: { type: "object", properties: { country: { type: "string" } } } },
+      { name: "open_project", description: "Open a tender project when the user asks to work on, follow, manage or bid for a specific tender: a schedule back from the deadline, morning reminders, and the deal agent starts on it. tender_id from the tools.", input_schema: { type: "object", properties: { tender_id: { type: "string" } }, required: ["tender_id"] } },
+      { name: "watch_tenders", description: "Save a tender watch when the user asks to be told about new tenders on a subject: every morning new matching tenders are sent. words: English product words; country: ISO3 or empty.", input_schema: { type: "object", properties: { words: { type: "string" }, country: { type: "string" } }, required: ["words"] } },
+      { name: "my_projects", description: "Show the user's open tender projects with progress and the next step.", input_schema: { type: "object", properties: {} } },
       { name: "start_deal_agent", description: "Start the deal agent only when the user asks to build, run or work on a deal end to end (source a product for a buyer, prepare a bid, find suppliers and contact them). request: the user's full request with the context.", input_schema: { type: "object", properties: { request: { type: "string" } }, required: ["request"] } },
     ];
     const sys = `You are Sinder's deal co-pilot on Telegram, talking to a Sinder trader. Answer from the Deal Desk's own data only, through the tools; call several tools at once when that is faster.
@@ -350,6 +367,14 @@ Facts: cite figures exactly as the tools returned them; never invent companies, 
       if (!uses.length) break;
       msgs.push({ role: "assistant", content });
       if (turn) await typing(chatId);
+      const me2 = { chat: chatId, email: link.email, name: link.name, lang: link.lang };
+      const op = uses.find((u) => u.name === "open_project" || u.name === "watch_tenders" || u.name === "my_projects");
+      if (op) {
+        await remember(chatId, t, `(${op.name} ${JSON.stringify(op.input).slice(0, 120)})`);
+        if (op.name === "open_project") return openProject(me2, op.input.tender_id || "");
+        if (op.name === "watch_tenders") return addWatch(me2, op.input.words || "", (op.input.country || "").toUpperCase().slice(0, 3));
+        return listProjects(me2);
+      }
       const start = uses.find((u) => u.name === "start_deal_agent");
       if (start) {
         await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: start.input.request || t });

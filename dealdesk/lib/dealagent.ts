@@ -127,11 +127,11 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
 // ---- running -----------------------------------------------------------------------------------------------
 const dealButton = (r: Run) => ({ reply_markup: { inline_keyboard: [[{ text: r.lang === "he" ? "פתח את העסקה במערכת" : "Open the deal", url: dealUrl(r.deal_id) }]] } });
 
-export async function startRun(io: Io, o: { chat: string; email: string; name: string; lang: "he" | "en"; ws?: string; request: string }) {
+export async function startRun(io: Io, o: { chat: string; email: string; name: string; lang: "he" | "en"; ws?: string; request: string; deal_id?: string }) {
   const id = "AG" + Date.now().toString(36).toUpperCase();
-  const r: Run = { id, chat: o.chat, email: o.email, name: o.name, lang: o.lang, ws: o.ws || DEFAULT_WS, deal_id: "AGENT-" + id, request: o.request.slice(0, 1500),
+  const r: Run = { id, chat: o.chat, email: o.email, name: o.name, lang: o.lang, ws: o.ws || DEFAULT_WS, deal_id: o.deal_id || "AGENT-" + id, request: o.request.slice(0, 1500),
     msgs: [{ role: "user", content: o.request.slice(0, 1500) }], turns: 0, status: "running", usd: 0, started: now() };
-  await saveRecord(r.deal_id, "stage", "stage", 1, "lead", { stage: "lead", title: o.request.slice(0, 240), next_step: "deal agent running", note: "opened by the deal agent from Telegram" }, o.email, "deal agent", r.ws).catch(() => {});
+  if (!o.deal_id) await saveRecord(r.deal_id, "stage", "stage", 1, "lead", { stage: "lead", title: o.request.slice(0, 240), next_step: "deal agent running", note: "opened by the deal agent from Telegram" }, o.email, "deal agent", r.ws).catch(() => {});
   await saveRun(r);
   await logActivity({ email: o.email, name: o.name }, "agent_start", id, o.request.slice(0, 200));
   await io.kick(id);
