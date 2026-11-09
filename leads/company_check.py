@@ -540,6 +540,7 @@ def queue(rows, checks, limit, today):
 
     # 1. asked from the panel (Check queue: time, company, country, by)
     from .push import LEADS_SHEET
+    STATE_SHEET = "1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo"  # the app's state sheet (Activity and other logs)
     for q in _sheet_rows(LEADS_SHEET, "'Check queue'!A2:D2000")[-300:]:
         q = q + [""] * 4
         for r in ([by_key[f"{q[1]}|{q[2]}"]] if f"{q[1]}|{q[2]}" in by_key else by_name.get(q[1].strip().lower(), [])[:2]):
@@ -547,7 +548,13 @@ def queue(rows, checks, limit, today):
     # 2. supplier pages opened in the last 30 days (Activity: time, email, name, role, action, target, detail;
     # an opened supplier is action "open", target "company <name>", detail "<name> | sector | country")
     since = (today - timedelta(days=30)).isoformat()
-    for a in _sheet_rows(LEADS_SHEET, "'Activity'!A2:G50000")[-10000:]:
+    # the app's Activity log lives in the state sheet since 9 Nov 2026 (the engine copy is the older history)
+    acts = _sheet_rows(LEADS_SHEET, "'Activity'!A2:G50000")
+    try:
+        acts = acts + _sheet_rows(STATE_SHEET, "'Activity'!A2:G50000")
+    except Exception:
+        pass
+    for a in acts[-10000:]:
         a = a + [""] * 7
         if str(a[0])[:10] < since or a[4] != "open" or not str(a[5]).startswith("company "):
             continue

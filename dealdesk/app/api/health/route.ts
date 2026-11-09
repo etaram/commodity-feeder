@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
   const only = req.nextUrl.searchParams.get("only") || "";
   const sample = Number(req.nextUrl.searchParams.get("sample") || 0);
   const out: Record<string, unknown>[] = [];
-  const list = CHECKS.filter((c) => !only || c.name.includes(only));
+  const list = only === "extra" ? [] : CHECKS.filter((c) => !only || only.split(",").some((o) => c.name === o || c.name.startsWith(o)));
   // a few at a time, like a page load
   for (let i = 0; i < list.length; i += 6) {
     out.push(...(await Promise.all(list.slice(i, i + 6).map(async (c) => {
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
     }))));
   }
   const extra: Record<string, unknown> = {};
-  if (!only) {
+  if (!only || only === "extra") {
     const tg = process.env.TELEGRAM_BOT_TOKEN;
     extra.telegram = tg ? await fetch(`https://api.telegram.org/bot${tg}/getWebhookInfo`).then((r) => r.json()).then((j) => { const w = j.result || {}; return { url_set: !!w.url, url_host: String(w.url || "").split("/")[2], pending: w.pending_update_count, last_error: w.last_error_message || "", last_error_at: w.last_error_date ? new Date(w.last_error_date * 1000).toISOString() : "" }; }).catch((e) => String(e)) : "no token";
     extra.ai = await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).then((r) => ({ ok: true, text: r.text })).catch((e) => ({ ok: false, err: String(e).slice(0, 200) }));

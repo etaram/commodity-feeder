@@ -3,6 +3,17 @@ import { JWT } from "google-auth-library";
 const SHEET = "1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y";
 const API = "https://sheets.googleapis.com/v4/spreadsheets";
 
+// The tabs the app itself writes all the time (logs, bot memory, agent state) live in a small separate spreadsheet
+// when STATE_SHEET_ID is set. A write to the engine sheet (4.7 million cells) holds its reads for up to a minute, so
+// every log line used to stall the live panel tabs; the state sheet takes those writes instead. Unset = old behaviour.
+const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Briefs"]);
+const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;
+function sheetFor(tab: string): string {
+  const st = (process.env.STATE_SHEET_ID || "").trim();
+  return st && STATE_TABS.has(tab) ? st : SHEET;
+}
+export function stateSheet(): string { return sheetFor("Activity"); }
+
 export function sheetsEnabled(): boolean {
   return Boolean(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
 }
@@ -65,9 +76,16 @@ export async function sheetsDiag(): Promise<Record<string, number | string>> {
 export async function readRanges(sid: string, ranges: string[]): Promise<string[][][] | null> {
   const jwt = await client();
   if (!jwt) return null;
-  const q = ranges.map((r) => "ranges=" + encodeURIComponent(r)).join("&");
-  const j = await call(jwt, "GET", `${API}/${sid}/values:batchGet?${q}&valueRenderOption=FORMATTED_VALUE`);
-  return (j.valueRanges || []).map((v: { values?: string[][] }) => v.values || []);
+  // engine-sheet ranges of the state tabs are read from the state sheet (see STATE_TABS), in the order asked
+  const where = ranges.map((r) => (sid === SHEET ? sheetFor(tabOf(r)) : sid));
+  const out: string[][][] = new Array(ranges.length);
+  for (const id of [...new Set(where)]) {
+    const idx = ranges.map((_, i) => i).filter((i) => where[i] === id);
+    const q = idx.map((i) => "ranges=" + encodeURIComponent(ranges[i])).join("&");
+    const j = await call(jwt, "GET", `${API}/${id}/values:batchGet?${q}&valueRenderOption=FORMATTED_VALUE`);
+    (j.valueRanges || []).forEach((v: { values?: string[][] }, k: number) => { out[idx[k]] = v.values || []; });
+  }
+  return out.map((v) => v || []);
 }
 
 // One supplier's official contact details from the private Supplier Universe sheet (columns B name, C country,
@@ -101,14 +119,14 @@ export async function appendRows(tab: string, rows: (string | number)[][]) {
   if (!rows.length) return;
   const jwt = await client();
   if (!jwt) throw new Error("Sheets is not configured");
-  const range = encodeURIComponent(`'${tab}'!A1`);
-  const url = `${API}/${SHEET}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+  const range = encodeURIComponent(`'${tab}'!A1`), sid = sheetFor(tab);
+  const url = `${API}/${sid}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
   const values = rows.map((r) => r.slice(0, 40));
   try {
     await call(jwt, "POST", url, { values });
   } catch (e: unknown) {
     if (String(e).includes("Unable to parse range")) {
-      await call(jwt, "POST", `${API}/${SHEET}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
+      await call(jwt, "POST", `${API}/${sid}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
       await call(jwt, "POST", url, { values });
     } else throw e;
   }
@@ -118,7 +136,7 @@ export async function appendRows(tab: string, rows: (string | number)[][]) {
 export async function writeRange(range: string, values: (string | number)[][]) {
   const jwt = await client();
   if (!jwt) throw new Error("Sheets is not configured");
-  await call(jwt, "PUT", `${API}/${SHEET}/values/${encodeURIComponent(range)}?valueInputOption=RAW`, { range, values });
+  await call(jwt, "PUT", `${API}/${sheetFor(tabOf(range))}/values/${encodeURIComponent(range)}?valueInputOption=RAW`, { range, values });
 }
 
 export const ENGINE_SHEET = SHEET;
@@ -168,13 +186,13 @@ async function append(tab: string, row: (string | number)[]) {
   if (row.length > 40) row = row.slice(0, 40);
   const jwt = await client();
   if (!jwt) throw new Error("Sheets is not configured");
-  const range = encodeURIComponent(`'${tab}'!A1`);
-  const url = `${API}/${SHEET}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
+  const range = encodeURIComponent(`'${tab}'!A1`), sid = sheetFor(tab);
+  const url = `${API}/${sid}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`;
   try {
     await call(jwt, "POST", url, { values: [row] });
   } catch (e: unknown) {
     if (String(e).includes("Unable to parse range")) {
-      await call(jwt, "POST", `${API}/${SHEET}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
+      await call(jwt, "POST", `${API}/${sid}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
       await call(jwt, "POST", url, { values: [row] });
     } else throw e;
   }
