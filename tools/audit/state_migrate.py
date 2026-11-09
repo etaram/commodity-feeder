@@ -10,7 +10,7 @@ if not ST: raise SystemExit(0)
 cr = service_account.Credentials.from_service_account_info(info, scopes=["https://www.googleapis.com/auth/spreadsheets"]); cr.refresh(Request())
 H = {"Authorization": f"Bearer {cr.token}"}
 LE = "1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y"; API = "https://sheets.googleapis.com/v4/spreadsheets"
-TABS = ["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Briefs"]
+TABS = (os.environ.get("TABS") or "").split(",") if os.environ.get("TABS") else ["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Briefs"]
 have = {s["properties"]["title"] for s in requests.get(f"{API}/{ST}?fields=sheets.properties(title)", headers=H, timeout=120).json()["sheets"]}
 src = {s["properties"]["title"] for s in requests.get(f"{API}/{LE}?fields=sheets.properties(title)", headers=H, timeout=180).json()["sheets"]}
 for t in TABS:

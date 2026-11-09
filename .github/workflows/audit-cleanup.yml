@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       state_sheet: { description: 'state sheet id (empty: print the service account only)', required: false, default: '' }
+      tabs: { description: 'comma list of tabs (empty = the first set)', required: false, default: '' }
 permissions:
   contents: read
 jobs:
@@ -17,3 +18,4 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           STATE_SHEET_ID: ${{ inputs.state_sheet }}
+          TABS: ${{ inputs.tabs }}
