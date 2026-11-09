@@ -65,20 +65,24 @@ let i = 1;
 for (const v of VIEWS) {
   cur = v;
   const t = Date.now();
-  try { await page.evaluate((x) => window.go && window.go(x), v); } catch (e) { R(v).pageerrors.push("go(): " + String(e).slice(0, 200)); }
+  try { await page.evaluate((x) => { location.hash = x; }, v); } catch (e) { R(v).pageerrors.push("open: " + String(e).slice(0, 200)); }
   await page.waitForTimeout(9000);
   R(v).ms_after_open = Date.now() - t;
   try { Object.assign(R(v), await inspect()); } catch (e) { R(v).inspect_error = String(e).slice(0, 200); }
-  await page.screenshot({ path: `audit/${String(i).padStart(2, "0")}-${v}.png`, fullPage: true, clip: undefined }).catch(() => {});
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: `audit/${String(i).padStart(2, "0")}-${v}.png`, fullPage: true }).catch(() => {});
   i++;
 }
+fs.writeFileSync("audit/report.json", JSON.stringify(rep, null, 1));
 // search flows on the tenders view: a Hebrew word and an English word
 for (const q of ["דאטה סנטר", "solar"]) {
   cur = "search:" + q;
-  await page.evaluate(() => window.go && window.go("tenders"));
-  const box = await page.$("#tq, #q, input[type=search]");
-  if (box) { await box.fill(q); await box.press("Enter"); await page.waitForTimeout(12000); Object.assign(R(cur), await inspect()); await page.screenshot({ path: `audit/${String(i++).padStart(2, "0")}-search-${q.replace(/\W+/g, "_") || "he"}.png` }); }
-  else R(cur).note = "search box not found";
+  try {
+    await page.evaluate(() => { location.hash = "tenders"; });
+    await page.waitForTimeout(3000);
+    await page.fill("#tq", q, { timeout: 8000 }); await page.press("#tq", "Enter"); await page.waitForTimeout(12000);
+    Object.assign(R(cur), await inspect()); await page.screenshot({ path: `audit/${String(i++).padStart(2, "0")}-search-${q.replace(/\W+/g, "_") || "he"}.png` });
+  } catch (e) { R(cur).note = "search: " + String(e).slice(0, 160); }
 }
 fs.writeFileSync("audit/report.json", JSON.stringify(rep, null, 1));
 await b.close();
