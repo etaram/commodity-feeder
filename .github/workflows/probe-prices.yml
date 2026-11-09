@@ -1,5 +1,5 @@
 name: probe-prices
-# Manual: which candidate physical-price sources answer from a GitHub runner (tools/probe_urls.txt).
+# Manual: look at a candidate physical-price source from a GitHub runner.
 on:
   workflow_dispatch:
 permissions:
@@ -12,5 +12,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install requests
-      - run: python tools/probe_links.py tools/probe_urls.txt "Thai|Indicator|Pink Sheet|Arabica"
+      - run: pip install -q requests pandas openpyxl
+      - run: python tools/probe_pink.py
