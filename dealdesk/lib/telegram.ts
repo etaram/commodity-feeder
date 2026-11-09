@@ -1,7 +1,7 @@
 import { anthropicHeaders } from "@/lib/anthropic";
 import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 import { listUsers } from "./users";
-import { searchTenders, supplierSearch, getRange } from "./panel";
+import { searchTenders, searchTendersSmart, supplierSearch, getRange } from "./panel";
 import { countryIntel } from "./country";
 import { readBrief, buildBrief } from "./brief";
 import { claude } from "./anthropic";
@@ -117,10 +117,9 @@ type Row = Record<string, string>;
 const toObjects = (g: string[][]): Row[] => { const h = g[0] || []; return g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))); };
 
 async function tenders(q: string, cty: string, n = 6): Promise<string> {
-  const v = [[q, "", cty], ["", "", ""], ["", "", ""], ["", "", ""], ["", "", ""]];
-  const rows = toObjects(await searchTenders(v)).slice(0, n);
+  const res = await searchTendersSmart(q, cty); const rows = res.rows.slice(0, n);
   if (!rows.length) return "-";
-  return rows.map((r) => `• <b>${r.id ? a(tenderUrl(r.id), esc(r.title_en || r.title || "")) : esc(r.title_en || r.title || "")}</b>\n  ${esc(r.buyer || "")} · ${esc(r.country)} · ${money(Number(String(r.est_value_usd || "").replace(/[^0-9.]/g, "")))} · ${esc(r.deadline || "")} · fit ${esc(r.fit || r.score || "")}${r.link ? `\n  ${a(r.link, "המכרז באתר המקור")}` : ""}`).join("\n");
+  return `${res.rows.length} open tenders (matched: ${esc(res.how)})\n` + rows.map((r) => `• <b>${r.id ? a(tenderUrl(r.id), esc(r.title_en || r.title || "")) : esc(r.title_en || r.title || "")}</b>\n  ${esc(r.buyer || "")} · ${esc(r.country)} · ${money(Number(String(r.est_value_usd || "").replace(/[^0-9.]/g, "")))} · ${esc(r.deadline || "")} · fit ${esc(r.fit || r.score || "")}${r.link ? `\n  ${a(r.link, "המכרז באתר המקור")}` : ""}`).join("\n");
 }
 async function plays(cty: string, n = 6): Promise<string> {
   const rows = toObjects(await getRange("plays")).filter((p) => !cty || p.country === cty).slice(0, n);
@@ -181,7 +180,7 @@ export async function handle(chatId: string, text: string, _from: string) {
       { name: "suppliers", description: "Proven suppliers for an English product phrase.", input_schema: { type: "object", properties: { product: { type: "string" } }, required: ["product"] } },
       { name: "start_deal_agent", description: "Start the deal agent when the user asks to build, run or work on a deal end to end: source a product for a buyer, prepare a bid on a tender, find suppliers and contact them. request: the user's full request.", input_schema: { type: "object", properties: { request: { type: "string" } }, required: ["request"] } },
     ];
-    const sys = `You answer a Sinder analyst on Telegram from the Deal Desk's own data only, through the tools. Call one or two tools, then answer in ${he ? "Hebrew" : "English"} in at most 12 lines, plain text with HTML <b> for names only; when a tool row has an "open" link, make the name a link: <a href="that link">name</a>. Cite figures exactly as the tools returned them. If the tools return nothing, say so. Never invent companies, prices or dates.`;
+    const sys = `You answer a Sinder analyst on Telegram from the Deal Desk's own data only, through the tools. Call one or two tools, then answer in ${he ? "Hebrew" : "English"} in at most 12 lines, plain text with HTML <b> for names only; when a tool row has an "open" link, make the name a link: <a href="that link">name</a>. Cite figures exactly as the tools returned them. If a search returns nothing, search again with other wordings before you answer: synonyms, UK and US spelling, the product alone without words like construction or supply, and related terms (for example data centre, server room, HPC); say no only after that, and name what you searched. Never invent companies, prices or dates.`;
     type Msg = { role: "user" | "assistant"; content: unknown };
     const msgs: Msg[] = [{ role: "user", content: t.slice(0, 500) }];
     let answer = "";

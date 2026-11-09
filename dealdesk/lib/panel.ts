@@ -281,6 +281,43 @@ export async function searchTenders(v: string[][], meta?: { total?: number }): P
   return [head, ...out.slice(0, cap).map((r) => head.map((k) => r[k] ?? ""))];
 }
 
+// Forgiving tender search for the agents (Telegram and the deal agent). A literal phrase search found nothing for
+// "data center construction" while 80+ notices said "data centre", "server room" or "Rechenzentrum". Steps: every word
+// (any order, plural = singular, UK/US spelling), known concepts widened to their usual wordings, then without generic
+// words ("construction", "supply"...), then any core word ranked by how many words matched.
+const SPELL: [RegExp, string][] = [[/^cent(er|re)s?$/, "cent(?:er|re)"], [/^fib(er|re)s?$/, "fib(?:er|re)"], [/^alumini?um$/, "alumini?um"], [/^(tyre|tire)s?$/, "t[iy]re"],
+  [/^defen[cs]e$/, "defen[cs]e"], [/^harbou?rs?$/, "harbou?r"], [/^sul(ph|f)ur$/, "sul(?:ph|f)ur"], [/^programm?e?s?$/, "programm?e?"], [/^theat(er|re)s?$/, "theat(?:er|re)"],
+  [/^(lit|met)(er|re)s?$/, "$1(?:er|re)"], [/^licen[cs]es?$/, "licen[cs]e"], [/^catalog(ue)?s?$/, "catalog"], [/^modell?ing$/, "modell?ing"]];
+const CONCEPTS: [RegExp, string][] = [
+  [/data ?cent(er|re)s?|datacent(er|re)s?/, "data ?cent(?:er|re)|datacent|server (?:room|hall|farm)|rechenzentr|centro de datos|centre de donn|centro de dados|centro dati|datacentrum|colocation|high performance comput|\\bhpc\\b"],
+  [/solar (power )?(plant|farm|park)s?|photovoltaic/, "solar|photovolta|\\bpv\\b"],
+  [/hospital equipment|medical equipment/, "medical equipment|medical device|hospital equipment|equipos? m[eé]dicos?|[eé]quipements? m[eé]dica"],
+  [/water treatment|desalination/, "water treatment|desalinat|reverse osmosis|\\bro plant|wastewater|sewage treatment"]];
+const GENERIC = /^(construction|construct|building|build|works?|supply|supplies|services?|projects?|tenders?|procurement|purchase|provision|installation|new|for|of|and|the|in|on|with|to|a)$/;
+const spellRe = (w: string) => { for (const [r, v] of SPELL) if (r.test(w)) return w.replace(r, v); return w.length > 4 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w; };
+export async function searchTendersSmart(words: string, cty = ""): Promise<{ rows: Record<string, string>[]; how: string }> {
+  let q = words.toLowerCase().replace(/[^\p{L}\p{N} ]+/gu, " ").replace(/\s+/g, " ").trim();
+  if (NON_LATIN.test(q)) q = (await toEnglish(q)).text.toLowerCase();
+  const groups: string[] = []; const notes: string[] = [];
+  for (const [r, alt] of CONCEPTS) if (r.test(q)) { groups.push(alt); q = q.replace(r, " "); notes.push("related wordings included"); }
+  const toks = [...new Set(q.split(" ").filter((x) => x.length >= 2))];
+  const core = toks.filter((x) => !GENERIC.test(x)), gen = toks.filter((x) => GENERIC.test(x));
+  const mk = (alts: string[]) => alts.map((a) => new RegExp(`(?:^|[^\\p{L}])(?:${a})`, "iu"));
+  const all = mk([...groups, ...core.map(spellRe), ...gen.map(spellRe)]), strict = mk([...groups, ...core.map(spellRe)]);
+  const { rows } = await allTenders();
+  const he = new Map(((await snapshot("static")).titles || []).slice(1).map((r) => [r[0], r[1] || ""]));
+  const pool = rows.filter((r) => !cty || r.country === cty).map((r) => ({ r, text: `${r.title_en} ${r.title_original} ${he.get(r.id) || ""} ${r.buyer} ${r.commodity} ${r.sector} ${(r as Record<string, string>).summary_en || ""}`.toLowerCase() }));
+  const byFit = (a: { r: TRow }, b: { r: TRow }) => (num(b.r.fit) || 0) - (num(a.r.fit) || 0);
+  const pick = (res: RegExp[]) => pool.filter((x) => res.every((re) => re.test(x.text))).sort(byFit);
+  let hit = all.length ? pick(all) : [], how = "all words";
+  if (hit.length < 3 && strict.length && strict.length < all.length) { const h2 = pick(strict); if (h2.length > hit.length) { hit = h2; how = `without the general words (${gen.join(", ")})`; } }
+  if (hit.length < 3 && strict.length > 1) {
+    const scored = pool.map((x) => ({ ...x, n: strict.filter((re) => re.test(x.text)).length })).filter((x) => x.n > 0).sort((a, b) => b.n - a.n || byFit(a, b));
+    if (scored.length > hit.length) { hit = scored; how = "any of the main words, best matches first"; }
+  }
+  return { rows: hit.map((x) => x.r as unknown as Record<string, string>), how: [how, ...new Set(notes)].join("; ") };
+}
+
 const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;
 export async function searchSuppliers(v: string[][]): Promise<Grid> {
   const g = (r: number) => String((v[r] || [])[0] ?? "").trim();

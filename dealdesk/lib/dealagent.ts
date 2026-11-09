@@ -9,7 +9,7 @@
 // panel shows the same deal, but the owner never has to open it.
 import { anthropicHeaders, estimateCost, MODEL } from "@/lib/anthropic";
 import { appendRow, ENGINE_SHEET, lookupContact, readRanges } from "@/lib/sheets";
-import { searchTenders, supplierSearch } from "@/lib/panel";
+import { searchTendersSmart, supplierSearch } from "@/lib/panel";
 import { tenders } from "@/lib/index";
 import { routeOptions } from "@/lib/routes";
 import { cashCheck } from "@/lib/dealstate";
@@ -85,8 +85,8 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
   }
   if (name === "supplier_contact") return JSON.stringify((await lookupContact(s("company"), s("country", 3).toUpperCase()).catch(() => null)) || { note: "no contact on record; try web search for the official sales contact" });
   if (name === "search_tenders") {
-    const g = await searchTenders([[s("words", 160), "", s("country", 3).toUpperCase()], ["", "", ""], ["", "", ""], ["", "", ""], ["", "", ""]]);
-    return JSON.stringify(toObjects(g).slice(0, 8).map((y) => ({ ...pick(y, ["id", "title_en", "title", "buyer", "country", "est_value_usd", "deadline", "access", "route", "fit", "link"]), open: y.id ? tenderUrl(y.id) : "" })));
+    const res = await searchTendersSmart(s("words", 160), s("country", 3).toUpperCase());
+    return JSON.stringify({ total: res.rows.length, matched: res.how, tenders: res.rows.slice(0, 8).map((y) => ({ ...pick(y, ["id", "title_en", "title", "buyer", "country", "est_value_usd", "deadline", "access", "route", "fit", "link"]), open: y.id ? tenderUrl(y.id) : "" })) });
   }
   if (name === "tender_routes") {
     const t = (await tenders()).find((y) => y.id === s("tender_id", 120));
