@@ -1,0 +1,19 @@
+name: scrapling-probe
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -q "scrapling[fetchers]" requests && (scrapling install || true)
+      - run: python tools/scrapling/probe.py || true
+      - name: publish to scratch-scrapling
+        run: |
+          cd out && git init -q && git checkout -q -b scratch-scrapling && git add -A
+          git -c user.name=probe -c user.email=probe@sinder.pro commit -qm "probe $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" scratch-scrapling
