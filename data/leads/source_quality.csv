@@ -1,5 +1,5 @@
 source,open,fresh_7d,deadline,value,buyer,title_en,expired,dup_in,mirrored,goods,flags
-TED (EU),20674,10,89,36,100,100,0,0,0,13,
+TED (EU),20673,10,89,36,100,100,0,0,0,13,
 India e-procurement (Uttar Pradesh),12017,17,100,0,100,100,0,0,0,0,
 oeffentlichevergabe (Germany),10619,0,0,6,100,100,0,0,0,7,thin parse; nothing new
 India e-procurement (Tamil Nadu),7328,6,100,0,100,100,0,0,0,0,
@@ -7,11 +7,11 @@ India e-procurement (Kerala),7148,17,100,0,100,100,0,0,0,0,
 BOAMP (France),6472,4,100,0,100,100,0,0,0,17,
 India e-procurement (Madhya Pradesh),4877,3,100,0,100,100,0,0,0,0,
 India e-procurement (Defence),4663,4,100,0,100,100,0,0,0,1,
-PNCP (Brazil),4261,2,100,67,100,100,0,0,0,6,
+PNCP (Brazil),4252,2,100,67,100,100,0,0,0,6,
 India e-procurement (Jammu and Kashmir),4082,15,100,0,100,100,0,0,0,0,
 SAM.gov (USA),3920,5,96,0,97,100,0,0,0,37,
 ChileCompra,3843,0,100,0,100,100,0,6,0,0,nothing new
-PLACSP (Spain),3792,2,98,100,100,100,0,0,0,7,
+PLACSP (Spain),3791,2,98,100,100,100,0,0,0,7,
 India e-procurement (Maharashtra),3747,9,100,0,100,100,0,0,0,0,
 India e-procurement (Odisha),3666,18,100,0,100,100,0,0,0,0,
 India e-procurement (West Bengal),2644,8,100,0,100,100,0,0,0,0,
@@ -40,14 +40,14 @@ GETS NZ,383,4,100,0,100,100,0,0,0,0,
 MyProcurement (Malaysia),380,0,100,31,100,100,0,0,0,11,nothing new
 India e-procurement (Assam),348,11,100,0,100,100,0,0,0,0,
 India e-procurement (Goa),321,1,100,0,100,100,0,0,0,0,
+Israel - statutory body,270,2,79,0,100,100,0,0,1,64,
 eSupply (Dubai),269,7,100,0,100,100,0,0,0,0,
-Israel - statutory body,268,0,78,0,100,100,0,0,1,65,nothing new
-Monaqasat (Qatar),260,8,0,0,0,100,0,0,0,0,thin parse
+Monaqasat (Qatar),266,11,0,0,0,100,0,0,0,0,thin parse
 India e-procurement (Tripura),257,1,100,0,100,100,0,0,0,0,
 UNGM (UNDP),246,3,100,0,100,100,0,0,0,4,
 India e-procurement (PMGSY rural roads),233,4,100,0,100,100,0,0,0,0,
 Umucyo (Rwanda),225,1,100,0,29,100,0,0,0,2,thin parse
-Israel - local council,214,0,10,0,100,100,0,0,2,9,thin parse; nothing new
+Israel - local council,214,2,10,0,100,100,0,0,2,10,thin parse
 Find a Tender (UK),175,1,100,69,100,100,0,0,0,31,
 AIIB,175,1,7,0,100,100,0,1,0,69,thin parse
 AusTender (Australia),155,0,0,0,0,100,0,0,0,0,thin parse; nothing new
@@ -59,18 +59,18 @@ US city - Los Angeles,138,8,99,0,100,100,0,0,0,0,
 UNGM (FAO),119,2,100,0,100,100,0,0,0,6,
 India e-procurement (Chandigarh),112,1,100,0,100,100,0,0,0,0,
 GHANEPS (Ghana),98,2,100,0,100,100,0,0,0,0,
-Israel - government company,96,0,5,0,100,100,0,1,2,9,thin parse; nothing new
+Israel - government company,95,0,5,0,100,100,0,1,2,9,thin parse; nothing new
 IDB,95,0,92,0,100,100,0,0,0,28,nothing new
 Contracts Finder (UK),84,0,100,88,100,100,0,0,0,19,nothing new
+Israel - academic institution,78,0,4,0,100,100,0,5,4,22,thin parse; nothing new
 NYC City Record (USA),77,0,100,0,100,100,0,0,0,0,nothing new
-Israel - academic institution,74,0,4,0,100,100,0,5,4,26,thin parse; nothing new
 UNGM (IOM),68,6,100,0,100,100,0,0,0,4,
 UFSA (Mozambique),68,0,100,0,100,100,0,0,0,0,nothing new
 UNGM (UNOPS),63,5,100,0,100,100,0,0,0,11,
 OCDS: Ecuador: Servicio Nacional de Contratación Pública,59,0,0,3,100,100,0,0,0,0,thin parse; nothing new
-Israel - religious council,48,2,4,0,100,100,0,0,6,6,thin parse
+Israel - religious council,49,4,6,0,100,100,0,0,6,6,thin parse
 UNGM (UNHCR),48,10,100,0,100,100,0,0,0,8,
-Israel - regional council,46,0,20,0,100,100,0,0,0,17,thin parse; nothing new
+Israel - regional council,47,2,21,0,100,100,0,0,0,17,thin parse
 UNGM (WHO),46,9,100,0,100,100,0,0,0,7,
 mr.gov.il exemption notice (Israel),44,50,100,0,100,100,0,0,0,0,
 UNGM (UNRWA),43,16,100,0,100,100,0,0,0,2,
@@ -101,12 +101,12 @@ UNGM (UNCDF),6,0,100,0,100,100,0,0,0,0,
 UNGM (ITC),6,0,100,0,100,100,0,0,0,0,
 Israel - company,6,0,0,0,100,100,0,0,0,0,thin parse
 Israel - cluster of authorities,5,0,0,0,100,100,0,0,0,40,thin parse
-Israel - drainage authority,5,0,0,0,100,100,0,0,0,0,thin parse
 US city - Denver,5,20,0,0,100,100,0,0,0,0,thin parse
 Israel - municipal company,4,0,0,0,100,100,0,0,0,0,thin parse
 OCDS: Liberia: Public Procurement and Concessions Commis,4,0,100,75,100,100,0,0,0,0,
 Israel - infrastructure body,4,0,0,0,100,100,0,0,0,0,thin parse
 US city - Houston,4,75,0,0,100,100,0,0,0,0,thin parse
+Israel - drainage authority,3,0,0,0,100,100,0,0,0,0,thin parse
 UNGM (IMO),3,0,100,0,100,100,0,0,0,0,
 US city - Phoenix,3,67,0,0,100,100,0,0,0,0,thin parse
 UNGM (OSCE),2,0,100,0,100,100,0,0,0,0,

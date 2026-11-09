@@ -1,143 +1,6 @@
-Mon Nov  9 09:47:49 UTC 2026
-INFO TED total matching notices: 4152
-INFO TED fetched 4152 notices (18 pages, 3 days) -> 4024 new rows, cache 23987 open (16597714 bytes)
-INFO ted: 23987 rows
-INFO FTS new 9, open 178 (pages 1)
-INFO fts: 178 rows
-INFO SAM incremental: fetched 375, open 8183 (5825 open to foreign firms)
-INFO sam: 8183 rows
-INFO CanadaBuys rows 865
-INFO canadabuys: 865 rows
-INFO EBRD rows 43
-INFO ebrd: 43 rows
-INFO UNGM total active 1713, new 472, cache 1185 (pages 35)
-INFO ungm: 1185 rows
-INFO UNDP new 18, open 12
-INFO undp: 12 rows
-INFO AIIB new 173, kept 176, awards 292
-INFO aiib: 176 rows
-INFO IsDB new 41, open 37
-INFO isdb: 37 rows
-WARNING AfDB project: not well-formed (invalid token): line 1, column 1341
-WARNING AfDB corporate: not well-formed (invalid token): line 1, column 1341
-INFO AfDB new 0, open 42
-INFO afdb: 42 rows
-INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1438572', 'noticeid': '39505', 'type': 'AWARD', 'countryname': 'REGIONAL', 'projectnumber': 'RG-L1131', 'proyecturl': 'https://www.iadb.org/en/project/RG-L1131', 'loannumber': '4822/OC-RG', 'noticetitle': 'Diseño y Construcción de Nueva Planta de', 'ezshareid': 'EZIDB0000470-314865798-1440', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Programa de Saneamiento Integral de las ', 'publicationyear': '2026', 'publicationdate': '2026-11-05 12:00:00.000000000', 'deadline': ''}
-INFO IDB dates min=2026-07-10 max=2026-11-05 sample=['2026-11-05 12:00:00.000000000', '2026-11-05 08:00:00.000000000', '2026-11-05 08:00:00.000000000'] deadlines=['', '2026-11-23', '2026-11-23']
-INFO IDB page 0: 1000 recs, 0 old, kept so far 99
-INFO IDB dates min=2026-03-25 max=2026-07-10 sample=['2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000', '2026-07-10 04:00:00.000000000'] deadlines=['2026-08-26', '2026-08-04', '2026-07-24']
-INFO IDB page 1: 1000 recs, 719 old, kept so far 99
-INFO IDB new 99, open 101
-INFO iadb: 101 rows
-INFO SIMAP new 240, open 619
-INFO simap: 619 rows
-INFO GETS new 402, open 415
-INFO gets: 415 rows
-INFO Etimad new 62, open 633 (pages 7)
-INFO etimad: 633 rows
-INFO Prozorro feed pages 13, candidates 598, fetched 225, open kept 1095
-INFO prozorro: 1095 rows
-INFO PNCP new 13, open 5023
-INFO pncp: 5023 rows
-INFO SECOP new 48, open 891
-INFO secop: 891 rows
-INFO Contracts Finder new 13, open 93
-INFO contractsfinder: 93 rows
-INFO MTender new 268, open 1111 (ocids 869, pages 10)
-INFO moldova: 1111 rows
-INFO Uruguay new 0, open 546 (fetched 700 of 1901; categories {'award': 6727, 'awardUpdate': 324, 'tender': 1901, 'tenderUpdate': 3575, 'tenderAmendment': 1637, 'tenderCancellation': 19})
-INFO uruguay: 546 rows
-INFO Malaysia page 1: 100 blocks, 100 new, first QT260000000026832 
-INFO Malaysia page 2: 100 blocks, 97 new, first QT260000000000091 
-INFO Malaysia page 3: 100 blocks, 95 new, first QT260000000000583 
-INFO Malaysia page 4: 100 blocks, 54 new, first QT260000000028666 
-INFO Malaysia page 5: 100 blocks, 26 new, first T1/26/AJP001/JPPF/43 
-INFO Malaysia page 6: 100 blocks, 13 new, first QT260000000029268 
-INFO Malaysia page 7: 100 blocks, 39 new, first T/1/9/2026(26) 
-INFO Malaysia page 8: 100 blocks, 3 new, first QT260000000014248 
-INFO Malaysia page 9: 100 blocks, 3 new, first QT260000000022738 
-INFO Malaysia page 10: 48 blocks, 2 new, first QT260000000024617 
-INFO Malaysia new 432, open 433
-INFO malaysia: 433 rows
-INFO AusTender new 129, open 166
-INFO austender: 166 rows
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1043, in _request_once
-    c.perform()
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 633, in perform
-    self._check_error(ret, "perform")
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 353, in _check_error
-    raise error
-curl_cffi.curl.CurlError: Failed to perform, curl: (28) Operation timed out after 60001 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 808, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 797, in main
-    run_source(a.source)
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/run.py", line 65, in run_source
-    rows, meta = m.fetch()
-                 ^^^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/oman.py", line 18, in fetch
-    r = cffi_get(URL)
-        ^^^^^^^^^^^^^
-  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/common.py", line 111, in cffi_get
-    return cr.get(url, impersonate="chrome", timeout=60, **kw)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 154, in get
-    return request(method="GET", url=url, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 146, in request
-    return s.request(method=method, url=url, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1117, in request
-    return self._request_once(
-           ^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.16/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1050, in _request_once
-    raise error(str(e), e.code, rsp) from e
-curl_cffi.requests.exceptions.Timeout: Failed to perform, curl: (28) Operation timed out after 60001 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Kenya 429 page 5
-INFO Kenya new 40, open 607 (pages 5)
-INFO kenya: 607 rows
-INFO Rwanda new 275, open 275 (pages 10)
-INFO rwanda: 275 rows
-WARNING Uganda page 1: Failed to perform, curl: (28) Connection timed out after 60000 milliseconds. See https://curl.se/libcurl/c/libcurl-error
-INFO Uganda new 0, open 42 (pages 1, titles looked up 0)
-INFO uganda: 42 rows
-INFO ghana new 101, open 101 (pages 13)
-INFO ghana: 101 rows
-INFO Malawi new 35, open 42
-INFO malawi: 42 rows
-WARNING Mozambique: Failed to perform, curl: (6) Could not resolve host: www.ufsa.gov.mz (DNS server returned general failure). See https://
-INFO Mozambique new 0, open 77
-INFO mozambique: 77 rows
-INFO Dubai new 206, open 277 (pages 4)
-INFO dubai: 277 rows
-INFO Philippines new 1200, open 1495 (pages 60)
-INFO philippines: 1495 rows
-WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/3 attempt 1: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/5 attempt 1: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/7 attempt 1: Failed to perform, curl: (28) Connection timed out after 60001 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/7 attempt 2: Failed to perform, curl: (28) Connection timed out after 60000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+Mon Nov  9 12:15:28 UTC 2026
 INFO initializing identifier
-WARNING Qatar https://monaqasat.mof.gov.qa/TendersOnlineServices/AvailableMinistriesTenders/7 attempt 3: Failed to perform, curl: (28) Connection timed out after 60000 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-INFO Qatar new 120, open 297
-INFO qatar: 297 rows
-[0;93m2026-11-09 10:07:50.001778693 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-11-09 12:16:15.072246321 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['CENTRO DEPORTIVO DE DISCIPLINAS MIXTAS - ESTUDIOS Y DISEÑOS TÉCNICOS A NIVEL DE DETALLE, LICENCIAMIENTO Y CONSTRUCCIÓN DEL CENTRO DEPORTIVO DE DISCIPLINAS MIXTAS EN EL MUNICIPIO DE FUNZA, CUNDINAMARCA.'])
 INFO ('apply_packaged_translation', 'CENTRO DEPORTIVO DE DISCIPLINAS MIXTAS - ESTUDIOS Y DISEÑOS TÉCNICOS A NIVEL DE DETALLE, LICENCIAMIENTO Y CONSTRUCCIÓN DEL CENTRO DEPORTIVO DE DISCIPLINAS MIXTAS EN EL MUNICIPIO DE FUNZA, CUNDINAMARCA.')
@@ -1247,235 +1110,13 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['mainstre@@', 'mains
 INFO ('value_hypotheses:', [('mainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstre@@', -25.310810089111328)])
 INFO ('translated_paragraphs:', [[('mainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstre@@', -25.310810089111328)]])
 INFO ('hypotheses_to_return:', [('mainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstremainstre@@', -25.310810089111328)])
-INFO ('paragraphs:', ['Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona'])
-INFO ('apply_packaged_translation', 'Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona'])
-INFO ('tokenized', [['Moldova', '-', 'Dai@@', 'ry', 'produc@@', 'ts', '-', 'Un@@', 't', '(', 'Zona', 'Nord', ')', ',', 'Un@@', 't', '(', 'Zona', 'Centru', ')', ',', 'Un@@', 't', '(', 'Zona', 'Sud', ')', ',', 'B@@', 'rân@@', 'ză', 'de', 'vaci', '(', 'Zona', 'Nord', ')', ',', 'B@@', 'rân@@', 'ză', 'de', 'vaci', '(', 'Zona', 'Centru', ')', ',', 'B@@', 'rân@@', 'ză', 'de', 'vaci', '(', 'Zona', 'Sud', ')', ',', 'Lapte', 'de', 'vaci', '(', 'Zona', 'Nord', ')', ',', 'Lapte', 'de', 'vaci', '(', 'Zona', 'Centru', ')', ',', 'Lapte', 'de', 'vaci', '(', 'Zona', 'Sud', ')', ',', 'Che@@', 'fir', '(', 'Zona', 'Nord', ')', ',', 'Che@@', 'fir', '(', 'Zona', 'Centru', ')', ',', 'Che@@', 'fir', '(', 'Zona']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Moldova', '-', 'D@@', 'airy', 'products', '-', 'But@@', 'ter', '(', 'North', 'Zone', ')', ',', 'But@@', 'ter', '(', 'Central', 'Zone', ')', ',', 'But@@', 'ter', '(', 'South', 'Zone', ')', ',', 'Cheese', 'of', 'cows', '(', 'North', 'Zone', ')', ',', 'Cheese', 'of', 'cows', '(', 'Central', 'Zone', ')', ',', 'Cheese', 'of', 'cows', '(', 'South', 'Zone', ')', ',', 'Milk', 'of', 'cows', '(', 'North', 'Zone', ')', ',', 'Milk', 'of', 'cows', '(', 'Central', 'Zone', ')', ',', 'Milk', 'of', 'cows', '(', 'South', 'Zone', ')', ',', 'Ch@@', 'ep@@', 'hir', '(', 'North', 'Zone', ')', ',', 'Ch@@', 'ep@@', 'hir', '(', 'Central', 'Zone', ')', ',', 'Ch@@', 'ep@@', 'hir', '(', 'Central', 'Zone', ')']], scores=[-13.293192863464355], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
-INFO ('translated_paragraphs:', [[('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)]])
-INFO ('hypotheses_to_return:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
-INFO ('paragraphs:', ['Produse alimentare pentru anul 2027, semestrul I'])
-INFO ('apply_packaged_translation', 'Produse alimentare pentru anul 2027, semestrul I')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Produse alimentare pentru anul 2027, semestrul I'])
-INFO ('tokenized', [['Produse', 'alimentare', 'pentru', 'anul', '20@@', '27', ',', 'seme@@', 'strul', 'I']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Food', 'for', '20@@', '27', ',', '1st', 'semester']], scores=[-2.060640811920166], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Food for 2027, 1st semester', -2.060640811920166)])
-INFO ('translated_paragraphs:', [[('Food for 2027, 1st semester', -2.060640811920166)]])
-INFO ('hypotheses_to_return:', [('Food for 2027, 1st semester', -2.060640811920166)])
-INFO ('paragraphs:', ['material saditor | material saditor PNERP'])
-INFO ('apply_packaged_translation', 'material saditor | material saditor PNERP')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['material saditor | material saditor PNERP'])
-INFO ('tokenized', [['material', 's@@', 'adi@@', 'tor', '&#@@', '12@@', '4@@', ';', 'material', 's@@', 'adi@@', 'tor', 'P@@', 'N@@', 'ER@@', 'P']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['1@@', '4.4', ';', 'P@@', 'N@@', 'ER@@', 'P']], scores=[-6.255130290985107], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('14.4; PNERP', -6.255130290985107)])
-INFO ('translated_paragraphs:', [[('14.4; PNERP', -6.255130290985107)]])
-INFO ('hypotheses_to_return:', [('14.4; PNERP', -6.255130290985107)])
-INFO ('paragraphs:', ['material saditor | material saditor pentru PNERP'])
-INFO ('apply_packaged_translation', 'material saditor | material saditor pentru PNERP')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['material saditor | material saditor pentru PNERP'])
-INFO ('tokenized', [['material', 's@@', 'adi@@', 'tor', '&#@@', '12@@', '4@@', ';', 'material', 's@@', 'adi@@', 'tor', 'pentru', 'P@@', 'N@@', 'ER@@', 'P']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['AD@@', 'DI@@', 'TIONAL', 'ST@@', 'AND@@', 'AR@@', 'DS']], scores=[-7.377967834472656], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('ADDITIONAL STANDARDS', -7.377967834472656)])
-INFO ('translated_paragraphs:', [[('ADDITIONAL STANDARDS', -7.377967834472656)]])
-INFO ('hypotheses_to_return:', [('ADDITIONAL STANDARDS', -7.377967834472656)])
-INFO ('paragraphs:', ['Licitaţie deschisă privind achiziţionarea echipamentelor terminale FTTR (Fiber-To-The-Room) destinate tehnologiei GPON/XGSPON | S.A. “Moldtelecom” anunţă inițierea licitaţiei deschise privind achiziţionarea echipamentelor terminale FTTR (Fiber-To-The-Room) destinate tehnologiei GPON/XGSPON. Pentru a'])
-INFO ('apply_packaged_translation', 'Licitaţie deschisă privind achiziţionarea echipamentelor terminale FTTR (Fiber-To-The-Room) destinate tehnologiei GPON/XGSPON | S.A. “Moldtelecom” anunţă inițierea licitaţiei deschise privind achiziţionarea echipamentelor terminale FTTR (Fiber-To-The-Room) destinate tehnologiei GPON/XGSPON. Pentru a')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Licitaţie deschisă privind achiziţionarea echipamentelor terminale FTTR (Fiber-To-The-Room) destinate tehnologiei GPON/XGSPON | S.A. “Moldtelecom” anunţă inițierea licitaţiei deschise privind achiziţionarea echipamentelor terminale FTTR (Fiber-To-The-Room) destinate tehnologiei GPON/XGSPON.', 'Pentru a'])
-INFO ('tokenized', [['Lic@@', 'it@@', 'aţie', 'deschisă', 'privind', 'achizi@@', 'ţionarea', 'echipamentelor', 'terminale', 'F@@', 'TT@@', 'R', '(', 'Fi@@', 'ber@@', '-@@', 'To@@', '-@@', 'The@@', '-@@', 'Ro@@', 'om', ')', 'destinate', 'tehnologiei', 'G@@', 'PO@@', 'N', '/', 'X@@', 'G@@', 'SP@@', 'ON', '&#@@', '12@@', '4@@', ';', 'S.A.', '&quot;', 'Mol@@', 'd@@', 'telec@@', 'om', '&quot;', 'anunţă', 'inițierea', 'licit@@', 'aţiei', 'deschise', 'privind', 'achizi@@', 'ţionarea', 'echipamentelor', 'terminale', 'F@@', 'TT@@', 'R', '(', 'Fi@@', 'ber@@', '-@@', 'To@@', '-@@', 'The@@', '-@@', 'Ro@@', 'om', ')', 'destinate', 'tehnologiei', 'G@@', 'PO@@', 'N', '/', 'X@@', 'G@@', 'SP@@', 'ON', '.'], ['Pentru', 'a']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Open', 'bidding', 'on', 'the', 'purchase', 'of', 'F@@', 'T@@', 'TR', 'terminal', 'equipment', '(', 'Fi@@', 'ber@@', '-', 'To@@', '-', 'The@@', '-', 'Room', ')', 'for', 'G@@', 'P@@', 'ON', '/', 'X@@', 'G@@', 'SP@@', 'ON', 'technology', '12@@', '4@@', ';', 'S.A.', '&quot;', 'Mol@@', 'd@@', 'telec@@', 'om', '&quot;', 'ann@@', 'ounces', 'the', 'opening', 'of', 'the', 'open', 'auction', 'on', 'the', 'purchase', 'of', 'F@@', 'T@@', 'TR', 'terminal', 'equipment', '(', 'Fi@@', 'ber@@', '-', 'To@@', '-', 'The@@', '-', 'Room', ')', 'for', 'G@@', 'P@@', 'ON', '/', 'X@@', 'G@@', 'SP@@', 'ON', 'technology', '.']], scores=[-13.327183723449707], attention=[], logits=[]), TranslationResult(hypotheses=[['To']], scores=[-1.3986200094223022], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Open bidding on the purchase of FTTR terminal equipment (Fiber- To- The- Room) for GPON / XGSPON technology 124; S.A. "Moldtelecom" announces the opening of the open auction on the purchase of FTTR terminal equipment (Fiber- To- The- Room) for GPON / XGSPON technology. To', -14.72580373287201)])
-INFO ('translated_paragraphs:', [[('Open bidding on the purchase of FTTR terminal equipment (Fiber- To- The- Room) for GPON / XGSPON technology 124; S.A. "Moldtelecom" announces the opening of the open auction on the purchase of FTTR terminal equipment (Fiber- To- The- Room) for GPON / XGSPON technology. To', -14.72580373287201)]])
-INFO ('hypotheses_to_return:', [('Open bidding on the purchase of FTTR terminal equipment (Fiber- To- The- Room) for GPON / XGSPON technology 124; S.A. "Moldtelecom" announces the opening of the open auction on the purchase of FTTR terminal equipment (Fiber- To- The- Room) for GPON / XGSPON technology. To', -14.72580373287201)])
-INFO ('paragraphs:', ['Servicii de evacuare și neutralizare a deșeurilor medicale infecțioase, inclusiv tăietor-înțepătoare conform necesităților pentru anul 2027'])
-INFO ('apply_packaged_translation', 'Servicii de evacuare și neutralizare a deșeurilor medicale infecțioase, inclusiv tăietor-înțepătoare conform necesităților pentru anul 2027')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Servicii de evacuare și neutralizare a deșeurilor medicale infecțioase, inclusiv tăietor-înțepătoare conform necesităților pentru anul 2027'])
-INFO ('tokenized', [['Servicii', 'de', 'evacuare', 'și', 'neutr@@', 'alizare', 'a', 'deșeurilor', 'medicale', 'infec@@', 'țioase', ',', 'inclusiv', 'tăie@@', 'tor@@', '-@@', 'în@@', 'țe@@', 'pă@@', 'toare', 'conform', 'neces@@', 'ităților', 'pentru', 'anul', '20@@', '27']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Ex@@', 'ha@@', 'ust', 'and', 'neutr@@', 'alisation', 'services', 'of', 'infectious', 'medical', 'waste', ',', 'including', 'pr@@', 'ickly', 'cutting', 'as', 'required', 'for', '20@@', '27']], scores=[-7.948040962219238], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Exhaust and neutralisation services of infectious medical waste, including prickly cutting as required for 2027', -7.948040962219238)])
-INFO ('translated_paragraphs:', [[('Exhaust and neutralisation services of infectious medical waste, including prickly cutting as required for 2027', -7.948040962219238)]])
-INFO ('hypotheses_to_return:', [('Exhaust and neutralisation services of infectious medical waste, including prickly cutting as required for 2027', -7.948040962219238)])
-INFO ('paragraphs:', ['Material săditor (salâm alb, stejar roșu, glădiță)'])
-INFO ('apply_packaged_translation', 'Material săditor (salâm alb, stejar roșu, glădiță)')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Material săditor (salâm alb, stejar roșu, glădiță)'])
-INFO ('tokenized', [['Materi@@', 'al', 'să@@', 'di@@', 'tor', '(', 'sal@@', 'â@@', 'm', 'alb', ',', 'ste@@', 'jar', 'roșu', ',', 'g@@', 'lă@@', 'di@@', 'ță', ')']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Pro@@', 'pag@@', 'ating', 'material', '(', 'white', 'sal@@', 'ami', ',', 'red', 'oak', ',', 'gl@@', 'itter', ')']], scores=[-5.752479553222656], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Propagating material (white salami, red oak, glitter)', -5.752479553222656)])
-INFO ('translated_paragraphs:', [[('Propagating material (white salami, red oak, glitter)', -5.752479553222656)]])
-INFO ('hypotheses_to_return:', [('Propagating material (white salami, red oak, glitter)', -5.752479553222656)])
-INFO ('paragraphs:', ['Servicii de conectare a centralei electrice'])
-INFO ('apply_packaged_translation', 'Servicii de conectare a centralei electrice')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Servicii de conectare a centralei electrice'])
-INFO ('tokenized', [['Servicii', 'de', 'conectare', 'a', 'centr@@', 'alei', 'electrice']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Electricity', 'plant', 'connection', 'services']], scores=[-3.311063766479492], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Electricity plant connection services', -3.311063766479492)])
-INFO ('translated_paragraphs:', [[('Electricity plant connection services', -3.311063766479492)]])
-INFO ('hypotheses_to_return:', [('Electricity plant connection services', -3.311063766479492)])
-INFO ('paragraphs:', ['ELIBERAREA EXTRASULUI DIN REGISTRUL BUNURILOR IMOBILE'])
-INFO ('apply_packaged_translation', 'ELIBERAREA EXTRASULUI DIN REGISTRUL BUNURILOR IMOBILE')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['ELIBERAREA EXTRASULUI DIN REGISTRUL BUNURILOR IMOBILE'])
-INFO ('tokenized', [['ELIBERAREA', 'EX@@', 'TRA@@', 'S@@', 'ULUI', 'DIN', 'REG@@', 'I@@', 'STR@@', 'UL', 'B@@', 'UN@@', 'U@@', 'RILOR', 'IM@@', 'O@@', 'BILE']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['APPROVAL', 'OF', 'EX@@', 'TRAC@@', 'TION', 'FROM', 'THE', 'RE@@', 'G@@', 'IS@@', 'TER', 'OF', 'IM@@', 'POSSIBLE', 'GO@@', 'ODS']], scores=[-6.70676326751709], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('APPROVAL OF EXTRACTION FROM THE REGISTER OF IMPOSSIBLE GOODS', -6.70676326751709)])
-INFO ('translated_paragraphs:', [[('APPROVAL OF EXTRACTION FROM THE REGISTER OF IMPOSSIBLE GOODS', -6.70676326751709)]])
-INFO ('hypotheses_to_return:', [('APPROVAL OF EXTRACTION FROM THE REGISTER OF IMPOSSIBLE GOODS', -6.70676326751709)])
-INFO ('paragraphs:', ['COPERTARE'])
-INFO ('apply_packaged_translation', 'COPERTARE')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['COPERTARE'])
-INFO ('tokenized', [['CO@@', 'PER@@', 'TARE']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['CO@@', 'OPERATION']], scores=[-2.687265157699585], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('COOPERATION', -2.687265157699585)])
-INFO ('translated_paragraphs:', [[('COOPERATION', -2.687265157699585)]])
-INFO ('hypotheses_to_return:', [('COOPERATION', -2.687265157699585)])
-INFO ('paragraphs:', ['ACHIZIȚIONAREA UNEI BATERII PENTRU LAVOAR'])
-INFO ('apply_packaged_translation', 'ACHIZIȚIONAREA UNEI BATERII PENTRU LAVOAR')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['ACHIZIȚIONAREA UNEI BATERII PENTRU LAVOAR'])
-INFO ('tokenized', [['AC@@', 'HI@@', 'ZI@@', 'ȚION@@', 'AREA', 'UN@@', 'EI', 'B@@', 'AT@@', 'ER@@', 'II', 'PENTRU', 'LA@@', 'VO@@', 'AR']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['AC@@', 'HI@@', 'EV@@', 'ING', 'A', 'B@@', 'AT@@', 'TER@@', 'Y', 'FOR', 'LA@@', 'V@@', 'OUR']], scores=[-4.872106075286865], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('ACHIEVING A BATTERY FOR LAVOUR', -4.872106075286865)])
-INFO ('translated_paragraphs:', [[('ACHIEVING A BATTERY FOR LAVOUR', -4.872106075286865)]])
-INFO ('hypotheses_to_return:', [('ACHIEVING A BATTERY FOR LAVOUR', -4.872106075286865)])
-INFO ('paragraphs:', ['Procurarea boiler electric pentru of. Bălți'])
-INFO ('apply_packaged_translation', 'Procurarea boiler electric pentru of. Bălți')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Procurarea boiler electric pentru of.', 'Bălți'])
-INFO ('tokenized', [['Procur@@', 'area', 'bo@@', 'i@@', 'ler', 'electric', 'pentru', 'of', '.'], ['Bă@@', 'l@@', 'ți']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Bu@@', 'ying', 'electric', 'boiler', 'for', 'of', '.']], scores=[-3.7702627182006836], attention=[], logits=[]), TranslationResult(hypotheses=[['Bal@@', 'ti']], scores=[-1.9266777038574219], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Buying electric boiler for of. Balti', -5.6969404220581055)])
-INFO ('translated_paragraphs:', [[('Buying electric boiler for of. Balti', -5.6969404220581055)]])
-INFO ('hypotheses_to_return:', [('Buying electric boiler for of. Balti', -5.6969404220581055)])
-INFO ('paragraphs:', ['« Mentenanța, reparația și deservirea tehnică a instalațiilor de ventilare și climatizare a aerului pentru anul - 2027»'])
-INFO ('apply_packaged_translation', '« Mentenanța, reparația și deservirea tehnică a instalațiilor de ventilare și climatizare a aerului pentru anul - 2027»')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['« Mentenanța, reparația și deservirea tehnică a instalațiilor de ventilare și climatizare a aerului pentru anul - 2027»'])
-INFO ('tokenized', [['&quot;', 'M@@', 'ent@@', 'en@@', 'anța', ',', 'repar@@', 'ația', 'și', 'deser@@', 'virea', 'tehnică', 'a', 'instalațiilor', 'de', 'ventil@@', 'are', 'și', 'climat@@', 'izare', 'a', 'aerului', 'pentru', 'anul', '-', '20@@', '27', '&quot;']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['&quot;', 'Maintenance', ',', 'repair', 'and', 'technical', 'service', 'of', 'air', 'ventilation', 'and', 'air', 'conditioning', 'installations', 'for', 'the', 'year', '-', '20@@', '27', '&quot;']], scores=[-5.717384338378906], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('"Maintenance, repair and technical service of air ventilation and air conditioning installations for the year - 2027"', -5.717384338378906)])
-INFO ('translated_paragraphs:', [[('"Maintenance, repair and technical service of air ventilation and air conditioning installations for the year - 2027"', -5.717384338378906)]])
-INFO ('hypotheses_to_return:', [('"Maintenance, repair and technical service of air ventilation and air conditioning installations for the year - 2027"', -5.717384338378906)])
-INFO ('paragraphs:', ['Piese şi accesorii pentru vehicule şi pentru motoare de vehicule'])
-INFO ('apply_packaged_translation', 'Piese şi accesorii pentru vehicule şi pentru motoare de vehicule')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Piese şi accesorii pentru vehicule şi pentru motoare de vehicule'])
-INFO ('tokenized', [['P@@', 'iese', 'şi', 'accesorii', 'pentru', 'vehicule', 'şi', 'pentru', 'motoare', 'de', 'vehicule']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Parts', 'and', 'accessories', 'for', 'vehicles', 'and', 'vehicle', 'engines']], scores=[-2.2390332221984863], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Parts and accessories for vehicles and vehicle engines', -2.2390332221984863)])
-INFO ('translated_paragraphs:', [[('Parts and accessories for vehicles and vehicle engines', -2.2390332221984863)]])
-INFO ('hypotheses_to_return:', [('Parts and accessories for vehicles and vehicle engines', -2.2390332221984863)])
-INFO ('paragraphs:', ['Servicii de cosire și întreținere a ierbii pe teritoriul central al satului Balasineşti, inclusiv în perimetrul monumentului şi al pieței central'])
-INFO ('apply_packaged_translation', 'Servicii de cosire și întreținere a ierbii pe teritoriul central al satului Balasineşti, inclusiv în perimetrul monumentului şi al pieței central')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Servicii de cosire și întreținere a ierbii pe teritoriul central al satului Balasineşti, inclusiv în perimetrul monumentului şi al pieței central'])
-INFO ('tokenized', [['Servicii', 'de', 'co@@', 'sire', 'și', 'întreținere', 'a', 'ier@@', 'bii', 'pe', 'teritoriul', 'central', 'al', 'satului', 'Bal@@', 'as@@', 'ine@@', 'şti', ',', 'inclusiv', 'în', 'perimetrul', 'monum@@', 'entului', 'şi', 'al', 'pieței', 'central']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['M@@', 'ining', 'and', 'maintenance', 'services', 'of', 'grass', 'on', 'the', 'central', 'territory', 'of', 'Bal@@', 'as@@', 'ine@@', 'ş@@', 'ti', 'village', ',', 'including', 'the', 'perimeter', 'of', 'the', 'monument', 'and', 'the', 'central', 'market']], scores=[-8.306164741516113], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Mining and maintenance services of grass on the central territory of Balasineşti village, including the perimeter of the monument and the central market', -8.306164741516113)])
-INFO ('translated_paragraphs:', [[('Mining and maintenance services of grass on the central territory of Balasineşti village, including the perimeter of the monument and the central market', -8.306164741516113)]])
-INFO ('hypotheses_to_return:', [('Mining and maintenance services of grass on the central territory of Balasineşti village, including the perimeter of the monument and the central market', -8.306164741516113)])
-INFO ('paragraphs:', ['AAZ5723366 din 30.09.2026 Servicii de tehnologie a informatieli | Servicii de tehnologie a informatieli'])
-INFO ('apply_packaged_translation', 'AAZ5723366 din 30.09.2026 Servicii de tehnologie a informatieli | Servicii de tehnologie a informatieli')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['AAZ5723366 din 30.09.2026 Servicii de tehnologie a informatieli | Servicii de tehnologie a informatieli'])
-INFO ('tokenized', [['AA@@', 'Z@@', '5@@', '7@@', '23@@', '3@@', '66', 'din', '30.@@', '09.@@', '20@@', '26', 'Servicii', 'de', 'tehnologie', 'a', 'inform@@', 'at@@', 'ieli', '&#@@', '12@@', '4@@', ';', 'Servicii', 'de', 'tehnologie', 'a', 'inform@@', 'at@@', 'ieli']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['AA@@', 'Z@@', '57@@', '23@@', '3@@', '66', 'of', '30.@@', '09.@@', '20@@', '26', 'Information', 'technology', 'services', ',', '12@@', '4@@', ';', 'Information', 'technology', 'services']], scores=[-5.891027927398682], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('AAZ5723366 of 30.09.2026 Information technology services, 124; Information technology services', -5.891027927398682)])
-INFO ('translated_paragraphs:', [[('AAZ5723366 of 30.09.2026 Information technology services, 124; Information technology services', -5.891027927398682)]])
-INFO ('hypotheses_to_return:', [('AAZ5723366 of 30.09.2026 Information technology services, 124; Information technology services', -5.891027927398682)])
-INFO ('paragraphs:', ['Repararea și întreținerea computerelor pentru Gimnaziul nr. 93'])
-INFO ('apply_packaged_translation', 'Repararea și întreținerea computerelor pentru Gimnaziul nr. 93')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Repararea și întreținerea computerelor pentru Gimnaziul nr. 93'])
-INFO ('tokenized', [['Re@@', 'par@@', 'area', 'și', 'întreținerea', 'compute@@', 'relor', 'pentru', 'G@@', 'im@@', 'naz@@', 'iul', 'nr', '.', '93']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Repair', 'and', 'maintenance', 'of', 'computers', 'for', 'Gy@@', 'm@@', 'na@@', 'sium', 'No', '93']], scores=[-2.929391860961914], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Repair and maintenance of computers for Gymnasium No 93', -2.929391860961914)])
-INFO ('translated_paragraphs:', [[('Repair and maintenance of computers for Gymnasium No 93', -2.929391860961914)]])
-INFO ('hypotheses_to_return:', [('Repair and maintenance of computers for Gymnasium No 93', -2.929391860961914)])
-INFO ('paragraphs:', ['Oglindă'])
-INFO ('apply_packaged_translation', 'Oglindă')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Oglindă'])
-INFO ('tokenized', [['Og@@', 'lin@@', 'dă']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Mir@@', 'ror']], scores=[-1.0135172605514526], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Mirror', -1.0135172605514526)])
-INFO ('translated_paragraphs:', [[('Mirror', -1.0135172605514526)]])
-INFO ('hypotheses_to_return:', [('Mirror', -1.0135172605514526)])
-INFO ('paragraphs:', ['Alte materiale'])
-INFO ('apply_packaged_translation', 'Alte materiale')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Alte materiale'])
-INFO ('tokenized', [['Alte', 'materiale']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Other', 'materials']], scores=[-1.7644928693771362], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Other materials', -1.7644928693771362)])
-INFO ('translated_paragraphs:', [[('Other materials', -1.7644928693771362)]])
-INFO ('hypotheses_to_return:', [('Other materials', -1.7644928693771362)])
-INFO ('paragraphs:', ['Servicii de deservire muzicala a ceremoniilor de Ziua Satului'])
-INFO ('apply_packaged_translation', 'Servicii de deservire muzicala a ceremoniilor de Ziua Satului')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Servicii de deservire muzicala a ceremoniilor de Ziua Satului'])
-INFO ('tokenized', [['Servicii', 'de', 'deser@@', 'vire', 'muzic@@', 'ala', 'a', 'ceremon@@', 'iilor', 'de', 'Ziua', 'S@@', 'atului']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Mus@@', 'ical', 'services', 'of', 'village', 'day', 'cerem@@', 'onies']], scores=[-4.656352519989014], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Musical services of village day ceremonies', -4.656352519989014)])
-INFO ('translated_paragraphs:', [[('Musical services of village day ceremonies', -4.656352519989014)]])
-INFO ('hypotheses_to_return:', [('Musical services of village day ceremonies', -4.656352519989014)])
-INFO ('paragraphs:', ['Servicii de demontare, depozitare și montarea a bradului artificial'])
-INFO ('apply_packaged_translation', 'Servicii de demontare, depozitare și montarea a bradului artificial')
-INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
-INFO ('sentences', ['Servicii de demontare, depozitare și montarea a bradului artificial'])
-INFO ('tokenized', [['Servicii', 'de', 'demon@@', 'tare', ',', 'depozitare', 'și', 'mon@@', 'tarea', 'a', 'bra@@', 'dului', 'artificial']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['Manufacture', 'from', 'materials', 'of', 'any', 'heading', ',', 'except', 'that', 'of', 'the', 'product']], scores=[-5.295239448547363], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('Manufacture from materials of any heading, except that of the product', -5.295239448547363)])
-INFO ('translated_paragraphs:', [[('Manufacture from materials of any heading, except that of the product', -5.295239448547363)]])
-INFO ('hypotheses_to_return:', [('Manufacture from materials of any heading, except that of the product', -5.295239448547363)])
-INFO ('paragraphs:', ['Будівництво кладовища по вул. Сабарівське шосе, б/н в м. Вінниці (5 черга) (код ДК 021:2015- 45210000-2 Будівництво будівель)'])
-INFO ('apply_packaged_translation', 'Будівництво кладовища по вул. Сабарівське шосе, б/н в м. Вінниці (5 черга) (код ДК 021:2015- 45210000-2 Будівництво будівель)')
-INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
-WARNING Language uk package default expects mwt, which has been added
-INFO ('sentences', ['Будівництво кладовища по вул.', 'Сабарівське шосе, б/н в м. Вінниці (5 черга) (код ДК 021:2015- 45210000-2 Будівництво будівель)'])
-INFO ('tokenized', [['Бу@@', 'ді@@', 'вни@@', 'цтво', 'кла@@', 'до@@', 'вища', 'по', 'ву@@', 'л', '.'], ['Са@@', 'ба@@', 'рі@@', 'всь@@', 'ке', 'шо@@', 'се', ',', 'б', '/', 'н', 'в', 'м', '.', 'Він@@', 'ниці', '(', '5', 'черга', ')', '(', 'код', 'Д@@', 'К', '0@@', '21', ':', '20@@', '15@@', '-', '4@@', '5@@', '2@@', '10@@', '00@@', '0@@', '-2', 'Бу@@', 'ді@@', 'вни@@', 'цтво', 'будіве@@', 'ль', ')']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['There', '&apos;s', 'a', 'building', 'on', 'the', 'floor', '.']], scores=[-6.67262601852417], attention=[], logits=[]), TranslationResult(hypotheses=[['Bar@@', 'ar@@', 'id', 'highway', ',', 'b', '/', 'n', 'in', 'm', '.']], scores=[-7.783909797668457], attention=[], logits=[])])
-INFO ('value_hypotheses:', [("There's a building on the floor. Bararid highway, b / n in m.", -14.456535816192627)])
-INFO ('translated_paragraphs:', [[("There's a building on the floor. Bararid highway, b / n in m.", -14.456535816192627)]])
-INFO ('hypotheses_to_return:', [("There's a building on the floor. Bararid highway, b / n in m.", -14.456535816192627)])
-INFO ('paragraphs:', ['Машина дорожня комбінована з піскорозкидальним та снігоочисним обладнанням (Код ДК 021:2015: 34140000-0 — Великовантажні мототранспортні засоби).'])
-INFO ('apply_packaged_translation', 'Машина дорожня комбінована з піскорозкидальним та снігоочисним обладнанням (Код ДК 021:2015: 34140000-0 — Великовантажні мототранспортні засоби).')
-INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
-INFO ('sentences', ['Машина дорожня комбінована з піскорозкидальним та снігоочисним обладнанням (Код ДК 021:2015: 34140000-0 — Великовантажні мототранспортні засоби).'])
-INFO ('tokenized', [['Машина', 'дорож@@', 'ня', 'комбі@@', 'нована', 'з', 'пі@@', 'ско@@', 'роз@@', 'кида@@', 'льним', 'та', 'сніго@@', 'о@@', 'чис@@', 'ним', 'обладна@@', 'нням', '(', 'Код', 'Д@@', 'К', '0@@', '21', ':', '2015', ':', '3@@', '4@@', '14@@', '00@@', '00@@', '-@@', '0', '-', 'Велико@@', 'ванта@@', 'жні', 'мото@@', 'транспорт@@', 'ні', 'засоби', ')', '.']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['The', 'road', 'machine', 'is', 'combined', 'with', 'pedestrian', 'and', 'snow@@', 'ball', 'equipment', '(', 'D@@', 'K', '@-@', '0@@', '21', ':', '2015', ':', '3@@', '4@@', '14@@', '00@@', '00@@', '00@@', '-', '0', '-', 'Road', 'vehicles', ')', '.']], scores=[-11.615264892578125], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('The road machine is combined with pedestrian and snowball equipment (DK-021: 2015: 3414000000- 0 - Road vehicles).', -11.615264892578125)])
-INFO ('translated_paragraphs:', [[('The road machine is combined with pedestrian and snowball equipment (DK-021: 2015: 3414000000- 0 - Road vehicles).', -11.615264892578125)]])
-INFO ('hypotheses_to_return:', [('The road machine is combined with pedestrian and snowball equipment (DK-021: 2015: 3414000000- 0 - Road vehicles).', -11.615264892578125)])
-INFO ('paragraphs:', ['ДК 021:2015 код 31620000-8 «Прилади звукової та візуальної сигналізації» (31625000-3 «Пристрої охоронної та пожежної сигналізації») (системи автоматичної пожежної сигналізації з комплектуючими з урахуванням витрат на монтаж та пусконалагодження обладнання для закладів освіти Дарницького району м.Киє'])
-INFO ('apply_packaged_translation', 'ДК 021:2015 код 31620000-8 «Прилади звукової та візуальної сигналізації» (31625000-3 «Пристрої охоронної та пожежної сигналізації») (системи автоматичної пожежної сигналізації з комплектуючими з урахуванням витрат на монтаж та пусконалагодження обладнання для закладів освіти Дарницького району м.Киє')
-INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
-INFO ('sentences', ['ДК 021:2015 код 31620000-8 «Прилади звукової та візуальної сигналізації» (31625000-3 «Пристрої охоронної та пожежної сигналізації») (системи автоматичної пожежної сигналізації з комплектуючими з урахуванням витрат на монтаж та пусконалагодження обладнання для закладів освіти Дарницького району м.Киє'])
-INFO ('tokenized', [['Д@@', 'К', '0@@', '21', ':', '2015', 'код', '3@@', '16@@', '200@@', '00@@', '-@@', '8', '&quot;', 'При@@', 'ла@@', 'ди', 'звукової', 'та', 'візуаль@@', 'ної', 'сигна@@', 'лізації', '&quot;', '(', '3@@', '16@@', '25@@', '00@@', '0@@', '-3', '&quot;', 'Пристрої', 'охоро@@', 'нної', 'та', 'пожеж@@', 'ної', 'сигна@@', 'лізації', '&quot;', ')', '(', 'системи', 'автоматич@@', 'ної', 'пожеж@@', 'ної', 'сигна@@', 'лізації', 'з', 'комплек@@', 'ту@@', 'ючими', 'з', 'урахуванням', 'витрат', 'на', 'мон@@', 'таж', 'та', 'пу@@', 'скона@@', 'ла@@', 'го@@', 'дження', 'обладнання', 'для', 'закла@@', 'дів', 'освіти', 'Дар@@', 'ниць@@', 'кого', 'райо@@', 'ну', 'м@@', '.@@', 'Ки@@', 'є']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['D@@', 'K', '0@@', '21', ':', '2015', 'code', '3@@', '16@@', '00@@', '-', '8', '&quot;', 'Sound', 'and', 'visual', 'alarms', '&quot;', '(', '3@@', '16@@', '25@@', '00@@', '000@@', '-3', '&quot;', 'security', 'and', 'fire', 'alarm', '&quot;', ')', '(', 'auto', '@-@', 'fire', 'alarm', 'systems', ',', 'compatible', 'with', 'mon@@', 'tage', 'costs', 'and', 'perf@@', 'ecting', 'equipment', 'for', 'the', 'Dar@@', 'kness', 'education', '.']], scores=[-16.70200538635254], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('DK 021: 2015 code 31600- 8 "Sound and visual alarms" (3162500000-3 "security and fire alarm") (auto-fire alarm systems, compatible with montage costs and perfecting equipment for the Darkness education.', -16.70200538635254)])
-INFO ('translated_paragraphs:', [[('DK 021: 2015 code 31600- 8 "Sound and visual alarms" (3162500000-3 "security and fire alarm") (auto-fire alarm systems, compatible with montage costs and perfecting equipment for the Darkness education.', -16.70200538635254)]])
-INFO ('hypotheses_to_return:', [('DK 021: 2015 code 31600- 8 "Sound and visual alarms" (3162500000-3 "security and fire alarm") (auto-fire alarm systems, compatible with montage costs and perfecting equipment for the Darkness education.', -16.70200538635254)])
-INFO ('paragraphs:', ['ДК 021:2015 код 32230000-4 «Апаратура для передавання радіосигналу з приймальним пристроєм» (бездротова система голосового зв’язку для закладів освіти Дарницького району м.Києва)'])
-INFO ('apply_packaged_translation', 'ДК 021:2015 код 32230000-4 «Апаратура для передавання радіосигналу з приймальним пристроєм» (бездротова система голосового зв’язку для закладів освіти Дарницького району м.Києва)')
-INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
-INFO ('sentences', ['ДК 021:2015 код 32230000-4 «Апаратура для передавання радіосигналу з приймальним пристроєм» (бездротова система голосового зв’язку для закладів освіти Дарницького району м.Києва)'])
-INFO ('tokenized', [['Д@@', 'К', '0@@', '21', ':', '2015', 'код', '3@@', '2@@', '23@@', '00@@', '00@@', '-4', '&quot;', 'А@@', 'пара@@', 'тура', 'для', 'передавання', 'радіо@@', 'сигналу', 'з', 'прийма@@', 'льним', 'пристроєм', '&quot;', '(', 'бездро@@', 'това', 'система', 'голосо@@', 'вого', 'зв', '&apos;', 'язку', 'для', 'закла@@', 'дів', 'освіти', 'Дар@@', 'ниць@@', 'кого', 'райо@@', 'ну', 'м@@', '.@@', 'Ки@@', 'є@@', 'ва', ')']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['D@@', 'K', '0@@', '21', ':', '2015', 'code', '3@@', '23@@', '00@@', '-4', '&quot;', 'Hardware', 'for', 'transferring', 'radio', 'signal', 'to', 'the', 'receiver', 'device', '&quot;', '(', 'the', 'wireless', 'system', 'of', 'voice', '@-@', 'communications', 'for', 'the', 'institution', 'of', 'the', 'Darwin', 'County', '.', 'Kiev', ')']], scores=[-14.054547309875488], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('DK 021: 2015 code 32300-4 "Hardware for transferring radio signal to the receiver device" (the wireless system of voice-communications for the institution of the Darwin County. Kiev)', -14.054547309875488)])
-INFO ('translated_paragraphs:', [[('DK 021: 2015 code 32300-4 "Hardware for transferring radio signal to the receiver device" (the wireless system of voice-communications for the institution of the Darwin County. Kiev)', -14.054547309875488)]])
-INFO ('hypotheses_to_return:', [('DK 021: 2015 code 32300-4 "Hardware for transferring radio signal to the receiver device" (the wireless system of voice-communications for the institution of the Darwin County. Kiev)', -14.054547309875488)])
+INFO ('Get https://argos-net.com/v1/translate-he_en-1_5.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-he_en-1_5.argosmodel',)
+INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['Електростанція газопоршнева резервного електроживлення у шумозахисному кожусі, з системою автоматичного керування'])
 INFO ('apply_packaged_translation', 'Електростанція газопоршнева резервного електроживлення у шумозахисному кожусі, з системою автоматичного керування')
 INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
+WARNING Language uk package default expects mwt, which has been added
 INFO ('sentences', ['Електростанція газопоршнева резервного електроживлення у шумозахисному кожусі, з системою автоматичного керування'])
 INFO ('tokenized', [['Електро@@', 'станція', 'газо@@', 'пор@@', 'ш@@', 'не@@', 'ва', 'резерв@@', 'ного', 'електро@@', 'живлення', 'у', 'шу@@', 'мо@@', 'захи@@', 'сному', 'ко@@', 'жу@@', 'сі', ',', 'з', 'системою', 'автоматичного', 'керування']])
 INFO ('translated_batches', [TranslationResult(hypotheses=[['The', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'power', 'in', 'a', 'noisy', 'cache', ',', 'with', 'an', 'automatic', 'control', 'system']], scores=[-15.430248260498047], attention=[], logits=[])])
@@ -1491,15 +1132,6 @@ INFO ('translated_batches', [TranslationResult(hypotheses=[['&quot;', 'Stock', '
 INFO ('value_hypotheses:', [('"Stock restructuring with internal activity in the part of the building of the year." "B," "B," "B," "B," "to the address: Voila. (Adjustments)', -19.848209857940674)])
 INFO ('translated_paragraphs:', [[('"Stock restructuring with internal activity in the part of the building of the year." "B," "B," "B," "B," "to the address: Voila. (Adjustments)', -19.848209857940674)]])
 INFO ('hypotheses_to_return:', [('"Stock restructuring with internal activity in the part of the building of the year." "B," "B," "B," "B," "to the address: Voila. (Adjustments)', -19.848209857940674)])
-INFO ('paragraphs:', ['09130000-9 Нафта і дистиляти Пальне для потреб НЕК «Укренерго» ІІ півріччя 2026 року Лот №1 Пальне для потреб ВП «Будівництво і ремонт» (ДК 021:2015 - 09130000-9 Нафта і дистиляти) Лот №2 Пальне для потреб Західного ТУОМ (ДК 021:2015 - 09130000-9 Нафта і дистиляти) Лот №3 Пальне для потреб Південног'])
-INFO ('apply_packaged_translation', '09130000-9 Нафта і дистиляти Пальне для потреб НЕК «Укренерго» ІІ півріччя 2026 року Лот №1 Пальне для потреб ВП «Будівництво і ремонт» (ДК 021:2015 - 09130000-9 Нафта і дистиляти) Лот №2 Пальне для потреб Західного ТУОМ (ДК 021:2015 - 09130000-9 Нафта і дистиляти) Лот №3 Пальне для потреб Південног')
-INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
-INFO ('sentences', ['09130000-9 Нафта і дистиляти Пальне для потреб НЕК «Укренерго» ІІ півріччя 2026 року Лот №1 Пальне для потреб ВП «Будівництво і ремонт» (ДК 021:2015 - 09130000-9 Нафта і дистиляти) Лот №2 Пальне для потреб Західного ТУОМ (ДК 021:2015 - 09130000-9 Нафта і дистиляти) Лот №3 Пальне для потреб Південног'])
-INFO ('tokenized', [['0@@', '9@@', '13@@', '00@@', '00@@', '-@@', '9', 'На@@', 'ф@@', 'та', 'і', 'ди@@', 'сти@@', 'ляти', 'Па@@', 'льне', 'для', 'потреб', 'НЕ@@', 'К', '&quot;', 'У@@', 'к@@', 'рен@@', 'ер@@', 'го', '&quot;', 'ІІ', 'пів@@', 'річчя', '20@@', '26', 'року', 'Л@@', 'от', '№', '1', 'Па@@', 'льне', 'для', 'потреб', 'В@@', 'П', '&quot;', 'Бу@@', 'ді@@', 'вни@@', 'цтво', 'і', 'ремонт', '&quot;', '(', 'Д@@', 'К', '0@@', '21', ':', '2015', '-', '0@@', '9@@', '13@@', '00@@', '00@@', '-@@', '9', 'На@@', 'ф@@', 'та', 'і', 'ди@@', 'сти@@', 'ляти', ')', 'Л@@', 'от', '№', '2', 'Па@@', 'льне', 'для', 'потреб', 'Захід@@', 'ного', 'ТУ@@', 'О@@', 'М', '(', 'Д@@', 'К', '0@@', '21', ':', '2015', '-', '0@@', '9@@', '13@@', '00@@', '00@@', '-@@', '9', 'На@@', 'ф@@', 'та', 'і', 'ди@@', 'сти@@', 'ляти', ')', 'Л@@', 'от', '№', '3', 'Па@@', 'льне', 'для', 'потреб', 'Півден@@', 'ног']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['0@@', '9@@', '00@@', '00@@', 'th', '@-@', '9', 'N@@', 'of@@', 'ta', 'and', 'dis@@', 'mantle', 'the', 'fuel', 'for', 'N@@', 'FC', '&apos;@@', 'U@@', 'k@@', 're@@', 'er@@', 'go', '&apos;', 'II', 'half', '@-@', 'year', '20@@', '26', 'L@@', '1', 'fuel', 'for', 'the', 'V@@', 'P', '&apos;@@', 'Co@@', 'di@@', 'tion@@', 'ation', 'and', 'repair', '&apos;', '(', 'D@@', 'K', '0@@', '21', ':', '2015', '-@@', '0@@', '9@@', '00@@', 'th', '@-@', '9', 'N@@', 'of@@', 'th', 'and', 'S@@', 'tit@@', 'ling', ')', 'L@@', '2', 'fuel', 'for', 'West', 'O@@', 'hm', '(', 'D@@', '0@@', '21', ':', '2015', '-', '0@@', '9@@', '00@@', '00@@', '9', ')', 'and', 'L@@', 'UR@@', 'T', '.']], scores=[-33.20844650268555], attention=[], logits=[])])
-INFO ('value_hypotheses:', [("090000th-9 Nofta and dismantle the fuel for NFC'Ukreergo 'II half-year 2026 L1 fuel for the VP'Coditionation and repair' (DK 021: 2015 -0900th-9 Nofth and Stitling) L2 fuel for West Ohm (D021: 2015 - 0900009) and LURT.", -33.20844650268555)])
-INFO ('translated_paragraphs:', [[("090000th-9 Nofta and dismantle the fuel for NFC'Ukreergo 'II half-year 2026 L1 fuel for the VP'Coditionation and repair' (DK 021: 2015 -0900th-9 Nofth and Stitling) L2 fuel for West Ohm (D021: 2015 - 0900009) and LURT.", -33.20844650268555)]])
-INFO ('hypotheses_to_return:', [("090000th-9 Nofta and dismantle the fuel for NFC'Ukreergo 'II half-year 2026 L1 fuel for the VP'Coditionation and repair' (DK 021: 2015 -0900th-9 Nofth and Stitling) L2 fuel for West Ohm (D021: 2015 - 0900009) and LURT.", -33.20844650268555)])
 INFO ('paragraphs:', ['Нейронавігаційна система для клініки дитячої нейрохірургії, хірургії епілепсії та нейрофізіології КНП ЛОР “Центр дитячої медицини” (Нейронавігація для нейрохірургічних операцій) НК 024:2023 – 62783 Система відстеження електромагнітних і оптичних навігаційних пристроїв'])
 INFO ('apply_packaged_translation', 'Нейронавігаційна система для клініки дитячої нейрохірургії, хірургії епілепсії та нейрофізіології КНП ЛОР “Центр дитячої медицини” (Нейронавігація для нейрохірургічних операцій) НК 024:2023 – 62783 Система відстеження електромагнітних і оптичних навігаційних пристроїв')
 INFO ('Splitting sentences using SBD Model: (uk) StanzaSentencizer',)
@@ -1557,29 +1189,28 @@ INFO ('hypotheses_to_return:', [('DK 021: 2015 - 360000000000006 Pharmaceutical 
 INFO ('Get https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-ar_en-1_0.argosmodel',)
 INFO ('get_installed_languages',)
-INFO ('paragraphs:', ['REQ 12628831 / OSP (TO COMPANY), CLE-FL, REG: O-86880, JC: INS-26-9163'])
-INFO ('apply_packaged_translation', 'REQ 12628831 / OSP (TO COMPANY), CLE-FL, REG: O-86880, JC: INS-26-9163')
-INFO ('Splitting sentences using SBD Model: (fi) StanzaSentencizer',)
-WARNING Language fi package default expects mwt, which has been added
-INFO ('sentences', ['REQ 12628831 /', 'OSP (TO COMPANY), CLE-FL, REG: O-86880, JC: INS-26-9163'])
-INFO ('tokenized', [['RE@@', 'Q', '12@@', '6@@', '28@@', '8@@', '31', '/'], ['OS@@', 'P', '(', 'TO', 'CO@@', 'M@@', 'PAN@@', 'Y', ')', ',', 'C@@', 'LE@@', '-@@', 'F@@', 'L', ',', 'RE@@', 'G', ':', 'O@@', '-@@', '8@@', '68@@', '80', ',', 'J@@', 'C', ':', 'IN@@', 'S@@', '-@@', '26@@', '-@@', '9@@', '163']])
-INFO ('translated_batches', [TranslationResult(hypotheses=[['RE@@', 'Q', '12@@', '6@@', '28@@', '8@@', '31', '/']], scores=[-0.6552370190620422], attention=[], logits=[]), TranslationResult(hypotheses=[['O@@', 'SP', '(', 'TO', 'COMP@@', 'ANY', ')', ',', 'CL@@', 'E', '@-@', 'FL', ',', 'Reg', ':', 'O', '@-@', '8@@', '68@@', '80', ',', 'J@@', 'C', ':', 'INS', '@-@', '26', '@-@', '9@@', '163']], scores=[-4.110743999481201], attention=[], logits=[])])
-INFO ('value_hypotheses:', [('REQ 12628831 / OSP (TO COMPANY), CLE-FL, Reg: O-86880, JC: INS-26-9163', -4.765981018543243)])
-INFO ('translated_paragraphs:', [[('REQ 12628831 / OSP (TO COMPANY), CLE-FL, Reg: O-86880, JC: INS-26-9163', -4.765981018543243)]])
-INFO ('hypotheses_to_return:', [('REQ 12628831 / OSP (TO COMPANY), CLE-FL, Reg: O-86880, JC: INS-26-9163', -4.765981018543243)])
-INFO translations: 37 new, 0 pending, cache 58461, 391s
-INFO awards 420363 (12m), recent 3000, buyers 54765, competitors 300450
+INFO ('paragraphs:', ['Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona'])
+INFO ('apply_packaged_translation', 'Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona')
+INFO ('Splitting sentences using SBD Model: (ro) StanzaSentencizer',)
+INFO ('sentences', ['Moldova – Dairy products – Unt (Zona Nord), Unt (Zona Centru), Unt (Zona Sud), Brânză de vaci (Zona Nord), Brânză de vaci (Zona Centru), Brânză de vaci (Zona Sud), Lapte de vaci (Zona Nord), Lapte de vaci (Zona Centru), Lapte de vaci (Zona Sud), Chefir (Zona Nord), Chefir (Zona Centru), Chefir (Zona'])
+INFO ('tokenized', [['Moldova', '-', 'Dai@@', 'ry', 'produc@@', 'ts', '-', 'Un@@', 't', '(', 'Zona', 'Nord', ')', ',', 'Un@@', 't', '(', 'Zona', 'Centru', ')', ',', 'Un@@', 't', '(', 'Zona', 'Sud', ')', ',', 'B@@', 'rân@@', 'ză', 'de', 'vaci', '(', 'Zona', 'Nord', ')', ',', 'B@@', 'rân@@', 'ză', 'de', 'vaci', '(', 'Zona', 'Centru', ')', ',', 'B@@', 'rân@@', 'ză', 'de', 'vaci', '(', 'Zona', 'Sud', ')', ',', 'Lapte', 'de', 'vaci', '(', 'Zona', 'Nord', ')', ',', 'Lapte', 'de', 'vaci', '(', 'Zona', 'Centru', ')', ',', 'Lapte', 'de', 'vaci', '(', 'Zona', 'Sud', ')', ',', 'Che@@', 'fir', '(', 'Zona', 'Nord', ')', ',', 'Che@@', 'fir', '(', 'Zona', 'Centru', ')', ',', 'Che@@', 'fir', '(', 'Zona']])
+INFO ('translated_batches', [TranslationResult(hypotheses=[['Moldova', '-', 'D@@', 'airy', 'products', '-', 'But@@', 'ter', '(', 'North', 'Zone', ')', ',', 'But@@', 'ter', '(', 'Central', 'Zone', ')', ',', 'But@@', 'ter', '(', 'South', 'Zone', ')', ',', 'Cheese', 'of', 'cows', '(', 'North', 'Zone', ')', ',', 'Cheese', 'of', 'cows', '(', 'Central', 'Zone', ')', ',', 'Cheese', 'of', 'cows', '(', 'South', 'Zone', ')', ',', 'Milk', 'of', 'cows', '(', 'North', 'Zone', ')', ',', 'Milk', 'of', 'cows', '(', 'Central', 'Zone', ')', ',', 'Milk', 'of', 'cows', '(', 'South', 'Zone', ')', ',', 'Ch@@', 'ep@@', 'hir', '(', 'North', 'Zone', ')', ',', 'Ch@@', 'ep@@', 'hir', '(', 'Central', 'Zone', ')', ',', 'Ch@@', 'ep@@', 'hir', '(', 'Central', 'Zone', ')']], scores=[-13.293192863464355], attention=[], logits=[])])
+INFO ('value_hypotheses:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
+INFO ('translated_paragraphs:', [[('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)]])
+INFO ('hypotheses_to_return:', [('Moldova - Dairy products - Butter (North Zone), Butter (Central Zone), Butter (South Zone), Cheese of cows (North Zone), Cheese of cows (Central Zone), Cheese of cows (South Zone), Milk of cows (North Zone), Milk of cows (Central Zone), Milk of cows (South Zone), Chephir (North Zone), Chephir (Central Zone), Chephir (Central Zone)', -13.293192863464355)])
+INFO translations: 18 new, 0 pending, cache 58479, 391s
+INFO awards 420350 (12m), recent 3000, buyers 54764, competitors 300443
 WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/work/commodity-feeder/commodity-feeder/leads/sanctions.py)
-INFO integrity: 207 countries profiled, tenders {'open': 61108, 'no data': 234, 'caution': 13113, 'high risk': 63615}
+INFO integrity: 207 countries profiled, tenders {'open': 61124, 'no data': 234, 'caution': 13113, 'high risk': 63615}
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 0 items (0 reddit, 0 hn, 0 telegram)
-INFO briefing: 488 items, 10 news leads
-INFO wb procurement plans: 1116 projects with a plan in the last 90 days
+INFO briefing: 497 items, 11 news leads
+INFO wb procurement plans: 1117 projects with a plan in the last 90 days
 INFO wb contract awards: 22400 rows (FY2026-2027)
-INFO plays: 476 (supply the winner=70, arbitrage gap=206, pre-tender approach=63, news lead=10, procurement plan=127)
+INFO plays: 476 (supply the winner=70, arbitrage gap=206, pre-tender approach=63, news lead=11, procurement plan=126)
 INFO gdelt news: 292 headlines for 13 countries
-INFO lei: 2 new lookups, 1586 cached, 429 with an LEI, 181 with a parent
+INFO lei: 0 new lookups, 1586 cached, 429 with an LEI, 181 with a parent
 INFO ecb fx: 14 currencies
 INFO trends rss IL: 10 items
 WARNING trends rss CN: HTTP 400
@@ -1594,29 +1225,42 @@ INFO trends rss DO: 10 items
 INFO trends rss CO: 10 items
 WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
-INFO attention: 2 rows (1 trending, 1 wikipedia)
+INFO attention: 11 rows (1 trending, 10 wikipedia)
 INFO market signals rows 2767
 INFO opportunities.csv trimmed for the sheet: 3858 of 20686 rows
 INFO opportunities 20686
-INFO exempt buys: 736 notices
-INFO archive: 5 closed notices moved to the archive (16170 there in total); 0 closed ones kept because we worked on them
-INFO open list: 137334 notices, 0 past their deadline left out, 731 duplicates of another source's notice left out
+INFO exempt buys: 752 notices
+INFO open list: 137345 notices, 0 past their deadline left out, 741 duplicates of another source's notice left out
 INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
 INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 4 new, 6966 total, 1 pending, 3s
+INFO hebrew titles: 0 new, 6982 total, 1 pending, 3s
 INFO accounts 30078
 INFO importers.csv trimmed for the sheet: 3988 of 5470 rows
-INFO tenders 138065, importers 5470, suppliers 3282
+INFO tenders 138086, importers 5470, suppliers 3282
 origin prices: {"fnc_colombia": 1, "uganda_coffee": 9, "ecx_2merkato": 5, "cepea": 4, "cai_cotton": 11, "tea_board": 14, "spices_cardamom": 1, "cac_rosario": 3, "eia": 6, "steelbenchmarker": 12, "drewry_wci": 5, "mpob_cpo": 1, "dtn_fertilizer": 8, "kilimo_nce": 2, "forbes_colombo": 4, "ahdb_dairy": 5, "energy_charts": 1, "eu_oil_bulletin": 93, "vietnam_coffee": "0 (kept 0 previous)"} total 185
 commodity_norm: 2021 rows, 2021 with a known price type {'futures': 58, 'spot': 211, 'index': 1689, 'assessment': 63}, physical 278, futures 58, unit conversions to USD/t 1793, grade stated 241, origin stated 200, delivery stated 1945, incoterm stated 60
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 214 with a change, 49 with volatility, 32 with seasonality, 85 anomalies {'stale': 62, 'jump15': 21, 'sigma3': 2}
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 735 deals checked, 3 GDELT queries, 58 linked articles
+INFO:leads:news: 734 deals checked, 4 GDELT queries, 58 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 221, in <module>
+    main()
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 161, in main
+    n = sh.replace_tab(LEADS_SHEET, tab, rows, clear_to=col_letter(width))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 76, in replace_tab
+    self._req("PUT", f"{API}/{sid}/values/'{q}'!A{i + 1}", params={"valueInputOption": "RAW" if raw else "USER_ENTERED"},
+  File "/home/runner/work/commodity-feeder/commodity-feeder/leads/push.py", line 45, in _req
+    raise RuntimeError("Sheets API retries exhausted")
+RuntimeError: Sheets API retries exhausted
 wrote 80001 rows x 28 cols to Tenders
 wrote 5001 rows x 16 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
@@ -1633,34 +1277,32 @@ wrote 8001 rows x 40 cols to Deal Calc
 wrote 16 rows x 6 cols to Price Trends
 wrote 34 rows x 8 cols to Price Series
 wrote 1837 rows x 10 cols to Commodity Prices
-wrote 934 rows x 15 cols to Israel
+wrote 944 rows x 15 cols to Israel
 wrote 59 rows x 7 cols to Press
 wrote 208 rows x 14 cols to Integrity
-wrote 737 rows x 17 cols to Exempt Buys
+wrote 753 rows x 17 cols to Exempt Buys
 wrote 530 rows x 12 cols to Grants
 wrote 477 rows x 14 cols to Plays
 wrote 293 rows x 5 cols to Country News
 wrote 15 rows x 7 cols to FX
-wrote 3 rows x 7 cols to Attention
-wrote 1117 rows x 9 cols to WB Plans
-wrote 489 rows x 11 cols to Briefing Items
+wrote 12 rows x 7 cols to Attention
+wrote 1118 rows x 9 cols to WB Plans
+wrote 498 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
-wrote 6967 rows x 2 cols to Titles HE
+wrote 6983 rows x 2 cols to Titles HE
 wrote 2437 rows x 28 cols to Upcoming
-wrote 3 rows x 2 cols to Meta
-wrote 59 rows x 1 cols to Digest
 INFO:leads:web index: 130000 tenders, 90.6 MB raw, 11.0 MB gz
-INFO:leads:web panel static: tenders 1500, titles 6967, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
+INFO:leads:web panel static: tenders 1500, titles 6983, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
 INFO:leads:web panel live: bd 41, accounts 51, intel 89, pursuits 42, jobs 55, contacts 481, projects 1, ptasks 1, approvals 1, stats 37, 0.3 MB encrypted
 HEALTH ALERT oman: error file present
 HEALTH ALERT wb_pipeline: EMPTY, zero rows
-HEALTH ALERT ocdr_tenders: stale 44.5 h
+HEALTH ALERT ocdr_tenders: stale 46.7 h
 health: 49 sources, 3 alerts
 {'source': 'UNGM (ICAO)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
- "timelines": 2580,
+ "timelines": 2577,
  "timelines_multi_event": 713
 }
  ],
- "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 74 projects in this data (recent approvals only, so biased short)"
+ "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 75 projects in this data (recent approvals only, so biased short)"
 }
 registry {'active': 80, 'degraded': 5, 'implemented': 4, 'discovered': 28}
