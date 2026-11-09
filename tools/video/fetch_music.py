@@ -5,7 +5,9 @@ H = {"User-Agent": "SinderVideo/1.0"}
 def get(u):
     return urllib.request.urlopen(urllib.request.Request(u, headers=H), timeout=60)
 seen, picks = set(), []
-for q in ["cinematic corporate", "inspiring technology", "corporate upbeat", "epic inspiring", "motivational electronic", "hopeful cinematic piano", "business background"]:
+import os
+Q = os.environ.get("MUSIC_Q", "dark electronic|tech house|cinematic trailer|synthwave|hip hop instrumental|future bass|deep house|epic trailer|electronic pulse|cyberpunk").split("|")
+for q in Q:
     u = "https://api.openverse.org/v1/audio/?" + urllib.parse.urlencode({"q": q, "license": "cc0,by", "category": "music", "page_size": 20})
     try: res = json.load(get(u)).get("results", [])
     except Exception as e: print("search fail", q, e); continue
