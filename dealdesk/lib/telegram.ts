@@ -12,6 +12,7 @@ import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
+import { commodityStats } from "./commodities";
 import { addWatch, listProjects, listWatches, openProject, projectCallback, watchCallback } from "./projects";
 
 // The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
@@ -223,6 +224,29 @@ export async function tenderSuppliers(t: Record<string, string>, n = 6, he = fal
   if (!rows.length) return he ? `לא מצאתי ספקים מתאימים למכרז:\n<i>${title}</i>` : `No matching suppliers for this tender:\n<i>${title}</i>`;
   return `<b>${he ? `${r.total} ספקים למכרז` : `${r.total} suppliers for the tender`}</b>\n<i>${title}</i>\n\n` + rows.map((s, i) => `<b>${i + 1}. ${a(supplierUrl(s.supplier, s.country), esc(s.supplier))}</b> · ${esc(s.country)} · tier ${esc(s.tier)}${s.match ? ` · ${esc(s.match)}` : ""}\n${esc((s.products || s.supplied || "").slice(0, 110))}${s.website ? `\n${a(/^https?:/.test(s.website) ? s.website : "https://" + s.website, esc(s.website.replace(/^https?:\/\//, "")))}` : ""}`).join("\n\n");
 }
+// Commodity prices the system holds: physical prices by origin and grade first, then benchmarks (futures, trade
+// unit values) and the World Bank monthly series. Each line keeps its date, basis and source, and a price older
+// than two weeks is marked so the answer never passes it off as today's.
+async function prices(product: string, origin: string): Promise<string> {
+  const words = product.replace(/[^\p{L}\p{N} ]/gu, " ").trim();
+  const all = await commodityStats({ product: words.split(/\s+/)[0] || "", limit: 500 });
+  const rest = words.split(/\s+/).slice(1).map((w) => new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
+  const hits = all.items.filter((i) => rest.every((w) => w.test(`${i.product} ${i.commodity} ${i.grade} ${i.origin}`)));
+  const age = (d: string) => Math.floor((Date.now() - Date.parse(d)) / 864e5);
+  const line = (i: (typeof hits)[number]) => {
+    const d = (i.timestamp || i.last_date || "").slice(0, 10), old = d && age(d) > 14 ? ` [STALE: ${age(d)} days old]` : "";
+    return `${i.product} | ${i.grade || i.commodity} | origin ${i.origin || "-"}${i.delivery_location ? ` @ ${i.delivery_location}` : ""} | ${i.price_usd ?? "-"} ${i.unit}${i.price_usd_t ? ` (= $${Math.round(i.price_usd_t)}/t)` : ""} | ${i.price_type}${i.physical === false ? ", not a physical offer" : ""} | date ${d}${old}${i.chg_1m_pct != null ? ` | 1m ${i.chg_1m_pct}%` : ""} | ${i.source}`;
+  };
+  const own = origin ? hits.filter((i) => i.origin === origin) : [];
+  const other = hits.filter((i) => !own.includes(i)).slice(0, 14);
+  const wb = (await commodityStats({}).catch(() => ({ worldbank: [] as { name: string; last_date: string; last_price: number | null; chg_1m_pct: number | null }[] }))).worldbank
+    .filter((w) => words.split(/\s+/).every((x) => new RegExp(x, "i").test(w.name))).slice(0, 4);
+  const out: string[] = [];
+  out.push(origin ? (own.length ? `PRICES FOR ORIGIN ${origin}:\n${own.slice(0, 10).map(line).join("\n")}` : `NO PRICE ON RECORD FOR ORIGIN ${origin}.`) : "");
+  if (other.length) out.push(`${origin ? "OTHER ORIGINS AND BENCHMARKS (not the asked origin)" : "PRICES"}:\n${other.map(line).join("\n")}`);
+  if (wb.length) out.push(`WORLD BANK MONTHLY: ${wb.map((w) => `${w.name} ${w.last_price} (${w.last_date}${w.chg_1m_pct != null ? `, 1m ${w.chg_1m_pct}%` : ""})`).join("; ")}`);
+  return out.filter(Boolean).join("\n\n") || `no price on record for "${product}"`;
+}
 async function lastTender(chatId: string): Promise<string> {
   const rows = (await readRanges(ENGINE_SHEET, [`'${MEM}'!A2:C6000`]).catch(() => null))?.[0] || [];
   const mine = rows.filter((r) => r && String(r[0]) === chatId && /^tn:/.test(String(r[2] || "")) && Date.now() - Date.parse(String(r[1] || "")) < 24 * 3600e3);
@@ -335,6 +359,7 @@ export async function handle(chatId: string, text: string, _from: string, langCo
       { name: "search_tenders", description: "Open tenders ranked by deal fit. words: the product or field in English (a few words, no country names); country: ISO3 or empty. Returns ids.", input_schema: { type: "object", properties: { words: { type: "string" }, country: { type: "string" } }, required: ["words"] } },
       { name: "tender_detail", description: "Everything the system knows about one tender id: value, deadline, fit and why, win chance, expected bidders, incumbent, buyer history, expected value, engine decision, entry route.", input_schema: { type: "object", properties: { id: { type: "string" } }, required: ["id"] } },
       { name: "suppliers", description: "Proven suppliers for an English product phrase, best product fit first.", input_schema: { type: "object", properties: { product: { type: "string" } }, required: ["product"] } },
+      { name: "prices", description: "Commodity prices the system holds: physical prices by origin and grade (exchanges, auctions, official boards), futures benchmarks, trade unit values and World Bank monthly series. Use for any price question. product: English commodity words (e.g. 'coffee arabica', 'sesame', 'urea'); origin: ISO3 or empty. Always give the date and basis of each price, say when it is stale, and never present another origin's price as the asked origin's.", input_schema: { type: "object", properties: { product: { type: "string" }, origin: { type: "string" } }, required: ["product"] } },
       { name: "supplier_contact", description: "Contact details on record for one supplier (name and ISO3 country as returned by suppliers).", input_schema: { type: "object", properties: { company: { type: "string" }, country: { type: "string" } }, required: ["company"] } },
       { name: "country_intel", description: "Country intelligence summary for an ISO3 country code: open tenders and value, sectors, theses, news.", input_schema: { type: "object", properties: { country: { type: "string" } }, required: ["country"] } },
       { name: "plays", description: "Deal theses (supply the winner, arbitrage gap, pre-tender, news lead, procurement plan), optionally for one ISO3 country.", input_schema: { type: "object", properties: { country: { type: "string" } } } },
@@ -390,6 +415,7 @@ Facts: cite figures exactly as the tools returned them; never invent companies, 
           else if (u.name === "tender_detail") { const x = await findTender(u.input.id || ""); out = x ? tenderDetail(x, he) : "tender not found or closed"; }
           else if (u.name === "country_intel") out = await country(c3);
           else if (u.name === "plays") out = await plays(c3, 5);
+          else if (u.name === "prices") out = await prices(u.input.product || "", (u.input.origin || "").toUpperCase().slice(0, 3));
           else if (u.name === "suppliers") out = await suppliers(u.input.product || "", 6, he);
           else if (u.name === "supplier_contact") out = JSON.stringify((await lookupContact(u.input.company || "", c3).catch(() => null)) || { note: "no contact on record" });
         } catch (e) { out = "error: " + String(e).slice(0, 120); }
