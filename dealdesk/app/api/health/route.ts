@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readRanges, ENGINE_SHEET, sheetsDiag } from "@/lib/sheets";
 import { mailCheck } from "@/lib/mailer";
 import { claude } from "@/lib/anthropic";
+import { tgEnv } from "@/lib/tgenv";
 
 // Self-check: calls every panel route the way the panel does (read-only calls only) and reports status, time, size
 // and the first error, plus the Telegram webhook, the AI key, the mail box login and the bot's tabs. Nothing is
@@ -94,13 +95,14 @@ export async function GET(req: NextRequest) {
   }
   const extra: Record<string, unknown> = {};
   if (!only || only === "extra") {
-    const tg = process.env.TELEGRAM_BOT_TOKEN;
+    const tg = tgEnv().token;
+    extra.telegram_token = Boolean(tg);
     extra.telegram = tg ? await fetch(`https://api.telegram.org/bot${tg}/getWebhookInfo`).then((r) => r.json()).then((j) => { const w = j.result || {}; return { url_set: !!w.url, url_host: String(w.url || "").split("/")[2], pending: w.pending_update_count, last_error: w.last_error_message || "", last_error_at: w.last_error_date ? new Date(w.last_error_date * 1000).toISOString() : "" }; }).catch((e) => String(e)) : "no token";
     extra.ai = await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).then((r) => ({ ok: true, text: r.text })).catch((e) => ({ ok: false, err: String(e).slice(0, 200) }));
     extra.mail = await mailCheck().catch((e) => ({ ok: false, error: String(e).slice(0, 200) }));
-    const tabs = ["Telegram Links", "Telegram Chat", "Agent Runs", "Approvals", "Tender Projects", "Tender Watches", "Users", "AI Usage", "App Log", "Activity"];
+    const tabs = ["Telegram", "Telegram Chat", "Agent Runs", "Agent Approvals", "Tender Projects", "Tender Watches", "Users", "AI Usage", "App Log", "Activity"];
     extra.tabs = Object.fromEntries(await Promise.all(tabs.map(async (t) => [t, await readRanges(ENGINE_SHEET, [`'${t}'!A1:A20000`]).then((v) => (v?.[0]?.length ?? -1)).catch((e) => String(e).slice(0, 120))])));
-    extra.env = Object.fromEntries(["GOOGLE_SERVICE_ACCOUNT_JSON", "ANTHROPIC_API_KEY", "TELEGRAM_BOT_TOKEN", "TELEGRAM_WEBHOOK_SECRET", "CRON_SECRET", "SESSION_SECRET", "PANEL_KEY", "ZOHO_SMTP_PASS", "AGENT_MODEL", "TG_MODEL"].map((k) => [k, Boolean(process.env[k])]));
+    extra.env = Object.fromEntries(["GOOGLE_SERVICE_ACCOUNT_JSON", "ANTHROPIC_API_KEY", "TELEGRAM_WEBHOOK_SECRET", "CRON_SECRET", "AUTH_SECRET", "STATE_SHEET_ID", "ZOHO_SMTP_PASS", "AGENT_MODEL", "TG_MODEL"].map((k) => [k, Boolean(process.env[k])]));
   }
   const bad = out.filter((o) => (o.status as number) !== 200 || o.err);
   return NextResponse.json({ ok: !bad.length, deployment: (process.env.VERCEL_DEPLOYMENT_ID || "").slice(-8), checks: out, bad: bad.map((b) => b.name), ...extra });
