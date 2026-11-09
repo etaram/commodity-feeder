@@ -649,11 +649,55 @@ def exa_ethiopia_coffee():
     return rows
 
 
+PINK = {  # World Bank Pink Sheet column -> (commodity label, hs6)
+    "Cocoa": ("Cocoa beans", "180100"), "Coffee, Arabica": ("Coffee Arabica", "090111"), "Coffee, Robusta": ("Coffee Robusta", "090111"),
+    "Tea, avg 3 auctions": ("Tea", "090240"), "Palm oil": ("Palm oil", "151110"), "Soybeans": ("Soybeans", "120190"), "Soybean oil": ("Soybean oil", "150710"),
+    "Maize": ("Maize", "100590"), "Rice, Thai 5%": ("Rice 5% broken (Thai)", "100630"), "Rice, Viet Namese 5%": ("Rice 5% broken (Vietnam)", "100630"),
+    "Wheat, US HRW": ("Wheat (US HRW)", "100199"), "Sugar, world": ("Sugar (world)", "170199"), "Cotton, A Index": ("Cotton (A Index)", "520100"),
+    "Rubber, RSS3": ("Natural rubber RSS3", "400121"), "DAP": ("DAP fertilizer", "310530"), "Urea": ("Urea fertilizer", "310210"),
+    "Potassium chloride": ("Potash (KCl)", "310420"), "Phosphate rock": ("Phosphate rock", "251010"), "Aluminum": ("Aluminium", "760110"),
+    "Copper": ("Copper", "740311"), "Nickel": ("Nickel", "750210"), "Zinc": ("Zinc", "790111"), "Tin": ("Tin", "800110"), "Lead": ("Lead", "780110"),
+    "Iron ore, cfr spot": ("Iron ore (62% Fe, CFR China)", "260111"), "Coal, Australian": ("Thermal coal (Australia)", "270112"),
+}
+
+
+def worldbank_pink():
+    """World Bank Pink Sheet, monthly nominal USD prices (official, T1): the latest month of each listed commodity.
+    The file's address changes every month, so it is found on the World Bank page first."""
+    import pandas as pd
+    page = get("https://www.worldbank.org/en/research/commodity-markets").text
+    m = re.search(r'href="(https://thedocs\.worldbank\.org/[^"]*CMO-Historical-Data-Monthly\.xlsx)"', page)
+    if not m:
+        return []
+    df = pd.read_excel(io.BytesIO(get(m.group(1)).content), sheet_name="Monthly Prices", header=None)
+    names = [str(c).replace("*", "").strip() for c in df.iloc[4].tolist()]
+    units = [str(c).strip() for c in df.iloc[5].tolist()]
+    body = df.iloc[6:]
+    body = body[body[0].astype(str).str.match(r"^\d{4}M\d{2}$")]
+    out = []
+    for i, nm in enumerate(names):
+        if nm not in PINK:
+            continue
+        col = pd.to_numeric(body[i], errors="coerce").dropna()
+        if col.empty:
+            continue
+        period = str(body.loc[col.index[-1], 0])
+        label, hs = PINK[nm]
+        kg = 1 if "$/kg" in units[i] else 1000 if "$/mt" in units[i] else None
+        if kg is None:
+            continue
+        out.append(row("wbpink", f"{label} - World Bank Pink Sheet monthly", label, float(col.iloc[-1]), "USD", "kg" if kg == 1 else "t", kg,
+                       f"{period[:4]}-{period[5:7]}-01", "World Bank Commodity Price Data (Pink Sheet), monthly nominal USD",
+                       "https://www.worldbank.org/en/research/commodity-markets", grade=nm, origin="", place="international reference price", hs6=hs,
+                       kind="assessment", tier="T1 Official statistics", basis="monthly average international reference price (the month is the date)"))
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink"}
 
 
 # ---------------------------------------------------------------- build
@@ -681,7 +725,7 @@ def to_usd(r, rates):
 
 
 # monthly sources are dated by their month start and published about a month late
-MAX_AGE = {"ahdb": 70}
+MAX_AGE = {"ahdb": 70, "wbpink": 70}
 
 
 def finish(r, rates, fxsrc, today):
