@@ -1,50 +1,50 @@
 source,last_run_utc,rows,note,detail
-ted,2026-11-09T05:51,23987,OK,fetched=4152; days=3; cache=23987
-fts,2026-11-09T05:51,177,OK,pages=1
-sam,2026-11-09T05:51,8150,OK,fetched=364; set_aside=11652; open_to_foreign=5792; full=0
-canadabuys,2026-11-09T05:53,865,OK,
+ted,2026-11-09T09:48,23987,OK,fetched=4152; days=3; cache=23987
+fts,2026-11-09T09:48,178,OK,pages=1
+sam,2026-11-09T09:48,8183,OK,fetched=375; set_aside=11652; open_to_foreign=5825; full=0
+canadabuys,2026-11-09T09:48,865,OK,
 za,2026-11-09T05:53,959,OK,
 worldbank,2026-11-09T06:53,727,OK,new=0; cache=727; days=10
-ebrd,2026-11-09T05:53,43,OK,
+ebrd,2026-11-09T09:48,43,OK,
 mrgov,2026-11-09T06:55,190,OK,
-ungm,2026-11-09T05:55,1164,OK,new=451; total_active=1716; pages=33
-undp,2026-11-09T05:55,12,OK,new=18; cache=12
-aiib,2026-11-09T05:55,175,OK,new=172; awards=292
-isdb,2026-11-09T05:55,37,OK,new=41
-etimad,2026-11-09T06:29,622,OK,new=51; pages=6
-prozorro,2026-11-09T06:29,1084,OK,candidates=271; fetched=12
-pncp,2026-11-09T06:29,5023,OK,new=13
-secop,2026-11-09T06:29,891,OK,new=48
+ungm,2026-11-09T09:49,1185,OK,new=472; total_active=1713; pages=35
+undp,2026-11-09T09:49,12,OK,new=18; cache=12
+aiib,2026-11-09T09:49,176,OK,new=173; awards=292
+isdb,2026-11-09T09:50,37,OK,new=41
+etimad,2026-11-09T09:51,633,OK,new=62; pages=7
+prozorro,2026-11-09T09:52,1095,OK,candidates=598; fetched=225
+pncp,2026-11-09T09:52,5023,OK,new=13
+secop,2026-11-09T09:52,891,OK,new=48
 germany,2026-11-09T06:29,11594,OK,new=0; awards_seen=0; awards_saved=0
-contractsfinder,2026-11-09T06:29,93,OK,new=11
+contractsfinder,2026-11-09T09:52,93,OK,new=13
 paraguay,2026-11-09T06:40,166,OK,new=0
 dominican,2026-11-09T06:40,628,OK,new=0; listed=311
-austender,2026-11-09T06:40,166,OK,new=129
-oman,2026-11-09T06:40,529,OK,new=50
+austender,2026-11-09T09:54,166,OK,new=129
+oman,2026-11-09T06:40,529,OK,"new=50 | last error: rform, curl: (28) Operation timed out after 60001 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. "
 france,2026-11-09T06:40,7018,OK,new=645
 spain,2026-11-09T06:42,4483,OK,new=191; pages=1; awards_seen=216
-kenya,2026-11-09T06:42,607,OK,new=0
-moldova,2026-11-09T06:30,1066,OK,new=199
-uruguay,2026-11-09T06:30,546,OK,new=0
+kenya,2026-11-09T09:56,607,OK,new=40
+moldova,2026-11-09T09:53,1111,OK,new=268
+uruguay,2026-11-09T09:53,546,OK,new=0
 bahrain,2026-11-09T06:31,19,OK,new=7
-malaysia,2026-11-09T06:32,433,OK,new=432
+malaysia,2026-11-09T09:54,433,OK,new=432
 qatar,2026-11-09T07:02,290,OK,new=584
 israel,2026-11-08T10:49,933,OK,bodies_scanned=912; open_notices=933
 nyc,2026-11-09T05:51,198,OK,open=198
 us_cities,2026-11-09T05:53,286,OK,Los_Angeles=200 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-11-09T06:53,0,EMPTY,projects=0
 ocdr_tenders,2026-11-07T14:04,1271,OK,publications=29; read=29; releases=1140553; open_tenders=1271; countries=6
-afdb,2026-11-09T05:55,42,OK,new=0
-iadb,2026-11-09T05:55,101,OK,new=99
+afdb,2026-11-09T09:50,42,OK,new=0
+iadb,2026-11-09T09:50,101,OK,new=99
 chile,2026-11-09T05:55,4472,OK,new=4449
-simap,2026-11-09T05:55,619,OK,new=240
-gets,2026-11-09T05:56,415,OK,new=402
+simap,2026-11-09T09:50,619,OK,new=240
+gets,2026-11-09T09:51,415,OK,new=402
 india,2026-11-09T06:28,64280,OK,new=59947
-rwanda,2026-11-09T06:43,274,OK,new=274
-uganda,2026-11-09T06:44,42,OK,new=38
-ghana,2026-11-09T06:44,101,OK,new=101
-malawi,2026-11-09T06:44,42,OK,new=35
-mozambique,2026-11-09T06:44,77,OK,new=0
-dubai,2026-11-09T06:44,259,OK,new=193
-philippines,2026-11-09T06:47,1444,OK,new=1200
+rwanda,2026-11-09T09:57,275,OK,new=275
+uganda,2026-11-09T09:58,42,OK,new=0
+ghana,2026-11-09T09:58,101,OK,new=101
+malawi,2026-11-09T09:58,42,OK,new=35
+mozambique,2026-11-09T09:58,77,OK,new=0
+dubai,2026-11-09T09:58,277,OK,new=206
+philippines,2026-11-09T10:00,1495,OK,new=1200
 importyeti,2026-11-09T06:55,1,OK,"1 HS headings cached; this run 0, due 681"
