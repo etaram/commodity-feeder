@@ -1,0 +1,23 @@
+name: prices-refresh
+on: workflow_dispatch
+permissions:
+  contents: write
+concurrency: { group: prices-refresh }
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -q -r requirements.txt pdfplumber beautifulsoup4 lxml
+      - name: origin prices only
+        env:
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+        run: python -m leads.origin_prices 2>&1 | tail -15
+      - name: commit
+        run: |
+          git config user.name "sinder-bot"; git config user.email "bot@sinder.pro"
+          git add data/leads/origin_prices.csv data/leads/origin_prices_health.json
+          git diff --cached --quiet || { git commit -qm "prices refresh"; git pull -q --rebase origin main && git push -q origin HEAD:main; }
