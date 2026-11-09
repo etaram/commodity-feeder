@@ -37,13 +37,14 @@ export async function ensureCallbacks() {
       body: JSON.stringify({ url, secret_token: process.env.TELEGRAM_WEBHOOK_SECRET, allowed_updates: ["message", "edited_message", "callback_query"], drop_pending_updates: false }) }).catch(() => null);
   }
 }
-export async function agentCallback(chatId: string, data: string, queryId: string) {
+export async function agentCallback(chatId: string, data: string, queryId: string, langCode?: string) {
   await fetch(API("answerCallbackQuery"), { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ callback_query_id: queryId }) }).catch(() => null);
-  const link = (await links()).find((l) => l.chat_id === chatId);
-  if (!link) return;
+  const found = (await links()).find((l) => l.chat_id === chatId);
+  if (!found) return;
+  const link = await withLang(found, langCode);
   const he = link.lang === "he";
   const qq = data.match(/^qq:(\d)$/);
-  if (qq) { const q = (await lastQuestions(chatId))[Number(qq[1])]; if (q) { await send(chatId, `<i>${esc(q)}</i>`); return handle(chatId, q, ""); } return; }
+  if (qq) { const q = (await lastQuestions(chatId))[Number(qq[1])]; if (q) { await send(chatId, `<i>${esc(q)}</i>`); return handle(chatId, q, "", langCode); } return; }
   const tm = data.match(/^(tn|ts|td):(.+)$/);
   if (tm) {
     const t = await findTender(tm[2]);
@@ -87,6 +88,17 @@ export async function links(fresh = false): Promise<Link[]> {
   for (const r of rows) if (r && r[0]) m.set(String(r[0]), { chat_id: String(r[0]), email: r[1] || "", name: r[2] || "", lang: r[4] === "en" ? "en" : "he", alerts: r[5] || "on" });
   linkCache = { at: Date.now(), v: [...m.values()] };
   return linkCache.v;
+}
+// The reply language follows the user's Telegram app language (he* = Hebrew, anything else = English). When it
+// changes, the link row is rewritten so alerts and briefs follow it too.
+function tgLang(code?: string): "he" | "en" | "" { return code ? (/^(he|iw)/i.test(code) ? "he" : "en") : ""; }
+async function withLang(link: Link, code?: string): Promise<Link> {
+  const lang = tgLang(code);
+  if (!lang || lang === link.lang) return link;
+  const next = { ...link, lang };
+  await appendRow(TAB, [link.chat_id, link.email, link.name, new Date().toISOString().slice(0, 16), lang, link.alerts]).catch(() => null);
+  if (linkCache) linkCache.v = linkCache.v.map((l) => (l.chat_id === link.chat_id ? next : l));
+  return next;
 }
 
 // The link code is derived from the user's email and the bot token, so the panel can show it without a store:
@@ -254,12 +266,13 @@ async function recall(chatId: string): Promise<{ role: "user" | "assistant"; con
   return recent.flatMap((r) => [{ role: "user" as const, content: String(r[2] || "") }, { role: "assistant" as const, content: String(r[3] || "") || "-" }]);
 }
 
-export async function handle(chatId: string, text: string, _from: string) {
+export async function handle(chatId: string, text: string, _from: string, langCode?: string) {
   await ensureCallbacks();
   const all = await links();
-  const link = all.find((l) => l.chat_id === chatId);
+  const found = all.find((l) => l.chat_id === chatId);
+  const link = found ? await withLang(found, langCode) : undefined;
   const t = text.trim();
-  const he = link ? link.lang === "he" : /[֐-׿]/.test(t);
+  const he = link ? link.lang === "he" : tgLang(langCode) ? tgLang(langCode) === "he" : /[֐-׿]/.test(t);
   if (!link) {
     const m = t.match(/^\/start(?:@\w+)?\s*([A-Za-z0-9]{6})?$/) || t.match(/^([A-Za-z0-9]{6})$/);
     if (m && m[1]) return send(chatId, await linkChat(chatId, m[1], he ? "he" : "en"));
