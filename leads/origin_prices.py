@@ -30,6 +30,7 @@ import csv
 import io
 import json
 import logging
+import os
 import re
 from datetime import date, datetime
 from pathlib import Path
@@ -606,11 +607,52 @@ def vietnam_coffee():
                 basis="average of the provinces' daily buying prices, as published by a trade site")]
 
 
+def exa_ethiopia_coffee():
+    """Ethiopian coffee prices found by Exa deep search, kept only with a dated source page; runs only when EXA_API_KEY exists.
+    Marked as automated research (T4), never as exchange data. Rows without a date, older than 30 days or without a citation are dropped."""
+    key = os.environ.get("EXA_API_KEY", "")
+    if not key:
+        return []
+    if OUT.exists() and any(r["adapter"] == "exa_eth" and r["fetched"] == date.today().isoformat() for r in csv.DictReader(open(OUT, encoding="utf-8"))):
+        return []   # at most one paid search per day; the rows of today are kept as they are
+    body = {"query": "Current Ethiopian coffee prices (ECX and export) by grade, with the date of each price",
+            "additionalQueries": ["Ethiopia Commodity Exchange coffee price today birr per feresula", "Ethiopian coffee export price per kg ECTA", "Ethiopia washed Arabica FOB price"],
+            "type": "deep", "systemPrompt": "Prefer dated market reports and official sources. Exclude undated pages. Never guess a price or a date.",
+            "outputSchema": {"type": "object", "required": ["prices"], "properties": {"prices": {"type": "array", "items": {"type": "object",
+                "required": ["grade", "price", "currency", "unit", "asOfDate"], "properties": {"grade": {"type": "string"}, "price": {"type": "string"},
+                "currency": {"type": "string"}, "unit": {"type": "string"}, "asOfDate": {"type": "string", "description": "YYYY-MM-DD"}}}}}}}
+    r = requests.post("https://api.exa.ai/search", json=body, headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, timeout=180)
+    r.raise_for_status()
+    out = (r.json().get("output") or {})
+    items = ((out.get("content") or {}).get("prices")) or []
+    cites = {}
+    for g in out.get("grounding") or []:
+        cs = g.get("citations") or []
+        if cs:
+            cites[g.get("field", "")] = cs[0].get("url", "")
+    rows = []
+    for i, it in enumerate(items):
+        try:
+            d = date.fromisoformat(str(it.get("asOfDate", ""))[:10])
+        except ValueError:
+            continue
+        price = num(str(it.get("price", "")).replace(",", ""))
+        url = next((u for f, u in cites.items() if f.startswith(f"prices[{i}]")), "")
+        ccy, unit = str(it.get("currency", "")).upper()[:3], str(it.get("unit", "")).lower()
+        kg = 1 if "kg" in unit and "100" not in unit else 17 if "feresula" in unit else 100 if "quintal" in unit else None
+        if price is None or not url or (date.today() - d).days > 30 or not kg or ccy not in ("USD", "ETB"):
+            continue
+        rows.append(row("exa_eth", f"Coffee - Ethiopia ({it.get('grade', '')})", "Coffee Arabica", price, ccy, unit, kg, d.isoformat(),
+                        "Exa deep search over dated public pages (automated research, cited)", url, grade=str(it.get("grade", "")), origin="ETH", place="Ethiopia",
+                        hs6="090111", kind="reference", tier="T4 Automated research", basis="found and cited by an automated search; verify against the cited page"))
+    return rows
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth"}
 
 
 # ---------------------------------------------------------------- build
@@ -693,6 +735,9 @@ def main():
         except ValueError:
             age = None
         fresh = isinstance(report.get(a.__name__), int)
+        if key == "exa_eth" and not os.environ.get("EXA_API_KEY"):
+            health[key] = {"rows": 0, "fetched_now": False, "newest_date": "", "age_days": None, "status": "off (no EXA_API_KEY)"}
+            continue
         health[key] = {"rows": len(mine), "fetched_now": fresh, "newest_date": newest, "age_days": age,
                        "status": "ok" if fresh and (age is None or age <= 14) else "stale"}
     OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -713,7 +758,8 @@ def complete():
     if not OUT.exists():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
-    return set(KEYS.values()) <= have
+    need = set(KEYS.values()) - (set() if os.environ.get("EXA_API_KEY") else {"exa_eth"})   # the Exa source exists only with its key
+    return need <= have
 
 
 if __name__ == "__main__":
