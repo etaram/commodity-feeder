@@ -111,7 +111,7 @@
    "fetched_now": true,
    "newest_date": "2026-09-01",
    "age_days": 69,
-   "status": "stale"
+   "status": "ok"
   },
   "echarts": {
    "rows": 1,
@@ -140,6 +140,13 @@
    "newest_date": "",
    "age_days": null,
    "status": "off (no EXA_API_KEY)"
+  },
+  "wbpink": {
+   "rows": 25,
+   "fetched_now": true,
+   "newest_date": "2026-10-01",
+   "age_days": 39,
+   "status": "ok"
   }
  }
 }
