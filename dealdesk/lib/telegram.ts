@@ -436,3 +436,28 @@ export async function broadcast(text: string, lang: "he" | "en") {
   for (const l of await links()) if (l.alerts !== "off" && l.lang === lang) await send(l.chat_id, text);
 }
 
+
+// Self-check of the bot's building blocks against the live data (nothing is sent): each block's output size,
+// a short excerpt and any error. Used by /api/health?only=bot.
+export async function botSelfTest(): Promise<Record<string, unknown>> {
+  const out: Record<string, unknown> = {};
+  const run = async (name: string, f: () => Promise<unknown>) => {
+    const t0 = Date.now();
+    try { const v = await f(); const s = typeof v === "string" ? v : JSON.stringify(v); out[name] = { ms: Date.now() - t0, len: s.length, head: s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").slice(0, 260) }; }
+    catch (e) { out[name] = { ms: Date.now() - t0, err: String(e).slice(0, 200) }; }
+  };
+  await run("tenders data center", () => tenders("data center", "", 3));
+  await run("tender list he", async () => (await tenderList("data center", "", 3, true)).text);
+  await run("prices coffee ETH", () => prices("coffee arabica", "ETH"));
+  await run("prices urea", () => prices("urea", ""));
+  await run("suppliers transformer", () => suppliers("power transformer", 3, true));
+  await run("country ETH", () => country("ETH"));
+  await run("plays", () => plays("", 2));
+  const first = (await allTenders()).rows.find((r) => r.stage !== "planned");
+  if (first) {
+    await run("tender detail", async () => tenderDetail(first as unknown as Row, true));
+    await run("tender suppliers", () => tenderSuppliers(first as unknown as Record<string, string>, 3, true));
+    await run("dress markers", async () => { const d = await dress(`Found:\n[[T:${first.id}]] note\n[[Q:Who supplies it?]]`, true); return { text: d.text.slice(0, 200), buttons: d.keyboard.length }; });
+  }
+  return out;
+}
