@@ -1,0 +1,372 @@
+{
+ "load": {
+  "pageerrors": [],
+  "console": [
+   "The script resource is behind a redirect, which is disallowed."
+  ],
+  "failed": [],
+  "slow": [
+   "8127ms /api/panel/get {\"key\":\"contacts\",\"fresh\":false}",
+   "8200ms /api/panel/get {\"key\":\"intel\",\"fresh\":false}",
+   "8244ms /api/panel/get {\"key\":\"ptasks\",\"fresh\":false}",
+   "8381ms /api/panel/get {\"key\":\"pursuits\",\"fresh\":false}",
+   "8470ms /api/panel/get {\"key\":\"bd\",\"fresh\":false}",
+   "9244ms /api/panel/get {\"key\":\"approvals\",\"fresh\":false}"
+  ],
+  "ms": 16261,
+  "url": "https://desk.sinder.pro/#today"
+ },
+ "today": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [
+   "13447ms /api/panel/get {\"key\":\"tot_t\",\"fresh\":false}",
+   "17216ms /api/profile?facets=1",
+   "17818ms /api/panel/today"
+  ],
+  "ms_after_open": 9003,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 10911,
+  "title": "Top matches"
+ },
+ "forme": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9001,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 23317,
+  "title": "Top matches"
+ },
+ "desk": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [
+   "19962ms /api/panel/ai {\"prompt\":\"Translate each string in the JSON array into Engl"
+  ],
+  "ms_after_open": 9005,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 5811,
+  "title": "Best deals to pursue now"
+ },
+ "tenders": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9005,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Select a tender to view details, check eligibility, match suppliers and reach out."
+  ],
+  "textlen": 14020,
+  "title": ""
+ },
+ "deals": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Pick an opportunity to see the data and run research, supplier search or outreach."
+  ],
+  "textlen": 7281,
+  "title": ""
+ },
+ "pipeline": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "No deals in progress yet. Open a tender and press Build the deal."
+  ],
+  "textlen": 211,
+  "title": "Deals in progress"
+ },
+ "projects": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9003,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "No active projects. Open a tender and press Start bid project."
+  ],
+  "textlen": 412,
+  "title": ""
+ },
+ "companies": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Pick a company to see what it sells and how to reach it, then run research or outreach."
+  ],
+  "textlen": 16480,
+  "title": ""
+ },
+ "contacts": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9003,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 94814,
+  "title": ""
+ },
+ "markets": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 29513,
+  "title": "Commodity prices"
+ },
+ "world": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9006,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 21908,
+  "title": "World events"
+ },
+ "country": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 1621,
+  "title": "Country intelligence"
+ },
+ "research": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 507,
+  "title": "Supplier research"
+ },
+ "reverse": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 485,
+  "title": "Deal reverse engineering"
+ },
+ "finance": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9006,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 61810,
+  "title": "Financing and grants"
+ },
+ "logistics": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 49759,
+  "title": "Logistics, customs and inspection"
+ },
+ "grants": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9005,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Pick a call to see who can apply and what it funds."
+  ],
+  "textlen": 10178,
+  "title": ""
+ },
+ "intel": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9003,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 63372,
+  "title": "Tenders expected to open"
+ },
+ "jobs": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9004,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 9790,
+  "title": "Jobs for the worker"
+ },
+ "clients": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9003,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "No clients yet."
+  ],
+  "textlen": 75,
+  "title": "Clients"
+ },
+ "outreach": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9005,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "No campaigns yet."
+  ],
+  "textlen": 209,
+  "title": "Outreach"
+ },
+ "users": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9005,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [],
+  "textlen": 39242,
+  "title": "User accounts"
+ },
+ "ops": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "ms_after_open": 9003,
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Loading data from your sheets…"
+  ],
+  "textlen": 42,
+  "title": "Admin panel"
+ },
+ "search:דאטה סנטר": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [
+   "12475ms /api/panel/admin"
+  ],
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Select a tender to view details, check eligibility, match suppliers and reach out."
+  ],
+  "textlen": 2514,
+  "title": ""
+ },
+ "search:solar": {
+  "pageerrors": [],
+  "console": [],
+  "failed": [],
+  "slow": [],
+  "overflow": 0,
+  "wide": [],
+  "bad": [],
+  "empty": [
+   "Select a tender to view details, check eligibility, match suppliers and reach out."
+  ],
+  "textlen": 2514,
+  "title": ""
+ }
+}
