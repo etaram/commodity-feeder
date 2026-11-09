@@ -42,6 +42,8 @@ export async function agentCallback(chatId: string, data: string, queryId: strin
   const link = (await links()).find((l) => l.chat_id === chatId);
   if (!link) return;
   const he = link.lang === "he";
+  const qq = data.match(/^qq:(\d)$/);
+  if (qq) { const q = (await lastQuestions(chatId))[Number(qq[1])]; if (q) { await send(chatId, `<i>${esc(q)}</i>`); return handle(chatId, q, ""); } return; }
   const tm = data.match(/^(tn|ts|td):(.+)$/);
   if (tm) {
     const t = await findTender(tm[2]);
@@ -198,10 +200,36 @@ async function country(c: string): Promise<string> {
     + (d.news.length ? `News:\n${d.news.slice(0, 4).map((x) => `• ${esc(x.title)} (${esc(x.domain)})`).join("\n")}` : "");
 }
 
+// The AI answer with its markers turned into cards and buttons: [[T:id]] becomes a numbered tender card with a
+// Details button; [[Q:question]] becomes a follow-up button (the questions are kept with the exchange, the button
+// carries only its number).
+async function dress(raw: string, he: boolean) {
+  const questions: string[] = []; let n = 0; const ids: string[] = [];
+  let text = raw.replace(/\[\[Q:([^\]]{2,80})\]\]\s*/g, (_m, q) => { if (questions.length < 3) questions.push(String(q).trim()); return ""; });
+  const parts = text.split(/(\[\[T:[^\]]+\]\])/), orig = [...parts];
+  for (let i = 0; i < parts.length; i++) {
+    const m = parts[i].match(/^\[\[T:([^\]]+)\]\]$/);
+    if (!m) { parts[i] = parts[i].replace(/^[\s:·-]+(?=\S)/, (x) => (i && /\[\[T:/.test(orig[i - 1] || "") ? "\n" : x)); continue; }
+    const r = await findTender(m[1].trim()).catch(() => undefined);
+    if (!r) { parts[i] = ""; continue; }
+    n += 1; ids.push(r.id); parts[i] = tenderLine(r, n, he);
+  }
+  text = parts.join("").replace(/^[ \t]*[-•]\s*(?=<b>\d+\.)/gm, "").replace(/\n{3,}/g, "\n\n").trim();
+  const keyboard: { text: string; callback_data: string }[][] = [];
+  for (let i = 0; i < ids.length; i += 4) keyboard.push(ids.slice(i, i + 4).map((id, k) => ({ text: he ? `פרטים ${i + k + 1}` : `Details ${i + k + 1}`, callback_data: cb("tn", id) })));
+  questions.forEach((q, i) => keyboard.push([{ text: q.slice(0, 60), callback_data: `qq:${i}` }]));
+  return { text, keyboard, questions };
+}
+
 // ---- short memory: the last exchanges of a chat (hidden tab 'Telegram Chat': chat_id, at, question, answer) ------
 const MEM = "Telegram Chat";
-async function remember(chatId: string, q: string, ans: string) {
-  await appendRows(MEM, [[chatId, new Date().toISOString(), q.slice(0, 600), ans.replace(/<[^>]+>/g, "").slice(0, 900)]]).catch(() => null);
+async function remember(chatId: string, q: string, ans: string, questions: string[] = []) {
+  await appendRows(MEM, [[chatId, new Date().toISOString(), q.slice(0, 600), ans.replace(/<[^>]+>/g, "").slice(0, 900), JSON.stringify(questions)]]).catch(() => null);
+}
+async function lastQuestions(chatId: string): Promise<string[]> {
+  const rows = (await readRanges(ENGINE_SHEET, [`'${MEM}'!A2:E6000`]).catch(() => null))?.[0] || [];
+  const mine = rows.filter((r) => r && String(r[0]) === chatId);
+  try { return JSON.parse(String(mine[mine.length - 1]?.[4] || "[]")); } catch { return []; }
 }
 async function recall(chatId: string): Promise<{ role: "user" | "assistant"; content: string }[]> {
   const rows = (await readRanges(ENGINE_SHEET, [`'${MEM}'!A2:D6000`]).catch(() => null))?.[0] || [];
@@ -264,7 +292,10 @@ export async function handle(chatId: string, text: string, _from: string) {
       { name: "start_deal_agent", description: "Start the deal agent only when the user asks to build, run or work on a deal end to end (source a product for a buyer, prepare a bid, find suppliers and contact them). request: the user's full request with the context.", input_schema: { type: "object", properties: { request: { type: "string" } }, required: ["request"] } },
     ];
     const sys = `You are Sinder's deal co-pilot on Telegram, talking to a Sinder trader. Answer from the Deal Desk's own data only, through the tools; call several tools at once when that is faster.
-How to answer: in ${he ? "simple, plain Hebrew (no jargon, no em-dashes, no emojis)" : "plain English"}; lead with the direct answer in one line, then at most 6 short items, then one line "next step" that suggests the most useful follow-up (a question to ask or a command such as /deal). Use HTML <b> only for names; when a tool row has an "open" link, make the name a link: <a href="that link">name</a>. Write money as $182.9M and dates as 2026-11-23.
+How to answer: in ${he ? "simple, plain Hebrew (no jargon, no em-dashes, no emojis)" : "plain English"}; lead with the direct answer in one or two lines, then at most 6 items, then one short recommendation line.
+Tenders: write each tender you mention as its own paragraph that starts with the marker [[T:<id>]] (the id from the tools) and then at most one short line in your own words on why it matters or what is unclear. The system turns the marker into a numbered card with the title as a link, buyer, country, value, days left and fit, plus a Details button, so do not repeat those facts.
+Suppliers and countries: when a tool row has an "open" link, make the name a link: <a href="that link">name</a>. Use HTML <b> only for names. Write money as $182.9M and dates as 2026-11-23.
+Follow-ups: end with two or three follow-up questions the trader is likely to ask next, each on its own line as [[Q:<question, at most 45 characters>]]; they become buttons. Do not write a "next question" line in the text.
 Thinking: understand what the trader is after (a market, a deal, a supplier, a price) and pick the tools that answer it; for a market question search tenders and also look at the country or theses when useful; for "is it worth it" read tender_detail. Use the conversation so far for follow-ups ("the second one", "and in Kenya?").
 Search: if a search returns nothing, search again before you answer with other wordings: synonyms, UK and US spelling, the product alone without words like construction or supply, related terms (for example data centre, server room, HPC). Say there is nothing only after that, and name what you searched.
 Facts: cite figures exactly as the tools returned them; never invent companies, contacts, prices or dates; a directory match is not a verified fact.`;
@@ -306,9 +337,9 @@ Facts: cite figures exactly as the tools returned them; never invent companies, 
       }));
       msgs.push({ role: "user", content: results });
     }
-    const final = answer || (he ? "לא מצאתי." : "Nothing found.");
-    await remember(chatId, t, final);
-    return send(chatId, final);
+    const out = await dress(answer || (he ? "לא מצאתי." : "Nothing found."), he);
+    await remember(chatId, t, out.text, out.questions);
+    return sendCard(chatId, out.text, out.keyboard.length ? out.keyboard : undefined);
   } catch (e) {
     return send(chatId, (he ? "שגיאה: " : "Error: ") + esc(String((e as Error).message || e).slice(0, 200)));
   }
