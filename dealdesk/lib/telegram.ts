@@ -48,8 +48,9 @@ export async function agentCallback(chatId: string, data: string, queryId: strin
   if (tm) {
     const t = await findTender(tm[2]);
     if (!t) return send(chatId, he ? "המכרז כבר לא פתוח במערכת." : "That tender is no longer open in the system.");
+    if (tm[1] !== "td") await remember(chatId, `tn:${t.id}`, "");
     if (tm[1] === "tn") { await logActivity({ email: link.email, name: link.name }, "tg_tender", t.id); return sendCard(chatId, tenderDetail(t, he), tenderButtons(t.id, he)); }
-    if (tm[1] === "ts") { await typing(chatId); return send(chatId, await suppliers(`${t.commodity || ""} ${t.title_en || t.title || ""}`.slice(0, 120), 6, he)); }
+    if (tm[1] === "ts") { await typing(chatId); return send(chatId, await tenderSuppliers(t, 6, he)); }
     await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: `Build a deal on tender ${t.id}: ${t.title_en || t.title} (${t.country}, buyer ${t.buyer})` });
     return send(chatId, he ? "פתחתי סוכן עסקאות על המכרז הזה. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "Opened a deal agent on this tender. I will update you here and ask approval before any message.");
   }
@@ -178,7 +179,7 @@ function tenderDetail(r: Row, he: boolean): string {
     + L("התאמה", "Fit", r.fit ? `${esc(r.fit)}${r.fit_why ? ` · ${esc(r.fit_why).slice(0, 140)}` : ""}` : "")
     + L("סיכוי זכייה", "Win chance", pct(r.p_win_market)) + L("מתחרים צפויים", "Expected bidders", esc(r.est_bidders || ""))
     + L("ספק מכהן", "Incumbent", esc(r.incumbent || "")) + L("זכיות של הקונה ב-12 חודשים", "Buyer awards, 12 months", esc(r.buyer_awards_12m || ""))
-    + L("שווי צפוי", "Expected value", money(num(r.ev_usd))) + L("החלטת המנוע", "Engine decision", esc(r.decision || ""))
+    + L("שווי צפוי", "Expected value", num(r.ev_usd) < 0 ? (he ? "שלילי (לא משתלם)" : "negative (not worth it)") : money(num(r.ev_usd))) + L("החלטת המנוע", "Engine decision", esc(r.decision || ""))
     + (best ? L("דרך כניסה", "Entry route", `${esc(best.route)} (${esc(best.verdict)}) · ${esc(best.next).slice(0, 160)}`) : "")
     + (r.link ? `\n${a(r.link, he ? "המכרז באתר המקור" : "Notice at the source")}` : "");
 }
@@ -191,6 +192,20 @@ async function suppliers(q: string, n = 6, he = false): Promise<string> {
   const rows = toObjects(r.values).filter((y) => y.match !== "incompatible").slice(0, n);
   if (!rows.length) return he ? `לא מצאתי ספקים מוכחים ל"${esc(q)}".` : `No proven suppliers for "${esc(q)}".`;
   return `<b>${r.total} ${he ? "ספקים" : "suppliers"}</b> · "${esc(r.query || q)}"\n\n` + rows.map((s, i) => `<b>${i + 1}. ${a(supplierUrl(s.supplier, s.country), esc(s.supplier))}</b> · ${esc(s.country)} · tier ${esc(s.tier)}${s.match ? ` · ${esc(s.match)}` : ""}\n${esc((s.products || s.supplied || "").slice(0, 110))}${s.website ? `\n${a(/^https?:/.test(s.website) ? s.website : "https://" + s.website, esc(s.website.replace(/^https?:\/\//, "")))}` : ""}`).join("\n\n");
+}
+// Suppliers for one tender, ranked the way the web panel does it: the tender's sector, customs code, country and
+// title words together (a long title never has to match word for word)
+async function tenderSuppliers(t: Record<string, string>, n = 6, he = false): Promise<string> {
+  const r = await supplierSearch({ sector: t.sector || "", text: `${t.title_en || t.title || ""} ${t.commodity || ""}`.slice(0, 400), country: t.country || "", region: t.region || "", hs: t.hs || "", n: 15 });
+  const rows = toObjects(r.values).filter((y) => y.match !== "incompatible").slice(0, n);
+  const title = esc((t.title_en || t.title || "").slice(0, 90));
+  if (!rows.length) return he ? `לא מצאתי ספקים מתאימים למכרז:\n<i>${title}</i>` : `No matching suppliers for this tender:\n<i>${title}</i>`;
+  return `<b>${he ? `${r.total} ספקים למכרז` : `${r.total} suppliers for the tender`}</b>\n<i>${title}</i>\n\n` + rows.map((s, i) => `<b>${i + 1}. ${a(supplierUrl(s.supplier, s.country), esc(s.supplier))}</b> · ${esc(s.country)} · tier ${esc(s.tier)}${s.match ? ` · ${esc(s.match)}` : ""}\n${esc((s.products || s.supplied || "").slice(0, 110))}${s.website ? `\n${a(/^https?:/.test(s.website) ? s.website : "https://" + s.website, esc(s.website.replace(/^https?:\/\//, "")))}` : ""}`).join("\n\n");
+}
+async function lastTender(chatId: string): Promise<string> {
+  const rows = (await readRanges(ENGINE_SHEET, [`'${MEM}'!A2:C6000`]).catch(() => null))?.[0] || [];
+  const mine = rows.filter((r) => r && String(r[0]) === chatId && /^tn:/.test(String(r[2] || "")) && Date.now() - Date.parse(String(r[1] || "")) < 24 * 3600e3);
+  return String(mine[mine.length - 1]?.[2] || "").slice(3);
 }
 async function country(c: string): Promise<string> {
   const d = await countryIntel(c);
@@ -228,12 +243,12 @@ async function remember(chatId: string, q: string, ans: string, questions: strin
 }
 async function lastQuestions(chatId: string): Promise<string[]> {
   const rows = (await readRanges(ENGINE_SHEET, [`'${MEM}'!A2:E6000`]).catch(() => null))?.[0] || [];
-  const mine = rows.filter((r) => r && String(r[0]) === chatId);
+  const mine = rows.filter((r) => r && String(r[0]) === chatId && !/^tn:/.test(String(r[2] || "")));
   try { return JSON.parse(String(mine[mine.length - 1]?.[4] || "[]")); } catch { return []; }
 }
 async function recall(chatId: string): Promise<{ role: "user" | "assistant"; content: string }[]> {
   const rows = (await readRanges(ENGINE_SHEET, [`'${MEM}'!A2:D6000`]).catch(() => null))?.[0] || [];
-  const mine = rows.filter((r) => r && String(r[0]) === chatId);
+  const mine = rows.filter((r) => r && String(r[0]) === chatId && !/^tn:/.test(String(r[2] || "")));
   const cut = mine.map((r) => r[2]).lastIndexOf("reset");
   const recent = mine.slice(cut + 1).filter((r) => Date.now() - Date.parse(String(r[1] || "")) < 6 * 3600e3).slice(-4);
   return recent.flatMap((r) => [{ role: "user" as const, content: String(r[2] || "") }, { role: "assistant" as const, content: String(r[3] || "") || "-" }]);
@@ -277,7 +292,14 @@ export async function handle(chatId: string, text: string, _from: string) {
     if (/^\/new/.test(cmd)) { await remember(chatId, "reset", ""); return send(chatId, he ? "התחלנו שיחה חדשה." : "New conversation."); }
     if (/^\/country/.test(cmd)) { const c = iso(arg.toUpperCase()); if (!c) return send(chatId, he ? "קוד מדינה בן 3 אותיות, למשל /country KEN" : "3-letter code, e.g. /country KEN"); await logActivity(who, "tg_country", c); return send(chatId, await country(c)); }
     if (/^\/plays/.test(cmd)) { await logActivity(who, "tg_plays", arg); return send(chatId, await plays(iso(arg.toUpperCase()))); }
-    if (/^\/suppliers/.test(cmd)) { await logActivity(who, "tg_suppliers", arg); await typing(chatId); return send(chatId, await suppliers(arg, 6, he)); }
+    if (/^\/suppliers/.test(cmd)) {
+      await logActivity(who, "tg_suppliers", arg); await typing(chatId);
+      if (arg) return send(chatId, await suppliers(arg, 6, he));
+      // no product named: the tender opened last in this chat, if any
+      const tid = await lastTender(chatId), tr = tid ? await findTender(tid) : null;
+      if (tr) return send(chatId, await tenderSuppliers(tr, 6, he));
+      return send(chatId, he ? "לאיזה מוצר? למשל:\n/suppliers power transformer\nאו לחץ \"ספקים מתאימים\" מתחת למכרז." : "Which product? For example:\n/suppliers power transformer\nor tap \"Matching suppliers\" under a tender.");
+    }
     if (/^\/brief/.test(cmd)) { await logActivity(who, "tg_brief", link.lang); const b = (await readBrief(link.lang)) || (await buildBrief(link.lang, link.email)); return send(chatId, b.text ? b.text.replace(/^## (.*)$/gm, "<b>$1</b>").replace(/\n---[\s\S]*$/, "") : (he ? "אין עדיין מקורות להיום." : "No sources collected yet today.")); }
     // free text: the AI picks tools from the same set and phrases the result from their output only; the last few
     // exchanges of this chat come along, so a follow-up ("and in Germany?", "the second one") is understood
