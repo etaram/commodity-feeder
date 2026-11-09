@@ -22,7 +22,7 @@ jobs:
         run: |
           check() {
             now=$(date -u +%s)
-            for spec in "feed.yml:13" "leads.yml:3" "suppliers.yml:12" "israel.yml:26" "company-check.yml:2"; do
+            for spec in "feed.yml:13" "leads.yml:3" "suppliers.yml:12" "israel.yml:26" "company-check.yml:2" "panel.yml:2"; do
               wf=${spec%%:*}; max_h=${spec##*:}
               group="$wf"; [ "$wf" = "leads.yml" ] || [ "$wf" = "suppliers.yml" ] && group="leads.yml suppliers.yml"
               busy=0
