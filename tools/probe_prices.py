@@ -16,3 +16,12 @@ for u in URLS:
         print(f"{r.status_code} | {len(r.content):>8} | {ct} | {u[:90]} -> {r.url[:90] if r.url != u else '='} | {title}")
     except Exception as e:
         print(f"ERR | {u[:90]} | {str(e)[:120]}")
+
+# optional: print the lines around a word (python tools/probe_prices.py urls.txt WORD URL_SUBSTRING)
+if len(sys.argv) > 3:
+    for u in URLS:
+        if sys.argv[3] in u:
+            t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", requests.get(u, headers=UA, timeout=40).text, flags=re.S)
+            t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", t))
+            for m in list(re.finditer(sys.argv[2], t))[:6]:
+                print("...", t[max(0, m.start() - 150):m.start() + 300])
