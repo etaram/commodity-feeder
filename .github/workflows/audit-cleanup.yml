@@ -1,15 +1,19 @@
 name: audit-cleanup
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      state_sheet: { description: 'state sheet id (empty: print the service account only)', required: false, default: '' }
 permissions:
   contents: read
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
-      - run: pip install -q google-auth requests && python tools/audit/cleanup.py
+      - run: pip install -q google-auth requests && python tools/audit/state_migrate.py
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          STATE_SHEET_ID: ${{ inputs.state_sheet }}
