@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install edge-tts || true
-      - run: for v in en-US-AndrewMultilingualNeural en-US-BrianMultilingualNeural en-GB-RyanNeural en-US-ChristopherNeural; do python tools/video/tts_words.py tools/video/film14.json pages/$v $v +0%; done
+      - run: for v in en-US-ChristopherNeural; do python tools/video/tts_words.py tools/video/film15.json pages/$v $v +0%; done
       - name: Push to the scratch branch
         run: |
           git config user.name "tts"; git config user.email "actions@users.noreply.github.com"
