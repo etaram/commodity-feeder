@@ -21,7 +21,14 @@ table.mk tr:last-child td{border-bottom:0}
 .cites{margin-inline-start:2px;font-size:.7em}.cites .cite{display:inline-block;min-width:1.4em;padding:0 3px;margin:0 1px;border-radius:6px;background:var(--line,#2a3550);color:inherit;text-decoration:none;text-align:center;line-height:1.5}.srcs{margin-top:10px;font-size:.85em}.srcs summary{cursor:pointer;color:var(--muted,#8a96ad)}.srcs ol{margin:6px 0;padding-inline-start:22px}.srcs a{word-break:break-all}.brief a{overflow-wrap:anywhere}
 .rd-list{list-style:none;padding:0;margin:6px 0}.rd-list li{padding:2px 0}.rd-list li.gap{color:var(--muted,#8a96ad)}.rd summary{cursor:pointer}
 .cov{width:100%;border-collapse:collapse;font-size:.9em}.cov th,.cov td{padding:6px 8px;border-bottom:1px solid var(--line,#2a3550);text-align:start}.cov tr.gap td:last-child{color:var(--warn,#e0a84a)}
-.tablewrap{overflow-x:auto;max-width:100%}.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.tablewrap{overflow-x:auto;max-width:100%}
+table.cmt td .sub{white-space:normal}table.cmt td.cm-links{white-space:nowrap}
+@media (max-width:700px){table.cmt thead{display:none}table.cmt,table.cmt tbody{display:block}
+table.cmt tr{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 4px;border-bottom:1px solid var(--line)}
+table.cmt td{display:block;border:0;padding:0;white-space:normal}
+table.cmt td.cm-name{flex:1 1 100%;min-width:0;max-width:none}
+table.cmt td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--muted)}
+table.cmt td.cm-links{flex:1 1 100%}}.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 body:not(.role-analyst):not(.role-admin) [data-v="clients"],body:not(.role-analyst):not(.role-admin) [data-v="outreach"]{display:none}
 </style></head><body>
 <title>Sinder Opportunity Panel</title>
@@ -3779,11 +3786,14 @@ async function renderComparable(q) {
   const pct = v => v === null || v === undefined || v === "" ? "" : `<span class="num ${v > 0 ? "up" : v < 0 ? "down" : ""}">${v > 0 ? "+" : ""}${Number(v).toFixed(1)}%</span>`;
   const items = j.items || [];
   if (!items.length) { el.innerHTML = `<div class="empty">${esc(t("cm_none"))}</div>`; return; }
-  el.innerHTML = `<div class="tablewrap"><table class="tbl"><thead><tr><th>${esc(mt("Series", "סדרה"))}</th><th>${esc(mt("Type", "סוג"))}</th><th>${esc(mt("Basis", "בסיס"))}</th><th>${esc(mt("Price", "מחיר"))}</th><th>USD/t</th><th>1m</th><th>3m</th><th>${esc(mt("Vol 30d", "תנודתיות 30 יום"))}</th><th></th></tr></thead><tbody>
-    ${items.map(x => `<tr><td>${esc(x.product || x.commodity)}${x.grade ? ` <span class="sub">${esc(x.grade)}</span>` : ""}<div class="sub">${esc(x.source)} · ${esc(x.timestamp)}</div></td>
-      <td><span class="pill ${x.physical ? "good" : "info"}">${esc(x.price_type)}</span></td><td class="sub">${esc([x.incoterm, x.delivery_location, x.origin].filter(Boolean).join(" ") || "-")}</td>
-      <td class="num">${x.price_usd ?? ""} <span class="sub">${esc(x.unit)}</span>${String(x.id).startsWith("O:") && x.conversion ? `<div class="sub">${esc(mt("as published: ", "כפי שפורסם: ") + x.conversion.split(" / ")[0])}</div>` : ""}</td><td class="num">${x.price_usd_t != null ? Math.round(x.price_usd_t) : ""}</td><td>${pct(x.chg_1m_pct)}</td><td>${pct(x.chg_3m_pct)}</td><td class="num">${x.vol_30d != null ? Number(x.vol_30d).toFixed(0) + "%" : ""}</td>
-      <td>${(x.anomaly || []).map(a => `<span class="pill warn">${esc(a)}</span>`).join(" ")}${x.link ? ` <a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(mt("source", "מקור"))}</a>` : ""}</td></tr>`).join("")}</tbody></table></div>
+  // a table on wide screens; on a phone each row becomes a card (labels come from data-l), see table.cmt in the CSS
+  const L = { type: mt("Type", "סוג"), basis: mt("Basis", "בסיס"), price: mt("Price", "מחיר"), vol: mt("Vol 30d", "תנודתיות 30 יום") };
+  const stale = d => { const a = Math.floor((Date.now() - Date.parse(d)) / 864e5); return Number.isFinite(a) && a > 14 ? ` <span class="pill warn">${esc(mt(a + " days old", "לפני " + a + " ימים"))}</span>` : ""; };
+  el.innerHTML = `<div class="tablewrap"><table class="mk cmt"><thead><tr><th>${esc(mt("Series", "סדרה"))}</th><th>${esc(L.type)}</th><th>${esc(L.basis)}</th><th>${esc(L.price)}</th><th>USD/t</th><th>1m</th><th>3m</th><th>${esc(L.vol)}</th><th></th></tr></thead><tbody>
+    ${items.map(x => `<tr><td class="cm-name"><b>${esc(x.product || x.commodity)}</b>${x.grade ? `<div class="sub">${esc(x.grade)}</div>` : ""}<div class="sub">${esc(x.source)} · ${esc(String(x.timestamp).slice(0, 10))}${stale(x.timestamp)}</div></td>
+      <td data-l="${esc(L.type)}"><span class="pill ${x.physical ? "good" : "info"}">${esc(x.price_type)}</span></td><td class="sub" data-l="${esc(L.basis)}">${esc([x.incoterm, x.delivery_location, x.origin].filter(Boolean).join(" ") || "-")}</td>
+      <td class="num" data-l="${esc(L.price)}">${x.price_usd ?? ""} <span class="sub">${esc(x.unit)}</span>${String(x.id).startsWith("O:") && x.conversion ? `<div class="sub">${esc(mt("as published: ", "כפי שפורסם: ") + x.conversion.split(" / ")[0])}</div>` : ""}</td><td class="num" data-l="USD/t">${x.price_usd_t != null ? Math.round(x.price_usd_t).toLocaleString("en-US") : "-"}</td><td data-l="1m">${pct(x.chg_1m_pct) || "-"}</td><td data-l="3m">${pct(x.chg_3m_pct) || "-"}</td><td class="num" data-l="${esc(L.vol)}">${x.vol_30d != null ? Number(x.vol_30d).toFixed(0) + "%" : "-"}</td>
+      <td class="cm-links">${(x.anomaly || []).map(a => `<span class="pill warn">${esc(a)}</span>`).join(" ")}${x.link ? ` <a href="${esc(x.link)}" target="_blank" rel="noopener">${esc(mt("source", "מקור"))}</a>` : ""}</td></tr>`).join("")}</tbody></table></div>
     <p class="note">${esc(j.note || "")}</p>`;
 }
 function renderMarkets() {
