@@ -143,10 +143,10 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
         have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
         added = 0
         for r in csv.DictReader(open(oe, encoding="utf-8")):
-            key = (r["supplier"].lower(), r["country"])
-            if not r["supplier"] or key in have:
+            ident = (r["supplier"].lower(), r["country"])  # not "key": that name holds the encryption key
+            if not r["supplier"] or ident in have:
                 continue
-            have.add(key)
+            have.add(ident)
             ty = r.get("type", "")
             out.append({"n": r["supplier"][:CUT["n"]], "c": r["country"], "tr": "3", "s": r.get("main_sector") or "Agriculture & food",
                         "ty": "manufacturer" if re.search(r"manufactur|producer", ty) else "trader", "td": "1" if "trader" in ty or "distributor" in ty else "",
