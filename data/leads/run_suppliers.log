@@ -1,5 +1,12 @@
-Sun Nov  8 18:14:38 UTC 2026
-INFO:leads:origin exporters: {"pages": 390, "failed": 0, "queued": 3440, "suppliers": 2907, "countries": 75, "top": [["FRA", 378], ["ITA", 306], ["ARG", 288], ["ZAF", 278], ["POL", 259], ["IDN", 253], ["MEX", 244], ["IND", 237], ["NGA", 181], ["USA", 44], ["TUR", 43], ["VNM", 33]]}
+Mon Nov  9 10:16:30 UTC 2026
+INFO:leads:import china-directory-2026-11-05: 19837 rows
+INFO:leads:import commodity-databases-2026-11-05: 135 rows
+INFO:leads:import global-suppliers-2026-11: 58151 rows
+INFO:leads:imports: 78123 rows, 76139 new suppliers, 1905 merged into existing ones
+INFO:leads:refined layer applied to 1008134 suppliers
+INFO:leads:classification check: 24 sectors, 8101 flagged
+INFO:leads:universe {'awards': 4455765, 'suppliers': 1008694, 'with_email': 397809, 'with_phone': 318978, 'exporters': 60525, 'goods': 356641, 'contacts_matched': 1025557, 'customs_exporters': 18225, 'customs_new': 17850, 'tier_A': 903123, 'tier_B_notable': 9812, 'tier_1_strategic': 27031, 'tier_2_proven': 108348, 'tier_3_qualified': 203278, 'tier_4_unproven': 670037, 'with_website': 254603, 'notable_total': 12592, 'notable_with_email': 3671, 'notable_with_phone': 3415, 'notable_with_website': 7873, 'quality_40_plus': 146714, 'with_any_contact': 677838, 'region: Europe': 484385, 'region: Latin America': 208314, 'region: Sub-Saharan Africa': 83008, 'region: North America': 57710, 'region: South Asia': 47056, 'region: East Asia': 41771, 'region: Oceania': 34842, 'region: unknown': 24623, 'region: Southeast Asia': 12038, 'region: CIS & Central Asia': 7366, 'region: Middle East & North Africa': 5137, 'region: Other': 1489, 'region: Israel': 955}
+wrote 150001 rows to Supplier Universe
 INFO:leads:web index: 2896 origin exporters from directories
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
