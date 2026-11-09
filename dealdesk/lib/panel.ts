@@ -160,7 +160,9 @@ const LIVE: Record<string, [string, string]> = {
 };
 // Live reads from Google Sheets can hang; after LIVE_TIMEOUT_MS the panel uses the encrypted snapshot instead
 // (refreshed by the panel worker), so a page load never waits for the 60 s function limit.
-const LIVE_TIMEOUT_MS = Number(process.env.LIVE_TIMEOUT_MS || 9000);
+// 4.5 s: a read that takes longer is waiting on a write to the engine sheet (the data workflows rewrite big tabs);
+// the page then shows the last copy at once and the read still finishes in the background for the next request
+const LIVE_TIMEOUT_MS = Number(process.env.LIVE_TIMEOUT_MS || 4500);
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   return Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`${what} timed out after ${ms} ms`)), ms))]);
 }

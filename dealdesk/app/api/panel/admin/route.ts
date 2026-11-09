@@ -65,7 +65,7 @@ export async function GET() {
       for (const r of v) { const k = `${r[1]}|${r[2]}|${String(r[3]).replace(/\(\w+\)/g, "()")}`; const x = m.get(k); if (x) { x.count++; if (String(r[0]) > x.time) x.time = String(r[0]); } else m.set(k, { time: String(r[0]), level: String(r[1]), area: String(r[2]), message: String(r[3]).slice(0, 200), detail: String(r[4] || "").slice(0, 200), count: 1 }); }
       return [...m.values()].sort((a, b) => b.time.localeCompare(a.time)).slice(0, 40);
     })),
-    safe((async () => ({ tenders_open: n((await getRange("tot_t"))[0]?.[1]), suppliers_searchable: n((await getRange("tot_s"))[0]?.[1]) }))(), 20000),
+    safe((async () => ({ tenders_open: n((await getRange("tot_t"))[0]?.[1]), suppliers_searchable: n((await getRange("tot_s"))[0]?.[1]) }))(), 15000),
     safe(intel({}).then((x) => x.counts)),
     safe(gviz(UNIVERSE, "Company checks", "select E, count(A), max(D) group by E").then((rows) => ({ by_verdict: Object.fromEntries(rows.map((r) => [r[0], Number(r[1]) || 0])), last: rows.map((r) => r[2]).sort().pop() || "" }))),
     // refinement progress: counts only, published by the hourly company-check workflow
@@ -73,7 +73,7 @@ export async function GET() {
   ]);
   return NextResponse.json({ ok: true, at: new Date().toISOString(),
     build: { commit: process.env.VERCEL_GIT_COMMIT_SHA || "local", supplier_match: MATCH_VERSION, model: MODEL },
-    ai_budget: await budgetState().catch(() => null), volumes, world, classification: classif, search_eval: evalTab, verified, assertions, sources, source_quality: quality, ai, warnings: applog, company_checks: checks, refine });
+    ai_budget: await safe(budgetState(), 6000), volumes, world, classification: classif, search_eval: evalTab, verified, assertions, sources, source_quality: quality, ai, warnings: applog, company_checks: checks, refine });
 }
 
 // POST {action: "backfill_research"} (admin): copies past research jobs into the research memory now, instead of
