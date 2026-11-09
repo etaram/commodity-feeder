@@ -76,7 +76,9 @@ def fetch(pfile, out):
     os.makedirs(out, exist_ok=True)
     for p in json.load(open(pfile)):
         tmp = f"/tmp/{p['name']}.src"; subprocess.run(["curl", "-sL", "-A", UA["User-Agent"], "-o", tmp, p["url"]], timeout=900, check=True)
-        if p.get("kind") == "image":
+        if p.get("kind") == "audio":
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-c:a", "libmp3lame", "-q:a", "2", f"{out}/{p['name']}.mp3"], check=True)
+        elif p.get("kind") == "image":
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-vf", "scale='min(3200,iw)':-2", "-q:v", "2", f"{out}/{p['name']}.jpg"], check=True)
         else:
             ss, du = str(p.get("ss", 0)), str(p.get("dur", 8))
