@@ -1,0 +1,44 @@
+name: audit-ui
+on:
+  workflow_dispatch:
+    inputs:
+      lang: { description: 'he or en', required: false, default: 'he' }
+      views: { description: 'comma list of views (empty = all)', required: false, default: '' }
+permissions:
+  contents: write
+concurrency: { group: audit-ui, cancel-in-progress: false }
+jobs:
+  ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: token from the private state sheet
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          pip install -q google-auth requests
+          T=$(python - <<'PY'
+          import json, os, requests
+          from google.oauth2 import service_account
+          from google.auth.transport.requests import Request
+          cr = service_account.Credentials.from_service_account_info(json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]), scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]); cr.refresh(Request())
+          v = requests.get("https://sheets.googleapis.com/v4/spreadsheets/1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo/values/Audit!A1", headers={"Authorization": f"Bearer {cr.token}"}, timeout=60).json()
+          print((v.get("values") or [[""]])[0][0])
+          PY
+          )
+          echo "::add-mask::$T"
+          echo "AUDIT_TOKEN=$T" >> $GITHUB_ENV
+      - run: |
+          mkdir -p /tmp/pw && cd /tmp/pw && npm init -y >/dev/null && npm i -s playwright@1.56.1 >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          cp $GITHUB_WORKSPACE/tools/audit/ui_audit.mjs /tmp/pw/ && cd /tmp/pw && LANG_UI="${{ inputs.lang }}" VIEWS="${{ inputs.views }}" node ui_audit.mjs || true
+          [ -n "${{ inputs.views }}" ] || true
+      - name: publish the report to the scratch-audit branch
+        run: |
+          cd /tmp/pw/audit && git init -q && git checkout -q -b scratch-audit && git add -A
+          git -c user.name=audit -c user.email=audit@sinder.pro commit -qm "ui audit ${{ inputs.lang }} $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" scratch-audit

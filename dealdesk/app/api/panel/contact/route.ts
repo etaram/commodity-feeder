@@ -1,3 +1,4 @@
+import { auditSession } from "@/lib/gate";
 import { logEvent } from "@/lib/log";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
@@ -31,7 +32,7 @@ async function fromResearch(name: string, country: string, ws: string): Promise<
 const cache = new Map<string, { at: number; v: Record<string, string> | null }>();
 
 export async function POST(req: NextRequest) {
-  const sess = verifySession((await cookies()).get("dd_session")?.value);
+  const sess = (verifySession((await cookies()).get("dd_session")?.value) || (await auditSession()));
   if (!sess) return NextResponse.json({ ok: false }, { status: 401 });
   const ws = sess.ws || DEFAULT_WS;
   const { name, country } = await req.json().catch(() => ({}));
