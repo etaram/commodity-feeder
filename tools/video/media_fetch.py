@@ -31,13 +31,14 @@ def commons(q, kind, n):
 
 def nasa(q, kind, n):
     u = "https://images-api.nasa.gov/search?" + urllib.parse.urlencode({"q": q, "media_type": "video" if kind == "video" else "image"})
-    items = json.loads(get(u))["collection"]["items"][:n * 2]; out = []
+    items = json.loads(get(u))["collection"]["items"][:n * 2]; out = []; print("nasa hits", q, len(items))
     for it in items:
         d = it["data"][0]
-        try: assets = [a["href"] for a in json.loads(get(it["href"]))]
-        except Exception: continue
-        pick = next((a for a in assets if a.endswith("~orig.mp4")), None) or next((a for a in assets if a.endswith(".mp4")), None) if kind == "video" else \
-               next((a for a in assets if re.search(r"~orig\.(jpg|png|tif)$", a)), None)
+        try: assets = [a if isinstance(a, str) else a.get("href") for a in json.loads(get(it["href"]))]
+        except Exception as e: print("nasa manifest", e); continue
+        print("nasa assets", d.get("nasa_id"), [a.rsplit("/", 1)[-1] for a in assets][:8])
+        if kind == "video": pick = next((a for a in assets if a.endswith("~orig.mp4")), None) or next((a for a in assets if a.endswith(".mp4")), None)
+        else: pick = next((a for a in assets if re.search(r"~orig\.(jpg|png)$", a)), None) or next((a for a in assets if re.search(r"~large\.(jpg|png)$", a)), None)
         if not pick: continue
         out.append({"src": "nasa", "title": d.get("title"), "url": pick.replace("http://", "https://"), "license": "Public domain (NASA)",
                     "author": d.get("center", "NASA"), "page": f"https://images.nasa.gov/details/{d.get('nasa_id')}"})
@@ -48,7 +49,7 @@ def frames(src, dst_prefix, dur=None):
     ts = [0.15, 0.5, 0.85]
     for i, f in enumerate(ts):
         at = (dur or 10) * f
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{at:.2f}", "-i", src, "-frames:v", "1", "-vf", "scale=480:-2", "-q:v", "4", f"{dst_prefix}_{i}.jpg"])
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{at:.2f}", "-i", src, "-frames:v", "1", "-vf", "scale=480:-2", "-threads", "1", "-pix_fmt", "yuvj420p", "-q:v", "4", f"{dst_prefix}_{i}.jpg"])
 
 def scout(qfile, out):
     os.makedirs(out, exist_ok=True); meta = []
@@ -63,7 +64,7 @@ def scout(qfile, out):
                 else:
                     tmp = f"/tmp/{key}"; probe_url = h["url"]
                     # read only the first ~25 MB, enough for preview frames
-                    subprocess.run(["curl", "-sL", "-A", UA["User-Agent"], "-r", "0-25000000", "-o", tmp, probe_url], timeout=300)
+                    subprocess.run(["curl", "-sL", "-A", UA["User-Agent"], "-r", "0-60000000", "-o", tmp, probe_url], timeout=300)
                     d = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", tmp], capture_output=True, text=True).stdout.strip()
                     h["probe_dur"] = d; frames(tmp, f"{out}/{key}", min(float(h.get("dur") or d or 10), float(d or 10)))
                     os.remove(tmp)
