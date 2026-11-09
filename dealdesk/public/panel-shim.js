@@ -63,8 +63,15 @@
     let k = "";
     try { const b = new TextEncoder().encode(prompt); const d = await crypto.subtle.digest("SHA-256", b); k = "ai2:" + Array.from(new Uint8Array(d)).map((x) => x.toString(16).padStart(2, "0")).join(""); const c = JSON.parse(localStorage.getItem(k) || "null"); if (c && Date.now() - c.at < 86400000) return c.text; } catch (e) {}
     let j;
-    try { j = await post("/api/panel/ai", { prompt, tier: opts && opts.modelTier }); }
-    catch (e) { e.text = "AI: " + (e.message || e.code || "error"); throw e; }
+    // a dropped connection (the phone switched apps, a network blip) is retried: the server keeps the finished
+    // answer for a day, so the retry returns it at once instead of paying for it again
+    for (let i = 0; ; i++) {
+      try { j = await post("/api/panel/ai", { prompt, tier: opts && opts.modelTier }); break; }
+      catch (e) {
+        if (e && e.retryable && i < 2) { await new Promise((r) => setTimeout(r, document.hidden ? 0 : 1500)); if (document.hidden) await new Promise((r) => document.addEventListener("visibilitychange", r, { once: true })); continue; }
+        e.text = e && e.code === "server_unavailable" ? "" : "AI: " + (e.message || e.code || "error"); throw e;
+      }
+    }
     const text = j.text || "";
     try { if (k && text) localStorage.setItem(k, JSON.stringify({ text, at: Date.now() })); } catch (e) {}
     return text;
