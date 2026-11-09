@@ -103,9 +103,13 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
     const sfit = (((await snapshot("static").catch(() => ({} as Snap))).fit) || {}) as Record<string, string[]>;
     let head: string[] = [], R: (new (a: string[]) => TRow) | null = null;
     const rows: TRow[] = [];
+    // downloads run a few files ahead of the parsing (window of 4), so the wait is the slowest file, not the sum of 65;
+    // the raw text held at once stays small (at most 4 files)
+    const getChunk = (n: number) => fetch(`${RAW}/leads/sheet/tenders_${String(n).padStart(2, "0")}.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+    const ahead = new Map<number, Promise<string>>();
     for (let i = 1; i <= 65; i++) {
-      // one chunk at a time: the raw text of all 65 files is never held at once
-      const text = await fetch(`${RAW}/leads/sheet/tenders_${String(i).padStart(2, "0")}.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+      for (let k = i; k < i + 4 && k <= 65; k++) if (!ahead.has(k)) ahead.set(k, getChunk(k));
+      const text = await ahead.get(i)!; ahead.delete(i);
       if (!text) continue;
       const p = Papa.parse<string[]>(text, { header: false, skipEmptyLines: true }).data;
       if (!p.length) continue;
