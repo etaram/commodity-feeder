@@ -34,6 +34,21 @@ async function call(jwt: JWT, method: string, url: string, body?: unknown) {
   return r.json();
 }
 
+// Timing of one read in parts (token, request), for the self-check
+export async function sheetsDiag(): Promise<Record<string, number | string>> {
+  const out: Record<string, number | string> = {};
+  let t = Date.now();
+  const jwt = await client(); if (!jwt) return { error: "no service account" };
+  try { await jwt.getAccessToken(); out.token_ms = Date.now() - t; } catch (e) { out.token_err = String(e).slice(0, 160); }
+  t = Date.now();
+  try { await call(jwt, "GET", `${API}/${SHEET}/values:batchGet?ranges=${encodeURIComponent("'Users'!A1:B3")}`); out.read_ms = Date.now() - t; } catch (e) { out.read_err = String(e).slice(0, 160); out.read_ms = Date.now() - t; }
+  t = Date.now();
+  try { await call(jwt, "GET", `${API}/${SHEET}/values:batchGet?ranges=${encodeURIComponent("'Users'!A1:B3")}`); out.read2_ms = Date.now() - t; } catch (e) { out.read2_err = String(e).slice(0, 160); }
+  t = Date.now();
+  try { await fetch("https://www.googleapis.com/discovery/v1/apis?name=sheets", { signal: AbortSignal.timeout(15000) }); out.plain_fetch_ms = Date.now() - t; } catch (e) { out.plain_err = String(e).slice(0, 120); }
+  return out;
+}
+
 // Reads several ranges at once (any spreadsheet the service account can open). Returns null when not configured.
 export async function readRanges(sid: string, ranges: string[]): Promise<string[][][] | null> {
   const jwt = await client();

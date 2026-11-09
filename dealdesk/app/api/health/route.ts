@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readRanges, ENGINE_SHEET } from "@/lib/sheets";
+import { readRanges, ENGINE_SHEET, sheetsDiag } from "@/lib/sheets";
 import { mailCheck } from "@/lib/mailer";
 import { claude } from "@/lib/anthropic";
 
@@ -70,6 +70,7 @@ export async function GET(req: NextRequest) {
   const given = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "") || req.nextUrl.searchParams.get("t") || "";
   const okAuth = (tok.length >= 32 && given === tok) || (process.env.CRON_SECRET && given === process.env.CRON_SECRET);
   if (!okAuth) return NextResponse.json({ ok: false }, { status: 401 });
+  if (req.nextUrl.searchParams.get("diag")) return NextResponse.json({ ok: true, region: process.env.VERCEL_REGION || "", sheets: await sheetsDiag(), again: await sheetsDiag() });
   const base = `https://${req.headers.get("host")}`;
   const only = req.nextUrl.searchParams.get("only") || "";
   const sample = Number(req.nextUrl.searchParams.get("sample") || 0);
