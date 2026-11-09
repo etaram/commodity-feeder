@@ -44,6 +44,18 @@ export async function sheetsDiag(): Promise<Record<string, number | string>> {
   try { await call(jwt, "GET", `${API}/${SHEET}/values:batchGet?ranges=${encodeURIComponent("'Users'!A1:B3")}`); out.read_ms = Date.now() - t; } catch (e) { out.read_err = String(e).slice(0, 160); out.read_ms = Date.now() - t; }
   t = Date.now();
   try { await call(jwt, "GET", `${API}/${SHEET}/values:batchGet?ranges=${encodeURIComponent("'Users'!A1:B3")}`); out.read2_ms = Date.now() - t; } catch (e) { out.read2_err = String(e).slice(0, 160); }
+  const { token } = await jwt.getAccessToken();
+  const probe = async (name: string, url: string, auth = true) => {
+    const t0 = Date.now();
+    try { const r = await fetch(url, { headers: auth ? { Authorization: `Bearer ${token}` } : {}, signal: AbortSignal.timeout(12000) }); out[name] = `${r.status} ${Date.now() - t0}ms ${(await r.text()).length}b`; }
+    catch (e) { out[name] = `ERR ${Date.now() - t0}ms ${String(e).slice(0, 60)}`; }
+  };
+  await probe("noauth_values", `${API}/${SHEET}/values/${encodeURIComponent("'Users'!A1:B3")}`, false);
+  await probe("meta_title", `${API}/${SHEET}?fields=properties.title`);
+  await probe("values_get", `${API}/${SHEET}/values/${encodeURIComponent("'Users'!A1:B3")}`);
+  await probe("su_values", `${API}/1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA/values/${encodeURIComponent("'Stats'!A1:B3")}`);
+  await probe("sa_email_domain", "https://www.googleapis.com/discovery/v1/apis?name=drive", false);
+  out.sa = String(JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON || "{}").client_email || "").replace(/^[^@]{0,3}[^@]*@/, (m) => m.slice(0, 3) + "...@");
   t = Date.now();
   try { await fetch("https://www.googleapis.com/discovery/v1/apis?name=sheets", { signal: AbortSignal.timeout(15000) }); out.plain_fetch_ms = Date.now() - t; } catch (e) { out.plain_err = String(e).slice(0, 120); }
   return out;
