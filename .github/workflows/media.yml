@@ -1,0 +1,21 @@
+name: media
+# Manual: free stock media (Wikimedia Commons, NASA) for the brand film, pushed to a scratch branch.
+on:
+  workflow_dispatch:
+    inputs:
+      mode: { description: "scout or fetch", required: true, default: "scout" }
+      file: { description: "json list", required: true, default: "tools/video/media_queries.json" }
+permissions:
+  contents: write
+jobs:
+  media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg >/dev/null
+      - run: python3 tools/video/media_fetch.py ${{ inputs.mode }} ${{ inputs.file }} media
+      - name: Push to the scratch branch
+        run: |
+          git config user.name "media"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan scratch-media; git rm -rq --cached . ; git add -f media; git commit -qm "media ${{ inputs.mode }}"; git push -qf origin scratch-media
