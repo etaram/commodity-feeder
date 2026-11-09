@@ -578,9 +578,26 @@ def parse_giacaphe(t):
     return num(v.replace(".", ",")), f"{yy}-{mm}-{dd}"
 
 
+def parse_giacaphe_table(html):
+    """The site prints each province price through a CSS class (span.cls::after { content:'85,000' }); this reads exactly
+    the value a visitor sees: the four coffee provinces, averaged. The date comes from 'Cập nhật: dd/mm/yyyy'."""
+    css = dict(re.findall(r"\.(\w+)::after\s*\{\s*content:'([^']*)'", html))
+    vals = []
+    for name, cls in re.findall(r'<tr><td><a [^>]*>([^<]+)</a></td>\s*<td><span class="(\w+) \w+"></span></td>', html):
+        if name.strip() in ("Đắk Lắk", "Lâm Đồng", "Gia Lai", "Đắk Nông") and cls in css:
+            v = num(css[cls].replace(",", ""))
+            if v and 20000 < v < 400000:   # VND per kg sanity range for green coffee
+                vals.append(v)
+    d = re.search(r"Cập nhật:\s*(\d{2})/(\d{2})/(\d{4})", html)
+    if len(vals) < 3 or not d:
+        return None
+    return sum(vals) / len(vals), f"{d.group(3)}-{d.group(2)}-{d.group(1)}"
+
+
 def vietnam_coffee():
     url = "https://giacaphe.com/gia-ca-phe-noi-dia/"
-    got = parse_giacaphe(text_of(get(url).text))
+    html = get(url).text
+    got = parse_giacaphe(text_of(html)) or parse_giacaphe_table(html)
     if not got:
         return []
     return [row("vncoffee", "Coffee Robusta - Vietnam Central Highlands farm-gate average", "Coffee Robusta", got[0], "VND", "kg", 1, got[1],
@@ -664,7 +681,25 @@ def main():
             rows += old
             report[name] = f"0 (kept {len(old)} previous)"
         _ = key
+    # source health: per source, how many fresh rows, the newest price date and its age; a source with no fresh rows or a
+    # date older than 14 days is "stale" (a broken parser or a publisher that stopped), so it shows up instead of hiding
+    health = {}
+    for a in ADAPTERS:
+        key = KEYS.get(a.__name__, a.__name__)
+        mine = [r for r in rows if r["adapter"] == key]
+        newest = max((r["date"] for r in mine if r.get("date")), default="")
+        try:
+            age = (date.fromisoformat(today) - date.fromisoformat(newest)).days if newest else None
+        except ValueError:
+            age = None
+        fresh = isinstance(report.get(a.__name__), int)
+        health[key] = {"rows": len(mine), "fetched_now": fresh, "newest_date": newest, "age_days": age,
+                       "status": "ok" if fresh and (age is None or age <= 14) else "stale"}
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    (OUT.parent / "origin_prices_health.json").write_text(json.dumps({"at": today, "sources": health}, indent=1), encoding="utf-8")
+    stale = [k for k, v in health.items() if v["status"] == "stale"]
+    if stale:
+        print("STALE price sources:", ", ".join(stale))
     with open(OUT, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         w.writeheader()
