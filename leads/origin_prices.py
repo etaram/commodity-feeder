@@ -581,15 +581,16 @@ def parse_giacaphe(t):
 
 def parse_giacaphe_table(html):
     """The site prints each province price through a CSS class (span.cls::after { content:'85,000' }); this reads exactly
-    the value a visitor sees: the four coffee provinces, averaged. The date comes from 'Cập nhật: dd/mm/yyyy'."""
-    css = dict(re.findall(r"\.(\w+)::after\s*\{\s*content:'([^']*)'", html))
+    the value a visitor sees: the four coffee provinces (recognised by their page address), averaged. The date is the one in
+    the page title or the 'Cập nhật' line."""
+    css = dict(re.findall(r"\.(\w+)::after\s*\{\s*content:\s*'([^']*)'", html))
     vals = []
-    for name, cls in re.findall(r'<tr><td><a [^>]*>([^<]+)</a></td>\s*<td><span class="(\w+) \w+"></span></td>', html):
-        if name.strip() in ("Đắk Lắk", "Lâm Đồng", "Gia Lai", "Đắk Nông") and cls in css:
+    for slug, cls in re.findall(r"<a href=\"https://giacaphe\.com/gia-ca-phe-(dak-lak|lam-dong|gia-lai|dak-nong)/\"[^>]*>[^<]*</a>\s*</td>\s*<td><span class=['\"](\w+) \w+['\"]></span>", html):
+        if cls in css:
             v = num(css[cls].replace(",", ""))
             if v and 20000 < v < 400000:   # VND per kg sanity range for green coffee
                 vals.append(v)
-    d = re.search(r"Cập nhật:\s*(\d{2})/(\d{2})/(\d{4})", html)
+    d = re.search(r"Cập nhật:\s*(\d{2})/(\d{2})/(\d{4})", html) or re.search(r"<title>[^<]*?(\d{2})/(\d{2})/(\d{4})", html)
     if len(vals) < 3 or not d:
         return None
     return sum(vals) / len(vals), f"{d.group(3)}-{d.group(2)}-{d.group(1)}"
@@ -597,7 +598,7 @@ def parse_giacaphe_table(html):
 
 def vietnam_coffee():
     url = "https://giacaphe.com/gia-ca-phe-noi-dia/"
-    html = get(url).text
+    html = get(url).content.decode("utf-8", "replace")   # the site is UTF-8; the default guess garbles the Vietnamese letters
     got = parse_giacaphe(text_of(html)) or parse_giacaphe_table(html)
     if not got:
         return []
