@@ -10,7 +10,7 @@ const now = () => new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jerusalem
 const cut = (v: unknown, n: number) => String(v ?? "").replace(/[\r\n\t]+/g, " ").slice(0, n);
 
 export async function logActivity(who: Pick<Session, "email"> & Partial<Session>, action: string, target = "", detail = "") {
-  if (!sheetsEnabled()) return;
+  if (!sheetsEnabled() || who.email === "audit@sinder.pro") return; // the self-check never fills the users' log
   try {
     await appendRow(TAB, [now(), cut(who.email, 120), cut(who.name, 80), cut(who.role, 12), cut(action, 40), cut(target, 300), cut(detail, 500)]);
   } catch { /* never block the user's action */ }

@@ -26,6 +26,7 @@ table.mk tr:last-child td{border-bottom:0}
 :root[dir="rtl"] div.sub{unicode-bidi:plaintext;text-align:right}
 /* a long label never pushes the page wider than the screen */
 .pill{max-width:100%;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+@media (max-width:700px){#alist .urow{grid-template-columns:1fr 1fr!important}#alist .urow>*{min-width:0;overflow-wrap:anywhere}}
 table.cmt td .sub{white-space:normal}table.cmt td.cm-links{white-space:nowrap}
 @media (max-width:700px){table.cmt thead{display:none}table.cmt,table.cmt tbody{display:block}
 table.cmt tr{display:flex;flex-wrap:wrap;gap:6px 14px;padding:12px 4px;border-bottom:1px solid var(--line)}
