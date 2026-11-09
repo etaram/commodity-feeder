@@ -26,9 +26,12 @@ async function valid(token: string | undefined): Promise<boolean> {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  if (pathname.startsWith("/login") || pathname.startsWith("/api/login") || pathname.startsWith("/api/register") || pathname.startsWith("/api/auth/") || pathname.startsWith("/api/logout") || pathname.startsWith("/api/cron/") || pathname === "/api/telegram" || pathname === "/api/agent/step" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
+  if (pathname.startsWith("/login") || pathname.startsWith("/api/login") || pathname.startsWith("/api/register") || pathname.startsWith("/api/auth/") || pathname.startsWith("/api/logout") || pathname.startsWith("/api/cron/") || pathname === "/api/telegram" || pathname === "/api/agent/step" || pathname === "/api/health" || pathname.startsWith("/_next") || pathname === "/favicon.ico") {
     return NextResponse.next();
   }
+  // the self-check (app/api/health) calls the routes with the audit token while AUDIT_TOKEN is set (see lib/gate.ts)
+  const audit = process.env.AUDIT_TOKEN || "";
+  if (audit.length >= 32 && req.headers.get("x-dd-audit") === audit) return NextResponse.next();
   if (!(await valid(req.cookies.get("dd_session")?.value))) {
     if (pathname.startsWith("/api/")) return NextResponse.json({ ok: false, error: "signed out" }, { status: 401 });
     const url = req.nextUrl.clone();
