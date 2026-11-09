@@ -680,6 +680,10 @@ def to_usd(r, rates):
     return p / rate if rate else None
 
 
+# monthly sources are dated by their month start and published about a month late
+MAX_AGE = {"ahdb": 70}
+
+
 def finish(r, rates, fxsrc, today):
     usd = to_usd(r, rates)
     unit = r["unit_native"]
@@ -740,7 +744,7 @@ def main():
             health[key] = {"rows": 0, "fetched_now": False, "newest_date": "", "age_days": None, "status": "off (no EXA_API_KEY)"}
             continue
         health[key] = {"rows": len(mine), "fetched_now": fresh, "newest_date": newest, "age_days": age,
-                       "status": "ok" if fresh and (age is None or age <= 14) else "stale"}
+                       "status": "ok" if fresh and (age is None or age <= MAX_AGE.get(key, 14)) else "stale"}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     (OUT.parent / "origin_prices_health.json").write_text(json.dumps({"at": today, "sources": health}, indent=1), encoding="utf-8")
     stale = [k for k, v in health.items() if v["status"] == "stale"]
