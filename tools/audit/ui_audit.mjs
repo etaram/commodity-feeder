@@ -83,7 +83,7 @@ for (const q of ["דאטה סנטר", "solar"]) {
   try {
     await page.evaluate(() => { location.hash = "tenders"; });
     await page.waitForTimeout(3000);
-    await page.fill("#tq", q, { timeout: 8000 }); await page.press("#tq", "Enter"); await page.waitForTimeout(12000);
+    await page.fill("#tq", q, { timeout: 8000 }); await page.press("#tq", "Enter"); await page.waitForTimeout(25000);
     Object.assign(R(cur), await inspect()); await page.screenshot({ path: `audit/${String(i++).padStart(2, "0")}-search-${q.replace(/\W+/g, "_") || "he"}.png` });
   } catch (e) { R(cur).note = "search: " + String(e).slice(0, 160); }
 }
