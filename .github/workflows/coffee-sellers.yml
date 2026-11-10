@@ -20,6 +20,10 @@ jobs:
         with: { python-version: "3.12" }
       - run: pip install -q requests pycountry pdfplumber
       - run: python -m leads.coffee_sellers --max 500 --minutes 14 2>&1 | tail -3
+      - name: Official exporter registries (weekly)
+        run: |
+          if [ ! -f data/leads/registry_cameroon.csv ] || [ -n "$(find data/leads/registry_cameroon.csv -mtime +7)" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.registries 2>&1 | tail -3; fi
+        continue-on-error: true
       - name: Uganda official directory (weekly)
         run: |
           if [ ! -f data/leads/uganda_directory.csv ] || [ -n "$(find data/leads/uganda_directory.csv -mtime +7)" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.uganda_directory 2>&1 | tail -8; fi
@@ -27,10 +31,10 @@ jobs:
       - name: commit
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
-          cp data/leads/coffee_sellers.csv /tmp/cs.csv; cp data/leads/coffee_sellers_state.json /tmp/cs.json; cp data/leads/uganda_directory.csv /tmp/ud.csv 2>/dev/null || true
+          cp data/leads/coffee_sellers.csv /tmp/cs.csv; cp data/leads/coffee_sellers_state.json /tmp/cs.json; cp data/leads/uganda_directory.csv /tmp/ud.csv 2>/dev/null || true; mkdir -p /tmp/reg && cp data/leads/registry_*.csv /tmp/reg/ 2>/dev/null || true
           for i in 1 2 3 4; do
-            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/cs.csv data/leads/coffee_sellers.csv && cp /tmp/cs.json data/leads/coffee_sellers_state.json; cp /tmp/ud.csv data/leads/uganda_directory.csv 2>/dev/null || true
-            git add data/leads/coffee_sellers.csv data/leads/coffee_sellers_state.json; git add data/leads/uganda_directory.csv 2>/dev/null || true; git diff --cached --quiet && break
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/cs.csv data/leads/coffee_sellers.csv && cp /tmp/cs.json data/leads/coffee_sellers_state.json; cp /tmp/ud.csv data/leads/uganda_directory.csv 2>/dev/null || true; cp /tmp/reg/registry_*.csv data/leads/ 2>/dev/null || true
+            git add data/leads/coffee_sellers.csv data/leads/coffee_sellers_state.json; git add data/leads/uganda_directory.csv 2>/dev/null || true; git add data/leads/registry_*.csv 2>/dev/null || true; git diff --cached --quiet && break
             git commit -q -m "coffee sellers: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
             sleep $((i * 8))
           done

@@ -1212,11 +1212,42 @@ def rosario_grains():
     return out
 
 
+def oncc_cameroon():
+    """Cameroon's National Cocoa and Coffee Board (ONCC): the day's CIF and FOB reference prices for cocoa, arabica and
+    robusta, and the exporters' buying price range at Douala and in the Moungo, in FCFA/kg (the board's site header)."""
+    h = get("https://oncc.cm/exporters").text
+    t = re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S))))
+    m = re.search(r"Prices for ([A-Z][a-z]{2} \d{1,2} \d{4}):", t)
+    if not m:
+        return []
+    d = datetime.strptime(m.group(1), "%b %d %Y").date().isoformat()
+    seg = t[m.end():m.end() + 900]
+    out = []
+    for name, cm, hs in (("Cocoa", "Cocoa beans", "180100"), ("Arabica Coffee", "Coffee Arabica", "090111"), ("Robusta Coffee", "Coffee Robusta", "090111")):
+        blk = re.search(re.escape(name) + r" \| \[ \| (.*?)\| \]", seg)
+        if not blk:
+            continue
+        b = blk.group(1)
+        for label, inco, place in (("FOB", "FOB", "Douala, FOB"), ("CIF", "CIF", "CIF destination (reference)")):
+            v = re.search(label + r": \| (\d+)FCFA/kg", b)
+            if v:
+                out.append(row("oncc", f"{name} - Cameroon {inco} reference price", cm, float(v.group(1)), "XAF", "kg", 1, d, "National Cocoa and Coffee Board of Cameroon (ONCC) daily reference prices",
+                               "https://oncc.cm/exporters", grade=f"{name}, board reference {inco}", origin="CMR", place=place, incoterm=inco, hs6=hs, kind="assessment", tier="T1 Official statistics",
+                               basis=f"the board's daily {inco} reference price for the origin; not a quote for one grade"))
+        bp = re.search(r"Buying Price ([A-Za-z ,()]+?) \| MIN: \| (\d+)FCFA/kg \| MAX: \| (\d+)FCFA/kg", b)
+        if bp:
+            lo, hi = float(bp.group(2)), float(bp.group(3))
+            out.append(row("oncc", f"{name} - Cameroon exporters' buying price, {bp.group(1).strip()}", cm, (lo + hi) / 2, "XAF", "kg", 1, d, "National Cocoa and Coffee Board of Cameroon (ONCC) daily prices",
+                           "https://oncc.cm/exporters", grade=f"{name}: exporters' buying price {bp.group(1).strip()}, {lo:.0f}-{hi:.0f} FCFA/kg", origin="CMR", place=bp.group(1).strip(), hs6=hs, kind="spot",
+                           tier="T1 Official statistics", basis="price exporters pay at the origin (farmgate side), midpoint of the published range; before export costs"))
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc"}
 
 
 # ---------------------------------------------------------------- build
@@ -1331,7 +1362,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc"}
     return need <= have
 
 

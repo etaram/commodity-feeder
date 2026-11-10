@@ -206,6 +206,31 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             out.append(x)
             n_ud += 1
         log.info("web index: %d Ugandan coffee and cocoa organisations from the official directory", n_ud)
+    # official exporter registries and promotion-council directories (leads/registries.py): a licence or registration
+    # entry is proof of status (tier 2); a promotion-council profile is the company's own words (tier 3)
+    from .regions import region as _region_of
+    for rf in sorted(LEADS.glob("registry_*.csv")):
+        have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
+        n_rf = 0
+        for r in csv.DictReader(open(rf, encoding="utf-8")):
+            if not r["supplier"] or (r["supplier"].lower(), r["country"]) in have:
+                continue
+            have.add((r["supplier"].lower(), r["country"]))
+            official = "council" not in r["source"].lower() and "promotion" not in r["source"].lower()
+            grows = re.search(r"cooperative|producer|farm", r["role"])
+            x = {"n": r["supplier"][:CUT["n"]], "c": r["country"], "rg": _region_of(r["country"]) or "", "tr": "2" if official else "3", "s": "Agriculture & food",
+                 "ty": "producer and exporter" if grows else "exporter", "td": "" if grows else "1",
+                 "p": f"{r['product'].capitalize()} ({r['country']}): {r['description']}"[:CUT["p"]] + (f" Size: {r['size']}." if r.get("size") else "") + (f" Certifications: {r['certifications']}." if r.get("certifications") else ""),
+                 "hs": "1801" if "cocoa" in r["product"] else "0901" if "coffee" in r["product"] else "", "x": f"{r['licence']} (official register)" if official else "exporter (promotion council directory)",
+                 "why": r["source"][:CUT["why"]], "ds": r["source"][:40], "du": r["source_url"][:160], "qv": 2}
+            ct = "; ".join(v for v in (r.get("contact_person", ""), r.get("phone", ""), r.get("email", "")) if v)
+            if ct:
+                x["ct"] = ct[:160]
+            if r.get("website"):
+                x["web"] = r["website"][:CUT["web"]]
+            out.append(x)
+            n_rf += 1
+        log.info("web index: %d from %s", n_rf, rf.name)
     # origin exporters from trade directories (leads/origin_exporters.py): searchable, but a directory listing is the
     # company's own claim, so the app caps these at "plausible: check" and links the listing ("ds", "du")
     oe = PRIVATE / "origin_exporters.csv"
