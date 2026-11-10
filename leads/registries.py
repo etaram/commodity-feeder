@@ -105,15 +105,19 @@ def pakistan():
         r = prev.get(company) or {"supplier": company, "country": "PAK", "product": "rice (basmati and non-basmati)", "role": "exporter", "licence": f"REAP member {c[0]}",
                                   "contact_person": person, "phone": "", "email": "", "website": "", "description": "Member of the Rice Exporters Association of Pakistan (the statutory exporters' body)",
                                   "size": "", "certifications": "", "source": "Rice Exporters Association of Pakistan member roll", "source_url": url, "fetched": date.today().isoformat()}
+        if r.get("email", "").lower().endswith("reap.com.pk"):
+            r["email"] = ""; r["phone"] = r["phone"] if r["phone"].startswith("+") else ""
         if link and not (r["phone"] or r["email"]) and fetched < 150:
             try:
                 d = requests.get("https://www.reap.com.pk" + link.group(1), headers=UA, timeout=30).text
                 fetched += 1
                 t = _clean(d)
-                em = re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", t)
+                t = t.split("Head Office")[0]   # the association's own footer carries its phone and mailbox
+                ems = [e for e in re.findall(r"[\w.+-]+@[\w-]+\.[\w.-]+", t) if "reap.com.pk" not in e.lower()]
                 ph = re.search(r"(\+92[\d\s-]{8,16}|0\d{2,3}[\s-]?\d{6,8})", t)
-                web = re.search(r"(?:www\.)[\w-]+\.[\w.-]+", t)
-                r["email"], r["phone"], r["website"] = (em.group(0) if em else ""), (ph.group(0).strip() if ph else ""), (web.group(0) if web and "reap" not in web.group(0) else "")
+                webs = [w for w in re.findall(r"(?:www\.)[\w-]+\.[\w.-]+", t) if "reap" not in w]
+                phone = ph.group(0).strip() if ph else ""
+                r["email"], r["phone"], r["website"] = (ems[0] if ems else ""), ("+92 " + phone[1:] if phone.startswith("0") else phone), (webs[0] if webs else "")
                 r["source_url"] = "https://www.reap.com.pk" + link.group(1)
                 r["fetched"] = date.today().isoformat()
             except Exception:  # noqa: BLE001
