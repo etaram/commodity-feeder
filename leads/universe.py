@@ -265,6 +265,21 @@ def apply_refined(out):
     return n
 
 
+def _described():
+    """English description and role per checked company (leads/describe.py); empty when the layer has not run yet."""
+    out = {}
+    p = DATA / "checks" / "describe.jsonl.gz"
+    if p.exists():
+        import gzip
+        with gzip.open(p, "rt", encoding="utf-8") as f:
+            for line in f:
+                try:
+                    d = json.loads(line); out[d["key"]] = d
+                except (ValueError, KeyError):
+                    pass
+    return out
+
+
 def _company_checks():
     """Latest company check per supplier key (leads/company_check.py), only where the site names the company."""
     out = {}
@@ -784,6 +799,7 @@ def build():
         log.info("imports: %d rows, %d new suppliers, %d merged into existing ones", len(drops), n_im_new, n_im_merged)
     web = _web_profiles()
     checks = _company_checks()
+    described = _described()
     out = []
     for (k, wc), x in sup.items():
         name = max(x["names"].items(), key=lambda y: y[1])[0]
@@ -793,6 +809,11 @@ def build():
         ck = checks.get(f"{name[:120]}|{wc}")
         if ck:  # a checked site that names the company outranks the light profile: its own description and product headings
             own = "; ".join([ck.get("description") or ""] + (ck.get("products") or [])[:12]).strip("; ")
+            dsc = described.get(f"{name[:120]}|{wc}")
+            if dsc and dsc.get("mt") == "argos" and dsc.get("about_en"):
+                own = dsc["about_en"]  # the site's own words in English (leads/describe.py, open-source translation): searchable and readable
+            if dsc and dsc.get("role") in ("manufacturer", "producer", "trader"):
+                x["_role_read"] = dsc["role"]
             wp = {**wp, "website": ck.get("website") or wp.get("website", ""), "title": ck.get("title") or wp.get("title", ""),
                   "about": own or wp.get("about", ""), "discovered": wp.get("discovered") or ck.get("name_match") == "high",
                   "email": wp.get("email") or "; ".join(e["email"] for e in (ck.get("emails") or []) if e.get("kind") == "generic")[:120],
@@ -854,6 +875,11 @@ def build():
             "contact_seen": today() if (x["email"] or x["phone"]) else "",  # last seen in a source, not a deliverability check
             "name_local": x.get("name_local", ""), "province": x.get("province", ""),
         })
+        rr = x.get("_role_read")  # the role its own website text reads as (open-source model, leads/describe.py): a reading, shown as such
+        if rr == "trader":
+            out[-1]["trader"] = "yes"
+        elif rr and "manufacturer" not in out[-1]["type"]:
+            out[-1]["type"] = (out[-1]["type"] + "; " if out[-1]["type"] else "") + ("manufacturer" if rr == "manufacturer" else "producer") + " (read from its website)"
     n_ref = apply_refined(out)
     for r in out:
         r["quality"] = quality(r)

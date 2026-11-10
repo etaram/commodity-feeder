@@ -558,13 +558,13 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
       gaps: [...m.gaps.filter((g) => !/directory/.test(g)), `listed in ${s.ds}: check the company before relying on it`], url: m.url || s.du };
     if (seenKey.has(dk)) continue;
     seenKey.add(dk);
-    // commodity order: the named variety first, then producers and exporters in the variety's origin, then other own
-    // evidence; a company that only once delivered it under a public contract comes last
+    // commodity order: the named variety first, then the variety's origin, producers and manufacturers before
+    // exporters and traders, then other own evidence; a company that only once delivered it under a public contract comes last
     let cb: number | undefined;
     if (cmd) {
       const inOrigin = (cmd.variety?.origins.length ? cmd.variety.origins : cmd.origins).includes(s.c || "");
       const names = !!cmd.variety && cmd.variety.re.test(all);
-      cb = (own ? 4 : 0) + (names && own ? 8 : names ? 3 : 0) + (inOrigin ? (cmd.variety ? 5 : 2) : 0) + (s.ds || s.x ? 2 : 0) + 3 * cmd.rest.filter((w) => all.includes(w)).length;
+      cb = (own ? 4 : 0) + (names && own ? 8 : names ? 3 : 0) + (inOrigin ? (cmd.variety ? 5 : 2) : 0) + (s.ds || s.x ? 1 : 0) + (supplierKind(s) === "maker" ? 3 : 0) + 3 * cmd.rest.filter((w) => all.includes(w)).length;
       if (cmd.key !== "maize") m = { ...m, gaps: m.gaps.filter((x) => !/^maize not named/.test(x)) };  // the grain rule's maize note belongs to maize requests only
       if (cmd.variety && !names) m = { ...m, gaps: [...m.gaps, inOrigin ? `"${cmd.variety.name}" not stated; the company is in its origin country` : `"${cmd.variety.name}" not stated`] };
       if (!own) m = { ...m, bucket: m.bucket === "supported" ? "plausible" : m.bucket };

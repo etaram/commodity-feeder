@@ -48,6 +48,20 @@ jobs:
       - name: Official registers (GLEIF LEI, EU VIES)
         run: python -m leads.registry_check --minutes 10 2>&1 | tail -5
         continue-on-error: true
+      - name: Translation and embedding models (open-source, cached)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.local/cache/argos-translate
+            /tmp/fastembed_cache
+          key: describe-models-v1
+      - name: Describe companies in English (open-source models on the runner; no paid calls)
+        run: |
+          pip install -q fastembed argostranslate langid 2>&1 | tail -1
+          python -m leads.describe --minutes 15 2>&1 | tail -3
+        continue-on-error: true
+        timeout-minutes: 25
       - name: Refine every supplier record (unchanged records are reused)
         run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5
       - name: Refine the other modules (tenders, buyers, projects, financing, logistics, importers)
@@ -56,11 +70,11 @@ jobs:
       - name: Publish progress counts
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
-          cp data/leads/refine_progress.json /tmp/rp.json; mkdir -p /tmp/refined; cp data/leads/refined/*.csv /tmp/refined/ 2>/dev/null || true
+          cp data/leads/refine_progress.json /tmp/rp.json; cp data/leads/describe_progress.json /tmp/dp.json 2>/dev/null || true; mkdir -p /tmp/refined; cp data/leads/refined/*.csv /tmp/refined/ 2>/dev/null || true
           for i in 1 2 3 4 5; do
-            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/rp.json data/leads/refine_progress.json
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/rp.json data/leads/refine_progress.json && (cp /tmp/dp.json data/leads/describe_progress.json 2>/dev/null || true)
             mkdir -p data/leads/refined && cp /tmp/refined/*.csv data/leads/refined/ 2>/dev/null || true
-            git add data/leads/refine_progress.json data/leads/refined
+            git add data/leads/refine_progress.json data/leads/refined; git add data/leads/describe_progress.json 2>/dev/null || true
             git diff --cached --quiet && break
             git commit -q -m "refine progress: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
             sleep $((i * 10))
