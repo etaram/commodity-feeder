@@ -1,5 +1,5 @@
 name: probe-prices
-# Manual: look at a candidate physical-price source from a GitHub runner.
+# Manual: look at candidate physical-price sources from a GitHub runner.
 on:
   workflow_dispatch:
 permissions:
@@ -8,9 +8,11 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install -q requests pandas openpyxl
-      - run: python tools/probe_pink.py
+      - run: pip install -q requests google-auth
+      - run: python -m tools.probe_eth
