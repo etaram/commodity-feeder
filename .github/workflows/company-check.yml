@@ -48,20 +48,6 @@ jobs:
       - name: Official registers (GLEIF LEI, EU VIES)
         run: python -m leads.registry_check --minutes 10 2>&1 | tail -5
         continue-on-error: true
-      - name: Translation and embedding models (open-source, cached)
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.local/share/argos-translate
-            ~/.local/cache/argos-translate
-            /tmp/fastembed_cache
-          key: describe-models-v1
-      - name: Describe companies in English (open-source models on the runner; no paid calls)
-        run: |
-          pip install -q fastembed argostranslate langid 2>&1 | tail -1
-          python -m leads.describe --minutes 15 2>&1 | tail -3
-        continue-on-error: true
-        timeout-minutes: 25
       - name: Refine every supplier record (unchanged records are reused)
         run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5
       - name: Refine the other modules (tenders, buyers, projects, financing, logistics, importers)

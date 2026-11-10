@@ -35,7 +35,8 @@ from .common import DATA, log
 VERSION = "describe-1"
 DIR = DATA / "checks"
 CHECKS = DIR / "company_checks.jsonl"
-OUT = DIR / "describe.jsonl.gz"
+OUT = DATA / "describe" / "describe.jsonl.gz"   # its own folder and Actions cache (describe workflow), so it never races the checks
+OLD_OUT = DIR / "describe.jsonl.gz"            # where the first run (inside company-check) wrote; read once, then left
 PROGRESS = DATA / "leads" / "describe_progress.json"
 TAX = Path(__file__).resolve().parent.parent / "dealdesk" / "lib" / "commodities.json"
 MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
@@ -93,6 +94,36 @@ def tagger(tax=None):
     return tags
 
 
+SITE_ROLE = {"manufacturer": "manufacturer", "trader": "trader", "epc": "contractor", "service": "services", "services": "services"}
+ROLE_WORDS = [
+    ("producer", re.compile(r"\b(farms?|farming|plantations?|estates?|growers?|cooperatives?|co-?operative union|we grow|harvest(ed|ing)?|ginner(y|ies)|"
+                            r"(rice|flour|oil|sugar|coffee|tea|cashew|cotton) (mill|mills|processor|processing|factory|washing station)|miners?|mining company|quarr(y|ies)|fisher(y|ies))\b", re.I)),
+    ("manufacturer", re.compile(r"\b(manufactur\w+|we produce|producer of|production (plant|facility|line|capacity)|our (factory|plant)|factory|foundry|refinery)\b", re.I)),
+    ("trader", re.compile(r"\b(trading (company|house)|traders?|wholesal\w+|distribut(or|ors|ion)|import(er|ers)? (and|&) export(er|ers)?|importers?|merchants?|reseller|dealer)\b", re.I)),
+    ("contractor", re.compile(r"\b(general contractor|construction company|civil (works|engineering) contractor|epc|design and build|builders?)\b", re.I)),
+    ("services", re.compile(r"\b(consult(ing|ancy|ants)|software|it services|logistics|freight forward\w+|law firm|training|advisory|maintenance services|agency)\b", re.I)),
+]
+
+
+def role_by_code(ck, english):
+    """(role, basis): the role the site's own wording states. First the phrase the company check recorded on the site
+    (a manufacturer that also trades stays a manufacturer), then the wording of the English description. Exporting is
+    not trading: a grower or a factory exports too."""
+    for r in ck.get("roles") or []:
+        m = SITE_ROLE.get(str(r.get("role", "")).lower())
+        if m in ("manufacturer", "contractor"):
+            return m, f"site phrase: {str(r.get('phrase', ''))[:60]}"
+    for role, rx in ROLE_WORDS:
+        m = rx.search(english or "")
+        if m:
+            return role, f"description: {m.group(0)[:40]}"
+    for r in ck.get("roles") or []:
+        m = SITE_ROLE.get(str(r.get("role", "")).lower())
+        if m:
+            return m, f"site phrase: {str(r.get('phrase', ''))[:60]}"
+    return "", ""
+
+
 def own_text(ck):
     """The company's own words from a check: its description, then its first product headings."""
     desc = re.sub(r"\s+", " ", ck.get("description") or "").strip()
@@ -106,8 +137,9 @@ def usable(ck):
 
 def load_out():
     out = {}
-    if OUT.exists():
-        with gzip.open(OUT, "rt", encoding="utf-8") as f:
+    src = OUT if OUT.exists() else OLD_OUT
+    if src.exists():
+        with gzip.open(src, "rt", encoding="utf-8") as f:
             for line in f:
                 try:
                     d = json.loads(line); out[d["key"]] = d
@@ -117,7 +149,7 @@ def load_out():
 
 
 def save_out(recs):
-    DIR.mkdir(parents=True, exist_ok=True)
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     tmp = OUT.with_suffix(".tmp")
     with gzip.open(tmp, "wt", encoding="utf-8") as f:
         for k in sorted(recs):
@@ -224,11 +256,26 @@ def build(recs, checks, minutes=20, limit=0, embedder=None, translate=True):
                 got = tr.get(key, {})
                 en, mt = [got[i] for i in range(len(src)) if i in got], ("argos" if got else "none")
             about = "; ".join(dict.fromkeys(x for x in en if x))[:420]
+            code_role, basis = role_by_code(ck, about)
+            if code_role:   # the site's own wording outranks the model's reading
+                role, rs = code_role, 1.0
+            role_src = basis if code_role else ("embedding model" if role else "")
             recs[key] = {"key": key, "supplier": ck.get("supplier", ""), "country": ck.get("country", ""), "version": VERSION, "hash": h, "at": today,
-                         "lang": lang, "mt": mt, "about_en": about, "role": role, "role_score": rs, "activity": acts,
+                         "lang": lang, "mt": mt, "about_en": about, "role": role, "role_score": rs, "role_src": role_src, "activity": acts,
                          "tags": tags(f"{about} {desc} {' '.join(prods)}"), "source": ck.get("website", ""), "checked": ck.get("checked", "")}
             done += 1
-    return {"version": VERSION, "at": today, "checked_sites_usable": reused + len(todo) if not limit else None, "reused": reused, "described_now": done,
+    # records described before the wording rules: their role is re-read by code (cheap, no model, no translation)
+    reread = 0
+    for key, r in recs.items():
+        if "role_src" in r or key not in checks:
+            continue
+        code_role, basis = role_by_code(checks[key], r.get("about_en", ""))
+        if code_role:
+            r["role"], r["role_score"], r["role_src"] = code_role, 1.0, basis
+        else:
+            r["role_src"] = "embedding model" if r.get("role") else ""
+        reread += 1
+    return {"version": VERSION, "at": today, "roles_reread": reread, "checked_sites_usable": reused + len(todo) if not limit else None, "reused": reused, "described_now": done,
             "queue_left": max(0, len(todo) - done), "seconds": round(time.time() - t0)}
 
 
@@ -239,7 +286,11 @@ def summary(recs):
         by_lang[r.get("lang", "")] = by_lang.get(r.get("lang", ""), 0) + 1
         by_role[r.get("role") or "unknown"] = by_role.get(r.get("role") or "unknown", 0) + 1
         mt[r.get("mt", "")] = mt.get(r.get("mt", ""), 0) + 1
-    return {"described": n, "with_english": sum(1 for r in recs.values() if r.get("about_en")), "with_commodity_tags": sum(1 for r in recs.values() if r.get("tags")),
+    src = {}
+    for r in recs.values():
+        k = (r.get("role_src") or "none").split(":")[0]
+        src[k] = src.get(k, 0) + 1
+    return {"role_basis": src, "described": n, "with_english": sum(1 for r in recs.values() if r.get("about_en")), "with_commodity_tags": sum(1 for r in recs.values() if r.get("tags")),
             "with_role": n - by_role.get("unknown", 0), "roles": by_role, "translation": mt, "languages": dict(sorted(by_lang.items(), key=lambda x: -x[1])[:12])}
 
 

@@ -1,0 +1,59 @@
+name: describe
+# What each checked company does, in English, by open-source models on the runner (leads/describe.py): Argos translation
+# and a multilingual embedding model. No paid model calls. Every hour, 40 minutes of work, resumes where it stopped.
+# Reads the company checks read-only; keeps its own cache, so it never overwrites another workflow's files. Only the
+# counts (data/leads/describe_progress.json) are public.
+on:
+  schedule:
+    - cron: "50 * * * *"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "minutes of work this run"
+        default: "40"
+permissions:
+  contents: write
+concurrency:
+  group: describe
+  cancel-in-progress: false
+jobs:
+  describe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 58
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Company checks (read-only)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/checks
+          key: checks-none
+          restore-keys: checks-
+      - name: Previous descriptions
+        uses: actions/cache@v4
+        with:
+          path: data/describe
+          key: describe-${{ github.run_id }}
+          restore-keys: describe-
+      - name: Translation and embedding models (cached)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.local/cache/argos-translate
+            /tmp/fastembed_cache
+          key: describe-models-v1
+      - run: pip install -q requests fastembed argostranslate langid 2>&1 | tail -1
+      - name: Describe
+        run: python -m leads.describe --minutes ${{ inputs.minutes || '40' }} 2>&1 | tail -3
+      - name: Publish the counts
+        run: |
+          git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
+          cp data/leads/describe_progress.json /tmp/dp.json 2>/dev/null || exit 0
+          for i in 1 2 3 4; do
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/dp.json data/leads/describe_progress.json
+            git add data/leads/describe_progress.json; git diff --cached --quiet && break
+            git commit -q -m "describe progress: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
+            sleep $((i * 8))
+          done

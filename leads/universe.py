@@ -268,7 +268,9 @@ def apply_refined(out):
 def _described():
     """English description and role per checked company (leads/describe.py); empty when the layer has not run yet."""
     out = {}
-    p = DATA / "checks" / "describe.jsonl.gz"
+    p = DATA / "describe" / "describe.jsonl.gz"
+    if not p.exists():
+        p = DATA / "checks" / "describe.jsonl.gz"   # the first run's place
     if p.exists():
         import gzip
         with gzip.open(p, "rt", encoding="utf-8") as f:

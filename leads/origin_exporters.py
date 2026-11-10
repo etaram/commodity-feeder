@@ -26,7 +26,7 @@ BASE = "https://dir.tridge.com"
 OUT = PRIVATE / "origin_exporters.csv"
 STATE = PRIVATE / "origin_exporters_state.json"
 UA = {"User-Agent": "SinderDealDesk/1.0 (supplier research; contact via sinder.pro)"}
-DELAY = 3.0
+DELAY = 4.0
 SEEDS = ["/suppliers/category/agriculture-food", "/suppliers/category-country/coffee-ethiopia"]
 LINK = re.compile(r'"(/suppliers/(?:category|category-country|product-country|product)/[a-z0-9-]+)"')
 TYPES = {"food_manufacturing": "manufacturer", "farming_production_processing_packing": "producer", "trade": "trader",
@@ -91,7 +91,7 @@ def load_rows():
     return {(r["supplier"].lower(), r["country"]): r for r in csv.DictReader(open(OUT, encoding="utf-8"))}
 
 
-def main(max_pages=800, max_minutes=45):
+def main(max_pages=450, max_minutes=45):
     PRIVATE.mkdir(parents=True, exist_ok=True)
     st = json.loads(STATE.read_text()) if STATE.exists() else {}
     seen = st.get("seen", {})  # path -> date fetched
@@ -107,7 +107,14 @@ def main(max_pages=800, max_minutes=45):
     except Exception as e:  # noqa: BLE001
         log.warning("origin exporters: commodity priority skipped: %s", e)
     rows = load_rows()
-    today, t0, n, fails = date.today().isoformat(), time.time(), 0, 0
+    today, t0, n, fails, streak = date.today().isoformat(), time.time(), 0, 0, 0
+    # repair (10 Nov 2026): that day's run was refused on all 800 pages but marked them as read; they are queued again, first
+    if not st.get("repaired_1110"):
+        lost = [p for p, d in seen.items() if d == "2026-11-10"]
+        for p in lost:
+            del seen[p]
+        queue = deque(lost + [p for p in queue if p not in set(lost)])
+        log.info("origin exporters: %d pages refused on 10 Nov queued again", len(lost))
     s = requests.Session()
     s.headers.update(UA)
     while queue and n < max_pages and time.time() - t0 < max_minutes * 60:
@@ -118,10 +125,19 @@ def main(max_pages=800, max_minutes=45):
         try:
             r = s.get(BASE + path, timeout=30)
             n += 1
-            seen[path] = today
             if r.status_code != 200:
-                fails += 1
+                # a refused page is not "seen": it goes to the back of the queue; after 10 refusals in a row the run
+                # stops (the site is limiting us: slow down, do not push)
+                fails += 1; streak += 1
+                if fails == 1 or streak == 10:
+                    log.warning("origin exporters: HTTP %s on %s", r.status_code, path)
+                queue.append(path)
+                if streak >= 10:
+                    log.warning("origin exporters: 10 refusals in a row, stopping this run"); break
+                time.sleep(DELAY * 2)
                 continue
+            streak = 0
+            seen[path] = today
             got, links = parse_page(r.text, path)
             for x in got:
                 key = (x["supplier"].lower(), x["country"])
@@ -142,7 +158,7 @@ def main(max_pages=800, max_minutes=45):
         time.sleep(DELAY)
     if not queue:  # a full pass done: start over from the seeds next week
         queue = deque(SEEDS)
-    STATE.write_text(json.dumps({"seen": seen, "queue": list(queue)[:20000], "at": datetime.now(timezone.utc).isoformat()}))
+    STATE.write_text(json.dumps({"seen": seen, "queue": list(queue)[:20000], "repaired_1110": True, "at": datetime.now(timezone.utc).isoformat()}))
     with open(OUT, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=COLS)
         w.writeheader()

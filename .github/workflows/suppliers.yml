@@ -45,6 +45,12 @@ jobs:
           path: data/checks
           key: checks-none
           restore-keys: checks-
+      - name: Company descriptions (read-only, written by the describe workflow)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/describe
+          key: describe-none
+          restore-keys: describe-
       - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth cryptography phonenumbers
       - run: mkdir -p data/leads && date -u > data/leads/run_suppliers.log
       - name: latam_awards
