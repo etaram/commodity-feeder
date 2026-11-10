@@ -14,7 +14,7 @@ export const maxDuration = 300;
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ ok: false }, { status: 401 });
-  const res = await scenarios(`https://${req.headers.get("host")}`, await selfKey(), 0, 20);
+  const res = await scenarios(`https://${req.headers.get("host")}`, await selfKey(), 0, 40);
   const bad = res.filter((r) => !r.pass);
   // price sources that stopped updating (data/leads/origin_prices_health.json, written by the price run): logged every
   // day, sent with a failure or once a week (Monday), so a dead source is known without a daily nag
