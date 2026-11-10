@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-10T03:36:48",
+  "finished_utc": "2026-11-10T13:56:30",
   "fx_source": "ECB via Frankfurter 2026-11-09",
   "fx": {
     "EUR": 1.1192943968122495,
@@ -32,7 +32,7 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 8,
+      "sec": 7,
       "newest_date": "2026-11-09",
       "log": [
         "INFO westmetall: 6 prices"
@@ -40,21 +40,21 @@
     },
     "em_global": {
       "ok": true,
-      "prices": 19,
-      "sec": 32,
+      "prices": 21,
+      "sec": 58,
       "newest_date": "2026-11-10",
       "log": [
         "INFO em_global board: 620 rows",
-        "INFO em_global: 19 prices"
+        "INFO em_global: 21 prices"
       ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
       "sec": 4,
-      "newest_date": "2026-11-09",
+      "newest_date": "2026-11-10",
       "log": [
-        "INFO cn_spot: 52 prices (2026-11-09)"
+        "INFO cn_spot: 52 prices (2026-11-10)"
       ]
     },
     "eu_agri": {
@@ -91,31 +91,31 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 1,
-      "newest_date": "2026-11-09",
+      "sec": 0,
+      "newest_date": "2026-11-10",
       "log": [
-        "INFO smi: 5 prices (as of 2026-11-09)"
+        "INFO smi: 5 prices (as of 2026-11-10)"
       ]
     },
     "usda": {
       "ok": true,
-      "prices": 0,
-      "sec": 7,
-      "newest_date": null,
+      "prices": 52,
+      "sec": 12,
+      "newest_date": "2026-11-09",
       "log": [
-        "WARNING usda gdt failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_1604.pdf",
-        "WARNING usda by-products failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_3510.pdf",
-        "WARNING usda feedstuff failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_3668.pdf",
-        "WARNING usda beef failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_2461.pdf",
-        "WARNING usda pork failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_2498.pdf",
-        "WARNING usda eggs failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_2843.pdf",
-        "WARNING usda fruit_veg failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/fvwtrds.pdf"
+        "INFO usda gdt: 8 prices",
+        "INFO usda by-products: 3 prices",
+        "INFO usda feedstuff: 12 prices",
+        "INFO usda beef: 1 prices",
+        "INFO usda pork: 2 prices",
+        "INFO usda eggs: 1 prices",
+        "INFO usda fruit_veg: 25 prices"
       ]
     },
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 1,
+      "sec": 0,
       "newest_date": null,
       "log": [
         "WARNING census 2026-10: Expecting value: line 1 column 1 (char 0)",
@@ -130,7 +130,7 @@
     "comext": {
       "ok": true,
       "prices": 1913,
-      "sec": 59,
+      "sec": 56,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -140,7 +140,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 30,
+      "sec": 33,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -150,28 +150,28 @@
     }
   },
   "rows_with_price": 1957,
-  "candidates": 2074,
-  "flagged": 336,
+  "candidates": 2128,
+  "flagged": 298,
   "by_source_selected": {
-    "yahoo": 32,
+    "yahoo": 31,
     "westmetall": 6,
-    "em_global": 3,
-    "cn_spot": 33,
+    "em_global": 4,
+    "cn_spot": 30,
     "eu_agri": 0,
     "dtn": 7,
     "ssb": 2,
     "scrapmonster": 31,
     "smi": 3,
-    "usda": 0,
+    "usda": 42,
     "census": 0,
-    "comext": 1807,
+    "comext": 1759,
     "comtrade": 3,
-    "derived": 30
+    "derived": 31
   },
   "by_tier": {
-    "T1 Exchange benchmark": 71,
-    "T2 Official market reporting": 2,
-    "T3 Industry assessment": 74,
-    "T4 Trade statistics (unit value)": 1810
+    "T1 Exchange benchmark": 80,
+    "T2 Official market reporting": 44,
+    "T3 Industry assessment": 71,
+    "T4 Trade statistics (unit value)": 1762
   }
 }
