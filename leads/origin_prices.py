@@ -699,7 +699,7 @@ def royal_ethiopia():
     the price per pack and the pack weight, so USD/kg is exact. It is a landed US warehouse offer (freight, import cost
     and the importer's margin included), not an origin FOB price: shown as an importer offer, never as exchange data.
     The Ethiopian exchange and authority sites do not answer from outside the country."""
-    out, seen = [], set()
+    out, lots = [], {}
     for page in range(1, 6):
         r = get(f"https://royalcoffee.com/collections/all-coffees/products.json?limit=250&page={page}")
         prods = (r.json() or {}).get("products") or []
@@ -718,15 +718,21 @@ def royal_ethiopia():
                 per_kg = price / (grams / 1000)
                 if 2 < per_kg < 60 and (best is None or grams > best[1]):
                     best = (per_kg, grams, str(v.get("title") or ""))
-            if not best or title.lower() in seen:
+            if not best:
                 continue
-            seen.add(title.lower())
-            d = str(p.get("updated_at") or p.get("published_at") or "")[:10]
-            out.append(row("royal_eth", f"Coffee - {title[:90]}", "Coffee Arabica", round(best[0], 3), "USD", "kg", 1, d,
-                           "Royal Coffee (US importer) public spot offer list", f"https://royalcoffee.com/products/{p.get('handle', '')}",
-                           grade=f"{title[:80]} ({best[1] / 1000:g} kg pack)", origin="ETH", place="US importer warehouse, spot", hs6="090111", kind="offer",
-                           tier="T3 Importer offer list", basis="importer's published spot offer in a US warehouse: freight, import cost and margin included; not an FOB origin price"))
-    return sorted(out, key=lambda x: x["price_native"])[:40]
+            # one row per region and grade ("Ethiopia Sidama 4 Natural"): its lots differ only by lot number, bag and arrival
+            name = re.sub(r"\s+", " ", title.split(" - ")[0]).strip().title().replace("Organic", "organic")
+            g = lots.setdefault(name, {"prices": [], "handle": p.get("handle", ""), "date": str(p.get("updated_at") or p.get("published_at") or "")[:10], "spot": 0})
+            g["prices"].append(best[0]); g["spot"] += 1 if "SPOT" in title.upper() else 0
+            g["date"] = max(g["date"], str(p.get("updated_at") or "")[:10])
+    for name, g in lots.items():
+        ps = sorted(g["prices"]); mid = ps[len(ps) // 2]
+        out.append(row("royal_eth", f"Coffee - {name[:80]}", "Coffee Arabica", round(mid, 3), "USD", "kg", 1, g["date"],
+                       "Royal Coffee (US importer) public spot offer list", f"https://royalcoffee.com/products/{g['handle']}",
+                       grade=f"{name[:70]}: {len(ps)} lots, {ps[0]:.2f}-{ps[-1]:.2f} USD/kg, {g['spot']} in stock (60 kg bags)", origin="ETH",
+                       place="US importer warehouse", hs6="090111", kind="offer", tier="T3 Importer offer list",
+                       basis="median of the importer's published offers for this grade, landed in its warehouse: freight, import cost and margin included; not an FOB origin price"))
+    return sorted(out, key=lambda x: x["commodity"])[:60]
 
 
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
