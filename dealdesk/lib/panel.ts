@@ -44,7 +44,7 @@ const SUP_COLS: [string, keyof Supplier][] = [["quality", "q"], ["supplier", "n"
   ["main_sector", "s"], ["other_sectors", "s2"], ["type", "ty"], ["trader", "td"], ["epc", "epc"], ["logistics_role", "lg"],
   ["products", "p"], ["commodities", "cm"], ["exports", "x"], ["wins", "w"], ["won_usd_est", "u"], ["buyer_countries", "bc"],
   ["website", "web"], ["last_win", "lw"], ["tier_reason", "why"], ["shipments_12m", "sh"], ["hs_codes", "hs"],
-  ["supplied", "sp"], ["industries", "in"], ["hs_names", "hd"]];
+  ["supplied", "sp"], ["industries", "in"], ["hs_names", "hd"], ["employees", "em"], ["notable", "nt"]];
 // Manufacturer or trader: a search always shows the makers first. Declared type first, then the name ("X Trading",
 // "Import & Export"), then what the record says it does ("manufacturer of", "factory", "mill"). Unknown stays unknown.
 const TRADER_RX = /\b(trad(er|ers|ing)|distribut\w*|wholesal\w*|import(er|ers|s)?|export(er|ers|s)?|merchants?|supply chain|sourcing|agenc(y|ies)|commerce|commercial|general supplies)\b/i;
