@@ -693,11 +693,47 @@ def worldbank_pink():
     return out
 
 
+def royal_ethiopia():
+    """Ethiopian coffees on a US green-coffee importer's public spot offer list (Royal Coffee, a Shopify storefront whose
+    robots.txt allows product and collection pages): each lot with its region and grade (Sidama, Yirgacheffe, Guji ...),
+    the price per pack and the pack weight, so USD/kg is exact. It is a landed US warehouse offer (freight, import cost
+    and the importer's margin included), not an origin FOB price: shown as an importer offer, never as exchange data.
+    The Ethiopian exchange and authority sites do not answer from outside the country."""
+    out, seen = [], set()
+    for page in range(1, 6):
+        r = get(f"https://royalcoffee.com/collections/all-coffees/products.json?limit=250&page={page}")
+        prods = (r.json() or {}).get("products") or []
+        if not prods:
+            break
+        for p in prods:
+            tags = p.get("tags") if isinstance(p.get("tags"), list) else str(p.get("tags") or "").split(",")
+            title = re.sub(r"\s+", " ", str(p.get("title") or "")).strip()
+            if not re.search(r"ethiopia", f"{title} {' '.join(tags)}", re.I) or re.search(r"roasted|sample|gift|merch", title, re.I):
+                continue
+            best = None
+            for v in p.get("variants") or []:
+                price, grams = num(str(v.get("price") or "")), v.get("grams") or 0
+                if not price or grams < 2000 or v.get("available") is False:   # trade packs only (a 10 kg box or a 60 kg bag)
+                    continue
+                per_kg = price / (grams / 1000)
+                if 2 < per_kg < 60 and (best is None or grams > best[1]):
+                    best = (per_kg, grams, str(v.get("title") or ""))
+            if not best or title.lower() in seen:
+                continue
+            seen.add(title.lower())
+            d = str(p.get("updated_at") or p.get("published_at") or "")[:10]
+            out.append(row("royal_eth", f"Coffee - {title[:90]}", "Coffee Arabica", round(best[0], 3), "USD", "kg", 1, d,
+                           "Royal Coffee (US importer) public spot offer list", f"https://royalcoffee.com/products/{p.get('handle', '')}",
+                           grade=f"{title[:80]} ({best[1] / 1000:g} kg pack)", origin="ETH", place="US importer warehouse, spot", hs6="090111", kind="offer",
+                           tier="T3 Importer offer list", basis="importer's published spot offer in a US warehouse: freight, import cost and margin included; not an FOB origin price"))
+    return sorted(out, key=lambda x: x["price_native"])[:40]
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth"}
 
 
 # ---------------------------------------------------------------- build
