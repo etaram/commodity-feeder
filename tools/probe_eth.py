@@ -1,16 +1,13 @@
-import re, requests, io, json, pdfplumber
+import re, requests
 UA = {"User-Agent": "Mozilla/5.0 (compatible; SinderLeads/1.0; +https://desk.sinder.pro)", "Accept-Language": "en"}
 def txt(h): return re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S))))
-# ONCC Cameroon exporters page
-r = requests.get("https://oncc.cm/exporters", headers=UA, timeout=40); h = r.text; t = txt(h)
-print("== ONCC exporters", r.status_code, len(h), "tables", h.count("<table"), "| links", sorted(set(re.findall(r'href="([^"]*(?:export|pdf|xls)[^"]*)"', h, re.I)))[:10])
-i = t.find("Export"); print("   ", t[i:i + 1500])
-# NEPC: the supplier list is rendered by WP Views; the page HTML may already hold the cards
+r = requests.get("https://oncc.cm/resources/list-of-active-cocoa---coffee-exporters-2025", headers=UA, timeout=40); h = r.text; t = txt(h)
+print("== ONCC list", r.status_code, len(h), "tables", h.count("<table"), "pdf", sorted(set(re.findall(r'href="([^"]*\.pdf[^"]*)"', h)))[:5])
+i = t.find("Exporters"); print("   ", t[i:i + 2500])
+r = requests.get("https://oncc.cm/robots.txt", headers=UA, timeout=20); print("== ONCC robots", r.status_code, r.text[:200])
+# NEPC: pagination of the directory
 r = requests.get("https://nepc.gov.ng/importer/find-your-supplier/", headers=UA, timeout=40); h = r.text; t = txt(h)
-cards = re.findall(r'wpv-loop|supplier-card|class="[^"]*exporter[^"]*"', h); print("== NEPC markers", len(cards), set(cards))
-i = t.find("Check out all av"); print("   ", t[i:i + 1800])
-print("   NEPC ajax", sorted(set(re.findall(r'"(wpv_[a-z_]+)"', h)))[:10], re.findall(r'data-viewnumber="(\d+)"', h)[:5])
-# ICO certifying agents pdf: countries and agencies (official per-country registry of who certifies coffee exports)
-r = requests.get("https://ico.org/documents/cy2025-26/ed-2500-r1e-certifying-agents-ports.pdf", headers=UA, timeout=60)
-with pdfplumber.open(io.BytesIO(r.content)) as d:
-    print("== ICO pages", len(d.pages)); print("   ", re.sub(r"\s+", " ", d.pages[1].extract_text() or "")[:1200])
+print("== NEPC", "READ MORE" , t.count("READ MORE"), "| pager", sorted(set(re.findall(r'href="([^"]*wpv_paged[^"]*|[^"]*find-your-supplier/page/\d+[^"]*)"', h)))[:6], "| data", re.findall(r'data-pagination="([^"]{0,200})', h)[:1])
+print("   links", sorted(set(re.findall(r'href="(https://nepc\.gov\.ng/importer/(?:supplier|exporter|company)[^"]*)"', h)))[:8])
+for m in re.finditer(r"\| ([A-Z][^|]{3,60}(?:Ltd|Limited|Group|Cocoa|Nigeria|PLC|Company|Industries)[^|]{0,30}) \| (?:Certifications: \| ([^|]+) \| )?Size: \| ([^|]+) \| ([^|]{40,})\| READ MORE", t):
+    print("   CARD", m.group(1).strip(), "|", (m.group(2) or "").strip(), "|", m.group(3).strip(), "|", m.group(4).strip()[:120])
