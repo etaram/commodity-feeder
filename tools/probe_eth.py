@@ -6,17 +6,16 @@ def t(name, url, params=None):
         print("==", name, r.status_code, len(r.content), r.url[:200]); return r
     except Exception as e:
         print("==", name, "ERR", str(e)[:150]); return None
-for mo in ("2026-09", "2026-08", "2026-07"):
-    r = t("census " + mo, "https://api.census.gov/data/timeseries/intltrade/imports/hs", {"get": "CTY_CODE,CTY_NAME,GEN_VAL_MO,GEN_QY1_MO,UNIT_QY1,GEN_CIF_MO,GEN_CHA_MO", "COMM_LVL": "HS6", "I_COMMODITY": "090111", "time": mo})
-    if r is not None and r.ok:
-        j = r.json(); print(j[0]); rows = sorted(j[1:], key=lambda x: -float(x[2] or 0))[:12]
-        for x in rows: print("  ", x[:7], (round(float(x[2]) / float(x[3]), 3) if float(x[3] or 0) else None))
-        break
-    elif r is not None: print(r.text[:300])
+for per in ("2026-08", "2026-07"):
+    r = t("comext " + per, "https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/ds-045409", {"freq": "M", "reporter": "EU27_2020", "partner": "ET", "product": "090111", "flow": "1", "indicators": "VALUE_IN_EUROS", "time": per, "format": "JSON"})
+    if r is not None: print(r.text[:700])
+r = t("comext2", "https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/ds-045409", {"freq": "M", "reporter": "EU27_2020", "product": "090111", "flow": "1", "lastTimePeriod": "1", "format": "JSON"})
+if r is not None: print(r.text[:1500])
 for rep, nm in (("76", "Brazil"), ("231", "Ethiopia"), ("704", "Viet Nam"), ("764", "Thailand"), ("356", "India"), ("384", "Cote d'Ivoire")):
     for per in ("202608", "202606", "2025"):
         freq = "A" if len(per) == 4 else "M"
         r = t(f"comtrade {nm} {per}", f"https://comtradeapi.un.org/public/v1/preview/C/{freq}/HS", {"reporterCode": rep, "cmdCode": "090111,100630,120740,180100,080131", "flowCode": "X", "period": per, "partnerCode": 0, "customsCode": "C00", "motCode": 0})
+        if r is not None and not r.ok: print("   ", r.text[:200])
         if r is not None and r.ok:
             d = r.json().get("data", [])
             print("   rows", len(d), [(x.get("cmdCode"), x.get("period"), round((x.get("primaryValue") or 0) / (x.get("netWgt") or 1), 3), int(x.get("netWgt") or 0)) for x in d if x.get("partner2Code") in (0, None)][:6])
