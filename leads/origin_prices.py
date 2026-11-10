@@ -1057,11 +1057,122 @@ def cmb_quotes():
     return out
 
 
+TMX_NAMES = {"Cashew Nuts": ("Cashew", "080131"), "Pigeon peas": ("Pulses", "071360"), "Chick peas": ("Pulses", "071320"), "Green Gram": ("Pulses", "071331"), "Sesame": ("Sesame seed", "120740"),
+             "Coffee Robusta": ("Coffee Robusta", "090111"), "Coffee Arabica": ("Coffee Arabica", "090111"), "Coffe Arabica": ("Coffee Arabica", "090111"), "Cocoa": ("Cocoa beans", "180100"),
+             "Soya Bean": ("Soybeans", "120190"), "Tea": ("Tea", "090240"), "Sunflower": ("Sunflower seed", "120600"), "Maize": ("Maize", "100590"), "Paddy": ("Rice", "100610")}
+
+
+def tmx_tanzania():
+    """Tanzania Mercantile Exchange: the latest auction result per commodity and region (TZS/kg high and low, dated).
+    Official exchange results at the origin: a concluded auction price, not a quotation. robots.txt allows the page."""
+    h = get("https://www.tmx.co.tz/market_data/recent-trade-results").text
+    t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S)))
+    t = re.sub(r"(\|\s*)+", "| ", t)
+    out = []
+    for m in re.finditer(r"\| ([A-Z][A-Za-z ]{2,30}?) \| ([A-Z0-9\-]{1,8}) \| ([A-Z][A-Za-z ]{2,25}?) \| ([\d,]+) \| ([\d,]+) \| [+\-−]?[\d,]+ \| (\d{4}-\d{2}-\d{2})", t):
+        name, code, region, hi, lo, d = m.groups()
+        cm = next((v for k, v in TMX_NAMES.items() if name.startswith(k)), None)
+        if not cm:
+            continue
+        hi, lo = num(hi.replace(",", "")), num(lo.replace(",", ""))
+        if not hi or not lo:
+            continue
+        out.append(row("tmx", f"{name.strip()} ({code}) - Tanzania, {region.strip()} auction", cm[0], round((hi + lo) / 2, 2), "TZS", "kg", 1, d,
+                       "Tanzania Mercantile Exchange auction results", "https://www.tmx.co.tz/market_data/recent-trade-results",
+                       grade=f"{name.strip()} {code}, {region.strip()} warehouse auction: high {hi:,.0f}, low {lo:,.0f} TZS/kg", origin="TZA", place=f"{region.strip()}, Tanzania (warehouse)",
+                       hs6=cm[1], kind="auction", tier="T1 Exchange", basis="exchange auction at the origin, ex-warehouse before export costs: the midpoint of the day's high and low"))
+    return out
+
+
+MANSA_NAMES = {"cashew": ("Cashew", "080131"), "cocoa": ("Cocoa beans", "180100"), "coffee": ("Coffee Robusta", "090111"), "cotton": ("Cotton", "520100"), "ginger": ("Spices", "091011"),
+               "maize": ("Maize", "100590"), "palm-oil": ("Palm oil", "151110"), "rice": ("Rice", "100630"), "rubber": ("Natural rubber", "400122"), "sesame": ("Sesame seed", "120740"),
+               "sorghum": ("Sorghum", "100790"), "soybean": ("Soybeans", "120190"), "sugar": ("Sugar", "170199"), "tea": ("Tea", "090240"), "wheat": ("Wheat", "100199")}
+MANSA_ISO = {"nigeria": "NGA", "ghana": "GHA", "cote-divoire": "CIV", "cameroon": "CMR", "kenya": "KEN", "ethiopia": "ETH", "uganda": "UGA", "tanzania": "TZA", "senegal": "SEN",
+             "benin": "BEN", "togo": "TGO", "burkina-faso": "BFA", "mali": "MLI", "rwanda": "RWA", "malawi": "MWI", "zambia": "ZMB", "mozambique": "MOZ", "egypt": "EGY", "morocco": "MAR", "south-africa": "ZAF"}
+
+
+def mansa_africa():
+    """African farmgate, exchange and export prices per commodity and country from Mansa Markets (the pages its sitemap
+    lists; each page states the price type, the source and the date). Official announcements (a regulator's producer
+    price) and exchange spots are kept with their type; the site is a secondary publisher, so tier T2."""
+    sm = get("https://www.mansamarkets.com/sitemap.xml").text
+    pages = sorted(set(re.findall(r"<loc>(https://www\.mansamarkets\.com/commodities/([a-z\-]+)/([a-z\-]+))</loc>", sm)))
+    out = []
+    for url, com, cty in pages:
+        cm, iso = MANSA_NAMES.get(com), MANSA_ISO.get(cty)
+        if not cm or not iso:
+            continue
+        try:
+            h = get(url).text
+        except Exception as e:  # noqa: BLE001
+            log.warning("mansa %s/%s: %s", com, cty, str(e)[:80]); continue
+        t = re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S))))
+        i = t.find("Price layers")
+        if i < 0:
+            continue
+        seen = set()
+        for m in re.finditer(r"\| (farmgate|exchange spot|export|benchmark|wholesale|reference|minimum) \| ([\d,.]+) \| ([A-Z]{3}) / (kg|tonne|t|bag) \| [^|]*\| [^|]*\| % \| ([^|]{3,60}?) \| \( \| ([a-z]+) \| \) \| (\d{1,2} [A-Z][a-z]+ \d{4})", t[i:i + 2500]):
+            ptype, price, ccy, unit, src, freq, d = m.groups()
+            if ptype in seen:
+                continue
+            seen.add(ptype)
+            try:
+                dd = datetime.strptime(d, "%d %B %Y").date().isoformat()
+            except ValueError:
+                continue
+            p = num(price.replace(",", ""))
+            if not p:
+                continue
+            kg = {"kg": 1, "tonne": 1000, "t": 1000}.get(unit)
+            if not kg:
+                continue
+            note = re.search(r"\| " + re.escape(ptype) + r" \| : \| ([^|]{10,220})", t[i:i + 3000])
+            out.append(row("mansa", f"{com.replace('-', ' ').title()} - {iso} {ptype} price", cm[0], p, ccy, unit if unit != "t" else "tonne", kg, dd,
+                           f"Mansa Markets ({src.strip()}, {freq})", url, grade=f"{ptype}: {note.group(1).strip() if note else src.strip()}"[:200], origin=iso, place=f"{iso}, {ptype}",
+                           hs6=cm[1], kind="assessment" if ptype in ("farmgate", "minimum", "reference") else "spot", tier="T2 Published official or exchange price",
+                           basis=f"{ptype} price inside the origin country as published ({src.strip()}); not an export FOB price"))
+    return out
+
+
+def spices_board_auctions():
+    """Spices Board of India: cardamom e-auction results (every auction, dated, with the lots, kilos sold, max and average
+    Rs/kg) and large cardamom market prices by market and type. Official auction results at the origin."""
+    h = get("https://indianspices.com/dailyprice-auctiondetails.html").text
+    t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S)))
+    out, seen = [], set()
+    for m in re.finditer(r"Spice: Small Cardamom \|? ?, Date of Auction: (\d{2}-[A-Z][a-z]{2}-\d{4}), Auctioneer: ([^,]+), No\.of lots: (\d+), Qty Arrived \(Kgs\): ([\d.]+), Qty Sold \(Kgs\): ([\d.]+), Max Price \(Rs\./Kg\): ([\d.]+), Avg\. Price \(Rs\./Kg\): ([\d.]+)", t):
+        d, auc, lots, arr, sold, mx, avg = m.groups()
+        try:
+            dd = datetime.strptime(d, "%d-%b-%Y").date().isoformat()
+        except ValueError:
+            continue
+        if (dd, auc) in seen:
+            continue
+        seen.add((dd, auc))
+        out.append(row("spiceauc", f"Cardamom, small - India e-auction {dd} ({auc.strip().title()[:40]})", "Spices", num(avg), "INR", "kg", 1, dd,
+                       "Spices Board of India e-auction results", "https://indianspices.com/dailyprice-auctiondetails.html",
+                       grade=f"small cardamom: {lots} lots, {float(sold):,.0f} kg sold of {float(arr):,.0f} offered, max {mx} Rs/kg, average {avg}", origin="IND", place="Kerala auction centre",
+                       hs6="090831", kind="auction", tier="T1 Official auction", basis="average price of a concluded e-auction at the origin, ex-auction centre"))
+    for m in re.finditer(r"Spice: Large Cardamom \|? ?, Date: (\d{2}-[A-Z][a-z]{2}-\d{4}), Market: ([A-Za-z ]+), Type: ([A-Za-z]+), Price \(Rs\./Kg\): ([\d.]+)", t):
+        d, mkt, typ, p = m.groups()
+        try:
+            dd = datetime.strptime(d, "%d-%b-%Y").date().isoformat()
+        except ValueError:
+            continue
+        if (dd, mkt, typ) in seen:
+            continue
+        seen.add((dd, mkt, typ))
+        out.append(row("spiceauc", f"Cardamom, large - India {mkt.strip()} market, {typ}", "Spices", num(p), "INR", "kg", 1, dd, "Spices Board of India market prices",
+                       "https://indianspices.com/dailyprice-auctiondetails.html", grade=f"large cardamom {typ}, {mkt.strip()} market", origin="IND", place=f"{mkt.strip()}, Sikkim",
+                       hs6="090832", kind="spot", tier="T1 Official statistics", basis="domestic market price at the origin, as reported by the Spices Board"))
+    return out[:40]
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc"}
 
 
 # ---------------------------------------------------------------- build
@@ -1090,7 +1201,7 @@ def to_usd(r, rates):
 
 # monthly sources are dated by their month start and published about a month late
 ROTATING = {"ct_fob"}
-MAX_AGE = {"eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
+MAX_AGE = {"mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
 def finish(r, rates, fxsrc, today):
@@ -1176,7 +1287,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc"}
     return need <= have
 
 
