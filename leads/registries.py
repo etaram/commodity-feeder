@@ -287,7 +287,7 @@ def argentina():
         em = re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", block)
         web = re.search(r"Web: \| ([^|]*?) \|", block)
         phone = re.sub(r"\s*-\s*$", "", tel.group(1).strip()) if tel else ""
-        phone = "+" + phone.replace("(", "").replace(")", "") if phone.startswith("(54") else phone
+        phone = "+" + phone.replace("(", "").replace(")", "") if phone.startswith("(54") else ("+54 " + phone.lstrip("(0").replace(")", "") if re.match(r"\(?0\d", phone) else phone)
         out.append(_row(name, "ARG", "soybean, maize, wheat, sunflower, grains and vegetable oils", "exporter and crusher" if re.search(r"Aceite|Harina", products) else "exporter", "CIARA-CEC member",
                         f"Member of CIARA-CEC (Argentine oilseed industry chamber and cereal exporters' centre); trades: {products.lower()}", "CIARA-CEC member list", url,
                         phone=phone, email=em.group(0) if em else "", website=(web.group(1).strip().rstrip("/") if web and "." in web.group(1) else "")))
@@ -317,7 +317,7 @@ def ukraine():
     url = "https://uga.ua/en/members-and-partners/"
     out, seen = [], set()
     for name, kind in re.findall(r"\| ([^|]{3,90}?) \| (Полные|Ассоциированные) \|", _text(url)):
-        name = name.strip().strip("“”«»\"")
+        name = re.sub(r"[“”«»\"]", "", name).strip()
         if name in seen:
             continue
         seen.add(name)
