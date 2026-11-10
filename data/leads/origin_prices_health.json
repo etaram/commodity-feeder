@@ -94,10 +94,10 @@
   },
   "nce": {
    "rows": 2,
-   "fetched_now": true,
+   "fetched_now": false,
    "newest_date": "2026-11-03",
    "age_days": 7,
-   "status": "ok"
+   "status": "stale"
   },
   "forbes": {
    "rows": 4,
@@ -157,10 +157,10 @@
   },
   "ct_fob": {
    "rows": 109,
-   "fetched_now": true,
+   "fetched_now": false,
    "newest_date": "2026-08-01",
    "age_days": 101,
-   "status": "ok"
+   "status": "stale"
   },
   "eu_cif": {
    "rows": 390,
@@ -181,6 +181,13 @@
    "fetched_now": true,
    "newest_date": "2026-11-04",
    "age_days": 6,
+   "status": "ok"
+  },
+  "cmb": {
+   "rows": 335,
+   "fetched_now": true,
+   "newest_date": "2026-11-10",
+   "age_days": 0,
    "status": "ok"
   }
  }
