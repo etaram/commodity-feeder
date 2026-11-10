@@ -773,21 +773,34 @@ def comtrade_fob():
     """FOB at the origin from the origin's own export declarations (UN Comtrade public preview, monthly; no key).
     One request per origin for the last months and every listed code; the API allows about one request a second."""
     import time as _t
-    periods = ",".join(f"{y}{m:02d}" for y, m in _last_months(5))
     label = {hs: (c, n) for c, n, hs in TRADED}
+    codes = list(label)
+    chunks = [codes[i:i + 22] for i in range(0, len(codes), 22)]   # the preview takes one period and about 22 codes a call
+    months = [f"{y}{m:02d}" for y, m in _last_months(3, lag=3)]
     out, skipped = [], 0
     t0 = _t.time()
-    for iso, rep in ORIGIN_REPORTERS.items():
-        if _t.time() - t0 > 420:
-            break
-        try:
-            r = requests.get("https://comtradeapi.un.org/public/v1/preview/C/M/HS", params={"reporterCode": rep, "cmdCode": ",".join(label), "flowCode": "X", "period": periods,
+
+    def call(rep, period, chunk):
+        for attempt in range(3):
+            r = requests.get("https://comtradeapi.un.org/public/v1/preview/C/M/HS", params={"reporterCode": rep, "cmdCode": ",".join(chunk), "flowCode": "X", "period": period,
                              "partnerCode": 0, "customsCode": "C00", "motCode": 0}, headers=UA, timeout=60)
             if r.status_code == 429:
-                _t.sleep(6); r = requests.get(r.url, headers=UA, timeout=60)
-            data = r.json().get("data", []) if r.status_code == 200 else []
+                _t.sleep(3 + attempt * 3); continue
+            _t.sleep(1.3)
+            return r.json().get("data", []) if r.status_code == 200 else []
+        return []
+
+    for iso, rep in ORIGIN_REPORTERS.items():
+        if _t.time() - t0 > 600:
+            log.info("comtrade fob: time budget reached at %s", iso); break
+        data = []
+        try:
+            for period in months:   # the latest month the origin has reported
+                got = [d for ch in chunks for d in call(rep, period, ch)]
+                if got:
+                    data = got; break
         except Exception as e:  # noqa: BLE001
-            log.warning("comtrade fob %s: %s", iso, str(e)[:100]); data = []
+            log.warning("comtrade fob %s: %s", iso, str(e)[:100])
         agg = {}
         for d in data:
             if d.get("partnerCode") not in (0, None) or d.get("partner2Code") not in (0, None):
@@ -807,7 +820,6 @@ def comtrade_fob():
                            "UN Comtrade: the origin country's own export declarations", "https://comtradeplus.un.org/", grade=f"{label[hs][1]}, all grades: {a['kg'] / 1000:,.0f} t in {len(set(a['p']))} months",
                            origin=iso, place=f"{iso}, FOB", incoterm="FOB", hs6=hs, kind="index", tier="T1 Official statistics",
                            basis="export value divided by net weight over the months stated: the average of every grade shipped, not a quote for one grade"))
-        _t.sleep(1.6)
     log.info("comtrade fob: %d rows, %d records without weight", len(out), skipped)
     return out
 
@@ -835,10 +847,11 @@ def comext_cif():
     except Exception:  # noqa: BLE001
         iso3 = {}
     out = []
+    times = "&".join(f"time={y}-{m:02d}" for y, m in _last_months(3, lag=3))   # Comext publishes about ten weeks after the month
     for commodity, name, hs in TRADED:
         try:
             j = get("https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/ds-045409?freq=M&reporter=EU27_2020&flow=1"
-                    f"&product={hs}&indicators=VALUE_IN_EUROS&indicators=QUANTITY_IN_100KG&lastTimePeriod=3&format=JSON").json()
+                    f"&product={hs}&indicators=VALUE_IN_EUROS&indicators=QUANTITY_IN_100KG&{times}&format=JSON").json()
         except Exception as e:  # noqa: BLE001
             log.warning("comext %s: %s", hs, str(e)[:100]); continue
         agg, months = {}, set()
