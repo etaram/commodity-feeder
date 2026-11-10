@@ -10,6 +10,7 @@ import { claude } from "./anthropic";
 import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
+import { TEAM } from "./team";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
 import { commodityStats } from "./commodities";
@@ -142,6 +143,7 @@ const HELP_HE = `פקודות:
 /retry - המשך ריצה שנעצרה בתקלה
 /new - שיחה חדשה
 /mailcheck - בדיקת החיבור לתיבת המייל (לא שולח)
+/team - הצוות שמריץ את העסקאות ומה כל אחד עושה
 או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
 /tenders <words> [ISO3] - open tenders by fit
@@ -158,6 +160,7 @@ const HELP_EN = `Commands:
 /retry - continue a run that stopped on an error
 /new - new conversation
 /mailcheck - check the mailbox sign-in (sends nothing)
+/team - the deal team and what each member does
 Or just write a question or a request.`;
 
 type Row = Record<string, string>;
@@ -317,6 +320,7 @@ export async function handle(chatId: string, text: string, _from: string, langCo
   const iso = (s: string) => (s.match(/\b([A-Z]{3})\b/) || [])[1] || "";
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
+    if (/^\/team/.test(cmd)) return send(chatId, (he ? "<b>צוות העסקאות</b>\n" : "<b>The deal team</b>\n") + TEAM.map((m) => `<b>${esc(m.name)}</b> - ${esc(he ? m.he : m.title)}\n${esc(m.does)}`).join("\n\n") + (he ? "\n\nכל פנייה החוצה מחכה לאישור שלך." : "\n\nEvery outgoing message waits for your approval."));
     if (/^\/mailcheck/.test(cmd)) { const r = await mailCheck(); return send(chatId, r.ok ? (he ? `תיבת המייל מחוברת (${esc(r.host)}). לא נשלח שום מייל בבדיקה.` : `The mailbox signs in (${esc(r.host)}). No mail was sent.`) : (he ? `החיבור לתיבה נכשל (${esc(r.host)}): ${esc(r.error || "")}` : `Mailbox sign-in failed (${esc(r.host)}): ${esc(r.error || "")}`)); }
     if (/^\/retry/.test(cmd)) { const ok = await retryLatest(agentIo, chatId); return send(chatId, ok ? (he ? "ממשיך מהמקום שבו הסוכן נעצר." : "Continuing from where the agent stopped.") : (he ? "אין ריצה שנעצרה בתקלה." : "No run stopped on an error.")); }
     if (/^\/stop/.test(cmd)) { const n = await stopLatest(chatId); return send(chatId, n ? (he ? "הסוכן נעצר." : "Agent stopped.") : (he ? "אין סוכן פעיל." : "No agent running.")); }

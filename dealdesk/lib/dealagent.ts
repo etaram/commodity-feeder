@@ -19,6 +19,8 @@ import { DEFAULT_WS } from "@/lib/auth";
 import { mailReady, sendMail } from "@/lib/mailer";
 import { claim } from "@/lib/claims";
 import { dealUrl, richText, supplierUrl, tenderUrl } from "@/lib/links";
+import { member, teamBrief } from "@/lib/team";
+import { logisticsFor } from "@/lib/logistics";
 
 export const RUNS = "Agent Runs", APPROVALS = "Agent Approvals";
 const MAX_TURNS = Number(process.env.AGENT_MAX_TURNS || 24);
@@ -62,7 +64,8 @@ const TOOLS = [
   { name: "tender_routes", description: "Entry routes for one tender id (direct bid, manufacturer with Sinder as agent, local partner, sub-supply to the winner) with verdict, basis, assumptions, missing items and next action.", input_schema: { type: "object", properties: { tender_id: { type: "string" } }, required: ["tender_id"] } },
   { name: "deal_economics", description: "Indicative deal economics in USD: gross profit, financing cost on the negative cash balance (daily simple interest), net, peak funding and warnings. Days are counted from the order.", input_schema: { type: "object", properties: { sale_price: { type: "number" }, cost_goods: { type: "number" }, freight: { type: "number" }, other_costs: { type: "number" }, fin_rate_pct: { type: "number" }, supplier_pay_day: { type: "number" }, customer_pay_day: { type: "number" }, funding_limit: { type: "number" } }, required: ["sale_price", "cost_goods"] } },
   { name: "record", description: "Save a fact to this deal's records. kind requirement: {item, mandatory, status (met|not_met|unknown|missing), source_doc}. kind party: {role (supplier|buyer|partner|finance|logistics), name, country ISO3, email, phone, website, source, note}. kind quote: {supplier, product, qty, unit, unit_price, currency, incoterm, named_place, valid_until YYYY-MM-DD, availability (confirmed|unconfirmed), source_ref}.", input_schema: { type: "object", properties: { kind: { type: "string", enum: ["requirement", "party", "quote"] }, data: { type: "object" } }, required: ["kind", "data"] } },
-  { name: "propose_message", description: "Prepare one outgoing message (a request for quotation to a supplier, a question to a buyer). It is NOT sent: the owner gets it with Approve and Reject buttons. Continue working after proposing.", input_schema: { type: "object", properties: { to_name: { type: "string" }, to_email: { type: "string" }, language: { type: "string" }, subject: { type: "string" }, body: { type: "string" }, why: { type: "string" } }, required: ["to_name", "subject", "body", "why"] } },
+  { name: "propose_message", description: "Prepare one outgoing message (a request for quotation to a supplier, a question to a buyer). It is NOT sent: the owner gets it with Approve and Reject buttons. Continue working after proposing.", input_schema: { type: "object", properties: { from_role: { type: "string", description: "the team role that prepared it: relations_asia, relations_west, negotiation, logistics" }, to_name: { type: "string" }, to_email: { type: "string" }, language: { type: "string" }, subject: { type: "string" }, body: { type: "string" }, why: { type: "string" } }, required: ["to_name", "subject", "body", "why"] } },
+  { name: "logistics_options", description: "Logistics providers from the system's own directory for this deal's route: inspection programmes required by the destination, customs brokers, forwarders and carriers, inspection and cargo insurance, each with the reason it fits. origin_countries and destination_country are ISO3.", input_schema: { type: "object", properties: { destination_country: { type: "string" }, origin_countries: { type: "array", items: { type: "string" } }, goods: { type: "string" } }, required: ["destination_country"] } },
   { name: "ask_owner", description: "Ask the owner one short question you cannot answer from the data (quantity, price target, buyer, timing). The run pauses until the owner answers in Telegram.", input_schema: { type: "object", properties: { question: { type: "string" } }, required: ["question"] } },
   { name: "report", description: "Send the owner a short progress update (2-5 lines) when you reach a result worth knowing.", input_schema: { type: "object", properties: { text: { type: "string" } }, required: ["text"] } },
   { name: "finish", description: "End the run with the final summary for the owner: what was found, what is ready, what is waiting for approval, what is missing and the next step.", input_schema: { type: "object", properties: { summary: { type: "string" } }, required: ["summary"] } },
@@ -73,6 +76,7 @@ function system(r: Run) {
   return `You are Sinder's deal agent. Sinder is an Israeli international procurement and trading firm. The owner gave you one request and you run the deal end to end by yourself, without asking him to use any system.
 Work in this order, skipping what does not apply: 1) state the requirement (product, grade, quantity, destination, timing) and record it; ask_owner only for facts that change the work and cannot be found; 2) if it is a tender, read it (search_tenders) and check entry routes (tender_routes); 3) find suppliers (search_suppliers), keep only those whose match is supported or plausible, prefer makers, and get their contacts (supplier_contact; web search for the official sales contact when the system has none); record the usable ones as parties; 4) compute indicative economics when you have a price basis (deal_economics); 5) propose_message one request for quotation per selected supplier (3 to 6 suppliers), in English or the supplier's business language, saying it is a request for information and not an order; 6) finish.
 Rules: facts only from the tools and web search results, with the source; never invent a company, contact, price or date; a directory row, a name match or an indicative price is not a verified fact; never call a fit "verified"; a restriction on one route is not a rejection of the deal. Nothing is ever sent by you: propose_message only prepares it for the owner's approval. Never commit, bid, accept terms or create accounts.
+${teamBrief(r.name || "the owner")}
 Talk to the owner (report, ask_owner, finish) in ${he ? "simple, plain Hebrew, short lines, no jargon, no English terms where a Hebrew word exists, no em-dashes, no emojis" : "plain English, short lines"}. Use report after each main stage. Make names clickable: write a supplier, a tender or the deal as [name](open link), using the "open" links the tools return; the deal page is ${dealUrl(r.deal_id)}. The deal id is ${r.deal_id}. Today is ${now().slice(0, 10)}.`;
 }
 
@@ -112,13 +116,19 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
   }
   if (name === "propose_message") {
     const id = "M" + Date.now().toString(36).toUpperCase();
-    const m = { to_name: s("to_name"), to_email: s("to_email", 120), language: s("language", 30), subject: s("subject", 200), body: s("body", 4000), why: s("why", 400) };
+    const by = member(s("from_role", 30));
+    const m = { from_role: by?.id || "", to_name: s("to_name"), to_email: s("to_email", 120), language: s("language", 30), subject: s("subject", 200), body: s("body", 4000), why: s("why", 400) };
     await appendRow(APPROVALS, [id, r.id, r.chat, now(), "pending", JSON.stringify(m)]);
     const he = r.lang === "he";
-    await io.send(r.chat, `${he ? "<b>פנייה לאישור</b>" : "<b>Message for approval</b>"}\n${esc(he ? "אל" : "To")}: ${esc(m.to_name)}${m.to_email ? ` &lt;${esc(m.to_email)}&gt;` : ""}\n${esc(he ? "למה" : "Why")}: ${esc(m.why)}\n\n<b>${esc(m.subject)}</b>\n${esc(m.body)}`,
+    await io.send(r.chat, `${he ? "<b>פנייה לאישור</b>" : "<b>Message for approval</b>"}${by ? `\n${esc(he ? "הכין" : "Prepared by")}: ${esc(by.name)}, ${esc(he ? by.he : by.title)}` : ""}\n${esc(he ? "אל" : "To")}: ${esc(m.to_name)}${m.to_email ? ` &lt;${esc(m.to_email)}&gt;` : ""}\n${esc(he ? "למה" : "Why")}: ${esc(m.why)}\n\n<b>${esc(m.subject)}</b>\n${esc(m.body)}`,
       { reply_markup: { inline_keyboard: [[{ text: he ? "אשר" : "Approve", callback_data: `ag:ok:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }],
         [{ text: he ? "פתח את הספק במערכת" : "Open the supplier", url: supplierUrl(m.to_name) }, { text: he ? "פתח את העסקה" : "Open the deal", url: dealUrl(r.deal_id) }]] } });
     return `proposed ${id}; waiting for the owner's approval (not sent). Continue with the rest of the work.`;
+  }
+  if (name === "logistics_options") {
+    const origins = (Array.isArray(x.origin_countries) ? x.origin_countries : []).map((o) => String(o).slice(0, 3).toUpperCase()).filter(Boolean);
+    const rows = await logisticsFor({ buyerCountry: s("destination_country", 3).toUpperCase(), origins, title: s("goods", 160) });
+    return JSON.stringify({ note: "directory entries, not offers: capability and price must be confirmed with the provider", options: rows.slice(0, 16) });
   }
   if (name === "report") { await io.send(r.chat, richText(s("text", 2000)), dealButton(r)); return "reported"; }
   return "unknown tool";
