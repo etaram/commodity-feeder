@@ -1168,11 +1168,55 @@ def spices_board_auctions():
     return out[:40]
 
 
+def mombasa_tea():
+    """Mombasa tea auction (East African Tea Trade Association): the latest sale's average price and volume for CTC and
+    orthodox tea, from the association's own live feed (the page's data). An auction price at the origin, USD/kg,
+    ex-auction Mombasa; tea from Kenya, Uganda, Rwanda, Burundi, Tanzania and Malawi is sold there."""
+    j = get("https://eatta.co.ke/api/live-stats.php").json()
+    out = []
+    d = str((j.get("sale") or {}).get("date") or "")[:10]
+    for kind, label in (("ctc", "CTC"), ("orthodox", "Orthodox")):
+        x = j.get(kind) or {}
+        p, kg = x.get("average_price_usd"), x.get("volume_kg") or 0
+        if not p or not d:
+            continue
+        out.append(row("eatta", f"Tea, {label} - Mombasa auction, sale {x.get('sale_number', '')}", "Tea", round(float(p), 3), "USD", "kg", 1, d, "East African Tea Trade Association, Mombasa auction results",
+                       "https://eatta.co.ke/statistics", grade=f"{label} tea, all grades: average of sale {x.get('sale_number', '')}, {kg:,.0f} kg sold", origin="KEN", place="Mombasa auction (East African origins)",
+                       hs6="090240", kind="auction", tier="T1 Exchange", basis="weekly auction average at the origin, ex-auction warehouse Mombasa; the average over every mark and grade sold"))
+    return out
+
+
+def rosario_grains():
+    """Rosario grain spot market reference prices (Cámara Arbitral de Cereales, Bolsa de Comercio de Rosario): weighted
+    averages of the day's reported trades for soybean, wheat, corn, sunflower seed and sorghum, in pesos per tonne,
+    delivered to the Rosario port terminals. The reference price for Argentine grain at the origin."""
+    h = get("https://www.bcr.com.ar/es/mercados/mercado-de-granos/cotizaciones/cotizaciones-locales-0").text
+    t = re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S))))
+    dates = re.findall(r"\| (\d{2}/\d{2}/\d{4}) ", t[t.find("Trading date"):t.find("Trading date") + 200])
+    names = {"Soybean": ("Soybeans", "120190"), "Wheat": ("Wheat", "100199"), "Yellow corn": ("Maize", "100590"), "Sunseed": ("Sunflower seed", "120600"), "Grain sorghum": ("Sorghum", "100790")}
+    out = []
+    for en, (cm, hs) in names.items():
+        m = re.search(r"\| " + re.escape(en) + r" \| ((?:(?:\$ [\d.,]+|S/C) \| ){1,6})", t)
+        if not m or not dates:
+            continue
+        vals = re.findall(r"\$ ([\d.,]+)|(S/C)", m.group(1))
+        for (v, sc), d in zip(vals, dates):   # the first dated column with a price
+            if sc or not v:
+                continue
+            price = num(v.replace(".", "").replace(",", "."))
+            if price:
+                out.append(row("bcr", f"{en} - Argentina, Rosario spot market (reference)", cm, price, "ARS", "t", 1000, f"{d[6:]}-{d[3:5]}-{d[:2]}", "Bolsa de Comercio de Rosario, Cámara Arbitral de Cereales reference prices",
+                               "https://www.bcr.com.ar/es/mercados/mercado-de-granos/cotizaciones/cotizaciones-locales-0", grade=f"{en}, Rosario spot: weighted average of the session's trades", origin="ARG",
+                               place="Rosario port terminals (delivered)", hs6=hs, kind="spot", tier="T1 Exchange", basis="spot market reference price at the origin, delivered to the Rosario terminals, in pesos; before export FOB costs"))
+                break
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr"}
 
 
 # ---------------------------------------------------------------- build
@@ -1287,7 +1331,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr"}
     return need <= have
 
 
