@@ -564,7 +564,8 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     if (cmd) {
       const inOrigin = (cmd.variety?.origins.length ? cmd.variety.origins : cmd.origins).includes(s.c || "");
       const names = !!cmd.variety && cmd.variety.re.test(all);
-      cb = (own ? 4 : 0) + (names && own ? 8 : names ? 3 : 0) + (inOrigin ? (cmd.variety ? 5 : 2) : 0) + (s.ds || s.x ? 2 : 0) + cmd.rest.filter((w) => all.includes(w)).length;
+      cb = (own ? 4 : 0) + (names && own ? 8 : names ? 3 : 0) + (inOrigin ? (cmd.variety ? 5 : 2) : 0) + (s.ds || s.x ? 2 : 0) + 3 * cmd.rest.filter((w) => all.includes(w)).length;
+      if (cmd.key !== "maize") m = { ...m, gaps: m.gaps.filter((x) => !/^maize not named/.test(x)) };  // the grain rule's maize note belongs to maize requests only
       if (cmd.variety && !names) m = { ...m, gaps: [...m.gaps, inOrigin ? `"${cmd.variety.name}" not stated; the company is in its origin country` : `"${cmd.variety.name}" not stated`] };
       if (!own) m = { ...m, bucket: m.bucket === "supported" ? "plausible" : m.bucket };
     }
