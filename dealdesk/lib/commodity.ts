@@ -9,6 +9,7 @@ type Var = { a: string[]; o: string[] };
 type Entry = { key: string; terms: string[]; hs: string[]; origins: string[]; not: string; varieties: Record<string, Var>; he: string[] };
 const LIST = (TAX as unknown as { commodities: Entry[] }).commodities;
 const HE_VAR: Record<string, string> = { "סידמו": "sidamo", "סידאמו": "sidamo", "ירגשף": "yirgacheffe", "ירגצ'ף": "yirgacheffe", "יסמין": "jasmine", "בסמטי": "basmati", "רובוסטה": "robusta", "ערביקה": "arabica", "הומרה": "humera" };
+const MULTI = new Set(["fish", "spices", "meat", "pulses", "nuts", "dates-fruit", "steel", "fertilizer", "oilseeds", "timber", "dairy", "lng-lpg", "diesel"]);
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const wordRe = (alts: string[], flags = "i") => new RegExp(`(?:^|[^\\p{L}\\p{N}])(?:${alts.map(esc).join("|")})s?(?![\\p{L}\\p{N}])`, flags + "u");
 
@@ -41,6 +42,8 @@ export function detectCommodity(raw: string): Commodity | null {
   for (const [name, v] of Object.entries(e.varieties)) if (wordRe(v.a).test(q)) { variety = { name, re: wordRe(v.a), origins: v.o }; break; }
   const used = new Set([...e.terms, ...(variety ? e.varieties[variety.name].a : [])].flatMap((t) => t.split(" ")));
   const rest = q.replace(/[^\p{L}\p{N} ]/gu, " ").split(" ").filter((w) => w.length >= 3 && !/[֐-׿]/.test(w) && !ROLE.test(w) && !used.has(w) && !used.has(w.replace(/s$/, "")));
-  return { key: e.key, hs: e.hs, origins: e.origins, term: wordRe(e.terms),
+  // a family of different products (fish, spices, pulses ...): only the product that was asked for, and no shared customs heading
+  const multi = MULTI.has(e.key), asked = e.terms.filter((t) => wordRe([t]).test(q));
+  return { key: e.key, hs: multi ? [] : e.hs, origins: e.origins, term: wordRe(multi && asked.length ? asked : e.terms),
     clean: (t: string) => (notRe ? t.replace(notRe, " ") : t), variety, rest: [...new Set(rest)].slice(0, 5) };
 }

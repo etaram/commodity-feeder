@@ -328,17 +328,35 @@ export async function searchTendersSmart(words: string, cty = ""): Promise<{ row
 const LOGI = /logistic|shipping|freight|port|terminal|courier|warehous|cargo|transport services|trucking/i;
 export async function searchSuppliers(v: string[][]): Promise<Grid> {
   const g = (r: number) => String((v[r] || [])[0] ?? "").trim();
-  const re = await queryRe(g(0)), reg = g(1), cty = g(2), sec = g(3), minq = num(g(4)), needC = g(5) === "yes", role = g(6);
-  const out = (await allSuppliers()).filter((s) =>
-    (!reg || s.rg === reg) && (!cty || s.c === cty) && (!sec || s.s === sec || (s.s2 || "").includes(sec)) &&
-    (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
-    (!role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""))) &&
-    (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.sp || ""}`.toLowerCase())))
-    // what the company itself makes or trades comes before what it once delivered under a contract
-    .map((s) => ({ s, own: !re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase()) ? 0 : 1 }))
-    .sort((a, b) => a.own - b.own).map((x) => x.s)
-    .sort((a, b) => (sec ? (a.s === sec ? 0 : 1) - (b.s === sec ? 0 : 1) : 0) || KIND_RANK[supplierKind(a)] - KIND_RANK[supplierKind(b)]).slice(0, 2000);
-  return [SUP_HEAD, ...out.map(supRow)];
+  const reg = g(1), cty = g(2), sec = g(3), minq = num(g(4)), needC = g(5) === "yes", role = g(6);
+  const roleOk = (s: Supplier) => !role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""));
+  const base = (s: Supplier) => (!reg || s.rg === reg) && (!cty || s.c === cty) && (!sec || s.s === sec || (s.s2 || "").includes(sec)) && (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) && roleOk(s);
+  // the typed text arrives as "\b<text>": plain words when it holds no pattern of its own
+  const plain = /^\\b[^|()\[\]]+$/.test(g(0)) ? g(0).slice(2).replace(/\\(.)/g, "$1").trim() : "";
+  const HEAD = [...SUP_HEAD, "rel", "match_gaps"];
+  // a commodity ("sidamo coffee producer", "jasmine rice"): the ranked commodity search, in its order
+  if (plain && detectCommodity(plain)) {
+    const r = await supplierSearch({ text: plain, n: 100, originCountry: cty || undefined, originRegion: reg || undefined });
+    const [h, ...rows] = r.values, gi = (h as string[]).indexOf("match_gaps"), n = SUP_HEAD.length;
+    const ci = SUP_HEAD.indexOf("quality"), wi = SUP_HEAD.indexOf("website");
+    return [HEAD, ...rows.filter((x) => (!(minq > 0) || num(x[ci]) >= minq) && (!needC || !!x[wi])).map((x, k) => [...x.slice(0, n), String(k), String(x[gi] || "")])];
+  }
+  // other text: every word must appear (in any order); what the company itself makes or trades comes before what it
+  // once delivered under a contract
+  const words = plain ? [...new Set(plain.toLowerCase().split(/\s+/).filter((w) => w.length >= 2 && !/^(producers?|manufacturers?|suppliers?|exporters?|of|the|and|for)$/.test(w)))] : [];
+  const wre = words.map((w) => new RegExp(`(?:^|[^\\p{L}\\p{N}])${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "iu"));
+  const re = words.length && !NON_LATIN.test(plain) ? { test: (t: string) => wre.every((x) => x.test(t)) } : await queryRe(g(0));
+  const out: { s: Supplier; rel: number }[] = [];
+  for (const s of await allSuppliers()) {
+    if (!base(s)) continue;
+    if (!re) { out.push({ s, rel: 0 }); continue; }
+    const own = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();
+    const inName = re.test(String(s.n || "").toLowerCase());
+    if (re.test(own)) out.push({ s, rel: inName && !(s.p || s.in || s.wt) ? 1 : 0 });
+    else if (re.test(`${own} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.sp || ""}`.toLowerCase())) out.push({ s, rel: 2 });
+  }
+  out.sort((a, b) => a.rel - b.rel || (sec ? (a.s.s === sec ? 0 : 1) - (b.s.s === sec ? 0 : 1) : 0) || KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)]);
+  return [HEAD, ...out.slice(0, 2000).map((x) => [...supRow(x.s), re ? String(x.rel) : "", x.rel === 2 ? "named only in contracts it won, not in its own products" : ""])];
 }
 
 // (words hold only letters and digits, so they need no escaping)
