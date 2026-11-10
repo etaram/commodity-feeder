@@ -2,6 +2,10 @@ name: probe-prices
 # Manual: look at candidate physical-price sources from a GitHub runner.
 on:
   workflow_dispatch:
+    inputs:
+      script:
+        description: "module under tools/ to run"
+        default: probe_eth
 permissions:
   contents: read
 jobs:
@@ -15,4 +19,4 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install -q requests google-auth pdfplumber
-      - run: python -m tools.probe_eth || true   # a probe is a look, not a job: a refused source must not send a failure e-mail
+      - run: python -m tools.${{ inputs.script || 'probe_eth' }} || true   # a probe is a look, not a job: a refused source must not send a failure e-mail
