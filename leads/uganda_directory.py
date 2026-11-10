@@ -47,7 +47,9 @@ def columns(page):
 def parse(text):
     """Entries of a stretch of directory text: [(section, name, {field: value})]."""
     lines = [re.sub(r"\s+", " ", x).strip() for x in text.split("\n")]
-    lines = [x for x in lines if x and not re.fullmatch(r"Coffee and Cocoa Directory Uganda|\d{1,3}|[ivx]{1,5}", x)]
+    # running heads and footers of the pages (also when the column split cuts them in half) are not directory text
+    noise = re.compile(r"MAAIF|REPUBLIC OF UGANDA|Animal Industry|Ministry of Agricultur|Value Chains?$|^nt in Uganda|^oa Value|Coffee and Coco\b|^Directory Uganda$|Developmen$|^\d{1,3} Directory Uganda", re.I)
+    lines = [x for x in lines if x and not re.fullmatch(r"Coffee and Cocoa Directory Uganda|\d{1,3}|[ivx]{1,5}", x) and not noise.search(x)]
     out, section, name, cur, last, pend = [], ("", ""), "", None, "", []
 
     def close():
@@ -101,7 +103,7 @@ def main():
         ph = re.findall(r"\+?\d[\d ]{8,15}\d", f.get("phone", ""))
         rows.append({"supplier": name, "country": "UGA", "section": f"{prod} {role}", "role": role, "product": prod, "location": f.get("location", "")[:120],
                      "contact_person": f.get("contact", "")[:80], "phone": "; ".join(dict.fromkeys(re.sub(r"\s+", " ", p).strip() for p in ph))[:80], "email": "; ".join(dict.fromkeys(em))[:120],
-                     "website": (web.group(0).rstrip(".") if web else "")[:100], "description": f.get("description", "")[:260],
+                     "website": (web.group(0).rstrip(".") if web else "")[:100], "description": re.sub(r"\s*\[See details.*$", "", f.get("description", ""))[:260],
                      "source": "Uganda Coffee Development Authority: Coffee and Cocoa Directory", "source_url": URL, "fetched": date.today().isoformat()})
     if len(rows) >= 40:   # a failed read never replaces the last good file
         with open(OUT, "w", encoding="utf-8", newline="") as fh:
