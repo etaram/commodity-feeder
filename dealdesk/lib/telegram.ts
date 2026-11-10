@@ -11,6 +11,7 @@ import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { TEAM } from "./team";
+import { findWinners } from "./index";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
 import { commodityStats } from "./commodities";
@@ -144,6 +145,7 @@ const HELP_HE = `פקודות:
 /new - שיחה חדשה
 /mailcheck - בדיקת החיבור לתיבת המייל (לא שולח)
 /team - הצוות שמריץ את העסקאות ומה כל אחד עושה
+/winners [מילים] - זוכים טריים במכרזים ומה הם צריכים לקנות
 או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
 /tenders <words> [ISO3] - open tenders by fit
@@ -161,6 +163,7 @@ const HELP_EN = `Commands:
 /new - new conversation
 /mailcheck - check the mailbox sign-in (sends nothing)
 /team - the deal team and what each member does
+/winners [words] - fresh contract winners and what they need to buy
 Or just write a question or a request.`;
 
 type Row = Record<string, string>;
@@ -320,6 +323,14 @@ export async function handle(chatId: string, text: string, _from: string, langCo
   const iso = (s: string) => (s.match(/\b([A-Z]{3})\b/) || [])[1] || "";
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
+    if (/^\/winners/.test(cmd)) {
+      const res = await findWinners({ text: arg || "", n: 10 });
+      if (!res.rows.length) return send(chatId, he ? (res.error ? `רשימת הזוכים לא נטענה: ${esc(res.error)}` : "לא נמצאו זוכים מתאימים.") : (res.error || "No matching winners."));
+      const usd = (v: number) => (v ? `$${v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : Math.round(v / 1e3) + "K"}` : "");
+      return send(chatId, `<b>${he ? `זוכים טריים (${res.total}, נכון ל-${esc(res.at)})` : `Fresh winners (${res.total}, as of ${esc(res.at)})`}</b>\n\n` + res.rows.map((w) =>
+        `<b>${esc(w.w[0])}</b>${w.wc ? ` (${esc(w.wc)})` : ""} ${he ? "זכה ב" : "won in "}${esc(w.c)} ${usd(w.v)}, ${esc(w.d)}\n${esc(w.t.slice(0, 110))}\n${he ? "צריך כנראה" : "likely needs"}: ${esc(w.n.slice(0, 4).join(", "))}${w.l ? `\n<a href="${esc(w.l)}">${he ? "מקור" : "source"}</a>` : ""}`).join("\n\n")
+        + (he ? "\n\nהצרכים נגזרו מכותרת החוזה: השערה, לא עובדה. לפנייה לזוכה: /deal ושם הזוכה." : "\n\nNeeds are inferred from the contract title. To approach one: /deal and the winner's name."));
+    }
     if (/^\/team/.test(cmd)) return send(chatId, (he ? "<b>צוות העסקאות</b>\n" : "<b>The deal team</b>\n") + TEAM.map((m) => `<b>${esc(m.name)}</b> - ${esc(he ? m.he : m.title)}\n${esc(m.does)}`).join("\n\n") + (he ? "\n\nכל פנייה החוצה מחכה לאישור שלך." : "\n\nEvery outgoing message waits for your approval."));
     if (/^\/mailcheck/.test(cmd)) { const r = await mailCheck(); return send(chatId, r.ok ? (he ? `תיבת המייל מחוברת (${esc(r.host)}). לא נשלח שום מייל בבדיקה.` : `The mailbox signs in (${esc(r.host)}). No mail was sent.`) : (he ? `החיבור לתיבה נכשל (${esc(r.host)}): ${esc(r.error || "")}` : `Mailbox sign-in failed (${esc(r.host)}): ${esc(r.error || "")}`)); }
     if (/^\/retry/.test(cmd)) { const ok = await retryLatest(agentIo, chatId); return send(chatId, ok ? (he ? "ממשיך מהמקום שבו הסוכן נעצר." : "Continuing from where the agent stopped.") : (he ? "אין ריצה שנעצרה בתקלה." : "No run stopped on an error.")); }

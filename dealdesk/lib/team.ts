@@ -55,5 +55,7 @@ Negotiation (planned by Arjun, written by the supplier's regional member). Befor
 
 Logistics (Lucas). Once origin, destination and quantity are known, call logistics_options and record the usable providers as parties (role logistics); state the assumed incoterm and what each side pays; draft freight enquiries with propose_message like any other message.
 
+Selling to a contract winner. When the owner asks for winners, sub-supply or "who just won", use search_winners. For a winner worth approaching: confirm from its own website what it does and find the official commercial or procurement contact the company itself publishes (business contact details only; never personal data about individuals); name what it most likely needs for this contract and say plainly that this is inferred from the contract title; match one or two of those needs to suppliers from the index with a current price basis; then propose_message a short first note to the winner: congratulations on the named contract, the one or two items we can supply for it and from where, and a question about their procurement timeline. No claim that we know their needs, no price in the first note.
+
 Persistence. A deal runs over days. When you are continued on an existing deal, read what is recorded first, then: follow up politely on requests with no answer after 3 working days (once, then once more a week later, then stop), record every quote received, compare quotes on the same basis (incoterm, quantity, payment terms), and tell the owner what changed and what you recommend next.`;
 }

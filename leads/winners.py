@@ -30,16 +30,16 @@ KEEP = 4000
 
 # what a works contract makes the contractor buy; first matching rules win, several may apply
 NEEDS = [
-    (r"road|highway|pavement|asphalt|carriageway|route|carretera|estrada|rodovia|voirie", ["bitumen", "cement", "steel rebar", "aggregates", "guardrails", "road marking paint"]),
     (r"bridge|pont\b|puente|viaduct|flyover", ["structural steel", "steel rebar", "cement", "bearings and expansion joints", "prestressing strand"]),
+    (r"\broads?\b|highway|pavement|asphalt|carriageway|\broute\b|bitumage|carretera|estrada|rodovia|voirie", ["bitumen", "cement", "steel rebar", "aggregates", "guardrails", "road marking paint"]),
     (r"water supply|water treatment|pipeline|sewer|sewage|sanitation|wastewater|drainage|adduction|eau potable|agua potable|saneamiento|borehole", ["HDPE and ductile iron pipes", "valves and fittings", "pumps", "water treatment chemicals", "water meters"]),
     (r"irrigation|canal|dam\b|barrage|riego|irrigac", ["pipes", "pumps", "gates and valves", "cement", "geomembrane"]),
     (r"transmission line|substation|distribution network|electrification|grid|power line|poste|sous-station|subestaci|kv\b|electrica", ["conductors and power cables", "transformers", "steel towers and poles", "insulators", "switchgear"]),
     (r"solar|photovolta|pv plant|mini.?grid", ["solar modules", "inverters", "batteries", "mounting structures", "DC and AC cables"]),
     (r"hospital|clinic|health cent|centre de sant|school|classroom|escuela|ecole|école|dormitor|housing|building|construction of|edificio|batiment|bâtiment|rehabilitation of", ["cement", "steel rebar", "roofing sheets", "tiles and sanitary ware", "electrical cables", "doors and windows"]),
     (r"railway|rail\b|track|ferrovi", ["rails", "sleepers", "ballast", "signalling cable"]),
-    (r"port\b|jetty|quay|harbour|harbor|dredg", ["sheet piles", "structural steel", "cement", "fenders and bollards"]),
-    (r"airport|runway|terminal", ["bitumen", "cement", "airfield lighting", "structural steel"]),
+    (r"\bports?\b|jetty|quay|harbour|harbor|dredg", ["sheet piles", "structural steel", "cement", "fenders and bollards"]),
+    (r"airport|\brunways?\b(?! and| ,)|air terminal", ["bitumen", "cement", "airfield lighting", "structural steel"]),
     (r"fibre|fiber|optic|telecom|broadband", ["fibre optic cable", "ducts and accessories", "network equipment"]),
     (r"storage|warehouse|silo|cold chain|market infrastructure", ["steel structures", "silos", "cold room panels", "cement"]),
 ]
@@ -87,6 +87,8 @@ def read(title, nature=""):
     for pat, items in NEEDS:
         if re.search(pat, t):
             works += [i for i in items if i not in works]
+    if not goods and re.search(r"supply (and|&) (installation|delivery)|supply of|equipment|fourniture|suministro|adquisici", t):
+        return "", [], ""   # an equipment supply we cannot name is not a materials lead
     is_works = "work" in (nature or "").lower() or bool(works) and not goods
     if goods and not is_works:
         return "commodity", goods[:4], goods[0]
@@ -146,7 +148,13 @@ def build():
         out.append({"d": d, "w": winners[:4], "wc": (r.get("winner_country") or "")[:20], "c": (r.get("country") or "")[:3], "b": (r.get("buyer") or "")[:120], "t": title[:220],
                     "v": round(usd), "k": kind, "n": needs, "cm": commodity, "s": (r.get("source") or ("TED" if r.get("pn") else ""))[:40], "l": (r.get("link") or (f"https://ted.europa.eu/en/notice/-/detail/{r['pn']}" if r.get("pn") else ""))[:200], "e": (r.get("email") or "")[:80], "id": str(r.get("id") or "")[:60], "sc": round(score, 1)})
     out.sort(key=lambda x: -x["sc"])
-    out = out[:KEEP]
+    per, capped = {}, []
+    for x in out:
+        cap = 2500 if "World Bank" in x["s"] else 350
+        per[x["s"]] = per.get(x["s"], 0) + 1
+        if per[x["s"]] <= cap:
+            capped.append(x)
+    out = capped[:KEEP]
     kinds = {}
     for x in out:
         kinds[x["k"]] = kinds.get(x["k"], 0) + 1

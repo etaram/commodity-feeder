@@ -10,7 +10,7 @@
 import { anthropicHeaders, estimateCost, MODEL } from "@/lib/anthropic";
 import { appendRow, ENGINE_SHEET, lookupContact, readRanges } from "@/lib/sheets";
 import { searchTendersSmart, supplierSearch } from "@/lib/panel";
-import { tenders } from "@/lib/index";
+import { findWinners, tenders } from "@/lib/index";
 import { routeOptions } from "@/lib/routes";
 import { cashCheck } from "@/lib/dealstate";
 import { clean, readDeal, saveRecord, type Kind } from "@/lib/deal";
@@ -61,6 +61,7 @@ const TOOLS = [
   { name: "search_suppliers", description: "Suppliers from the system's supplier index for an English product phrase, ranked by exact product fit (match: supported, plausible, related, incompatible, with the reason and gaps). Optional origin_country ISO3, kind maker|trader.", input_schema: { type: "object", properties: { product: { type: "string" }, origin_country: { type: "string" }, kind: { type: "string" } }, required: ["product"] } },
   { name: "supplier_contact", description: "Contact details the system holds for one supplier (email, phone, website, address, legal id). country: ISO3 as returned by search_suppliers.", input_schema: { type: "object", properties: { company: { type: "string" }, country: { type: "string" } }, required: ["company"] } },
   { name: "search_tenders", description: "Open tenders from the system, ranked by deal fit. words: English product words; country: ISO3 or empty.", input_schema: { type: "object", properties: { words: { type: "string" }, country: { type: "string" } }, required: ["words"] } },
+  { name: "search_winners", description: "Companies that recently WON a public contract, read as sales leads: winner, winner country, project country, contract title, value, date, kind (commodity = they must source that commodity now; contractor = works contract) and needs (what they probably have to buy; inferred from the title, a hypothesis until the winner confirms). words: free words (product, need, company); kind: commodity|contractor or empty; country: ISO3 or empty.", input_schema: { type: "object", properties: { words: { type: "string" }, kind: { type: "string" }, country: { type: "string" } } } },
   { name: "tender_routes", description: "Entry routes for one tender id (direct bid, manufacturer with Sinder as agent, local partner, sub-supply to the winner) with verdict, basis, assumptions, missing items and next action.", input_schema: { type: "object", properties: { tender_id: { type: "string" } }, required: ["tender_id"] } },
   { name: "deal_economics", description: "Indicative deal economics in USD: gross profit, financing cost on the negative cash balance (daily simple interest), net, peak funding and warnings. Days are counted from the order.", input_schema: { type: "object", properties: { sale_price: { type: "number" }, cost_goods: { type: "number" }, freight: { type: "number" }, other_costs: { type: "number" }, fin_rate_pct: { type: "number" }, supplier_pay_day: { type: "number" }, customer_pay_day: { type: "number" }, funding_limit: { type: "number" } }, required: ["sale_price", "cost_goods"] } },
   { name: "record", description: "Save a fact to this deal's records. kind requirement: {item, mandatory, status (met|not_met|unknown|missing), source_doc}. kind party: {role (supplier|buyer|partner|finance|logistics), name, country ISO3, email, phone, website, source, note}. kind quote: {supplier, product, qty, unit, unit_price, currency, incoterm, named_place, valid_until YYYY-MM-DD, availability (confirmed|unconfirmed), source_ref}.", input_schema: { type: "object", properties: { kind: { type: "string", enum: ["requirement", "party", "quote"] }, data: { type: "object" } }, required: ["kind", "data"] } },
@@ -91,6 +92,10 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
   if (name === "search_tenders") {
     const res = await searchTendersSmart(s("words", 160), s("country", 3).toUpperCase());
     return JSON.stringify({ total: res.rows.length, matched: res.how, tenders: res.rows.slice(0, 8).map((y) => ({ ...pick(y, ["id", "title_en", "title", "buyer", "country", "est_value_usd", "deadline", "access", "route", "fit", "link"]), open: y.id ? tenderUrl(y.id) : "" })) });
+  }
+  if (name === "search_winners") {
+    const res = await findWinners({ text: s("words", 120), kind: ["commodity", "contractor"].includes(s("kind")) ? s("kind") : "", country: s("country", 3), n: 12 });
+    return JSON.stringify({ as_of: res.at, total: res.total, note: "needs are inferred from the contract title: a hypothesis to confirm with the winner, not a fact", winners: res.rows.map((w) => ({ date: w.d, winner: w.w.join("; "), winner_country: w.wc, project_country: w.c, project: w.b, contract: w.t, value_usd: w.v, kind: w.k, needs: w.n, source: w.s, link: w.l })) });
   }
   if (name === "tender_routes") {
     const t = (await tenders()).find((y) => y.id === s("tender_id", 120));

@@ -93,3 +93,33 @@ export function facet<T>(rows: T[], get: (r: T) => string | undefined, limit = 3
 }
 
 export const words = (q: string) => q.toLowerCase().split(/[\s,]+/).map((w) => w.trim()).filter((w) => w.length > 1);
+
+// Fresh contract winners read as sales leads (leads/winners.py): who won, where, what they now have to buy.
+export type Winner = { d: string; w: string[]; wc: string; c: string; b: string; t: string; v: number; k: "commodity" | "contractor"; n: string[]; cm: string; s: string; l: string; id: string; sc: number; e?: string };
+export async function winners(): Promise<{ at: string; rows: Winner[]; error?: string }> {
+  const key = process.env.WEB_INDEX_KEY;
+  if (!key) return { at: "", rows: [], error: "WEB_INDEX_KEY is not configured" };
+  try {
+    return await load("winners.enc", (b) => {
+      const nonce = b.subarray(0, 12), tag = b.subarray(b.length - 16), body = b.subarray(12, b.length - 16);
+      const d = createDecipheriv("aes-256-gcm", Buffer.from(key, "base64"), nonce);
+      d.setAuthTag(tag);
+      return JSON.parse(gunzipSync(Buffer.concat([d.update(body), d.final()])).toString("utf-8")) as { at: string; rows: Winner[] };
+    });
+  } catch (e) {
+    return { at: "", rows: [], error: String(e).slice(0, 120) };
+  }
+}
+/** Winners filtered by free words (winner, country ISO3, need, title) and kind, best first. */
+export async function findWinners(q: { text?: string; kind?: string; country?: string; n?: number }) {
+  const all = await winners();
+  const words = (q.text || "").toLowerCase().split(/\s+/).filter((w) => w.length > 1);
+  const rows = all.rows.filter((r) => {
+    if (q.kind && r.k !== q.kind) return false;
+    if (q.country && r.c !== q.country.toUpperCase() && !r.wc.includes(q.country.toUpperCase())) return false;
+    if (!words.length) return true;
+    const hay = `${r.w.join(" ")} ${r.t} ${r.n.join(" ")} ${r.cm} ${r.b} ${r.c} ${r.wc}`.toLowerCase();
+    return words.every((w) => hay.includes(w));
+  });
+  return { at: all.at, total: rows.length, rows: rows.slice(0, q.n || 20), error: all.error };
+}
