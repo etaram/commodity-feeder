@@ -34,7 +34,7 @@ jobs:
           cp data/leads/coffee_sellers.csv /tmp/cs.csv; cp data/leads/coffee_sellers_state.json /tmp/cs.json; cp data/leads/uganda_directory.csv /tmp/ud.csv 2>/dev/null || true; mkdir -p /tmp/reg && cp data/leads/registry_*.csv /tmp/reg/ 2>/dev/null || true
           for i in 1 2 3 4; do
             git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/cs.csv data/leads/coffee_sellers.csv && cp /tmp/cs.json data/leads/coffee_sellers_state.json; cp /tmp/ud.csv data/leads/uganda_directory.csv 2>/dev/null || true; cp /tmp/reg/registry_*.csv data/leads/ 2>/dev/null || true
-            git add data/leads/coffee_sellers.csv data/leads/coffee_sellers_state.json; git add data/leads/uganda_directory.csv 2>/dev/null || true; git add data/leads/registry_*.csv 2>/dev/null || true; git diff --cached --quiet && break
+            git add data/leads/coffee_sellers.csv data/leads/coffee_sellers_state.json; git add data/leads/uganda_directory.csv 2>/dev/null || true; git add data/leads/registry_*.csv 2>/dev/null || true; python -m leads.coverage_board >/dev/null 2>&1 || true; git add data/leads/coverage_board.csv 2>/dev/null || true; git diff --cached --quiet && break
             git commit -q -m "coffee sellers: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
             sleep $((i * 8))
           done
