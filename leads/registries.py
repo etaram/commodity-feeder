@@ -4,6 +4,9 @@
              and e-mail (a public PDF linked from oncc.cm/exporters)
   nigeria    Nigerian Export Promotion Council: the "find your supplier" directory for importers (name, products, size,
              certifications, description)
+  pakistan   Rice Exporters Association of Pakistan member roll with each member's contact page
+  iran       Iran Pistachio Association member lists (exporters, growers, service providers)
+  vietnam    Vietnam Food Association member roll (rice exporters and millers)
 
 Each registry writes data/leads/registry_<country>.csv with the same columns, and leads/webindex.py puts the rows into the
 supplier index: an official registry entry is proof of licence or registration (tier 2), a promotion-council listing is
@@ -76,7 +79,98 @@ def nigeria():
     return out
 
 
-REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria}
+def _clean(h):
+    t = re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S))))
+    return t.replace("&#8211;", "-").replace("&#8217;", "'").replace("&amp;", "&").replace("&nbsp;", " ")
+
+
+def _previous(key):
+    f = LEADS / f"registry_{key}.csv"
+    return {r["supplier"]: r for r in csv.DictReader(open(f, encoding="utf-8"))} if f.exists() else {}
+
+
+def pakistan():
+    """Rice Exporters Association of Pakistan: the member roll (membership number, contact person, company), with the
+    member's detail page read for phone, e-mail and website; detail pages are fetched 150 per run and kept between runs."""
+    url = "https://www.reap.com.pk/memberProfile"
+    h = requests.get(url, headers=UA, timeout=60).text
+    prev = _previous("pakistan")
+    out, fetched = [], 0
+    for tr in re.findall(r"<tr.*?</tr>", h, flags=re.S):
+        c = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", x)).strip() for x in re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)]
+        link = re.search(r'href="(/memberDetails/\d+)"', tr)
+        if len(c) < 3 or not re.match(r"\d-\d-\d{2}-\d{4}", c[0]) or c[2].upper() == "REAP":
+            continue
+        company, person = _name(c[2]), _name(c[1]).replace("Mr. ", "").replace("Mrs. ", "")
+        r = prev.get(company) or {"supplier": company, "country": "PAK", "product": "rice (basmati and non-basmati)", "role": "exporter", "licence": f"REAP member {c[0]}",
+                                  "contact_person": person, "phone": "", "email": "", "website": "", "description": "Member of the Rice Exporters Association of Pakistan (the statutory exporters' body)",
+                                  "size": "", "certifications": "", "source": "Rice Exporters Association of Pakistan member roll", "source_url": url, "fetched": date.today().isoformat()}
+        if link and not (r["phone"] or r["email"]) and fetched < 150:
+            try:
+                d = requests.get("https://www.reap.com.pk" + link.group(1), headers=UA, timeout=30).text
+                fetched += 1
+                t = _clean(d)
+                em = re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", t)
+                ph = re.search(r"(\+92[\d\s-]{8,16}|0\d{2,3}[\s-]?\d{6,8})", t)
+                web = re.search(r"(?:www\.)[\w-]+\.[\w.-]+", t)
+                r["email"], r["phone"], r["website"] = (em.group(0) if em else ""), (ph.group(0).strip() if ph else ""), (web.group(0) if web and "reap" not in web.group(0) else "")
+                r["source_url"] = "https://www.reap.com.pk" + link.group(1)
+                r["fetched"] = date.today().isoformat()
+            except Exception:  # noqa: BLE001
+                pass
+        out.append(r)
+    return out
+
+
+def iran():
+    """Iran Pistachio Association member lists (exporters, growers, service providers): company, phone, e-mail, website.
+    The site pages further rows with a script, so each list's first page is what the association publishes to a reader."""
+    out = []
+    for cat, role in ((4, "exporter"), (1, "grower"), (5, "processor or service provider")):
+        url = f"https://iranpistachio.org/en/members/view/form/catid/{cat}?catid={cat}"
+        try:
+            h = requests.get(url, headers=UA, timeout=40).text
+        except Exception:  # noqa: BLE001
+            continue
+        for tr in re.findall(r"<tr.*?</tr>", h, flags=re.S):
+            c = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", x)).strip() for x in re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)]
+            if len(c) < 7 or c[0] == "Name":
+                continue
+            person, company, tel, _fax, mob, email, site = c[:7]
+            name = company or person
+            if not name:
+                continue
+            phone = ("+98 " + tel.lstrip("0")) if tel else (("+98 " + mob.lstrip("0")) if mob else "")
+            out.append({"supplier": name, "country": "IRN", "product": "pistachio", "role": role, "licence": "Iran Pistachio Association member", "contact_person": person if company else "",
+                        "phone": phone, "email": email if "@" in email else "", "website": site, "description": f"Iran Pistachio Association member ({role})", "size": "", "certifications": "",
+                        "source": "Iran Pistachio Association member list", "source_url": url, "fetched": date.today().isoformat()})
+    return out
+
+
+def vietnam():
+    """Vietnam Food Association member roll: the rice exporters, millers and food companies that make up the
+    association (banks and associate members marked with * are left out), grouped north / centre / south."""
+    url = "https://vietfood.org.vn/hoi-vien/danh-sach-hoi-vien/"
+    h = requests.get(url, headers=UA, timeout=60).text
+    m = re.search(r"<(main|article)", h)
+    t = _clean(h[m.start():] if m else h)
+    out, region = [], ""
+    for seg in [x.strip() for x in t.split("|")]:
+        if seg in ("MIỀN BẮC", "MIỀN TRUNG", "MIỀN NAM"):
+            region = {"MIỀN BẮC": "north", "MIỀN TRUNG": "central", "MIỀN NAM": "south"}[seg]
+            continue
+        if not region or len(seg) < 8 or seg.endswith("*") or not re.match(r"^(CTY|TỔNG CTY|CÔNG TY|TỔNG CÔNG TY|DNTN|HTX|LIÊN HIỆP)", seg):
+            continue
+        if seg.startswith("NGÂN HÀNG"):
+            continue
+        name = re.sub(r"\s+", " ", seg).title().replace("Cty ", "Cty ").replace("Tnhh", "TNHH").replace("Xnk", "XNK").replace("Mtv", "MTV")
+        out.append({"supplier": name, "country": "VNM", "product": "rice", "role": "exporter and miller", "licence": "Vietnam Food Association member", "contact_person": "", "phone": "", "email": "", "website": "",
+                    "description": f"Member of the Vietnam Food Association (rice exporters' association), {region} Vietnam", "size": "", "certifications": "",
+                    "source": "Vietnam Food Association member roll", "source_url": url, "fetched": date.today().isoformat()})
+    return out
+
+
+REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam}
 
 
 def main():

@@ -1243,11 +1243,42 @@ def oncc_cameroon():
     return out
 
 
+def vfa_rice():
+    """Vietnam Food Association export price board (the table the association shows on every page): FOB offer range in
+    USD per tonne for Vietnamese rice by type (5% broken fragrant, Jasmine, 25% broken...), alongside Thailand, India
+    and Pakistan where listed. Dated by the association's latest export-price bulletin."""
+    url = "https://vietfood.org.vn/thi-truong/gia-xuat-khau/"
+    h = get(url).text
+    m = re.search(r"<(main|article)", h)
+    body = h[m.start():] if m else h
+    dm = re.search(r"(\d{2})/(\d{2})/(\d{4})", re.sub(r"<[^>]+>", " ", body))
+    d = f"{dm.group(3)}-{dm.group(2)}-{dm.group(1)}" if dm else date.today().isoformat()
+    iso = {"Việt Nam": "VNM", "Thái Lan": "THA", "Ấn Độ": "IND", "Pakistan": "PAK", "Myanmar": "MMR", "Campuchia": "KHM"}
+    out, country = [], ""
+    for tr in re.findall(r"<tr.*?</tr>", h, flags=re.S):
+        c = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", x)).strip() for x in re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)]
+        if not c:
+            continue
+        if c[0] in iso:
+            country, c = c[0], c[1:]
+        if len(c) < 3 or not country:
+            continue
+        kind, lo, hi = c[0], num(c[1]), num(c[2])
+        if not lo or not hi:
+            continue
+        price = (lo + hi) / 2
+        en = kind.replace("Gạo thơm", "fragrant rice").replace("Gạo", "rice").replace("tấm", "broken").replace("trắng", "white").replace("nếp", "glutinous")
+        out.append(row("vfa", f"Rice, {en} - {country} FOB offer range (VFA)", "Rice", round(price, 1), "USD", "t", 1000, d, "Vietnam Food Association export price board", url,
+                       grade=f"{en} ({kind}); offers {lo:g}-{hi:g} USD/t", origin=iso[country], place=f"{country} FOB", incoterm="FOB", hs6="100630", kind="offer", tier="T2 Association",
+                       basis="exporters' FOB offer range reported by the association; midpoint shown"))
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon, vfa_rice]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc", "vfa_rice": "vfa"}
 
 
 # ---------------------------------------------------------------- build
@@ -1276,7 +1307,7 @@ def to_usd(r, rates):
 
 # monthly sources are dated by their month start and published about a month late
 ROTATING = {"ct_fob"}
-MAX_AGE = {"mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
+MAX_AGE = {"vfa": 45, "mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
 def finish(r, rates, fxsrc, today):
@@ -1362,7 +1393,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc", "vfa"}
     return need <= have
 
 
