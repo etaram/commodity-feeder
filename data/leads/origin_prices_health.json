@@ -94,10 +94,10 @@
   },
   "nce": {
    "rows": 2,
-   "fetched_now": false,
+   "fetched_now": true,
    "newest_date": "2026-11-03",
    "age_days": 7,
-   "status": "stale"
+   "status": "ok"
   },
   "forbes": {
    "rows": 4,
@@ -149,7 +149,7 @@
    "status": "ok"
   },
   "royal_eth": {
-   "rows": 40,
+   "rows": 60,
    "fetched_now": true,
    "newest_date": "2026-11-10",
    "age_days": 0,
