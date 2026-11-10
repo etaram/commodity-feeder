@@ -1036,7 +1036,8 @@ def cmb_quotes():
                 d = ""
         unit = re.search(r">(EUR|USD)(?:<!-- -->)?/(kg|t|mt)<", h)
         ccy, per = (unit.group(1), unit.group(2)) if unit else ("EUR", "kg")
-        commodity, hs = next(((c, x) for w, c, x in CMB_MAP if w in slug), (slug.replace("-", " ").title(), ""))
+        toks = slug.split("-")   # whole words of the slug, so "rice" does not catch "licorice" nor "corn" "peppercorn"
+        commodity, hs = next(((c, x) for w, c, x in CMB_MAP if any(tk.startswith(w) for tk in toks)), (slug.replace("-", " ").title(), ""))
         for m in re.finditer(r'<tr[^>]*>\s*<td[^>]*>\s*<a[^>]*>([^<]+)</a>\s*(?:<div[^>]*>([^<]*)</div>)?\s*</td>\s*<td[^>]*>\s*<span[^>]*>([^<]*)</span>\s*(?:<!-- -->)?\s*([^<·]+)·\s*([A-Z]{3})\s*</td>'
                              r'\s*<td[^>]*>\s*[€$]?\s*([\d.,]+)\s*</td>', h):
             name, spec, flag, place, inco, price = (html.unescape(m.group(1)).strip(), html.unescape(m.group(2) or "").strip(), m.group(3), html.unescape(m.group(4)).strip(), m.group(5), num(m.group(6).replace(",", "")))
