@@ -19,5 +19,5 @@ jobs:
       - name: commit
         run: |
           git config user.name "sinder-bot"; git config user.email "bot@sinder.pro"
-          git add data/leads/origin_prices.csv data/leads/origin_prices_health.json
+          git add data/leads/origin_prices.csv data/leads/origin_prices_health.json; git add data/leads/eth_exporters.csv data/leads/eth_buyers.csv 2>/dev/null || true
           git diff --cached --quiet || { git commit -qm "prices refresh"; git pull -q --rebase origin main && git push -q origin HEAD:main; }

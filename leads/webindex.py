@@ -144,6 +144,28 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             x["wb"] = r["website_basis"][:80]
         if x.get("n") and x.get("tr") in ("1", "2", "3"):  # proven (tier 1-2) and qualified (tier 3); tier 4 stays out
             out.append(x)
+    # Ethiopian coffee exporters with a recorded export volume (leads/eth_market.py: the Coffee and Tea Authority's export
+    # record): proven by an official record, so they rank as proven suppliers; marketplace-only sellers stay a listing
+    ee = LEADS / "eth_exporters.csv"
+    if ee.exists():
+        have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
+        n_ee = 0
+        for r in csv.DictReader(open(ee, encoding="utf-8")):
+            if not r["supplier"] or (r["supplier"].lower(), "ETH") in have:
+                continue
+            have.add((r["supplier"].lower(), "ETH"))
+            producer = re.search(r"farmers|coop|union|plantation|farm\b|estate|growers", r["supplier"], re.I)
+            if r["kind"] == "export record":
+                tons, val = float(r["tons"] or 0), float(r["value_usd"] or 0)
+                out.append({"n": r["supplier"][:CUT["n"]], "c": "ETH", "rg": "Africa", "tr": "2", "s": "Agriculture & food", "ty": "producer and exporter" if producer else "exporter",
+                            "p": f"Green coffee (Ethiopia): exported {tons:,.0f} t worth ${val / 1e6:,.1f}M in {r['year_ec']} E.C., average {r['avg_usd_kg']} USD/kg; rank {r['rank']} among Ethiopian coffee exporters"[:CUT["p"]],
+                            "hs": "0901", "x": "exporter (official export record)", "why": f"official export record: {tons:,.0f} t of coffee in {r['year_ec']} E.C.", "qv": 2})
+            else:
+                out.append({"n": r["supplier"][:CUT["n"]], "c": "ETH", "rg": "Africa", "tr": "3", "s": "Agriculture & food", "ty": "exporter",
+                            "p": f"Green coffee (Ethiopia), offers: {r['offers']}"[:CUT["p"]], "x": "exporter (marketplace listing)", "why": "lists coffee lots on a marketplace",
+                            "ds": "Ethiopian Export Market", "du": r["source_url"], "qv": 2})
+            n_ee += 1
+        log.info("web index: %d Ethiopian coffee exporters (official export record and marketplace)", n_ee)
     # origin exporters from trade directories (leads/origin_exporters.py): searchable, but a directory listing is the
     # company's own claim, so the app caps these at "plausible: check" and links the listing ("ds", "du")
     oe = PRIVATE / "origin_exporters.csv"

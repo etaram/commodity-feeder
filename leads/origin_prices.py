@@ -949,11 +949,41 @@ def wfp_local():
     return out
 
 
+def eem_ethiopia():
+    """Ethiopian coffee at the origin (leads/eth_market.py): FOB lots offered by exporters, by area, grade and process;
+    the average export price of the official export record (all exporters, and it also writes the exporter ranking
+    the supplier index reads); roasted coffee export prices by grade."""
+    from .eth_market import fetch, BASE
+    d = fetch()
+    out = []
+    for lot in d["lots"]:
+        out.append(row("eem", f"Coffee - Ethiopia {lot['lot']} (exporter offer, {lot['seller'][:30]})", "Coffee Arabica", lot["usd_t"], "USD", "t", 1000, lot["date"],
+                       "Ethiopian Export Market marketplace: exporter's own listing", BASE + "/marketplace",
+                       grade=f"{lot['origin_area']} Grade {lot['grade']} {lot['process']}: {lot['qty_t']:g} t offered, minimum {lot['min_t']:g} t, seller {lot['seller']}",
+                       origin="ETH", place="Ethiopia (Djibouti port)", incoterm=lot["incoterm"].split(" ")[0], hs6="090111", kind="offer", tier="T4 Marketplace listing",
+                       basis="an exporter's asking price on a marketplace (its own claim, not a concluded trade): confirm the lot and the exporter before relying on it"))
+    ex = d["exporters"]
+    if ex:
+        v, t = sum(e["value_usd"] for e in ex), sum(e["tons"] for e in ex)
+        ends = f"{int(d['year']) + 8}-07-07" if str(d["year"]).isdigit() else ""   # the Ethiopian year ends in early July
+        out.append(row("eem", f"Coffee - Ethiopia average export price, {d['year']} E.C. (official export record)", "Coffee Arabica", round(v / (t * 1000), 4), "USD", "kg", 1, ends,
+                       "Ethiopian Coffee and Tea Authority export record, as published by Ethiopian Export Market", BASE + "/insight",
+                       grade=f"all grades: {t:,.0f} t worth ${v / 1e6:,.0f}M by the {len(ex)} listed exporters, range {min(e['value_usd'] / e['tons'] / 1000 for e in ex):.2f}-{max(e['value_usd'] / e['tons'] / 1000 for e in ex):.2f} USD/kg by exporter",
+                       origin="ETH", place="Ethiopia, export", incoterm="FOB", hs6="090111", kind="index", tier="T1 Official statistics",
+                       basis="export value divided by tonnes over the whole Ethiopian year: the average of every grade, and a year old by now"))
+    for g, usd_t in d["roasted"]:
+        if usd_t:
+            out.append(row("eem", f"Roasted coffee - Ethiopia Grade {g} (export price)", "Coffee roasted", usd_t, "USD", "t", 1000, d["roasted_date"],
+                           "Ethiopian Coffee and Tea Authority, as published by Ethiopian Export Market", BASE + "/insight", grade=f"Roasted, Grade {g}", origin="ETH",
+                           place="Ethiopia, export", hs6="090121", kind="assessment", tier="T2 Regulator price list", basis="roasted coffee export price by grade, issued weekly"))
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem"}
 
 
 # ---------------------------------------------------------------- build
@@ -982,7 +1012,7 @@ def to_usd(r, rates):
 
 # monthly sources are dated by their month start and published about a month late
 ROTATING = {"ct_fob"}
-MAX_AGE = {"ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
+MAX_AGE = {"eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
 def finish(r, rates, fxsrc, today):
@@ -1068,7 +1098,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem"}
     return need <= have
 
 
