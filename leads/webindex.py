@@ -183,6 +183,29 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
                         "why": "has a seller profile on a green-coffee marketplace", "ds": "Algrano", "du": r["source_url"][:160], "qv": 2})
             n_cs += 1
         log.info("web index: %d coffee sellers from marketplace profiles", n_cs)
+    # Uganda's official Coffee and Cocoa Directory (leads/uganda_directory.py): co-operatives, farms, processors and
+    # exporters with their contacts; an official directory listing, to verify before relying on it
+    ud = LEADS / "uganda_directory.csv"
+    if ud.exists():
+        have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
+        n_ud = 0
+        for r in csv.DictReader(open(ud, encoding="utf-8")):
+            if not r["supplier"] or (r["supplier"].lower(), "UGA") in have:
+                continue
+            have.add((r["supplier"].lower(), "UGA"))
+            grows = re.search(r"cooperative|farm|producer|primary processor|processor", r["role"])
+            x = {"n": r["supplier"][:CUT["n"]], "c": "UGA", "rg": "Sub-Saharan Africa", "tr": "3", "s": "Agriculture & food", "ty": "producer" if grows else "trader",
+                 "td": "" if grows else "1", "p": f"{r['product'].title()} {r['role']} (Uganda, {r['location'][:40]}): {r['description']}"[:CUT["p"]],
+                 "hs": "0901" if r["product"] == "coffee" else "1801", "x": f"{r['product']} {r['role']} (official directory)", "why": "listed in Uganda's official coffee and cocoa directory",
+                 "ds": "UCDA Coffee and Cocoa Directory", "du": r["source_url"][:160], "qv": 2}
+            if r.get("website"):
+                x["web"] = r["website"][:CUT["web"]]
+            ct = "; ".join(v for v in (r.get("contact_person", ""), r.get("phone", ""), r.get("email", "")) if v)
+            if ct:
+                x["ct"] = ct[:160]   # the contact the directory prints for the organisation
+            out.append(x)
+            n_ud += 1
+        log.info("web index: %d Ugandan coffee and cocoa organisations from the official directory", n_ud)
     # origin exporters from trade directories (leads/origin_exporters.py): searchable, but a directory listing is the
     # company's own claim, so the app caps these at "plausible: check" and links the listing ("ds", "du")
     oe = PRIVATE / "origin_exporters.csv"
