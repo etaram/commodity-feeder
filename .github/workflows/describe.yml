@@ -49,7 +49,8 @@ jobs:
             ~/.local/share/argos-translate
             ~/.local/cache/argos-translate
             /tmp/fastembed_cache
-          key: describe-models-v1
+          key: describe-models-${{ github.run_id }}   # saved after every run, so a language model downloaded once stays
+          restore-keys: describe-models-
       - run: pip install -q requests fastembed argostranslate langid 2>&1 | tail -1
       - name: Describe
         run: python -m leads.describe --minutes ${{ inputs.minutes || '26' }} 2>&1 | tail -3

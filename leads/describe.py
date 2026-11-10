@@ -229,7 +229,13 @@ def build(recs, checks, minutes=20, limit=0, embedder=None, translate=True):
         raw = f"{desc} {' '.join(prods)}"
         hot = 0 if tags(raw) else 1   # commodity-related companies first
         todo.append((hot, key, ck, desc, prods, h))
-    todo.sort(key=lambda x: (x[0], x[1]))
+    # one language at a time, the most common first (English needs no model): a batch of mixed rare languages spent its
+    # time downloading and loading translation models (run 2: 800 companies in 38 minutes)
+    lang_of = {key: detect(f"{desc} {' '.join(prods)}"[:300]) for _, key, _, desc, prods, _ in todo}
+    freq = {}
+    for v in lang_of.values():
+        freq[v] = freq.get(v, 0) + 1
+    todo.sort(key=lambda x: (x[0], 0 if lang_of[x[1]] == "en" else 1, -freq[lang_of[x[1]]], lang_of[x[1]], x[1]))
     if limit:
         todo = todo[:limit]
     budget = minutes * 60
@@ -238,7 +244,7 @@ def build(recs, checks, minutes=20, limit=0, embedder=None, translate=True):
         if time.time() - t0 > budget * 0.9:
             break
         batch = todo[b:b + 400]
-        langs = {key: detect(f"{desc} {' '.join(prods)}"[:300]) for _, key, _, desc, prods, _ in batch}
+        langs = {key: lang_of[key] for _, key, _, _, _, _ in batch}
         tr, tried, nomodel = {}, set(), set()
         if translate:
             items = [(key, langs[key], ([desc] if desc else []) + prods[:6]) for _, key, _, desc, prods, _ in batch if langs[key] != "en"]
