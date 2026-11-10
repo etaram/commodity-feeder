@@ -1243,41 +1243,11 @@ def oncc_cameroon():
     return out
 
 
-def naeb_rwanda():
-    """Rwanda's National Agricultural Export Development Board (NAEB) home banner: the week's agri-export revenue and
-    tonnage, broken down per crop (coffee, tea, horticulture...). Revenue divided by tonnes gives the week's average
-    realised export value per kg at the origin, an official number on the board's own site."""
-    h = get("https://www.naeb.gov.rw/").text
-    t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S)))
-    m = re.search(r"data for (\d{1,2})-(\d{1,2})/(\d{1,2})/(\d{4})", t)
-    if not m:
-        return []
-    d = date(int(m.group(4)), int(m.group(3)), int(m.group(2))).isoformat()
-    seg = t[m.end():m.end() + 1500]
-    usd, tons = {}, {}
-    for part in re.split(r"Details in ", seg)[1:]:
-        head = part[:30].lower()
-        vals = dict(re.findall(r"([A-Z][A-Za-z ]+?)\s*:\s*([\d,\.]+)", part.split("Details")[0]))
-        if "usd" in head or "$" in head:
-            usd = vals
-        elif "ton" in head or "mt" in head or "kg" in head:
-            tons = vals
-    names = {"Coffee": ("Coffee Arabica", "090111", "Rwanda, washed arabica, all grades exported in the week"), "Tea": ("Tea", "090240", "Rwanda, made tea exported in the week")}
-    out = []
-    for k, (cm, hs, grade) in names.items():
-        u, q = num(usd.get(k, "")), num(tons.get(k, ""))
-        if u and q and q > 0:
-            out.append(row("naeb", f"{k} - Rwanda weekly export value (NAEB)", cm, round(u / q / 1000, 3), "USD", "kg", 1, d, "NAEB Rwanda weekly agri-export data (revenue and tonnage)",
-                           "https://www.naeb.gov.rw/", grade=grade, origin="RWA", place="Rwanda, exports of the week", hs6=hs, kind="export unit value", tier="T1 Official",
-                           basis="week's export revenue divided by tonnes shipped; an average realised export value, not a quoted FOB offer"))
-    return out
-
-
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon, naeb_rwanda]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc", "naeb_rwanda": "naeb"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc"}
 
 
 # ---------------------------------------------------------------- build
@@ -1306,7 +1276,7 @@ def to_usd(r, rates):
 
 # monthly sources are dated by their month start and published about a month late
 ROTATING = {"ct_fob"}
-MAX_AGE = {"naeb": 30, "mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
+MAX_AGE = {"mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
 def finish(r, rates, fxsrc, today):
@@ -1392,7 +1362,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc", "naeb"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc"}
     return need <= have
 
 
