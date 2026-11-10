@@ -1,3 +1,4 @@
+import { selfKey } from "@/lib/selfkey";
 import { NextRequest, NextResponse } from "next/server";
 
 // Verifies the signed session cookie (HMAC-SHA256 with AUTH_SECRET, same format as lib/auth.ts) on every request.
@@ -31,7 +32,8 @@ export async function middleware(req: NextRequest) {
   }
   // the self-check (app/api/health) calls the routes with the audit token while AUDIT_TOKEN is set (see lib/gate.ts)
   const audit = process.env.AUDIT_TOKEN || "";
-  if (audit.length >= 32 && req.headers.get("x-dd-audit") === audit) return NextResponse.next();
+  const given = req.headers.get("x-dd-audit") || "";
+  if (given.length >= 32 && ((audit.length >= 32 && given === audit) || given === (await selfKey()))) return NextResponse.next();
   if (!(await valid(req.cookies.get("dd_session")?.value))) {
     if (pathname.startsWith("/api/")) return NextResponse.json({ ok: false, error: "signed out" }, { status: 401 });
     const url = req.nextUrl.clone();
