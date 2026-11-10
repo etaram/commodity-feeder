@@ -729,7 +729,7 @@ def royal_ethiopia():
         ps = sorted(g["prices"]); mid = ps[len(ps) // 2]
         out.append(row("royal_eth", f"Coffee - {name[:80]}", "Coffee Arabica", round(mid, 3), "USD", "kg", 1, g["date"],
                        "Royal Coffee (US importer) public spot offer list", f"https://royalcoffee.com/products/{g['handle']}",
-                       grade=f"{name[:70]}: {len(ps)} lots, {ps[0]:.2f}-{ps[-1]:.2f} USD/kg, {g['spot']} in stock (60 kg bags)", origin="ETH",
+                       grade=f"{name[:70]}: {len(ps)} lots, {ps[0]:.2f}-{ps[-1]:.2f} USD/kg, {g['spot']} in stock (trade packs)", origin="ETH",
                        place="US importer warehouse", hs6="090111", kind="offer", tier="T3 Importer offer list",
                        basis="median of the importer's published offers for this grade, landed in its warehouse: freight, import cost and margin included; not an FOB origin price"))
     return sorted(out, key=lambda x: x["commodity"])[:60]
