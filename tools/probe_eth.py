@@ -4,38 +4,6 @@ import re, requests, io
 from urllib import robotparser
 UA = {"User-Agent": "Mozilla/5.0 (compatible; SinderLeads/1.0; +https://desk.sinder.pro)"}
 CANDIDATES = [
-    # Latin America coffee/cocoa boards
-    ("ihcafe", "https://www.ihcafe.hn/precios/"),
-    ("anacafe", "https://www.anacafe.org/precios-del-cafe/"),
-    ("icafe", "https://www.icafe.cr/sector-cafetalero/precios/"),
-    ("icafe_liq", "https://www.icafe.cr/wp-content/uploads/informacion_mercado/precios/"),
-    ("csc_sv", "https://www.csc.gob.sv/precios/"),
-    ("fnc", "https://federaciondecafeteros.org/wp/estadisticas-cafeteras/"),
-    ("fnc_precio", "https://federaciondecafeteros.org/wp/precio-del-cafe/"),
-    ("anecacao", "https://anecacao.com/precio-referencial/"),
-    ("anecacao2", "https://www.anecacao.com/index.php/es/precios.html"),
-    ("midagri_sisap", "https://sistemas.midagri.gob.pe/sisap/"),
-    ("midagri_precios", "https://www.gob.pe/institucion/midagri/informes-publicaciones?term=precios"),
-    ("bcr_pizarra", "https://www.bcr.com.ar/es/mercados/mercado-de-granos/cotizaciones/cotizaciones-locales-0"),
-    ("bolsa_cereales", "https://www.bolsadecereales.com/precios-pizarra"),
-    ("conab", "https://www.conab.gov.br/info-agro/precos"),
-    ("cepea_cafe", "https://www.cepea.org.br/br/indicador/cafe.aspx"),
-    ("odepa", "https://www.odepa.gob.cl/precios"),
-    ("inia_uy", "https://www.mgap.gub.uy/unidad-organizativa/oficina-de-programacion-y-politicas-agropecuarias/precios"),
-    # Africa
-    ("cocobod", "https://cocobod.gh/"),
-    ("ccc_ci", "https://www.conseilcafecacao.ci/"),
-    ("naeb", "https://naeb.gov.rw/"),
-    ("afa_ke", "https://www.afa.go.ke/"),
-    ("nce_ke", "https://nairobicoffeeexchange.co.ke/"),
-    ("ucda_rep", "https://ugandacoffee.go.ug/resources/reports"),
-    ("zamace", "https://www.zamace.co.zm/"),
-    ("ahcx", "https://ahcx.mw/"),
-    ("bmm_mz", "https://www.bmm.co.mz/"),
-    ("gum_sudan", "https://www.gumarabic.sd/"),
-    ("sesame_eth", "https://www.ecx.com.et/"),
-    ("ethiopia_eta", "https://ethiopiancoffee.gov.et/"),
-    ("nigeria_nepc", "https://nepc.gov.ng/exporters-directory/"),
     ("tanzania_tcb", "https://www.coffeeboard.or.tz/"),
     ("tcb_auction", "https://www.coffeeboard.or.tz/auction-results/"),
     ("tzcashew", "https://www.cashew.go.tz/"),
@@ -82,11 +50,16 @@ def robots_ok(url):
 for name, url in CANDIDATES:
     try:
         ok = robots_ok(url)
-        r = requests.get(url, headers=UA, timeout=25, allow_redirects=True)
-        txt = re.sub(r"<script.*?</script>|<style.*?</style>", " ", r.text, flags=re.S)
+        r = requests.get(url, headers=UA, timeout=(10, 20), allow_redirects=True, stream=True)
+        body = b""
+        for chunk in r.iter_content(65536):
+            body += chunk
+            if len(body) > 3_000_000: break
+        r.close(); text = body.decode(r.encoding or "utf-8", "replace")
+        txt = re.sub(r"<script.*?</script>|<style.*?</style>", " ", text, flags=re.S)
         txt = re.sub(r"<[^>]+>", " ", txt); txt = re.sub(r"\s+", " ", txt)
         nums = len(re.findall(r"\b\d{2,5}[.,]\d{1,2}\b", txt))
-        print(f"{name:14} {r.status_code} robots={ok} len={len(r.content):7} nums={nums:4} {r.url[:70]}")
+        print(f"{name:14} {r.status_code} robots={ok} len={len(body):7} nums={nums:4} {r.url[:70]}")
         print("   ", txt[:260])
     except Exception as e:
         print(f"{name:14} ERR {type(e).__name__}: {str(e)[:120]}")
