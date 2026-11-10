@@ -1,0 +1,32 @@
+name: coffee-sellers
+# Coffee producers, cooperatives and exporters from public marketplace seller profiles (leads/coffee_sellers.py).
+# A few hundred profiles a run, resumes where it stopped. Public profile facts only.
+on:
+  schedule:
+    - cron: "35 */2 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: coffee-sellers
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q requests pycountry
+      - run: python -m leads.coffee_sellers --max 500 --minutes 14 2>&1 | tail -3
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
+          cp data/leads/coffee_sellers.csv /tmp/cs.csv; cp data/leads/coffee_sellers_state.json /tmp/cs.json
+          for i in 1 2 3 4; do
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/cs.csv data/leads/coffee_sellers.csv && cp /tmp/cs.json data/leads/coffee_sellers_state.json
+            git add data/leads/coffee_sellers.csv data/leads/coffee_sellers_state.json; git diff --cached --quiet && break
+            git commit -q -m "coffee sellers: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
+            sleep $((i * 8))
+          done

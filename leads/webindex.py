@@ -166,6 +166,23 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
                             "ds": "Ethiopian Export Market", "du": r["source_url"], "qv": 2})
             n_ee += 1
         log.info("web index: %d Ethiopian coffee exporters (official export record and marketplace)", n_ee)
+    # coffee producers, cooperatives and exporters by origin (leads/coffee_sellers.py: public marketplace seller profiles):
+    # the seller's own statement, shown as a directory listing to check
+    cs = LEADS / "coffee_sellers.csv"
+    if cs.exists():
+        from .regions import region as _region
+        have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
+        n_cs = 0
+        for r in csv.DictReader(open(cs, encoding="utf-8")):
+            if not r["supplier"] or not r["country"] or (r["supplier"].lower(), r["country"]) in have:
+                continue
+            have.add((r["supplier"].lower(), r["country"]))
+            out.append({"n": r["supplier"][:CUT["n"]], "c": r["country"], "rg": _region(r["country"]) or "", "tr": "3", "s": "Agriculture & food",
+                        "ty": "producer" if r["role"] == "producer" else "trader", "td": "" if r["role"] == "producer" else "1",
+                        "p": f"Green coffee ({r['country_name']}): {r['kinds']}. {r['about']}"[:CUT["p"]], "hs": "0901", "x": "coffee seller (marketplace profile)",
+                        "why": "has a seller profile on a green-coffee marketplace", "ds": "Algrano", "du": r["source_url"][:160], "qv": 2})
+            n_cs += 1
+        log.info("web index: %d coffee sellers from marketplace profiles", n_cs)
     # origin exporters from trade directories (leads/origin_exporters.py): searchable, but a directory listing is the
     # company's own claim, so the app caps these at "plausible: check" and links the listing ("ds", "du")
     oe = PRIVATE / "origin_exporters.csv"
