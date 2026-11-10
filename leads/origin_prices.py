@@ -735,11 +735,205 @@ def royal_ethiopia():
     return sorted(out, key=lambda x: x["commodity"])[:60]
 
 
+# ---------------------------------------------------------------- official origin layers (all commodities)
+# One list of traded commodities with their customs code; three official layers price each of them at the origin:
+#   comtrade_fob   what the origin's own customs recorded on export: value / weight = FOB at the origin (UN Comtrade, monthly)
+#   comext_cif     what EU customs recorded on import from that origin: CIF at the EU border (Eurostat Comext, monthly)
+#   wfp_local      what the commodity costs on markets inside the origin country (WFP market monitoring, monthly)
+# A unit value is an average over every grade shipped that month, so it is the level of the market, not a quote for
+# one grade; each row states the tonnes behind it, and thin flows (under 25 t) are left out.
+TRADED = [("Coffee Arabica", "Coffee, green", "090111"), ("Rice", "Rice, milled", "100630"), ("Sesame seed", "Sesame seed", "120740"), ("Cocoa beans", "Cocoa beans", "180100"),
+          ("Tea", "Black tea, bulk", "090240"), ("Sugar", "Raw cane sugar", "170114"), ("Sugar", "Refined sugar", "170199"), ("Wheat", "Wheat", "100199"), ("Maize", "Maize", "100590"),
+          ("Soybeans", "Soybeans", "120190"), ("Palm oil", "Crude palm oil", "151110"), ("Sunflower oil", "Crude sunflower oil", "151211"), ("Cashew", "Cashew in shell", "080131"),
+          ("Cashew", "Cashew kernels", "080132"), ("Pepper", "Black pepper", "090411"), ("Spices", "Cardamom", "090831"), ("Spices", "Cloves", "090710"), ("Spices", "Vanilla", "090510"),
+          ("Spices", "Ginger", "091011"), ("Cotton", "Cotton lint", "520100"), ("Natural rubber", "Natural rubber TSNR", "400122"), ("Urea", "Urea", "310210"), ("Fertilizer", "DAP", "310530"),
+          ("Fertilizer", "Potash (KCl)", "310420"), ("Sulphur", "Sulphur", "250300"), ("Cement", "Portland cement", "252329"), ("Steel", "Rebar", "721420"), ("Copper", "Copper cathodes", "740311"),
+          ("Aluminium", "Aluminium, unwrought", "760110"), ("Fish", "Frozen skipjack tuna", "030343"), ("Fish", "Frozen shrimp", "030617"), ("Meat", "Frozen boneless beef", "020230"),
+          ("Meat", "Frozen chicken cuts", "020714"), ("Dairy products", "Whole milk powder", "040221"), ("Pulses", "Lentils", "071340"), ("Pulses", "Chickpeas", "071320"),
+          ("Nuts", "Almonds, shelled", "080212"), ("Nuts", "Groundnuts, shelled", "120242"), ("Fruit", "Dates", "080410"), ("Fruit", "Avocados", "080440"), ("Gum arabic", "Gum arabic", "130120"),
+          ("Flowers", "Cut roses", "060311"), ("Honey", "Natural honey", "040900"), ("Cocoa products", "Cocoa butter", "180400")]
+ORIGIN_REPORTERS = {"BRA": 76, "COL": 170, "VNM": 704, "IDN": 360, "IND": 356, "THA": 764, "PAK": 586, "KEN": 404, "UGA": 800, "TZA": 834, "ETH": 231, "RWA": 646, "CIV": 384,
+                    "GHA": 288, "NGA": 566, "ECU": 218, "PER": 604, "GTM": 320, "HND": 340, "MEX": 484, "ARG": 32, "URY": 858, "PRY": 600, "ZAF": 710, "EGY": 818, "MAR": 504,
+                    "TUR": 792, "UKR": 804, "KAZ": 398, "MYS": 458, "PHL": 608, "LKA": 144, "MMR": 104, "KHM": 116, "AUS": 36, "NZL": 554, "CAN": 124, "CHL": 152, "SDN": 729,
+                    "BFA": 854, "MLI": 466, "SEN": 686, "CMR": 120, "MOZ": 508, "MDG": 450, "ZMB": 894, "BEN": 204}
+
+
+def _last_months(n, lag=2):
+    y, m = date.today().year, date.today().month
+    out = []
+    for i in range(lag, lag + n):
+        mm, yy = m - i, y
+        while mm <= 0:
+            mm += 12; yy -= 1
+        out.append((yy, mm))
+    return out
+
+
+def comtrade_fob():
+    """FOB at the origin from the origin's own export declarations (UN Comtrade public preview, monthly; no key).
+    One request per origin for the last months and every listed code; the API allows about one request a second."""
+    import time as _t
+    periods = ",".join(f"{y}{m:02d}" for y, m in _last_months(5))
+    label = {hs: (c, n) for c, n, hs in TRADED}
+    out, skipped = [], 0
+    t0 = _t.time()
+    for iso, rep in ORIGIN_REPORTERS.items():
+        if _t.time() - t0 > 420:
+            break
+        try:
+            r = requests.get("https://comtradeapi.un.org/public/v1/preview/C/M/HS", params={"reporterCode": rep, "cmdCode": ",".join(label), "flowCode": "X", "period": periods,
+                             "partnerCode": 0, "customsCode": "C00", "motCode": 0}, headers=UA, timeout=60)
+            if r.status_code == 429:
+                _t.sleep(6); r = requests.get(r.url, headers=UA, timeout=60)
+            data = r.json().get("data", []) if r.status_code == 200 else []
+        except Exception as e:  # noqa: BLE001
+            log.warning("comtrade fob %s: %s", iso, str(e)[:100]); data = []
+        agg = {}
+        for d in data:
+            if d.get("partnerCode") not in (0, None) or d.get("partner2Code") not in (0, None):
+                continue
+            kg = d.get("netWgt") or (d.get("qty") if d.get("qtyUnitCode") == 8 else 0) or 0
+            v = d.get("primaryValue") or d.get("fobvalue") or 0
+            if kg <= 0 or v <= 0:
+                skipped += 1; continue
+            a = agg.setdefault(str(d.get("cmdCode")), {"v": 0, "kg": 0, "p": []})
+            a["v"] += v; a["kg"] += kg; a["p"].append(str(d.get("period")))
+        for hs, a in agg.items():
+            uv = a["v"] / a["kg"]
+            if hs not in label or a["kg"] < 25000 or not (0.02 < uv < 500):
+                continue
+            last = max(a["p"])
+            out.append(row("ct_fob", f"{label[hs][1]} - FOB {iso} (origin customs, exports)", label[hs][0], round(uv, 4), "USD", "kg", 1, f"{last[:4]}-{last[4:6]}-01",
+                           "UN Comtrade: the origin country's own export declarations", "https://comtradeplus.un.org/", grade=f"{label[hs][1]}, all grades: {a['kg'] / 1000:,.0f} t in {len(set(a['p']))} months",
+                           origin=iso, place=f"{iso}, FOB", incoterm="FOB", hs6=hs, kind="index", tier="T1 Official statistics",
+                           basis="export value divided by net weight over the months stated: the average of every grade shipped, not a quote for one grade"))
+        _t.sleep(1.6)
+    log.info("comtrade fob: %d rows, %d records without weight", len(out), skipped)
+    return out
+
+
+def _jsonstat(j):
+    """Eurostat JSON-stat -> list of ({dimension: category id}, value)."""
+    ids, size = j.get("id") or [], j.get("size") or []
+    cats = [sorted(j["dimension"][d]["category"]["index"].items(), key=lambda x: x[1]) for d in ids]
+    out = []
+    for k, v in (j.get("value") or {}).items():
+        n, pos = int(k), []
+        for sz in reversed(size):
+            pos.append(n % sz); n //= sz
+        pos.reverse()
+        out.append(({d: cats[i][pos[i]][0] for i, d in enumerate(ids)}, v))
+    return out
+
+
+def comext_cif():
+    """CIF at the EU border by origin, from EU customs (Eurostat Comext, monthly, no key): the price the EU actually
+    paid each origin, which bounds the origin's FOB from above by the sea freight."""
+    try:
+        import pycountry
+        iso3 = {c.alpha_2: c.alpha_3 for c in pycountry.countries}
+    except Exception:  # noqa: BLE001
+        iso3 = {}
+    out = []
+    for commodity, name, hs in TRADED:
+        try:
+            j = get("https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/ds-045409?freq=M&reporter=EU27_2020&flow=1"
+                    f"&product={hs}&indicators=VALUE_IN_EUROS&indicators=QUANTITY_IN_100KG&lastTimePeriod=3&format=JSON").json()
+        except Exception as e:  # noqa: BLE001
+            log.warning("comext %s: %s", hs, str(e)[:100]); continue
+        agg, months = {}, set()
+        for dims, v in _jsonstat(j):
+            p = dims.get("partner", "")
+            if len(p) != 2 or not v:
+                continue
+            a = agg.setdefault(p, {"eur": 0, "kg": 0})
+            if "VALUE" in dims.get("indicators", ""):
+                a["eur"] += v
+            elif "QUANTITY" in dims.get("indicators", ""):
+                a["kg"] += v * 100
+            months.add(dims.get("time", ""))
+        last = max(months) if months else ""
+        ranked = sorted(((p, a) for p, a in agg.items() if a["kg"] >= 25000 and a["eur"] > 0 and p in iso3 and iso3[p] not in EU27), key=lambda x: -x[1]["kg"])[:10]
+        for p, a in ranked:
+            uv = a["eur"] / a["kg"]
+            if not (0.02 < uv < 500):
+                continue
+            out.append(row("eu_cif", f"{name} - EU import price from {iso3[p]} (CIF EU border)", commodity, round(uv, 4), "EUR", "kg", 1, f"{last[:7]}-01" if last else "",
+                           "Eurostat Comext: EU customs import declarations by origin", "https://ec.europa.eu/eurostat/comext/newxtweb/", grade=f"{name}, all grades: {a['kg'] / 1000:,.0f} t in {len(months)} months",
+                           origin=iso3[p], place="EU border", incoterm="CIF", hs6=hs, kind="index", tier="T1 Official statistics",
+                           basis="import value divided by weight over the months stated: freight and insurance to the EU included; the average of every grade shipped"))
+    return out
+
+
+EU27 = {"AUT", "BEL", "BGR", "HRV", "CYP", "CZE", "DNK", "EST", "FIN", "FRA", "DEU", "GRC", "HUN", "IRL", "ITA", "LVA", "LTU", "LUX", "MLT", "NLD", "POL", "PRT", "ROU", "SVK", "SVN", "ESP", "SWE"}
+WFP_NAMES = {"coffee": "Coffee Arabica", "sesame": "Sesame seed", "rice": "Rice", "maize": "Maize", "wheat": "Wheat", "sugar": "Sugar", "lentils": "Pulses", "chickpeas": "Pulses",
+             "groundnuts": "Nuts", "cashew": "Cashew", "cocoa": "Cocoa beans", "tea": "Tea", "soybeans": "Soybeans", "sorghum": "Sorghum", "beans": "Pulses", "cotton": "Cotton",
+             "oil (palm)": "Palm oil", "oil (sunflower)": "Sunflower oil", "niger seed": "Oilseeds", "lin seed": "Oilseeds", "honey": "Honey", "cowpeas": "Pulses", "millet": "Millet"}
+WFP_COUNTRIES = {"ETH": "ethiopia", "KEN": "kenya", "UGA": "uganda", "TZA": "united-republic-of-tanzania", "RWA": "rwanda", "SDN": "sudan", "NGA": "nigeria", "GHA": "ghana",
+                 "CIV": "cote-d-ivoire", "BFA": "burkina-faso", "MLI": "mali", "SEN": "senegal", "MOZ": "mozambique", "ZMB": "zambia", "MWI": "malawi", "CMR": "cameroon",
+                 "IND": "india", "PAK": "pakistan", "MMR": "myanmar", "KHM": "cambodia", "IDN": "indonesia", "PHL": "philippines", "LKA": "sri-lanka", "COL": "colombia",
+                 "GTM": "guatemala", "HND": "honduras", "EGY": "egypt", "TUR": "turkiye", "UKR": "ukraine", "KAZ": "kazakhstan"}
+
+
+def wfp_local():
+    """Prices on markets inside the origin country (WFP market monitoring, published on HDX; monthly, in USD): the median
+    of the country's monitored markets over the last months. Wholesale where WFP records it, else retail (stated). This
+    is the domestic level a local buyer pays, below the export price by the cost of cleaning, grading and getting to port."""
+    import statistics
+    out = []
+    for iso, slug in WFP_COUNTRIES.items():
+        try:
+            pk = get(f"https://data.humdata.org/api/3/action/package_show?id=wfp-food-prices-for-{slug}").json()["result"]
+            url = next(x["url"] for x in pk["resources"] if "food_prices" in x["url"] or "Food Prices" in x.get("name", ""))
+            rows_ = list(csv.DictReader(io.StringIO(get(url).content.decode("utf-8", "replace"))))
+        except Exception as e:  # noqa: BLE001
+            log.warning("wfp %s: %s", iso, str(e)[:100]); continue
+        dated = [x for x in rows_ if re.match(r"\d{4}-\d{2}", x.get("date", ""))]
+        if not dated:
+            continue
+        last = max(x["date"] for x in dated)
+        y, m = int(last[:4]), int(last[5:7])
+        cut = f"{y if m > 3 else y - 1}-{(m - 3) if m > 3 else m + 9:02d}"
+        g = {}
+        for x in dated:
+            if x["date"][:7] <= cut:
+                continue
+            base = re.sub(r"\s*\(.*", "", x.get("commodity", "")).strip().lower()
+            key_ = x.get("commodity", "").strip().lower() if x.get("commodity", "").strip().lower() in WFP_NAMES else base
+            if key_ not in WFP_NAMES:
+                continue
+            um = re.match(r"\s*([\d.]*)\s*(kg|g|l|mt)\b", x.get("unit", "").lower())
+            usd = num(x.get("usdprice") or "")
+            if not um or not usd:
+                continue
+            kg = (float(um.group(1)) if um.group(1) else 1) * {"kg": 1, "g": 0.001, "l": 1, "mt": 1000}[um.group(2)]
+            if kg <= 0:
+                continue
+            g.setdefault((x.get("commodity", "").strip(), x.get("pricetype", "").strip() or "Retail", key_), []).append((usd / kg, x.get("market", ""), x["date"]))
+        best = {}
+        for (com, ptype, key_), vals in g.items():   # wholesale outranks retail for the same commodity
+            if com not in best or (ptype.lower() == "wholesale" and best[com][0].lower() != "wholesale"):
+                best[com] = (ptype, key_, vals)
+        for com, (ptype, key_, vals) in best.items():
+            prices = [v[0] for v in vals]
+            if len(prices) < 3:
+                continue
+            med = statistics.median(prices)
+            if not (0.01 < med < 500):
+                continue
+            out.append(row("wfp", f"{com} - {iso} local markets ({ptype.lower()})", WFP_NAMES[key_], round(med, 4), "USD", "kg", 1, max(v[2] for v in vals)[:10],
+                           "WFP market price monitoring (HDX)", f"https://data.humdata.org/dataset/wfp-food-prices-for-{slug}",
+                           grade=f"{com}, {ptype.lower()}: median of {len(prices)} quotes on {len({v[1] for v in vals})} markets, range {min(prices):.2f}-{max(prices):.2f} USD/kg",
+                           origin=iso, place=f"{iso}, domestic markets", hs6="", kind="spot", tier="T2 UN market monitoring",
+                           basis=f"domestic {ptype.lower()} price inside the origin country, not an export price"))
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp"}
 
 
 # ---------------------------------------------------------------- build
@@ -767,7 +961,7 @@ def to_usd(r, rates):
 
 
 # monthly sources are dated by their month start and published about a month late
-MAX_AGE = {"ahdb": 70, "wbpink": 70}
+MAX_AGE = {"ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
 def finish(r, rates, fxsrc, today):
@@ -849,7 +1043,8 @@ def complete():
     if not OUT.exists():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
-    need = set(KEYS.values()) - (set() if os.environ.get("EXA_API_KEY") else {"exa_eth"})   # the Exa source exists only with its key
+    # sources that may legitimately return nothing on a given day never force a refresh
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth"}
     return need <= have
 
 
