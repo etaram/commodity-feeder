@@ -8,6 +8,8 @@
   iran       Iran Pistachio Association member lists (exporters, growers, service providers)
   vietnam    Vietnam Food Association member roll (rice exporters and millers)
   paraguay   CAPECO (grain and oilseed exporters' chamber) member list with contacts
+  south_africa  FPEF fresh produce exporter members (contact, phone, website, commodities)
+  brazil     CECAFE coffee exporters' council member list
 
 Each registry writes data/leads/registry_<country>.csv with the same columns, and leads/webindex.py puts the rows into the
 supplier index: an official registry entry is proof of licence or registration (tier 2), a promotion-council listing is
@@ -212,7 +214,56 @@ def paraguay():
     return out
 
 
-REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay}
+def south_africa():
+    """Fresh Produce Exporters' Forum (FPEF), South Africa: the extensive exporter member list with contact person,
+    telephone, website and the commodities each member exports (the site masks e-mail addresses)."""
+    url = "https://www.fpef.co.za/exportermembersextensivelist"
+    h = requests.get(url, headers=UA, timeout=90).text
+    t = _clean(h)
+    out = []
+    for m in re.finditer(r"\| ([^|]{2,60}?) \| Contact person: \| ([^|]*?) \| Telephone: \| ([^|]*?) \| E-mail: \| [^|]*\| Website: \| ([^|]*?) \| Commodities: \| ([^|]*?) \|", t):
+        name, person, tel, web, comm = (x.strip() for x in m.groups())
+        if name.lower().startswith(("exporter members", "search")):
+            continue
+        web = "" if "8203" in web or len(web) < 5 else web
+        out.append({"supplier": name, "country": "ZAF", "product": comm.lower() or "fresh fruit", "role": "exporter", "licence": "FPEF exporter member", "contact_person": person,
+                    "phone": tel if tel.startswith("+") else "", "email": "", "website": web, "description": f"Fresh produce exporter, FPEF member; exports {comm.lower()}", "size": "", "certifications": "",
+                    "source": "Fresh Produce Exporters' Forum member list", "source_url": url, "fetched": date.today().isoformat()})
+    return out
+
+
+def brazil():
+    """CECAFE, the Brazilian coffee exporters' council: the member list (exporters, cooperatives, warehouses and the
+    regional coffee trade centres); names only, as published."""
+    url = "https://www.cecafe.com.br/conheca-o-cecafe/associados/"
+    h = requests.get(url, headers=UA, timeout=90).text
+    t = _clean(h)
+    i = t.find("| Associados | Associados |")
+    seg = t[i + 27:] if i >= 0 else t
+    out = []
+    for x in [y.strip() for y in seg.split("|")]:
+        if not x or len(x) < 6:
+            continue
+        if x.lower().startswith(("links úteis", "como se associar", "contato", "rss", "home")) or re.match(r"\d{4}-\d{2}", x):
+            if out and x.lower().startswith(("links úteis", "contato")):
+                break
+            continue
+        if re.search(r"\d{4}-\d{2}-\d{2}", x) or x.lower() in ("associados",):
+            continue
+        name = x.replace("&#8211;", "-").replace("&amp;", "&")
+        if not re.search(r"[A-Za-zÀ-ú]", name) or len(name) > 90:
+            continue
+        kind = "trade centre" if re.search(r"Centro d[eo] Com|Associação Comercial", name) else "cooperative" if re.search(r"Coop", name, re.I) else "warehouse" if re.search(r"Armaz", name, re.I) else "exporter"
+        if kind == "trade centre":
+            continue
+        out.append({"supplier": name, "country": "BRA", "product": "coffee", "role": "producer cooperative and exporter" if kind == "cooperative" else kind, "licence": "CECAFE member", "contact_person": "", "phone": "", "email": "", "website": "",
+                    "description": f"Member of CECAFE, the Brazilian coffee exporters' council ({kind})", "size": "", "certifications": "", "source": "CECAFE member list", "source_url": url, "fetched": date.today().isoformat()})
+        if len(out) > 300:
+            break
+    return out
+
+
+REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil}
 
 
 def main():
