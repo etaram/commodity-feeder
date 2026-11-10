@@ -1,17 +1,17 @@
 {
- "at": "2026-11-09",
+ "at": "2026-11-10",
  "sources": {
   "fnc": {
    "rows": 1,
    "fetched_now": true,
    "newest_date": "2026-11-09",
-   "age_days": 0,
+   "age_days": 1,
    "status": "ok"
   },
   "uganda": {
    "rows": 9,
    "fetched_now": true,
-   "newest_date": "2026-11-09",
+   "newest_date": "2026-11-10",
    "age_days": 0,
    "status": "ok"
   },
@@ -19,34 +19,34 @@
    "rows": 5,
    "fetched_now": true,
    "newest_date": "2026-09-01",
-   "age_days": 69,
+   "age_days": 70,
    "status": "stale"
   },
   "cepea": {
    "rows": 4,
    "fetched_now": true,
    "newest_date": "2026-11-09",
-   "age_days": 0,
+   "age_days": 1,
    "status": "ok"
   },
   "cai": {
    "rows": 11,
    "fetched_now": true,
    "newest_date": "2026-11-09",
-   "age_days": 0,
+   "age_days": 1,
    "status": "ok"
   },
   "teaboard": {
    "rows": 14,
-   "fetched_now": true,
+   "fetched_now": false,
    "newest_date": "2026-10-31",
-   "age_days": 9,
-   "status": "ok"
+   "age_days": 10,
+   "status": "stale"
   },
   "spices": {
    "rows": 1,
    "fetched_now": true,
-   "newest_date": "2026-11-09",
+   "newest_date": "2026-11-10",
    "age_days": 0,
    "status": "ok"
   },
@@ -54,34 +54,34 @@
    "rows": 3,
    "fetched_now": true,
    "newest_date": "2026-11-05",
-   "age_days": 4,
+   "age_days": 5,
    "status": "ok"
   },
   "eia": {
    "rows": 6,
    "fetched_now": true,
    "newest_date": "2026-11-03",
-   "age_days": 6,
+   "age_days": 7,
    "status": "ok"
   },
   "steelbench": {
    "rows": 12,
    "fetched_now": true,
    "newest_date": "2026-10-28",
-   "age_days": 12,
+   "age_days": 13,
    "status": "ok"
   },
   "drewry": {
    "rows": 5,
    "fetched_now": true,
    "newest_date": "2026-11-05",
-   "age_days": 4,
+   "age_days": 5,
    "status": "ok"
   },
   "mpob": {
    "rows": 1,
    "fetched_now": true,
-   "newest_date": "2026-11-05",
+   "newest_date": "2026-11-06",
    "age_days": 4,
    "status": "ok"
   },
@@ -89,34 +89,34 @@
    "rows": 8,
    "fetched_now": true,
    "newest_date": "2026-10-30",
-   "age_days": 10,
+   "age_days": 11,
    "status": "ok"
   },
   "nce": {
    "rows": 2,
-   "fetched_now": true,
+   "fetched_now": false,
    "newest_date": "2026-11-03",
-   "age_days": 6,
-   "status": "ok"
+   "age_days": 7,
+   "status": "stale"
   },
   "forbes": {
    "rows": 4,
    "fetched_now": true,
    "newest_date": "2026-11-04",
-   "age_days": 5,
+   "age_days": 6,
    "status": "ok"
   },
   "ahdb": {
    "rows": 5,
    "fetched_now": true,
    "newest_date": "2026-09-01",
-   "age_days": 69,
+   "age_days": 70,
    "status": "ok"
   },
   "echarts": {
    "rows": 1,
    "fetched_now": true,
-   "newest_date": "2026-11-09",
+   "newest_date": "2026-11-10",
    "age_days": 0,
    "status": "ok"
   },
@@ -124,13 +124,13 @@
    "rows": 93,
    "fetched_now": true,
    "newest_date": "2026-11-02",
-   "age_days": 7,
+   "age_days": 8,
    "status": "ok"
   },
   "vncoffee": {
    "rows": 1,
    "fetched_now": true,
-   "newest_date": "2026-11-09",
+   "newest_date": "2026-11-10",
    "age_days": 0,
    "status": "ok"
   },
@@ -145,7 +145,14 @@
    "rows": 25,
    "fetched_now": true,
    "newest_date": "2026-10-01",
-   "age_days": 39,
+   "age_days": 40,
+   "status": "ok"
+  },
+  "royal_eth": {
+   "rows": 40,
+   "fetched_now": true,
+   "newest_date": "2026-11-10",
+   "age_days": 0,
    "status": "ok"
   }
  }
