@@ -109,6 +109,11 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
         log.warning("web index suppliers: %s missing", src); return
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     out, hsn = [], _hs_names()
+    try:  # contract items in English (leads/describe_supplied.py, open-source translation); empty until it has run
+        from .describe_supplied import english as _sp_en, load as _sp_load
+        sp_cache = _sp_load()
+    except Exception:  # noqa: BLE001
+        sp_cache = {}
     for r in csv.DictReader(open(src, encoding="utf-8")):
         if len(out) >= limit:
             break
@@ -117,6 +122,8 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             v = (r.get(k) or "").strip()
             if not v:
                 continue
+            if short == "sp" and sp_cache:
+                v = _sp_en(v, sp_cache)
             if short in ("q", "w", "u", "sh"):
                 v = _f(v)
                 if v is None:

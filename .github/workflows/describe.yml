@@ -10,7 +10,7 @@ on:
     inputs:
       minutes:
         description: "minutes of work this run"
-        default: "40"
+        default: "26"
 permissions:
   contents: write
 concurrency:
@@ -30,6 +30,12 @@ jobs:
           path: data/checks
           key: checks-none
           restore-keys: checks-
+      - name: Private supplier list (read-only)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/private
+          key: private-none
+          restore-keys: private-
       - name: Previous descriptions
         uses: actions/cache@v4
         with:
@@ -46,14 +52,18 @@ jobs:
           key: describe-models-v1
       - run: pip install -q requests fastembed argostranslate langid 2>&1 | tail -1
       - name: Describe
-        run: python -m leads.describe --minutes ${{ inputs.minutes || '40' }} 2>&1 | tail -3
+        run: python -m leads.describe --minutes ${{ inputs.minutes || '26' }} 2>&1 | tail -3
+        continue-on-error: true
+      - name: Contract items in English
+        run: python -m leads.describe_supplied --minutes 14 2>&1 | tail -2
+        continue-on-error: true
       - name: Publish the counts
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
-          cp data/leads/describe_progress.json /tmp/dp.json 2>/dev/null || exit 0
+          cp data/leads/describe_progress.json /tmp/dp.json 2>/dev/null || exit 0; cp data/leads/describe_supplied_progress.json /tmp/ds.json 2>/dev/null || true
           for i in 1 2 3 4; do
-            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/dp.json data/leads/describe_progress.json
-            git add data/leads/describe_progress.json; git diff --cached --quiet && break
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/dp.json data/leads/describe_progress.json; cp /tmp/ds.json data/leads/describe_supplied_progress.json 2>/dev/null || true
+            git add data/leads/describe_progress.json; git add data/leads/describe_supplied_progress.json 2>/dev/null || true; git diff --cached --quiet && break
             git commit -q -m "describe progress: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
             sleep $((i * 8))
           done
