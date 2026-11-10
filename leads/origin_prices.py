@@ -790,7 +790,14 @@ def comtrade_fob():
             return r.json().get("data", []) if r.status_code == 200 else []
         return []
 
-    for iso, rep in ORIGIN_REPORTERS.items():
+    # a run reaches about 20 origins inside its time: the origins read longest ago go first, and main() keeps the
+    # rows of the ones not reached this time
+    seen_at = {}
+    if OUT.exists():
+        for r_ in csv.DictReader(open(OUT, encoding="utf-8")):
+            if r_.get("adapter") == "ct_fob":
+                seen_at[r_.get("origin", "")] = max(seen_at.get(r_.get("origin", ""), ""), r_.get("fetched", ""))
+    for iso, rep in sorted(ORIGIN_REPORTERS.items(), key=lambda x: seen_at.get(x[0], "")):
         if _t.time() - t0 > 600:
             log.info("comtrade fob: time budget reached at %s", iso); break
         data = []
@@ -974,6 +981,7 @@ def to_usd(r, rates):
 
 
 # monthly sources are dated by their month start and published about a month late
+ROTATING = {"ct_fob"}
 MAX_AGE = {"ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
@@ -1013,6 +1021,9 @@ def main():
             log.warning("origin prices %s failed: %s", name, str(e)[:200])
             got = []
         key = got[0]["adapter"] if got else None
+        if got and KEYS.get(name) in ROTATING:   # a rotating source: the origins not reached this run keep their last rows
+            fresh = {g["origin"] for g in got}
+            got += [o_ for o_ in prev.get(KEYS[name], []) if o_.get("origin") not in fresh]
         if got:
             rows += got
             report[name] = len(got)
