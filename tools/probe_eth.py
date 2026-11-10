@@ -1,12 +1,22 @@
-import json, requests, time
-from leads import origin_prices as o
-j = o.get("https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/ds-045409?freq=M&reporter=EU27_2020&flow=1&product=090111&indicators=VALUE_IN_EUROS&indicators=QUANTITY_IN_100KG&lastTimePeriod=3&format=JSON").json()
-print("ids", j.get("id"), "size", j.get("size"), "value type", type(j.get("value")).__name__, "n", len(j.get("value") or []))
-for d in j["id"]:
-    idx = j["dimension"][d]["category"]["index"]; print(d, type(idx).__name__, list(idx.items())[:6] if isinstance(idx, dict) else idx[:6])
-rows = o._jsonstat(j); print("decoded", len(rows), rows[:4])
-for label, params in (("multi-period", {"period": "202608,202607", "cmdCode": "090111,100630"}), ("44 codes", {"period": "202608", "cmdCode": ",".join(h for _, _, h in o.TRADED)}), ("22 codes", {"period": "202608", "cmdCode": ",".join(h for _, _, h in o.TRADED[:22])})):
-    r = requests.get("https://comtradeapi.un.org/public/v1/preview/C/M/HS", params={"reporterCode": 76, "flowCode": "X", "partnerCode": 0, "customsCode": "C00", "motCode": 0, **params}, headers=o.UA, timeout=60)
-    d = r.json().get("data", []) if r.ok else []
-    print("comtrade", label, r.status_code, len(d), r.text[:160] if not d else [(x.get("cmdCode"), x.get("period"), x.get("netWgt"), x.get("qty"), x.get("qtyUnitCode"), x.get("altQty"), x.get("altQtyUnitCode"), int(x.get("primaryValue") or 0)) for x in d[:5]])
-    time.sleep(3)
+import re, requests
+UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36", "Accept-Language": "en"}
+URLS = ["https://organic.ams.usda.gov/integrity/Reports/DataHistory", "https://organic.ams.usda.gov/integrity/", "https://organic.ams.usda.gov/integrity/Reports/Reports",
+        "https://www.flocert.net/about-flocert/customer-search/", "https://ugandacoffee.go.ug/registered-exporters", "https://ugandacoffee.go.ug/",
+        "https://apeda.gov.in/apedawebsite/Exporters_Directory/exporters_directory.htm", "https://agriexchange.apeda.gov.in/", "https://www.indiacoffee.org/coffee-exporters.html",
+        "https://www.rainforest-alliance.org/business/certification/certificate-search-and-public-summaries/", "https://www.teaboard.gov.in/TEABOARDCSM/NQ==",
+        "https://www.vicofa.org.vn/", "https://www.kenyacoffee.go.ke/", "https://royalcoffee.com/collections/all-coffees/products.json?limit=5",
+        "https://www.globalgap.org/what-we-offer/ggn-label/", "https://www.sedex.com/", "https://ec.europa.eu/agriculture/ofis_public/actor_cbr/ctrl_actor_cbr.cfm"]
+for u in URLS:
+    try:
+        r = requests.get(u, headers=UA, timeout=30)
+        t = r.text
+        files = sorted(set(re.findall(r'href="([^"]+\.(?:xlsx?|csv|zip)[^"]*)"', t, re.I)))[:6]
+        title = re.search(r"<title[^>]*>(.*?)</title>", t, re.S | re.I)
+        print(r.status_code, len(r.content), "|", u[:80], "|", (re.sub(r"\s+", " ", title.group(1))[:60] if title else ""), "| files", files)
+        if "DataHistory" in u or "Reports/Reports" in u:
+            for m in list(re.finditer(r'href="([^"]+)"[^>]*>([^<]{4,80})<', t))[:400]:
+                if re.search(r"download|export|xls|csv|histor|operation", m.group(1) + m.group(2), re.I): print("   LINK", m.group(1)[:140], "|", m.group(2).strip()[:60])
+        if "products.json" in u and r.ok:
+            p = r.json()["products"][0]; print("   keys", list(p.keys()), "| vendor", p.get("vendor"), "| tags", p.get("tags")[:12] if isinstance(p.get("tags"), list) else p.get("tags"), "| body", re.sub(r"<[^>]+>", " ", p.get("body_html") or "")[:400])
+    except Exception as e:
+        print("ERR", u[:80], str(e)[:100])
