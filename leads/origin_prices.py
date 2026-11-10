@@ -27,6 +27,7 @@ A source that fails keeps its last good rows (dated as published), so a broken p
 
 Run: python -m leads.origin_prices   (writes data/leads/origin_prices.csv; commodity_norm merges it)."""
 import csv
+import html
 import io
 import json
 import logging
@@ -979,11 +980,87 @@ def eem_ethiopia():
     return out
 
 
+CMB_MAP = [  # category slug word -> (our commodity, hs6); anything else is kept under its own name
+    ("sesame", "Sesame seed", "120740"), ("cashew", "Cashew", "080132"), ("almond", "Nuts", "080212"), ("pistachio", "Nuts", "080252"), ("walnut", "Nuts", "080232"),
+    ("hazelnut", "Nuts", "080222"), ("peanut", "Nuts", "120242"), ("groundnut", "Nuts", "120242"), ("chickpea", "Pulses", "071320"), ("lentil", "Pulses", "071340"),
+    ("beans", "Pulses", "071333"), ("peas", "Pulses", "071310"), ("coffee", "Coffee Arabica", "090111"), ("cocoa", "Cocoa beans", "180100"), ("pepper", "Pepper", "090411"),
+    ("cardamom", "Spices", "090831"), ("cumin", "Spices", "090931"), ("turmeric", "Spices", "091030"), ("ginger", "Spices", "091011"), ("cinnamon", "Spices", "090611"),
+    ("clove", "Spices", "090710"), ("chilli", "Spices", "090421"), ("coriander", "Spices", "090921"), ("fennel", "Spices", "090961"), ("nutmeg", "Spices", "090811"),
+    ("vanilla", "Spices", "090510"), ("rice", "Rice", "100630"), ("wheat", "Wheat", "100199"), ("maize", "Maize", "100590"), ("corn", "Maize", "100590"), ("barley", "Barley", "100390"),
+    ("sunflower", "Sunflower seed", "120600"), ("linseed", "Oilseeds", "120400"), ("flax", "Oilseeds", "120400"), ("rapeseed", "Oilseeds", "120510"), ("poppy", "Oilseeds", "120791"),
+    ("pumpkin", "Oilseeds", "120799"), ("chia", "Oilseeds", "120799"), ("quinoa", "Grains", "100850"), ("millet", "Millet", "100829"), ("buckwheat", "Grains", "100810"),
+    ("raisin", "Dried fruit", "080620"), ("dates", "Fruit", "080410"), ("apricot", "Dried fruit", "081310"), ("fig", "Dried fruit", "080420"), ("prune", "Dried fruit", "081320"),
+    ("coconut", "Coconut", "080111"), ("sugar", "Sugar", "170199"), ("butter", "Dairy products", "040510"), ("avocado", "Fruit", "080440"), ("banana", "Fruit", "080390"),
+    ("honey", "Honey", "040900"), ("garlic", "Vegetables", "070320"), ("onion", "Vegetables", "071220"), ("mustard", "Oilseeds", "120750"), ("soy", "Soybeans", "120190")]
+
+
+def _flag_iso3(flag):
+    """A flag emoji is two regional-indicator letters: decoded to ISO2, then ISO3."""
+    cps = [ord(c) - 0x1F1E6 for c in flag if 0x1F1E6 <= ord(c) <= 0x1F1FF]
+    if len(cps) != 2:
+        return ""
+    a2 = "".join(chr(65 + c) for c in cps)
+    try:
+        import pycountry
+        c = pycountry.countries.get(alpha_2=a2)
+        return c.alpha_3 if c else ""
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def cmb_quotes():
+    """Current quotations by origin, specification and delivery basis from the CMB commodity information service
+    (commodity-board.com; its robots.txt allows the category pages): one table per product, dated, in EUR/kg, each row
+    with the origin country, the place and the incoterm ("New Delhi · FOB", "Łódź · FCA"). Broker quotations: an asking
+    level for a stated specification, not a concluded trade. A FOB row is a price at the origin; an FCA/DDP row in
+    Europe is a landed price and is labelled so."""
+    import time as _t
+    home = get("https://commodity-board.com/category/oil-seeds/sesame").text
+    cats = sorted(set(re.findall(r'href="(/category/[a-z0-9\-]+-market-news-prices-global-supply-demand-outlook)"', home)))
+    out, groups, t0 = [], {}, _t.time()
+    for path in cats:
+        if _t.time() - t0 > 420:
+            log.info("cmb: time budget reached, %d of %d categories", cats.index(path), len(cats)); break
+        slug = path.split("/")[-1].replace("-market-news-prices-global-supply-demand-outlook", "")
+        try:
+            h = get("https://commodity-board.com" + path).text
+        except Exception as e:  # noqa: BLE001
+            log.warning("cmb %s: %s", slug, str(e)[:80]); continue
+        _t.sleep(1.2)
+        as_of = re.search(r"As of\s*(?:<!-- -->)?\s*<time[^>]*>([^<]+)</time>|As of ([A-Z][a-z]{2} \d{1,2}, \d{4})", h)
+        d = ""
+        if as_of:
+            try:
+                d = datetime.strptime((as_of.group(1) or as_of.group(2)).strip(), "%b %d, %Y").date().isoformat()
+            except ValueError:
+                d = ""
+        unit = re.search(r">(EUR|USD)(?:<!-- -->)?/(kg|t|mt)<", h)
+        ccy, per = (unit.group(1), unit.group(2)) if unit else ("EUR", "kg")
+        commodity, hs = next(((c, x) for w, c, x in CMB_MAP if w in slug), (slug.replace("-", " ").title(), ""))
+        for m in re.finditer(r'<tr[^>]*>\s*<td[^>]*>\s*<a[^>]*>([^<]+)</a>\s*(?:<div[^>]*>([^<]*)</div>)?\s*</td>\s*<td[^>]*>\s*<span[^>]*>([^<]*)</span>\s*(?:<!-- -->)?\s*([^<·]+)·\s*([A-Z]{3})\s*</td>'
+                             r'\s*<td[^>]*>\s*[€$]?\s*([\d.,]+)\s*</td>', h):
+            name, spec, flag, place, inco, price = (html.unescape(m.group(1)).strip(), html.unescape(m.group(2) or "").strip(), m.group(3), html.unescape(m.group(4)).strip(), m.group(5), num(m.group(6).replace(",", "")))
+            iso = _flag_iso3(flag)
+            if not price or not d:
+                continue
+            groups.setdefault((name, spec, iso, inco, place, commodity, hs, ccy, per, d, path), []).append(price)
+    for (name, spec, iso, inco, place, commodity, hs, ccy, per, d, path), prices in groups.items():   # several lots of one specification: one row, median and range
+        prices.sort()
+        mid = prices[len(prices) // 2]
+        at_origin = inco in ("FOB", "FAS", "EXW")
+        rng = f", {len(prices)} quotations {prices[0]:g}-{prices[-1]:g} {ccy}/{per}" if len(prices) > 1 else ""
+        out.append(row("cmb", f"{name}{' ' + spec if spec else ''} - {iso or 'origin n/a'} ({inco} {place})"[:110], commodity, mid, ccy, per, 1 if per == "kg" else 1000, d,
+                       "CMB commodity information service (broker quotations)", "https://commodity-board.com" + path, grade=f"{name}{', ' + spec if spec else ''}{rng}", origin=iso,
+                       place=place, incoterm=inco, hs6=hs, kind="offer", tier="T3 Broker quotation",
+                       basis=("quotation at the origin" if at_origin else "quotation delivered in the buyer's region (freight and handling included), not an origin price") + ": an asking level for the stated specification, not a concluded trade"))
+    return out
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb"}
 
 
 # ---------------------------------------------------------------- build
@@ -1098,7 +1175,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb"}
     return need <= have
 
 
