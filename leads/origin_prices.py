@@ -1276,11 +1276,36 @@ def vfa_rice():
     return out
 
 
+def iso_sugar():
+    """International Sugar Organization daily prices: the ISA daily price (raw sugar, cents/lb) and the white sugar
+    price index (USD/t). World reference prices from the intergovernmental body, not an origin quote."""
+    url = "https://www.isosugar.org/prices.php"
+    h = get(url).text
+    for tr in re.findall(r"<tr.*?</tr>", h, flags=re.S):
+        c = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", x)).strip() for x in re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)]
+        m = re.match(r"(\d{1,2}) (\w{3}) (\d{4})", c[0]) if c else None
+        if not m or len(c) < 4:
+            continue
+        d = datetime.strptime(m.group(0), "%d %b %Y").date().isoformat()
+        raw, white = num(c[1]), num(c[3])
+        out = []
+        if raw:
+            out.append(row("iso", "Sugar, raw - ISA daily price (ISO)", "Sugar", round(raw * 22.0462, 1), "USD", "t", 1000, d, "International Sugar Organization daily prices", url,
+                           grade=f"raw sugar, {raw:g} cents/lb (average of the first three ICE No. 11 positions)", origin="", place="world reference", hs6="170114", kind="reference", tier="T1 Official",
+                           basis="intergovernmental reference price from futures closes; not a physical origin quote"))
+        if white:
+            out.append(row("iso", "Sugar, white - ISO white sugar price index", "Sugar", white, "USD", "t", 1000, d, "International Sugar Organization daily prices", url,
+                           grade="white refined sugar (average of the first two ICE London No. 5 positions)", origin="", place="world reference", hs6="170199", kind="reference", tier="T1 Official",
+                           basis="intergovernmental reference price from futures closes; not a physical origin quote"))
+        return out
+    return []
+
+
 ADAPTERS = [fnc_colombia, uganda_coffee, ecx_2merkato, cepea, cai_cotton, tea_board, spices_cardamom, cac_rosario, eia, steelbenchmarker, drewry_wci,
-            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon, vfa_rice]
+            mpob_cpo, dtn_fertilizer, kilimo_nce, forbes_colombo, ahdb_dairy, energy_charts, eu_oil_bulletin, vietnam_coffee, exa_ethiopia_coffee, worldbank_pink, royal_ethiopia, comtrade_fob, comext_cif, wfp_local, eem_ethiopia, cmb_quotes, tmx_tanzania, mansa_africa, spices_board_auctions, mombasa_tea, rosario_grains, oncc_cameroon, vfa_rice, iso_sugar]
 KEYS = {"fnc_colombia": "fnc", "uganda_coffee": "uganda", "ecx_2merkato": "ecx", "cepea": "cepea", "cai_cotton": "cai", "tea_board": "teaboard",
         "spices_cardamom": "spices", "cac_rosario": "cac", "eia": "eia", "steelbenchmarker": "steelbench", "drewry_wci": "drewry", "mpob_cpo": "mpob",
-        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc", "vfa_rice": "vfa"}
+        "dtn_fertilizer": "dtn", "kilimo_nce": "nce", "forbes_colombo": "forbes", "ahdb_dairy": "ahdb", "energy_charts": "echarts", "eu_oil_bulletin": "wob", "vietnam_coffee": "vncoffee", "exa_ethiopia_coffee": "exa_eth", "worldbank_pink": "wbpink", "royal_ethiopia": "royal_eth", "comtrade_fob": "ct_fob", "comext_cif": "eu_cif", "wfp_local": "wfp", "eem_ethiopia": "eem", "cmb_quotes": "cmb", "tmx_tanzania": "tmx", "mansa_africa": "mansa", "spices_board_auctions": "spiceauc", "mombasa_tea": "eatta", "rosario_grains": "bcr", "oncc_cameroon": "oncc", "vfa_rice": "vfa", "iso_sugar": "iso"}
 
 
 # ---------------------------------------------------------------- build
@@ -1309,7 +1334,7 @@ def to_usd(r, rates):
 
 # monthly sources are dated by their month start and published about a month late
 ROTATING = {"ct_fob"}
-MAX_AGE = {"vfa": 45, "mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
+MAX_AGE = {"iso": 10, "vfa": 45, "mansa": 400, "tmx": 60, "eem": 500, "ahdb": 70, "wbpink": 70, "ct_fob": 150, "eu_cif": 120, "wfp": 120}
 
 
 def finish(r, rates, fxsrc, today):
@@ -1395,7 +1420,7 @@ def complete():
         return False
     have = {r["adapter"] for r in csv.DictReader(open(OUT, encoding="utf-8"))}
     # sources that may legitimately return nothing on a given day never force a refresh
-    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc", "vfa"}
+    need = set(KEYS.values()) - {"exa_eth", "ct_fob", "eu_cif", "wfp", "royal_eth", "eem", "cmb", "tmx", "mansa", "spiceauc", "eatta", "bcr", "oncc", "vfa", "iso"}
     return need <= have
 
 

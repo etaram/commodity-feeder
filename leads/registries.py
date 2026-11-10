@@ -263,7 +263,111 @@ def brazil():
     return out
 
 
-REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil}
+def _row(supplier, country, product, role, licence, description, source, url, person="", phone="", email="", website=""):
+    return {"supplier": supplier, "country": country, "product": product, "role": role, "licence": licence, "contact_person": person, "phone": phone, "email": email, "website": website,
+            "description": description, "size": "", "certifications": "", "source": source, "source_url": url, "fetched": date.today().isoformat()}
+
+
+def _text(url, timeout=90):
+    import html as _html
+    return _html.unescape(_clean(requests.get(url, headers=UA, timeout=timeout).text))
+
+
+def argentina():
+    """CIARA-CEC, the Argentine oilseed industry chamber and cereal exporters' centre: each member with the products it
+    trades, address, telephone, e-mail and website."""
+    url = "https://www.ciaracec.com.ar/ciara/Asociados"
+    out = []
+    for block in _text(url).split("Cerrar ventana"):
+        m = re.search(r"\| ([^|]{3,90}?) \| Ver datos \| Productos que comercializa: \| ([^|]*?) \|", block)
+        if not m:
+            continue
+        name, products = m.group(1).strip(), m.group(2).strip().rstrip(".")
+        tel = re.search(r"Tel: \| ([^|]*?) \|", block)
+        em = re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", block)
+        web = re.search(r"Web: \| ([^|]*?) \|", block)
+        phone = re.sub(r"\s*-\s*$", "", tel.group(1).strip()) if tel else ""
+        phone = "+" + phone.replace("(", "").replace(")", "") if phone.startswith("(54") else phone
+        out.append(_row(name, "ARG", "soybean, maize, wheat, sunflower, grains and vegetable oils", "exporter and crusher" if re.search(r"Aceite|Harina", products) else "exporter", "CIARA-CEC member",
+                        f"Member of CIARA-CEC (Argentine oilseed industry chamber and cereal exporters' centre); trades: {products.lower()}", "CIARA-CEC member list", url,
+                        phone=phone, email=em.group(0) if em else "", website=(web.group(1).strip().rstrip("/") if web and "." in web.group(1) else "")))
+    return out
+
+
+def indonesia():
+    """GAPKI, the Indonesian palm oil association: member companies with province, address, telephone and e-mail as the
+    association lists them (the first page of the public member search)."""
+    url = "https://gapki.id/member-gapki/"
+    out = []
+    for block in _text(url).split("| Anggota GAPKI |")[1:]:
+        m = re.match(r"\s*([^|]{3,90}?) \| Lokasi \| ([^|]*?) \|", block)
+        if not m:
+            continue
+        tel = re.search(r"Telepon \| ([^|]*?) \|", block)
+        em = re.search(r"[\w.+-]+@[\w-]+\.[\w.-]+", block)
+        phone = tel.group(1).strip() if tel else ""
+        phone = "+62 " + phone[1:] if phone.startswith("0") else phone
+        out.append(_row(m.group(1).strip(), "IDN", "palm oil (CPO), palm kernel", "producer", "GAPKI member", f"Member of GAPKI, the Indonesian palm oil association; {m.group(2).strip()}", "GAPKI member list", url,
+                        phone=phone, email=em.group(0) if em and "gapki" not in em.group(0) else ""))
+    return out
+
+
+def ukraine():
+    """Ukrainian Grain Association: full and associated member companies (grain exporters, traders, terminals)."""
+    url = "https://uga.ua/en/members-and-partners/"
+    out, seen = [], set()
+    for name, kind in re.findall(r"\| ([^|]{3,90}?) \| (Полные|Ассоциированные) \|", _text(url)):
+        name = name.strip().strip("“”«»\"")
+        if name in seen:
+            continue
+        seen.add(name)
+        out.append(_row(name, "UKR", "wheat, maize, barley, sunflower, grains and oilseeds", "exporter and trader" if kind == "Полные" else "trader or service company", "Ukrainian Grain Association member",
+                        f"{'Full' if kind == 'Полные' else 'Associated'} member of the Ukrainian Grain Association", "Ukrainian Grain Association member list", url))
+    return out
+
+
+def colombia():
+    """Asoexport, the Colombian coffee exporters' association: affiliated exporting companies."""
+    url = "https://asoexport.org/home/afiliados/"
+    out, seen = [], set()
+    for name in re.findall(r'\| ([^|"]{4,80}?) \| " data-category="\d+"', _text(url)):
+        name = _name(name.strip())
+        if name not in seen:
+            seen.add(name)
+            out.append(_row(name, "COL", "coffee", "exporter", "Asoexport member", "Affiliated to Asoexport, the Colombian coffee exporters' association", "Asoexport affiliated companies", url))
+    return out
+
+
+def chile():
+    """Chilenut, the Chilean walnut association: producer and exporter members."""
+    url = "https://chilenut.cl/socios/"
+    t = _text(url)
+    i = t.find("Nuestros Socios")
+    out, seen, role = [], set(), "producer"
+    for seg in [x.strip() for x in t[i:].split("|")] if i >= 0 else []:
+        if re.search(r"Socios Exportador", seg, re.I):
+            role = "exporter"
+        if re.search(r"Socios Productor", seg, re.I):
+            role = "producer"
+        if seg.lower().startswith(("contacto", "síguenos", "©")):
+            break
+        if len(seg) < 6 or not re.match(r"^[A-ZÁÉÍÓÚÑ0-9&.,' -]+$", seg) or seg in seen:
+            continue
+        seen.add(seg)
+        out.append(_row(_name(seg), "CHL", "walnuts", role, "Chilenut member", f"Member of Chilenut, the Chilean walnut association ({role})", "Chilenut member list", url))
+    return out
+
+
+def peru():
+    """Peruvian Chamber of Coffee and Cocoa: member exporters with the chamber's own short description of each."""
+    url = "https://camcafeperu.com.pe/ES/asociados.php"
+    out = []
+    for name, desc in re.findall(r"\| ([^|]{3,80}?) \| ([^|]{40,900}?) \| Ver site", _text(url)):
+        out.append(_row(name.strip(), "PER", "coffee, cocoa", "exporter", "Cámara Peruana del Café y Cacao member", desc.strip()[:400], "Peruvian Chamber of Coffee and Cocoa member list", url))
+    return out
+
+
+REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil, "argentina": argentina, "indonesia": indonesia, "ukraine": ukraine, "colombia": colombia, "chile": chile, "peru": peru}
 
 
 def main():
