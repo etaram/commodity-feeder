@@ -1254,6 +1254,7 @@ def vfa_rice():
     dm = re.search(r"(\d{2})/(\d{2})/(\d{4})", re.sub(r"<[^>]+>", " ", body))
     d = f"{dm.group(3)}-{dm.group(2)}-{dm.group(1)}" if dm else date.today().isoformat()
     iso = {"Việt Nam": "VNM", "Thái Lan": "THA", "Ấn Độ": "IND", "Pakistan": "PAK", "Myanmar": "MMR", "Campuchia": "KHM"}
+    en_c = {"VNM": "Vietnam", "THA": "Thailand", "IND": "India", "PAK": "Pakistan", "MMR": "Myanmar", "KHM": "Cambodia"}
     out, country = [], ""
     for tr in re.findall(r"<tr.*?</tr>", h, flags=re.S):
         c = [re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", x)).strip() for x in re.findall(r"<td[^>]*>(.*?)</td>", tr, flags=re.S)]
@@ -1268,8 +1269,9 @@ def vfa_rice():
             continue
         price = (lo + hi) / 2
         en = kind.replace("Gạo thơm", "fragrant rice").replace("Gạo", "rice").replace("tấm", "broken").replace("trắng", "white").replace("nếp", "glutinous")
-        out.append(row("vfa", f"Rice, {en} - {country} FOB offer range (VFA)", "Rice", round(price, 1), "USD", "t", 1000, d, "Vietnam Food Association export price board", url,
-                       grade=f"{en} ({kind}); offers {lo:g}-{hi:g} USD/t", origin=iso[country], place=f"{country} FOB", incoterm="FOB", hs6="100630", kind="offer", tier="T2 Association",
+        cn = en_c[iso[country]]
+        out.append(row("vfa", f"Rice, {en} - {cn} FOB offer range (VFA)", "Rice", round(price, 1), "USD", "t", 1000, d, "Vietnam Food Association export price board", url,
+                       grade=f"{en} ({kind}); offers {lo:g}-{hi:g} USD/t", origin=iso[country], place=f"{cn} FOB", incoterm="FOB", hs6="100630", kind="offer", tier="T2 Association",
                        basis="exporters' FOB offer range reported by the association; midpoint shown"))
     return out
 
