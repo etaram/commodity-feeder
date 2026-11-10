@@ -38,10 +38,10 @@
   },
   "teaboard": {
    "rows": 14,
-   "fetched_now": false,
+   "fetched_now": true,
    "newest_date": "2026-10-31",
    "age_days": 10,
-   "status": "stale"
+   "status": "ok"
   },
   "spices": {
    "rows": 1,
@@ -153,6 +153,27 @@
    "fetched_now": true,
    "newest_date": "2026-11-10",
    "age_days": 0,
+   "status": "ok"
+  },
+  "ct_fob": {
+   "rows": 0,
+   "fetched_now": false,
+   "newest_date": "",
+   "age_days": null,
+   "status": "stale"
+  },
+  "eu_cif": {
+   "rows": 0,
+   "fetched_now": false,
+   "newest_date": "",
+   "age_days": null,
+   "status": "stale"
+  },
+  "wfp": {
+   "rows": 220,
+   "fetched_now": true,
+   "newest_date": "2026-11-15",
+   "age_days": -5,
    "status": "ok"
   }
  }
