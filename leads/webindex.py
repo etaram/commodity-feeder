@@ -221,7 +221,7 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             x = {"n": r["supplier"][:CUT["n"]], "c": r["country"], "rg": _region_of(r["country"]) or "", "tr": "2" if official else "3", "s": "Agriculture & food",
                  "ty": "producer and exporter" if grows else "exporter", "td": "" if grows else "1",
                  "p": f"{r['product'].capitalize()} ({r['country']}): {r['description']}"[:CUT["p"]] + (f" Size: {r['size']}." if r.get("size") else "") + (f" Certifications: {r['certifications']}." if r.get("certifications") else ""),
-                 "hs": "1801" if "cocoa" in r["product"] else "0901" if "coffee" in r["product"] else "1006" if "rice" in r["product"] else "0802" if "pistachio" in r["product"] else "", "x": f"{r['licence']} (official register)" if official else "exporter (promotion council directory)",
+                 "hs": "1801" if "cocoa" in r["product"] else "0901" if "coffee" in r["product"] else "1006" if "rice" in r["product"] else "0802" if "pistachio" in r["product"] else "1201" if "soybean" in r["product"] else "", "x": f"{r['licence']} (official register)" if official else "exporter (promotion council directory)",
                  "why": r["source"][:CUT["why"]], "ds": r["source"][:40], "du": r["source_url"][:160], "qv": 2}
             ct = "; ".join(v for v in (r.get("contact_person", ""), r.get("phone", ""), r.get("email", "")) if v)
             if ct:

@@ -7,6 +7,7 @@
   pakistan   Rice Exporters Association of Pakistan member roll with each member's contact page
   iran       Iran Pistachio Association member lists (exporters, growers, service providers)
   vietnam    Vietnam Food Association member roll (rice exporters and millers)
+  paraguay   CAPECO (grain and oilseed exporters' chamber) member list with contacts
 
 Each registry writes data/leads/registry_<country>.csv with the same columns, and leads/webindex.py puts the rows into the
 supplier index: an official registry entry is proof of licence or registration (tier 2), a promotion-council listing is
@@ -174,7 +175,44 @@ def vietnam():
     return out
 
 
-REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam}
+def paraguay():
+    """CAPECO, the Paraguayan chamber of cereal and oilseed exporters and traders: the member page lists each company
+    with its contact people, address, phone and e-mail addresses (soy, maize, wheat, rice exporters and crushers)."""
+    url = "https://capeco.org.py/socios/"
+    h = requests.get(url, headers=UA, timeout=60).text
+    t = _clean(h)
+    t = t[t.find("| Socios | Socios |") + 19:] if "| Socios | Socios |" in t else t
+    segs = [x.strip() for x in t.split("|")]
+    out, cur = [], None
+    def flush():
+        if cur and cur["supplier"]:
+            out.append(cur)
+    for seg in segs:
+        if not seg:
+            continue
+        if re.match(r"^[A-ZÁÉÍÓÚÑ0-9][A-ZÁÉÍÓÚÑ0-9&.,' -]{3,}(S\.A\.|S\.R\.L\.|S\.A\.E\.|LTDA\.?|S\.A\.C\.I\.|S\.A\.I\.C\.|SA|SRL|S\.A\.I\.C\.A\.|S\.A\.E\.C\.A\.|COOP\.?[A-Z. ]*|LIMITADA)$", seg):
+            flush()
+            cur = {"supplier": _name(seg), "country": "PRY", "product": "soybean, maize, wheat, rice, grains and oilseeds", "role": "exporter and trader", "licence": "CAPECO member", "contact_person": "", "phone": "", "email": "", "website": "",
+                   "description": "Member of CAPECO, the Paraguayan chamber of grain and oilseed exporters and traders", "size": "", "certifications": "", "source": "CAPECO member list", "source_url": url, "fetched": date.today().isoformat()}
+            continue
+        if cur is None:
+            continue
+        if seg.lower().startswith(("contacto", "responsabilidad", "ambito")) or seg in ("ENLACES", "PROGRAMAS"):
+            flush(); cur = None; break
+        if "@" in seg:
+            cur["email"] = cur["email"] or seg.split()[0]
+        elif seg.startswith("Tel"):
+            m = re.search(r"\(?0?(\d{2,4})\)?[\s.]*([\d.\s]{5,12})", seg)
+            cur["phone"] = cur["phone"] or (f"+595 {m.group(1)} {m.group(2).replace('.', '').strip()}" if m else "")
+        elif seg.startswith("www") or re.match(r"^[a-z0-9-]+\.(com|py)", seg):
+            cur["website"] = cur["website"] or seg
+        elif re.match(r"^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ' -]{5,40}$", seg) and not cur["contact_person"] and not re.search(r"KM|RUTA|AVDA|CALLE|S\.A", seg):
+            cur["contact_person"] = _name(seg)
+    flush()
+    return out
+
+
+REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay}
 
 
 def main():
