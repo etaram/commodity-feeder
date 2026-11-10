@@ -24,8 +24,11 @@ let mem: { at: number; rows: Row[] } | null = null;
 export async function coverage(fresh = false): Promise<Row[]> {
   if (!fresh && mem && Date.now() - mem.at < 6 * 3600e3) return mem.rows;
   const rows: Row[] = [];
-  for (const p of PRIORITY) {
-    const r = await supplierSearch({ text: p.q, n: 100, strict: true }).catch(() => null);
+  // counts come from the search code itself (no model call per product: the page must answer in seconds, also on a cold start)
+  const found: Awaited<ReturnType<typeof supplierSearch>>[] = [];
+  for (let i = 0; i < PRIORITY.length; i += 6) found.push(...(await Promise.all(PRIORITY.slice(i, i + 6).map((p) => supplierSearch({ text: p.q, n: 100, strict: true, noExpand: true }).catch(() => null as never)))));
+  for (const [k, p] of PRIORITY.entries()) {
+    const r = found[k];
     if (!r) continue;
     const [h, ...vals] = r.values as string[][];
     const ix = (k: string) => h.indexOf(k);

@@ -369,7 +369,7 @@ const STOP = new Set(("the and for with from supply supplies delivery services s
 // "granular" (the gap is shown per result); the material and the product stay mandatory
 const FLEX_WORDS = new Set(["granular", "prilled", "bulk", "premium", "quality", "high", "grade", "standard", "new", "best", "cheap", "good", "industrial", "fertilizer", "fertiliser"]);
 export type SupQuery = { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number;
-  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean; kind?: "maker" | "trader" | "" };
+  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean; kind?: "maker" | "trader" | ""; noExpand?: boolean };
 export async function suppliersFor(o: SupQuery): Promise<Grid> {
   return (await supplierSearch(o)).values;
 }
@@ -488,7 +488,7 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   const short = String(o.text || "").trim().length <= 80;
   // a commodity request is read by the commodity table (code): no model call, no translation needed
   const cmd = short ? detectCommodity(String(o.text || "")) : null;
-  const ex = cmd ? { en: String(o.text || ""), concepts: [{ terms: [] as string[], hs: cmd.hs }] } : short ? await expandQuery(String(o.text || "")) : null;
+  const ex = cmd ? { en: String(o.text || ""), concepts: [{ terms: [] as string[], hs: cmd.hs }] } : short && !o.noExpand ? await expandQuery(String(o.text || "")) : null;
   const query = ex?.en || (NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || ""));
   const words = [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
     .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
