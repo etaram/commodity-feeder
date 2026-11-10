@@ -149,8 +149,27 @@ NOISE = _re.compile(r"\b(injector|pump|filter|valve|hose|gauge|nozzle|assembly|k
                     r"aprons)\b", _re.I)
 
 
+def _lookalikes():
+    """Phrases that hold a commodity word but are not the commodity ("coffee table", "rice cooker", "cotton shirt"),
+    from the commodity table the app's search uses (dealdesk/lib/commodities.json)."""
+    try:
+        import json as _json
+        from pathlib import Path as _Path
+        tax = _json.loads((_Path(__file__).resolve().parent.parent / "dealdesk" / "lib" / "commodities.json").read_text(encoding="utf-8"))["commodities"]
+        pats = [e["not"] for e in tax if e.get("not")]
+        return _re.compile("|".join(f"(?:{p})" for p in pats), _re.I) if pats else None
+    except Exception:  # noqa: BLE001
+        return None
+
+
+LOOKALIKE = _lookalikes()
+
+
 def group_of_text(text):
-    """Commodity group for a tender title by keyword, or None (noise words exclude)."""
+    """Commodity group for a tender title by keyword, or None (noise words exclude). Look-alike phrases are removed
+    first, so a furniture maker shipping coffee tables is not filed under coffee."""
+    if text and LOOKALIKE:
+        text = LOOKALIKE.sub(" ", text)
     if not text or NOISE.search(text):
         return None
     for gid, rx in _KW_RX:

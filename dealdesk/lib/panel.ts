@@ -519,6 +519,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     // look-alikes ("coffee table", "rice cooker") are removed from the text before a commodity is looked for
     const blob = cmd ? cmd.clean(blob0) : blob0;
     const all = cmd ? `${blob} ${cmd.clean((s.sp || "").toLowerCase())}` : `${blob} ${s.sp || ""}`.toLowerCase();
+    // its own products name only the look-alike ("coffee table") and no customs heading of the commodity: the
+    // commodity label on the record was derived from that phrase, so it is not evidence
+    if (cmd) { const pw = `${s.n} ${s.p || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase(); if (cmd.term.test(pw) && !cmd.term.test(cmd.clean(pw)) && !cmd.hs.some((h) => String(s.hs || "").replace(/\./g, "").includes(h))) continue; }
     let hits = 0, own = 0;
     const codes = concepts.some((c) => c.hs.length) ? (String(s.hs || "").replace(/\./g, "").match(/\d{4,6}/g) || []) : [];
     for (const c of concepts) {

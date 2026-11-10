@@ -6,7 +6,7 @@ const API = "https://sheets.googleapis.com/v4/spreadsheets";
 // The tabs the app itself writes all the time (logs, bot memory, agent state) live in a small separate spreadsheet
 // when STATE_SHEET_ID is set. A write to the engine sheet (4.7 million cells) holds its reads for up to a minute, so
 // every log line used to stall the live panel tabs; the state sheet takes those writes instead. Unset = old behaviour.
-const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Briefs",
+const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Coverage Cache", "Briefs",
   // read on every request or written by the app only: users and their settings, push subscriptions, app records
   "Users", "Profiles", "Push", "Workspace strategy", "Client Dossiers", "Prospects", "My Network", "Assertions", "Decisions", "Outbox"]);
 const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;
