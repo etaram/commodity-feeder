@@ -108,7 +108,7 @@ jobs:
       - name: origin exporters (trade directories, resumes weekly)
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',origin_exporters,') }}
         run: set -o pipefail; python -m leads.origin_exporters 2>&1 | tail -5 | tee -a data/leads/run_suppliers.log
-        timeout-minutes: 45
+        timeout-minutes: 55
         continue-on-error: true
       - name: webindex
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',webindex,') || contains(format(',{0},', inputs.only), ',universe,') || contains(format(',{0},', inputs.only), ',origin_exporters,') }}

@@ -15,6 +15,7 @@ import json
 import re
 import time
 from collections import deque
+from pathlib import Path
 from datetime import date, datetime, timezone
 
 import requests
@@ -90,11 +91,21 @@ def load_rows():
     return {(r["supplier"].lower(), r["country"]): r for r in csv.DictReader(open(OUT, encoding="utf-8"))}
 
 
-def main(max_pages=400, max_minutes=35):
+def main(max_pages=800, max_minutes=45):
     PRIVATE.mkdir(parents=True, exist_ok=True)
     st = json.loads(STATE.read_text()) if STATE.exists() else {}
     seen = st.get("seen", {})  # path -> date fetched
     queue = deque(st.get("queue") or SEEDS)
+    # commodity pages first: the directory has thousands of pages, and the ones people search (coffee, rice, sesame,
+    # cashew ... and their varieties, from the shared commodity table) must not wait weeks behind the rest
+    try:
+        tax = json.loads((Path(__file__).resolve().parent.parent / "dealdesk/lib/commodities.json").read_text(encoding="utf-8"))["commodities"]
+        keys = {w for e in tax for t in e["terms"] + [a for v in e["varieties"].values() for a in v["a"]] for w in [t.lower().replace(" ", "-")] if len(w) >= 4}
+        hot = [p for p in queue if any(k in p for k in keys)]
+        queue = deque(hot + [p for p in queue if p not in set(hot)])
+        log.info("origin exporters: %d commodity pages moved to the front of %d queued", len(hot), len(queue))
+    except Exception as e:  # noqa: BLE001
+        log.warning("origin exporters: commodity priority skipped: %s", e)
     rows = load_rows()
     today, t0, n, fails = date.today().isoformat(), time.time(), 0, 0
     s = requests.Session()
