@@ -1,20 +1,27 @@
-import io, re, requests, pdfplumber
-UA = {"User-Agent": "Mozilla/5.0 (compatible; SinderLeads/1.0; +https://desk.sinder.pro)"}
-def pdf(u, pages=(0, 1, 2), n=1400):
-    r = requests.get(u, headers=UA, timeout=90); print("==", u[-70:], r.status_code, len(r.content))
-    if not r.ok: return
-    with pdfplumber.open(io.BytesIO(r.content)) as d:
-        print("   pages", len(d.pages))
-        for i in pages:
-            if i < len(d.pages):
-                print(f"   --- p{i + 1}:", re.sub(r"\s+", " ", d.pages[i].extract_text() or "")[:n])
-        for i, pg in enumerate(d.pages):
-            tx = pg.extract_text() or ""
-            if re.search(r"exporter", tx, re.I) and re.search(r"60.?kg|bags|share|%", tx, re.I):
-                print(f"   EXPORTERS p{i + 1}:", re.sub(r"\s+", " ", tx)[:1800]); break
-pdf("https://ugandacoffee.go.ug/Coffee_and_Cocoa_Directory.pdf", pages=(0, 3, 8, 15))
-pdf("https://ugandacoffee.go.ug/sites/default/files/2026-10/12%20September%202026%20Report%20dpptx%20%281%29.pptx_Finalptx.pdf", pages=(0,))
-for u in ["https://apps.fas.usda.gov/newgainapi/api/Report/GetReportsList?countryName=Thailand&reportTitle=Rice%20Price", "https://fas.usda.gov/data/search?keyword=rice%20price%20weekly%20thailand", "https://gain.fas.usda.gov/api/reports?country=Thailand&title=Rice%20Price%20-%20Weekly"]:
+import re, requests
+UA = {"User-Agent": "Mozilla/5.0 (compatible; SinderLeads/1.0; +https://desk.sinder.pro)", "Accept-Language": "en"}
+def txt(h): return re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S))))
+def robots(host):
     try:
-        r = requests.get(u, headers=UA, timeout=40); print("== GAIN", u[:80], r.status_code, len(r.text), re.findall(r'href="([^"]*[Rr]ice[^"]*[Ww]eekly[^"]*)"', r.text)[:4], r.text[:200].replace("\n", " "))
-    except Exception as e: print("== GAIN ERR", str(e)[:100])
+        r = requests.get(f"https://{host}/robots.txt", headers=UA, timeout=20); t = r.text if r.ok else ""
+        return f"robots {r.status_code} dis={re.findall(r'(?im)^disallow:\s*(\S*)', t)[:6]}"
+    except Exception: return "robots ERR"
+JOBS = [("globaledge.msu.edu", "/global-resources/resource/1316", r"Exporter|directory"), ("globaledge.msu.edu", "/countries/thailand/resources", r"Directory|Exporter"),
+        ("globaledge.msu.edu", "/global-resources/trade-leads", r"Directory"), ("globaledge.msu.edu", "/globalresources/resourcesbytag/export-promotion-agency", r"Agency|Export"),
+        ("www.sunsirs.com", "/uk/sectors-14.html", r"\d+\.\d\d"), ("www.sunsirs.com", "/CommodityPrice.html", r"\d+\.\d\d"), ("www.sunsirs.com", "/uk/", r"Commodity"),
+        ("agriculture.gov.au", "/abares/data/weekly-commodity-price-update", r"xlsx|csv|US\$"), ("east-fruit.com", "/en/horticulture-market/prices/", r"\$|USD|price"),
+        ("agro.gov.vn", "/vn/tID6392_Prices-of-agricultural-commodities-in-domestic-markets.html", r"VND|price|\d{2},\d{3}"), ("indianspices.com", "/marketing/price/domestic/daily-price.html", r"Rs|price|\d{3}"),
+        ("www.tmx.co.tz", "/", r"results|Trade Results|\.pdf"), ("www.mansamarkets.com", "/commodities/sesame/nigeria", r"\$|NGN|per"), ("www.naeb.gov.rw", "/publications/news/last-week-export-performance", r"US\$|USD|Kg"),
+        ("www.reap.com.pk", "/", r"member|Member"), ("ikar.ru", "/1/en/press/", r"\$|FOB"), ("www.gcx.com.gh", "/", r"price|GHS"), ("cocobod.gh", "/", r"price|Price"),
+        ("www.anecacao.com", "/", r"export|socios"), ("www.promperu.gob.pe", "/", r"export"), ("www.acrop.app", "/mandi", r"₹|Rs|mandi"), ("www.cepici.gouv.ci", "/", r"export")]
+seen = {}
+for host, path, pat in JOBS:
+    try:
+        if host not in seen: seen[host] = robots(host)
+        r = requests.get(f"https://{host}{path}", headers=UA, timeout=30); h = r.text; t = txt(h)
+        hits = [t[max(0, m.start() - 120):m.start() + 260] for m in list(re.finditer(pat, t))[3:5]]
+        files = sorted(set(re.findall(r'href="([^"]+\.(?:xlsx?|csv|pdf)[^"]*)"', h, re.I)))[:3]
+        print(f"== {host}{path[:55]} | {r.status_code} | {len(h)} | {seen[host]} | tables {h.count('<table')} | files {files}")
+        for x in hits: print("     >", x)
+    except Exception as e:
+        print(f"== {host}{path[:50]} ERR {str(e)[:80]}")
