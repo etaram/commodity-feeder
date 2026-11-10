@@ -248,8 +248,8 @@ def brazil():
             if out and x.lower().startswith(("links úteis", "contato")):
                 break
             continue
-        if re.search(r"\d{4}-\d{2}-\d{2}", x) or x.lower() in ("associados",):
-            continue
+        if re.search(r"\d{4}-\d{2}-\d{2}", x) or x.lower() in ("associados",) or not out and not re.search(r"ltda|s/a|s\.a|coop|café|cafe|coffee|export|armaz|agro|com", x, re.I):
+            continue   # the post's author line precedes the list
         name = x.replace("&#8211;", "-").replace("&amp;", "&")
         if not re.search(r"[A-Za-zÀ-ú]", name) or len(name) > 90:
             continue
