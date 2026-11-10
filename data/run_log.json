@@ -1,29 +1,29 @@
 {
-  "finished_utc": "2026-11-09T14:31:31",
-  "fx_source": "ECB via Frankfurter 2026-11-06",
+  "finished_utc": "2026-11-10T03:36:48",
+  "fx_source": "ECB via Frankfurter 2026-11-09",
   "fx": {
-    "EUR": 1.1164950985865172,
-    "CNY": 0.14989582240342963,
-    "CAD": 0.7109341674960898,
+    "EUR": 1.1192943968122495,
+    "CNY": 0.14986212684330416,
+    "CAD": 0.7090689924129617,
     "MYR": 0.2463661000246366,
-    "JPY": 0.00631592244047243,
-    "ILS": 0.31259768677711786,
-    "GBP": 1.338490985263214,
-    "INR": 0.010647359454855196,
-    "AUD": 0.687096330905593,
-    "BRL": 0.18169594999727456,
-    "NOK": 0.10607040953785123,
-    "CHF": 1.2211503236048358,
-    "ZAR": 0.060466072486727696,
-    "KRW": 0.0007359813943903498,
+    "JPY": 0.006331117442228554,
+    "ILS": 0.315387769262308,
+    "GBP": 1.3415975743915853,
+    "INR": 0.010646225912913872,
+    "AUD": 0.6894174422612892,
+    "BRL": 0.1812677869015897,
+    "NOK": 0.10627105495276251,
+    "CHF": 1.2214038816215358,
+    "ZAR": 0.06079692610741601,
+    "KRW": 0.0007425062556152036,
     "USD": 1.0
   },
   "sources": {
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 27,
-      "newest_date": "2026-11-09",
+      "sec": 26,
+      "newest_date": "2026-11-10",
       "log": [
         "INFO yahoo: no data for JKM=F",
         "INFO yahoo: 33 prices"
@@ -32,20 +32,20 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 7,
-      "newest_date": "2026-11-06",
+      "sec": 8,
+      "newest_date": "2026-11-09",
       "log": [
         "INFO westmetall: 6 prices"
       ]
     },
     "em_global": {
       "ok": true,
-      "prices": 21,
-      "sec": 43,
-      "newest_date": "2026-11-09",
+      "prices": 19,
+      "sec": 32,
+      "newest_date": "2026-11-10",
       "log": [
         "INFO em_global board: 620 rows",
-        "INFO em_global: 21 prices"
+        "INFO em_global: 19 prices"
       ]
     },
     "cn_spot": {
@@ -64,7 +64,7 @@
     "dtn": {
       "ok": true,
       "prices": 7,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-10-30",
       "log": [
         "INFO dtn: 7 prices from https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/11/04/uan28-continues-lead-fertilizer-week"
@@ -92,30 +92,30 @@
       "ok": true,
       "prices": 5,
       "sec": 1,
-      "newest_date": "2026-11-06",
+      "newest_date": "2026-11-09",
       "log": [
-        "INFO smi: 5 prices (as of 2026-11-06)"
+        "INFO smi: 5 prices (as of 2026-11-09)"
       ]
     },
     "usda": {
       "ok": true,
-      "prices": 52,
-      "sec": 11,
-      "newest_date": "2026-11-09",
+      "prices": 0,
+      "sec": 7,
+      "newest_date": null,
       "log": [
-        "INFO usda gdt: 8 prices",
-        "INFO usda by-products: 3 prices",
-        "INFO usda feedstuff: 12 prices",
-        "INFO usda beef: 1 prices",
-        "INFO usda pork: 2 prices",
-        "INFO usda eggs: 1 prices",
-        "INFO usda fruit_veg: 25 prices"
+        "WARNING usda gdt failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_1604.pdf",
+        "WARNING usda by-products failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_3510.pdf",
+        "WARNING usda feedstuff failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_3668.pdf",
+        "WARNING usda beef failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_2461.pdf",
+        "WARNING usda pork failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_2498.pdf",
+        "WARNING usda eggs failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/ams_2843.pdf",
+        "WARNING usda fruit_veg failed: 403 Client Error: Forbidden for url: https://www.ams.usda.gov/mnreports/fvwtrds.pdf"
       ]
     },
     "census": {
       "ok": true,
       "prices": 0,
-      "sec": 0,
+      "sec": 1,
       "newest_date": null,
       "log": [
         "WARNING census 2026-10: Expecting value: line 1 column 1 (char 0)",
@@ -130,7 +130,7 @@
     "comext": {
       "ok": true,
       "prices": 1913,
-      "sec": 57,
+      "sec": 59,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
@@ -140,7 +140,7 @@
     "comtrade": {
       "ok": true,
       "prices": 3,
-      "sec": 15,
+      "sec": 30,
       "newest_date": "2026-08-31",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -150,28 +150,28 @@
     }
   },
   "rows_with_price": 1957,
-  "candidates": 2128,
-  "flagged": 298,
+  "candidates": 2074,
+  "flagged": 336,
   "by_source_selected": {
-    "yahoo": 31,
+    "yahoo": 32,
     "westmetall": 6,
-    "em_global": 4,
-    "cn_spot": 30,
+    "em_global": 3,
+    "cn_spot": 33,
     "eu_agri": 0,
     "dtn": 7,
     "ssb": 2,
     "scrapmonster": 31,
     "smi": 3,
-    "usda": 42,
+    "usda": 0,
     "census": 0,
-    "comext": 1759,
+    "comext": 1807,
     "comtrade": 3,
-    "derived": 31
+    "derived": 30
   },
   "by_tier": {
-    "T1 Exchange benchmark": 80,
-    "T2 Official market reporting": 44,
-    "T3 Industry assessment": 71,
-    "T4 Trade statistics (unit value)": 1762
+    "T1 Exchange benchmark": 71,
+    "T2 Official market reporting": 2,
+    "T3 Industry assessment": 74,
+    "T4 Trade statistics (unit value)": 1810
   }
 }
