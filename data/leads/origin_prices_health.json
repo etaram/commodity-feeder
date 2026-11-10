@@ -4,8 +4,8 @@
   "fnc": {
    "rows": 1,
    "fetched_now": true,
-   "newest_date": "2026-11-09",
-   "age_days": 1,
+   "newest_date": "2026-11-10",
+   "age_days": 0,
    "status": "ok"
   },
   "uganda": {
@@ -25,8 +25,8 @@
   "cepea": {
    "rows": 4,
    "fetched_now": true,
-   "newest_date": "2026-11-09",
-   "age_days": 1,
+   "newest_date": "2026-11-10",
+   "age_days": 0,
    "status": "ok"
   },
   "cai": {
@@ -237,6 +237,13 @@
    "fetched_now": true,
    "newest_date": "2026-11-06",
    "age_days": 4,
+   "status": "ok"
+  },
+  "iso": {
+   "rows": 2,
+   "fetched_now": true,
+   "newest_date": "2026-11-09",
+   "age_days": 1,
    "status": "ok"
   }
  }
