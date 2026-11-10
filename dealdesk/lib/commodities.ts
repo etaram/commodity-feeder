@@ -27,6 +27,7 @@ export type CommodityStat = {
   vol_30d: number | null; vol_90d: number | null; season_idx: number[] | null; season_note: string; anomaly: string[]; anomaly_note: string; basis: string;
 };
 
+import NAMES from "@/lib/countrynames.json";
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 export function joinRows(norm: Row[], stats: Row[], q: CommodityQuery = {}): CommodityStat[] {
@@ -39,7 +40,9 @@ export function joinRows(norm: Row[], stats: Row[], q: CommodityQuery = {}): Com
   const ordered = [...norm.filter((r) => String(r.id).startsWith("O:")), ...norm.filter((r) => !String(r.id).startsWith("O:"))];
   for (const r of ordered) {
     if (hs && !String(r.hs6 || "").startsWith(hs)) continue;
-    if (words.length && !words.every((w) => w.test(`${r.product} ${r.commodity} ${r.grade} ${r.origin} ${r.delivery_location} ${r.source}`))) continue;
+    // the origin is searchable by its name too ("coffee ethiopia" finds rows whose origin is ETH)
+    const oname = r.origin ? ((NAMES as Record<string, string[]>)[r.origin] || []).join(" ") : "";
+    if (words.length && !words.every((w) => w.test(`${r.product} ${r.commodity} ${r.grade} ${r.origin} ${oname} ${r.delivery_location} ${r.source}`))) continue;
     const s = byId.get(r.id) || {};
     let season: number[] | null = null;
     try { season = s.season_idx ? (JSON.parse(s.season_idx) as number[]) : null; } catch { season = null; }
@@ -53,9 +56,15 @@ export function joinRows(norm: Row[], stats: Row[], q: CommodityQuery = {}): Com
       chg_3m_pct: num(s.chg_3m_pct), chg_12m_pct: num(s.chg_12m_pct), vol_30d: num(s.vol_30d), vol_90d: num(s.vol_90d), season_idx: season,
       season_note: s.season_note || "", anomaly: String(s.anomaly || "").split(";").filter(Boolean), anomaly_note: s.anomaly_note || "", basis: s.basis || "",
     });
-    if (out.length >= limit) break;
   }
-  return out;
+  // no single source fills the list: the first few rows of every source come before the rest of any one of them (an
+  // importer's 60 offers no longer hide the customs and market rows), official statistics first inside each round,
+  // and a price older than 100 days after the fresh ones
+  const seenBy = new Map<string, number>(), key = new Map<CommodityStat, number>();
+  const tier = (t: string) => (t === "T1" ? 0 : t === "T2" ? 1 : t === "T3" ? 2 : 3);
+  const stale = (d: string) => (d && Date.now() - Date.parse(d) > 100 * 864e5 ? 1 : 0);
+  for (const o of out) { const k = seenBy.get(o.source) || 0; seenBy.set(o.source, k + 1); key.set(o, stale(o.timestamp) * 1000 + Math.floor(k / 3) * 10 + tier(o.source_tier)); }
+  return out.map((o, i) => ({ o, i })).sort((a, b) => key.get(a.o)! - key.get(b.o)! || a.i - b.i).slice(0, limit).map((x) => x.o);
 }
 
 // World Bank Pink Sheet monthly series (ids "WB:<series>") carry their own stats rows and no normalised price row

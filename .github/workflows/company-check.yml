@@ -56,11 +56,11 @@ jobs:
       - name: Publish progress counts
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
-          cp data/leads/refine_progress.json /tmp/rp.json; cp data/leads/describe_progress.json /tmp/dp.json 2>/dev/null || true; mkdir -p /tmp/refined; cp data/leads/refined/*.csv /tmp/refined/ 2>/dev/null || true
+          cp data/leads/refine_progress.json /tmp/rp.json; mkdir -p /tmp/refined; cp data/leads/refined/*.csv /tmp/refined/ 2>/dev/null || true
           for i in 1 2 3 4 5; do
-            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/rp.json data/leads/refine_progress.json && (cp /tmp/dp.json data/leads/describe_progress.json 2>/dev/null || true)
+            git fetch -q origin main && git reset -q --hard origin/main && cp /tmp/rp.json data/leads/refine_progress.json
             mkdir -p data/leads/refined && cp /tmp/refined/*.csv data/leads/refined/ 2>/dev/null || true
-            git add data/leads/refine_progress.json data/leads/refined; git add data/leads/describe_progress.json 2>/dev/null || true
+            git add data/leads/refine_progress.json data/leads/refined
             git diff --cached --quiet && break
             git commit -q -m "refine progress: $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
             sleep $((i * 10))
