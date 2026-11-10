@@ -19,6 +19,7 @@ COL,Latin America,837,9469343535,SECOP II (Colombia); UNGM (FAO); UNGM (IOM); UN
 CAN,North America,833,3921793,CanadaBuys (Canada); TED (EU); UNGM (ICAO)
 CZE,Europe,812,7342813078,TED (EU)
 NLD,Europe,727,6399386327,TED (EU); UNGM (ICJ)
+ECU,Latin America,701,2363428641,IDB; OCDS: Ecuador: Servicio Nacional de Contratación Pública; UNGM (FAO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNICEF); World Bank pipeline
 BEL,Europe,679,609366367,TED (EU)
 ROU,Europe,662,6339140677,TED (EU); World Bank pipeline
 SAU,Middle East & North Africa,642,0,Etimad (Saudi Arabia); IsDB; SAM.gov (USA); UNGM (IOM)
@@ -62,7 +63,6 @@ UZB,CIS & Central Asia,75,3573000000,AIIB; UNGM (FAO); UNGM (UNDP); UNGM (UNICEF
 MWI,Sub-Saharan Africa,69,480000000,AfDB; PPDA (Malawi); UNGM (FAO); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
 MLT,Europe,68,228946186,TED (EU); World Bank pipeline
 PAK,South Asia,66,4658600000,AIIB; IsDB; UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNESCO); UNGM (UNHCR); UNGM (UNICEF); UNGM (WHO); World Bank; World Bank pipeline
-PER,Latin America,56,1226886461,IDB; OCDS: Peru: Organismo Especializado para las Contratacio; UNGM (ILO); UNGM (UNDP); UNGM (UNFPA); UNGM (UNHCR); UNGM (UNIDO); World Bank pipeline
 IDN,Southeast Asia,55,6919956652,AIIB; IsDB; SAM.gov (USA); UNDP; UNGM (FAO); UNGM (ILO); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
 AFG,South Asia,53,337500000,UNGM (FAO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UN-Women); UNGM (UNDP); UNGM (UNESCO); UNGM (UNICEF); UNGM (UNOPS); UNGM (WHO); World Bank pipeli
 TUR,Middle East & North Africa,51,9029699970,AIIB; IsDB; TED (EU); UNGM (FAO); UNGM (IOM); UNGM (UNDP); UNGM (UNHCR); World Bank; World Bank pipeline
@@ -71,6 +71,7 @@ NGA,Sub-Saharan Africa,49,5300000000,IsDB; UNGM (ILO); UNGM (IOM); UNGM (UNDP); 
 SYR,Middle East & North Africa,44,685000000,UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNOPS); UNGM (UNRWA); UNGM (WHO); World Bank; World Bank pipeline
 HND,Latin America,44,361356277,IDB; OCDS: Honduras: Oficina Normativa de Contratación y Adqu; TED (EU); UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS);
 TCD,Sub-Saharan Africa,43,614909864,UNGM (FAO); UNGM (IOM); UNGM (UNDP); UNGM (UNHCR); World Bank; World Bank pipeline
+PER,Latin America,42,1223081211,IDB; OCDS: Peru: Organismo Especializado para las Contratacio; UNGM (ILO); UNGM (UNDP); UNGM (UNFPA); UNGM (UNHCR); UNGM (UNIDO); World Bank pipeline
 Western and Central Africa,Other,41,0,World Bank
 TUN,Middle East & North Africa,38,813502496,AfDB; IsDB; UNDP; UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); UNGM (WHO); World Bank; World Bank pipeline
 BDI,Sub-Saharan Africa,38,307000000,UNGM (FAO); UNGM (ILO); UNGM (UNDP); UNGM (UNESCO); UNGM (UNFPA); UNGM (UNICEF); UNGM (UNOPS); World Bank; World Bank pipeline
@@ -103,7 +104,6 @@ EGY,Middle East & North Africa,24,2050000000,UNGM (FAO); UNGM (ILO); UNGM (IOM);
 KGZ,CIS & Central Asia,23,220750000,AIIB; IsDB; UNGM (FAO); UNGM (UN-Women); UNGM (UNDP); World Bank; World Bank pipeline
 COD,Sub-Saharan Africa,23,0,UNGM (FAO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UNCDF); UNGM (UNFPA); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); UNGM (WHO)
 CHN,East Asia,22,757407205,AIIB; TED (EU); UNGM (UN-Women); UNGM (UNFPA); UNGM (UNICEF); World Bank; World Bank pipeline
-ECU,Latin America,22,2350000000,IDB; UNGM (FAO); UNGM (UN-Women); UNGM (UNDP); UNGM (UNICEF); World Bank pipeline
 SLE,Sub-Saharan Africa,21,210000000,AfDB; UNGM (FAO); UNGM (ITC); UNGM (UN-Women); UNGM (UNDP); UNGM (UNICEF); UNGM (UNOPS); World Bank; World Bank pipeline
 SOM,Sub-Saharan Africa,21,435000000,UNGM (FAO); UNGM (ILO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UNDP); UNGM (UNICEF); World Bank pipeline
 GEO,CIS & Central Asia,20,672562496,AIIB; UNGM (FAO); World Bank; World Bank pipeline
@@ -219,8 +219,8 @@ Lao PDR,Other,1,0,AIIB
 BLR,Europe,1,0,UNDP
 Jordan,Middle East & North Africa,1,0,EBRD
 Tajikistan,CIS & Central Asia,1,0,EBRD
-"Somalia, Federal Republic of",Other,1,0,World Bank
 DZA,Middle East & North Africa,1,2689229,TED (EU)
+"Somalia, Federal Republic of",Other,1,0,World Bank
 "LUX,BEL,FRA,LVA,DEU,ESP,POL,SWE,GRC,FIN,ROU,DNK,ITA,IRL,LTU,HUN,SVK,PRT,NLD,MLT,AUT,SVN,EST,CZE",Other,1,0,TED (EU)
 Romania,Europe,1,0,EBRD
 Bosnia And Herzegovina,Europe,1,0,EBRD
