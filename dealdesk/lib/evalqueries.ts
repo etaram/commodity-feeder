@@ -7,4 +7,5 @@ export const QUERIES = [
   "bitumen", "jet fuel", "LPG", "wheat", "rice", "sugar", "sunflower oil", "milk powder", "HDPE pipe",
   "ductile iron pipe", "water meters", "reverse osmosis", "UPS uninterruptible power supply", "data center cooling",
   "server racks", "X-ray machine", "patient monitors", "surgical gloves", "excavator", "fire trucks",
+  "sidamo coffee producer", "jasmine rice", "ethiopian sesame", "raw cashew nuts", "green coffee exporter", "basmati rice",
 ];

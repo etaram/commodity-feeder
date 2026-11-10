@@ -1,6 +1,7 @@
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
+import { detectCommodity } from "@/lib/commodity";
 import { suppliers as supplierIndex, tenders as supplierIndexTenders, isClosed, type Supplier } from "@/lib/index";
 import { readRanges, UNIVERSE } from "@/lib/sheets";
 import { isServiceOnly, sectorOf } from "@/lib/supfit";
@@ -333,6 +334,9 @@ export async function searchSuppliers(v: string[][]): Promise<Grid> {
     (!(minq > 0) || (s.q || 0) >= minq) && (!needC || !!s.web) &&
     (!role || (role === "logistics" ? (!!s.lg || LOGI.test(s.s || "")) : role === "trader" ? (s.td === "yes" || /trader/i.test(s.ty || "")) : role === "epc" ? !!s.epc : /goods/i.test(s.ty || ""))) &&
     (!re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.s || ""} ${s.s2 || ""} ${s.web || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.sp || ""}`.toLowerCase())))
+    // what the company itself makes or trades comes before what it once delivered under a contract
+    .map((s) => ({ s, own: !re || re.test(`${s.n} ${s.p || ""} ${s.cm || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase()) ? 0 : 1 }))
+    .sort((a, b) => a.own - b.own).map((x) => x.s)
     .sort((a, b) => (sec ? (a.s === sec ? 0 : 1) - (b.s === sec ? 0 : 1) : 0) || KIND_RANK[supplierKind(a)] - KIND_RANK[supplierKind(b)]).slice(0, 2000);
   return [SUP_HEAD, ...out.map(supRow)];
 }
@@ -464,7 +468,9 @@ Reply JSON only: {"en": "<the request in English>", "concepts": [{"terms": ["...
 }
 export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string }> {
   const short = String(o.text || "").trim().length <= 80;
-  const ex = short ? await expandQuery(String(o.text || "")) : null;
+  // a commodity request is read by the commodity table (code): no model call, no translation needed
+  const cmd = short ? detectCommodity(String(o.text || "")) : null;
+  const ex = cmd ? { en: String(o.text || ""), concepts: [{ terms: [] as string[], hs: cmd.hs }] } : short ? await expandQuery(String(o.text || "")) : null;
   const query = ex?.en || (NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || ""));
   const words = [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
     .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
@@ -472,11 +478,11 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   // product words reach the customs codes too: "tuna" is named in HS 0302.31-0303.49 and 1604.14, while a supplier
   // record often carries only the codes and the 4-digit heading ("Fish, frozen")
   const hsOf = await hsWordMap();
-  const concepts: Concept[] = ex
+  const concepts: Concept[] = cmd ? [{ terms: [cmd.term], hs: cmd.hs }] : ex
     ? ex.concepts.map((c) => ({ terms: c.terms.map((t) => stemRe(t)), hs: [...c.hs, ...c.terms.flatMap((t) => [...hsOf(t)])] }))
     : words.filter((w) => !FLEX_WORDS.has(w) || words.every((x) => FLEX_WORDS.has(x))).map((w) => ({ terms: [stemRe(w)], hs: [...hsOf(w)] }));
   const res = concepts;
-  const scored: { s: Supplier; sc: number; m: MatchResult }[] = [];
+  const scored: { s: Supplier; sc: number; m: MatchResult; cb?: number }[] = [];
   const fams = familiesFor(`${query} ${o.text || ""}`), seenKey = new Set<string>();
   const askedKey = String(o.text || "").trim().toLowerCase().slice(0, 200);
   const vcaps = process.env.SUPPLIER_VERIFIED === "off" ? new Map<string, Verified[]>() : await Promise.race([verifiedCaps().catch(() => new Map<string, Verified[]>()), new Promise<Map<string, Verified[]>>((r) => setTimeout(() => r(new Map()), 1500))]);
@@ -491,8 +497,10 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
     // what the company makes or trades (name, products, industry, customs headings) counts more than what it once
     // supplied under a contract (a crane firm that moved generators is not a generator maker)
     if (o.kind && supplierKind(s) !== o.kind) continue;
-    const blob = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();
-    const all = `${blob} ${s.sp || ""}`.toLowerCase();
+    const blob0 = `${s.n} ${s.p || ""} ${s.cm || ""} ${s.lg || ""} ${s.hs || ""} ${s.hd || ""} ${s.in || ""} ${s.wt || ""}`.toLowerCase();
+    // look-alikes ("coffee table", "rice cooker") are removed from the text before a commodity is looked for
+    const blob = cmd ? cmd.clean(blob0) : blob0;
+    const all = cmd ? `${blob} ${cmd.clean((s.sp || "").toLowerCase())}` : `${blob} ${s.sp || ""}`.toLowerCase();
     let hits = 0, own = 0;
     const codes = concepts.some((c) => c.hs.length) ? (String(s.hs || "").replace(/\./g, "").match(/\d{4,6}/g) || []) : [];
     for (const c of concepts) {
@@ -532,12 +540,27 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
       gaps: [...m.gaps.filter((g) => !/directory/.test(g)), `listed in ${s.ds}: check the company before relying on it`], url: m.url || s.du };
     if (seenKey.has(dk)) continue;
     seenKey.add(dk);
-    scored.push({ s, sc, m });
+    // commodity order: the named variety first, then producers and exporters in the variety's origin, then other own
+    // evidence; a company that only once delivered it under a public contract comes last
+    let cb: number | undefined;
+    if (cmd) {
+      const inOrigin = (cmd.variety?.origins.length ? cmd.variety.origins : cmd.origins).includes(s.c || "");
+      const names = !!cmd.variety && cmd.variety.re.test(all);
+      cb = (own ? 4 : 0) + (names && own ? 8 : names ? 3 : 0) + (inOrigin ? (cmd.variety ? 5 : 2) : 0) + (s.ds || s.x ? 2 : 0) + cmd.rest.filter((w) => all.includes(w)).length;
+      if (cmd.variety && !names) m = { ...m, gaps: [...m.gaps, inOrigin ? `"${cmd.variety.name}" not stated; the company is in its origin country` : `"${cmd.variety.name}" not stated`] };
+      if (!own) m = { ...m, bucket: m.bucket === "supported" ? "plausible" : m.bucket };
+    }
+    scored.push({ s, sc, m, cb });
     if (s.c && hits) origins.set(s.c, (origins.get(s.c) || 0) + 1);
   }
   // stage D: product fit first (a strong global tier never compensates a mismatch), then evidence strength, then
   // the score; makers before traders only as a tie-break (the role filter "kind" narrows explicitly)
-  scored.sort((a, b) => BUCKET_RANK[a.m.bucket] - BUCKET_RANK[b.m.bucket] || evidenceRank(a.m.evidence) - evidenceRank(b.m.evidence)
+  if (cmd) {
+    // with enough companies that state the commodity themselves, one-off contract deliveries are left out
+    const ownN = scored.filter((x) => (x.cb || 0) >= 4).length;
+    if (ownN >= 15) for (let i = scored.length - 1; i >= 0; i--) if ((scored[i].cb || 0) < 4) scored.splice(i, 1);
+  }
+  scored.sort((a, b) => (b.cb || 0) - (a.cb || 0) || BUCKET_RANK[a.m.bucket] - BUCKET_RANK[b.m.bucket] || evidenceRank(a.m.evidence) - evidenceRank(b.m.evidence)
     || KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
   const head = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version", "match_url"];
   return { values: [head, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION, x.m.url || ""])], total: scored.length,

@@ -1,0 +1,1584 @@
+{
+"version": "commodity-tax-1",
+"commodities": [
+{
+"key": "coffee",
+"terms": [
+"coffee",
+"green coffee",
+"arabica",
+"robusta",
+"cafe verde",
+"café vert"
+],
+"hs": [
+"0901"
+],
+"origins": [
+"ETH",
+"BRA",
+"COL",
+"VNM",
+"UGA",
+"KEN",
+"HND",
+"GTM",
+"PER",
+"IDN",
+"TZA",
+"RWA",
+"IND",
+"MEX",
+"NIC",
+"CRI"
+],
+"not": "coffee (table|machine|maker|shop|cup|mug|break|filter|grinder|vending|capsule machine|furniture|service|set)|cafeteria|coffee ?house",
+"varieties": {
+"sidamo": {
+"a": [
+"sidamo",
+"sidama"
+],
+"o": [
+"ETH"
+]
+},
+"yirgacheffe": {
+"a": [
+"yirgacheffe",
+"yirga cheffe",
+"yirgachefe"
+],
+"o": [
+"ETH"
+]
+},
+"guji": {
+"a": [
+"guji"
+],
+"o": [
+"ETH"
+]
+},
+"harrar": {
+"a": [
+"harrar",
+"harar"
+],
+"o": [
+"ETH"
+]
+},
+"limu": {
+"a": [
+"limu",
+"limmu"
+],
+"o": [
+"ETH"
+]
+},
+"djimmah": {
+"a": [
+"djimmah",
+"jimma"
+],
+"o": [
+"ETH"
+]
+},
+"lekempti": {
+"a": [
+"lekempti",
+"nekemte"
+],
+"o": [
+"ETH"
+]
+},
+"supremo": {
+"a": [
+"supremo",
+"excelso"
+],
+"o": [
+"COL"
+]
+},
+"santos": {
+"a": [
+"santos",
+"cerrado"
+],
+"o": [
+"BRA"
+]
+},
+"kenya aa": {
+"a": [
+"kenya aa"
+],
+"o": [
+"KEN"
+]
+},
+"mandheling": {
+"a": [
+"mandheling",
+"gayo",
+"sumatra"
+],
+"o": [
+"IDN"
+]
+},
+"bugisu": {
+"a": [
+"bugisu",
+"drugar"
+],
+"o": [
+"UGA"
+]
+},
+"robusta": {
+"a": [
+"robusta"
+],
+"o": [
+"VNM",
+"UGA",
+"IDN",
+"BRA",
+"IND"
+]
+},
+"arabica": {
+"a": [
+"arabica"
+],
+"o": []
+}
+},
+"he": [
+"קפה"
+]
+},
+{
+"key": "rice",
+"terms": [
+"rice",
+"paddy",
+"riz",
+"arroz"
+],
+"hs": [
+"1006"
+],
+"origins": [
+"THA",
+"VNM",
+"IND",
+"PAK",
+"KHM",
+"MMR",
+"USA",
+"URY",
+"BRA",
+"CHN"
+],
+"not": "rice (cooker|mill machine|milling machine|paper|university|bran oil machine)|licorice|price|caprice|avarice",
+"varieties": {
+"jasmine": {
+"a": [
+"jasmine",
+"hom mali",
+"thai fragrant",
+"fragrant rice",
+"khao dawk mali"
+],
+"o": [
+"THA",
+"KHM",
+"VNM"
+]
+},
+"basmati": {
+"a": [
+"basmati",
+"1121",
+"pusa"
+],
+"o": [
+"IND",
+"PAK"
+]
+},
+"parboiled": {
+"a": [
+"parboiled",
+"sella"
+],
+"o": [
+"IND",
+"THA",
+"PAK"
+]
+},
+"broken": {
+"a": [
+"broken rice",
+"5% broken",
+"25% broken",
+"100% broken"
+],
+"o": [
+"VNM",
+"THA",
+"IND",
+"PAK"
+]
+},
+"glutinous": {
+"a": [
+"glutinous",
+"sticky rice"
+],
+"o": [
+"THA",
+"VNM",
+"LAO"
+]
+},
+"irri-6": {
+"a": [
+"irri-6",
+"irri 6",
+"irri-9"
+],
+"o": [
+"PAK"
+]
+},
+"japonica": {
+"a": [
+"japonica",
+"calrose",
+"sushi rice"
+],
+"o": [
+"USA",
+"VNM",
+"CHN"
+]
+}
+},
+"he": [
+"אורז"
+]
+},
+{
+"key": "sesame",
+"terms": [
+"sesame",
+"sesamum",
+"sesamo",
+"sésame",
+"gingelly"
+],
+"hs": [
+"1207"
+],
+"origins": [
+"ETH",
+"SDN",
+"IND",
+"NGA",
+"TZA",
+"BFA",
+"TCD",
+"MMR",
+"MOZ",
+"UGA",
+"PAK"
+],
+"not": "sesame (oil press|street)",
+"varieties": {
+"humera": {
+"a": [
+"humera"
+],
+"o": [
+"ETH"
+]
+},
+"wollega": {
+"a": [
+"wollega",
+"wellega"
+],
+"o": [
+"ETH"
+]
+},
+"gadaref": {
+"a": [
+"gadaref",
+"gedaref"
+],
+"o": [
+"SDN"
+]
+},
+"hulled": {
+"a": [
+"hulled"
+],
+"o": [
+"IND"
+]
+}
+},
+"he": [
+"שומשום"
+]
+},
+{
+"key": "cocoa",
+"terms": [
+"cocoa",
+"cacao",
+"kakao"
+],
+"hs": [
+"1801",
+"1803",
+"1804",
+"1805"
+],
+"origins": [
+"CIV",
+"GHA",
+"ECU",
+"CMR",
+"NGA",
+"IDN",
+"BRA",
+"PER",
+"DOM"
+],
+"not": "cocoa (mat|butter lotion)",
+"varieties": {},
+"he": [
+"קקאו"
+]
+},
+{
+"key": "tea",
+"terms": [
+"tea",
+"black tea",
+"green tea",
+"ctc tea"
+],
+"hs": [
+"0902"
+],
+"origins": [
+"KEN",
+"LKA",
+"IND",
+"CHN",
+"VNM",
+"RWA",
+"UGA",
+"MWI",
+"TZA"
+],
+"not": "tea (pot|cup|set|room|house|towel|spoon|bag machine|light)|steam|team|teak|tear",
+"varieties": {
+"ceylon": {
+"a": [
+"ceylon"
+],
+"o": [
+"LKA"
+]
+},
+"assam": {
+"a": [
+"assam"
+],
+"o": [
+"IND"
+]
+},
+"darjeeling": {
+"a": [
+"darjeeling"
+],
+"o": [
+"IND"
+]
+}
+},
+"he": [
+"תה"
+]
+},
+{
+"key": "sugar",
+"terms": [
+"sugar",
+"icumsa",
+"azucar",
+"sucre",
+"raw sugar",
+"white sugar"
+],
+"hs": [
+"1701"
+],
+"origins": [
+"BRA",
+"IND",
+"THA",
+"GTM",
+"ZAF",
+"AUS",
+"MEX"
+],
+"not": "sugar (free|mill machinery|testing)|blood sugar",
+"varieties": {
+"icumsa 45": {
+"a": [
+"icumsa 45",
+"icumsa-45",
+"ic45",
+"refined white"
+],
+"o": [
+"BRA",
+"IND",
+"THA"
+]
+},
+"vhp": {
+"a": [
+"vhp",
+"icumsa 600",
+"icumsa 1200"
+],
+"o": [
+"BRA"
+]
+}
+},
+"he": [
+"סוכר"
+]
+},
+{
+"key": "wheat",
+"terms": [
+"wheat",
+"blé",
+"trigo",
+"durum"
+],
+"hs": [
+"1001"
+],
+"origins": [
+"RUS",
+"UKR",
+"AUS",
+"CAN",
+"USA",
+"FRA",
+"ARG",
+"KAZ",
+"ROU"
+],
+"not": "wheat (grass juice|bag)",
+"varieties": {},
+"he": [
+"חיטה"
+]
+},
+{
+"key": "maize",
+"terms": [
+"maize",
+"corn",
+"yellow corn",
+"white maize",
+"maiz"
+],
+"hs": [
+"1005"
+],
+"origins": [
+"USA",
+"BRA",
+"ARG",
+"UKR",
+"ZAF",
+"ROU"
+],
+"not": "corn(er|ing|ea|ell|ice|wall)|popcorn machine|unicorn|acorn",
+"varieties": {},
+"he": [
+"תירס"
+]
+},
+{
+"key": "soybean",
+"terms": [
+"soybean",
+"soybeans",
+"soya",
+"soja",
+"soy bean"
+],
+"hs": [
+"1201",
+"1507",
+"2304"
+],
+"origins": [
+"BRA",
+"USA",
+"ARG",
+"PRY",
+"UKR",
+"IND"
+],
+"not": "soy (sauce|candle|ink)",
+"varieties": {},
+"he": [
+"סויה"
+]
+},
+{
+"key": "palm oil",
+"terms": [
+"palm oil",
+"cpo",
+"palm olein",
+"rbd palm",
+"palm kernel"
+],
+"hs": [
+"1511",
+"1513"
+],
+"origins": [
+"IDN",
+"MYS",
+"THA",
+"COL",
+"NGA",
+"GTM",
+"PNG"
+],
+"not": "",
+"varieties": {},
+"he": [
+"שמן דקלים"
+]
+},
+{
+"key": "sunflower oil",
+"terms": [
+"sunflower oil",
+"sunflower seed oil",
+"sunflower"
+],
+"hs": [
+"1512",
+"1206"
+],
+"origins": [
+"UKR",
+"RUS",
+"ARG",
+"TUR",
+"BGR",
+"ROU"
+],
+"not": "",
+"varieties": {},
+"he": [
+"שמן חמניות"
+]
+},
+{
+"key": "olive oil",
+"terms": [
+"olive oil",
+"extra virgin",
+"aceite de oliva"
+],
+"hs": [
+"1509"
+],
+"origins": [
+"ESP",
+"ITA",
+"GRC",
+"TUN",
+"TUR",
+"PRT",
+"MAR"
+],
+"not": "",
+"varieties": {},
+"he": [
+"שמן זית"
+]
+},
+{
+"key": "cashew",
+"terms": [
+"cashew",
+"cashews",
+"cashew nut",
+"rcn",
+"anacarde",
+"cajou"
+],
+"hs": [
+"0801"
+],
+"origins": [
+"CIV",
+"VNM",
+"IND",
+"TZA",
+"NGA",
+"BEN",
+"GHA",
+"GNB",
+"MOZ",
+"BRA"
+],
+"not": "",
+"varieties": {
+"w320": {
+"a": [
+"w320",
+"w240",
+"ww320"
+],
+"o": [
+"VNM",
+"IND"
+]
+},
+"rcn": {
+"a": [
+"rcn",
+"raw cashew"
+],
+"o": [
+"CIV",
+"TZA",
+"NGA",
+"BEN",
+"GHA",
+"GNB"
+]
+}
+},
+"he": [
+"קשיו"
+]
+},
+{
+"key": "pepper",
+"terms": [
+"black pepper",
+"white pepper",
+"peppercorn",
+"pepper"
+],
+"hs": [
+"0904"
+],
+"origins": [
+"VNM",
+"BRA",
+"IDN",
+"IND",
+"LKA",
+"MYS",
+"KHM"
+],
+"not": "pepper (spray|mill|grinder)|bell pepper|sweet pepper",
+"varieties": {},
+"he": [
+"פלפל שחור"
+]
+},
+{
+"key": "spices",
+"terms": [
+"cardamom",
+"cinnamon",
+"clove",
+"cloves",
+"turmeric",
+"cumin",
+"ginger",
+"nutmeg",
+"vanilla",
+"saffron",
+"coriander seed",
+"chilli"
+],
+"hs": [
+"0905",
+"0906",
+"0907",
+"0908",
+"0909",
+"0910"
+],
+"origins": [
+"IND",
+"VNM",
+"IDN",
+"LKA",
+"MDG",
+"GTM",
+"CHN",
+"TZA",
+"NGA",
+"ETH"
+],
+"not": "",
+"varieties": {},
+"he": [
+"תבלינים"
+]
+},
+{
+"key": "cotton",
+"terms": [
+"cotton lint",
+"raw cotton",
+"cotton",
+"coton"
+],
+"hs": [
+"5201"
+],
+"origins": [
+"USA",
+"IND",
+"BRA",
+"AUS",
+"UZB",
+"BFA",
+"MLI",
+"BEN",
+"EGY",
+"PAK",
+"TZA"
+],
+"not": "cotton (shirt|fabric|towel|swab|bud|pad|bag|bedding|garment|yarn dyed|clothing|t-shirt|wool|socks|roll|gauze)",
+"varieties": {},
+"he": [
+"כותנה"
+]
+},
+{
+"key": "cashmere-wool",
+"terms": [
+"greasy wool",
+"raw wool",
+"merino wool"
+],
+"hs": [
+"5101"
+],
+"origins": [
+"AUS",
+"NZL",
+"ZAF",
+"URY",
+"ARG"
+],
+"not": "",
+"varieties": {},
+"he": []
+},
+{
+"key": "rubber",
+"terms": [
+"natural rubber",
+"rss3",
+"tsr20",
+"svr",
+"latex concentrate"
+],
+"hs": [
+"4001"
+],
+"origins": [
+"THA",
+"IDN",
+"VNM",
+"CIV",
+"MYS",
+"IND",
+"LBR"
+],
+"not": "",
+"varieties": {},
+"he": [
+"גומי טבעי"
+]
+},
+{
+"key": "urea",
+"terms": [
+"urea",
+"urea 46",
+"granular urea",
+"prilled urea"
+],
+"hs": [
+"3102"
+],
+"origins": [
+"RUS",
+"QAT",
+"SAU",
+"EGY",
+"OMN",
+"CHN",
+"IDN",
+"NGA",
+"DZA",
+"IRN",
+"ARE"
+],
+"not": "",
+"varieties": {},
+"he": [
+"אוריאה"
+]
+},
+{
+"key": "fertilizer",
+"terms": [
+"fertilizer",
+"fertiliser",
+"dap",
+"npk",
+"potash",
+"mop",
+"ammonium nitrate",
+"ammonium sulphate"
+],
+"hs": [
+"3102",
+"3103",
+"3104",
+"3105"
+],
+"origins": [
+"RUS",
+"CHN",
+"MAR",
+"SAU",
+"BLR",
+"CAN",
+"JOR",
+"EGY",
+"TUR"
+],
+"not": "",
+"varieties": {},
+"he": [
+"דשן"
+]
+},
+{
+"key": "sulphur",
+"terms": [
+"sulphur",
+"sulfur",
+"granular sulphur"
+],
+"hs": [
+"2503",
+"2802"
+],
+"origins": [
+"ARE",
+"QAT",
+"SAU",
+"KAZ",
+"RUS",
+"CAN",
+"KWT",
+"TKM"
+],
+"not": "sulphur (dioxide analy|free)",
+"varieties": {},
+"he": [
+"גופרית"
+]
+},
+{
+"key": "cement",
+"terms": [
+"cement",
+"clinker",
+"opc",
+"portland cement"
+],
+"hs": [
+"2523"
+],
+"origins": [
+"VNM",
+"TUR",
+"EGY",
+"PAK",
+"ARE",
+"IRN",
+"IDN",
+"CHN",
+"IND"
+],
+"not": "cement (mixer|truck|plant machinery)|fiber cement|fibre cement board",
+"varieties": {},
+"he": [
+"מלט"
+]
+},
+{
+"key": "steel",
+"terms": [
+"rebar",
+"steel billet",
+"hot rolled coil",
+"hrc",
+"wire rod",
+"steel billets",
+"deformed bar",
+"steel coil"
+],
+"hs": [
+"7207",
+"7208",
+"7213",
+"7214"
+],
+"origins": [
+"CHN",
+"TUR",
+"IND",
+"RUS",
+"UKR",
+"VNM",
+"KOR",
+"EGY",
+"IRN"
+],
+"not": "",
+"varieties": {},
+"he": [
+"פלדה"
+]
+},
+{
+"key": "copper",
+"terms": [
+"copper cathode",
+"copper cathodes",
+"copper concentrate"
+],
+"hs": [
+"7403",
+"2603"
+],
+"origins": [
+"CHL",
+"PER",
+"COD",
+"ZMB",
+"CHN",
+"AUS",
+"IDN",
+"KAZ"
+],
+"not": "copper (pipe fitting|wire harness)",
+"varieties": {},
+"he": [
+"נחושת"
+]
+},
+{
+"key": "aluminium",
+"terms": [
+"aluminium ingot",
+"aluminum ingot",
+"a7 ingot",
+"primary aluminium"
+],
+"hs": [
+"7601"
+],
+"origins": [
+"CHN",
+"IND",
+"RUS",
+"ARE",
+"BHR",
+"CAN",
+"NOR",
+"MYS"
+],
+"not": "",
+"varieties": {},
+"he": [
+"אלומיניום"
+]
+},
+{
+"key": "gold",
+"terms": [
+"gold dore",
+"gold bullion",
+"gold bar",
+"dore bars"
+],
+"hs": [
+"7108"
+],
+"origins": [
+"GHA",
+"ZAF",
+"TZA",
+"MLI",
+"BFA",
+"PER",
+"ARE",
+"CHE"
+],
+"not": "gold (plated|jewel|leaf|coast)",
+"varieties": {},
+"he": [
+"זהב"
+]
+},
+{
+"key": "crude oil",
+"terms": [
+"crude oil",
+"bonny light",
+"espo",
+"urals",
+"crude petroleum"
+],
+"hs": [
+"2709"
+],
+"origins": [
+"SAU",
+"RUS",
+"IRQ",
+"ARE",
+"NGA",
+"AGO",
+"KAZ",
+"USA",
+"BRA"
+],
+"not": "",
+"varieties": {},
+"he": [
+"נפט גולמי"
+]
+},
+{
+"key": "diesel",
+"terms": [
+"en590",
+"diesel",
+"gasoil",
+"ulsd",
+"d2",
+"jet a1",
+"jp54"
+],
+"hs": [
+"2710"
+],
+"origins": [
+"RUS",
+"IND",
+"ARE",
+"SAU",
+"NLD",
+"USA",
+"KOR",
+"SGP",
+"KWT"
+],
+"not": "diesel (generator|engine|particulate|pump|injector|mechanic)",
+"varieties": {},
+"he": [
+"סולר",
+"דיזל"
+]
+},
+{
+"key": "lng-lpg",
+"terms": [
+"lng",
+"lpg",
+"liquefied natural gas",
+"propane",
+"butane"
+],
+"hs": [
+"2711"
+],
+"origins": [
+"QAT",
+"USA",
+"AUS",
+"RUS",
+"ARE",
+"DZA",
+"NGA"
+],
+"not": "lpg (cylinder|stove|hose)",
+"varieties": {},
+"he": [
+"גז"
+]
+},
+{
+"key": "coal",
+"terms": [
+"thermal coal",
+"steam coal",
+"coking coal",
+"anthracite"
+],
+"hs": [
+"2701"
+],
+"origins": [
+"IDN",
+"AUS",
+"ZAF",
+"RUS",
+"COL",
+"MOZ",
+"USA"
+],
+"not": "",
+"varieties": {},
+"he": [
+"פחם"
+]
+},
+{
+"key": "iron ore",
+"terms": [
+"iron ore",
+"hematite",
+"magnetite",
+"iron ore fines"
+],
+"hs": [
+"2601"
+],
+"origins": [
+"AUS",
+"BRA",
+"ZAF",
+"IND",
+"UKR",
+"CAN",
+"MRT"
+],
+"not": "",
+"varieties": {},
+"he": [
+"עפרת ברזל"
+]
+},
+{
+"key": "timber",
+"terms": [
+"timber",
+"sawn timber",
+"teak",
+"logs",
+"sawnwood",
+"hardwood",
+"plywood"
+],
+"hs": [
+"4403",
+"4407",
+"4412"
+],
+"origins": [
+"MYS",
+"IDN",
+"CMR",
+"GAB",
+"BRA",
+"VNM",
+"RUS",
+"FIN",
+"COG",
+"GHA"
+],
+"not": "log(in|istic|o|ic|ging tool)",
+"varieties": {},
+"he": [
+"עץ"
+]
+},
+{
+"key": "fish",
+"terms": [
+"tuna",
+"skipjack",
+"yellowfin",
+"frozen fish",
+"mackerel",
+"sardine",
+"shrimp",
+"tilapia",
+"pangasius",
+"octopus",
+"squid"
+],
+"hs": [
+"0302",
+"0303",
+"0304",
+"0306",
+"0307",
+"1604"
+],
+"origins": [
+"VNM",
+"IDN",
+"THA",
+"ECU",
+"IND",
+"CHN",
+"MAR",
+"MRT",
+"SEN",
+"NAM",
+"CHL",
+"NOR"
+],
+"not": "fish(ing rod| tank|ing net machine)",
+"varieties": {},
+"he": [
+"דגים",
+"טונה"
+]
+},
+{
+"key": "meat",
+"terms": [
+"frozen chicken",
+"chicken paws",
+"halal chicken",
+"beef",
+"frozen beef",
+"lamb",
+"mutton",
+"poultry meat"
+],
+"hs": [
+"0201",
+"0202",
+"0204",
+"0207"
+],
+"origins": [
+"BRA",
+"USA",
+"AUS",
+"IND",
+"ARG",
+"URY",
+"NZL",
+"POL",
+"UKR",
+"PRY"
+],
+"not": "",
+"varieties": {},
+"he": [
+"בשר",
+"עוף"
+]
+},
+{
+"key": "dairy",
+"terms": [
+"milk powder",
+"skimmed milk powder",
+"smp",
+"wmp",
+"butter",
+"whey powder"
+],
+"hs": [
+"0402",
+"0405",
+"0404"
+],
+"origins": [
+"NZL",
+"NLD",
+"DEU",
+"FRA",
+"IRL",
+"USA",
+"BLR",
+"ARG",
+"URY",
+"POL"
+],
+"not": "butter(fly|cup)|shea butter|cocoa butter|peanut butter",
+"varieties": {},
+"he": [
+"אבקת חלב"
+]
+},
+{
+"key": "pulses",
+"terms": [
+"lentils",
+"chickpeas",
+"chickpea",
+"kidney beans",
+"mung beans",
+"pigeon peas",
+"faba beans",
+"white pea beans",
+"pulses"
+],
+"hs": [
+"0713"
+],
+"origins": [
+"CAN",
+"AUS",
+"IND",
+"ETH",
+"TUR",
+"MMR",
+"TZA",
+"RUS",
+"ARG",
+"USA"
+],
+"not": "",
+"varieties": {},
+"he": [
+"קטניות",
+"חומוס",
+"עדשים"
+]
+},
+{
+"key": "nuts",
+"terms": [
+"almonds",
+"pistachio",
+"walnuts",
+"hazelnuts",
+"macadamia",
+"peanuts",
+"groundnuts",
+"brazil nuts"
+],
+"hs": [
+"0802",
+"1202"
+],
+"origins": [
+"USA",
+"TUR",
+"IRN",
+"CHL",
+"AUS",
+"IND",
+"ARG",
+"CHN",
+"SDN",
+"SEN",
+"NGA",
+"KEN",
+"ZAF"
+],
+"not": "",
+"varieties": {},
+"he": [
+"אגוזים",
+"שקדים"
+]
+},
+{
+"key": "dates-fruit",
+"terms": [
+"dates",
+"medjool",
+"avocado",
+"mango",
+"banana",
+"pineapple",
+"citrus",
+"oranges"
+],
+"hs": [
+"0803",
+"0804",
+"0805"
+],
+"origins": [
+"ECU",
+"PHL",
+"CRI",
+"COL",
+"MEX",
+"PER",
+"KEN",
+"ZAF",
+"EGY",
+"TUN",
+"SAU",
+"IRQ",
+"DZA",
+"ARE"
+],
+"not": "up[- ]to[- ]dates?|dates? of",
+"varieties": {},
+"he": [
+"תמרים"
+]
+},
+{
+"key": "gum arabic",
+"terms": [
+"gum arabic",
+"acacia gum",
+"gum acacia"
+],
+"hs": [
+"1301"
+],
+"origins": [
+"SDN",
+"TCD",
+"NGA",
+"SEN",
+"MLI"
+],
+"not": "",
+"varieties": {},
+"he": [
+"גומי ערבי"
+]
+},
+{
+"key": "shea",
+"terms": [
+"shea butter",
+"shea nut",
+"shea nuts",
+"karite"
+],
+"hs": [
+"1207",
+"1515"
+],
+"origins": [
+"GHA",
+"BFA",
+"NGA",
+"MLI",
+"CIV",
+"BEN",
+"TGO"
+],
+"not": "",
+"varieties": {},
+"he": [
+"שיאה"
+]
+},
+{
+"key": "flowers",
+"terms": [
+"cut flowers",
+"roses",
+"fresh flowers"
+],
+"hs": [
+"0603"
+],
+"origins": [
+"KEN",
+"ETH",
+"ECU",
+"COL",
+"NLD"
+],
+"not": "",
+"varieties": {},
+"he": [
+"פרחים"
+]
+},
+{
+"key": "oilseeds",
+"terms": [
+"niger seed",
+"linseed",
+"flaxseed",
+"castor seed",
+"rapeseed",
+"canola"
+],
+"hs": [
+"1204",
+"1205",
+"1207"
+],
+"origins": [
+"ETH",
+"IND",
+"CAN",
+"KAZ",
+"RUS",
+"UKR",
+"AUS"
+],
+"not": "",
+"varieties": {},
+"he": []
+}
+]
+}
