@@ -1,13 +1,36 @@
-import re, requests, json
-UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36", "Accept-Language": "en"}
-h = requests.get("https://royalcoffee.com/offerings/?country=ethiopia", headers=UA, timeout=40).text
-print("len", len(h), "tables", h.count("<table"), "json-ld", h.count("application/ld+json"), "wp-json", "wp-json" in h)
-for m in list(re.finditer(r"[$]\s?\d+[.]\d\d", h))[:6]:
-    print("HTML>>", re.sub(r"\s+", " ", h[max(0, m.start() - 700):m.start() + 120]))
-    print("-----")
-for m in list(re.finditer(r"(?i)ethiopia", h))[:400:60]:
-    print("ETH>>", re.sub(r"\s+", " ", h[max(0, m.start() - 150):m.start() + 350]))
-for u in ["https://royalcoffee.com/wp-json/wc/store/products?per_page=5&search=ethiopia", "https://royalcoffee.com/wp-json/wp/v2/types", "https://royalcoffee.com/robots.txt"]:
+import requests, json, csv, io
+UA = {"User-Agent": "Mozilla/5.0 (compatible; SinderPriceProbe/1.0)"}
+def t(name, url, params=None):
     try:
-        r = requests.get(u, headers=UA, timeout=30); print("API", u[-60:], r.status_code, r.text[:600].replace("\n", " "))
-    except Exception as e: print("API ERR", e)
+        r = requests.get(url, params=params, headers=UA, timeout=60)
+        print("==", name, r.status_code, len(r.content), r.url[:200]); return r
+    except Exception as e:
+        print("==", name, "ERR", str(e)[:150]); return None
+for mo in ("2026-09", "2026-08", "2026-07"):
+    r = t("census " + mo, "https://api.census.gov/data/timeseries/intltrade/imports/hs", {"get": "CTY_CODE,CTY_NAME,GEN_VAL_MO,GEN_QY1_MO,UNIT_QY1,GEN_CIF_MO,GEN_CHA_MO", "COMM_LVL": "HS6", "I_COMMODITY": "090111", "time": mo})
+    if r is not None and r.ok:
+        j = r.json(); print(j[0]); rows = sorted(j[1:], key=lambda x: -float(x[2] or 0))[:12]
+        for x in rows: print("  ", x[:7], (round(float(x[2]) / float(x[3]), 3) if float(x[3] or 0) else None))
+        break
+    elif r is not None: print(r.text[:300])
+for rep, nm in (("76", "Brazil"), ("231", "Ethiopia"), ("704", "Viet Nam"), ("764", "Thailand"), ("356", "India"), ("384", "Cote d'Ivoire")):
+    for per in ("202608", "202606", "2025"):
+        freq = "A" if len(per) == 4 else "M"
+        r = t(f"comtrade {nm} {per}", f"https://comtradeapi.un.org/public/v1/preview/C/{freq}/HS", {"reporterCode": rep, "cmdCode": "090111,100630,120740,180100,080131", "flowCode": "X", "period": per, "partnerCode": 0, "customsCode": "C00", "motCode": 0})
+        if r is not None and r.ok:
+            d = r.json().get("data", [])
+            print("   rows", len(d), [(x.get("cmdCode"), x.get("period"), round((x.get("primaryValue") or 0) / (x.get("netWgt") or 1), 3), int(x.get("netWgt") or 0)) for x in d if x.get("partner2Code") in (0, None)][:6])
+            if d: break
+r = t("hdx wfp eth", "https://data.humdata.org/api/3/action/package_show", {"id": "wfp-food-prices-for-ethiopia"})
+if r is not None and r.ok:
+    res = r.json()["result"]["resources"]; print([(x["name"], x["url"][-70:]) for x in res][:4])
+    c = t("wfp csv", res[0]["url"])
+    if c is not None and c.ok:
+        rows = list(csv.DictReader(io.StringIO(c.text))); print(len(rows), list(rows[0].keys()))
+        last = max(x["date"] for x in rows[1:]); print("last", last)
+        com = {}
+        for x in rows[1:]:
+            if x["date"] >= "2026-06": com.setdefault((x["commodity"], x["pricetype"], x["unit"]), []).append(float(x["usdprice"] or 0))
+        for k, v in sorted(com.items())[:60]: print("  ", k, len(v), round(sum(v) / len(v), 3))
+r = t("fpma", "https://fpma.fao.org/giews/v4/price_module/api/v1/FpmaSerie/", {"format": "json"})
+if r is not None: print(r.text[:500])
