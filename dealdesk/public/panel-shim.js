@@ -117,6 +117,11 @@
     list: async () => { const r = await fetch("/api/users", { credentials: "same-origin" }); if (r.status === 401) { location.href = "/login"; throw err("needs_reauth", "Deal Desk"); } const j = await r.json().catch(() => ({})); if (!r.ok) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j.users || []; },
     set: async (email, patch) => post("/api/users", Object.assign({ email }, patch), "Deal Desk"),
   };
+  // Bid projects: one record for the panel and the Telegram bot.
+  window.DD_PROJECTS = {
+    list: async () => { const r = await fetch("/api/projects", { credentials: "same-origin" }); return r.json().catch(() => ({})); },
+    open: async (tenderId) => { const r = await fetch("/api/projects", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ tender_id: tenderId }) }); return r.json().catch(() => ({})); },
+  };
   // The best suppliers for one tender, ranked on the server over the whole supplier index.
   window.DD_SUPFOR = async (q) => (await post("/api/panel/suppliers-for", q, "Deal Desk")).values || [];
   // Private deal workspace (analysts and admins; the server refuses viewers).
