@@ -1,50 +1,50 @@
 source,last_run_utc,rows,note,detail
-ted,2026-11-11T06:05,24626,OK,fetched=5701; days=3; cache=24626
-fts,2026-11-11T06:05,180,OK,pages=1
-sam,2026-11-11T06:05,7672,OK,fetched=1360; set_aside=11744; open_to_foreign=5527; full=0
-canadabuys,2026-11-11T06:07,838,OK,
+ted,2026-11-11T09:22,24626,OK,fetched=5701; days=3; cache=24626
+fts,2026-11-11T09:22,180,OK,pages=1
+sam,2026-11-11T09:23,7673,OK,fetched=1367; set_aside=11744; open_to_foreign=5528; full=0
+canadabuys,2026-11-11T09:23,838,OK,
 za,2026-11-11T06:08,1118,OK,
 worldbank,2026-11-11T07:22,707,OK,new=282; cache=707; days=10
-ebrd,2026-11-11T06:08,42,OK,
+ebrd,2026-11-11T09:23,42,OK,
 mrgov,2026-11-11T07:23,185,OK,
-ungm,2026-11-11T06:09,1176,OK,new=391; total_active=1653; pages=29
-undp,2026-11-11T02:01,18,OK,"new=24; cache=18 | last error: rform, curl: (28) Operation timed out after 60000 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details. "
-aiib,2026-11-11T06:10,176,OK,new=173; awards=292
-isdb,2026-11-11T06:10,34,OK,new=39
-etimad,2026-11-11T06:43,661,OK,new=93; pages=11
-prozorro,2026-11-11T06:44,1195,OK,candidates=2991; fetched=78
-pncp,2026-11-11T06:45,5835,OK,new=318
-secop,2026-11-11T06:45,858,OK,new=27
+ungm,2026-11-11T09:24,1208,OK,new=411; total_active=1656; pages=30
+undp,2026-11-11T09:24,18,OK,new=24; cache=18
+aiib,2026-11-11T09:24,176,OK,new=173; awards=292
+isdb,2026-11-11T09:24,34,OK,new=39
+etimad,2026-11-11T09:26,674,OK,new=106; pages=12
+prozorro,2026-11-11T09:27,1208,OK,candidates=2959; fetched=192
+pncp,2026-11-11T09:28,5857,OK,new=273
+secop,2026-11-11T09:28,858,OK,new=27
 germany,2026-11-11T06:45,12060,OK,new=69; awards_seen=22; awards_saved=22
-contractsfinder,2026-11-11T06:46,93,OK,new=24
+contractsfinder,2026-11-11T09:29,93,OK,new=24
 paraguay,2026-11-11T06:57,101,OK,new=1
 dominican,2026-11-11T06:59,648,OK,new=146; listed=343
-austender,2026-11-11T06:59,176,OK,new=124
-oman,2026-11-11T06:59,566,OK,new=50
+austender,2026-11-11T09:32,176,OK,new=124
+oman,2026-11-11T09:32,599,OK,new=50
 france,2026-11-11T06:59,6920,OK,new=765
 spain,2026-11-11T07:10,4961,OK,new=550; pages=6; awards_seen=1171
-kenya,2026-11-11T07:11,490,OK,new=130
-moldova,2026-11-11T06:47,1227,OK,new=410
-uruguay,2026-11-11T06:47,570,OK,new=1
+kenya,2026-11-11T09:33,490,OK,new=50
+moldova,2026-11-11T09:30,1252,OK,new=443
+uruguay,2026-11-11T09:31,570,OK,new=0
 bahrain,2026-11-09T18:38,19,OK,new=7 | last error:                                 ║ ║ <3 Patchright Team                                         ║ ╚════════════════════════════════════════════════════════════╝ 
-malaysia,2026-11-11T06:49,428,OK,new=428
+malaysia,2026-11-11T09:32,430,OK,new=428
 qatar,2026-11-11T07:22,312,OK,new=160
 israel,2026-11-10T11:51,946,OK,bodies_scanned=912; open_notices=946
 nyc,2026-11-11T06:05,0,EMPTY,open=0
 us_cities,2026-11-11T06:07,277,OK,Los_Angeles=192 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-11-11T07:22,955,OK,projects=955
 ocdr_tenders,2026-11-10T09:18,1764,OK,publications=29; read=29; releases=1143432; open_tenders=1764; countries=6
-afdb,2026-11-11T06:10,42,OK,new=0
-iadb,2026-11-11T06:10,105,OK,new=103
+afdb,2026-11-11T09:25,42,OK,new=0
+iadb,2026-11-11T09:25,105,OK,new=103
 chile,2026-11-11T06:10,4252,OK,new=4225
-simap,2026-11-11T06:11,696,OK,new=240
-gets,2026-11-11T06:11,425,OK,new=409
+simap,2026-11-11T09:25,696,OK,new=240
+gets,2026-11-11T09:25,425,OK,new=409
 india,2026-11-11T06:42,60678,OK,new=51512
-rwanda,2026-11-11T07:12,259,OK,new=259
-uganda,2026-11-11T07:12,42,OK,new=34
-ghana,2026-11-11T07:13,103,OK,new=103
-malawi,2026-11-11T07:13,37,OK,new=33
-mozambique,2026-11-11T07:13,82,OK,new=82
-dubai,2026-11-11T07:13,298,OK,new=245
-philippines,2026-11-11T07:15,1337,OK,new=1200
+rwanda,2026-11-11T09:33,261,OK,new=261
+uganda,2026-11-11T09:33,45,OK,new=37
+ghana,2026-11-11T09:34,103,OK,new=103
+malawi,2026-11-11T09:34,40,OK,new=35
+mozambique,2026-11-11T09:34,85,OK,new=85
+dubai,2026-11-11T09:34,354,OK,new=297
+philippines,2026-11-11T09:34,1337,OK,new=0
 importyeti,2026-11-11T07:23,1,OK,"1 HS headings cached; this run 0, due 681"
