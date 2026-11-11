@@ -1,9 +1,10 @@
 // "/" is the Opportunity Panel: the same page as the panel inside Claude, loaded from the repo (dealdesk/public/panel.html)
 // so panel updates do not need a redeploy. The page talks to this server through /panel-shim.js.
+import { RAW_ROOT } from "@/lib/rawbase";
 export const dynamic = "force-dynamic";
 // Preview deployments (VERCEL_ENV=preview) read the "staging" branch so a change can be tried before it goes live.
 const REF = process.env.VERCEL_ENV === "preview" ? "staging" : "main";
-const SRC = `https://raw.githubusercontent.com/etaram/commodity-feeder/${REF}/dealdesk/public/panel.html`;
+const SRC = process.env.DATA_BASE_URL ? `${RAW_ROOT}/dealdesk/public/panel.html` : `https://raw.githubusercontent.com/etaram/commodity-feeder/${REF}/dealdesk/public/panel.html`;
 let hit: { at: number; html: string } | null = null;
 
 export async function GET() {

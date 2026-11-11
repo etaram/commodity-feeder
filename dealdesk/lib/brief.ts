@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 import { claude } from "@/lib/anthropic";
 import { appendRow, ENGINE_SHEET, readRanges } from "@/lib/sheets";
@@ -6,7 +7,7 @@ import { appendRow, ENGINE_SHEET, readRanges } from "@/lib/sheets";
 // own expert feeds) plus today's plays, written for a cross-border sourcing firm and cached in the hidden tab
 // 'Briefs' (date, lang, text, items, by). Every claim in the brief must cite one of the collected links; the
 // prompt forbids outside knowledge, so the brief is a reading of the day's sources, not a forecast.
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads";
+const RAW = `${RAW_ROOT}/data/leads`;
 const TAB = "Briefs";
 type Row = Record<string, string>;
 const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jerusalem" });

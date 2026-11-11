@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 
 // Financing and grants: who can finance, insure or grant-fund a cross-border supply deal.
@@ -10,7 +11,7 @@ import Papa from "papaparse";
 // - defence goods: an institution whose policy excludes defence is left out, one that states it finances defence
 //   ranks first; a deal larger than the stated maximum is flagged, not hidden;
 // - institutions whose rules exclude Israeli firms (boycott clauses) are flagged.
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/finance/finance_providers.csv";
+const RAW = `${RAW_ROOT}/data/finance/finance_providers.csv`;
 export type Fin = Record<string, string>;
 let mem: { at: number; rows: Fin[] } | null = null;
 

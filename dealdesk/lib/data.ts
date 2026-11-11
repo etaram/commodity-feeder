@@ -1,6 +1,7 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main";
+const RAW = `${RAW_ROOT}`;
 const TTL = 900;
 
 export type Row = Record<string, string>;

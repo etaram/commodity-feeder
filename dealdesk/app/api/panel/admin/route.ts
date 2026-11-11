@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import { NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { budgetState, MODEL } from "@/lib/anthropic";
@@ -69,7 +70,7 @@ export async function GET() {
     safe(intel({}).then((x) => x.counts)),
     safe(gviz(UNIVERSE, "Company checks", "select E, count(A), max(D) group by E").then((rows) => ({ by_verdict: Object.fromEntries(rows.map((r) => [r[0], Number(r[1]) || 0])), last: rows.map((r) => r[2]).sort().pop() || "" }))),
     // refinement progress: counts only, published by the hourly company-check workflow
-    safe(fetch("https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/refine_progress.json", { cache: "no-store", signal: AbortSignal.timeout(8000) }).then((r) => (r.ok ? r.json() : { error: `not published yet (${r.status})` }))),
+    safe(fetch(`${RAW_ROOT}/data/leads/refine_progress.json`, { cache: "no-store", signal: AbortSignal.timeout(8000) }).then((r) => (r.ok ? r.json() : { error: `not published yet (${r.status})` }))),
   ]);
   return NextResponse.json({ ok: true, at: new Date().toISOString(),
     build: { commit: process.env.VERCEL_GIT_COMMIT_SHA || "local", supplier_match: MATCH_VERSION, model: MODEL },

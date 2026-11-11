@@ -1,8 +1,9 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import { normalizeSuppliers } from "@/lib/supfit";
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/web";
+const RAW = `${RAW_ROOT}/data/web`;
 const TTL_MS = 15 * 60 * 1000;
 
 export type Tender = {

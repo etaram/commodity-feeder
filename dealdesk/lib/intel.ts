@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 
 // World and project intelligence (spec phase 4), read-only. The pipeline (leads/events.py, leads/hypotheses.py)
@@ -5,7 +6,7 @@ import Papa from "papaparse";
 //   events      world intelligence: typed events with country roles, verification and the per-event analysis
 //   timelines   projects that link funding, plans, packages, tenders and awards
 //   hypotheses  research candidates (gaps stated) and actionable ones (an open tender exists); all are hypotheses
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads";
+const RAW = `${RAW_ROOT}/data/leads`;
 type Row = Record<string, string>;
 const num = (v: unknown) => { const n = parseFloat(String(v ?? "").replace(/[,$]/g, "")); return Number.isFinite(n) ? n : 0; };
 

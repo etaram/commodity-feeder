@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import { NextRequest, NextResponse } from "next/server";
 import { scenarios } from "@/lib/scenarios";
 import { selfKey } from "@/lib/selfkey";
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
   const bad = res.filter((r) => !r.pass);
   // price sources that stopped updating (data/leads/origin_prices_health.json, written by the price run): logged every
   // day, sent with a failure or once a week (Monday), so a dead source is known without a daily nag
-  const stale: string[] = await fetch("https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/origin_prices_health.json", { cache: "no-store", signal: AbortSignal.timeout(8000) })
+  const stale: string[] = await fetch(`${RAW_ROOT}/data/leads/origin_prices_health.json`, { cache: "no-store", signal: AbortSignal.timeout(8000) })
     .then((r) => r.json()).then((j) => Object.entries((j.sources || {}) as Record<string, { status: string; newest_date: string }>).filter(([, v]) => v.status === "stale").map(([k, v]) => `${k} (last ${v.newest_date || "never"})`)).catch(() => []);
   if (stale.length) await logEvent("warn", "prices", `${stale.length} price sources are stale`, stale.join(", ").slice(0, 500)).catch(() => {});
   const weekly = new Date().getUTCDay() === 1 && stale.length > 0;

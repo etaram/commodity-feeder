@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import { createHash } from "crypto";
 import Papa from "papaparse";
 import { asWs } from "@/lib/auth";
@@ -206,7 +207,7 @@ Reply JSON only: {"explanations":[{"prospect_id":"...","explanation":"..."}]}`))
 }
 
 // ------------------------------------------------------------------ data sources (existing data, read-only)
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads";
+const RAW = `${RAW_ROOT}/data/leads`;
 let awardsMem: { at: number; rows: AwardRow[] } | null = null;
 export async function loadAwards(): Promise<AwardRow[]> {
   if (awardsMem && Date.now() - awardsMem.at < 900_000) return awardsMem.rows;

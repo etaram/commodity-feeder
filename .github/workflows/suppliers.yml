@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   suppliers:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
     timeout-minutes: 300  # the universe rebuild runs last and needs 30-45 min; 150 cut it off from 7 Nov
     env:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}

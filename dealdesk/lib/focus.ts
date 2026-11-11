@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 import { allTenders } from "@/lib/panel";
 
@@ -6,7 +7,7 @@ import { allTenders } from "@/lib/panel";
 // the headlines). Focus: the same layers seen through one lens (commodities, defence, engineering, data centers,
 // energy, medical equipment): a lens is a set of sectors plus product words; a notice belongs to it when either
 // matches, and ranks by the brain's fit, lifted when both match.
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads";
+const RAW = `${RAW_ROOT}/data/leads`;
 type Row = Record<string, string>;
 const num = (v: unknown) => { const n = parseFloat(String(v ?? "").replace(/[,$]/g, "")); return Number.isFinite(n) ? n : 0; };
 // days to the deadline, or NaN when the notice states none (a blank is never "closing today")

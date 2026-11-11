@@ -1,0 +1,84 @@
+# Sinder Deal Desk - the whole system on one server.
+#   app      the Deal Desk (Next.js), reads the engine's data from the private "data" service
+#   data     serves the repository checkout (data/, dealdesk/public/) to the app only; never exposed to the internet
+#   sync     keeps that checkout current (git pull every 2 minutes)
+#   cron     calls the app's scheduled routes (what Vercel Cron did), with the same CRON_SECRET
+#   db       PostgreSQL 16 for the deal state (next step of the migration; nothing reads it yet)
+#   proxy    Caddy: HTTPS for ${DESK_DOMAIN} with an automatic certificate
+# Secrets live only in deploy/.env on the server (never in git). Start: docker compose up -d --build
+name: sinder
+services:
+  app:
+    build: ../dealdesk
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATA_BASE_URL: http://data:8080
+      AGENT_BASE_URL: https://${DESK_DOMAIN}
+      DESK_URL: https://${DESK_DOMAIN}
+    depends_on: [data]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+  data:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    command: caddy file-server --root /srv/repo --listen :8080
+    volumes: ["repo:/srv/repo:ro"]
+  sync:
+    image: alpine/git:latest
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        cd /srv/repo
+        if [ ! -d .git ]; then git clone --depth 1 "$${REPO_URL}" . ; fi
+        while true; do git fetch -q --depth 1 origin main && git reset -q --hard origin/main || echo "sync failed $$(date -u +%FT%TZ)"; sleep 120; done
+    environment:
+      REPO_URL: ${REPO_URL:-https://github.com/etaram/commodity-feeder.git}
+    volumes: ["repo:/srv/repo"]
+  cron:
+    image: alpine:3.20
+    restart: unless-stopped
+    env_file: .env
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache curl >/dev/null
+        # the schedule Vercel ran (UTC): brief 04:30, digest 05:00, projects 05:40, verify 06:20, selfcheck 06:50; outreach every 15 minutes
+        cat > /etc/crontabs/root <<CRON
+        30 4 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/cron/brief >/dev/null || echo "cron brief failed"
+        0 5 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/cron/digest >/dev/null || echo "cron digest failed"
+        40 5 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/cron/projects >/dev/null || echo "cron projects failed"
+        20 6 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/cron/verify >/dev/null || echo "cron verify failed"
+        50 6 * * * curl -fsS -m 600 -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/cron/selfcheck >/dev/null || echo "cron selfcheck failed"
+        CRON
+        exec crond -f -l 8
+    depends_on: [app]
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sinder
+      POSTGRES_USER: sinder
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes: ["pg:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sinder -d sinder"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    command: caddy reverse-proxy --from ${DESK_DOMAIN} --to app:3000
+    volumes: ["caddy:/data"]
+    depends_on: [app]
+volumes:
+  repo:
+  pg:
+  caddy:

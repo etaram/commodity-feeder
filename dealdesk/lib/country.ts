@@ -1,7 +1,8 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 import { tenders as tenderIndex, type Tender } from "@/lib/index";
 
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
+const RAW = `${RAW_ROOT}/data`;
 const mem: Record<string, { at: number; data: unknown }> = {};
 async function cached<T>(name: string, ttlMs: number, make: () => Promise<T>): Promise<T> {
   const hit = mem[name];

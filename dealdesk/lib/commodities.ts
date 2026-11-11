@@ -1,10 +1,11 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 
 // Normalised commodity prices and their statistics (upgrade brief section 11), read-only. The pipeline
 // (leads/commodity_norm.py, leads/commodity_stats.py) writes two public CSVs; this module reads them from raw GitHub
 // like lib/intel.ts (15-minute cache) and joins them by id. Nothing here compares prices: a futures benchmark is
 // never a delivered physical offer, and a row says what it is (price_type, physical, incoterm, delivery, basis).
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads";
+const RAW = `${RAW_ROOT}/data/leads`;
 type Row = Record<string, string>;
 const num = (v: unknown) => { const n = parseFloat(String(v ?? "").replace(/[,$]/g, "")); return Number.isFinite(n) ? n : null; };
 

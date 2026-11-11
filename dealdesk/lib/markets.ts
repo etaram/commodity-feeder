@@ -1,10 +1,11 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 import { readRanges } from "@/lib/sheets";
 import { logEvent } from "@/lib/log";
 import { portfolioLine } from "@/lib/verdict";
 import { verdict } from "@/lib/verdict";
 
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
+const RAW = `${RAW_ROOT}/data`;
 const TRACKER = "1yHBXBVCU3_flqKCQN8HCRYclWyvvX4wXQsQYZtiOaX4";
 let memo: { at: number; data: unknown } | null = null;
 

@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import Papa from "papaparse";
 import NAMES from "@/lib/countrynames.json";
 
@@ -19,7 +20,7 @@ const mentions = (text: string, iso: string) => !!iso && (new RegExp(`\\b${iso}\
 // - freight: forwarders, carriers, breakbulk and air cargo that operate in the origin and the destination regions;
 //   project cargo first for heavy equipment, defence-capable ones first for defence goods;
 // - inspection companies and cargo insurance by region.
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/logistics/logistics_providers.csv";
+const RAW = `${RAW_ROOT}/data/logistics/logistics_providers.csv`;
 export type Lg = Record<string, string>;
 let mem: { at: number; rows: Lg[] } | null = null;
 

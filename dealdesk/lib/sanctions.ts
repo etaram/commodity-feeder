@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 // Screening of a company name against the official sanctions lists (OFAC, UN Security Council, EU), indexed daily by
 // the sanctions workflow into data/leads/sanctions.json. Name matching only: a hit is a lead to verify, never a verdict.
 type Ent = [string[], string, string, string, string];
@@ -9,7 +10,7 @@ const toks = (s: string) => norm(s).split(" ").filter((t) => t && !STOP.has(t));
 
 async function load() {
   if (mem && Date.now() - mem.at < 6 * 3600_000) return mem;
-  const r = await fetch("https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/sanctions.json", { cache: "no-store", signal: AbortSignal.timeout(20000) });
+  const r = await fetch(`${RAW_ROOT}/data/leads/sanctions.json`, { cache: "no-store", signal: AbortSignal.timeout(20000) });
   if (!r.ok) throw new Error("sanctions index HTTP " + r.status);
   const j = await r.json();
   const ents: Ent[] = j.e || [];

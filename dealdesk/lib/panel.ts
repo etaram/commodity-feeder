@@ -1,3 +1,4 @@
+import { RAW_ROOT } from "@/lib/rawbase";
 import { gunzipSync } from "zlib";
 import { createDecipheriv } from "crypto";
 import Papa from "papaparse";
@@ -10,7 +11,7 @@ import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
 import { claude } from "@/lib/anthropic";
 
-const RAW = "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data";
+const RAW = `${RAW_ROOT}/data`;
 type Grid = string[][];
 type Snap = Record<string, Grid> & { fit?: unknown };
 const mem: Record<string, { at: number; data: unknown }> = {};
