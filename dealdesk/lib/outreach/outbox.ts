@@ -7,10 +7,11 @@ import { classifyReply, replyEffect, type ClassifyModel } from "./classify";
 import { adaptWording, passes, renderMessage, validateAdaptation, validateMessage, withFooter, type ModelFn } from "./draft";
 import { inWs, latest, sha, type Row, type Snapshot } from "./store";
 import { addSuppression, isSuppressed } from "./suppression";
-import { classifySendError, type Transport } from "./transport";
+import { classifySendError, type SendResult, type Transport } from "./transport";
 import type { Account, Campaign, OutboxItem, ReplyCategory } from "./types";
 
 // Queued outbox with idempotency keys, rate limits, retry classification and every pre-send check, plus the
+// delivery_unknown / reconcile path for sends whose outcome is not known,
 // campaign controls (start, pause, resume, cancel, withdraw) and the per-workspace emergency stop.
 // tick() does nothing unless OUTREACH_ENABLED=1 (or enabled:true is passed by a test).
 
@@ -174,11 +175,63 @@ async function closeAccount(deps: Deps, a: Account, reason: string) {
 
 // ---------------- the tick ----------------
 
-export type TickResult = { id: string; ws: string; action: "sent" | "deferred" | "cancelled" | "failed" | "retry" | "duplicate" | "needs_review"; reason: string };
+export type TickResult = { id: string; ws: string; action: "sent" | "deferred" | "cancelled" | "failed" | "retry" | "duplicate" | "needs_review" | "delivery_unknown"; reason: string };
+
+// Statuses where the message has, or may have, left: none of them may ever be followed by a second send of the same key.
+const MAYBE_SENT = ["sent", "sending", "delivery_unknown", "needs_review"];
 
 function sentWithin(snap: Snapshot, ws: string, ms: number, now: number, campaignId?: string): number {
   const since = iso(now - ms);
   return inWs(snap.log, ws).filter((r) => r.status === "sent" && (!campaignId || r.campaign_id === campaignId) && String((r.data as Record<string, unknown>).at || "") >= since).length;
+}
+
+// A confirmed send: item sent, log row (the rate limits and the duplicate check count these), stage and next follow-up.
+// Shared by the tick and by reconcileDelivery (a null account/campaign there only skips the stage and the follow-up).
+async function recordSent(deps: Deps, c: Campaign | null, a: Account | null, it: OutboxItem, providerId: string, by: string, extra: Record<string, unknown> = {}) {
+  const now = deps.now();
+  await writeItem(deps, { ...it, status: "sent", reason: "", sent_at: iso(now), provider_id: providerId }, by);
+  await logEvent(deps, it.ws, it.campaign_id, "sent", { account_id: it.account_id, to: a?.email || it.to, linkedin_url: a?.linkedin_url || "", outbox_id: it.id, idem_key: it.idem_key, step: it.step, subject: it.subject, body_hash: sha(it.body).slice(0, 16), claims_used: it.claims_used, transport: it.transport || deps.transport.name, provider_id: providerId, ...extra }, by);
+  if (!c || !a) return;
+  if (it.step === 0) await engineMove(deps, a, "contacted", `first message ${iso(now).slice(0, 10)}`, "system");
+  if (it.step < c.plan.follow_up_limit) {
+    const gap = c.plan.cadence.gap_days[it.step] ?? 7;
+    await enqueue(deps, it.ws, { campaign_id: c.id, account_id: a.id, step: it.step + 1, due_at: iso(now + gap * DAY) }, "system").catch(() => null);
+  }
+}
+
+// The only way out of delivery_unknown (and needs_review). Without a decision the provider is asked by idempotency key;
+// "unknown" or a transport without lookup leaves the item exactly where it is. With a decision the owner has checked
+// (for example the Sent folder) and says which it was. sent: recorded as sent, nothing is sent again. not_sent: back to
+// queued, and the next tick runs every pre-send check again (suppression, stop conditions, authorization, limits).
+export type ReconcileResult = { ok: true; outcome: "sent" | "requeued" | "unchanged"; item: OutboxItem; source: "provider" | "owner" } | { ok: false; error: string };
+export async function reconcileDelivery(deps: Deps, ws: string, outboxId: string, by: string, decision?: "sent" | "not_sent"): Promise<ReconcileResult> {
+  ws = asWs(ws);
+  const snap = await deps.store.load();
+  const it = outboxItems(snap, ws).find((x) => x.id === outboxId);
+  if (!it) return { ok: false, error: "outbox item not found" };
+  if (it.status !== "delivery_unknown" && it.status !== "needs_review") return { ok: false, error: `cannot reconcile a ${it.status} item` };
+  if (decision !== undefined && decision !== "sent" && decision !== "not_sent") return { ok: false, error: "decision must be sent or not_sent" };
+  const source = decision ? "owner" as const : "provider" as const;
+  let providerId = it.provider_id, state: "sent" | "not_sent" | "unknown" = decision || "unknown";
+  if (!decision && deps.transport.lookup) {
+    const l = await deps.transport.lookup(ws, it.idem_key).catch((): { state: "unknown" } => ({ state: "unknown" }));
+    state = l.state;
+    if (l.state === "sent") providerId = l.provider_id;
+  }
+  if (state === "unknown") {
+    await logEvent(deps, ws, it.campaign_id, "reconcile", { account_id: it.account_id, outbox_id: it.id, outcome: "unchanged", source }, by);
+    return { ok: true, outcome: "unchanged", item: it, source };
+  }
+  await logEvent(deps, ws, it.campaign_id, "reconcile", { account_id: it.account_id, outbox_id: it.id, outcome: state, source, was: it.status }, by);
+  if (state === "sent") {
+    const c = readCampaign(snap, ws, it.campaign_id);
+    const a = c ? readAccounts(snap, ws, c.id).find((x) => x.id === it.account_id) || null : null;
+    await recordSent(deps, c, a, it, providerId, by, { reconciled: source });
+    return { ok: true, outcome: "sent", item: { ...it, status: "sent", reason: "", provider_id: providerId }, source };
+  }
+  const next: OutboxItem = { ...it, status: "queued", due_at: iso(deps.now()), reason: `reconciled_not_sent (${source})` };
+  await writeItem(deps, next, by);
+  return { ok: true, outcome: "requeued", item: next, source };
 }
 
 async function processItem(deps: Deps, snap: Snapshot, it: OutboxItem): Promise<TickResult> {
@@ -215,7 +268,7 @@ async function processItem(deps: Deps, snap: Snapshot, it: OutboxItem): Promise<
       return (a.email && String(d.to || "").toLowerCase() === a.email.toLowerCase()) || (a.linkedin_url && d.linkedin_url === a.linkedin_url);
     });
     if (recent) return cancel(`recent_contact: ${recent.status} on ${String((recent.data as Record<string, unknown>).at).slice(0, 10)}`);
-    const other = outboxItems(snap, ws).find((x) => x.campaign_id !== c.id && x.to.toLowerCase() === it.to.toLowerCase() && ["queued", "sending", "sent"].includes(x.status));
+    const other = outboxItems(snap, ws).find((x) => x.campaign_id !== c.id && x.to.toLowerCase() === it.to.toLowerCase() && ["queued", ...MAYBE_SENT].includes(x.status));
     if (other) return cancel(`account_conflict: also in campaign ${other.campaign_id}`);
   }
 
@@ -224,7 +277,7 @@ async function processItem(deps: Deps, snap: Snapshot, it: OutboxItem): Promise<
   if (ident !== c.plan.sender.name) return defer("sender_identity_mismatch");
 
   const dup = inWs(snap.log, ws).some((r) => r.status === "sent" && (r.data as Record<string, unknown>).idem_key === it.idem_key)
-    || outboxItems(snap, ws).some((x) => x.idem_key === it.idem_key && x.id !== it.id && ["sent", "sending"].includes(x.status));
+    || outboxItems(snap, ws).some((x) => x.idem_key === it.idem_key && x.id !== it.id && MAYBE_SENT.includes(x.status));
   if (dup) { await writeItem(deps, { ...it, status: "cancelled", reason: "duplicate_idempotency_key" }); return out("duplicate", "already sent with this idempotency key"); }
 
   if (sentWithin(snap, ws, HOUR, now, c.id) >= c.plan.volume.per_hour) return defer("rate_limit_campaign_hour");
@@ -251,17 +304,20 @@ async function processItem(deps: Deps, snap: Snapshot, it: OutboxItem): Promise<
     ws, campaign_id: c.id, account_id: a.id, outbox_id: it.id, idem_key: it.idem_key, step: it.step, to: a.email,
     from_email: c.plan.sender.email, from_name: c.plan.sender.name, subject, body, attachments: c.plan.attachments,
     headers: { "X-Idempotency-Key": it.idem_key, "X-Campaign": c.id },
-  }).catch((e) => ({ ok: false as const, code: "network", message: String(e).slice(0, 200) }));
+  }).catch((e): SendResult => ({ ok: false, code: "network", message: String(e).slice(0, 200), delivery: "unknown" })); // a throw says nothing about whether the request left
 
   if (res.ok) {
-    await writeItem(deps, { ...sending, status: "sent", sent_at: iso(now), provider_id: res.provider_id });
-    await logEvent(deps, ws, c.id, "sent", { account_id: a.id, to: a.email, linkedin_url: a.linkedin_url, outbox_id: it.id, idem_key: it.idem_key, step: it.step, subject, body_hash: sha(body).slice(0, 16), claims_used: r.claims_used, transport: deps.transport.name, provider_id: res.provider_id });
-    if (it.step === 0) await engineMove(deps, a, "contacted", `first message ${iso(now).slice(0, 10)}`, "system");
-    if (it.step < c.plan.follow_up_limit) {
-      const gap = c.plan.cadence.gap_days[it.step] ?? 7;
-      await enqueue(deps, ws, { campaign_id: c.id, account_id: a.id, step: it.step + 1, due_at: iso(now + gap * DAY) }, "system").catch(() => null);
-    }
+    await recordSent(deps, c, a, { ...sending, claims_used: r.claims_used }, res.provider_id, "system");
     return out("sent", res.provider_id);
+  }
+
+  // The request may have left and nothing clear came back: a retry could be a second message to the same person.
+  // The item parks as delivery_unknown (no backoff, no follow-up, the account stays where it is) until reconcileDelivery.
+  if (res.delivery === "unknown") {
+    const reason = "no clear answer after dispatch; reconcile with the provider before any retry";
+    await writeItem(deps, { ...sending, status: "delivery_unknown", reason, last_error: `${res.code} ${res.message}`.slice(0, 300) });
+    await logEvent(deps, ws, c.id, "delivery_unknown", { account_id: a.id, to: a.email, code: res.code, outbox_id: it.id, idem_key: it.idem_key, step: it.step, attempt: sending.attempts });
+    return out("delivery_unknown", `${res.code}: ${reason}`);
   }
 
   const cls = classifySendError(res.code);
@@ -301,7 +357,8 @@ export async function tick(deps: Deps, opts: { enabled?: boolean; limit?: number
   const tried = new Set<string>();
   const wsFilter = opts.ws ? asWs(opts.ws) : "";
 
-  // a send that never returned is not retried automatically: a human checks it (the provider may have sent it)
+  // a send that never returned is not retried automatically: a human checks it (the provider may have sent it).
+  // delivery_unknown items are not touched here at all: the loop below only ever picks up queued items.
   const first = await deps.store.load();
   for (const w of new Set(first.outbox.map((r) => asWs(r.ws)))) {
     if (wsFilter && w !== wsFilter) continue;

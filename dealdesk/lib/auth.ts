@@ -57,6 +57,7 @@ export function hasRole(s: Session | null, min: Role): boolean {
 
 // The original shared team login (TEAM_USER + TEAM_PASSCODE). Kept as the bootstrap admin account so the owner can
 // never be locked out; personal accounts live in the Users tab (lib/users.ts).
+// It goes through the same failed-attempt limiter as every other sign-in (app/api/login/route.ts, lib/ratelimit.ts).
 export function checkLegacyLogin(user: string, passcode: string): boolean {
   const pass = process.env.TEAM_PASSCODE || "";
   if (!pass || passcode.length !== pass.length) return false;

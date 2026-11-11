@@ -29,6 +29,7 @@ export default function LoginForm({ google, notice }: { google: boolean; notice:
       if (r.ok) { const n = new URLSearchParams(window.location.search).get("next") || "/"; window.location.href = /^\/(?![/\\])/.test(n) ? n : "/"; }
       else if (j.code === "pending") setErr(NOTICE.pending);
       else if (j.code === "disabled") setErr(NOTICE.disabled);
+      else if (j.code === "rate_limited") setErr(j.error || "Too many failed sign-in attempts. Try again later.");
       else setErr("Wrong email or password.");
     } else {
       const r = await fetch("/api/register", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, name, passcode }) });

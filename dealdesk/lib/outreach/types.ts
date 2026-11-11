@@ -52,7 +52,10 @@ export type Account = {
   fields: Record<string, string>; notes: string; updated_at: string;
 };
 
-export type OutboxStatus = "queued" | "sending" | "sent" | "cancelled" | "failed" | "needs_review";
+// delivery_unknown: the send call timed out or failed after the request may have left, so the provider may or may not
+// have delivered it. Never retried by the tick; only reconcileDelivery (provider confirms sent / not sent, or the
+// owner decides) moves it on. needs_review: a send that never returned at all (stuck in sending), same rule.
+export type OutboxStatus = "queued" | "sending" | "sent" | "cancelled" | "failed" | "needs_review" | "delivery_unknown";
 
 export type OutboxItem = {
   id: string; ws: string; campaign_id: string; account_id: string; step: number; idem_key: string;
