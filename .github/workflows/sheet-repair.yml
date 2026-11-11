@@ -1,0 +1,24 @@
+name: sheet-repair
+# One-time repairs of the state spreadsheet, run on the company server. Dry run unless apply is ticked.
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: make the change (otherwise only report)
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: [self-hosted, sinder]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q google-auth requests
+      - env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          STATE_SHEET_ID: ${{ secrets.STATE_SHEET_ID || '1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo' }}
+        run: python tools/repair_sheet_headers.py ${{ inputs.apply && '--apply' || '' }}

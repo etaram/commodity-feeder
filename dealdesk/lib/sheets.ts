@@ -135,7 +135,8 @@ export async function appendRows(tab: string, rows: (string | number)[][]) {
   } catch (e: unknown) {
     if (String(e).includes("Unable to parse range")) {
       await call(jwt, "POST", `${API}/${sid}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
-      await call(jwt, "POST", url, { values });
+      // a new tab starts with a marker row: every reader starts at row 2, and without it the first record was never read
+      await call(jwt, "POST", url, { values: [["#"], ...values] });
     } else throw e;
   }
 }
@@ -201,7 +202,7 @@ async function append(tab: string, row: (string | number)[]) {
   } catch (e: unknown) {
     if (String(e).includes("Unable to parse range")) {
       await call(jwt, "POST", `${API}/${sid}:batchUpdate`, { requests: [{ addSheet: { properties: { title: tab, hidden: true } } }] });
-      await call(jwt, "POST", url, { values: [row] });
+      await call(jwt, "POST", url, { values: [["#"], row] });   // marker row first: readers start at row 2
     } else throw e;
   }
 }
