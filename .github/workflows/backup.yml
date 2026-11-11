@@ -1,0 +1,29 @@
+name: backup
+# Daily encrypted database backup on the company server, restore-tested, with a copy kept outside the server as a
+# workflow artifact (30 days). The file is AES-256 encrypted; the key never leaves the server.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 1 * * *"
+permissions:
+  contents: read
+concurrency:
+  group: backup
+jobs:
+  run:
+    runs-on: [self-hosted, sinder]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash deploy/ops/backup.sh
+      - name: copy the newest backup for upload
+        run: |
+          . deploy/ops/_root.sh
+          f=$(asroot sh -c 'ls -1t /opt/sinder/backup/db/*.enc | head -1')
+          asroot cat "$f" > "$(basename "$f")"
+          ls -l *.enc
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sinder-db-backup
+          path: "*.enc"
+          retention-days: 30
