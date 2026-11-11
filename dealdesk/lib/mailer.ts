@@ -5,7 +5,7 @@
 // sendMail is called from lib/sendguard.ts only (emergency stop, opt-out list, idempotency key): do not call it directly.
 import tls from "node:tls";
 import crypto from "node:crypto";
-import { renderMail } from "@/lib/mailhtml";
+import { renderMail, splitSignature, FIRM } from "@/lib/mailhtml";
 
 const EMAIL = /^[^\s@<>,;"]+@[^\s@<>,;"]+\.[a-z]{2,}$/i;
 export const mailReady = () => !!(process.env.ZOHO_SMTP_USER && process.env.ZOHO_SMTP_PASS) && process.env.AGENT_MAIL_LIVE !== "0";
@@ -65,10 +65,16 @@ export type MailResult = { ok: boolean; id?: string; error?: string; stage?: Mai
 
 export async function sendMail(m: { to: string; subject: string; text: string }): Promise<MailResult> {
   if (!mailReady()) return { ok: false, error: "mailbox not configured", stage: "config" };
-  const to = m.to.trim(), from = String(process.env.ZOHO_SMTP_USER);
+  // The mailbox signs in as ZOHO_SMTP_USER; the address the recipient sees and replies to can be a shared alias of that
+  // mailbox (ZOHO_FROM_ADDRESS, e.g. a desk address), so messages do not go out under one person's name.
+  const to = m.to.trim(), login_ = String(process.env.ZOHO_SMTP_USER), alias = String(process.env.ZOHO_FROM_ADDRESS || "").trim();
+  const from = EMAIL.test(alias) ? alias : login_;
   if (!EMAIL.test(to)) return { ok: false, error: "invalid recipient address", stage: "address" };
   const id = `<${crypto.randomUUID()}@${from.split("@")[1] || "sinder.pro"}>`;
-  const name = process.env.ZOHO_FROM_NAME ? `${hdr(process.env.ZOHO_FROM_NAME)} <${from}>` : from;
+  // Sender name: the team member who signed the message ("Mei Lin Zhang | Sinder"), otherwise the configured name or the firm.
+  const signer = splitSignature(m.text).signer;
+  const shown = signer ? `${signer.name} | ${FIRM}` : (process.env.ZOHO_FROM_NAME || FIRM);
+  const name = `${hdr(shown)} <${from}>`;
   // Two versions of one message: plain text and the letterhead layout. MAIL_HTML=0 goes back to plain text only.
   const head = [`From: ${name}`, `To: ${to}`, `Reply-To: ${from}`, `Subject: ${hdr(m.subject.replace(/[\r\n]+/g, " ").slice(0, 200))}`,
     `Date: ${new Date().toUTCString()}`, `Message-ID: ${id}`, "MIME-Version: 1.0"];
