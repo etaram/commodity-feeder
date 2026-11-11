@@ -13,20 +13,22 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install -q requests pycountry pdfplumber
       - run: python -m leads.coffee_sellers --max 500 --minutes 14 2>&1 | tail -3
       - name: Official exporter registries (weekly)
+        timeout-minutes: 40
         run: |
-          if [ ! -f data/leads/registry_cameroon.csv ] || [ -n "$(find data/leads/registry_cameroon.csv -mtime +7)" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.registries 2>&1 | tail -3; fi
+          if [ ! -f data/leads/registry_cameroon.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/registry_cameroon.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.registries 2>&1 | tail -3; fi
         continue-on-error: true
       - name: Uganda official directory (weekly)
         run: |
-          if [ ! -f data/leads/uganda_directory.csv ] || [ -n "$(find data/leads/uganda_directory.csv -mtime +7)" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.uganda_directory 2>&1 | tail -8; fi
+          if [ ! -f data/leads/uganda_directory.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/uganda_directory.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.uganda_directory 2>&1 | tail -8; fi
         continue-on-error: true
       - name: commit
         run: |

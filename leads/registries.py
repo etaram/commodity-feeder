@@ -367,7 +367,52 @@ def peru():
     return out
 
 
-REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil, "argentina": argentina, "indonesia": indonesia, "ukraine": ukraine, "colombia": colombia, "chile": chile, "peru": peru}
+def india():
+    """APEDA (India's agricultural export authority) exporter directory: the registered member exporters with
+    address, the product line they declare and the state. About 480 pages of 9; read in full once a week with a pause
+    between pages. The contact button posts the member's tax identifier, so it is not used or stored."""
+    import html as _html
+    import time as _time
+    base = "https://agriexchange.apeda.gov.in/AgriDirectory/Exporter/Exporters?page={}"
+    first = requests.get(base.format(1), headers=UA, timeout=60).text
+    last = max([int(x) for x in re.findall(r"Exporters\?page=(\d+)", first)] or [1])
+    out, seen = [], set()
+    for page in range(1, last + 1):
+        try:
+            h = first if page == 1 else requests.get(base.format(page), headers=UA, timeout=60).text
+        except Exception:  # noqa: BLE001
+            continue
+        for box in re.findall(r'<div class="box col-md-4">(.*?)Click here to contact', h, flags=re.S):
+            ps = [re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", x))).strip() for x in re.findall(r"<p[^>]*>(.*?)</p>", box, flags=re.S)]
+            if len(ps) < 4 or not ps[0]:
+                continue
+            name, addr, prod, state = ps[0], ps[1], ps[2], ps[3]
+            pin = ps[4] if len(ps) > 4 else ""
+            key = (name.upper(), pin)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(_row(_name(name), "IND", prod.lower() or "agricultural products", "exporter", "APEDA registered exporter",
+                            f"APEDA registered exporter; {prod}; {addr}, {state} {pin}".strip(), "APEDA exporter directory", base.format(page)))
+        _time.sleep(1.2)
+    return out
+
+
+def philippines():
+    """Philippine Sugar Millers Association: the member sugar mills."""
+    url = "https://psma.com.ph/members-and-industry-partners"
+    t = _text(url)
+    i, j = t.find("| Members |"), t.find("Institutional Focus")
+    out = []
+    for x in [y.strip() for y in t[i + 11:j].split("|")] if i >= 0 else []:
+        x = re.sub(r"^\d+\.\s*", "", x).strip()
+        if len(x) < 5 or x.lower().startswith("associate member"):
+            continue
+        out.append(_row(x, "PHL", "sugar (raw and refined)", "producer", "PSMA member", "Sugar mill, member of the Philippine Sugar Millers Association", "Philippine Sugar Millers Association member list", url))
+    return out
+
+
+REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil, "argentina": argentina, "indonesia": indonesia, "ukraine": ukraine, "colombia": colombia, "chile": chile, "peru": peru, "india": india, "philippines": philippines}
 
 
 def main():
