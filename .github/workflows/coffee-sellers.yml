@@ -24,11 +24,11 @@ jobs:
       - name: Official exporter registries (weekly)
         timeout-minutes: 40
         run: |
-          if [ ! -f data/leads/registry_cameroon.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/registry_cameroon.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.registries 2>&1 | tail -3; fi
+          if [ ! -f data/leads/registry_cameroon.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/registry_cameroon.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.registries 2>&1 | grep -E 'registry|registries' | tail -40; fi
         continue-on-error: true
       - name: APEDA India exporters (25 minutes a run, resumes where it stopped)
         timeout-minutes: 30
-        run: python -m leads.registries india 2>&1 | tail -3
+        run: python -m leads.registries india 2>&1 | grep -E 'registry|registries|india' | tail -10
         continue-on-error: true
       - name: Uganda official directory (weekly)
         run: |

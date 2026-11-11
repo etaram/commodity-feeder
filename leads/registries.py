@@ -18,6 +18,7 @@ the company's own profile (tier 3). An empty or failed read never replaces the l
   python -m leads.registries
 """
 import csv
+import os
 import io
 import json
 import re
@@ -429,18 +430,27 @@ REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "i
 def main(only=None):
     LEADS.mkdir(parents=True, exist_ok=True)
     rep = {}
+    import concurrent.futures as cf
+    import time as _time
+    pool = cf.ThreadPoolExecutor(max_workers=4)
     for key, fn in REGISTRIES.items():
         if (only and key not in only) or (not only and key in SEPARATE):
             continue
+        t0 = _time.time()
+        limit = 1800 if key in SEPARATE else 300   # one slow or silent site must not hold the others
         try:
-            rows = fn()
+            rows = pool.submit(fn).result(timeout=limit)
+        except cf.TimeoutError:
+            log.warning("registry %s: gave up after %d s (previous file kept)", key, limit); rows = []
         except Exception as e:  # noqa: BLE001
             log.warning("registry %s: %s", key, str(e)[:120]); rows = []
+        log.info("registry %s: %d rows in %.0f s", key, len(rows), _time.time() - t0)
         if len(rows) >= 5:
             with open(LEADS / f"registry_{key}.csv", "w", encoding="utf-8", newline="") as f:
                 w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader(); w.writerows(rows)
         rep[key] = {"rows": len(rows), "with_email": sum(1 for r in rows if r["email"]), "with_phone": sum(1 for r in rows if r["phone"])}
-    print("registries:", json.dumps(rep))
+    print("registries:", json.dumps(rep), flush=True)
+    os._exit(0)   # threads still waiting on a silent site are dropped here
 
 
 SEPARATE = {"india"}   # long registries run in their own step with a time budget
