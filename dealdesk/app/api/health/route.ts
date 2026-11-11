@@ -9,7 +9,8 @@ import { selfKey } from "@/lib/selfkey";
 
 // Self-check: calls every panel route the way the panel does (read-only calls only) and reports status, time, size
 // and the first error, plus the Telegram webhook, the AI key, the mail box login and the bot's tabs. Nothing is
-// written, sent or changed. Open with the AUDIT_TOKEN (Bearer, or ?t=) while an audit runs; CRON_SECRET also works.
+// written, sent or changed. Open with the AUDIT_TOKEN in the Authorization header (Bearer) while an audit runs; CRON_SECRET
+// also works. The token is never read from the address: a query string is kept in access logs and browser history.
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
@@ -74,7 +75,7 @@ function summarize(j: unknown): string {
 
 export async function GET(req: NextRequest) {
   const tok = process.env.AUDIT_TOKEN || "";
-  const given = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "") || req.nextUrl.searchParams.get("t") || "";
+  const given = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "");
   const okAuth = (tok.length >= 32 && given === tok) || (process.env.CRON_SECRET && given === process.env.CRON_SECRET);
   if (!okAuth) return NextResponse.json({ ok: false }, { status: 401 });
   if (req.nextUrl.searchParams.get("only") === "scenarios") {

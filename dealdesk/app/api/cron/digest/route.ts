@@ -10,6 +10,7 @@ import { a, countryUrl } from "@/lib/links";
 import { getRange } from "@/lib/panel";
 import { tgEnv } from "@/lib/tgenv";
 import { pushAll } from "@/lib/push";
+import { notifyTo } from "@/lib/notify";
 
 // Daily digest (Vercel Cron, 05:00 UTC). For every active user whose profile asks for one: the new matches since the
 // last digest (not sent before, not hidden), best first, by email through Resend. No AI. Weekly digests go on Sundays.
@@ -41,14 +42,16 @@ export async function GET(req: NextRequest) {
     } catch (e) { await logEvent("warn", "telegram", "morning plays failed", String(e).slice(0, 200)); }
   }
 
-  // The shared team login has no Users row: its digest goes to the owner's address.
+  // The shared team login has no Users row: its digest goes to the owner's address (NOTIFY_EMAIL; no address is kept
+  // in the code, so without it that one digest is skipped and one event is logged).
   const team = (process.env.TEAM_USER || "").trim().toLowerCase();
-  const owner = (process.env.NOTIFY_EMAIL || "etamar.ramot@gmail.com").split(/[\s,;]+/)[0];
+  const owner = notifyTo()[0] || "";
   if (team) active.set(team, { email: team, name: "Sinder", role: "admin" } as never);
   for (const { email, p } of await allProfiles()) {
     const u = active.get(email);
     const to = email === team ? owner : email;
     if (!u || p.digest === "off" || (p.digest === "weekly" && !sunday)) continue;
+    if (!to) { await logEvent("warn", "digest", "NOTIFY_EMAIL is not set: the team login's digest was skipped"); report.push({ email, items: 0, sent: false, error: "NOTIFY_EMAIL is not set" }); continue; }
     const sent = new Set(p.sent || []);
     const m = await matches(p, { mode: "focus", limit: 300 });
     const fresh = m.items.filter((r) => !sent.has(r.id)).slice(0, 12);

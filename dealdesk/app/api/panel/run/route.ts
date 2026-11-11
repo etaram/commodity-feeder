@@ -6,6 +6,7 @@ import { logEvent } from "@/lib/log";
 import { registryFacts } from "@/lib/registry";
 import { logActivity } from "@/lib/activity";
 import { remember, subjectOf } from "@/lib/researchmemory";
+import { canWriteOwnerTabs } from "@/lib/scope";
 
 // Runs a panel job (research, supplier search, eligibility, logistics, quote...) immediately on the server
 // with Claude Haiku 5.5 and web search, writes the finished job to 'Panel Jobs', and returns the answer.
@@ -94,7 +95,9 @@ After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array
           for (const x of list.slice(0, 12)) {
             const name = str(x.name, 160), web = str(x.website, 200), source = str(x.source, 300);
             if (!name || !/^https?:\/\//.test(source || web)) continue;
-            if (sheetsEnabled()) { await appendRow("Web Suppliers", [stamp0, str(target, 120), name, str(x.country, 3).toUpperCase(), str(x.type, 20), str(x.products, 300), web, source || web, session.email || "", "web-found"]); saved++; }
+            // the shared tab feeds every workspace's supplier search: only the original workspace writes to it (lib/scope.ts);
+            // another workspace keeps its finds in its own research memory below
+            if (sheetsEnabled() && canWriteOwnerTabs(session.ws)) { await appendRow("Web Suppliers", [stamp0, str(target, 120), name, str(x.country, 3).toUpperCase(), str(x.type, 20), str(x.products, 300), web, source || web, session.email || "", "web-found"]); saved++; }
           }
         } catch (e) { await logEvent("warn", "run", "web suppliers not saved", String(e).slice(0, 200), session.email); }
       }

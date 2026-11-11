@@ -1,14 +1,12 @@
-import { auditSession } from "@/lib/gate";
+import { gate } from "@/lib/gate";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
 import { logEvent } from "@/lib/log";
 
 // Browser-side errors from the panel (script errors, failed calls). Signed-in users only, a few per minute per instance.
 let bucket = 0, win = 0;
 export async function POST(req: NextRequest) {
-  const s = (verifySession((await cookies()).get("dd_session")?.value) || (await auditSession()));
-  if (!s) return NextResponse.json({ ok: false }, { status: 401 });
+  const { s, res } = await gate("viewer");
+  if (!s) return res;
   const now = Date.now();
   if (now - win > 60_000) { win = now; bucket = 0; }
   if (++bucket > 20) return NextResponse.json({ ok: true, dropped: true });

@@ -8,7 +8,7 @@ import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 // so any change can be traced and undone by saving the earlier version again.
 // Columns: A time, B deal_id, C kind, D record_id, E version, F status, G data_json, H by, I source, J note.
 export type Kind = "quote" | "requirement" | "economics" | "party" | "stage";
-export type DealRecord = { time: string; deal_id: string; kind: Kind; record_id: string; version: number; status: string; data: Record<string, unknown>; by: string; source: string };
+export type DealRecord = { time: string; deal_id: string; kind: Kind; record_id: string; version: number; status: string; data: Record<string, unknown>; by: string; source: string; note?: string };
 const TAB = "Deal Records";
 
 const INCOTERMS = new Set(["EXW", "FCA", "FAS", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP", "DPU", "DDP"]);
@@ -109,7 +109,7 @@ export async function readDeal(dealId: string, ws = DEFAULT_WS): Promise<{ recor
     versions++;
     let data: Record<string, unknown> = {};
     try { data = JSON.parse(r[6] || "{}"); } catch { data = {}; }
-    const rec: DealRecord = { time: r[0] || "", deal_id: r[1], kind: r[2] as Kind, record_id: r[3] || "", version: Number(r[4]) || 1, status: r[5] || "", data, by: r[7] || "", source: r[8] || "" };
+    const rec: DealRecord = { time: r[0] || "", deal_id: r[1], kind: r[2] as Kind, record_id: r[3] || "", version: Number(r[4]) || 1, status: r[5] || "", data, by: r[7] || "", source: r[8] || "", note: r[9] || "" };
     const k = `${rec.kind}|${rec.record_id}`;
     const prev = latest.get(k);
     if (!prev || rec.version >= prev.version) latest.set(k, rec);
