@@ -13,8 +13,11 @@ const DAILY = Number(process.env.PANEL_MAIL_DAILY || 40);
 let day = "", used = 0;
 
 export async function POST(req: NextRequest) {
-  const auth = await gate("analyst");
+  // The mailbox is the owner's own: only an admin of the original workspace sends from it, and the click is the
+  // approval (recorded in the Outbox tab and the activity log below). Analysts and other workspaces cannot send.
+  const auth = await gate("admin");
   if (!auth.s) return auth.res;
+  if (auth.s.ws && auth.s.ws !== "sinder") return NextResponse.json({ ok: false, error: "Sending from this mailbox is limited to the owner" }, { status: 403 });
   if (!mailReady()) return NextResponse.json({ ok: false, error: "No mailbox is connected" }, { status: 503 });
   const b = await req.json().catch(() => ({}));
   const to = (Array.isArray(b.to) ? b.to : String(b.to || "").split(/[,;\s]+/)).map((x: unknown) => String(x).trim()).filter((x: string) => /@/.test(x)).slice(0, 5);

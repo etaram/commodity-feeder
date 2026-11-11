@@ -64,6 +64,7 @@ export async function agentCallback(chatId: string, data: string, queryId: strin
   }
   const m = data.match(/^ag:(ok|no|re):([A-Z0-9]+)$/);
   if (!m) return;
+  if (!(await isOwner(link.email))) { await logActivity({ email: link.email, name: link.name }, "tg_approval_denied", m[2], "not the owner"); return send(chatId, "Only the owner can approve or reject a message."); }
   await decide(agentIo, chatId, m[2], m[1] !== "no", m[1] === "re");
 }
 
@@ -106,6 +107,18 @@ async function withLang(link: Link, code?: string): Promise<Link> {
   await appendRow(TAB, [link.chat_id, link.email, link.name, new Date().toISOString().slice(0, 16), lang, link.alerts]).catch(() => null);
   if (linkCache) linkCache.v = linkCache.v.map((l) => (l.chat_id === link.chat_id ? next : l));
   return next;
+}
+
+// Who may start the deal agent or approve an outgoing message from Telegram: an active admin of the original
+// workspace (or the bootstrap team login). Re-read on every decision, so a disabled account or a lowered role loses
+// the right at once; a linked chat alone is never enough.
+export async function isOwner(email: string): Promise<boolean> {
+  const e = (email || "").trim().toLowerCase();
+  if (!e) return false;
+  const team = (process.env.TEAM_USER || "").trim().toLowerCase();
+  if (team && e === team) return true;
+  const u = (await listUsers(true).catch(() => [])).find((x) => x.email.toLowerCase() === e);
+  return !!u && u.status === "active" && u.role === "admin" && (!u.workspace || u.workspace === "sinder");
 }
 
 // The link code is derived from the user's email and the bot token, so the panel can show it without a store:
@@ -368,6 +381,7 @@ export async function handle(chatId: string, text: string, _from: string, langCo
     if (/^\/retry/.test(cmd)) { const ok = await retryLatest(agentIo, chatId); return send(chatId, ok ? (he ? "ממשיך מהמקום שבו הסוכן נעצר." : "Continuing from where the agent stopped.") : (he ? "אין ריצה שנעצרה בתקלה." : "No run stopped on an error.")); }
     if (/^\/stop/.test(cmd)) { const n = await stopLatest(chatId); return send(chatId, n ? (he ? "הסוכן נעצר." : "Agent stopped.") : (he ? "אין סוכן פעיל." : "No agent running.")); }
     if (/^\/deal/.test(cmd)) {
+      if (!(await isOwner(link.email))) return send(chatId, he ? "רק הבעלים יכול להפעיל את סוכן העסקאות." : "Only the owner can start the deal agent.");
       if (!arg.trim()) return send(chatId, he ? "כתוב מה לעשות, למשל: /deal תמצא לי 5,000 טון תירס לבן לקניה" : "Write the request, e.g. /deal find 5,000 t of white maize for Kenya");
       await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: arg });
       return send(chatId, he ? "התחלתי לעבוד על העסקה. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "Started on the deal. I will update you here and ask approval before any message.");
@@ -449,6 +463,7 @@ Facts: cite figures exactly as the tools returned them; never invent companies, 
       }
       const start = uses.find((u) => u.name === "start_deal_agent");
       if (start) {
+        if (!(await isOwner(link.email))) return send(chatId, he ? "רק הבעלים יכול להפעיל את סוכן העסקאות." : "Only the owner can start the deal agent.");
         await startRun(agentIo, { chat: chatId, email: link.email, name: link.name, lang: link.lang, request: start.input.request || t });
         await remember(chatId, t, "(started the deal agent)");
         return send(chatId, he ? "פתחתי סוכן עסקאות לבקשה הזו. אעדכן כאן בכל שלב, ואבקש אישור לפני כל פנייה." : "I opened a deal agent for this request. I will update you here and ask approval before any message.");
