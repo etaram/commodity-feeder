@@ -42,7 +42,7 @@ jobs:
         if: ${{ !cancelled() }}
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-          STATE_SHEET_ID: ${{ secrets.STATE_SHEET_ID }}
+          STATE_SHEET_ID: ${{ secrets.STATE_SHEET_ID || '1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo' }}
           BACKUP_REQUIRE_STATE_SHEET: "1"
           BACKUP_ALLOW_SHRINK: ${{ inputs.allow_shrink }}
         run: |
