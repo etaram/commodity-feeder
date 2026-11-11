@@ -15,6 +15,21 @@ No passwords or secrets in this file. Secrets live only in Vercel environment va
 | AI | Anthropic API (Claude Haiku 5.5 via ANTHROPIC_API_KEY) | |
 | E-mail | Resend (RESEND_API_KEY) | |
 
+## Baseline: baseline-2026-11-12 (current)
+
+- Code: branch `baseline-2026-11-12` = commit `5490bad2` (main at 00:25 Israel time, 12 Nov 2026).
+- Production deployment now serving desk.sinder.pro: `dpl_4zZtjnvvhzYFZcutaYACfiHcUAhE` (built from main at `6578f644`, 11 Nov 21:25).
+  To go back to it: Vercel MCP create_deployment with this deploymentId and target production, or "Promote" in the dashboard (about 2 minutes). Data is untouched.
+- Previous production deployments, newest first: `dpl_DVtsRARVkoQmHV4BjpYQS3nVxcAJ`, `dpl_4q56Wtyk6NcjzUhqrtYM72Mr7RAm`, `dpl_4pWZDHjaaTsd77xZ5cpi6PKHT2u3`, `dpl_t5VSGraVY38Azms8FVv84xEGz4Sm`.
+- Server: InterServer VPS; code copy at /opt/sinder/repo, database and Sheets backups under /opt/sinder/backup (encrypted with /opt/sinder/backup.key), copies in Google Drive `Sinder-Backups`.
+- Restore drill, 12 Nov 2026 00:20 (workflow restore-drill, run 43110425346): the newest Sheets backup (export of 11 Nov 16:04 UTC) was written into a new empty spreadsheet and read back:
+  30 of 30 tabs match, 5,034 of 5,034 rows, all byte-identical, 121 seconds. Tabs created after that export (for example 'Send Guard', 'Missions', 'Outcomes') are not in it; the next nightly backup covers them.
+- Staging (preview deployments): separate state spreadsheet, live spreadsheets read-only, mail off. Proof endpoint `/api/staging-check` (preview only).
+  Environment variables on the Preview target: STATE_SHEET_ID (staging copy), AGENT_MAIL_LIVE=0, SHEETS_READONLY_IDS, STATE_TABS_EXTRA.
+  To undo staging: delete those four Preview variables and set STATE_SHEET_ID (production entry) back to Production and Preview; nothing in production depends on them.
+- Mail settings changed on 11 Nov: DNS of sinder.pro now points mail to Zoho (MX mx/mx2/mx3.zoho.com, SPF include:zohomail.com, DKIM selector `sinder`). Before: IONOS (MX mx00/mx01.ionos.com, SPF include:_spf-us.ionos.com). Changing back is done in the IONOS DNS screen by the owner.
+- Mail look: `MAIL_HTML=0` returns to plain-text mail; removing `ZOHO_FROM_ADDRESS` returns the visible sender to the mailbox address; removing `MAIL_ABOUT` removes the first-contact note.
+
 ## Baseline: baseline-2026-11-04
 
 - Code: branch `baseline-2026-11-04` = commit `5fdb8e8ba681be7717998d748c0414b88279772e` (Node v22.23.4, next 15.5.28, `dealdesk/package-lock.json`).
