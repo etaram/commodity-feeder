@@ -146,9 +146,9 @@ const HELP_HE = `פקודות:
 /new - שיחה חדשה
 /mailcheck - בדיקת החיבור לתיבת המייל (לא שולח)
 /team - הצוות שמריץ את העסקאות ומה כל אחד עושה
-/winners [מילים] - זוכים טריים במכרזים ומה הם צריכים לקנות
+/winners [מילים] [קטן|בינוני|גדול] - זוכים טריים ומה הם צריכים לקנות
 /pipeline - משפך העבודה של הצוות ב-30 הימים האחרונים
-/company [שם] - היסטוריית הזכיות של חברה
+/company [שם] [קטנה|בינונית|גדולה] - היסטוריית הזכיות של חברה
 /agency [שם] - גוף רוכש: ממי הוא קונה וכמה זה ריכוזי
 או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
@@ -332,10 +332,12 @@ export async function handle(chatId: string, text: string, _from: string, langCo
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
     if (/^\/company/.test(cmd)) {
       if (!arg) return send(chatId, he ? "כתוב שם חברה: /company China Railway" : "Add a company name: /company China Railway");
-      const res = await companyFootprint(arg);
+      const sm = arg.match(/\b(small|mid|large|קטנה|בינונית|גדולה)\b/i);
+      const size = sm ? ({ "קטנה": "small", "בינונית": "mid", "גדולה": "large" } as Record<string, string>)[sm[1]] || sm[1].toLowerCase() : "";
+      const res = await companyFootprint(arg.replace(sm?.[0] || "\u0000", "").trim(), 5, size);
       if (!res.rows.length) return send(chatId, he ? "לא נמצאו זכיות לחברה הזו במאגר." : "No awards found for this company.");
       const usd = (v: number) => (v >= 1e9 ? `$${(v / 1e9).toFixed(1)}B` : v >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : `$${Math.round(v / 1e3)}K`);
-      return send(chatId, res.rows.map((f) => `<b>${esc(f.n)}</b>${f.wc ? ` (${esc(f.wc)})` : ""}\n${he ? "זכיות" : "Awards"}: ${f.a} | ${usd(f.u)}\n${he ? "לפי שנה" : "By year"}: ${Object.entries(f.y).map(([y, n]) => `${y}:${n}`).join(" ")}\n${he ? "מדינות" : "Countries"}: ${Object.keys(f.c).join(", ")}\n${he ? "קונים עיקריים" : "Main buyers"}: ${esc(f.b.slice(0, 3).join("; "))}\n${f.l.slice(0, 3).map((x) => `- ${esc(x.d)} ${esc(x.c)} ${esc(x.t.slice(0, 80))}`).join("\n")}`).join("\n\n") + `\n\n${he ? "מקור: רשומות זכייה ציבוריות, נכון ל-" : "Source: public award records, as of "}${esc(res.at)}`);
+      return send(chatId, res.rows.map((f) => `<b>${esc(f.n)}</b>${f.wc ? ` (${esc(f.wc)})` : ""}${f.sz ? ` [${he ? ({ small: "קטנה", mid: "בינונית", large: "גדולה" } as Record<string, string>)[f.sz] : f.sz}]` : ""}\n${he ? "זכיות" : "Awards"}: ${f.a} | ${usd(f.u)}\n${he ? "לפי שנה" : "By year"}: ${Object.entries(f.y).map(([y, n]) => `${y}:${n}`).join(" ")}\n${he ? "מדינות" : "Countries"}: ${Object.keys(f.c).join(", ")}\n${he ? "קונים עיקריים" : "Main buyers"}: ${esc(f.b.slice(0, 3).join("; "))}\n${f.l.slice(0, 3).map((x) => `- ${esc(x.d)} ${esc(x.c)} ${esc(x.t.slice(0, 80))}`).join("\n")}`).join("\n\n") + `\n\n${he ? "מקור: רשומות זכייה ציבוריות, נכון ל-" : "Source: public award records, as of "}${esc(res.at)}`);
     }
     if (/^\/agency/.test(cmd)) {
       if (!arg) return send(chatId, he ? "כתוב שם גוף רוכש: /agency National Roads Authority" : "Add a buyer name: /agency National Roads Authority");
@@ -352,7 +354,9 @@ export async function handle(chatId: string, text: string, _from: string, langCo
         : `<b>${f.days}-day funnel</b>\nAgent runs: ${f.runs} (done ${f.runs_done}, waiting on you ${f.runs_waiting_on_owner})\nMessages prepared: ${f.messages_proposed}\nSent: ${f.messages_sent} | rejected: ${f.messages_rejected} | waiting approval: ${f.messages_waiting_approval}${f.messages_failed ? ` | failed: ${f.messages_failed}` : ""}\nFresh winner leads: ${w.total}`);
     }
     if (/^\/winners/.test(cmd)) {
-      const res = await findWinners({ text: arg || "", n: 10 });
+      const wm = (arg || "").match(/\b(small|mid|large|קטן|בינוני|גדול)\b/i);
+      const wsize = wm ? ({ "קטן": "small", "בינוני": "mid", "גדול": "large" } as Record<string, string>)[wm[1]] || wm[1].toLowerCase() : "";
+      const res = await findWinners({ text: (arg || "").replace(wm?.[0] || "\u0000", "").trim(), n: 10, size: wsize });
       if (!res.rows.length) return send(chatId, he ? (res.error ? `רשימת הזוכים לא נטענה: ${esc(res.error)}` : "לא נמצאו זוכים מתאימים.") : (res.error || "No matching winners."));
       const usd = (v: number) => (v ? `$${v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : Math.round(v / 1e3) + "K"}` : "");
       return send(chatId, `<b>${he ? `זוכים טריים (${res.total}, נכון ל-${esc(res.at)})` : `Fresh winners (${res.total}, as of ${esc(res.at)})`}</b>\n\n` + res.rows.map((w) =>

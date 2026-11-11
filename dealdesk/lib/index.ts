@@ -111,11 +111,13 @@ export async function winners(): Promise<{ at: string; rows: Winner[]; error?: s
   }
 }
 /** Winners filtered by free words (winner, country ISO3, need, title) and kind, best first. */
-export async function findWinners(q: { text?: string; kind?: string; country?: string; n?: number }) {
+export async function findWinners(q: { text?: string; kind?: string; country?: string; n?: number; size?: string }) {
   const all = await winners();
   const words = (q.text || "").toLowerCase().split(/\s+/).filter((w) => w.length > 1);
   const rows = all.rows.filter((r) => {
     if (q.kind && r.k !== q.kind) return false;
+    // contract size: small < USD 1M, mid 1-50M, large > 50M (contracts without a stated value pass)
+    if (q.size && r.v && (q.size === "small" ? r.v >= 1e6 : q.size === "mid" ? r.v < 1e6 || r.v > 50e6 : r.v <= 50e6)) return false;
     if (q.country && r.c !== q.country.toUpperCase() && !r.wc.includes(q.country.toUpperCase())) return false;
     if (!words.length) return true;
     const hay = `${r.w.join(" ")} ${r.t} ${r.n.join(" ")} ${r.cm} ${r.b} ${r.c} ${r.wc}`.toLowerCase();
@@ -125,39 +127,59 @@ export async function findWinners(q: { text?: string; kind?: string; country?: s
 }
 
 // Company and buyer footprints from public award records (leads/footprints.py).
-export type Footprint = { n: string; a: number; u: number; y: Record<string, number>; c: Record<string, number>; b: string[]; wc: string; l: { d: string; t: string; u: string; c: string }[] };
+export type Footprint = { sz?: "small" | "mid" | "large"; n: string; a: number; u: number; y: Record<string, number>; c: Record<string, number>; b: string[]; wc: string; l: { d: string; t: string; u: string; c: string }[] };
 export type BuyerProfile = { n: string; c: string; a: number; u: number; y: Record<string, number>; s: { n: string; a: number; sh: number | null }[]; t3: number | null };
-type Footprints = { at: string; companies: Record<string, Footprint>; buyers: Record<string, BuyerProfile> };
+type Shard = { at: string; companies: Record<string, Footprint>; buyers: Record<string, BuyerProfile> };
+type Names = { at: string; c: [string, number, string][]; b: [string, number][] };
 const FP_STOP = new Set(["co", "ltd", "limited", "llc", "inc", "plc", "sa", "sas", "srl", "spa", "gmbh", "ag", "bv", "pvt", "private", "the", "and", "of", "corp",
   "corporation", "company", "sdn", "bhd", "pte", "jsc", "ojsc", "pjsc", "cjsc", "pty", "sarl", "ltda", "cia", "sac", "eirl", "llp", "lp", "nv", "oy", "ab", "as"]);
 export const fpNorm = (s: string) => (String(s || "").toLowerCase().match(/[a-z0-9]+/g) || []).filter((x) => !FP_STOP.has(x) && x.length > 1).join(" ").slice(0, 80);
-async function footprints(): Promise<Footprints | null> {
+const SHARDS = 32;
+let CRC: number[] | null = null;
+function crc32(str: string): number {   // same as Python's zlib.crc32 (leads/footprints.py picks the shard with it)
+  if (!CRC) { CRC = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; CRC.push(c >>> 0); } }
+  let c = 0xffffffff;
+  for (const byte of Buffer.from(str, "utf-8")) c = CRC[(c ^ byte) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+function decryptJson<T>(b: Buffer, key: string): T {
+  const nonce = b.subarray(0, 12), tag = b.subarray(b.length - 16), body = b.subarray(12, b.length - 16);
+  const d = createDecipheriv("aes-256-gcm", Buffer.from(key, "base64"), nonce);
+  d.setAuthTag(tag);
+  return JSON.parse(gunzipSync(Buffer.concat([d.update(body), d.final()])).toString("utf-8")) as T;
+}
+async function fpShard(i: number): Promise<Shard | null> {
   const key = process.env.WEB_INDEX_KEY;
   if (!key) return null;
-  try {
-    return await load("footprints.enc", (b) => {
-      const nonce = b.subarray(0, 12), tag = b.subarray(b.length - 16), body = b.subarray(12, b.length - 16);
-      const d = createDecipheriv("aes-256-gcm", Buffer.from(key, "base64"), nonce);
-      d.setAuthTag(tag);
-      return JSON.parse(gunzipSync(Buffer.concat([d.update(body), d.final()])).toString("utf-8")) as Footprints;
-    });
-  } catch { return null; }
+  try { return await load(`footprints/${String(i).padStart(2, "0")}.enc`, (b) => decryptJson<Shard>(b, key)); } catch { return null; }
 }
-/** Exact normalised name first, then names containing every word of the query (largest first). */
-export async function companyFootprint(name: string, n = 3) {
-  const fp = await footprints();
-  if (!fp) return { at: "", rows: [] as (Footprint & { key: string })[], error: "footprints not built yet" };
+async function fpNames(): Promise<Names | null> {
+  const key = process.env.WEB_INDEX_KEY;
+  if (!key) return null;
+  try { return await load("footprints/names.enc", (b) => decryptJson<Names>(b, key)); } catch { return null; }
+}
+const shardOf = (k: string) => crc32(k) % SHARDS;
+/** Exact normalised name first (one shard); otherwise names holding every word of the query, from the name directory.
+ *  size: small (< USD 1M won), mid (1-50M), large (> 50M); empty = any. */
+export async function companyFootprint(name: string, n = 3, size = "") {
   const k = fpNorm(name);
-  if (fp.companies[k]) return { at: fp.at, rows: [{ key: k, ...fp.companies[k] }] };
+  const exact = k ? await fpShard(shardOf(k)) : null;
+  if (exact?.companies[k] && (!size || exact.companies[k].sz === size)) return { at: exact.at, rows: [{ key: k, ...exact.companies[k] }] };
+  const dir = await fpNames();
+  if (!dir) return { at: "", rows: [] as (Footprint & { key: string })[], error: "footprints not built yet" };
   const words = k.split(" ").filter(Boolean);
-  const rows = Object.entries(fp.companies).filter(([kk]) => words.length && words.every((w) => kk.split(" ").includes(w))).sort((a, b) => b[1].u - a[1].u).slice(0, n).map(([kk, v]) => ({ key: kk, ...v }));
-  return { at: fp.at, rows };
+  const keys = dir.c.filter(([kk, , sz]) => words.length && (!size || sz === size) && words.every((w) => kk.split(" ").includes(w))).sort((a, b) => b[1] - a[1]).slice(0, n).map((x) => x[0]);
+  const rows: (Footprint & { key: string })[] = [];
+  for (const kk of keys) { const sh = await fpShard(shardOf(kk)); if (sh?.companies[kk]) rows.push({ key: kk, ...sh.companies[kk] }); }
+  return { at: dir.at, rows };
 }
 export async function buyerProfile(name: string, country = "", n = 3) {
-  const fp = await footprints();
-  if (!fp) return { at: "", rows: [] as (BuyerProfile & { key: string })[], error: "footprints not built yet" };
+  const dir = await fpNames();
+  if (!dir) return { at: "", rows: [] as (BuyerProfile & { key: string })[], error: "footprints not built yet" };
   const words = fpNorm(name).split(" ").filter(Boolean);
-  const rows = Object.entries(fp.buyers).filter(([kk, v]) => (!country || v.c === country.toUpperCase()) && words.length && words.every((w) => kk.split("|")[0].split(" ").includes(w)))
-    .sort((a, b) => b[1].u - a[1].u).slice(0, n).map(([kk, v]) => ({ key: kk, ...v }));
-  return { at: fp.at, rows };
+  const keys = dir.b.filter(([kk]) => { const [nm, c] = kk.split("|"); return words.length && (!country || c === country.toUpperCase()) && words.every((w) => nm.split(" ").includes(w)); })
+    .sort((a, b) => b[1] - a[1]).slice(0, n).map((x) => x[0]);
+  const rows: (BuyerProfile & { key: string })[] = [];
+  for (const kk of keys) { const sh = await fpShard(shardOf(kk.split("|")[0])); if (sh?.buyers[kk]) rows.push({ key: kk, ...sh.buyers[kk] }); }
+  return { at: dir.at, rows };
 }

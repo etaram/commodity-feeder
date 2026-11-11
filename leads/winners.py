@@ -26,7 +26,7 @@ from .common import DATA, LEADS, PRIVATE, log
 
 OUT = DATA / "web"
 WINDOW = 150   # days back from today
-KEEP = 4000
+KEEP = 8000
 
 # what a works contract makes the contractor buy; first matching rules win, several may apply
 NEEDS = [

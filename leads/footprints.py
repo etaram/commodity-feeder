@@ -21,7 +21,8 @@ from .winners import _fx, _rows
 OUT = DATA / "web"
 STOP = {"co", "ltd", "limited", "llc", "inc", "plc", "sa", "sas", "srl", "spa", "gmbh", "ag", "bv", "pvt", "private", "the", "and", "of", "corp",
         "corporation", "company", "sdn", "bhd", "pte", "jsc", "ojsc", "pjsc", "cjsc", "pty", "sarl", "ltda", "cia", "sac", "eirl", "llp", "lp", "nv", "oy", "ab", "as"}
-MAX_COMPANIES, MAX_BUYERS = 60_000, 25_000
+MAX_COMPANIES, MAX_BUYERS = 900_000, 120_000
+SHARDS = 32   # one file per shard; a lookup by exact name reads one shard only
 
 
 def norm(name):
@@ -77,15 +78,17 @@ def build():
             if year: b["y"][year] += 1
     log.info("footprints: %d award rows, %d companies, %d buyers before cuts", n, len(comp), len(buy))
     # keep the companies and buyers that carry information: two awards or more, largest value first
-    cs = sorted((k for k, v in comp.items() if v["a"] >= 2), key=lambda k: -comp[k]["u"])[:MAX_COMPANIES]
+    # every company with two awards or more, or one award of USD 250k or more: small and mid-sized firms stay in
+    cs = sorted((k for k, v in comp.items() if v["a"] >= 2 or v["u"] >= 250_000), key=lambda k: -comp[k]["u"])[:MAX_COMPANIES]
     bs = sorted((k for k, v in buy.items() if v["a"] >= 3), key=lambda k: -buy[k]["u"])[:MAX_BUYERS]
     companies = {}
     for k in cs:
         v = comp[k]
-        last = sorted(v["last"], reverse=True)[:5]
-        companies[k] = {"n": v["n"], "a": v["a"], "u": round(v["u"]), "y": dict(sorted(v["y"].items())[-8:]), "c": dict(v["c"].most_common(6)),
-                        "b": [x for x, _ in v["b"].most_common(5)], "wc": (v["wc"].most_common(1) or [("", 0)])[0][0],
-                        "l": [dict(zip(("d", "t", "u", "c"), x.split("\t"))) for x in last]}
+        last = sorted(v["last"], reverse=True)[:3]
+        companies[k] = {"n": v["n"], "a": v["a"], "u": round(v["u"]), "y": dict(sorted(v["y"].items())[-8:]), "c": dict(v["c"].most_common(4)),
+                        "b": [x[:70] for x, _ in v["b"].most_common(3)], "wc": (v["wc"].most_common(1) or [("", 0)])[0][0],
+                        "l": [dict(zip(("d", "t", "u", "c"), x.split("\t"))) for x in last],
+                        "sz": "large" if v["u"] >= 50e6 else "mid" if v["u"] >= 1e6 else "small"}
     buyers = {}
     for k in bs:
         v = buy[k]
@@ -97,6 +100,11 @@ def build():
                      "t3": round(100 * top3 / tot, 1) if tot else None}
     log.info("footprints: kept %d companies, %d buyers", len(companies), len(buyers))
     return {"companies": companies, "buyers": buyers}
+
+
+def shard(key):
+    import zlib
+    return zlib.crc32(key.encode("utf-8")) % SHARDS
 
 
 def main():
@@ -111,14 +119,35 @@ def main():
         log.warning("footprints: WEB_INDEX_KEY not set - nothing written"); return
     data = build()
     if not data["companies"]:
-        log.warning("footprints: nothing built - previous file kept"); return
+        log.warning("footprints: nothing built - previous files kept"); return
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     import datetime as dt
-    raw = gzip.compress(json.dumps({"at": dt.date.today().isoformat(), **data}, ensure_ascii=False, separators=(",", ":")).encode(), 9)
+    aes = AESGCM(base64.b64decode(key))
+    at = dt.date.today().isoformat()
+    parts = [{"at": at, "companies": {}, "buyers": {}} for _ in range(SHARDS)]
+    for k, v in data["companies"].items():
+        parts[shard(k)]["companies"][k] = v
+    for k, v in data["buyers"].items():
+        parts[shard(k.split("|")[0])]["buyers"][k] = v
+    d = OUT / "footprints"
+    d.mkdir(parents=True, exist_ok=True)
+    total = 0
+    for i, part in enumerate(parts):
+        raw = gzip.compress(json.dumps(part, ensure_ascii=False, separators=(",", ":")).encode(), 9)
+        nonce = os.urandom(12)
+        (d / f"{i:02d}.enc").write_bytes(nonce + aes.encrypt(nonce, raw, None))
+        total += (d / f"{i:02d}.enc").stat().st_size
+    # a name directory for searches by words (which shard holds a company is not known from a partial name)
+    names = {"at": at, "c": [[k, v["u"], v["sz"]] for k, v in data["companies"].items()], "b": [[k, v["u"]] for k, v in data["buyers"].items()]}
+    raw = gzip.compress(json.dumps(names, ensure_ascii=False, separators=(",", ":")).encode(), 9)
     nonce = os.urandom(12)
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "footprints.enc").write_bytes(nonce + AESGCM(base64.b64decode(key)).encrypt(nonce, raw, None))
-    log.info("footprints: %.1f MB encrypted", (OUT / "footprints.enc").stat().st_size / 1e6)
+    (d / "names.enc").write_bytes(nonce + aes.encrypt(nonce, raw, None))
+    total += (d / "names.enc").stat().st_size
+    sizes = {s: sum(1 for v in data["companies"].values() if v["sz"] == s) for s in ("small", "mid", "large")}
+    log.info("footprints: %d shards, %.1f MB encrypted; companies by size %s", SHARDS, total / 1e6, json.dumps(sizes))
+    old = OUT / "footprints.enc"
+    if old.exists():
+        old.unlink()
 
 
 if __name__ == "__main__":
