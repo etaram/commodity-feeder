@@ -13,14 +13,17 @@ export async function GET() {
   catch (e) { return NextResponse.json({ ok: false, error: String((e as Error).message || e).slice(0, 300) }, { status: 502 }); }
 }
 
-// POST /api/clients {name, client_kind?: "represented"|"own", legal_name?, domains?: string[], country?, claims?: [{field, value, source_ref}], private_notes?}
-// Creates a draft dossier from manual input. Claims without a source_ref are rejected and listed.
+// POST /api/clients {legal_name, name?, jurisdiction?, country? (ISO3), website?, domains?: string[], business_objective?,
+//   representation_status?: "not_agreed"|"in_discussion"|"agreed"|"own_company", claims?: [{field, value, source_ref}], private_notes?}
+// Creates a draft dossier in the caller's workspace (taken from the session, never from the body). Claims without a
+// source_ref are rejected and listed; nothing created here is approved.
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("analyst");
   if (!s) return res;
   const b = await req.json().catch(() => ({}));
-  if (!String(b.name || "").trim()) return NextResponse.json({ ok: false, error: "name is required" }, { status: 400 });
-  const d = newDossier({ name: b.name, client_kind: b.client_kind, legal_name: b.legal_name, domains: Array.isArray(b.domains) ? b.domains : [], country: b.country }, s.email);
+  const name = String(b.name || b.legal_name || "").trim();
+  if (!name) return NextResponse.json({ ok: false, error: "the client's legal name is required" }, { status: 400 });
+  const d = newDossier({ name, client_kind: b.client_kind, legal_name: b.legal_name || name, domains: Array.isArray(b.domains) ? b.domains : [], country: b.country, jurisdiction: b.jurisdiction, website: b.website, business_objective: b.business_objective, representation_status: b.representation_status }, s.email);
   const rejected: { item: unknown; reason: string }[] = [], add: Claim[] = [];
   for (const x of (Array.isArray(b.claims) ? b.claims : []).slice(0, 100)) { const c = manualClaim(x || {}, s.email); if ("error" in c) rejected.push({ item: x, reason: c.error }); else add.push(c); }
   d.claims = mergeClaims([], add).claims;
