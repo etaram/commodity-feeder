@@ -485,21 +485,27 @@ Reply JSON only: {"en": "<the request in English>", "concepts": [{"terms": ["...
     return r;
   } catch (e) { void logEvent("warn", "search", "query expansion failed", String(e).slice(0, 200)); return null; }
 }
+// The product words of a request when no commodity and no model expansion applies (every tender title longer than
+// 80 characters takes this route): the first 14 distinct words of 3+ letters that are not procurement stop-words.
+// Exported so the evaluation (tools/eval-suppliers.ts) logs exactly what the search derived; the search itself calls them.
+export const queryWords = (query: string): string[] => [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
+  .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
+/** each remaining word is one concept; descriptors ("granular", "bulk") are dropped unless nothing else is left */
+export const plainConceptWords = (words: string[]): string[] => words.filter((w) => !FLEX_WORDS.has(w) || words.every((x) => FLEX_WORDS.has(x)));
 export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string }> {
   const short = String(o.text || "").trim().length <= 80;
   // a commodity request is read by the commodity table (code): no model call, no translation needed
   const cmd = short ? detectCommodity(String(o.text || "")) : null;
   const ex = cmd ? { en: String(o.text || ""), concepts: [{ terms: [] as string[], hs: cmd.hs }] } : short && !o.noExpand ? await expandQuery(String(o.text || "")) : null;
   const query = ex?.en || (NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || ""));
-  const words = [...new Set(query.toLowerCase().replace(/[^\p{L}\p{N} ]/gu, " ").split(/\s+/)
-    .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
+  const words = queryWords(query);
   const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
   // product words reach the customs codes too: "tuna" is named in HS 0302.31-0303.49 and 1604.14, while a supplier
   // record often carries only the codes and the 4-digit heading ("Fish, frozen")
   const hsOf = await hsWordMap();
   const concepts: Concept[] = cmd ? [{ terms: [cmd.term], hs: cmd.hs }] : ex
     ? ex.concepts.map((c) => ({ terms: c.terms.map((t) => stemRe(t)), hs: [...c.hs, ...c.terms.flatMap((t) => [...hsOf(t)])] }))
-    : words.filter((w) => !FLEX_WORDS.has(w) || words.every((x) => FLEX_WORDS.has(x))).map((w) => ({ terms: [stemRe(w)], hs: [...hsOf(w)] }));
+    : plainConceptWords(words).map((w) => ({ terms: [stemRe(w)], hs: [...hsOf(w)] }));
   const res = concepts;
   const scored: { s: Supplier; sc: number; m: MatchResult; cb?: number }[] = [];
   const fams = familiesFor(`${query} ${o.text || ""}`), seenKey = new Set<string>();

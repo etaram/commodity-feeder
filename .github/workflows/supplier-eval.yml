@@ -1,21 +1,44 @@
 name: supplier-eval
-# Supplier-search benchmark on the real index (measure before tuning). Writes the private tab 'Search eval'.
+# Blind relevance evaluation of the supplier search on the real index (measure before tuning).
+# Runs the product's own search code (dealdesk/lib/panel.ts supplierSearch) for two sets: 40 buyer requests
+# (dealdesk/lib/evalqueries.ts EVAL_SET, as the supplier research screen searches) and 30 open tenders picked at run
+# time (as the tender screen searches). Output: rows for an independent labeller (no verdict in them), the matcher's
+# verdicts in a separate file, the tender derivations, the owner's own verdicts. Kept on the server under
+# /opt/sinder/eval/<timestamp>/ and copied to Google Drive, folder Sinder-Eval/<timestamp>/.
+# THE LOG IS PUBLIC: it shows counts only. No supplier row is printed, uploaded as an artifact or left in the workspace.
+# Scoring (on your own machine): tools/eval_score.py. Guide: docs/release-2026-11-13/SUPPLIER_MATCH_LABELLING.md
 on:
   workflow_dispatch:
     inputs:
+      expand:
+        description: "Model query expansion: auto = as in production when ANTHROPIC_API_KEY is available to the run, off = never"
+        type: choice
+        options: [auto, "off"]
+        default: auto
+      verified:
+        description: "Apply reviewed facts ('Verified capabilities') as the product does: on, or off to measure the text matching alone"
+        type: choice
+        options: ["on", "off"]
+        default: "on"
+      sheet_benchmark:
+        description: "Also run the older benchmark that writes the private sheet tab 'Search eval' (yes / no)"
+        type: choice
+        options: ["no", "yes"]
+        default: "no"
       baseline:
-        description: "Commit to compare with (blank: no baseline)"
+        description: "Older benchmark only: commit to compare with (blank: no baseline)"
         default: ""
 permissions:
   contents: read
+concurrency:
+  group: supplier-eval
 jobs:
   eval:
-    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    runs-on: [self-hosted, sinder]
     timeout-minutes: 40
     env:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-      SUPPLIER_EXPAND: "off"
-      SUPPLIER_VERIFIED: "off"  # measure the heuristics, not the reviewed facts layered on top
+      OUT: eval-out
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
@@ -23,22 +46,60 @@ jobs:
         with: { python-version: "3.12" }
       - uses: actions/setup-node@v4
         with: { node-version: "20" }
-      - run: pip install requests google-auth
-      - name: Index key from the private sheet (masked)
+      - run: pip install -q requests google-auth
+      - name: Index key (masked)
+        # WEB_INDEX_KEY is not a GitHub secret today: it lives in the private universe sheet, tab Config, and is read
+        # with the service account (the same fallback as tools/search_eval.py). A repository secret of that name wins if one is added.
+        env:
+          KEY_SECRET: ${{ secrets.WEB_INDEX_KEY }}
         run: |
-          K=$(python -c "from leads.push import UNIVERSE_SHEET, Sheets; print(next((r[1] for r in Sheets().values(UNIVERSE_SHEET, 'Config!A1:B10') if len(r) > 1 and r[0] == 'WEB_INDEX_KEY'), ''))")
-          echo "::add-mask::$K"; echo "WEB_INDEX_KEY=$K" >> $GITHUB_ENV
+          K="$KEY_SECRET"
+          if [ -z "$K" ]; then K=$(python -c "from leads.push import UNIVERSE_SHEET, Sheets; print(next((r[1] for r in Sheets().values(UNIVERSE_SHEET, 'Config!A1:B10') if len(r) > 1 and r[0] == 'WEB_INDEX_KEY'), ''))" 2>/dev/null || true); fi
+          [ -n "$K" ] || { echo "WEB_INDEX_KEY not found (no repository secret, and the Config tab did not return it)"; exit 1; }
+          echo "::add-mask::$K"; echo "WEB_INDEX_KEY=$K" >> "$GITHUB_ENV"
       - run: npm ci --prefix dealdesk --ignore-scripts --no-audit --no-fund
-      - name: Run the benchmark (current code)
+      - name: Build the runner
+        run: cd dealdesk && npx --yes esbuild@0.24.0 tools/eval-suppliers.ts --bundle --platform=node --format=cjs --alias:@=. --outfile="$RUNNER_TEMP/ev.js" --log-level=error
+      - name: Blind run (prints counts only)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DATA_BASE_URL: ${{ vars.EVAL_DATA_BASE_URL }}
+          SUPPLIER_EXPAND: ${{ inputs.expand == 'off' && 'off' || '' }}
+          SUPPLIER_VERIFIED: ${{ inputs.verified == 'off' && 'off' || '' }}
         run: |
-          cd dealdesk && npx --yes esbuild@0.24.0 tools/eval-suppliers.ts --bundle --platform=node --format=cjs --alias:@=. --outfile=/tmp/ev.js --log-level=error
-          node --max-old-space-size=3000 /tmp/ev.js /tmp/eval_new.json
-      - name: Run the benchmark (baseline)
-        if: ${{ inputs.baseline != '' }}
+          rm -rf "$OUT"; mkdir -p "$OUT"
+          node --max-old-space-size=3000 "$RUNNER_TEMP/ev.js" --blind "$OUT"
+      - name: Keep on the server and copy to Google Drive
         run: |
-          git worktree add /tmp/base ${{ inputs.baseline }}
-          mkdir -p /tmp/base/dealdesk/tools && cp dealdesk/tools/eval-suppliers.ts /tmp/base/dealdesk/tools/
-          ln -s $PWD/dealdesk/node_modules /tmp/base/dealdesk/node_modules
-          cd /tmp/base/dealdesk && npx --yes esbuild@0.24.0 tools/eval-suppliers.ts --bundle --platform=node --format=cjs --alias:@=. --outfile=/tmp/evb.js --log-level=error
-          node --max-old-space-size=3000 /tmp/evb.js /tmp/eval_base.json
-      - run: python -m leads.search_eval /tmp/eval_new.json $([ -f /tmp/eval_base.json ] && echo /tmp/eval_base.json)
+          . deploy/ops/_root.sh
+          ts=$(date -u +%Y%m%dT%H%M%SZ)
+          asroot bash "$GITHUB_WORKSPACE/deploy/ops/_eval_root.sh" "$GITHUB_WORKSPACE/$OUT" "$ts"
+          echo "output folder: Sinder-Eval/$ts (Google Drive) and /opt/sinder/eval/$ts (server)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Older sheet benchmark (current code)
+        if: ${{ inputs.sheet_benchmark == 'yes' }}
+        env:
+          SUPPLIER_EXPAND: "off"
+          SUPPLIER_VERIFIED: "off"  # measure the heuristics, not the reviewed facts layered on top
+        run: |
+          mkdir -p "$OUT/legacy"
+          node --max-old-space-size=3000 "$RUNNER_TEMP/ev.js" "$OUT/legacy/eval_new.json" | sed -E 's/^.*: ([0-9]+ results, [0-9]+ ms)$/\1/'
+      - name: Older sheet benchmark (baseline)
+        if: ${{ inputs.sheet_benchmark == 'yes' && inputs.baseline != '' }}
+        env:
+          SUPPLIER_EXPAND: "off"
+          SUPPLIER_VERIFIED: "off"
+          BASELINE: ${{ inputs.baseline }}
+        run: |
+          git worktree add "$RUNNER_TEMP/base" "$BASELINE"
+          ln -s "$PWD/dealdesk/node_modules" "$RUNNER_TEMP/base/dealdesk/node_modules"
+          # the baseline commit runs its own copy of the benchmark tool (the current one needs code the baseline may not have)
+          (cd "$RUNNER_TEMP/base/dealdesk" && npx --yes esbuild@0.24.0 tools/eval-suppliers.ts --bundle --platform=node --format=cjs --alias:@=. --outfile="$RUNNER_TEMP/evb.js" --log-level=error)
+          node --max-old-space-size=3000 "$RUNNER_TEMP/evb.js" "$OUT/legacy/eval_base.json" | sed -E 's/^.*: ([0-9]+ results, [0-9]+ ms)$/\1/'
+      - name: Older sheet benchmark (write the private tab)
+        if: ${{ inputs.sheet_benchmark == 'yes' }}
+        run: python -m leads.search_eval "$OUT/legacy/eval_new.json" $([ -f "$OUT/legacy/eval_base.json" ] && echo "$OUT/legacy/eval_base.json")
+      - name: Remove the output from the runner
+        if: always()
+        run: |
+          rm -rf "$OUT" "$RUNNER_TEMP/ev.js" "$RUNNER_TEMP/evb.js"
+          git worktree remove --force "$RUNNER_TEMP/base" 2>/dev/null || rm -rf "$RUNNER_TEMP/base"
