@@ -1,0 +1,67 @@
+name: supplier-label
+# Independent, blind labelling of one supplier-match evaluation run (workflow supplier-eval), then scoring.
+# The labeller (tools/eval_label.py) is given rows.jsonl and tenders.jsonl only: the matcher's verdicts never leave
+# /opt/sinder/eval/<stamp>/ until the labelling is over. After it, tools/eval_score.py runs on the server as root and
+# writes score.txt and score.json beside labels.jsonl; the three files are copied to Google Drive Sinder-Eval/<stamp>/.
+# THE LOG IS PUBLIC: it shows counts and percentages only. No supplier name, evidence, reason or model reply is printed,
+# nothing is uploaded as an artifact, and the work directory is removed at the end.
+# A run can be repeated: requests already labelled in labels.jsonl on the server are skipped.
+on:
+  workflow_dispatch:
+    inputs:
+      stamp:
+        description: "Evaluation folder (timestamp), e.g. 20261111T181953Z"
+        required: true
+      limit:
+        description: "Label at most this many requests (a cheap trial). Blank: all"
+        default: ""
+      model:
+        description: "Anthropic model id. Blank: the labeller's default (the web app's cheapest model)"
+        default: ""
+permissions:
+  contents: read
+concurrency:
+  group: supplier-label
+jobs:
+  label:
+    runs-on: [self-hosted, sinder]
+    timeout-minutes: 90
+    env:
+      STAMP: ${{ inputs.stamp }}
+      LIMIT: ${{ inputs.limit }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Check the inputs
+        run: |
+          case "$STAMP" in *[!0-9TZ]*|"") echo "stamp must look like 20261111T181953Z"; exit 1;; esac
+          case "$LIMIT" in *[!0-9]*) echo "limit must be a whole number or blank"; exit 1;; esac
+          echo "WORK=$RUNNER_TEMP/label-$GITHUB_RUN_ID" >> "$GITHUB_ENV"
+      - name: Fetch rows.jsonl and tenders.jsonl (only those) from the server folder
+        run: |
+          . deploy/ops/_root.sh
+          rm -rf "$WORK"; mkdir -m 700 "$WORK"
+          asroot bash "$GITHUB_WORKSPACE/deploy/ops/_label_root.sh" fetch "$STAMP" "$WORK" "$(id -u)"
+      - name: Label (prints counts only)
+        id: label
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EVAL_LABEL_MODEL: ${{ inputs.model }}
+        run: |
+          set -o pipefail
+          args=(--rows "$WORK/rows.jsonl" --out "$WORK/labels.jsonl")
+          [ -f "$WORK/tenders.jsonl" ] && args+=(--tenders "$WORK/tenders.jsonl")
+          [ -n "$LIMIT" ] && args+=(--limit-requests "$LIMIT")
+          python3 tools/eval_label.py "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Store the labels, score on the server, copy to Google Drive (prints aggregates only)
+        # also after a labelling step that failed part-way: what was labelled is kept, so the next run resumes from it
+        if: ${{ always() && steps.label.conclusion != 'skipped' }}
+        run: |
+          set -o pipefail
+          . deploy/ops/_root.sh
+          asroot bash "$GITHUB_WORKSPACE/deploy/ops/_label_root.sh" store "$STAMP" "$WORK" "$GITHUB_WORKSPACE" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "output folder: Sinder-Eval/$STAMP (Google Drive) and /opt/sinder/eval/$STAMP (server)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove the work directory from the runner
+        if: always()
+        run: if [ -n "${WORK:-}" ]; then rm -rf "$WORK"; fi
