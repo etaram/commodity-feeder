@@ -9,7 +9,14 @@ export type OutboundMessage = {
   attachments: { name: string; ref: string }[]; headers: Record<string, string>;
 };
 
-export type SendResult = { ok: true; provider_id: string } | { ok: false; code: string; message: string };
+// A failure without `delivery` is a definite answer: the provider refused the message, or the transport is certain the
+// request never left (connect refused, DNS). A transport MUST set delivery:"unknown" when the request may have left and
+// no clear answer came back (read timeout, connection reset after dispatch, ambiguous provider reply). A send() that
+// throws is treated the same way. Such an item is never retried blindly (see OutboxStatus delivery_unknown).
+export type SendResult = { ok: true; provider_id: string } | { ok: false; code: string; message: string; delivery?: "unknown" };
+
+// What the provider says about a message, looked up by idempotency key (reconcile step).
+export type DeliveryLookup = { state: "sent"; provider_id: string } | { state: "not_sent" } | { state: "unknown" };
 
 export interface Transport {
   readonly name: string;
@@ -17,6 +24,8 @@ export interface Transport {
   // The display name of the verified sender connection for this mailbox, or null when it is not verified.
   verifySender(ws: string, email: string): Promise<string | null>;
   send(m: OutboundMessage): Promise<SendResult>;
+  // Optional: ask the provider whether a message with this idempotency key was accepted. Without it only the owner can reconcile.
+  lookup?(ws: string, idem_key: string): Promise<DeliveryLookup>;
 }
 
 export class TestTransport implements Transport {
@@ -25,6 +34,7 @@ export class TestTransport implements Transport {
   readonly sent: OutboundMessage[] = [];
   private verified = new Map<string, string>();
   private failures = new Map<string, string[]>();
+  private ambiguous = new Map<string, ("lost" | "delivered" | "throw")[]>();
   private n = 0;
 
   constructor(senders: { ws: string; email: string; name: string }[] = []) {
@@ -38,7 +48,25 @@ export class TestTransport implements Transport {
   async verifySender(ws: string, email: string): Promise<string | null> {
     return this.verified.get(`${ws}|${email.toLowerCase()}`) ?? null;
   }
+  // Ambiguous outcomes for a recipient (consumed one per send attempt). "lost": timeout, nothing was delivered.
+  // "delivered": the provider accepted the message but the answer never arrived. "throw": send() itself rejects.
+  ambiguousNext(to: string, ...modes: ("lost" | "delivered" | "throw")[]) { this.ambiguous.set(to.toLowerCase(), [...(this.ambiguous.get(to.toLowerCase()) || []), ...modes]); }
+  // When set, lookup() answers "unknown" (a provider that cannot confirm either way).
+  lookupUnavailable = false;
+  async lookup(ws: string, idem_key: string): Promise<DeliveryLookup> {
+    if (this.lookupUnavailable) return { state: "unknown" };
+    const i = this.sent.findIndex((m) => m.ws === ws && m.idem_key === idem_key);
+    return i >= 0 ? { state: "sent", provider_id: `test-lookup-${i + 1}` } : { state: "not_sent" };
+  }
+
   async send(m: OutboundMessage): Promise<SendResult> {
+    const amb = this.ambiguous.get(m.to.toLowerCase());
+    if (amb && amb.length) {
+      const mode = amb.shift()!;
+      if (mode === "delivered") this.sent.push(JSON.parse(JSON.stringify(m)));
+      if (mode === "throw") throw new Error("socket hang up");
+      return { ok: false, code: "timeout", message: "test: no answer after dispatch", delivery: "unknown" };
+    }
     const q = this.failures.get(m.to.toLowerCase());
     if (q && q.length) { const code = q.shift()!; return { ok: false, code, message: `test failure ${code}` }; }
     this.sent.push(JSON.parse(JSON.stringify(m)));
@@ -53,7 +81,9 @@ export function classifySendError(code: string): ErrorClass {
   if (/^(550|551|553)\b/.test(c) || /^5\.1\.\d/.test(c) || /^5\.2\.1/.test(c) || ["invalid_recipient", "hard_bounce", "no_such_user", "mailbox_unavailable"].includes(c)) return "hard_bounce";
   if (["auth_failed", "sender_not_verified", "sender_revoked", "530", "535"].includes(c) || /^5\.7\.(0|8)/.test(c)) return "sender";
   if (/^5\d\d\b/.test(c) || /^5\.\d\.\d/.test(c) || ["rejected", "content_rejected", "invalid_message"].includes(c)) return "permanent";
-  return "transient"; // 4xx, 4.x.x, timeouts, rate limits, network errors and anything unknown (retried, bounded)
+  // 4xx, 4.x.x, rate limits, and timeouts / network errors the transport reports as definitely not sent, and anything
+  // unknown (retried, bounded). An ambiguous outcome never reaches this function: see SendResult.delivery.
+  return "transient";
 }
 
 // The transport used by the API routes and the cron. Senders for the test transport come from
