@@ -12,6 +12,7 @@ import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { TEAM } from "./team";
 import { findWinners } from "./index";
+import { funnel } from "./quotes";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
 import { commodityStats } from "./commodities";
@@ -146,6 +147,7 @@ const HELP_HE = `פקודות:
 /mailcheck - בדיקת החיבור לתיבת המייל (לא שולח)
 /team - הצוות שמריץ את העסקאות ומה כל אחד עושה
 /winners [מילים] - זוכים טריים במכרזים ומה הם צריכים לקנות
+/pipeline - משפך העבודה של הצוות ב-30 הימים האחרונים
 או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
 /tenders <words> [ISO3] - open tenders by fit
@@ -164,6 +166,7 @@ const HELP_EN = `Commands:
 /mailcheck - check the mailbox sign-in (sends nothing)
 /team - the deal team and what each member does
 /winners [words] - fresh contract winners and what they need to buy
+/pipeline - the deal team funnel for the last 30 days
 Or just write a question or a request.`;
 
 type Row = Record<string, string>;
@@ -323,6 +326,13 @@ export async function handle(chatId: string, text: string, _from: string, langCo
   const iso = (s: string) => (s.match(/\b([A-Z]{3})\b/) || [])[1] || "";
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
+    if (/^\/pipeline/.test(cmd)) {
+      const f = await funnel(Number(arg) > 0 ? Math.min(365, Number(arg)) : 30);
+      const w = await findWinners({ n: 1 });
+      return send(chatId, he
+        ? `<b>משפך ${f.days} יום</b>\nריצות סוכן: ${f.runs} (הושלמו ${f.runs_done}, ממתינות לך ${f.runs_waiting_on_owner})\nהודעות שהוכנו: ${f.messages_proposed}\nנשלחו: ${f.messages_sent} | נדחו: ${f.messages_rejected} | ממתינות לאישור: ${f.messages_waiting_approval}${f.messages_failed ? ` | נכשלו: ${f.messages_failed}` : ""}\nלידים של זוכים טריים: ${w.total}`
+        : `<b>${f.days}-day funnel</b>\nAgent runs: ${f.runs} (done ${f.runs_done}, waiting on you ${f.runs_waiting_on_owner})\nMessages prepared: ${f.messages_proposed}\nSent: ${f.messages_sent} | rejected: ${f.messages_rejected} | waiting approval: ${f.messages_waiting_approval}${f.messages_failed ? ` | failed: ${f.messages_failed}` : ""}\nFresh winner leads: ${w.total}`);
+    }
     if (/^\/winners/.test(cmd)) {
       const res = await findWinners({ text: arg || "", n: 10 });
       if (!res.rows.length) return send(chatId, he ? (res.error ? `רשימת הזוכים לא נטענה: ${esc(res.error)}` : "לא נמצאו זוכים מתאימים.") : (res.error || "No matching winners."));
