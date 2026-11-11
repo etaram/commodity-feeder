@@ -11,7 +11,7 @@ import { logActivity } from "./activity";
 import { tgEnv } from "./tgenv";
 import { a, countryUrl, supplierUrl, tenderUrl } from "./links";
 import { TEAM } from "./team";
-import { findWinners } from "./index";
+import { buyerProfile, companyFootprint, findWinners } from "./index";
 import { funnel } from "./quotes";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
@@ -148,6 +148,8 @@ const HELP_HE = `פקודות:
 /team - הצוות שמריץ את העסקאות ומה כל אחד עושה
 /winners [מילים] - זוכים טריים במכרזים ומה הם צריכים לקנות
 /pipeline - משפך העבודה של הצוות ב-30 הימים האחרונים
+/company [שם] - היסטוריית הזכיות של חברה
+/agency [שם] - גוף רוכש: ממי הוא קונה וכמה זה ריכוזי
 או פשוט לכתוב שאלה או בקשה, למשל: "תמצא לי 5,000 טון תירס לבן לקניה".`;
 const HELP_EN = `Commands:
 /tenders <words> [ISO3] - open tenders by fit
@@ -167,6 +169,8 @@ const HELP_EN = `Commands:
 /team - the deal team and what each member does
 /winners [words] - fresh contract winners and what they need to buy
 /pipeline - the deal team funnel for the last 30 days
+/company [name] - a company's contract awards
+/agency [name] - a public buyer: who it buys from, how concentrated
 Or just write a question or a request.`;
 
 type Row = Record<string, string>;
@@ -326,6 +330,20 @@ export async function handle(chatId: string, text: string, _from: string, langCo
   const iso = (s: string) => (s.match(/\b([A-Z]{3})\b/) || [])[1] || "";
   try {
     if (/^\/help/.test(cmd)) return send(chatId, he ? HELP_HE : HELP_EN);
+    if (/^\/company/.test(cmd)) {
+      if (!arg) return send(chatId, he ? "כתוב שם חברה: /company China Railway" : "Add a company name: /company China Railway");
+      const res = await companyFootprint(arg);
+      if (!res.rows.length) return send(chatId, he ? "לא נמצאו זכיות לחברה הזו במאגר." : "No awards found for this company.");
+      const usd = (v: number) => (v >= 1e9 ? `$${(v / 1e9).toFixed(1)}B` : v >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : `$${Math.round(v / 1e3)}K`);
+      return send(chatId, res.rows.map((f) => `<b>${esc(f.n)}</b>${f.wc ? ` (${esc(f.wc)})` : ""}\n${he ? "זכיות" : "Awards"}: ${f.a} | ${usd(f.u)}\n${he ? "לפי שנה" : "By year"}: ${Object.entries(f.y).map(([y, n]) => `${y}:${n}`).join(" ")}\n${he ? "מדינות" : "Countries"}: ${Object.keys(f.c).join(", ")}\n${he ? "קונים עיקריים" : "Main buyers"}: ${esc(f.b.slice(0, 3).join("; "))}\n${f.l.slice(0, 3).map((x) => `- ${esc(x.d)} ${esc(x.c)} ${esc(x.t.slice(0, 80))}`).join("\n")}`).join("\n\n") + `\n\n${he ? "מקור: רשומות זכייה ציבוריות, נכון ל-" : "Source: public award records, as of "}${esc(res.at)}`);
+    }
+    if (/^\/agency/.test(cmd)) {
+      if (!arg) return send(chatId, he ? "כתוב שם גוף רוכש: /agency National Roads Authority" : "Add a buyer name: /agency National Roads Authority");
+      const res = await buyerProfile(arg);
+      if (!res.rows.length) return send(chatId, he ? "לא נמצא גוף רוכש כזה במאגר." : "No such buyer in the award data.");
+      const usd = (v: number) => (v >= 1e9 ? `$${(v / 1e9).toFixed(1)}B` : v >= 1e6 ? `$${(v / 1e6).toFixed(1)}M` : `$${Math.round(v / 1e3)}K`);
+      return send(chatId, res.rows.map((b) => `<b>${esc(b.n)}</b> (${esc(b.c)})\n${he ? "חוזים" : "Awards"}: ${b.a} | ${usd(b.u)}${b.t3 != null ? ` | ${he ? "שלושת הגדולים" : "top-3 share"}: ${b.t3}%` : ""}\n${b.s.slice(0, 6).map((x) => `- ${esc(x.n)}: ${x.a}${x.sh != null ? ` (${x.sh}%)` : ""}`).join("\n")}`).join("\n\n"));
+    }
     if (/^\/pipeline/.test(cmd)) {
       const f = await funnel(Number(arg) > 0 ? Math.min(365, Number(arg)) : 30);
       const w = await findWinners({ n: 1 });

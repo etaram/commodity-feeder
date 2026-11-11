@@ -133,7 +133,7 @@ def build():
             cur, val = (r.get("currency") or "USD").upper(), float(r.get("value") or 0)
             usd = float(r.get("value_usd") or 0) or (val if cur == "USD" else 0)
             if not usd and val and fx.get(cur):
-                usd = val / fx[cur] if "per" in fx_col else val * fx[cur]
+                usd = val * fx[cur] if fx_col == "usd_per_unit" else val / fx[cur]   # fx.csv holds USD per one unit of the currency
         except (TypeError, ValueError):
             usd = 0
         if usd and usd < 100_000 or usd > 5e9:   # tiny orders are not worth a call; absurd totals are framework ceilings

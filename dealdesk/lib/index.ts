@@ -123,3 +123,41 @@ export async function findWinners(q: { text?: string; kind?: string; country?: s
   });
   return { at: all.at, total: rows.length, rows: rows.slice(0, q.n || 20), error: all.error };
 }
+
+// Company and buyer footprints from public award records (leads/footprints.py).
+export type Footprint = { n: string; a: number; u: number; y: Record<string, number>; c: Record<string, number>; b: string[]; wc: string; l: { d: string; t: string; u: string; c: string }[] };
+export type BuyerProfile = { n: string; c: string; a: number; u: number; y: Record<string, number>; s: { n: string; a: number; sh: number | null }[]; t3: number | null };
+type Footprints = { at: string; companies: Record<string, Footprint>; buyers: Record<string, BuyerProfile> };
+const FP_STOP = new Set(["co", "ltd", "limited", "llc", "inc", "plc", "sa", "sas", "srl", "spa", "gmbh", "ag", "bv", "pvt", "private", "the", "and", "of", "corp",
+  "corporation", "company", "sdn", "bhd", "pte", "jsc", "ojsc", "pjsc", "cjsc", "pty", "sarl", "ltda", "cia", "sac", "eirl", "llp", "lp", "nv", "oy", "ab", "as"]);
+export const fpNorm = (s: string) => (String(s || "").toLowerCase().match(/[a-z0-9]+/g) || []).filter((x) => !FP_STOP.has(x) && x.length > 1).join(" ").slice(0, 80);
+async function footprints(): Promise<Footprints | null> {
+  const key = process.env.WEB_INDEX_KEY;
+  if (!key) return null;
+  try {
+    return await load("footprints.enc", (b) => {
+      const nonce = b.subarray(0, 12), tag = b.subarray(b.length - 16), body = b.subarray(12, b.length - 16);
+      const d = createDecipheriv("aes-256-gcm", Buffer.from(key, "base64"), nonce);
+      d.setAuthTag(tag);
+      return JSON.parse(gunzipSync(Buffer.concat([d.update(body), d.final()])).toString("utf-8")) as Footprints;
+    });
+  } catch { return null; }
+}
+/** Exact normalised name first, then names containing every word of the query (largest first). */
+export async function companyFootprint(name: string, n = 3) {
+  const fp = await footprints();
+  if (!fp) return { at: "", rows: [] as (Footprint & { key: string })[], error: "footprints not built yet" };
+  const k = fpNorm(name);
+  if (fp.companies[k]) return { at: fp.at, rows: [{ key: k, ...fp.companies[k] }] };
+  const words = k.split(" ").filter(Boolean);
+  const rows = Object.entries(fp.companies).filter(([kk]) => words.length && words.every((w) => kk.split(" ").includes(w))).sort((a, b) => b[1].u - a[1].u).slice(0, n).map(([kk, v]) => ({ key: kk, ...v }));
+  return { at: fp.at, rows };
+}
+export async function buyerProfile(name: string, country = "", n = 3) {
+  const fp = await footprints();
+  if (!fp) return { at: "", rows: [] as (BuyerProfile & { key: string })[], error: "footprints not built yet" };
+  const words = fpNorm(name).split(" ").filter(Boolean);
+  const rows = Object.entries(fp.buyers).filter(([kk, v]) => (!country || v.c === country.toUpperCase()) && words.length && words.every((w) => kk.split("|")[0].split(" ").includes(w)))
+    .sort((a, b) => b[1].u - a[1].u).slice(0, n).map(([kk, v]) => ({ key: kk, ...v }));
+  return { at: fp.at, rows };
+}
