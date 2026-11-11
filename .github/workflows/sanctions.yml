@@ -21,7 +21,7 @@ jobs:
       - run: pip install requests
       - run: python -m leads.sanctions
       - name: result fingerprint (for comparing runners)
-        run: python -c "import json,hashlib;d=json.load(open('data/leads/sanctions.json'));print('entries',len(d) if hasattr(d,'__len__') else '?', 'keys', sorted(d)[:5] if isinstance(d,dict) else '', 'sha', hashlib.sha256(json.dumps(d,sort_keys=True).encode()).hexdigest()[:16])"
+        run: python -c "import json,hashlib;d=json.load(open('data/leads/sanctions.json'));d.pop('updated',None);print('fingerprint counts',d.get('counts'),'names',len(d.get('e',[])),'sha',hashlib.sha256(json.dumps(d,sort_keys=True).encode()).hexdigest()[:16])"
       - name: commit
         run: |
           git config user.name github-actions; git config user.email actions@github.com
