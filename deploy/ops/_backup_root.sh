@@ -18,5 +18,10 @@ psqlc -d postgres -q -c "drop database if exists restore_test" -c "create databa
 openssl enc -d -aes-256-cbc -pbkdf2 -pass file:/opt/sinder/backup.key < "$f" | gunzip | psqlc -d restore_test -q >/dev/null
 echo "restored into restore_test in $(( $(date +%s)-t1 ))s; row read back: $(psqlc -d restore_test -Atc 'select id, note from backup_probe')"
 psqlc -d postgres -q -c "drop database restore_test"
+# off-server copy: the owner's Google Drive, when he has connected it (rclone remote "gdrive", scope limited to files this tool creates)
+if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "^gdrive:"; then
+  if rclone copy "$f" gdrive:Sinder-Backups/db --quiet; then echo "copied to Google Drive: Sinder-Backups/db ($(rclone lsf gdrive:Sinder-Backups/db | wc -l) files there)"; rclone delete gdrive:Sinder-Backups/db --min-age 60d --quiet || true
+  else echo "GOOGLE DRIVE COPY FAILED"; fi
+else echo "Google Drive not connected yet: backup is on the server and as a workflow artifact only"; fi
 find /opt/sinder/backup/db -name "*.enc" -mtime +14 -delete
 echo "backups kept: $(ls -1 /opt/sinder/backup/db | wc -l)"
