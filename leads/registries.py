@@ -367,36 +367,47 @@ def peru():
     return out
 
 
-def india():
+def india(budget_s=1500):
     """APEDA (India's agricultural export authority) exporter directory: the registered member exporters with
-    address, the product line they declare and the state. About 480 pages of 9; read in full once a week with a pause
-    between pages. The contact button posts the member's tax identifier, so it is not used or stored."""
+    address, the product line they declare and the state. About 480 pages of 9; the site is slow, so each run reads
+    pages for budget_s seconds from where the last run stopped and merges into the file (data/leads/
+    registry_india_state.json keeps the next page). The contact button posts the member's tax identifier, so it is
+    not used or stored."""
     import html as _html
     import time as _time
     base = "https://agriexchange.apeda.gov.in/AgriDirectory/Exporter/Exporters?page={}"
-    first = requests.get(base.format(1), headers=UA, timeout=60).text
-    last = max([int(x) for x in re.findall(r"Exporters\?page=(\d+)", first)] or [1])
-    out, seen = [], set()
-    for page in range(1, last + 1):
+    state_f, out_f = LEADS / "registry_india_state.json", LEADS / "registry_india.csv"
+    try:
+        state = json.load(open(state_f, encoding="utf-8"))
+    except (OSError, ValueError):
+        state = {"next": 1, "last": 0}
+    have = {}
+    if out_f.exists():
+        for r in csv.DictReader(open(out_f, encoding="utf-8")):
+            have[(r["supplier"].upper(), r["description"][-6:])] = r
+    t0, page, read = _time.time(), state["next"], 0
+    while _time.time() - t0 < budget_s:
         try:
-            h = first if page == 1 else requests.get(base.format(page), headers=UA, timeout=60).text
+            h = requests.get(base.format(page), headers=UA, timeout=(10, 60)).text
         except Exception:  # noqa: BLE001
-            continue
+            page += 1; continue
+        state["last"] = max([int(x) for x in re.findall(r"Exporters\?page=(\d+)", h)] + [state.get("last") or 0])
         for box in re.findall(r'<div class="box col-md-4">(.*?)Click here to contact', h, flags=re.S):
             ps = [re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", " ", x))).strip() for x in re.findall(r"<p[^>]*>(.*?)</p>", box, flags=re.S)]
             if len(ps) < 4 or not ps[0]:
                 continue
-            name, addr, prod, state = ps[0], ps[1], ps[2], ps[3]
+            name, addr, prod, state_name = ps[0], ps[1], ps[2], ps[3]
             pin = ps[4] if len(ps) > 4 else ""
-            key = (name.upper(), pin)
-            if key in seen:
-                continue
-            seen.add(key)
-            out.append(_row(_name(name), "IND", prod.lower() or "agricultural products", "exporter", "APEDA registered exporter",
-                            f"APEDA registered exporter; {prod}; {addr}, {state} {pin}".strip(), "APEDA exporter directory", base.format(page)))
-        _time.sleep(1.2)
-    return out
-
+            row = _row(_name(name), "IND", prod.lower() or "agricultural products", "exporter", "APEDA registered exporter",
+                       f"APEDA registered exporter; {prod}; {addr}, {state_name} {pin}".strip(), "APEDA exporter directory", base.format(page))
+            have[(row["supplier"].upper(), row["description"][-6:])] = row
+        read += 1
+        page = 1 if state["last"] and page >= state["last"] else page + 1
+        _time.sleep(1.0)
+    state["next"] = page
+    json.dump(state, open(state_f, "w", encoding="utf-8"))
+    log.info("india (APEDA): %d pages read this run, next page %d of %d, %d exporters on file", read, page, state.get("last") or 0, len(have))
+    return list(have.values())
 
 def philippines():
     """Philippine Sugar Millers Association: the member sugar mills."""
@@ -415,10 +426,12 @@ def philippines():
 REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil, "argentina": argentina, "indonesia": indonesia, "ukraine": ukraine, "colombia": colombia, "chile": chile, "peru": peru, "india": india, "philippines": philippines}
 
 
-def main():
+def main(only=None):
     LEADS.mkdir(parents=True, exist_ok=True)
     rep = {}
     for key, fn in REGISTRIES.items():
+        if (only and key not in only) or (not only and key in SEPARATE):
+            continue
         try:
             rows = fn()
         except Exception as e:  # noqa: BLE001
@@ -430,7 +443,11 @@ def main():
     print("registries:", json.dumps(rep))
 
 
+SEPARATE = {"india"}   # long registries run in their own step with a time budget
+
+
 if __name__ == "__main__":
     import logging
+    import sys
     logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
-    main()
+    main(set(sys.argv[1:]) or None)
