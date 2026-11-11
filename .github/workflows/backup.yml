@@ -1,8 +1,15 @@
 name: backup
 # Daily encrypted database backup on the company server, restore-tested, with a copy kept outside the server as a
 # workflow artifact (30 days). The file is AES-256 encrypted; the key never leaves the server.
+# Then the application state kept in Google Sheets (tools/backup_sheets.py: users, deals, approvals, logs, agent runs):
+# exported, checked, encrypted with the same key, kept on the server, on Google Drive and as a second artifact.
+# The Sheets steps run even when the database steps fail. Runbook: docs/release-2026-11-13/BACKUP_RESTORE_RUNBOOK.md
 on:
   workflow_dispatch:
+    inputs:
+      allow_shrink:
+        description: 'Sheets tabs allowed to have lost more than half their rows ("all" or names separated by commas)'
+        default: ""
   schedule:
     - cron: "40 1 * * *"
 permissions:
@@ -12,7 +19,7 @@ concurrency:
 jobs:
   run:
     runs-on: [self-hosted, sinder]
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - run: bash deploy/ops/backup.sh
@@ -27,3 +34,44 @@ jobs:
           name: sinder-db-backup
           path: "*.enc"
           retention-days: 30
+      - uses: actions/setup-python@v5
+        if: ${{ !cancelled() }}
+        with: { python-version: '3.12' }
+      - name: export the state kept in Google Sheets
+        id: sheets
+        if: ${{ !cancelled() }}
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          STATE_SHEET_ID: ${{ secrets.STATE_SHEET_ID }}
+          BACKUP_REQUIRE_STATE_SHEET: "1"
+          BACKUP_ALLOW_SHRINK: ${{ inputs.allow_shrink }}
+        run: |
+          . deploy/ops/_root.sh
+          rm -rf sheets-export sheets-prev-manifest.json sheets-artifact
+          # row counts of the last good export (no cell content), for the half-rows guard
+          asroot sh -c 'cat /opt/sinder/backup/sheets/last-manifest.json 2>/dev/null || true' > sheets-prev-manifest.json
+          pip install -q google-auth requests
+          python tools/backup_sheets.py sheets-export sheets-prev-manifest.json
+      - name: check the export
+        id: sheets_check
+        if: ${{ !cancelled() && steps.sheets.outcome == 'success' }}
+        run: python tools/restore_sheets_check.py sheets-export
+      - name: encrypt, keep on the server, copy to Google Drive
+        id: sheets_enc
+        if: ${{ !cancelled() && steps.sheets_check.outcome == 'success' }}
+        run: |
+          . deploy/ops/_root.sh
+          asroot bash "$GITHUB_WORKSPACE/deploy/ops/_sheets_backup_root.sh" "$GITHUB_WORKSPACE" sheets-export
+          mkdir -p sheets-artifact
+          f=$(asroot sh -c 'ls -1t /opt/sinder/backup/sheets/*.enc | head -1')
+          asroot cat "$f" > "sheets-artifact/$(basename "$f")"
+          ls -l sheets-artifact
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.sheets_enc.outcome == 'success' }}
+        with:
+          name: sinder-sheets-backup
+          path: sheets-artifact/*.enc
+          retention-days: 30
+      - name: remove the plain export from the runner
+        if: always()
+        run: rm -rf sheets-export sheets-prev-manifest.json sheets-artifact
