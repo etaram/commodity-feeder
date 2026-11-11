@@ -5,6 +5,7 @@
 // sendMail is called from lib/sendguard.ts only (emergency stop, opt-out list, idempotency key): do not call it directly.
 import tls from "node:tls";
 import crypto from "node:crypto";
+import { renderMail } from "@/lib/mailhtml";
 
 const EMAIL = /^[^\s@<>,;"]+@[^\s@<>,;"]+\.[a-z]{2,}$/i;
 export const mailReady = () => !!(process.env.ZOHO_SMTP_USER && process.env.ZOHO_SMTP_PASS) && process.env.AGENT_MAIL_LIVE !== "0";
@@ -68,9 +69,17 @@ export async function sendMail(m: { to: string; subject: string; text: string })
   if (!EMAIL.test(to)) return { ok: false, error: "invalid recipient address", stage: "address" };
   const id = `<${crypto.randomUUID()}@${from.split("@")[1] || "sinder.pro"}>`;
   const name = process.env.ZOHO_FROM_NAME ? `${hdr(process.env.ZOHO_FROM_NAME)} <${from}>` : from;
-  const msg = [`From: ${name}`, `To: ${to}`, `Reply-To: ${from}`, `Subject: ${hdr(m.subject.replace(/[\r\n]+/g, " ").slice(0, 200))}`,
-    `Date: ${new Date().toUTCString()}`, `Message-ID: ${id}`, "MIME-Version: 1.0", "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: base64", "",
-    wrap(b64(m.text))].join("\r\n");
+  // Two versions of one message: plain text and the letterhead layout. MAIL_HTML=0 goes back to plain text only.
+  const head = [`From: ${name}`, `To: ${to}`, `Reply-To: ${from}`, `Subject: ${hdr(m.subject.replace(/[\r\n]+/g, " ").slice(0, 200))}`,
+    `Date: ${new Date().toUTCString()}`, `Message-ID: ${id}`, "MIME-Version: 1.0"];
+  const part = (type: string, content: string) => [`Content-Type: ${type}; charset=UTF-8`, "Content-Transfer-Encoding: base64", "", wrap(b64(content))].join("\r\n");
+  let msg: string;
+  if (process.env.MAIL_HTML === "0") msg = [...head, part("text/plain", m.text)].join("\r\n");
+  else {
+    const bd = `=_sinder_${crypto.randomBytes(12).toString("hex")}`;
+    const html = renderMail({ text: m.text, from, fromName: process.env.ZOHO_FROM_NAME, fromTitle: process.env.ZOHO_FROM_TITLE });
+    msg = [...head, `Content-Type: multipart/alternative; boundary="${bd}"`, "", `--${bd}`, part("text/plain", m.text), `--${bd}`, part("text/html", html), `--${bd}--`, ""].join("\r\n");
+  }
   let c: Conn | null = null, stage: MailStage = "connect";
   try {
     c = await login(host(), (st) => { stage = st; });
