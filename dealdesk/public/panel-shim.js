@@ -123,7 +123,8 @@
     open: async (tenderId) => { const r = await fetch("/api/projects", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json" }, body: JSON.stringify({ tender_id: tenderId }) }); return r.json().catch(() => ({})); },
   };
   // The best suppliers for one tender, ranked on the server over the whole supplier index.
-  window.DD_SUPFOR = async (q) => (await post("/api/panel/suppliers-for", q, "Deal Desk")).values || [];
+  // the rows; when the server explains an empty list (a tender that buys no goods), the text rides on the array as .note
+  window.DD_SUPFOR = async (q) => { const r = await post("/api/panel/suppliers-for", q, "Deal Desk"), v = r.values || []; if (r.note) v.note = String(r.note); return v; };
   // Private deal workspace (analysts and admins; the server refuses viewers).
   window.DD_DEAL = {
     get: async (id) => { const r = await fetch("/api/deal?id=" + encodeURIComponent(id), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j; },

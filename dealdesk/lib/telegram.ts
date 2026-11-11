@@ -264,7 +264,8 @@ async function suppliers(q: string, n = 6, he = false): Promise<string> {
 // Suppliers for one tender, ranked the way the web panel does it: the tender's sector, customs code, country and
 // title words together (a long title never has to match word for word)
 export async function tenderSuppliers(t: Record<string, string>, n = 6, he = false): Promise<string> {
-  const r = await supplierSearch({ sector: t.sector || "", text: `${t.title_en || t.title || ""} ${t.commodity || ""}`.slice(0, 400), country: t.country || "", region: t.region || "", hs: t.hs || "", n: 15 });
+  const r = await supplierSearch({ sector: t.sector || "", text: `${t.title_en || t.title || ""} ${t.commodity || ""}`.slice(0, 400), country: t.country || "", region: t.region || "", hs: t.hs || "", n: 15,
+    tender: { title: String(t.title_en || t.title || "").slice(0, 300), category: t.nature || "" } });
   const rows = toObjects(r.values).filter((y) => y.match !== "incompatible").slice(0, n);
   const title = esc((t.title_en || t.title || "").slice(0, 90));
   if (!rows.length) return he ? `לא מצאתי ספקים מתאימים למכרז:\n<i>${title}</i>` : `No matching suppliers for this tender:\n<i>${title}</i>`;

@@ -2193,12 +2193,14 @@ function bindLabels(out, rows, product) {
 }
 async function showSuppliers(sector, text, outSel, ctx) {
   const out = $(outSel);
-  let list = [], whole = false;
+  let list = [], whole = false, why = "";
   // On the web: ranked on the server over the whole supplier index; otherwise over the suppliers loaded here.
   if (window.DD_SUPFOR) {
     out.innerHTML = `<div class="section"><div class="note"><span class="spin"></span> ${esc(t("sup_wait"))}</div></div>`;
     const r = ctx?.r || {};
-    try { list = toObjects(await window.DD_SUPFOR({ sector, text, country: r.country || "", region: r.region || "", hs: r.hs || "", n: 15 })); whole = true; } catch (e) { list = []; }
+    // a tender also sends its own title and procurement category: the server reads them only when its flag TENDER_KIND is on
+    const tender = ctx?.kind === "tender" && r.title_en ? { title: String(r.title_en), category: String(r.nature || "") } : undefined;
+    try { const v = await window.DD_SUPFOR({ sector, text, country: r.country || "", region: r.region || "", hs: r.hs || "", n: 15, tender }); why = v.note || ""; list = toObjects(v); whole = true; } catch (e) { list = []; }
   }
   if (!whole) {
     if (!SUP().length) { out.innerHTML = `<div class="flash err">${esc(S.err.suppliers ? errText(S.err.suppliers, SUPS()) : t("sup_not_loaded"))}</div>`; return; }
@@ -2211,7 +2213,7 @@ async function showSuppliers(sector, text, outSel, ctx) {
       <div class="sub">${txt(String(s.products || s.hs_names || s.industries || s.commodities || s.main_sector || "").slice(0, 220))}</div>
       ${s.supplied ? `<div class="sub">${esc(t("supplied"))}: ${txt(String(s.supplied).slice(0, 200))}</div>` : ""}
       ${s.exports || s.tier_reason ? `<div class="sub">${esc(s.exports || s.tier_reason)}${s.hs_codes ? ` · HS ${esc(s.hs_codes)}` : ""}</div>` : ""}
-      <div class="sub" dir="ltr">${[s.email, s.phone].filter(Boolean).map(esc).join(" · ")} ${link(s.website, s.website)}</div></label></div>`).join("") : `<div class="empty">${esc(t("e_sup_match"))}</div>`}
+      <div class="sub" dir="ltr">${[s.email, s.phone].filter(Boolean).map(esc).join(" · ")} ${link(s.website, s.website)}</div></label></div>`).join("") : `<div class="empty">${esc(why || t("e_sup_match"))}</div>`}
     <div class="actions"><button class="primary" type="button" id="ms-rfq">${esc(t("draft_sel"))}</button><button type="button" id="ms-job">${esc(t("deep_sup"))}</button></div><div id="ms-out"></div></div>`;
   bindLabels(out, list, text);
   $("#ms-rfq").onclick = () => { const chosen = list.filter((s, i) => $("#ms" + i)?.checked); if (!chosen.length) { $("#ms-out").innerHTML = `<div class="flash info">${esc(t("tick_one"))}</div>`; return; } compose({ kind: "rfq", ctx, to: chosen }, "#ms-out"); };
@@ -3686,7 +3688,7 @@ async function renderBuilder(r, recs) {
     const role = b.dataset.suggest, el = $("#db-sug-" + role); el.innerHTML = `<div class="note"><span class="spin"></span> ${esc(t("loading"))}</div>`;
     try {
       let list = [];
-      if (role === "supplier" && window.DD_SUPFOR) { const v = await window.DD_SUPFOR({ sector: r.sector, text: `${r.title_en || ""} ${r.commodity || ""}`.slice(0, 400), country: r.country, region: r.region, n: 8 }); list = toObjects(v).map(x => ({ name: x.supplier, country: x.country, website: x.website, email: x.email || "", phone: x.phone || "", note: [x.kind ? t("sk_" + x.kind) : "", x.products].filter(Boolean).join(" · ").slice(0, 200), source: "supplier universe" })); }
+      if (role === "supplier" && window.DD_SUPFOR) { const v = await window.DD_SUPFOR({ sector: r.sector, text: `${r.title_en || ""} ${r.commodity || ""}`.slice(0, 400), country: r.country, region: r.region, n: 8, tender: r.title_en ? { title: String(r.title_en), category: String(r.nature || "") } : undefined }); list = toObjects(v).map(x => ({ name: x.supplier, country: x.country, website: x.website, email: x.email || "", phone: x.phone || "", note: [x.kind ? t("sk_" + x.kind) : "", x.products].filter(Boolean).join(" · ").slice(0, 200), source: "supplier universe" })); }
       if (role === "finance" && window.DD_FIN) { const j = await window.DD_FIN.forDeal({ sector: r.sector, region: r.region, buyerCountry: r.country, origins: [...new Set(by("supplier").map(p => p.country).filter(Boolean))], value: num(r.est_value_usd), defence: r.sector === "Defence & security" }); list = (j.items || []).slice(0, 8).map(f => ({ name: f.name, country: f.country_hq, website: f.apply_url, note: [catL(f.category), (f.why || []).join(", "), (f.flags || []).join(", ")].filter(Boolean).join(" · ").slice(0, 220), source: f.source_url })); }
       if (role === "logistics") { list = window.DD_LOG ? ((await window.DD_LOG.forDeal({ sector: r.sector, region: r.region, buyerCountry: r.country, origins: by("supplier").map(p => p.country) })).items || []).slice(0, 8).map(f => ({ name: f.name, country: f.country_hq, website: f.contact_url, note: (f.why || []).join(", "), source: f.source_url })) : []; }
       el.innerHTML = list.length ? list.map((x, i) => `<div class="sup"><div style="min-width:0;flex:1"><div class="t">${flag(x.country)}${txt(x.name)}</div><div class="sub">${txt(x.note || "")}</div></div><button type="button" class="sm" data-pick="${i}">${esc(t("db_pick"))}</button></div>`).join("") : `<p class="note">${esc(t(role === "logistics" && !window.DD_LOG ? "db_log_soon" : "e_none_now"))}</p>`;

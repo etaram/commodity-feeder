@@ -49,7 +49,7 @@ export function splitResults(q: Pick<EvalQuery, "id" | "text"> & { set?: "produc
 // purchases, 10 titles that buy no goods (works, services, consulting, development programmes: any supplier
 // returned is a false positive), 10 mixed or vague ones. A labeller can overrule a stratum (rank 0 label).
 export type Stratum = "goods" | "non_goods" | "mixed";
-export type TenderLike = { id: string; title_en: string; commodity?: string; sector?: string; country?: string; region?: string; notice_type?: string; hs?: string };
+export type TenderLike = { id: string; title_en: string; commodity?: string; sector?: string; country?: string; region?: string; notice_type?: string; hs?: string; nature?: string };
 const MIXED_RX = /\b(framework (agreement|contract)|lots?\b|supply(,| and) (delivery,? )?(installation|commissioning|construction)|supply, installation|design,? supply|supply and install\w*|turnkey|goods and services|works and supplies)\b/i;
 const NONGOODS_RX = /\b(consult\w*|advisory|technical assistance|feasibility|stud(y|ies)|survey|audit\w*|training|capacity building|supervision|evaluation|development (programme|program|project|policy)|value chains?|resilience|governance|reform|construction of|rehabilitation of|repair of|civil works|road works|maintenance|servicing|cleaning services|security services|insurance|recruitment|rental|hire of|services? (for|of)|project$|program(me)?$)\b/i;
 const GOODS_RX = /\b(supply of|supply and delivery of|purchase of|procurement of|acquisition of|delivery of|provision of)\b/i;
@@ -83,7 +83,9 @@ export function pickTenders<T extends TenderLike>(all: T[], serviceSectors: Set<
   return out;
 }
 /** the request the tender screen sends for one tender (the same fields and the same text as panel.html) */
-export const tenderRequest = (t: TenderLike) => ({ sector: one(t.sector), text: `${t.title_en || ""} ${t.commodity || ""}`.slice(0, 600), country: one(t.country), region: one(t.region), hs: one(t.hs), n: TOP });
+export const tenderRequest = (t: TenderLike) => ({ sector: one(t.sector), text: `${t.title_en || ""} ${t.commodity || ""}`.slice(0, 600), country: one(t.country), region: one(t.region), hs: one(t.hs), n: TOP,
+  // read by the search only when TENDER_KIND=on (lib/panel.ts tenderPlan)
+  tender: { title: one(t.title_en).slice(0, 300), category: one(t.nature) } });
 
 /** The only numbers a public workflow log may show: counts, never a supplier. */
 export function summarize(perQuery: { id: string; returned: number; total: number; ms: number; error?: string }[], verdicts: VerdictRow[], extra: Record<string, unknown> = {}) {

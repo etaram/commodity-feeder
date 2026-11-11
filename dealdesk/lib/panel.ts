@@ -10,6 +10,7 @@ import { BUCKET_RANK, MATCH_VERSION, classifyMatch, dedupeKey, evidenceRank, fam
 import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
 import { claude } from "@/lib/anthropic";
+import { tenderKind, type TenderKind } from "@/lib/tenderkind";
 
 const RAW = `${RAW_ROOT}/data`;
 type Grid = string[][];
@@ -370,7 +371,10 @@ const STOP = new Set(("the and for with from supply supplies delivery services s
 // "granular" (the gap is shown per result); the material and the product stay mandatory
 const FLEX_WORDS = new Set(["granular", "prilled", "bulk", "premium", "quality", "high", "grade", "standard", "new", "best", "cheap", "good", "industrial", "fertilizer", "fertiliser"]);
 export type SupQuery = { sector?: string; text?: string; country?: string; region?: string; hs?: string; n?: number;
-  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean; kind?: "maker" | "trader" | ""; noExpand?: boolean };
+  originRegion?: string; originCountry?: string; exportersOnly?: boolean; strict?: boolean; kind?: "maker" | "trader" | ""; noExpand?: boolean;
+  /** set only by "suppliers for this tender" (the tender screen, the Telegram tender card, the evaluation): the tender's
+   *  own title, apart from the search text, and its procurement category (the column "nature") when the row has one */
+  tender?: { title: string; category?: string; cpv?: string; description?: string } };
 export async function suppliersFor(o: SupQuery): Promise<Grid> {
   return (await supplierSearch(o)).values;
 }
@@ -492,12 +496,30 @@ export const queryWords = (query: string): string[] => [...new Set(query.toLower
   .filter((w) => w.length >= 3 && !STOP.has(w)))].slice(0, 14);
 /** each remaining word is one concept; descriptors ("granular", "bulk") are dropped unless nothing else is left */
 export const plainConceptWords = (words: string[]): string[] => words.filter((w) => !FLEX_WORDS.has(w) || words.every((x) => FLEX_WORDS.has(x)));
-export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string }> {
-  const short = String(o.text || "").trim().length <= 80;
+// What a tender buys, before any supplier is looked for (lib/tenderkind.ts). Behind the flag TENDER_KIND=on; with the
+// flag off, or for a request that is not a tender request, there is no plan and the search runs exactly as before.
+//   no goods, high confidence   block: no suppliers are returned, with a note the screen can show
+//   goods or mixed              text: the product phrases of the title, searched in place of the title words
+//   unknown, low confidence, or no phrase found: text null, the search runs as before
+export const NO_GOODS_NOTE = "This tender buys works or services, not goods: there is nothing to source";
+export function tenderPlan(o: SupQuery, flag = process.env.TENDER_KIND): { kind: TenderKind; block: boolean; text: string | null } | null {
+  if (flag !== "on" || !o.tender || !String(o.tender.title || "").trim()) return null;
+  const kind = tenderKind({ sector: o.sector, ...o.tender });
+  if (kind.kind === "non_goods" && kind.confidence === "high") return { kind, block: true, text: null };
+  const usePhrases = (kind.kind === "goods" || kind.kind === "mixed") && kind.confidence === "high" && kind.goods_phrases.length > 0;
+  return { kind, block: false, text: usePhrases ? kind.goods_phrases.join(", ") : null };
+}
+const SEARCH_HEAD = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version", "match_url"];
+export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string; note?: string; tender_kind?: string }> {
+  const plan = tenderPlan(o);
+  if (plan?.block) return { values: [SEARCH_HEAD], total: 0, origins: [], query: String(o.text || ""), note: NO_GOODS_NOTE, tender_kind: plan.kind.kind };
+  // the text the product is read from: the request text, or (flag on) the product phrases of the tender title
+  const asked = plan?.text ?? String(o.text || "");
+  const short = asked.trim().length <= 80;
   // a commodity request is read by the commodity table (code): no model call, no translation needed
-  const cmd = short ? detectCommodity(String(o.text || "")) : null;
-  const ex = cmd ? { en: String(o.text || ""), concepts: [{ terms: [] as string[], hs: cmd.hs }] } : short && !o.noExpand ? await expandQuery(String(o.text || "")) : null;
-  const query = ex?.en || (NON_LATIN.test(o.text || "") ? (await toEnglish(o.text || "")).text : String(o.text || ""));
+  const cmd = short ? detectCommodity(asked) : null;
+  const ex = cmd ? { en: asked, concepts: [{ terms: [] as string[], hs: cmd.hs }] } : short && !o.noExpand ? await expandQuery(asked) : null;
+  const query = ex?.en || (NON_LATIN.test(asked) ? (await toEnglish(asked)).text : asked);
   const words = queryWords(query);
   const sec = o.sector || "", ch = String(o.hs || "").slice(0, 2);
   // product words reach the customs codes too: "tuna" is named in HS 0302.31-0303.49 and 1604.14, while a supplier
@@ -592,7 +614,6 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   }
   scored.sort((a, b) => (b.cb || 0) - (a.cb || 0) || BUCKET_RANK[a.m.bucket] - BUCKET_RANK[b.m.bucket] || evidenceRank(a.m.evidence) - evidenceRank(b.m.evidence)
     || KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
-  const head = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version", "match_url"];
-  return { values: [head, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION, x.m.url || ""])], total: scored.length,
-    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query };
+  return { values: [SEARCH_HEAD, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION, x.m.url || ""])], total: scored.length,
+    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query, ...(plan ? { tender_kind: plan.kind.kind } : {}) };
 }

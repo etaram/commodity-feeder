@@ -70,7 +70,7 @@ async function blind(dir: string) {
     for (const { t, stratum } of picked) {
       const id = `T${String(++i).padStart(2, "0")}`, req = tenderRequest(t), t0 = Date.now();
       const meta: Record<string, unknown> = { set: "tender", query_id: id, tender_id: t.id, title: t.title_en, commodity: t.commodity || "", sector: t.sector || "",
-        notice_type: t.notice_type || "", country: t.country || "", stratum,
+        notice_type: t.notice_type || "", nature: t.nature || "", country: t.country || "", stratum,
         // the system has no goods / works / services field on a tender: the sector is all it knows, and the search does not use it to decide whether goods are bought at all
         system_goods_class: "none (the system does not classify a tender as goods, works or services)",
         sector_is_service_or_works: SERVICE_SECTOR.has(String(t.sector || "")) || /works\b/i.test(String(t.sector || "")),
@@ -80,7 +80,7 @@ async function blind(dir: string) {
         const x = splitResults({ id, text: req.text.trim(), set: "tender" }, r.values, record);
         rows.push(...x.rows); verdicts.push(...x.verdicts);
         tender.push({ id, stratum, returned: x.rows.length, total: r.total, ms: Date.now() - t0 });
-        tenderMeta.push({ ...meta, derived_query: r.query, returned: x.rows.length, total_matched: r.total });
+        tenderMeta.push({ ...meta, derived_query: r.query, returned: x.rows.length, total_matched: r.total, ...(r.tender_kind ? { tender_kind: r.tender_kind } : {}) });
       } catch (e) { tender.push({ id, stratum, returned: 0, total: 0, ms: Date.now() - t0, error: String(e).slice(0, 80) }); tenderMeta.push({ ...meta, error: String(e).slice(0, 80) }); }
     }
   } catch (e) { tenderError = String(e).slice(0, 80); }
