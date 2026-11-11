@@ -16,9 +16,20 @@ const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", 
   // idempotency keys of real e-mail sends (lib/sendguard.ts): written and read back around every send, so it must be fast
   "Send Guard"]);
 const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;
-function sheetFor(tab: string): string {
+// A test copy of the site (staging) must never write to the live spreadsheets. Two settings make that a property of the
+// code, not of care: STATE_TABS_EXTRA names further tabs that live in the state sheet (in staging: every tab the app
+// writes that is still in the engine sheet, e.g. the outreach lists), and SHEETS_READONLY_IDS lists spreadsheets that
+// refuse every write (in staging: the engine sheet, the live state sheet and the supplier universe).
+const extraTabs = () => new Set((process.env.STATE_TABS_EXTRA || "").split(",").map((x) => x.trim()).filter(Boolean));
+export function sheetFor(tab: string): string {
   const st = (process.env.STATE_SHEET_ID || "").trim();
-  return st && STATE_TABS.has(tab) ? st : SHEET;
+  return st && (STATE_TABS.has(tab) || extraTabs().has(tab)) ? st : SHEET;
+}
+/** The spreadsheet a write would hit, when that spreadsheet is marked read-only; "" when the write is allowed. */
+export function writeRefused(method: string, url: string): string {
+  if (method === "GET") return "";
+  const id = (url.match(/\/spreadsheets\/([^/:?]+)/) || [])[1] || "";
+  return (process.env.SHEETS_READONLY_IDS || "").split(",").map((x) => x.trim()).filter(Boolean).includes(id) ? id : "";
 }
 export function stateSheet(): string { return sheetFor("Activity"); }
 
@@ -42,6 +53,8 @@ async function client(): Promise<JWT | null> {
 // limit (on 5 November a stall made every panel read time out together). Callers already fall back to a copy.
 const SHEETS_TIMEOUT_MS = Number(process.env.SHEETS_TIMEOUT_MS || 12000);
 async function call(jwt: JWT, method: string, url: string, body?: unknown) {
+  const ro = writeRefused(method, url);
+  if (ro) throw new Error(`Sheets write refused: spreadsheet ${ro.slice(0, 6)}... is read-only in this environment`);
   const { token } = await jwt.getAccessToken();
   const r = await fetch(url, {
     method,
