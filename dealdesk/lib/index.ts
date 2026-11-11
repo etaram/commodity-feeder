@@ -95,7 +95,7 @@ export function facet<T>(rows: T[], get: (r: T) => string | undefined, limit = 3
 export const words = (q: string) => q.toLowerCase().split(/[\s,]+/).map((w) => w.trim()).filter((w) => w.length > 1);
 
 // Fresh contract winners read as sales leads (leads/winners.py): who won, where, what they now have to buy.
-export type Winner = { d: string; w: string[]; wc: string; c: string; b: string; t: string; v: number; k: "commodity" | "contractor"; n: string[]; cm: string; s: string; l: string; id: string; sc: number; e?: string };
+export type Winner = { d: string; w: string[]; wc: string; c: string; b: string; t: string; v: number; k: "commodity" | "contractor"; n: string[]; cm: string; s: string; l: string; id: string; sc: number; e?: string; ws?: string; ce?: string[]; cp?: string[]; cs?: string; wd?: string };
 export async function winners(): Promise<{ at: string; rows: Winner[]; error?: string }> {
   const key = process.env.WEB_INDEX_KEY;
   if (!key) return { at: "", rows: [], error: "WEB_INDEX_KEY is not configured" };

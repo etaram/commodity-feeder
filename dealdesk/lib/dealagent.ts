@@ -95,7 +95,7 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
   }
   if (name === "search_winners") {
     const res = await findWinners({ text: s("words", 120), kind: ["commodity", "contractor"].includes(s("kind")) ? s("kind") : "", country: s("country", 3), n: 12 });
-    return JSON.stringify({ as_of: res.at, total: res.total, note: "needs are inferred from the contract title: a hypothesis to confirm with the winner, not a fact", winners: res.rows.map((w) => ({ date: w.d, winner: w.w.join("; "), winner_country: w.wc, project_country: w.c, project: w.b, contract: w.t, value_usd: w.v, kind: w.k, needs: w.n, source: w.s, link: w.l })) });
+    return JSON.stringify({ as_of: res.at, total: res.total, note: "needs are inferred from the contract title: a hypothesis to confirm with the winner, not a fact", winners: res.rows.map((w) => ({ date: w.d, winner: w.w.join("; "), winner_country: w.wc, project_country: w.c, project: w.b, contract: w.t, value_usd: w.v, kind: w.k, needs: w.n, source: w.s, link: w.l, website: w.ws || "", published_contact: [...(w.ce || []), ...(w.cp || [])].join(", "), contact_page: w.cs || "" })) });
   }
   if (name === "tender_routes") {
     const t = (await tenders()).find((y) => y.id === s("tender_id", 120));

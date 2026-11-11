@@ -169,6 +169,11 @@ def build():
 
 def main():
     out = build()
+    try:
+        from .winner_dossier import enrich
+        enrich(out)
+    except Exception as e:  # noqa: BLE001
+        log.warning("winner dossier skipped: %s", e)
     key = os.environ.get("WEB_INDEX_KEY", "")
     if not key:
         try:

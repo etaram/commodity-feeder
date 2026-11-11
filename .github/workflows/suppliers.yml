@@ -123,7 +123,7 @@ jobs:
       - name: winners (fresh contract winners as sales leads)
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',winners,') || contains(format(',{0},', inputs.only), ',ext_awards,') }}
         run: set -o pipefail; python -m leads.winners 2>&1 | tee -a data/leads/run_suppliers.log
-        timeout-minutes: 10
+        timeout-minutes: 30
         continue-on-error: true
       - name: commit
         run: |
