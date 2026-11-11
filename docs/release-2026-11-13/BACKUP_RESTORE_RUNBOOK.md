@@ -70,8 +70,9 @@ Restore into a new database first, look at it, then switch. Replacing the live d
 
 ## Writing a Sheets export back (not automated, needs owner approval)
 
-No tool in the repository writes a backup into Google Sheets. This is on purpose: a write-back replaces live data.
-It is a separate step, done only after the owner approves it in writing, in this order:
+No tool in the repository writes a backup into the live spreadsheets. This is on purpose: a write-back replaces live
+data. (`tools/restore_sheets.py` writes into a new, empty spreadsheet only and refuses the live ones; see "Restore
+drill" below. It can do step 4 of this list.) Writing back is a separate step, done only after the owner approves it in writing, in this order:
 
 1. Decrypt and check the export (above). Stop on any `FAIL`.
 2. Stop the writers: pause the Vercel deployment and the scheduled workflows that write to the sheets.
@@ -84,6 +85,56 @@ It is a separate step, done only after the owner approves it in writing, in this
    tabs into the old one. Start the writers again.
 
 Google's own version history (File > Version history) is often the faster way back for a single damaged tab.
+
+## Restore drill
+
+Proves that the newest Sheets backup can be written into a spreadsheet and read back unchanged. Workflow
+`restore-drill` (run by hand), tool `tools/restore_sheets.py`, server part `deploy/ops/_restore_root.sh`.
+Written and unit-tested on 12 Nov 2026 with a fake Sheets API; **not yet run against Google**.
+
+How to run it:
+
+1. In Google Drive create a new, empty spreadsheet. Share it with the service account (the `client_email` of
+   `GOOGLE_SERVICE_ACCOUNT_JSON`) as **Editor**. Keep it private: no "anyone with the link".
+2. Copy its id: the long part of the address between `/d/` and `/edit`.
+3. GitHub > Actions > `restore-drill` > Run workflow, paste the id into `target`. `only` restores a few tabs
+   (names separated by commas) for a quick trial.
+4. When the run is over, **delete the target spreadsheet**: it now holds a full copy of users, contacts and deals.
+
+What the run does: decrypts the newest `/opt/sinder/backup/sheets/*.enc` on the server into a work directory only
+the runner user can read, checks it like `restore_sheets_check.py`, creates one tab per exported tab in the target,
+writes the rows as plain values (RAW: a formula of a hand-kept tab arrives as its text and is not evaluated), reads
+every tab back and compares. The work directory is removed at the end, also when a step fails.
+
+The tool refuses to write (exit code 2, nothing sent) when the target is the engine, state or universe spreadsheet,
+when a tab of the target with the same name as a tab to restore already holds data, or when the export is damaged.
+A second run therefore needs a fresh spreadsheet (or the restored tabs deleted from the first one).
+
+What counts as a pass: every tab line starts with `OK` and the last line says `restore drill PASSED: N of N tabs
+match`. For each tab the rows and columns read back equal the manifest and the content hash is equal. The hash is
+made as in the backup (sha256 over one compact JSON array per row) after both sides are normalised the same way:
+an empty cell is `""`, empty cells at the end of a row and empty rows at the end of a tab are dropped, a number
+without a fraction is an integer. Text is compared exactly. `(byte-identical)` on a line means the tab matched even
+without that normalising. The log holds tab names and counts only, never a cell.
+
+On a mismatch (`FAIL`, the run ends red):
+
+- `REFUSED` as the last line: nothing was written. Read the reason (live spreadsheet, target not empty, export
+  failed the check, target not shared with the service account) and fix that.
+- `HTTP 403` on a tab: the service account is not an editor of the target. `HTTP 429` after six tries: Google's
+  quota; wait a few minutes and run again into a fresh spreadsheet, or use `only`.
+- `first difference at row R, column C`: the cell came back different from the export. Decrypt the same backup on
+  the server (above), look at line R of that tab's `.jsonl` file and at the cell in the target spreadsheet. Known
+  candidates that this drill has not yet met in real data: a number with more than 15 significant digits, a cell
+  longer than 50,000 characters, text that Sheets stores differently from what was sent. If the export is right
+  and only the comparison is too strict, the rule to change is `normalise()` in `tools/restore_sheets.py`, with a
+  test; if the cell was written wrongly, the backup of that tab cannot be trusted for a real restore until fixed.
+- rows `X of Y` with X smaller: a write was cut short. Run again into a fresh spreadsheet; if it repeats on the same
+  tab, restore that tab alone with `only` and report the line.
+- A failed drill does not touch the backups or the live sheets. Do not treat the backup as proven until a run passes.
+
+The database has its own drill every night: `deploy/ops/_backup_root.sh` restores the dump it just wrote into the
+throw-away database `restore_test`, reads the probe row back and drops it. It reads one row, not every table.
 
 ## What the workflow needs
 
@@ -107,5 +158,5 @@ Google's own version history (File > Version history) is often the faster way ba
 ## Not measured yet
 
 - Recovery time: nobody has timed a full restore of the Sheets state or of the server. No target has been agreed.
-- A full write-back into Google Sheets has never been rehearsed.
+- A write-back into Google Sheets has never been rehearsed against Google: the restore drill exists but has not run.
 - The first real run of the Sheets steps (duration, Google read quota, size of the encrypted file).

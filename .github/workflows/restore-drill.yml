@@ -1,0 +1,75 @@
+name: restore-drill
+# Proves that the Google Sheets backup can be restored: the newest encrypted export on the server is decrypted,
+# written into a NEW, EMPTY spreadsheet (input "target"), read back and compared tab by tab (tools/restore_sheets.py).
+# It never writes to a live spreadsheet: the tool refuses the engine, state and universe sheets as a target, and
+# refuses any target tab that already holds data. Runbook: docs/release-2026-11-13/BACKUP_RESTORE_RUNBOOK.md
+# THE LOG IS PUBLIC: it shows tab names, counts and yes/no only. No cell is printed, nothing is uploaded as an
+# artifact, and the decrypted export is removed from the runner at the end, also when a step fails.
+# The database is not part of this workflow: the nightly backup (deploy/ops/_backup_root.sh) already restores each
+# dump into a throw-away database and reads a row back.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Id of a NEW, EMPTY spreadsheet shared with the service account as editor (delete it after the drill)"
+        required: true
+      only:
+        description: "Restore only these tabs (names separated by commas). Blank: all"
+        default: ""
+permissions:
+  contents: read
+concurrency:
+  group: restore-drill
+jobs:
+  drill:
+    runs-on: [self-hosted, sinder]
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Check the input
+        # The target id is read from the event file and masked before it is put in the environment, so that the
+        # log (which prints the environment of every step) shows *** instead of the id.
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          i = json.load(open(os.environ["GITHUB_EVENT_PATH"], encoding="utf-8")).get("inputs") or {}
+          target, only = (i.get("target") or "").strip(), (i.get("only") or "").strip()
+          if not re.fullmatch(r"[A-Za-z0-9_-]{20,100}", target):
+              raise SystemExit("target must be a spreadsheet id (the long part of its address), not a link")
+          if re.search(r"[\r\n]", only):
+              raise SystemExit("only must be one line")
+          print(f"::add-mask::{target}")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as f:
+              f.write(f"TARGET={target}\nONLY={only}\nWORK={os.environ['RUNNER_TEMP']}/restore-drill-{os.environ['GITHUB_RUN_ID']}\n")
+          print("input accepted")
+          PY
+      - name: Decrypt the newest Sheets backup into a private work directory
+        run: |
+          . deploy/ops/_root.sh
+          rm -rf "$WORK"; mkdir -m 700 "$WORK"
+          asroot bash "$GITHUB_WORKSPACE/deploy/ops/_restore_root.sh" open "$WORK" "$(id -u)"
+      - name: Check the export (local files only)
+        run: |
+          set -o pipefail
+          python3 tools/restore_sheets_check.py "$WORK/export" | tail -1
+      - name: Restore into the target spreadsheet, read back, compare (prints counts only)
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          # the live state sheet, so the tool can refuse it as a target (same value as in the backup workflow)
+          STATE_SHEET_ID: ${{ secrets.STATE_SHEET_ID || '1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo' }}
+        run: |
+          set -o pipefail
+          pip install -q google-auth requests
+          args=("$WORK/export" --target "$TARGET")
+          [ -n "$ONLY" ] && args+=(--only "$ONLY")
+          python3 tools/restore_sheets.py "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Remove the decrypted export from the runner
+        if: always()
+        run: |
+          if [ -n "${WORK:-}" ]; then
+            . deploy/ops/_root.sh
+            asroot bash "$GITHUB_WORKSPACE/deploy/ops/_restore_root.sh" clean "$WORK" || rm -rf "$WORK"
+            [ ! -e "$WORK" ] || { echo "THE WORK DIRECTORY IS STILL THERE: remove it by hand"; exit 1; }
+          fi
