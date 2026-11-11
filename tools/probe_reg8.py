@@ -6,8 +6,11 @@ def clean(h):
     b = re.sub(r"<script.*?</script>|<style.*?</style>|<nav.*?</nav>|<header.*?</header>|<footer.*?</footer>", " ", h, flags=re.S)
     return re.sub(r"(\|\s*)+", "| ", re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " | ", b)))
 def ok(url):
-    m = re.match(r"(https?://[^/]+)", url); rp = robotparser.RobotFileParser(m.group(1) + "/robots.txt")
-    try: rp.read(); return rp.can_fetch(UA["User-Agent"], url)
+    m = re.match(r"(https?://[^/]+)", url); rp = robotparser.RobotFileParser()
+    try:
+        r = requests.get(m.group(1) + "/robots.txt", headers=UA, timeout=(8, 15))
+        if r.status_code >= 400: return True
+        rp.parse(r.text.splitlines()); return rp.can_fetch(UA["User-Agent"], url)
     except Exception as e: return f"? {type(e).__name__}"
 PAGES = [
   ("apeda", "https://agriexchange.apeda.gov.in/AgriDirectory/Exporter/Exporters?page=122"),

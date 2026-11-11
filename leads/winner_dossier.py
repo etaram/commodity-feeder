@@ -45,13 +45,18 @@ def _close(a, b):
 def _allowed(url):
     host = "{0.scheme}://{0.netloc}".format(urlparse(url))
     if host not in _robots:
-        rp = robotparser.RobotFileParser(host + "/robots.txt")
+        rp = robotparser.RobotFileParser()
         try:
-            rp.read()
+            r = requests.get(host + "/robots.txt", headers=UA, timeout=(8, 15))
+            rp = None if r.status_code >= 400 else rp
+            if rp is not None:
+                rp.parse(r.text.splitlines())
         except Exception:  # noqa: BLE001
-            rp = None
+            rp = False   # unreachable robots.txt: treat the site as unreachable
         _robots[host] = rp
     rp = _robots[host]
+    if rp is False:
+        return False
     return True if rp is None else rp.can_fetch(UA["User-Agent"], url)
 
 
