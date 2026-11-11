@@ -9,6 +9,7 @@ N="${1:-3}"
 read -r -s -p "Registration token: " TOKEN; echo
 id runner >/dev/null 2>&1 || useradd -m -s /bin/bash runner
 echo "runner ALL=(ALL) NOPASSWD: /usr/bin/apt-get" > /etc/sudoers.d/runner   # media.yml installs ffmpeg with apt-get
+usermod -aG docker runner   # server-ops.yml reads container status and restarts services
 VER=$(curl -fsS https://api.github.com/repos/actions/runner/releases/latest | jq -r .tag_name | sed 's/^v//')
 ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
 for i in $(seq 1 "$N"); do

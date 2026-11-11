@@ -1,0 +1,20 @@
+name: server-ops
+# Runs one named maintenance script from deploy/ops on the company server. Only scripts that exist in the repository
+# can run: the input is a choice, never free text.
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: script in deploy/ops to run
+        type: choice
+        options: [status]
+        default: status
+permissions:
+  contents: read
+jobs:
+  run:
+    runs-on: [self-hosted, sinder]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash "deploy/ops/${{ inputs.task }}.sh"
