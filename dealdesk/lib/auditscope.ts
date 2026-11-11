@@ -6,7 +6,7 @@
 const NEVER = ["/api/panel/sendmail", "/api/outreach/authorize", "/api/mcp/key"];
 // Reading allowed (the self-check reads these), writing never: the sending queue, replies and campaign control, the
 // agent, users, the bot setup, deal and client records, decisions, queued and instant research jobs, admin actions.
-const READ_ONLY = ["/api/outreach/", "/api/agent/", "/api/users", "/api/telegram/", "/api/push", "/api/clients", "/api/deal", "/api/decision", "/api/job", "/api/panel/admin", "/api/panel/append", "/api/panel/run"];
+const READ_ONLY = ["/api/outreach/", "/api/agent/", "/api/users", "/api/telegram/", "/api/push", "/api/clients", "/api/deal", "/api/missions", "/api/decision", "/api/job", "/api/panel/admin", "/api/panel/append", "/api/panel/run"];
 const under = (path: string, p: string) => path === p || (p.endsWith("/") ? path.startsWith(p) : path.startsWith(p + "/"));
 export function auditMayCall(method: string, pathname: string): boolean {
   const path = pathname.replace(/\/+$/, "") || "/", m = (method || "GET").toUpperCase();

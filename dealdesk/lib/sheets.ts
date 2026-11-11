@@ -8,7 +8,9 @@ const API = "https://sheets.googleapis.com/v4/spreadsheets";
 // every log line used to stall the live panel tabs; the state sheet takes those writes instead. Unset = old behaviour.
 const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Coverage Cache", "Briefs",
   // read on every request or written by the app only: users and their settings, push subscriptions, app records
-  "Users", "Profiles", "Push", "Workspace strategy", "Client Dossiers", "Prospects", "My Network", "Assertions", "Decisions", "Outbox"]);
+  "Users", "Profiles", "Push", "Workspace strategy", "Client Dossiers", "Prospects", "My Network", "Assertions", "Decisions", "Outbox",
+  // missions (lib/missionstore-sheets.ts): append-only rows, created hidden on the first append
+  "Missions"]);
 const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;
 function sheetFor(tab: string): string {
   const st = (process.env.STATE_SHEET_ID || "").trim();
