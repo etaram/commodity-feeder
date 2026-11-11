@@ -5,6 +5,10 @@ import { richText, supplierUrl } from "@/lib/links";
 import { TABS } from "./mocks/sheets";
 import { MAIL } from "./mocks/mailer";
 import { SAVED } from "./mocks/deal";
+import { addSuppression } from "@/lib/outreach/suppression";
+import { sheetsStore } from "@/lib/outreach/store-sheets";
+import { CONTROL_ID } from "@/lib/outreach/campaign";
+import { nextRev } from "@/lib/outreach/store";
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
 process.env.ANTHROPIC_API_KEY = "test";
@@ -71,6 +75,58 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
   ok(/תיקיית "נשלח"/.test(sent[sent.length - 1].text) && MAIL.sent.length === 1 && JSON.stringify(sent[sent.length - 1].extra).includes("ag:re:M3"), "a stuck send asks the owner instead of sending again");
   await decide(io, "C1", "M3", true, true);
   ok(MAIL.sent.length === 2, "Send again sends it");
+  // ---- the send guard on the live path (lib/sendguard.ts)
+  const ws = (await loadRun(r.id))!.ws || "sinder";
+  const st = (id: string) => TABS["Agent Approvals"].filter((x) => x[0] === id).map((x) => String(x[4])).join();
+  const last = () => sent[sent.length - 1];
+  const pend = (id: string, to = "sales@grainsa.co.za") => TABS["Agent Approvals"].push([id, r.id, "C1", new Date().toISOString(), "pending", JSON.stringify({ to_name: "Grain SA", to_email: to, subject: "RFQ " + id, body: "body " + id })]);
+  // a second click on Approve, one after the other: handled, no second mail
+  let n0 = MAIL.sent.length;
+  await decide(io, "C1", "M2", true);
+  ok(MAIL.sent.length === n0 && /כבר טופל/.test(last().text), "a second Approve on a sent message does not send again");
+  // even when the approval's own status row was lost (it reads pending again) the idempotency key stops the second send
+  TABS["Agent Approvals"].push(["M2", r.id, "C1", new Date().toISOString(), "pending", ""]);
+  await decide(io, "C1", "M2", true);
+  ok(MAIL.sent.length === n0 && st("M2").endsWith("pending,sending,sent") && /כבר נשלחה קודם/.test(last().text), "a lost status row cannot cause a second send: the key of the approval id is already sent");
+  ok((TABS["Send Guard"] || []).filter((x) => x[2] === "approval:M2").map((x) => x[3]).join() === "reserved,sent" && TABS["Send Guard"].some((x) => x[2] === "approval:M2" && x[8] === "Agent Approvals:M2"), "the send is recorded under the approval id, with the approval reference");
+  // opt-out: by address, and by the whole domain
+  await addSuppression({ store: sheetsStore(), now: () => Date.now() }, ws, "stop@optout.example", "asked to be removed", "reply", "owner");
+  await addSuppression({ store: sheetsStore(), now: () => Date.now() }, ws, "@gone.example", "asked to be removed", "reply", "owner");
+  pend("M4", "Stop@OptOut.example"); pend("M5", "anyone@gone.example");
+  await decide(io, "C1", "M4", true);
+  ok(MAIL.sent.length === n0 && st("M4") === "pending,sending,blocked" && /ביקשו לא לקבל פניות/.test(last().text) && !/<pre>/.test(last().text), "an opted-out recipient: approved, not sent, and not handed over for manual sending");
+  await decide(io, "C1", "M5", true);
+  ok(MAIL.sent.length === n0 && st("M5") === "pending,sending,blocked", "an opted-out domain blocks the send too");
+  await decide(io, "C1", "M4", true, true);
+  ok(MAIL.sent.length === n0 && /כבר טופל/.test(last().text), "a blocked message cannot be sent again");
+  // emergency stop: nothing leaves, the approval stays open, and it goes out after the stop is cleared
+  const control = (status: string) => TABS["Campaigns"] = [...(TABS["Campaigns"] || []), [new Date().toISOString(), ws, "*", CONTROL_ID, nextRev(Date.now()), status, "{}", "owner"]];
+  control("engaged"); pend("M6");
+  await decide(io, "C1", "M6", true);
+  ok(MAIL.sent.length === n0 && st("M6") === "pending,sending,pending" && /עצירת החירום/.test(last().text), "with the emergency stop engaged nothing is sent and the approval stays open");
+  control("cleared");
+  await decide(io, "C1", "M6", true);
+  ok(MAIL.sent.length === n0 + 1 && st("M6").endsWith("sending,sent"), "after the stop is cleared the same approval sends once");
+  // a timeout after the message data started: delivery unknown, never "send it yourself", never a silent retry
+  n0 = MAIL.sent.length; pend("M7");
+  MAIL.fail.push({ ok: false, error: "SMTP timeout", stage: "body" });
+  await decide(io, "C1", "M7", true);
+  ok(st("M7") === "pending,sending,delivery_unknown" && /תיקיית "נשלח"/.test(last().text) && /אל תשלח אותה ידנית/.test(last().text) && !/<pre>/.test(last().text) && JSON.stringify(last().extra).includes("ag:re:M7"), "a timeout after DATA is delivery_unknown: check Sent first, the text is not handed over for manual sending");
+  await decide(io, "C1", "M7", true);
+  ok(MAIL.sent.length === n0 && st("M7") === "pending,sending,delivery_unknown" && /תיקיית "נשלח"/.test(last().text), "pressing Approve again on an unknown delivery does not send");
+  const party7 = (SAVED as unknown[][]).filter((x) => x[1] === "party" && x[2] === "PM7").pop();
+  ok(!!party7 && party7[4] !== "contacted", "the supplier is not marked contacted while delivery is unknown");
+  await Promise.all([decide(io, "C1", "M7", true, true), decide(io, "C1", "M7", true, true)]);
+  ok(MAIL.sent.length === n0 + 1 && st("M7").endsWith("sending,sent"), "the owner's Send again (after checking Sent) sends exactly one, even on a double press");
+  // a definite refusal before DATA: send_failed, the owner may retry after the fix
+  n0 = MAIL.sent.length; pend("M8");
+  MAIL.fail.push({ ok: false, error: "SMTP 535: authentication failed", stage: "auth" });
+  await decide(io, "C1", "M8", true);
+  ok(st("M8") === "pending,sending,send_failed" && /<pre>/.test(last().text) && /שום דבר לא יצא/.test(last().text) && JSON.stringify(last().extra).includes("ag:re:M8"), "a refusal before DATA is send_failed: nothing left, with a retry button");
+  await decide(io, "C1", "M8", true);
+  ok(MAIL.sent.length === n0 && /כבר טופל/.test(last().text), "a plain Approve on a failed send does nothing");
+  await decide(io, "C1", "M8", true, true);
+  ok(MAIL.sent.length === n0 + 1 && st("M8").endsWith("send_failed,sending,sent"), "the retry after the fix sends it");
   // two step calls for one run at the same moment: only one runs the model
   const r2 = await startRun(io, { chat: "C1", email: "o@x.com", name: "Owner", lang: "he", request: "בדיקה" });
   script.push([{ type: "tool_use", id: "v1", name: "finish", input: { summary: "סיום" } }]);

@@ -1,13 +1,15 @@
 // "/" is the Opportunity Panel: the same page as the panel inside Claude, loaded from the repo (dealdesk/public/panel.html)
 // so panel updates do not need a redeploy. The page talks to this server through /panel-shim.js.
-import { RAW_ROOT } from "@/lib/rawbase";
+import { RAW_ROOT, warnPublicFallback } from "@/lib/rawbase";
 export const dynamic = "force-dynamic";
 // Preview deployments (VERCEL_ENV=preview) read the "staging" branch so a change can be tried before it goes live.
 const REF = process.env.VERCEL_ENV === "preview" ? "staging" : "main";
+// TODO(remove with the public repository): the second branch is the PUBLIC FALLBACK (see lib/rawbase.ts); it stays until the repository is private.
 const SRC = process.env.DATA_BASE_URL ? `${RAW_ROOT}/dealdesk/public/panel.html` : `https://raw.githubusercontent.com/etaram/commodity-feeder/${REF}/dealdesk/public/panel.html`;
 let hit: { at: number; html: string } | null = null;
 
 export async function GET() {
+  warnPublicFallback("app/route");  // logs once per instance, changes nothing
   if (!hit || Date.now() - hit.at > 300_000) {
     const r = await fetch(SRC, { cache: "no-store" }).catch(() => null);
     if (r && r.ok) hit = { at: Date.now(), html: await r.text() };
