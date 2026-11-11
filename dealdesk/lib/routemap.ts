@@ -1,15 +1,18 @@
 // Maps one deal file (lib/deal.ts records) to one OpportunityRoute for lib/route.ts. Pure: no I/O, no clock (the
-// caller passes `now`), no model. The rule of this file: a value the deal file does not contain stays null or
+// caller passes `now`), no model. The sanctions screen of the deal's parties is run by the caller (lib/sanctions.ts
+// screenParties over dealParties below) and passed in as ctx.sanctions: this file only reads its result. The rule of this file: a value the deal file does not contain stays null or
 // "unknown". Nothing is estimated, converted or filled with a default number. Each mapping decision is listed in
 // docs/release-2026-11-13/DECISION_ENGINE.md ("Wired").
 import type { DealRecord } from "@/lib/deal";
 import type { Compared } from "@/lib/quotes";
 import { decideSend } from "@/lib/mandate";
+import type { PartyScreen, ScreenParty } from "@/lib/sanctions";
 import { evaluateRoute, priority, type DemandStatus, type Evaluation, type EvidenceItem, type NextTask, type OpportunityRoute, type Priority, type Requirement, type TechnicalFit } from "@/lib/route";
 
 export type QuoteComparison = { groups: { basis: string; rows: Compared[] }[] } | null;
 /** What the caller knows outside the deal records. tender: the notice with the deal's id in the tender index, if any. */
-export type DealContext = { deal_id?: string; workspace?: string; tender?: { stage: string; deadline: string; buyer: string; title: string; link: string } | null };
+/** sanctions: the screen of dealParties(), when the caller ran one. Absent or null reads as NOT_CHECKED, never as clear. */
+export type DealContext = { deal_id?: string; workspace?: string; tender?: { stage: string; deadline: string; buyer: string; title: string; link: string } | null; sanctions?: PartyScreen | null };
 
 // The note lib/dealagent.ts writes on a party record after the owner approved one outgoing message. The deal API
 // never lets a caller set a record's note, so this value is only ever written by that approval step.
@@ -44,6 +47,24 @@ export function chooseSupplier(records: DealRecord[]): SupplierChoice {
   const all = names(parties.map((p) => p.data.name));
   if (all.length === 1) return { supplier: all[0], basis: "only supplier party" };
   return { supplier: null, basis: all.length ? "several candidates, none selected" : "none recorded" };
+}
+
+/** The names a sanctions screen of this deal covers: the buyer (deal party, else the notice), every live supplier,
+ *  partner, finance and logistics party that is not dropped, and every quoting supplier. */
+export function dealParties(records: DealRecord[], ctx: DealContext = {}): ScreenParty[] {
+  const r = live(records), out: ScreenParty[] = [], seen = new Set<string>();
+  const add = (role: string, name: unknown) => { if (key(name) && !seen.has(key(name))) { seen.add(key(name)); out.push({ role, name: s(name) }); } };
+  for (const p of r.filter((x) => x.kind === "party" && s(x.data.status || x.status) !== "dropped")) add(s(p.data.role) || "party", p.data.name);
+  if (!out.some((p) => p.role === "buyer")) add("buyer", ctx.tender?.buyer);
+  for (const q of r.filter((x) => x.kind === "quote")) add("supplier", q.data.supplier);
+  return out;
+}
+
+export type SanctionsView = { status: PartyScreen["status"]; label: string; checked_on: string | null; screened: string[]; candidates: PartyScreen["candidates"]; clearance: false };
+/** What the card may say about sanctions. Only a candidate match raises the alert; nothing here ever says "clear". */
+export function sanctionsView(screen: PartyScreen | null | undefined): SanctionsView {
+  if (!screen) return { status: "NOT_CHECKED", label: "not checked", checked_on: null, screened: [], candidates: [], clearance: false };
+  return { status: screen.status, label: screen.label, checked_on: screen.checked_on, screened: screen.screened.map((p) => p.name), candidates: screen.candidates, clearance: false };
 }
 
 const TENDER_STAGE: Record<string, DemandStatus> = { planned: "planned", tender: "open", open: "open", awarded: "awarded", closed: "closed", cancelled: "cancelled" };
@@ -111,7 +132,7 @@ export function routeFromDeal(records: DealRecord[], comparison: QuoteComparison
     evidence,
     economics: { price_type: priced ? "quote" : goods !== null ? "assumption" : "none", sale_price: econ ? n(econ.sale_price) : null, cost,
       capital_need: null, funding_limit: econ ? n(econ.funding_limit) : null },
-    authority: { owner_mandate: ownerApproved ? "per_message" : "none", sanctions_alert: false,
+    authority: { owner_mandate: ownerApproved ? "per_message" : "none", sanctions_alert: ctx.sanctions?.status === "FAILED",
       data_rights_ok: legal(LEGAL_RE.data_rights), representation_ok: legal(LEGAL_RE.representation), engagement: inContact ? "in_contact" : "none" },
     time: { now, deadline: date(stage.deadline), quote_valid_until: quote ? date(quote.valid_until) : null, lead_time_days: quote ? n(quote.lead_time_days) : null },
   };
@@ -128,12 +149,14 @@ export function contactPolicy(nowMs: number): ContactPolicy {
   return { needs_owner_approval: d.decision !== "ALLOW", conversation_mode: false, reason: d.reasons[0] || "" };
 }
 
-export type RouteStateView = { evaluation: Evaluation; priority: Priority | null; next_task: NextTask | null; supplier: SupplierChoice; contact: ContactPolicy; not_in_deal_file: string[] };
+export type RouteStateView = { evaluation: Evaluation; priority: Priority | null; next_task: NextTask | null; supplier: SupplierChoice; contact: ContactPolicy; sanctions: SanctionsView; not_in_deal_file: string[] };
 /** The route state of one deal: the mapping above, then the engine. */
 export function routeState(records: DealRecord[], comparison: QuoteComparison, now: string, ctx: DealContext = {}): RouteStateView {
   const route = routeFromDeal(records, comparison, now, ctx);
   const evaluation = evaluateRoute(route);
   return { evaluation, priority: priority(route, evaluation), next_task: evaluation.next_task, supplier: chooseSupplier(records), contact: contactPolicy(Date.parse(now)),
-    // fields no deal record holds: the engine sees them as unknown, and the card says so
-    not_in_deal_file: ["sanctions screening result", "who else can see the demand", "required delivery date", "capital need"] };
+    sanctions: sanctionsView(ctx.sanctions),
+    // fields no deal record holds: the engine sees them as unknown, and the card says so. The sanctions screen is
+    // computed on each read and not stored on the deal, so it stays in this list unless the caller ran one now.
+    not_in_deal_file: [...(ctx.sanctions ? [] : ["sanctions screening result"]), "who else can see the demand", "required delivery date", "capital need"] };
 }

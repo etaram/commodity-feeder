@@ -185,5 +185,13 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
   ok(JSON.stringify(seen[1].messages).includes(supplierUrl("Grain SA", "ZAF").replace(/"/g, "")), "supplier rows carry the link to their page");
   const sum = sent.find((m) => /סיכום העסקה/.test(m.text));
   ok(!!sum && JSON.stringify(sum.extra).includes("open=d%3AAGENT-") || JSON.stringify(sum?.extra).includes("open=d:AGENT-"), "the summary has a button to the deal page");
+  // outcome ledger (lib/outcomelog.ts): one rfq_authorized and one rfq_sent per approval that the guard reported as sent
+  const led = (TABS["Outcomes"] || []).map((x) => JSON.parse(String(x[6])) as { type: string; case_id: string; proof: { kind: string; id: string }; actor: string; workspace: string });
+  const sentIds = [...new Set((TABS["Agent Approvals"] || []).filter((x) => x[4] === "sent" && JSON.parse(String(x[5])).mail_id).map((x) => String(x[0])))];
+  const auth = led.filter((e) => e.type === "rfq_authorized"), out = led.filter((e) => e.type === "rfq_sent");
+  ok(sentIds.length >= 3 && auth.length === sentIds.length && out.length === sentIds.length && sentIds.every((i) => auth.filter((e) => e.proof.id === `Agent Approvals:${i}`).length === 1),
+    `the ledger has rfq_authorized and rfq_sent once for each of the ${sentIds.length} sent approvals, with the approval id as proof`);
+  ok(out.every((e) => e.proof.kind === "message" && e.proof.id === "<id@x>" && e.case_id === cur.deal_id && e.actor === "o@x.com" && e.workspace === "sinder") && !auth.some((e) => /:(M4|M5)$/.test(e.proof.id)),
+    "rfq_sent carries the mailer's message id; a blocked (opted-out) message writes no event");
   console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
 })();

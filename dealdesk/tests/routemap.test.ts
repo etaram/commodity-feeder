@@ -1,7 +1,8 @@
 // Deal file -> OpportunityRoute (lib/routemap.ts), with fixture records. No network, no model, nothing is sent.
 import type { DealRecord, Kind } from "@/lib/deal";
 import { STATE_RANK } from "@/lib/route";
-import { chooseSupplier, contactPolicy, LEGAL_ITEMS, OWNER_APPROVED_NOTE, routeFromDeal, routeState, type DealContext } from "@/lib/routemap";
+import { chooseSupplier, contactPolicy, dealParties, LEGAL_ITEMS, OWNER_APPROVED_NOTE, routeFromDeal, routeState, type DealContext } from "@/lib/routemap";
+import { SCREEN_STATUSES, screenWith, type SanctionsIndex } from "@/lib/sanctions";
 
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
@@ -84,5 +85,40 @@ const complete = () => [...legal, reqm("R1", "flow rate 50 l/h"), reqm("R2", "IP
 {
   const c = contactPolicy(Date.parse(NOW));
   ok(c.needs_owner_approval === true && c.conversation_mode === false && c.reason.startsWith("no_mandate"), "contact needs owner approval: no mandate, conversation mode off");
+}
+// ---- sanctions: the screen of the deal's parties sets the route's flag (three outcomes)
+{
+  const INDEX: SanctionsIndex = { updated: "2026-11-11 05:00", ents: [[["Blocked Pumps Trading LLC"], "OFAC SDN", "SDGT", "entity", "ref-9"]] };
+  const recs = [...complete(), rec("party", "PB", { role: "buyer", name: "Fixture Water Board", status: "candidate" }), rec("party", "PD", { role: "supplier", name: "Dropped Co", status: "dropped" })];
+  const parties = dealParties(recs, { ...CTX, tender: TENDER });
+  ok(parties.map((p) => `${p.role}:${p.name}`).join() === "buyer:Fixture Water Board,supplier:Fixture Pumps Ltd", "the screen covers the buyer and the quoting supplier, once each; a dropped party is left out");
+  ok(dealParties(complete(), { ...CTX, tender: TENDER }).some((p) => p.role === "buyer" && p.name === "Fixture Water Board"), "with no buyer party the notice's buyer is screened");
+  ok(SCREEN_STATUSES.join() === "NOT_CHECKED,CHECKED_NO_ISSUE,FAILED,STALE,VERIFIED", "the status vocabulary is fixed");
+
+  // 1. no candidate match: checked on a date, not a clearance, no alert
+  const clean = screenWith(INDEX, parties, NOW), v1 = routeState(recs, null, NOW, { ...CTX, tender: TENDER, sanctions: clean });
+  ok(clean.status === "CHECKED_NO_ISSUE" && clean.label.startsWith("checked, no candidate match on 2026-11-11") && /not a clearance/.test(clean.label) && clean.clearance === false && clean.candidates.length === 0,
+    `no match: "${clean.label.slice(0, 44)}...", stated as not a clearance`);
+  ok(routeFromDeal(recs, null, NOW, { ...CTX, tender: TENDER, sanctions: clean }).authority.sanctions_alert === false && v1.sanctions.status === "CHECKED_NO_ISSUE" && v1.sanctions.checked_on === "2026-11-11"
+    && !v1.not_in_deal_file.includes("sanctions screening result") && v1.evaluation.state !== "STOPPED" && !/\bclear(ed)?\b(?! ance)/i.test(v1.sanctions.label.replace("not a clearance", "")), "no match: no alert, the card shows the check and its date and never the word clear");
+
+  // 2. candidate match: alert, the route is STOPPED and stays so whatever else is on the file
+  const bad = [...recs, rec("party", "PX", { role: "partner", name: "Blocked Pumps Trading", status: "candidate", partner_state: "candidate found" })];
+  const hit = screenWith(INDEX, dealParties(bad, { ...CTX, tender: TENDER }), NOW), v2 = routeState(bad, null, NOW, { ...CTX, tender: TENDER, sanctions: hit });
+  ok(hit.status === "FAILED" && hit.candidates.length === 1 && hit.candidates[0].name === "Blocked Pumps Trading" && hit.candidates[0].list === "OFAC SDN" && hit.candidates[0].ref === "ref-9" && /Qualified review required/.test(hit.label),
+    "candidate match: FAILED, with the party, the list and the reference");
+  ok(v2.evaluation.state === "STOPPED" && v2.evaluation.blockers.some((b) => b.code === "sanctions_alert" && /qualified review required/.test(b.text)) && v2.next_task === null && v2.priority === null && v2.sanctions.candidates.length === 1,
+    "candidate match: the route's sanctions alert is set and the state is STOPPED, with no next task");
+  const approved = [...bad, rec("party", "PAPPR9", { role: "supplier", name: "Fixture Pumps Ltd", status: "contacted" }, { note: OWNER_APPROVED_NOTE })];
+  ok(routeState(approved, null, NOW, { ...CTX, tender: TENDER, sanctions: screenWith(INDEX, dealParties(approved, { ...CTX, tender: TENDER }), NOW) }).evaluation.state === "STOPPED", "an owner approval on file does not lift the alert");
+
+  // 3. lists unavailable: not checked, which is neither an alert nor a pass
+  const none = screenWith(null, parties, NOW), v3 = routeState(recs, null, NOW, { ...CTX, tender: TENDER, sanctions: none });
+  ok(none.status === "NOT_CHECKED" && none.label.startsWith("not checked") && none.checked_on === null && none.screened.length === 0, "lists unavailable: NOT_CHECKED, no date, nobody screened");
+  ok(v3.sanctions.status === "NOT_CHECKED" && routeFromDeal(recs, null, NOW, { ...CTX, tender: TENDER, sanctions: none }).authority.sanctions_alert === false && v3.evaluation.state === v1.evaluation.state, "not checked raises no alert and is shown as not checked");
+  const absent = routeState(recs, null, NOW, { ...CTX, tender: TENDER });
+  ok(absent.sanctions.status === "NOT_CHECKED" && absent.sanctions.label === "not checked" && absent.not_in_deal_file.includes("sanctions screening result"), "no screen passed in at all: also NOT_CHECKED, never read as clear");
+  const stale = screenWith({ ...INDEX, updated: "2026-10-20 05:00" }, parties, NOW), staleHit = screenWith({ ...INDEX, updated: "2026-10-20 05:00" }, dealParties(bad, { ...CTX, tender: TENDER }), NOW);
+  ok(stale.status === "STALE" && /does not count/.test(stale.label) && staleHit.status === "FAILED" && screenWith(INDEX, [], NOW).status === "NOT_CHECKED", "an out-of-date index is STALE, not a check; a candidate in it is still an alert; no names is not checked");
 }
 if (fail) { console.log(`${fail} failed`); process.exit(1); }

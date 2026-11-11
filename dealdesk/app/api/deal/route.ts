@@ -7,6 +7,7 @@ import { routeOptions, routesHe } from "@/lib/routes";
 import { readiness } from "@/lib/dealstate";
 import { PARTNER_STATES, type DealRecord } from "@/lib/deal";
 import { canMoveDeal, canMoveParty } from "@/lib/transitions";
+import { logQuoteReceived } from "@/lib/outcomelog";
 
 // Entry routes and readiness gates for the deal workspace (skills package, 6 Nov 2026). DEAL_GATES=off removes them.
 async function gates(id: string, records: DealRecord[]) {
@@ -67,6 +68,10 @@ export async function POST(req: NextRequest) {
     }
     await saveRecord(dealId, kind, recordId, version, c.status, c.data, s.email, "", s.ws);
     await logActivity(s, "deal_" + kind, dealId, `${recordId} v${version}`);
+    // outcome ledger: the first version of a quote record is "quote received". Never blocks the save: a failed ledger
+    // write is logged (lib/outcomelog.ts) and the answer is the same.
+    if (kind === "quote" && version === 1) await logQuoteReceived({ workspace: s.ws, deal_id: dealId, at: new Date().toISOString(), actor: s.email, counterparty: String(c.data.supplier || ""),
+      record_id: recordId, source_ref: String(c.data.source_ref || "") }).catch(() => {});
     return NextResponse.json({ ok: true, record_id: recordId, version });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });

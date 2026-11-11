@@ -12,7 +12,11 @@ export const RIGHTS = ["own", "client_confidential", "public"] as const;
 export const PROOF_KINDS = ["source", "message", "document"] as const;
 
 export type FunnelStage = (typeof FUNNEL)[number];
-export type EventType = (typeof EVENT_TYPES)[number];
+// A feedback event is a label an owner or analyst puts on a case, with a reason from the fixed list. It is not an
+// outcome: it never moves the stage, is never a known negative and never closes the case. It is kept out of
+// EVENT_TYPES (the funnel and its two terminal events) on purpose.
+export const FEEDBACK = "feedback" as const;
+export type EventType = (typeof EVENT_TYPES)[number] | typeof FEEDBACK;
 export type Reason = (typeof REASONS)[number];
 export type RightsScope = (typeof RIGHTS)[number];
 export type Proof = { kind: (typeof PROOF_KINDS)[number]; id: string };
@@ -43,7 +47,7 @@ const DAY = 86_400_000;
 const WS_RE = /^[a-z0-9][a-z0-9-]{1,39}$/;
 /** Stages that only our own (or a client's) action can reach. A public notice is never proof of one of them. */
 const FIRST_PARTY = new Set<EventType>(["rfq_authorized", "rfq_sent", "rfq_responded", "quote_received", "proposal_delivered", "negotiation_advanced",
-  "contract_signed", "delivered_invoiced", "cash_collected", "lost", "abandoned"]);
+  "contract_signed", "delivered_invoiced", "cash_collected", "lost", "abandoned", FEEDBACK]);
 
 export function timeMs(iso: unknown, what = "time"): number {
   const s = typeof iso === "string" ? iso : "";
@@ -57,7 +61,7 @@ const str = (v: unknown) => typeof v === "string" && v.trim().length > 0;
 export function eventProblems(e: Partial<OutcomeEvent> | null | undefined): string[] {
   const p: string[] = [];
   if (!e || typeof e !== "object") return ["not an event"];
-  if (!EVENT_TYPES.includes(e.type as EventType)) p.push(`unknown event type ${JSON.stringify(e.type)}`);
+  if (!(EVENT_TYPES as readonly string[]).includes(String(e.type)) && e.type !== FEEDBACK) p.push(`unknown event type ${JSON.stringify(e.type)}`);
   for (const k of ["case_id", "route_id", "actor", "model_version"] as const) if (!str(e[k])) p.push(`${k} is required`);
   if (typeof e.counterparty !== "string") p.push("counterparty must be a string (empty when there is none yet)");
   if (!WS_RE.test(String(e.workspace ?? ""))) p.push("workspace is missing or not a valid workspace id");
@@ -65,9 +69,9 @@ export function eventProblems(e: Partial<OutcomeEvent> | null | undefined): stri
   if (!e.proof || !PROOF_KINDS.includes(e.proof.kind) || !str(e.proof.id)) p.push("proof is required: a source id, message id or document id");
   if (!RIGHTS.includes(e.rights_scope as RightsScope)) p.push(`unknown rights_scope ${JSON.stringify(e.rights_scope)}`);
   if (e.display_rank !== null && !(Number.isInteger(e.display_rank) && (e.display_rank as number) >= 1)) p.push("display_rank must be null or a whole number from 1");
-  const terminal = (TERMINAL as readonly string[]).includes(String(e.type));
-  if (terminal && !REASONS.includes(e.reason as Reason)) p.push(`${e.type} needs a reason from the fixed list`);
-  if (!terminal && e.reason != null) p.push("reason is only for lost / abandoned");
+  const terminal = (TERMINAL as readonly string[]).includes(String(e.type)), reasoned = terminal || e.type === FEEDBACK;
+  if (reasoned && !REASONS.includes(e.reason as Reason)) p.push(`${e.type} needs a reason from the fixed list`);
+  if (!reasoned && e.reason != null) p.push("reason is only for lost / abandoned / feedback");
   if (e.rights_scope === "public" && FIRST_PARTY.has(e.type as EventType)) p.push(`${e.type} cannot be recorded from public information: a public award or notice is not our own outcome`);
   return p;
 }
@@ -104,6 +108,7 @@ export function caseStatus(events: OutcomeEvent[], now: string, followUpDays: nu
     if (probs.length) { ignored.push(`${String(e?.type)}: ${probs[0]}`); continue; }
     const t = timeMs(e.at);
     if (t > nowMs) continue;   // not yet happened at this point in time: silently outside the view
+    if (e.type === FEEDBACK) continue; // a label, not an outcome: it never changes the reading
     good.push({ ...e, t });
   }
   good.sort((a, b) => a.t - b.t);
@@ -127,7 +132,7 @@ export function caseStatus(events: OutcomeEvent[], now: string, followUpDays: nu
 
 // ---- store and ledger ----------------------------------------------------------------------------------------------
 
-/** Append-only storage. The production store is not built in this task; tests use the in-memory one. */
+/** Append-only storage. Production: lib/outcomestore-sheets.ts (tab "Outcomes"); tests use the in-memory one. */
 export interface OutcomeStore { append(e: OutcomeEvent): Promise<void>; all(): Promise<OutcomeEvent[]> }
 export function memoryStore(): OutcomeStore {
   const rows: OutcomeEvent[] = [];

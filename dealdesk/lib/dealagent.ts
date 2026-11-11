@@ -23,6 +23,7 @@ import { claim } from "@/lib/claims";
 import { dealUrl, richText, supplierUrl, tenderUrl } from "@/lib/links";
 import { member, teamBrief } from "@/lib/team";
 import { logisticsFor } from "@/lib/logistics";
+import { logQuoteReceived, logRfqSent } from "@/lib/outcomelog";
 
 export const RUNS = "Agent Runs", APPROVALS = "Agent Approvals";
 const MAX_TURNS = Number(process.env.AGENT_MAX_TURNS || 24);
@@ -170,6 +171,8 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
     const cur = await readDeal(r.deal_id, r.ws);
     const rid = `${kind[0].toUpperCase()}${Date.now().toString(36).toUpperCase()}`;
     await saveRecord(r.deal_id, kind, rid, 1 + (cur.records.find((y) => y.kind === kind && y.record_id === rid)?.version || 0), c.status, c.data, r.email, AGENT_NOTE, r.ws);
+    // outcome ledger: never blocks the save (lib/outcomelog.ts logs a failure and goes on)
+    if (kind === "quote") await logQuoteReceived({ workspace: r.ws, deal_id: r.deal_id, at: now(), actor: r.email, counterparty: String(c.data.supplier || ""), model_version: AGENT_MODEL, record_id: rid, source_ref: String(c.data.source_ref || "") }).catch(() => {});
     return `saved ${kind} ${rid}`;
   }
   if (name === "compare_quotes") {
@@ -354,7 +357,14 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
       await saveRecord(run.deal_id, "party", "P" + approvalId, (prev?.version || 0) + 1, pst, { role: "supplier", name: m.to_name || "-", email: m.to_email || "", status: pst,
         note: `RFQ ${sent ? "sent" : status === "delivery_unknown" ? "approved, delivery not confirmed" : "approved, not sent"} ${now().slice(0, 10)}`, source: "deal agent" }, run.email, "approved by the owner", run.ws).catch(() => {});  // not AGENT_NOTE: the owner vetted this address
     }
-    if (res.outcome === "sent") return io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
+    if (res.outcome === "sent") {
+      await io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
+      // outcome ledger, after the owner was told: only a send the guard itself reports as sent, with the approval and
+      // the message id as proof. A failure is logged (lib/outcomelog.ts) and changes nothing about the send.
+      if (run) await logRfqSent({ workspace: run.ws, deal_id: run.deal_id, at: now(), actor: run.email || `telegram:${chat}`, counterparty: String(m.to_name || ""), model_version: AGENT_MODEL,
+        approval_ref: `${APPROVALS}:${approvalId}`, message_id: res.id }).catch(() => {});
+      return;
+    }
     if (sent) return io.send(chat, he ? `הפנייה אל ${esc(m.to_name)} כבר נשלחה קודם. היא לא נשלחה שוב.` : `The message to ${esc(m.to_name)} was already sent earlier. It was not sent again.`);
     if (status === "delivery_unknown") return io.send(chat, unknownText(he, m), againButtons(he, approvalId));
     if (status === "blocked") return io.send(chat, he ? `לא נשלח: ${esc(m.to_email)} נמצא ברשימת מי שביקשו לא לקבל פניות (הכתובת או כל הדומיין). הפנייה נחסמה, ואין לשלוח אותה גם ידנית.` : `Not sent: ${esc(m.to_email)} is on the opt-out list (the address or its whole domain). The message is blocked; do not send it manually either.`);

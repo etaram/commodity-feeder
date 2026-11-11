@@ -292,6 +292,13 @@ export const waitOnExternal = (ctx: Ctx, workspace: string, missionId: string, w
   m.status = "waiting_on_external"; m.next_decision = `waiting: ${String(what || "external event").slice(0, 300)}`; return [];
 });
 
+/** The mission needs the owner: a precise question nobody else can answer. Nothing new starts until resume. */
+export const needOwner = (ctx: Ctx, workspace: string, missionId: string, question: string) => setStatus(ctx, workspace, missionId, (m) => {
+  if (TERMINAL.includes(m.status)) return `mission is ${m.status}`;
+  if (m.status === "paused_on_risk") return "mission is paused_on_risk"; // a risk pause is never replaced by a question
+  m.status = "needs_owner"; m.next_decision = `owner: ${String(question || "decision needed").slice(0, 900)}`; return [];
+});
+
 /** Continue after a pause, a wait or an owner decision. A budget stop comes straight back unless the budget was raised. */
 export const resume = (ctx: Ctx, workspace: string, missionId: string) => setStatus(ctx, workspace, missionId, (m) => {
   if (m.status !== "paused_on_risk" && m.status !== "needs_owner" && m.status !== "waiting_on_external") return `mission is ${m.status}`;
