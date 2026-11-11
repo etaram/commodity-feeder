@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   feed:
-    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
     timeout-minutes: 60
     env:
       CENSUS_KEY: ${{ secrets.CENSUS_KEY }}

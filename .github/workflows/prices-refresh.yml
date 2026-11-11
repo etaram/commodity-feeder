@@ -5,7 +5,7 @@ permissions:
 concurrency: { group: prices-refresh }
 jobs:
   run:
-    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4

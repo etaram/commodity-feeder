@@ -13,7 +13,7 @@ concurrency:
   group: sanctions
 jobs:
   build:
-    runs-on: ${{ inputs.runner || vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ inputs.runner || vars.RUNNER_LABEL || 'sinder' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
