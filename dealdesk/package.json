@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node tests/run-all.mjs"
   },
   "dependencies": {
     "google-auth-library": "^9.15.0",
@@ -19,6 +20,7 @@
     "@types/papaparse": "^5.3.15",
     "@types/react": "^19",
     "autoprefixer": "^10.4.20",
+    "esbuild": "^0.24.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"

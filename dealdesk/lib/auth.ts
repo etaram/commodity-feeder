@@ -1,6 +1,12 @@
 import { createHmac, timingSafeEqual } from "crypto";
 
-const SECRET = () => process.env.AUTH_SECRET || "dev-secret-change-me";
+// No default secret in production: a missing AUTH_SECRET must stop sign-in, not fall back to a value anyone can read in the code.
+const SECRET = () => {
+  const s = process.env.AUTH_SECRET || "";
+  if (s) return s;
+  if (process.env.NODE_ENV === "production") throw new Error("AUTH_SECRET is not set");
+  return "dev-secret-change-me";
+};
 
 // Roles, from least to most access. viewer: read only. analyst: also runs research, decisions and projects.
 // admin: also approves outside actions (project approvals, closing projects) and manages users.

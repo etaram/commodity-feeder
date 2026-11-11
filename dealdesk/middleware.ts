@@ -14,7 +14,10 @@ async function valid(token: string | undefined): Promise<boolean> {
     const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
     const exp = Number(bin.split("|")[1]);
     if (!Number.isFinite(exp) || exp < Date.now()) return false;
-    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(process.env.AUTH_SECRET || "dev-secret-change-me"), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+    // fail closed: without AUTH_SECRET in production no session is valid (no readable default secret)
+    const secret = process.env.AUTH_SECRET || (process.env.NODE_ENV === "production" ? "" : "dev-secret-change-me");
+    if (!secret) return false;
+    const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
     const expect = b64url(await crypto.subtle.sign("HMAC", key, bytes));
     if (expect.length !== sig.length) return false;
     let diff = 0;

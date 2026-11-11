@@ -7,9 +7,9 @@
 //
 // funnel: counts of what the deal team has done, from the agent's own records: runs, messages proposed, approved and
 // sent, rejected, waiting; quotes received. It answers "is the machine producing, and where does it stall".
-import { getRange } from "./panel";
-import { readDeal } from "./deal";
-import { ENGINE_SHEET, readRanges } from "./sheets";
+import { getRange } from "@/lib/panel";
+import { readDeal } from "@/lib/deal";
+import { ENGINE_SHEET, readRanges } from "@/lib/sheets";
 
 const RUNS = "Agent Runs", APPROVALS = "Agent Approvals";   // the deal agent's tabs (lib/dealagent.ts)
 
