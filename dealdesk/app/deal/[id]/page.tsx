@@ -4,6 +4,7 @@ import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
 import ContactFinder from "@/components/ContactFinder";
 import BottomLine from "@/components/BottomLine";
+import RouteState from "@/components/RouteState";
 import { verdict } from "@/lib/verdict";
 import { tenders, isClosed } from "@/lib/index";
 
@@ -86,6 +87,7 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
         ) : (
           <div className="rounded-xl border border-line bg-white p-8 text-sm text-muted">This notice has closed or is no longer in the data. <Link href="/tenders" className="text-accent font-semibold">Back to search</Link></div>
         )}
+        <RouteState id={decodeURIComponent(id)} />
       </div>
     );
   }
@@ -116,6 +118,8 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
       {isClosed(deal.deadline) && <div className="rounded-xl border-l-4 border-no bg-nobg p-3 text-sm font-semibold text-no">This tender closed on {deal.deadline}. It is kept here for reference only and no longer appears in the lists.</div>}
 
       <BottomLine v={verdict(deal)} />
+
+      <RouteState id={deal.id} />
 
       <Advisor flag={deal.integrity_flag} score={deal.integrity_score} note={deal.integrity_note} gov={govAll.find((g) => g.country === deal.country)} />
 

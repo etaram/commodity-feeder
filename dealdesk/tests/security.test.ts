@@ -10,12 +10,12 @@ const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}
   // ---- finding 7: the audit session reads, it never sends
   for (const [m, p] of [["POST", "/api/panel/sendmail"], ["GET", "/api/panel/sendmail"], ["POST", "/api/outreach/authorize"], ["POST", "/api/outreach/authorize/"], ["POST", "/api/outreach/outbox"], ["POST", "/api/outreach/reply"],
     ["POST", "/api/outreach/control"], ["POST", "/api/outreach/campaign"], ["POST", "/api/agent/step"], ["POST", "/api/agent/decide"], ["POST", "/api/users"], ["DELETE", "/api/users/x@y.z"], ["POST", "/api/telegram/setup"],
-    ["GET", "/api/mcp/key"], ["POST", "/api/deal"], ["POST", "/api/deal/docs"], ["PUT", "/api/clients/C1"], ["POST", "/api/panel/run"], ["POST", "/api/panel/append"], ["POST", "/api/panel/admin"], ["POST", "/api/decision"], ["POST", "/api/job"], ["post", "/api/panel/sendmail"]])
+    ["GET", "/api/mcp/key"], ["POST", "/api/deal"], ["POST", "/api/deal/docs"], ["PUT", "/api/clients/C1"], ["POST", "/api/panel/run"], ["POST", "/api/panel/append"], ["POST", "/api/panel/admin"], ["POST", "/api/decision"], ["POST", "/api/job"], ["POST", "/api/missions"], ["post", "/api/panel/sendmail"]])
     ok(!auditMayCall(m, p), `audit session refused: ${m} ${p}`);
   // what /api/health, the daily scenarios and the UI audit call stays open
   for (const [m, p] of [["POST", "/api/panel/get"], ["POST", "/api/panel/search"], ["POST", "/api/panel/suppliers-for"], ["POST", "/api/panel/know"], ["POST", "/api/panel/finance"], ["POST", "/api/panel/logistics"], ["POST", "/api/panel/contact"],
     ["GET", "/api/outreach/outbox"], ["GET", "/api/outreach/campaign"], ["GET", "/api/outreach/log"], ["GET", "/api/outreach/suppression"], ["GET", "/api/outreach/linkedin"], ["GET", "/api/users"], ["GET", "/api/telegram/code"], ["GET", "/api/telegram/setup"],
-    ["GET", "/api/panel/admin"], ["GET", "/api/deal"], ["GET", "/api/clients"], ["GET", "/api/push"], ["GET", "/api/me"], ["GET", "/"], ["GET", "/panel-shim.js"], ["HEAD", "/api/users"], ["GET", "/api/panel/today"], ["GET", "/api/profile"]])
+    ["GET", "/api/panel/admin"], ["GET", "/api/deal"], ["GET", "/api/deal/route-state"], ["GET", "/api/missions"], ["GET", "/api/clients"], ["GET", "/api/push"], ["GET", "/api/me"], ["GET", "/"], ["GET", "/panel-shim.js"], ["HEAD", "/api/users"], ["GET", "/api/panel/today"], ["GET", "/api/profile"]])
     ok(auditMayCall(m, p), `audit session allowed: ${m} ${p}`);
   ok(auditMayCall("POST", "/api/dealers") && auditMayCall("POST", "/api/usersx"), "the list matches whole path segments, not prefixes of other names");
 
