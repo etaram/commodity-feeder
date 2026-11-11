@@ -28,6 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {session && (
               <div className="ml-auto flex items-center gap-3 text-xs text-[#9FBBDD]">
                 <span>{session.name || session.email} <span className="rounded bg-[#2B4A72] px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-white">{session.role}</span></span>
+                {session.role === "admin" && (process.env.OPS_ROOM || "").trim().toLowerCase() === "on" && <a href="/room" className="hover:text-white">Ops room</a>}
                 {session.role === "admin" && <a href="/#users" className="hover:text-white">Users</a>}
                 <SignOut />
               </div>

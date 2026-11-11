@@ -35,7 +35,10 @@ type Msg = { role: "user" | "assistant"; content: string | Block[] };
 export type Run = { id: string; chat: string; email: string; name: string; lang: "he" | "en"; ws: string; deal_id: string; request: string;
   msgs: Msg[]; turns: number; status: "running" | "waiting" | "done" | "stopped" | "error"; usd: number; started: string; note?: string;
   /** addresses the system's own contact lookup returned in this run (supplier_contact): the only ones a message may go to unflagged, besides the deal's own parties */
-  known?: string[] };
+  known?: string[];
+  /** set on a run that nobody asked for (a scout, lib/scoutrun.ts): where it came from, and tighter limits than the
+   *  normal ones. max_turns can only lower AGENT_MAX_TURNS; max_usd ends the run once its estimated cost reaches it. */
+  origin?: string; max_turns?: number; max_usd?: number };
 
 export type Io = { send: (chat: string, text: string, extra?: Record<string, unknown>) => Promise<void>; kick: (id: string) => Promise<void> };
 
@@ -214,13 +217,15 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
 // ---- running -----------------------------------------------------------------------------------------------
 const dealButton = (r: Run) => ({ reply_markup: { inline_keyboard: [[{ text: r.lang === "he" ? "פתח את העסקה במערכת" : "Open the deal", url: dealUrl(r.deal_id) }]] } });
 
-export async function startRun(io: Io, o: { chat: string; email: string; name: string; lang: "he" | "en"; ws?: string; request: string; deal_id?: string }) {
+export async function startRun(io: Io, o: { chat: string; email: string; name: string; lang: "he" | "en"; ws?: string; request: string; deal_id?: string; origin?: string; max_turns?: number; max_usd?: number }) {
   const id = "AG" + Date.now().toString(36).toUpperCase();
   const r: Run = { id, chat: o.chat, email: o.email, name: o.name, lang: o.lang, ws: o.ws || DEFAULT_WS, deal_id: o.deal_id || "AGENT-" + id, request: o.request.slice(0, 1500),
-    msgs: [{ role: "user", content: o.request.slice(0, 1500) }], turns: 0, status: "running", usd: 0, started: now() };
-  if (!o.deal_id) await saveRecord(r.deal_id, "stage", "stage", 1, "lead", { stage: "lead", title: o.request.slice(0, 240), next_step: "deal agent running", note: "opened by the deal agent from Telegram" }, o.email, "deal agent", r.ws).catch(() => {});
+    msgs: [{ role: "user", content: o.request.slice(0, o.origin ? 4000 : 1500) }], turns: 0, status: "running", usd: 0, started: now(),
+    ...(o.origin ? { origin: o.origin.slice(0, 40) } : {}), ...(o.max_turns && o.max_turns > 0 ? { max_turns: Math.floor(o.max_turns) } : {}), ...(o.max_usd && o.max_usd > 0 ? { max_usd: o.max_usd } : {}) };
+  // the deal's title is the first line of the request (a scout brief opens with a one-line headline)
+  if (!o.deal_id) await saveRecord(r.deal_id, "stage", "stage", 1, "lead", { stage: "lead", title: (o.origin ? o.request.split("\n")[0] : o.request).slice(0, 240), next_step: "deal agent running", note: o.origin ? `opened by ${o.origin}, not by a request from the owner` : "opened by the deal agent from Telegram" }, o.email, "deal agent", r.ws).catch(() => {});
   await saveRun(r);
-  await logActivity({ email: o.email, name: o.name }, "agent_start", id, o.request.slice(0, 200));
+  await logActivity({ email: o.email, name: o.name }, o.origin ? "agent_start_scout" : "agent_start", id, o.request.slice(0, 200));
   await io.kick(id);
   return r;
 }
@@ -250,14 +255,24 @@ async function stepLocked(io: Io, id: string, budgetMs: number): Promise<boolean
   const r = await loadRun(id);
   if (!r || r.status !== "running") return false;
   const t0 = Date.now(), he = r.lang === "he";
+  // a run's own limit can only be tighter than the normal one
+  const cap = r.max_turns && r.max_turns > 0 ? Math.min(MAX_TURNS, r.max_turns) : MAX_TURNS;
   try {
     while (Date.now() - t0 < budgetMs - 60_000) {
-      if (r.turns >= MAX_TURNS) {
+      if (r.max_usd && r.usd >= r.max_usd) {
+        r.status = "done"; r.note = `stopped at its cost limit (estimated USD ${r.usd.toFixed(2)} of ${r.max_usd})`;
+        await io.send(r.chat, he ? "עצרתי: הריצה הגיעה לתקרת העלות שנקבעה לה. מה שנמצא שמור בתיק העסקה." : "Stopped: this run reached its cost limit. What was found is saved in the deal file.", dealButton(r));
+        break;
+      }
+      if (r.turns >= cap) {
         r.status = "done";
         await io.send(r.chat, he ? "הגעתי למספר הצעדים המרבי לבקשה אחת. מה שנמצא שמור, ואפשר לבקש ממני להמשיך." : "Reached the step limit for one request. What was found is saved; ask me to continue.");
         break;
       }
       r.turns++;
+      // a run with its own limit is told when its last step comes, so it ends with a summary and not mid-work
+      const tail = r.msgs[r.msgs.length - 1];
+      if (r.max_turns && r.turns === cap && tail?.role === "user" && Array.isArray(tail.content)) tail.content.push({ type: "text", text: "This is your last step. Call finish now with the final summary for the owner." });
       const t1 = Date.now();
       const res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(),
         body: JSON.stringify({ model: AGENT_MODEL, max_tokens: 3000, system: system(r), tools: [...TOOLS, { type: "web_search_20250305", name: "web_search", max_uses: 3 }], messages: r.msgs }) });

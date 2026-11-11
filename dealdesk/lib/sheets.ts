@@ -14,7 +14,9 @@ const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", 
   // outcome ledger (lib/outcomestore-sheets.ts): append-only rows, created hidden on the first append
   "Outcomes",
   // idempotency keys of real e-mail sends (lib/sendguard.ts): written and read back around every send, so it must be fast
-  "Send Guard"]);
+  "Send Guard",
+  // decisions of the scouts (lib/scout.ts): append-only rows, created hidden on the first append
+  "Scout Seen"]);
 const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;
 // A test copy of the site (staging) must never write to the live spreadsheets. Two settings make that a property of the
 // code, not of care: STATE_TABS_EXTRA names further tabs that live in the state sheet (in staging: every tab the app

@@ -19,6 +19,18 @@
     {
       "path": "/api/cron/selfcheck",
       "schedule": "50 6 * * *"
+    },
+    {
+      "path": "/api/cron/scout?slot=1",
+      "schedule": "10 6 * * *"
+    },
+    {
+      "path": "/api/cron/scout?slot=2",
+      "schedule": "10 9 * * *"
+    },
+    {
+      "path": "/api/cron/scout?slot=3",
+      "schedule": "10 12 * * *"
     }
   ]
 }

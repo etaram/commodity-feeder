@@ -16,7 +16,7 @@ for (const f of readdirSync(here).filter((x) => /\.test\.(ts|mjs)$/.test(x)).sor
     else {
       if (f === "dealagent.test.ts") execFileSync("node", [path.join(here, "build-agent-test.mjs"), js], { cwd: root, stdio: "pipe" });
       else if (f === "isolation.test.ts") execFileSync("node", [path.join(here, "build-agent-test.mjs"), js, "tests/" + f, "isolation"], { cwd: root, stdio: "pipe" });
-      else if (f === "clients-scope.test.ts" || f === "runner-api.test.ts") execFileSync("node", [path.join(here, "build-agent-test.mjs"), js, "tests/" + f], { cwd: root, stdio: "pipe" });
+      else if (f === "clients-scope.test.ts" || f === "runner-api.test.ts" || f === "scout-route.test.ts") execFileSync("node", [path.join(here, "build-agent-test.mjs"), js, "tests/" + f], { cwd: root, stdio: "pipe" });
       else execFileSync(esbuild, [path.join(here, f), "--bundle", "--platform=node", "--format=cjs", `--alias:@=${root}`, `--outfile=${js}`, "--log-level=error"], { cwd: root, stdio: "pipe" });
       r = spawnSync("node", [js], { cwd: root, encoding: "utf8", env: { ...process.env, AUTH_SECRET: process.env.AUTH_SECRET || "test-secret" } });
     }
