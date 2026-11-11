@@ -50,7 +50,7 @@ ${who.title ? `<div style="font-size:13px;color:${MUTED};padding-top:2px">${esc(
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid ${RULE}">
 <tr><td dir="ltr" style="padding:22px 32px 16px 32px;border-bottom:2px solid ${BRASS};text-align:${side}">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" dir="ltr" align="${side}"><tr>
-<td style="vertical-align:middle"><a href="${esc(site())}"><img src="${esc(logo())}" width="44" height="44" alt="" style="display:block;border:0"></a></td>
+<td style="vertical-align:middle"><a href="${esc(site())}"><img src="${esc(logo())}" width="44" height="44" alt="S" style="display:block;border:0;border-radius:10px;background-color:#172b4d;color:#e8c56f;font-family:Georgia,serif;font-size:26px;font-weight:bold;line-height:44px;text-align:center"></a></td>
 <td style="vertical-align:middle;padding-left:12px;font-family:${font};text-align:left">
 <a href="${esc(site())}" style="text-decoration:none;font-size:22px;line-height:24px;font-weight:bold;letter-spacing:2px;color:${GREEN}">SINDER</a>
 <div style="font-size:12px;line-height:16px;letter-spacing:0.4px;color:${BRASS};padding-top:2px">${esc(TAGLINE)}</div></td></tr></table></td></tr>
