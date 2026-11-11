@@ -2,20 +2,33 @@ import { num, usd, type Row } from "@/lib/data";
 
 export type Verdict = { action: string; tone: "go" | "watch" | "no"; reasons: string[]; risks: string[]; next: string };
 
+// Bidders as the engine recorded them: the "why" line carries the basis ("3 bidders (buyer history)"). A count that is
+// only the engine default (leads/brain.py DEFAULT_BIDS) is not a finding about this deal.
+export function biddersBasis(d: Row): { n: number | null; src: string; assumed: number | null } {
+  const n = parseFloat(d.est_bidders || ""), src = ((d.why || "").match(/bidders(?: expected)? \(([^)]+)\)/) || [])[1] || "";
+  if (!Number.isFinite(n) || n <= 0) return { n: null, src: "", assumed: null };
+  return src && src !== "default" ? { n, src, assumed: null } : { n: null, src: "", assumed: n };
+}
+export const NO_WIN_PROBABILITY = "No win probability is calculated: no outcome data exists.";
+export function biddersText(d: Row) {
+  const b = biddersBasis(d);
+  return b.n !== null ? `about ${b.n} bidders expected (${b.src})` : b.assumed !== null ? `bidders unknown (engine assumed ${b.assumed})` : "bidders unknown";
+}
+
 export function verdict(d: Row): Verdict {
   const days = d.days_left === "" ? null : num(d.days_left);
-  const ev = num(d.ev_usd), p = num(d.p_win_market), net = num(d.net_margin_pct), value = num(d.deal_value_usd);
+  const ev = num(d.ev_usd), net = num(d.net_margin_pct), value = num(d.deal_value_usd), b = biddersBasis(d);
   const route = d.route || "direct";
   const reasons: string[] = [], risks: string[] = [];
-  if (ev > 0) reasons.push(`expected value ${usd(ev)} after pursuit cost`);
-  if (p >= 0.2) reasons.push(`good win odds (${Math.round(p * 100)}%, ~${d.est_bidders || "?"} bidders)`);
-  if (net >= 0.08) reasons.push(`healthy net margin (${(net * 100).toFixed(1)}%)`);
+  if (ev > 0) reasons.push(`engine ranking value ${usd(ev)} (a model figure from assumed competition and a sector-typical margin, not this deal's quotes)`);
+  if (b.n !== null && b.n <= 3) reasons.push(`about ${b.n} bidders expected (${b.src})`);
+  if (net >= 0.08) reasons.push(`sector-typical net margin ${(net * 100).toFixed(1)}%, not this deal's (no quote yet)`);
   if (num(d.fta_edge_pct) > 0) reasons.push(`trade-agreement edge +${(num(d.fta_edge_pct) * 100).toFixed(1)}% margin`);
   if (d.country === "ISR") reasons.push("home market: no foreign-bidder handicap");
   if (d.value_basis && d.value_basis !== "stated") risks.push(`value is estimated from ${d.value_basis}, not stated`);
-  if (p > 0 && p < 0.1) risks.push(`low win odds (${Math.round(p * 100)}%)`);
+  if (b.assumed !== null) risks.push(`number of bidders unknown: the engine assumed ${b.assumed}`);
   if (days !== null && days < 10) risks.push(`only ${days} days to the deadline`);
-  if (net > 0 && net < 0.04) risks.push(`thin net margin (${(net * 100).toFixed(1)}%)`);
+  if (net > 0 && net < 0.04) risks.push(`thin sector-typical net margin ${(net * 100).toFixed(1)}%, not this deal's (no quote yet)`);
   if (d.incumbent) risks.push(`incumbent supplier: ${d.incumbent.slice(0, 60)}`);
   if (/rising/.test(d.price_signal || "")) risks.push(`input prices ${d.price_signal} - fix prices carefully`);
   if (num(d.press_count) > 0) risks.push(`buyer is in the news (${d.press_count} articles) - read before bidding`);

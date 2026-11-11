@@ -4,7 +4,7 @@ import Decide from "@/components/Decide";
 import JobButton from "@/components/JobButton";
 import ContactFinder from "@/components/ContactFinder";
 import BottomLine from "@/components/BottomLine";
-import { verdict } from "@/lib/verdict";
+import { verdict, biddersText, NO_WIN_PROBABILITY } from "@/lib/verdict";
 import { tenders, isClosed } from "@/lib/index";
 
 export const revalidate = 900;
@@ -120,10 +120,10 @@ export default async function DealPage({ params }: { params: Promise<{ id: strin
       <Advisor flag={deal.integrity_flag} score={deal.integrity_score} note={deal.integrity_note} gov={govAll.find((g) => g.country === deal.country)} />
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Fact label="Expected value" value={usd(num(deal.ev_usd))} strong />
+        <Fact label="Engine ranking value (assumption)" value={usd(num(deal.ev_usd))} strong />
         <Fact label="Deal value" value={`${usd(num(deal.deal_value_usd))} (${deal.value_basis || "estimated"})`} />
-        <Fact label="Win probability" value={`${pct(deal.p_win_market)} vs ~${deal.est_bidders || "?"} bidders`} />
-        <Fact label="Net margin" value={`${pct(deal.net_margin_pct, 1)} (gross ${pct(deal.gross_margin_pct, 1)})`} />
+        <Fact label="Bidders" value={`${biddersText(deal)}. ${NO_WIN_PROBABILITY}`} />
+        <Fact label="Net margin (sector-typical, assumption)" value={`${pct(deal.net_margin_pct, 1)} (gross ${pct(deal.gross_margin_pct, 1)})`} />
       </div>
 
       <section className="rounded-xl border border-line bg-white p-5 shadow-sm">

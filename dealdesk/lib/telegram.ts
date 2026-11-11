@@ -3,6 +3,7 @@ import { appendRow, appendRows, ENGINE_SHEET, lookupContact, readRanges } from "
 import { listUsers } from "./users";
 import { allTenders, searchTendersSmart, supplierSearch, getRange } from "./panel";
 import { routeOptions } from "./routes";
+import { biddersBasis } from "./verdict";
 import { MODEL } from "./anthropic";
 import { countryIntel } from "./country";
 import { readBrief, buildBrief } from "./brief";
@@ -237,13 +238,15 @@ export function tenderDetail(r: Row, he: boolean): string {
   const L = (h: string, e: string, v: string) => (v ? `${he ? h : e}: ${v}\n` : "");
   const routes = routeOptions({ country: r.country, access: r.access, title: r.title_en, sector: r.sector, value_usd: num(r.est_value_usd), stage: r.stage } as never);
   const best = routes.find((x) => x.verdict === "supported") || routes.find((x) => x.verdict === "conditional");
+  const bb = biddersBasis(r);
   const title = esc(r.title_en || r.title || "");
   return `<b>${r.id ? a(tenderUrl(r.id), title) : title}</b>\n${esc(r.buyer || "")} · ${esc(r.country || "")}\n\n`
     + L("שווי", "Value", money(num(r.est_value_usd))) + L("דדליין", "Deadline", r.deadline ? `${esc(r.deadline)} (${due(r.deadline, he)})` : "")
     + L("התאמה", "Fit", r.fit ? `${esc(r.fit)}${r.fit_why ? ` · ${esc(r.fit_why).slice(0, 140)}` : ""}` : "")
-    + L("סיכוי זכייה", "Win chance", pct(r.p_win_market)) + L("מתחרים צפויים", "Expected bidders", esc(r.est_bidders || ""))
+    + L("מתחרים צפויים", "Expected bidders", bb.n !== null ? `${bb.n} (${esc(bb.src)})` : he ? `לא ידוע${bb.assumed !== null ? ` (המנוע הניח ${bb.assumed})` : ""}` : `unknown${bb.assumed !== null ? ` (engine assumed ${bb.assumed})` : ""}`)
+    + L("סיכוי זכייה", "Win probability", he ? "לא מחושב: אין נתוני תוצאות" : "not calculated: no outcome data exists")
     + L("ספק מכהן", "Incumbent", esc(r.incumbent || "")) + L("זכיות של הקונה ב-12 חודשים", "Buyer awards, 12 months", esc(r.buyer_awards_12m || ""))
-    + L("שווי צפוי", "Expected value", num(r.ev_usd) < 0 ? (he ? "שלילי (לא משתלם)" : "negative (not worth it)") : money(num(r.ev_usd))) + L("החלטת המנוע", "Engine decision", esc(r.decision || ""))
+    + L("ערך דירוג של המנוע (הנחה, לא ממצא)", "Engine ranking value (assumption, not a finding)", num(r.ev_usd) < 0 ? (he ? "שלילי (לא משתלם)" : "negative (not worth it)") : money(num(r.ev_usd))) + L("החלטת המנוע", "Engine decision", esc(r.decision || ""))
     + (best ? L("דרך כניסה", "Entry route", `${esc(best.route)} (${esc(best.verdict)}) · ${esc(best.next).slice(0, 160)}`) : "")
     + (r.link ? `\n${a(r.link, he ? "המכרז באתר המקור" : "Notice at the source")}` : "");
 }
@@ -434,7 +437,7 @@ export async function handle(chatId: string, text: string, _from: string, langCo
     await logActivity(who, "tg_ask", t.slice(0, 200)); await typing(chatId);
     const tools = [
       { name: "search_tenders", description: "Open tenders ranked by deal fit. words: the product or field in English (a few words, no country names); country: ISO3 or empty. Returns ids.", input_schema: { type: "object", properties: { words: { type: "string" }, country: { type: "string" } }, required: ["words"] } },
-      { name: "tender_detail", description: "Everything the system knows about one tender id: value, deadline, fit and why, win chance, expected bidders, incumbent, buyer history, expected value, engine decision, entry route.", input_schema: { type: "object", properties: { id: { type: "string" } }, required: ["id"] } },
+      { name: "tender_detail", description: "Everything the system knows about one tender id: value, deadline, fit and why, expected bidders with their basis (or unknown), incumbent, buyer history, the engine's ranking value (an assumption, not a finding), engine decision. No win probability is calculated: never state one, entry route.", input_schema: { type: "object", properties: { id: { type: "string" } }, required: ["id"] } },
       { name: "suppliers", description: "Proven suppliers for an English product phrase, best product fit first.", input_schema: { type: "object", properties: { product: { type: "string" } }, required: ["product"] } },
       { name: "prices", description: "Commodity prices the system holds: physical prices by origin and grade (exchanges, auctions, official boards), futures benchmarks, trade unit values and World Bank monthly series. Use for any price question. product: English commodity words (e.g. 'coffee arabica', 'sesame', 'urea'); origin: ISO3 or empty. Always give the date and basis of each price, say when it is stale, and never present another origin's price as the asked origin's.", input_schema: { type: "object", properties: { product: { type: "string" }, origin: { type: "string" } }, required: ["product"] } },
       { name: "supplier_contact", description: "Contact details on record for one supplier (name and ISO3 country as returned by suppliers).", input_schema: { type: "object", properties: { company: { type: "string" }, country: { type: "string" } }, required: ["company"] } },

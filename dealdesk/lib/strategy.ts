@@ -8,6 +8,7 @@ import { ownWorkspace, scrubTendersForWs } from "@/lib/scope";
 // 'Workspace strategy' (A workspace, B updated, C JSON, D by); the latest row per workspace wins.
 export type Strategy = { partners: string[]; focus: string[]; excluded: string[] };
 const TAB = "Workspace strategy";
+// Fixed bonuses, not measured effects: each one is named with its size in the fit_why text the user reads.
 const PARTNER_POINTS = 5; // leads/dealfit.py W["partner"]
 const FOCUS_POINTS = 3;
 const iso = (v: unknown) => (Array.isArray(v) ? v : []).map((x) => String(x || "").trim().toUpperCase()).filter((c) => /^[A-Z]{3}$/.test(c)).slice(0, 80);
@@ -40,8 +41,8 @@ export function applyStrategy(grid: string[][], ws: string, st: Strategy | null)
     const c = ic >= 0 ? String(r[ic] || "") : "";
     if (excl.has(c)) continue;
     let add = 0; const why: string[] = [];
-    if (part.has(c)) { add += PARTNER_POINTS; why.push("local partner (your workspace)"); }
-    if (isec >= 0 && focus.length && focus.some((f) => String(r[isec] || "").toLowerCase().includes(f))) { add += FOCUS_POINTS; why.push("focus sector (your workspace)"); }
+    if (part.has(c)) { add += PARTNER_POINTS; why.push(`local partner (your workspace): fixed +${PARTNER_POINTS} points`); }
+    if (isec >= 0 && focus.length && focus.some((f) => String(r[isec] || "").toLowerCase().includes(f))) { add += FOCUS_POINTS; why.push(`focus sector (your workspace): fixed +${FOCUS_POINTS} points`); }
     if (!add) { out.push(r); continue; }
     const x = [...r];
     for (const k of [isc, ifit]) if (k >= 0 && x[k] !== "" && Number.isFinite(Number(x[k]))) x[k] = String(Math.min(100, Number(x[k]) + add));
