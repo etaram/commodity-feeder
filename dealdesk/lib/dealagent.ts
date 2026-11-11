@@ -17,6 +17,7 @@ import { cashCheck, econInputs, econTitle } from "@/lib/dealstate";
 import { clean, readDeal, saveRecord, type Kind } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
 import { DEFAULT_WS } from "@/lib/auth";
+import { ownWorkspace } from "@/lib/scope";
 import { mailReady } from "@/lib/mailer";
 import { guardedSend, sheetsGuardDeps, type GuardResult } from "@/lib/sendguard";
 import { claim } from "@/lib/claims";
@@ -117,9 +118,9 @@ Talk to the owner (report, ask_owner, finish) in ${he ? "simple, plain Hebrew, s
 // write records, prepare messages or talk to the owner.
 export const READ_ONLY_TOOLS = new Set(["search_suppliers", "supplier_contact", "search_tenders", "search_winners", "company_footprint", "buyer_profile", "tender_routes", "deal_economics", "logistics_options"]);
 export function readOnlyToolDefs() { return TOOLS.filter((t) => READ_ONLY_TOOLS.has(t.name)); }
-export async function readOnlyTool(name: string, x: Record<string, unknown>): Promise<string> {
+export async function readOnlyTool(name: string, x: Record<string, unknown>, ws = ""): Promise<string> {
   if (!READ_ONLY_TOOLS.has(name)) throw new Error("unknown tool");
-  const r = { id: "mcp", chat: "", email: "mcp", name: "mcp", lang: "en", ws: "", deal_id: "", request: "", msgs: [], turns: 0, status: "running", usd: 0, started: now() } as Run;
+  const r = { id: "mcp", chat: "", email: "mcp", name: "mcp", lang: "en", ws, deal_id: "", request: "", msgs: [], turns: 0, status: "running", usd: 0, started: now() } as Run;
   return runTool(r, { send: async () => {}, kick: async () => {} }, name, x);
 }
 
@@ -131,6 +132,8 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
     return JSON.stringify({ total: res.total, suppliers: rows.map((y) => ({ ...pick(y, ["supplier", "country", "type", "tier", "products", "website", "match", "match_why", "match_gaps", "match_conflicts"]), open: supplierUrl(y.supplier, y.country) })) });
   }
   if (name === "supplier_contact") {
+    // the stored contact columns are the original workspace's private records (lib/scope.ts, as in /api/panel/contact)
+    if (r.ws && !ownWorkspace(r.ws)) return JSON.stringify({ note: "no contact on record; try web search for the official sales contact" });
     const c = await lookupContact(s("company"), s("country", 3).toUpperCase()).catch(() => null);
     // remembered in the run state: propose_message accepts these addresses as the system's own (see recipients above)
     if (c?.email) r.known = [...new Set([...(r.known || []), ...emailsIn(c.email)])].slice(-200);

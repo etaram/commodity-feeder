@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { recordDecision } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
+import { canWriteOwnerTabs } from "@/lib/scope";
 
 export async function POST(req: NextRequest) {
   const { s: session, res } = await gate("analyst");
   if (!session) return res;
+  // these tabs are the original workspace's private records (lib/scope.ts): another workspace cannot write to them
+  if (!canWriteOwnerTabs(session.ws)) return NextResponse.json({ ok: false, code: "forbidden", error: "These records belong to another workspace" }, { status: 403 });
   const { id, decision, title = "", buyer = "", country = "", note = "" } = await req.json().catch(() => ({}));
   if (!id || !["Go", "Watch", "No"].includes(decision)) return NextResponse.json({ ok: false }, { status: 400 });
   try {

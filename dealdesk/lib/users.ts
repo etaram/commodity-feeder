@@ -1,6 +1,6 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { appendRow, ENGINE_SHEET, readRanges, writeRange } from "./sheets";
-import { asRole, type Role } from "./auth";
+import { asRole, asWs, type Role } from "./auth";
 
 // Personal accounts live in the 'Users' tab of the engine sheet:
 // A email, B name, C role, D status (pending | active | disabled), E pass_hash (scrypt, empty for Google-only),
@@ -48,6 +48,13 @@ async function readUsers(): Promise<User[]> {
 export async function findUser(email: string, fresh = false): Promise<User | null> {
   const e = normEmail(email);
   return (await listUsers(fresh)).find((u) => u.email === e) || null;
+}
+
+// The workspace an account belongs to, for the places that know a person only by e-mail (the Telegram link, a
+// project, a stored job row). No row = the bootstrap team login = the original workspace. A failed Users read throws:
+// a caller never falls back to the original workspace for somebody else's account.
+export async function workspaceOf(email: string): Promise<string> {
+  return asWs((await findUser(email))?.workspace);
 }
 
 export const publicUser = (u: User): PublicUser => {

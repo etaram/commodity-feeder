@@ -148,7 +148,11 @@ export function subjectOf(type: string, target: string, target_id: string, conte
 // read through the same extraction, idempotent on ids, a bounded number per call. Code only.
 export async function backfillJobs(limit = 300): Promise<{ jobs: number; facts: number }> {
   const { readRanges, ENGINE_SHEET } = await import("@/lib/sheets");
-  const { DEFAULT_WS } = await import("@/lib/auth");
+  const { DEFAULT_WS, asWs } = await import("@/lib/auth");
+  // rows written by an account of another workspace (before the tab was closed to them) are not the original
+  // workspace's research: they are skipped, never adopted. If the accounts cannot be read, nothing is copied.
+  const { listUsers } = await import("@/lib/users");
+  const foreign = new Set((await listUsers()).filter((u) => asWs(u.workspace) !== DEFAULT_WS).map((u) => u.email.toLowerCase()));
   const g = (await readRanges(ENGINE_SHEET, ["'Panel Jobs'!A2:L5000"]).catch(() => null))?.[0] || [];
   const have = new Set((await readAssertions().catch(() => [])).map((a) => a.id));
   const fresh: Assertion[] = [];
@@ -160,6 +164,7 @@ export async function backfillJobs(limit = 300): Promise<{ jobs: number; facts: 
     let context: Record<string, unknown> = {};
     try { context = JSON.parse(ctx || "{}"); } catch { context = {}; }
     const by = (String(r[11] || "").match(/[\w.+-]+@[\w.-]+/) || [""])[0];
+    if (by && foreign.has(by.toLowerCase())) continue;
     const sources = [...result.matchAll(/https?:\/\/[^\s)\]>"']+/g)].slice(-8).map((m) => ({ url: m[0] }));
     let contacts: ResearchInput["contacts"];
     if (type === "find_contact") { try { contacts = JSON.parse((result.match(/\{[\s\S]*\}/) || ["{}"])[0]); } catch { contacts = undefined; } }

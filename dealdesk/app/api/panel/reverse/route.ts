@@ -5,6 +5,7 @@ import { supplierSearch, searchTenders, getRange } from "@/lib/panel";
 import { appendRow, sheetsEnabled } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
 import { remember } from "@/lib/researchmemory";
+import { canWriteOwnerTabs } from "@/lib/scope";
 
 // Deal reverse engineering: a screenshot or PDF of a (redacted) deal document comes in, a reconstruction comes out.
 // 1. Vision pass (one AI call, no web): the facts the document states, each marked read or inferred, redactions listed.
@@ -74,7 +75,8 @@ Never present a guess as a fact. Never invent company names, emails or prices. M
     const src = r2.sources.slice(0, 8).map((x) => `- ${x.title}: ${x.url}`).join("\n");
     const result = (r2.text + (src ? `\n\n${he ? "מקורות" : "Sources"}:\n${src}` : "")).slice(0, 45000);
     const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
-    if (sheetsEnabled()) {
+    // 'Panel Jobs' is the original workspace's private tab: another workspace's reconstruction is not written to it
+    if (sheetsEnabled() && canWriteOwnerTabs(s.ws)) {
       try { await appendRow("Panel Jobs", ["RV" + Date.now().toString(36).toUpperCase(), stamp, "reverse", "", `Deal reconstruction: ${product || "document"}`, JSON.stringify(f).slice(0, 4000), "", "done", result.slice(0, 20000), r2.sources[0]?.url || "", stamp, `web instant; ${s.email}`]); } catch { /* the answer still returns */ }
     }
     await logActivity(s, "reverse_deal_done", product, `${sup.total} suppliers, ${tenders.length} tenders`);

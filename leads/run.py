@@ -17,6 +17,7 @@ from urllib.parse import quote_plus
 
 from .common import DATA, LEADS, PARTIAL, benchmarks, clean, fmt_bench, log, master_rows, save_partial, today
 from .taxonomy import refine_group, BY_ID, CH2GROUP, match_cpv
+from . import source_status
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
@@ -63,9 +64,11 @@ def run_source(name):
     else:
         raise SystemExit(f"unknown source {name}")
     rows, meta = m.fetch()
-    save_partial(name, rows, meta)
+    # the snapshot is replaced only by a run that returned rows (leads/source_status.py): an empty result keeps the
+    # previous good snapshot, and every outcome is written to data/leads/source_status.json
+    st = source_status.record_result(name, rows, meta)
     (LEADS / f"error_{name}.txt").unlink(missing_ok=True)
-    log.info("%s: %d rows", name, len(rows))
+    log.info("%s: %d rows (%s)", name, len(rows), st["status"])
 
 
 def _rates():
@@ -652,11 +655,15 @@ def _write_plain(name, rows, cols=None):
             w.writerow([r.get(c, "") for c in cols])
 
 
-def merge():
+def merge(allow_shrink=False):
     bm = benchmarks()
     seen_p = LEADS / "seen.json"
     seen = json.loads(seen_p.read_text()) if seen_p.exists() else {}
     tenders, status = merge_tenders(bm, seen)
+    # before anything is written: an empty merge, or one that lost more than half its rows, stops here (non-zero exit,
+    # error_merge.txt, the previous output files stay) unless --allow-shrink / LEADS_ALLOW_SHRINK=1 says it is expected
+    source_status.merge_guard(len(tenders), source_status.allow_shrink(allow_shrink))
+    source_status.refresh(TENDER_SOURCES)
     cutoff = str(today() - dt.timedelta(days=120))
     seen = {k: v for k, v in seen.items() if v >= cutoff}
     seen_p.write_text(json.dumps(seen, sort_keys=True, indent=0))
@@ -791,12 +798,17 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     ap = argparse.ArgumentParser()
     ap.add_argument("--source"); ap.add_argument("--merge", action="store_true")
+    ap.add_argument("--allow-shrink", action="store_true", help="accept an empty or halved merged list (leads/source_status.py)")
     a = ap.parse_args()
     try:
         if a.source:
-            run_source(a.source)
+            try:
+                run_source(a.source)
+            except Exception as e:  # noqa: BLE001
+                source_status.record_failure(a.source, e)  # DOWN / DENIED / RATE_LIMITED; the previous snapshot stays
+                raise
         if a.merge:
-            merge()
+            merge(a.allow_shrink)
             (LEADS / "error_merge.txt").unlink(missing_ok=True)  # a successful merge clears an old failure
     except Exception:  # noqa: BLE001
         LEADS.mkdir(parents=True, exist_ok=True)

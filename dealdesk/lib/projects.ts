@@ -1,5 +1,6 @@
 import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 import { readDeal } from "./deal";
+import { workspaceOf } from "./users";
 import { APPROVALS, loadRuns, startRun, type Run } from "./dealagent";
 import { searchTendersSmart } from "./panel";
 import { a, dealUrl, tenderUrl } from "./links";
@@ -69,7 +70,7 @@ export async function loadWatches(chat?: string): Promise<Watch[]> {
 // ---- what the agent already did marks steps done ---------------------------------------------------------------
 async function autoProgress(p: Project): Promise<string[]> {
   const marked: string[] = [];
-  const recs = (await readDeal(p.deal_id).catch(() => ({ records: [] as { kind: string; data: Record<string, unknown> }[] }))).records;
+  const recs = (await workspaceOf(p.email).then((ws) => readDeal(p.deal_id, ws)).catch(() => ({ records: [] as { kind: string; data: Record<string, unknown> }[] }))).records;
   const has = { docs: recs.some((r) => r.kind === "requirement"), suppliers: recs.some((r) => r.kind === "party" && String(r.data.role || "") === "supplier"), quotes: recs.some((r) => r.kind === "quote") } as Record<string, boolean>;
   if (p.runs.length) {
     const g = (await readRanges(ENGINE_SHEET, [`'${APPROVALS}'!A2:B5000`]).catch(() => null))?.[0] || [];
@@ -120,7 +121,8 @@ export async function openProject(who: Who, tenderId: string): Promise<void> {
   const p: Project = { id, chat: who.chat, email: who.email, name: who.name, lang: who.lang, tender_id: t.id, title: t.title_en || t.title || "", buyer: t.buyer || "",
     country: t.country || "", value: num(t.est_value_usd), deadline: t.deadline || "", link: t.link || "", status: "active", created: new Date().toISOString(),
     deal_id: `PRJ-${id}`, runs: [], steps: schedule(t.deadline || ""), sent: [] };
-  const run = await startRun(agentIo, { chat: who.chat, email: who.email, name: who.name, lang: who.lang, deal_id: p.deal_id, request: kickoff(p) });
+  // the run works in the workspace of the person who opened the project, never the original one by default
+  const run = await startRun(agentIo, { chat: who.chat, email: who.email, name: who.name, lang: who.lang, ws: await workspaceOf(who.email), deal_id: p.deal_id, request: kickoff(p) });
   p.runs.push(run.id);
   await saveProject(p);
   await logActivity({ email: who.email, name: who.name }, "tg_project_open", p.id, t.id);
@@ -148,7 +150,7 @@ export async function projectCallback(who: Who, kind: string, id: string): Promi
   if (kind === "pa") {
     const live = (await loadRuns()).find((r: Run) => p.runs.includes(r.id) && (r.status === "running" || r.status === "waiting"));
     if (live) { await send(p.chat, live.status === "waiting" ? (he ? "הסוכן מחכה לתשובה שלך על השאלה האחרונה שלו. ענה כאן בהודעה." : "The agent is waiting for your answer to its last question. Reply here.") : (he ? "הסוכן כבר עובד על הפרויקט." : "The agent is already working on this project.")); return true; }
-    const run = await startRun(agentIo, { chat: p.chat, email: p.email, name: p.name, lang: p.lang, deal_id: p.deal_id, request: kickoff(p, "Continue from the deal file: do not repeat what is already recorded; work the next open step.") });
+    const run = await startRun(agentIo, { chat: p.chat, email: p.email, name: p.name, lang: p.lang, ws: await workspaceOf(p.email), deal_id: p.deal_id, request: kickoff(p, "Continue from the deal file: do not repeat what is already recorded; work the next open step.") });
     p.runs.push(run.id); await saveProject(p);
     await send(p.chat, he ? `הסוכן ממשיך מהשלב הבא: ${esc(stepName(nextStep(p)?.k || "", he))}.` : `The agent continues with the next step: ${esc(stepName(nextStep(p)?.k || "", he))}.`);
     return true;
