@@ -10,6 +10,7 @@ import {
 } from "@/lib/dossier";
 import { classifyStage, discoverProspects, latestProspects, prospectId, prospectRowsFor, validateProfiles, type Profile } from "@/lib/targeting";
 
+const ADMIN = { email: "rev@x.com", role: "admin" };  // approving a claim needs an admin or the client's representative
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
 
@@ -141,7 +142,7 @@ const chunk = [{ ref: "slide 1", text: "Containerized reverse osmosis units, 10-
   d.claims.push({ ...v.claims[2], id: "K2", value: "Founded 2003", source_ref: "https://aquapure.example/about" });
   ok(codeContradictions(d.claims).length === 1, "code finds two sources giving different founding years");
   const perf = d.claims.find((c) => c.field === "differentiators")!;
-  let r = applyPatch(d, { update_claims: [{ id: perf.id, approved: true }] }, "rev@x.com");
+  let r = applyPatch(d, { update_claims: [{ id: perf.id, approved: true }] }, "rev@x.com", ADMIN);
   ok(r.ok && r.errors.some((e) => /independent source/.test(e)) && !r.dossier.claims.find((c) => c.id === perf.id)!.approved, "a flagged performance claim cannot be approved without an independent source");
   r = applyPatch(d, { update_claims: [{ id: perf.id, verified_source: "https://shop.aquapure.example/test" }] }, "rev@x.com");
   ok(r.ok && r.errors.some((e) => /own site cannot verify/.test(e)), "the client's own domain cannot verify its own claim");
@@ -155,7 +156,7 @@ const chunk = [{ ref: "slide 1", text: "Containerized reverse osmosis units, 10-
   const act0 = rev.ok ? applyPatch(rev.dossier, { status: "active" }, "rev@x.com") : null;
   ok(!!act0 && !act0.ok && /approve at least one claim/.test(act0.error), "activation needs at least one approved claim");
   const prod = d.claims.find((c) => c.field === "products_services")!;
-  const appr = rev.ok ? applyPatch({ ...rev.dossier, status: "reviewed" }, { update_claims: [{ id: prod.id, approved: true }] }, "rev@x.com") : null;
+  const appr = rev.ok ? applyPatch({ ...rev.dossier, status: "reviewed" }, { update_claims: [{ id: prod.id, approved: true }] }, "rev@x.com", ADMIN) : null;
   ok(!!appr && appr.ok && appr.status_reset && appr.dossier.status === "draft", "a content edit on a reviewed dossier sends it back to draft");
   const direct = applyPatch(d, { status: "active" }, "rev@x.com");
   ok(!direct.ok, "a draft cannot jump to active");

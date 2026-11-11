@@ -9,6 +9,8 @@ export type Segment = { ref: string; text: string };
 export type Extracted = { kind: "pdf" | "pptx" | "text" | "html"; segments: Segment[]; gaps: { ref: string; reason: string }[]; error?: string };
 
 const MAX_ENTRY = 8 * 1024 * 1024, MAX_TOTAL = 40 * 1024 * 1024, MAX_PAGES = 300;
+// Upload limits, enforced on the server for every uploaded file (see sniffUpload and unzip).
+export const UPLOAD_LIMITS = { bytes: 4_500_000, zipEntries: 2000, zipEntryBytes: MAX_ENTRY, zipTotalBytes: MAX_TOTAL } as const;
 
 // ---------------------------------------------------------------- zip (PPTX, DOCX)
 export function unzip(buf: Buffer, want: (name: string) => boolean): Map<string, Buffer> {
@@ -31,11 +33,54 @@ export function unzip(buf: Buffer, want: (name: string) => boolean): Map<string,
     const start = loc + 30 + buf.readUInt16LE(loc + 26) + buf.readUInt16LE(loc + 28);
     const data = buf.subarray(start, start + csize);
     try {
-      const body = method === 0 ? Buffer.from(data) : method === 8 ? inflateRawSync(data, { maxOutputLength: MAX_ENTRY }) : null;
+      // an entry may never inflate beyond the size its directory record declares (a lying record is skipped, not trusted)
+      const body = method === 0 ? Buffer.from(data.subarray(0, MAX_ENTRY)) : method === 8 ? inflateRawSync(data, { maxOutputLength: Math.min(MAX_ENTRY, Math.max(1, usize)) }) : null;
+      if (body && total + body.length > MAX_TOTAL) break;  // zip bomb guard (actual size)
       if (body) { out.set(name, body); total += body.length; }
     } catch { /* a broken entry is skipped; the slide is then reported as a gap */ }
   }
   return out;
+}
+
+// The central directory as declared: names, entry count and declared sizes. Nothing is decompressed here.
+export function zipInventory(buf: Buffer, maxEntries = 100_000): { names: string[]; count: number; declared: number; largest: number } {
+  let eocd = -1;
+  for (let i = buf.length - 22; i >= Math.max(0, buf.length - 65557); i--) if (buf.readUInt32LE(i) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error("not a zip file");
+  const count = buf.readUInt16LE(eocd + 10), names: string[] = [];
+  let p = buf.readUInt32LE(eocd + 16), declared = 0, largest = 0;
+  for (let n = 0; n < count && n < maxEntries && p + 46 <= buf.length; n++) {
+    if (buf.readUInt32LE(p) !== 0x02014b50) break;
+    const usize = buf.readUInt32LE(p + 24), nlen = buf.readUInt16LE(p + 28);
+    names.push(buf.subarray(p + 46, p + 46 + nlen).toString("utf-8"));
+    declared += usize; largest = Math.max(largest, usize);
+    p += 46 + nlen + buf.readUInt16LE(p + 30) + buf.readUInt16LE(p + 32);
+  }
+  return { names, count, declared, largest };
+}
+
+// What an uploaded file IS, decided from its bytes and never from its name or the browser's content type. Only a PDF
+// and a PowerPoint PPTX are accepted. A macro-enabled deck (PPTM, PPSM, or any package carrying vbaProject.bin) is
+// refused outright: nothing in an upload is ever executed, and a macro deck is not read at all.
+export type Sniffed = { ok: true; kind: "pdf" | "pptx" } | { ok: false; status: 400 | 413 | 415 | 422; error: string };
+export function sniffUpload(buf: Buffer): Sniffed {
+  if (!buf.length) return { ok: false, status: 400, error: "the file is empty" };
+  if (buf.length > UPLOAD_LIMITS.bytes) return { ok: false, status: 413, error: "the file is larger than 4.5 MB" };
+  if (buf.subarray(0, 5).toString("latin1") === "%PDF-") return { ok: true, kind: "pdf" };
+  if (buf.length >= 4 && buf.readUInt32LE(0) === 0x04034b50) {
+    let inv: ReturnType<typeof zipInventory>;
+    try { inv = zipInventory(buf, UPLOAD_LIMITS.zipEntries + 1); } catch { return { ok: false, status: 415, error: "unreadable package (send a PDF or a PPTX)" }; }
+    if (inv.count > UPLOAD_LIMITS.zipEntries) return { ok: false, status: 422, error: `the package holds ${inv.count} entries (limit ${UPLOAD_LIMITS.zipEntries})` };
+    if (inv.largest > UPLOAD_LIMITS.zipEntryBytes || inv.declared > UPLOAD_LIMITS.zipTotalBytes) return { ok: false, status: 422, error: "the package expands beyond the decompressed size limit (40 MB in total, 8 MB per part)" };
+    let types = "";
+    try { types = unzip(buf, (n) => n === "[Content_Types].xml").get("[Content_Types].xml")?.toString("utf-8") || ""; } catch { /* treated as no content types */ }
+    if (inv.names.some((n) => /vbaProject\.bin$/i.test(n)) || /macroEnabled/i.test(types)) return { ok: false, status: 415, error: "macro-enabled presentations (PPTM, PPSM) are not accepted: save the deck as PPTX or PDF" };
+    if (inv.names.includes("ppt/presentation.xml")) return { ok: true, kind: "pptx" };
+    if (inv.names.some((n) => n.startsWith("word/"))) return { ok: false, status: 415, error: "Word documents are not supported yet (send a PDF or a PPTX)" };
+    if (inv.names.some((n) => n.startsWith("xl/"))) return { ok: false, status: 415, error: "Excel workbooks are not supported yet (send a PDF or a PPTX)" };
+    return { ok: false, status: 415, error: "not a PowerPoint file (send a PDF or a PPTX)" };
+  }
+  return { ok: false, status: 415, error: "only PDF and PPTX files are accepted (the file's content is neither)" };
 }
 
 const XML_ENT: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
@@ -366,7 +411,14 @@ export function extractPdf(buf: Buffer): Extracted {
   return { kind: "pdf", segments, gaps };
 }
 
-// ---------------------------------------------------------------- dispatcher
+// ---------------------------------------------------------------- uploads: content decides, the file name does not
+export function extractUpload(buf: Buffer): Extracted & { status?: number } {
+  const k = sniffUpload(buf);
+  if (!k.ok) return { kind: "pdf", segments: [], gaps: [], error: k.error, status: k.status };
+  return k.kind === "pdf" ? extractPdf(buf) : extractPptx(buf);
+}
+
+// ---------------------------------------------------------------- dispatcher (trusted callers and tests; uploads use extractUpload)
 export function extractDocument(buf: Buffer, filename = ""): Extracted {
   const head = buf.subarray(0, 8).toString("latin1"), ext = filename.toLowerCase().split(".").pop() || "";
   if (head.startsWith("%PDF") || ext === "pdf") return extractPdf(buf);
