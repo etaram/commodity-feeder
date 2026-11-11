@@ -5,7 +5,7 @@
 import { TEAM } from "@/lib/team";
 
 export const FIRM = "Sinder";
-export const TAGLINE = process.env.MAIL_TAGLINE || "From tender to delivery";
+export const TAGLINE = process.env.MAIL_TAGLINE || "Everything you need";
 // Brand colours of the logo (public/brand): navy and gold.
 const INK = "#1c2433", GREEN = "#172b4d", BRASS = "#b8902e", MUTED = "#526175", RULE = "#e2e5ea";
 const site = () => (process.env.MAIL_SITE_URL || "https://sinder.pro").replace(/\/+$/, "");

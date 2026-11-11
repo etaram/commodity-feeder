@@ -15,5 +15,5 @@ assert.equal((h.match(/<img/g) || []).length, 1, "one image: the logo"); assert.
 const he = renderMail({ text: "שלום,\n\nזו הודעת בדיקה.", from: "desk@sinder.pro", fromName: "Etamar", fromTitle: "Managing Director" });
 assert.ok(he.includes('dir="rtl"') && he.includes("Managing Director"));
 assert.equal(splitSignature("Hello\n\nno signature here").signer, null);
-assert.ok(h.includes("From tender to delivery"), "slogan in the header");
+assert.ok(h.includes("Everything you need"), "slogan in the header");
 console.log("mailhtml: ok");
