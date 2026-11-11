@@ -5,6 +5,8 @@
 import { TEAM } from "@/lib/team";
 
 export const FIRM = "Sinder";
+// A short note about the firm, added under the signature of the first message to a new contact only (wording set by the owner).
+export const ABOUT = process.env.MAIL_ABOUT === "0" ? "" : (process.env.MAIL_ABOUT || "Sinder is an international strategic procurement firm, with procurement experience on projects worth more than USD 250 million.");
 export const TAGLINE = process.env.MAIL_TAGLINE || "Everything you need";
 // Brand colours of the logo (public/brand): navy and gold.
 const INK = "#1c2433", GREEN = "#172b4d", BRASS = "#b8902e", MUTED = "#526175", RULE = "#e2e5ea";
@@ -29,7 +31,7 @@ export function splitSignature(text: string): { body: string; signer: Signer | n
   return { body: text.trim(), signer: null };
 }
 
-export function renderMail(m: { text: string; from: string; fromName?: string; fromTitle?: string }): string {
+export function renderMail(m: { text: string; about?: string; from: string; fromName?: string; fromTitle?: string }): string {
   const { body, signer } = splitSignature(m.text);
   const who: Signer | null = signer || (m.fromName ? { name: m.fromName, title: m.fromTitle || "" } : null);
   const rtl = /[֐-׿؀-ۿ]/.test(body.slice(0, 400));
@@ -55,6 +57,8 @@ ${who.title ? `<div style="font-size:13px;color:${MUTED};padding-top:2px">${esc(
 <a href="${esc(site())}" style="text-decoration:none;font-size:22px;line-height:24px;font-weight:bold;letter-spacing:2px;color:${GREEN}">SINDER</a>
 <div style="font-size:12px;line-height:16px;letter-spacing:0.4px;color:${BRASS};padding-top:2px">${esc(TAGLINE)}</div></td></tr></table></td></tr>
 <tr><td dir="${dir}" style="padding:28px 32px 30px 32px;font-family:${font};font-size:15px;line-height:1.6;color:${INK};text-align:${side}">
-${paras}${sig}</td></tr>
+${paras}${sig}</td></tr>${m.about ? `
+<tr><td dir="ltr" style="padding:16px 32px 18px 32px;border-top:1px solid ${RULE};background:#f7f8fa;font-family:${font};font-size:13px;line-height:1.55;color:${MUTED};text-align:left">
+<span style="font-weight:bold;color:${GREEN}">About ${FIRM}</span><br>${esc(m.about)} <a href="${esc(site())}" style="color:${GREEN}">${esc(site().replace(/^https?:\/\//, ""))}</a></td></tr>` : ""}
 </table></td></tr></table></body></html>`;
 }

@@ -32,7 +32,9 @@ export interface SentKeys {
   finish(ws: string, key: string, token: string, at: string, status: Exclude<KeyStatus, "reserved">, meta: KeyMeta): Promise<void>;
 }
 export type GuardDeps = {
-  mailer: (m: { to: string; subject: string; text: string }) => Promise<MailResult>;
+  mailer: (m: { to: string; subject: string; text: string; intro?: boolean }) => Promise<MailResult>;
+  // True when nothing was ever sent to this address: the first message carries the short "About Sinder" note.
+  firstContact?: (ws: string, email: string) => Promise<boolean>;
   // The matching opt-out entry (an address or "@domain"), or null. Throws when the list cannot be read.
   suppressed: (ws: string, email: string) => Promise<string | null>;
   killSwitch: (ws: string) => Promise<boolean>;
@@ -89,7 +91,9 @@ export async function guardedSend(deps: GuardDeps, msg: GuardMessage): Promise<G
     if (!(await deps.keys.reserve(ws, key, token, new Date(now).toISOString(), meta("")))) return res("refused", "duplicate", "duplicate", { prior: "delivery_unknown" });
   } catch (e) { return res("refused", "checks_unavailable", "stopped: the send could not be recorded", { error: cut((e as Error).message || e, 200) }); }
   let r: MailResult;
-  try { r = await deps.mailer({ to, subject: msg.subject, text: msg.text }); } catch (e) { r = { ok: false, error: "the mailer failed without an answer: " + cut((e as Error).message || e, 160) }; }
+  // a failed read means no note: the message itself is never held back for it
+  const intro = deps.firstContact ? await deps.firstContact(ws, to).catch(() => false) : false;
+  try { r = await deps.mailer({ to, subject: msg.subject, text: msg.text, intro }); } catch (e) { r = { ok: false, error: "the mailer failed without an answer: " + cut((e as Error).message || e, 160) }; }
   const stage = String(r?.stage || ""), error = cut(r?.error || "", 200);
   const outcome: GuardOutcome = r?.ok === true ? "sent" : BEFORE_DATA.has(stage) ? "send_failed" : "delivery_unknown";
   // if this row cannot be written the reservation stays open, which later reads as "may have left": the safe side
@@ -137,6 +141,7 @@ export function sheetsGuardDeps(over: Partial<GuardDeps> = {}): GuardDeps {
     suppressed: async (ws, email) => isSuppressed({ ...emptySnapshot(), suppression: await rowsOf(TABS.suppression) }, ws, email, "*")?.value || null,
     killSwitch: async (ws) => outreachKillSwitch({ ...emptySnapshot(), campaigns: await rowsOf(TABS.campaigns) }, ws).engaged,
     keys: new SheetsSentKeys(),
+    firstContact: async (ws, email) => !(await tab(SEND_GUARD, "K", 1)).some((r) => asWs(r[1]) === ws && r[3] === "sent" && String(r[5] || "").trim().toLowerCase() === email.trim().toLowerCase()),
     now: () => Date.now(),
     ...over,
   };

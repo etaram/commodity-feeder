@@ -16,4 +16,6 @@ const he = renderMail({ text: "שלום,\n\nזו הודעת בדיקה.", from: 
 assert.ok(he.includes('dir="rtl"') && he.includes("Managing Director"));
 assert.equal(splitSignature("Hello\n\nno signature here").signer, null);
 assert.ok(h.includes("Everything you need"), "slogan in the header");
+assert.ok(!h.includes("About Sinder"), "no firm note unless asked");
+assert.ok(renderMail({ text: t, from: "desk@sinder.pro", about: "Sinder is a firm." }).includes("About Sinder"), "firm note on a first contact");
 console.log("mailhtml: ok");

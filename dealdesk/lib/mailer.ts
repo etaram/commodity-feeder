@@ -5,7 +5,7 @@
 // sendMail is called from lib/sendguard.ts only (emergency stop, opt-out list, idempotency key): do not call it directly.
 import tls from "node:tls";
 import crypto from "node:crypto";
-import { renderMail, splitSignature, FIRM } from "@/lib/mailhtml";
+import { renderMail, splitSignature, FIRM, ABOUT } from "@/lib/mailhtml";
 
 const EMAIL = /^[^\s@<>,;"]+@[^\s@<>,;"]+\.[a-z]{2,}$/i;
 export const mailReady = () => !!(process.env.ZOHO_SMTP_USER && process.env.ZOHO_SMTP_PASS) && process.env.AGENT_MAIL_LIVE !== "0";
@@ -63,7 +63,7 @@ const hdr = (s: string) => (/^[\x20-\x7e]*$/.test(s) ? s : `=?UTF-8?B?${b64(s)}?
 export type MailStage = "config" | "address" | "connect" | "auth" | "mail_from" | "rcpt" | "data" | "body" | "done";
 export type MailResult = { ok: boolean; id?: string; error?: string; stage?: MailStage };
 
-export async function sendMail(m: { to: string; subject: string; text: string }): Promise<MailResult> {
+export async function sendMail(m: { to: string; subject: string; text: string; intro?: boolean }): Promise<MailResult> {
   if (!mailReady()) return { ok: false, error: "mailbox not configured", stage: "config" };
   // The mailbox signs in as ZOHO_SMTP_USER; the address the recipient sees and replies to can be a shared alias of that
   // mailbox (ZOHO_FROM_ADDRESS, e.g. a desk address), so messages do not go out under one person's name.
@@ -80,11 +80,13 @@ export async function sendMail(m: { to: string; subject: string; text: string })
     `Date: ${new Date().toUTCString()}`, `Message-ID: ${id}`, "MIME-Version: 1.0"];
   const part = (type: string, content: string) => [`Content-Type: ${type}; charset=UTF-8`, "Content-Transfer-Encoding: base64", "", wrap(b64(content))].join("\r\n");
   let msg: string;
-  if (process.env.MAIL_HTML === "0") msg = [...head, part("text/plain", m.text)].join("\r\n");
+  const about = m.intro && ABOUT ? ABOUT : "";
+  const plain = about ? `${m.text.trimEnd()}\n\n--\nAbout ${FIRM}: ${about}\n` : m.text;
+  if (process.env.MAIL_HTML === "0") msg = [...head, part("text/plain", plain)].join("\r\n");
   else {
     const bd = `=_sinder_${crypto.randomBytes(12).toString("hex")}`;
-    const html = renderMail({ text: m.text, from, fromName: process.env.ZOHO_FROM_NAME, fromTitle: process.env.ZOHO_FROM_TITLE });
-    msg = [...head, `Content-Type: multipart/alternative; boundary="${bd}"`, "", `--${bd}`, part("text/plain", m.text), `--${bd}`, part("text/html", html), `--${bd}--`, ""].join("\r\n");
+    const html = renderMail({ text: m.text, about, from, fromName: process.env.ZOHO_FROM_NAME, fromTitle: process.env.ZOHO_FROM_TITLE });
+    msg = [...head, `Content-Type: multipart/alternative; boundary="${bd}"`, "", `--${bd}`, part("text/plain", plain), `--${bd}`, part("text/html", html), `--${bd}--`, ""].join("\r\n");
   }
   let c: Conn | null = null, stage: MailStage = "connect";
   try {
