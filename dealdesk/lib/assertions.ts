@@ -84,18 +84,41 @@ export function sourceKey(e: Evidence): string {
   return `${p.hostname}${p.pathname}`;
 }
 
-// Two pieces of evidence are the same source when they carry the same document hash or point at the same host+path.
+// The supporting text reduced to letters and digits, for comparing copies of one document published on several
+// sites. Shorter than 80 characters is too little to tell a copy from two sources saying the same short thing.
+const SAME_TEXT_MIN = 80;
+function textKey(e: Evidence): string {
+  const t = String(e.excerpt || "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  return t.length >= SAME_TEXT_MIN ? t : "";
+}
+
+// Two pieces of evidence are the same source when they carry the same document hash, point at the same host+path,
+// or quote the same text (a press release republished by a wire service or a news site: one copy's excerpt equals
+// or contains the other's). A rewritten article that repeats the claim in other words is NOT detected here.
 export function isMirror(a: Evidence, b: Evidence): boolean {
   if (a.doc_hash && b.doc_hash && a.doc_hash === b.doc_hash) return true;
   const ka = sourceKey(a), kb = sourceKey(b);
-  return Boolean(ka && kb && ka === kb);
+  if (ka && kb && ka === kb) return true;
+  const ta = textKey(a), tb = textKey(b);
+  return Boolean(ta && tb && (ta.includes(tb) || tb.includes(ta)));
+}
+
+// Evidence grouped by source family: every member of a family is a copy of another member (same document hash,
+// same host+path or the same text), directly or through a third copy. One family is one confirmation.
+export function evidenceFamilies(list: Evidence[]): Evidence[][] {
+  const fams: Evidence[][] = [];
+  for (const e of list) {
+    const hit = fams.filter((f) => f.some((k) => isMirror(k, e)));
+    if (!hit.length) { fams.push([e]); continue; }
+    hit[0].push(e);
+    for (const other of hit.slice(1)) { hit[0].push(...other); fams.splice(fams.indexOf(other), 1); }
+  }
+  return fams;
 }
 
 // How many independent sources a set of evidence represents (mirrors collapse to one).
 export function countIndependent(list: Evidence[]): number {
-  const kept: Evidence[] = [];
-  for (const e of list) if (!kept.some((k) => isMirror(k, e))) kept.push(e);
-  return kept.length;
+  return evidenceFamilies(list).length;
 }
 
 export const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");

@@ -13,9 +13,15 @@ import type { Supplier } from "@/lib/index";
 //   incompatible - established conflict with a mandatory requirement (urea cream for fertilizer, steel pipe for
 //                PE pipe); dropped from results
 //
+// Technical fit comes before ranking (acceptance test F09, tests/mismatch.test.ts): a requirement the request states
+// (rated power, frequency, voltage, emission standard or certificate, membrane element size, feed water, urea form)
+// must be stated by the supplier's evidence before the bucket can be "supported". A requirement the evidence
+// contradicts makes the row "related"; one it does not mention is an explicit gap and the row is "plausible".
+// Nothing is assumed from the product family, and no score is produced.
+//
 // The company name locates an entity; it never establishes product capability. HS/CPV codes are retrieval
 // signals, not proof of compatibility. Terms match on whole words ("corn" is not in "Corning").
-export const MATCH_VERSION = "match-1.4 (2026-11-06)";
+export const MATCH_VERSION = "match-1.5 (2026-11-11)";
 export type Bucket = "supported" | "plausible" | "related" | "incompatible";
 export type MatchResult = { bucket: Bucket; why: string; evidence: string; conflicts: string[]; gaps: string[]; url?: string };
 
@@ -28,10 +34,136 @@ export function termRe(term: string): RegExp {
   return new RegExp(`(^|[^\\p{L}\\p{N}])${body}(e?s)?(?=$|[^\\p{L}\\p{N}])`, "iu");
 }
 
-type Rule = { rx: RegExp; label: string; bucket: "related" | "incompatible" };
+// record: judged only against the whole record, where the right product stated elsewhere clears it (a maker of RO
+// and UF membranes lists both in one item)
+type Rule = { rx: RegExp; label: string; bucket: "related" | "incompatible"; record?: boolean };
+
+// ---- technical specifications a request can state ----
+type SpecState = "met" | "conflict" | "unstated";
+type SpecReq = { blocking: boolean; check: (evidence: string) => { state: SpecState; note: string } };
+// read: the requirements of this kind that the request states (none when it states none)
+type Spec = { id: string; read: (query: string) => SpecReq[] };
+const NUM = "(\\d{1,3}(?:,\\d{3})+|\\d+(?:\\.\\d+)?)";
+const toNum = (x: string) => parseFloat(x.replace(/,/g, ""));
+const fmt = (n: number) => String(Math.round(n * 100) / 100);
+
+// rated power: kVA and MVA are one scale, kW and MW another; the two are never converted into each other here
+// (the ratio is the power factor, which the evidence would have to state)
+const P_UNIT = "(kva|mva|kw|mw)";
+const pScale = (u: string) => ({ kind: /va$/i.test(u) ? "kVA" : "kW", mul: /^m/i.test(u) ? 1000 : 1 });
+const powerSpec: Spec = { id: "rated-power", read: (q) => {
+  const m = new RegExp(`${NUM}\\s?${P_UNIT}\\b`, "i").exec(q);
+  if (!m) return [];
+  const w = pScale(m[2]), want = toNum(m[1]) * w.mul, label = `${fmt(want)} ${w.kind}`;
+  return [{ blocking: true, check: (ev) => {
+    const iv: [number, number][] = [], pts: number[] = []; let other = false;
+    for (const r of ev.matchAll(new RegExp(`${NUM}\\s?${P_UNIT}?\\s*(?:-|\u2013|\u2014|to|up to)\\s*${NUM}\\s?${P_UNIT}\\b`, "gi"))) {
+      const hi = pScale(r[4]), lo = pScale(r[2] || r[4]);
+      if (hi.kind === w.kind && lo.kind === w.kind) iv.push([toNum(r[1]) * lo.mul, toNum(r[3]) * hi.mul]);
+    }
+    for (const r of ev.matchAll(new RegExp(`(?:up to|max(?:imum)?\\.?|\u2264)\\s*${NUM}\\s?${P_UNIT}\\b`, "gi"))) { const u = pScale(r[2]); if (u.kind === w.kind) iv.push([0, toNum(r[1]) * u.mul]); }
+    for (const r of ev.matchAll(new RegExp(`${NUM}\\s?${P_UNIT}\\b`, "gi"))) { const u = pScale(r[2]); if (u.kind === w.kind) pts.push(toNum(r[1]) * u.mul); else other = true; }
+    if (iv.some(([a, b]) => want >= a && want <= b) || pts.includes(want)) return { state: "met", note: "" };
+    const all = [...pts, ...iv.flat()];
+    if (!all.length) return { state: "unstated", note: other ? `rated power is stated in ${w.kind === "kVA" ? "kW" : "kVA"} only; ${label} depends on the power factor and is not confirmed` : `rated power (${label}) not stated` };
+    const lo = Math.min(...all), hi = Math.max(...all);
+    if (want < lo || want > hi) return { state: "conflict", note: `rated power ${label} is outside the stated range (${lo === hi ? fmt(lo) : `${fmt(lo)}-${fmt(hi)}`} ${w.kind})` };
+    return { state: "unstated", note: `a ${label} model is not stated (stated ratings: ${[...new Set(pts)].sort((a, b) => a - b).map(fmt).join(", ")} ${w.kind})` };
+  } }];
+} };
+const frequencySpec: Spec = { id: "frequency", read: (q) => {
+  const m = /\b(50|60)\s?hz\b/i.exec(q);
+  if (!m) return [];
+  return [{ blocking: true, check: (ev) => {
+    const got = new Set<string>();
+    for (const r of ev.matchAll(/\b(50|60)(?:\s*(?:\/|or|and|&)\s*(50|60))?\s?hz\b/gi)) { got.add(r[1]); if (r[2]) got.add(r[2]); }
+    if (got.has(m[1])) return { state: "met", note: "" };
+    return got.size ? { state: "conflict", note: `${[...got].join("/")} Hz stated, ${m[1]} Hz requested` } : { state: "unstated", note: `frequency (${m[1]} Hz) not stated` };
+  } }];
+} };
+// voltage: a different stated voltage is reported as a gap, not a conflict (alternators are commonly reconnectable
+// and 380/400/415 V are one class; the evidence has to say so before it counts)
+const voltageSpec: Spec = { id: "voltage", read: (q) => {
+  const m = new RegExp(`(?:^|[^\\d.,])${NUM}(?:\\s*\\/\\s*${NUM})?\\s?(kv|v|volts?)\\b`, "i").exec(q);
+  if (!m) return [];
+  const mul = (u: string) => (/^kv$/i.test(u) ? 1000 : 1), want = toNum(m[1]) * mul(m[3]);
+  return [{ blocking: true, check: (ev) => {
+    const pts: number[] = []; let hit = false;
+    for (const r of ev.matchAll(new RegExp(`${NUM}(?:\\s*(\\/|-|\u2013|to)\\s*${NUM})?\\s?(kv|v|volts?)\\b`, "gi"))) {
+      const a = toNum(r[1]) * mul(r[4]), b = r[3] ? toNum(r[3]) * mul(r[4]) : a;
+      pts.push(a, b);
+      if (r[2] && r[2] !== "/" ? want >= Math.min(a, b) && want <= Math.max(a, b) : a === want || b === want) hit = true;
+    }
+    if (hit) return { state: "met", note: "" };
+    return { state: "unstated", note: pts.length ? `${fmt(want)} V not stated (states ${[...new Set(pts)].map(fmt).join(", ")} V)` : `voltage (${fmt(want)} V) not stated` };
+  } }];
+} };
+// emission stages and certificates the request names: each must be named by the evidence, none is assumed
+const ROMAN: Record<string, string> = { "1": "I", "2": "II", "3": "III", "4": "IV", "5": "V" };
+function standardsIn(t: string): string[] {
+  const out: string[] = [];
+  for (const r of t.matchAll(/\b(?:eu[\s-]+)?stage[\s-]?(iii\s?[ab]|iii|ii|iv|v|i|[1-5]\s?[ab]?)\b/gi)) { const x = r[1].replace(/\s/g, "").toUpperCase(); out.push(`EU Stage ${x.replace(/^[1-5]/, (d) => ROMAN[d])}`); }
+  for (const r of t.matchAll(/\b(?:epa[\s-]+)?tier[\s-]?([1-4])(?:\s?(final|interim))?\b/gi)) out.push(`EPA Tier ${r[1]}${r[2] ? " " + r[2].toLowerCase() : ""}`);
+  for (const r of t.matchAll(/\biso[\s-]?(\d{4,5})\b/gi)) out.push(`ISO ${r[1]}`);
+  for (const r of t.matchAll(/\bnsf(?:\s?\/\s?ansi)?[\s-]?(\d{2,3})\b/gi)) out.push(`NSF/ANSI ${r[1]}`);
+  return [...new Set(out)];
+}
+const standardSpec: Spec = { id: "standard", read: (q) => standardsIn(q).map((want) => ({ blocking: true, check: (ev: string) => {
+  const got = standardsIn(ev);
+  // "Tier 4" in the request is met by "Tier 4 final"; the reverse is not
+  if (got.some((g) => g === want || (/^EPA Tier \d$/.test(want) && g.startsWith(want + " ")))) return { state: "met" as const, note: "" };
+  const same = got.filter((g) => g.split(" ")[0] === want.split(" ")[0]);
+  return { state: "unstated" as const, note: `${want} not evidenced${same.length ? ` (states ${same.join(", ")})` : ""}` };
+} })) };
+// RO element diameter, as inches or as the model code (8040 = 8 x 40 inch)
+const ELEMENT_CODE: Record<string, string> = { "2540": "2.5", "4040": "4", "4021": "4", "8040": "8", "8080": "8", "1640": "16" };
+function elementSizes(t: string): string[] {
+  const out: string[] = [];
+  for (const r of t.matchAll(/(?:^|[^\d.])(2\.5|4|8|16)[\s-]?(?:inch(?:es)?\b|["\u201d\u2033])/gi)) out.push(r[1]);
+  for (const r of t.matchAll(/(?:^|[^\d])(2540|4040|4021|8040|8080|1640)(?!\d)/g)) out.push(ELEMENT_CODE[r[1]]);
+  return [...new Set(out)];
+}
+const elementSizeSpec: Spec = { id: "element-size", read: (q) => {
+  const want = elementSizes(q)[0];
+  if (!want) return [];
+  return [{ blocking: true, check: (ev) => {
+    const got = elementSizes(ev);
+    if (got.includes(want)) return { state: "met", note: "" };
+    return got.length ? { state: "conflict", note: `${got.join("- and ")}-inch element stated, ${want}-inch requested` } : { state: "unstated", note: `element size (${want}-inch) not stated` };
+  } }];
+} };
+const SEA = /\bswro\b|\bsea[\s-]?water\b/i, BRACKISH = /\bbwro\b|\bbrackish\b/i;
+const feedWaterSpec: Spec = { id: "feed-water", read: (q) => {
+  const sea = SEA.test(q), br = BRACKISH.test(q);
+  if (sea === br) return [];
+  const [mine, theirs, want, got] = sea ? [SEA, BRACKISH, "seawater (SWRO)", "brackish-water (BWRO)"] : [BRACKISH, SEA, "brackish water (BWRO)", "seawater (SWRO)"];
+  return [{ blocking: true, check: (ev) => mine.test(ev) ? { state: "met", note: "" }
+    : theirs.test(ev) ? { state: "conflict", note: `${got} membrane stated, ${want} requested` } : { state: "unstated", note: `feed water (${want}) not stated` } }];
+} };
+const ureaFormSpec: Spec = { id: "urea-form", read: (q) => {
+  const m = /\b(granular|prilled)\b/i.exec(q);
+  if (!m) return [];
+  const want = m[1].toLowerCase(), alt = want === "granular" ? "prilled" : "granular";
+  return [{ blocking: true, check: (ev) => new RegExp(`\\b${want}\\b`, "i").test(ev) ? { state: "met", note: "" }
+    : new RegExp(`\\b${alt}\\b`, "i").test(ev) ? { state: "conflict", note: `${alt} urea stated, ${want} requested` } : { state: "unstated", note: `form (${want}) not stated` } }];
+} };
+// packing is a commercial condition: reported as a gap when not stated, it never changes the bucket
+const packingSpec: Spec = { id: "packing", read: (q) => {
+  if (!/\b(bagged|in bags|bags)\b/i.test(q)) return [];
+  return [{ blocking: false, check: (ev) => /\b(bag(s|ged)?|sacks?|\d+ ?kg)\b/i.test(ev) ? { state: "met", note: "" } : { state: "unstated", note: "packing (bagged) not stated" } }];
+} };
+
+const AUTOMOTIVE_FILTERS: Rule = { rx: /\b(oil filters?|air filters?|fuel filters?|cabin filters?|automotive|auto parts|car parts|spare parts for (cars|trucks|vehicles)|for (cars|trucks|vehicles|motorcycles))\b/i, label: "automotive filters, not RO water treatment", bucket: "incompatible" };
+// parts and accessories of a generating set, and a generating set the company runs for itself
+const GEN_PARTS = "(spare parts?|parts|accessor\\w*|components?|consumables|filters?|controllers?|control panels?|avrs?|canop(y|ies)|silencers?|mufflers?|radiators?|transfer switch\\w*|batter(y|ies)|fuel tanks?)";
+const GEN_NOUN = "(generators?|gensets?|generating sets?)";
+const GEN_ACCESSORY = `\\b${GEN_PARTS} (for|of|to suit)\\b[^;,]{0,40}\\b${GEN_NOUN}\\b|\\b${GEN_NOUN} ${GEN_PARTS}\\b`;
+const GEN_OWN_USE = `\\b(powered by|runs? on|running on|backed[- ]up by|backup (power )?from|equipped with|fitted with|our own|own[- ]use|on-?site)\\b[^;,]{0,40}\\b${GEN_NOUN}\\b`;
+// equipment, pretreatment and consumables around an RO membrane
+const RO_AROUND = "\\b(pre-?treatment|housings?|pressure vessels?|pumps?|valves?|skids?|racks?|antiscalants?|chemicals?|cleaners?|energy recovery( devices?)?|cartridges?|filters?|dosing( systems?)?|spare parts?|services?) (for|before|upstream of|ahead of)\\b[^;,.]{0,60}";
 // exact: the right product stated outright; strip: phrases removed before that test (in "maize flour" the word
 // maize names flour, not grain)
-type Family = { id: string; when: RegExp; need?: { rx: RegExp; gap: string }; exact?: RegExp; strip?: RegExp; rules: Rule[] };
+type Family = { id: string; when: RegExp; need?: { rx: RegExp; gap: string }; exact?: RegExp; strip?: RegExp; rules: Rule[]; specs?: Spec[] };
 // Curated product families from the observed failures (urea, maize, generators, steel coil, transformers, PE pipe).
 // "when" reads the query; rules read the supplier's evidence text. A rule fires only when the query does not ask
 // for that product itself (a search for "urea cream" keeps cream makers).
@@ -42,9 +174,10 @@ const FAMILIES: Family[] = [
     rules: [
       { rx: /\b(cream|lotion|moisturi[sz]\w*|cosmetic\w*|skin|derma\w*|ointment|emollient|hand care|foot care)\b/i, label: "cosmetic urea, not fertilizer", bucket: "incompatible" },
       { rx: /\b(peroxide|carbamide peroxide|whitening|teeth)\b/i, label: "urea peroxide compound, not fertilizer", bucket: "incompatible" },
+      { rx: /\b(pharma\w*|medical|medicinal|usp|ph\.? ?eur|bp grade|injection|infusion|diagnostic\w*|breath tests?|clinical|laborator\w*|reagents?|analytical grade)\b/i, label: "pharmaceutical, medical or laboratory urea, not fertilizer", bucket: "related" },
       { rx: /\b(urea[- ]formaldehyde|resins?|adhesives?|glue)\b/i, label: "urea resin or adhesive", bucket: "related" },
       { rx: /\b(adblue|def\b|diesel exhaust fluid)\b/i, label: "automotive urea solution", bucket: "related" },
-    ] },
+    ], specs: [ureaFormSpec, packingSpec] },
   { id: "grain", when: /\b(maize|corn|wheat|rice|barley|sorghum|millet)\b/i,
     exact: /\b(maize|corn|wheat|rice|barley|sorghum|millet)\b(?![\s-]+(flour|meal|starch|syrup|gluten|bran|oil|flakes|grits|snacks?|chips|feed|silage|noodles?|crackers?|cakes?|vinegar|wine|paper|husk|straw))/i,
     strip: /\b(maize|corn|wheat|rice|barley)[\s-]+(flour|meal|starch|syrup|gluten|bran|oil|flakes|grits|snacks?|chips|feed|silage|noodles?|crackers?|cakes?|vinegar|wine|paper|husk|straw)\b|\b(sweet ?corn|popcorn|corn ?flakes|atta|maida|semolina)\b/gi,
@@ -64,7 +197,12 @@ const FAMILIES: Family[] = [
       { rx: /\b(ultra ?purity|ultima|electronic grade|reagent|laborator\w*|labochemicals|analytical grade|ammonium hydroxide|ammonia solution)\b/i, label: "laboratory or electronic grade, not bulk ammonia", bucket: "related" },
     ] },
   { id: "generator", when: /\b(generators?|gensets?|generating sets?)\b/i,
+    exact: /\b(diesel|petrol|gasoline|natural gas|standby|silent|soundproof|power|electric(al)?) (generators?|gensets?|generating sets?)\b|\bgensets?\b|\bgenerating sets?\b/i,
+    strip: new RegExp(`${GEN_ACCESSORY}|${GEN_OWN_USE}`, "gi"),
+    specs: [powerSpec, frequencySpec, voltageSpec, standardSpec],
     rules: [
+      { rx: new RegExp(GEN_ACCESSORY, "i"), label: "generator accessories or spare parts, not generating sets", bucket: "related" },
+      { rx: new RegExp(GEN_OWN_USE, "i"), label: "runs a generator for its own use, does not sell them", bucket: "related" },
       { rx: /\b(reefer|clip-?on|refrigerated containers?|container gensets?|cold chain|freight|shipping line)\b/i, label: "genset named in a transport context, not sold", bucket: "related" },
       { rx: /\b(ozone|hydrogen|steam|nitrogen|oxygen|signal|function|smoke|foam|fog|wave|pulse|noise|vapou?r|ice) generators?\b/i, label: "a different kind of generator", bucket: "incompatible" },
       { rx: /\b(rental|hire)\b/i, label: "rental, not sale", bucket: "related" },
@@ -99,9 +237,21 @@ const FAMILIES: Family[] = [
     exact: /\b(reverse osmosis|ro (plants?|systems?|units?|membranes?)|desalinat\w*|water treatment (plants?|systems?))\b/i,
     need: { rx: /\b(reverse osmosis|ro (plants?|systems?|units?|membranes?)|desalinat\w*|water treatment|membranes?)\b/i, gap: "RO water treatment not stated" },
     rules: [
-      { rx: /\b(oil filters?|air filters?|fuel filters?|cabin filters?|automotive|auto parts|car parts|spare parts for (cars|trucks|vehicles)|for (cars|trucks|vehicles|motorcycles))\b/i, label: "automotive filters, not RO water treatment", bucket: "incompatible" },
+      AUTOMOTIVE_FILTERS,
       { rx: /\b(household|domestic|home|under[- ]sink|countertop|kitchen) (water )?(purifiers?|filters?|systems?)\b|\bwater dispensers?\b/i, label: "household purifier, not an industrial RO system", bucket: "related" },
       { rx: /\b(bottled water|mineral water|drinking water brand)\b/i, label: "bottled water producer", bucket: "related" },
+    ] },
+  // RO membrane elements (F09): the element is the product; another membrane process, the wrong element size, the
+  // wrong feed water and the equipment around the element are not
+  { id: "ro-membrane", when: /\b(swro|bwro)\b|\b(ro|reverse osmosis|desalinat\w*)\b.*\b(membranes?|elements?)\b|\b(membranes?|elements?)\b.*\b(ro|reverse osmosis|desalinat\w*)\b/i,
+    exact: /\b(swro|bwro|ro|reverse osmosis)\b[^;,.]{0,40}\b(membranes?|elements?)\b|\b(membranes?|elements?)\b[^;,.]{0,30}\b(swro|bwro|reverse osmosis)\b/i,
+    strip: new RegExp(RO_AROUND, "gi"),
+    need: { rx: /\b(membranes?|elements?)\b/i, gap: "membrane elements not stated" },
+    specs: [elementSizeSpec, feedWaterSpec, standardSpec],
+    rules: [
+      AUTOMOTIVE_FILTERS,
+      { rx: /\b(ultra-?filtration|micro-?filtration|nano-?filtration|uf|mf|nf|mbr)\b|\bhollow[- ]fib(er|re)\b/i, label: "a different membrane process (UF, MF or NF), not reverse osmosis", bucket: "related", record: true },
+      { rx: new RegExp(RO_AROUND, "i"), label: "equipment or pretreatment around the RO membrane, not the membrane element", bucket: "related" },
     ] },
   // maize color is a specification, not a synonym: a yellow-maize seller is not an exact fit for white maize
   { id: "white-maize", when: /\bwhite (maize|corn)\b/i, exact: /\bwhite (maize|corn)\b/i,
@@ -150,7 +300,7 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
     let clean = false, conflicted = "";
     for (const seg of segments(txt)) {
       if (!all(seg)) continue;
-      const bad = rules.find((r) => r.rx.test(seg));
+      const bad = rules.find((r) => !r.record && r.rx.test(seg));
       if (bad) { if (bad.bucket === "incompatible") conflicted = conflicted || "!" + bad.label; else conflicted = conflicted || bad.label; continue; }
       if (SERVICE_CTX.test(seg)) { conflicted = conflicted || "named in a service or fuel context, not sold"; continue; }
       clean = true;
@@ -195,8 +345,32 @@ export function classifyMatch(s: Supplier, conceptTerms: RegExp[][], conceptHs: 
   if (bucket === "supported" && /(?<!for |to |with )\b(epc|turnkey|ppa|installer|installation company)\b(?![\s-]+(contractors?|companies|clients|customers|partners))/i.test(own) && !/\b(manufactur\w*|produc(er|es|tion)|factory|maker|mills?|plant in)\b/i.test(own)) {
     bucket = "related"; conflicts.push("project execution role (installer or EPC)");
   }
+  // technical fit before ranking: what the request specifies must be stated by the company's own words or its
+  // contract items. Judged on the item that names the product (so "BWRO 8040; SWRO 4040" is not read as SWRO 8040);
+  // a requirement that item leaves open is looked for in the rest of the record.
+  const reqs = fams.flatMap((f) => (f.specs || []).flatMap((sp) => sp.read(query)));
+  let specGap = "";
+  if (reqs.length && (bucket === "supported" || bucket === "plausible")) {
+    const whole = `${own} ${award}`;
+    const run = (txt: string) => reqs.map((r) => r.check(txt));
+    const count = (rs: { state: SpecState }[], st: SpecState) => rs.filter((x) => x.state === st).length;
+    const wholeRes = run(whole);
+    const items = [own, award].flatMap((t) => t.split(/[;|\n]/)).filter((it) => it.trim().length > 2 && all(it))
+      .map((it) => run(it).map((x, i) => (x.state === "unstated" ? wholeRes[i] : x)))
+      .sort((a, b) => count(a, "conflict") - count(b, "conflict") || count(a, "unstated") - count(b, "unstated"));
+    const res = items[0] || wholeRes;
+    const bad: string[] = [];
+    res.forEach((x, i) => {
+      if (x.state === "conflict" && reqs[i].blocking) bad.push(x.note);
+      else if (x.state !== "met") { gaps.push(x.note); if (reqs[i].blocking && !specGap) specGap = x.note; }
+    });
+    if (bad.length) { bucket = "related"; conflicts.unshift(...bad); }
+    else if (specGap && bucket === "supported") bucket = "plausible";
+    else specGap = "";
+  }
   const role = s.td === "yes" || /trader|distributor/i.test(String(s.ty || "")) ? "trader" : /manufactur|producer|goods/i.test(String(s.ty || "")) ? "goods supplier" : "";
   const why = bucket === "supported" ? `Fits because its ${evidence} names ${n > 1 ? "the whole product in one item" : "the product"}`
+    : bucket === "plausible" && specGap ? `Possible: its ${evidence} names the product, but a requested specification is not evidenced (${specGap})`
     : bucket === "plausible" ? `Possible: evidence is ${evidence}`
     : bucket === "related" ? `Related, not an exact fit: ${conflicts[0] || "role differs"}`
     : `Not compatible: ${conflicts[0] || ""}`;
