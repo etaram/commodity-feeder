@@ -23,7 +23,7 @@ from .common import PRIVATE, log
 
 CACHE = PRIVATE / "winner_dossier.json"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; SinderLeads/1.0; +https://desk.sinder.pro)"}
-PER_RUN = 120
+PER_RUN = 250
 TTL_DAYS = 30
 ROLE = re.compile(r"^(info|sales|contact|contacts|enquir(y|ies)|inquir(y|ies)|procurement|purchas(e|ing)|supply|supplier|suppliers|tender|tenders|bid|bids|office|admin|mail|hq|headoffice|business|marketing|export|international|overseas|commercial|service|general|reception|pr|media|communications?)[\w.-]*@", re.I)
 COMPANY = re.compile(r"company|corporation|enterprise|group|construction|engineering|contractor|firm|business|manufacturer|conglomerate|state-owned|subsidiary|limited|holding", re.I)
@@ -119,13 +119,61 @@ def contacts(site):
     return emails[:4], phones[:3], page
 
 
-def enrich(rows):
+def index_sites(key):
+    """normalized supplier name -> website, from the encrypted supplier index built earlier in the same job."""
+    import base64, gzip
+    from .common import DATA
+    f = DATA / "web" / "suppliers.enc"
+    if not key or not f.exists():
+        return {}
+    try:
+        from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+        b = f.read_bytes()
+        rows = json.loads(gzip.decompress(AESGCM(base64.b64decode(key)).decrypt(b[:12], b[12:], None)))
+    except Exception as e:  # noqa: BLE001
+        log.warning("winner dossier: supplier index not read: %s", e)
+        return {}
+    out = {}
+    for r in rows:
+        web = (r.get("web") or "").strip()
+        if web and "." in web:
+            out.setdefault(" ".join(_norm(r.get("n"))), web if web.startswith("http") else "https://" + web)
+    log.info("winner dossier: %d suppliers with a website in the index", len(out))
+    return out
+
+
+def wikipedia_site(name):
+    """Wikipedia's search handles name variants better than Wikidata's; the page's Wikidata item gives P856."""
+    try:
+        s = requests.get("https://en.wikipedia.org/w/api.php", params={"action": "query", "list": "search", "srsearch": name[:80], "srlimit": 3, "format": "json"}, headers=UA, timeout=20).json()
+    except Exception:  # noqa: BLE001
+        return "", ""
+    for hit in s.get("query", {}).get("search", []):
+        if not _close(hit["title"], name):
+            continue
+        try:
+            p = requests.get("https://en.wikipedia.org/w/api.php", params={"action": "query", "prop": "pageprops", "titles": hit["title"], "format": "json"}, headers=UA, timeout=20).json()
+            qid = next(iter(p["query"]["pages"].values())).get("pageprops", {}).get("wikibase_item")
+            if not qid:
+                continue
+            e = requests.get("https://www.wikidata.org/w/api.php", params={"action": "wbgetentities", "ids": qid, "props": "claims", "format": "json"}, headers=UA, timeout=20).json()
+            for c in e["entities"][qid]["claims"].get("P856", []):
+                v = c["mainsnak"].get("datavalue", {}).get("value")
+                if v and v.startswith("http"):
+                    return v.rstrip("/"), qid
+        except Exception:  # noqa: BLE001
+            continue
+    return "", ""
+
+
+def enrich(rows, key=""):
     """Add ws/ce/cp/cs/wd to winner rows in place; looks up at most PER_RUN new or stale winners per run."""
     try:
         cache = json.load(open(CACHE, encoding="utf-8"))
     except (OSError, ValueError):
         cache = {}
     today = dt.date.today()
+    idx = index_sites(key)
     done = 0
     seen = set()
     for r in rows:   # rows come best first, so the lookups go to the best leads
@@ -135,11 +183,15 @@ def enrich(rows):
             continue
         seen.add(key)
         hit = cache.get(key)
-        fresh = hit and (today - dt.date.fromisoformat(hit["at"])).days < TTL_DAYS
+        fresh = hit and (hit.get("ws") or hit.get("v", 0) >= 2) and (today - dt.date.fromisoformat(hit["at"])).days < TTL_DAYS
         if not fresh and done < PER_RUN:
-            site, qid = wikidata_site(name)
+            site, qid = idx.get(key, ""), ""
+            if not site:
+                site, qid = wikidata_site(name)
+            if not site:
+                site, qid = wikipedia_site(name)
             em, ph, page = contacts(site) if site else ([], [], "")
-            hit = cache[key] = {"at": today.isoformat(), "ws": site, "wd": qid, "ce": em, "cp": ph, "cs": page}
+            hit = cache[key] = {"at": today.isoformat(), "v": 2, "ws": site, "wd": qid, "ce": em, "cp": ph, "cs": page, "via": "index" if site and site == idx.get(key) else ("wikidata" if site else "")}
             done += 1
             time.sleep(1.0)
     found = sum(1 for v in cache.values() if v.get("ws"))

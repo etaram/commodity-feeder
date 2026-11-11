@@ -169,11 +169,6 @@ def build():
 
 def main():
     out = build()
-    try:
-        from .winner_dossier import enrich
-        enrich(out)
-    except Exception as e:  # noqa: BLE001
-        log.warning("winner dossier skipped: %s", e)
     key = os.environ.get("WEB_INDEX_KEY", "")
     if not key:
         try:
@@ -183,6 +178,11 @@ def main():
             log.warning("winners key from sheet: %s", e)
     if not key:
         log.warning("winners: WEB_INDEX_KEY not set - nothing written"); return
+    try:
+        from .winner_dossier import enrich
+        enrich(out, key)
+    except Exception as e:  # noqa: BLE001
+        log.warning("winner dossier skipped: %s", e)
     if not out:
         log.warning("winners: no leads - previous file kept"); return
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
