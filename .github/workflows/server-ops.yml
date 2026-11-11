@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats]
         default: status
 permissions:
   contents: read

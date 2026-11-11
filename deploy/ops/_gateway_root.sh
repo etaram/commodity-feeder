@@ -17,7 +17,14 @@ $HOST {
 		respond 404
 	}
 	log {
-		output discard
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>uri delete
+				request>headers delete
+			}
+		}
 	}
 }
 CADDY
