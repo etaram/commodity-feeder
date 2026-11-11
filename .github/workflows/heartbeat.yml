@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   beat:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, sinder]
     timeout-minutes: 360
     steps:
       - env:

@@ -4,7 +4,7 @@ permissions:
   contents: write
 jobs:
   probe:
-    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4

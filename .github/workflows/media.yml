@@ -9,7 +9,7 @@ permissions:
   contents: write
 jobs:
   media:
-    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
