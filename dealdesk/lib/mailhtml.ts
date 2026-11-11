@@ -6,7 +6,8 @@ import { TEAM } from "@/lib/team";
 
 export const FIRM = "Sinder";
 // A short note about the firm, added under the signature of the first message to a new contact only (wording set by the owner).
-export const ABOUT = process.env.MAIL_ABOUT === "0" ? "" : (process.env.MAIL_ABOUT || "Sinder is an international strategic procurement firm, with procurement experience on projects worth more than USD 250 million.");
+// Off until the owner approves the wording: the note is sent only when MAIL_ABOUT holds the approved text.
+export const ABOUT = process.env.MAIL_ABOUT && process.env.MAIL_ABOUT !== "0" ? process.env.MAIL_ABOUT : "";
 export const TAGLINE = process.env.MAIL_TAGLINE || "Everything you need";
 // Brand colours of the logo (public/brand): navy and gold.
 const INK = "#1c2433", GREEN = "#172b4d", BRASS = "#b8902e", MUTED = "#526175", RULE = "#e2e5ea";
