@@ -2,7 +2,8 @@
 // A mandate is the owner's written permission for one conversation: one counterparty, one verified address, one
 // channel, one purpose, with boundaries. decideSend is plain code: no model takes part in the authorization. The
 // drafting step may extract facts from a message, but facts can only make the decision stricter, never looser.
-// Nothing here sends anything and nothing is wired to dealagent.ts or the outbox yet (see
+// Nothing here sends anything. lib/sendguard.ts calls decideSend in the default mode (conversation mode OFF) only to
+// assert that a message carries an owner approval; mandates themselves are not wired to dealagent.ts or the outbox yet (see
 // docs/release-2026-11-13/CONVERSATION_MANDATES.md). Default: conversation mode OFF, every message needs approval.
 import { createHash } from "crypto";
 

@@ -17,7 +17,8 @@ import { cashCheck, econInputs, econTitle } from "@/lib/dealstate";
 import { clean, readDeal, saveRecord, type Kind } from "@/lib/deal";
 import { logActivity } from "@/lib/activity";
 import { DEFAULT_WS } from "@/lib/auth";
-import { mailReady, sendMail } from "@/lib/mailer";
+import { mailReady } from "@/lib/mailer";
+import { guardedSend, sheetsGuardDeps, type GuardResult } from "@/lib/sendguard";
 import { claim } from "@/lib/claims";
 import { dealUrl, richText, supplierUrl, tenderUrl } from "@/lib/links";
 import { member, teamBrief } from "@/lib/team";
@@ -296,11 +297,17 @@ async function stepLocked(io: Io, id: string, budgetMs: number): Promise<boolean
 
 // ---- approvals ---------------------------------------------------------------------------------------------
 const STUCK_MS = 10 * 60_000;
-const label = (st: string, he: boolean) => (he ? ({ sent: "נשלחה", rejected: "נדחתה", send_failed: "לא נשלחה (נמסרה לך לשליחה ידנית)", sending: "בשליחה", needs_review: "ממתינה לבדיקה שלך", approved: "אושרה" } as Record<string, string>)[st] || st : st);
+const label = (st: string, he: boolean) => (he ? ({ sent: "נשלחה", rejected: "נדחתה", send_failed: "לא נשלחה (נמסרה לך לשליחה ידנית)", sending: "בשליחה", needs_review: "ממתינה לבדיקה שלך", approved: "אושרה",
+  delivery_unknown: "לא ידוע אם נשלחה, ממתינה לבדיקה שלך", blocked: "נחסמה: הנמען ביקש לא לקבל פניות" } as Record<string, string>)[st] || st : st);
+// states in which the owner, and only the owner, may ask for another attempt (the "Send again" button, ag:re)
+const OPEN_AGAIN = ["needs_review", "delivery_unknown", "send_failed"];
 
-/** The owner's decision on one proposed message. States: pending → sending → sent | send_failed, or pending → rejected.
- *  A message is sent at most once: the decision is claimed first (a double press or a retry finds it claimed), and a
- *  send that never reported back (the call died mid-way) becomes needs_review, never a silent second send. */
+/** The owner's decision on one proposed message. States: pending → sending → sent | send_failed | delivery_unknown, or
+ *  pending → rejected, or → blocked (the recipient opted out). Every send goes through lib/sendguard.ts (emergency
+ *  stop, opt-out list, idempotency key, reservation before the mailer). A message is sent at most once: the decision is
+ *  claimed first (a double press or a retry finds it claimed), the key is built from the approval id (so even a lost
+ *  status row cannot cause a second send), and a send that may have left (a timeout after the message data started, or
+ *  a call that died mid-way) becomes delivery_unknown / needs_review, never a silent second send. */
 export async function decide(io: Io, chat: string, approvalId: string, ok: boolean, again = false) {
   const g = (await readRanges(ENGINE_SHEET, [`'${APPROVALS}'!A2:F5000`]).catch(() => null))?.[0] || [];
   const mine = g.filter((x) => x[0] === approvalId);
@@ -315,9 +322,10 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
     await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "needs_review", first[5]]);
     st = "needs_review";
   }
-  if (st === "needs_review" && again) st = "pending";
-  if (st === "needs_review") return io.send(chat, he ? `השליחה אל ${esc(m.to_name)} לא דיווחה אם הסתיימה. בדוק בתיקיית "נשלח" ב-Zoho. אם המייל לא שם, אפשר לשלוח שוב.` : `The send to ${esc(m.to_name)} never reported back. Check the Sent folder in Zoho; if it is not there, send again.`,
-    { reply_markup: { inline_keyboard: [[{ text: he ? "שלח שוב" : "Send again", callback_data: `ag:re:${approvalId}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${approvalId}` }]] } });
+  const unknown = st === "needs_review" || st === "delivery_unknown";
+  // Send again and Reject are the owner's own decisions on a message that did not (or may not have) left
+  if (OPEN_AGAIN.includes(st) && (again || !ok)) st = "pending";
+  if (st === "needs_review" || st === "delivery_unknown") return io.send(chat, unknownText(he, m), againButtons(he, approvalId));
   if (st !== "pending") return io.send(chat, he ? `כבר טופל: ${label(st, true)}.` : `Already handled: ${st}.`);
   const lock = await claim(`appr:${approvalId}`, STUCK_MS);
   if (!lock.ok) return io.send(chat, he ? "ההחלטה על הפנייה הזו כבר בטיפול." : "This message is already being handled.");
@@ -325,21 +333,43 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
     if (!ok) { await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "rejected", first[5]]); return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`); }
     const ready = mailReady() && !!m.to_email;
     if (ready) await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "sending", first[5]]);
-    const res = ready ? await sendMail({ to: m.to_email, subject: m.subject || "", text: m.body || "" }) : { ok: false as const, error: m.to_email ? "mailbox not configured" : "no recipient address" };
-    await appendRow(APPROVALS, [approvalId, row[1], chat, now(), res.ok ? "sent" : "send_failed", JSON.stringify({ ...m, mail_id: res.ok ? res.id : "", error: res.ok ? "" : res.error })]);
-    if (run) {
-      // the supplier moves to contacted when the request actually left; a failed send leaves it a candidate
+    // The idempotency key is the approval id. Only the owner's "Send again", pressed after a send whose delivery is
+    // unknown, opens a new key: each such state in the history adds one, so a double press on Send again is one send.
+    const round = mine.filter((x) => x[4] === "needs_review" || x[4] === "delivery_unknown").length + (unknown && row[4] === "sending" ? 1 : 0);
+    const res: GuardResult = !m.to_email ? { outcome: "send_failed", reason: "", message: "", id: "", error: "no recipient address", stage: "address", prior: "" }
+      // without a connected mailbox nothing is sent, but the checks still run: an opted-out recipient is not handed over for manual sending either
+      : await guardedSend(sheetsGuardDeps(ready ? {} : { mailer: async () => ({ ok: false, error: "mailbox not configured", stage: "config" }) }), {
+        workspace: run?.ws || DEFAULT_WS, to: String(m.to_email), subject: m.subject || "", text: m.body || "", idempotency_key: `approval:${approvalId}${round ? `:again${round}` : ""}`,
+        approved_by: run?.email || `telegram:${chat}`, approval_ref: `${APPROVALS}:${approvalId}`, context: `deal agent run ${row[1]}` });
+    const sent = res.outcome === "sent" || (res.reason === "duplicate" && res.prior === "sent");
+    // refused by a check that the owner can clear (emergency stop, lists unreadable): the approval stays open for another press
+    const reopen = res.reason === "kill_switch" || res.reason === "checks_unavailable";
+    const status = sent ? "sent" : res.outcome === "delivery_unknown" || res.reason === "duplicate" ? "delivery_unknown" : res.reason === "opted_out" ? "blocked" : reopen ? "pending" : "send_failed";
+    if (status !== "pending" || ready) await appendRow(APPROVALS, [approvalId, row[1], chat, now(), status, JSON.stringify({ ...m, mail_id: res.id, error: sent ? "" : res.error || res.message })]);
+    if (run && !reopen && res.reason !== "opted_out") {
+      // the supplier moves to contacted when the request actually left; a failed or unconfirmed send leaves it a candidate
       const cur = (await readDeal(run.deal_id, run.ws).catch(() => ({ records: [] as { kind: string; record_id: string; version: number; status: string }[] }))).records;
       const prev = cur.filter((x) => x.kind === "party" && x.record_id === "P" + approvalId).sort((x, y) => y.version - x.version)[0];
-      const status = res.ok ? "contacted" : (prev?.status || "candidate");
-      await saveRecord(run.deal_id, "party", "P" + approvalId, (prev?.version || 0) + 1, status, { role: "supplier", name: m.to_name || "-", email: m.to_email || "", status,
-        note: `RFQ ${res.ok ? "sent" : "approved, not sent"} ${now().slice(0, 10)}`, source: "deal agent" }, run.email, "approved by the owner", run.ws).catch(() => {});  // not AGENT_NOTE: the owner vetted this address
+      const pst = sent ? "contacted" : (prev?.status || "candidate");
+      await saveRecord(run.deal_id, "party", "P" + approvalId, (prev?.version || 0) + 1, pst, { role: "supplier", name: m.to_name || "-", email: m.to_email || "", status: pst,
+        note: `RFQ ${sent ? "sent" : status === "delivery_unknown" ? "approved, delivery not confirmed" : "approved, not sent"} ${now().slice(0, 10)}`, source: "deal agent" }, run.email, "approved by the owner", run.ws).catch(() => {});  // not AGENT_NOTE: the owner vetted this address
     }
-    if (res.ok) return io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
-    return io.send(chat, (he ? `אושרה, אבל לא נשלחה (${esc(res.error)}). הנה ההודעה לשליחה ידנית${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved but not sent (${esc(res.error)}). Here is the message to send yourself${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
-      + `\n\n<b>${esc(m.subject)}</b>\n<pre>${esc(m.body)}</pre>`);
+    if (res.outcome === "sent") return io.send(chat, he ? `נשלח אל ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; מהתיבה ${esc(process.env.ZOHO_SMTP_USER || "")}. תשובה תגיע לתיבה שלך.` : `Sent to ${esc(m.to_name)} &lt;${esc(m.to_email)}&gt; from ${esc(process.env.ZOHO_SMTP_USER || "")}. A reply will reach your mailbox.`);
+    if (sent) return io.send(chat, he ? `הפנייה אל ${esc(m.to_name)} כבר נשלחה קודם. היא לא נשלחה שוב.` : `The message to ${esc(m.to_name)} was already sent earlier. It was not sent again.`);
+    if (status === "delivery_unknown") return io.send(chat, unknownText(he, m), againButtons(he, approvalId));
+    if (status === "blocked") return io.send(chat, he ? `לא נשלח: ${esc(m.to_email)} נמצא ברשימת מי שביקשו לא לקבל פניות (הכתובת או כל הדומיין). הפנייה נחסמה, ואין לשלוח אותה גם ידנית.` : `Not sent: ${esc(m.to_email)} is on the opt-out list (the address or its whole domain). The message is blocked; do not send it manually either.`);
+    if (res.reason === "kill_switch") return io.send(chat, he ? "לא נשלח: עצירת החירום של השליחה מופעלת. שום דבר לא יצא. אחרי שתבטל אותה בפאנל, לחץ שוב על אישור." : "Not sent: the emergency stop for sending is engaged. Nothing left the system. Clear it in the panel, then press Approve again.");
+    if (reopen) return io.send(chat, he ? `לא נשלח: לא ניתן היה לקרוא את בדיקות הבטיחות (עצירת חירום, רשימת הסרה). שום דבר לא יצא. נסה שוב בעוד כמה דקות. (${esc(res.error)})` : `Not sent: the safety checks (emergency stop, opt-out list) could not be read. Nothing left the system. Try again in a few minutes. (${esc(res.error)})`);
+    // a definite failure before any message content left: retrying or sending it by hand cannot create a duplicate
+    return io.send(chat, (he ? `אושרה, אבל לא נשלחה (${esc(res.error || res.message)}). שום דבר לא יצא מהמערכת. הנה ההודעה לשליחה ידנית${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved but not sent (${esc(res.error || res.message)}). Nothing left the system. Here is the message to send yourself${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
+      + `\n\n<b>${esc(m.subject)}</b>\n<pre>${esc(m.body)}</pre>`, ready ? { reply_markup: { inline_keyboard: [[{ text: he ? "נסה לשלוח שוב" : "Try sending again", callback_data: `ag:re:${approvalId}` }]] } } : undefined);
   } finally { await lock.release(); }
 }
+const againButtons = (he: boolean, id: string) => ({ reply_markup: { inline_keyboard: [[{ text: he ? "שלח שוב" : "Send again", callback_data: `ag:re:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }]] } });
+// delivery unknown: never "send it yourself" before the Sent folder was checked, that is how a duplicate happens
+const unknownText = (he: boolean, m: { to_name?: string }) => (he
+  ? `לא ידוע אם הפנייה אל ${esc(m.to_name)} נשלחה: השליחה נקטעה או לא דיווחה אם הסתיימה, וייתכן שהמייל יצא. אל תשלח אותה ידנית לפני בדיקה. בדוק קודם בתיקיית "נשלח" ב-Zoho. רק אם המייל לא שם, לחץ "שלח שוב".`
+  : `It is not known whether the message to ${esc(m.to_name)} was sent: the send was cut off or never reported back, and the mail may have left. Do not send it manually yet. First check the Sent folder in Zoho; only if it is not there, press "Send again".`);
 
 /** A run that stopped on an error goes on from where it stopped (the owner's /retry). */
 export async function retryLatest(io: Io, chat: string) {
