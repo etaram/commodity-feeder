@@ -36,11 +36,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-STATE_TABS = ["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks",
-              "Tender Projects", "Tender Watches", "Coverage Cache", "Briefs",
-              "Users", "Profiles", "Push", "Workspace strategy", "Client Dossiers", "Prospects", "My Network",
-              "Assertions", "Decisions", "Outbox",
-              "Missions"]
+STATE_TABS = ["Activity", "App Log", "AI Usage", "Telegram Chat", "Telegram", "Agent Runs", "Agent Approvals", "Locks", "Tender Projects", "Tender Watches", "Coverage Cache", "Briefs", "Users", "Profiles", "Push", "Workspace strategy", "Client Dossiers", "Prospects", "My Network", "Assertions", "Decisions", "Outbox", "Missions", "Send Guard"]
 ENGINE_TABS = ["Deal Records", "Panel Jobs", "Pursuits", "Check queue", "Web Suppliers",
                "Campaigns", "Campaign Accounts", "Suppression", "Outreach Log", "LinkedIn Tasks"]
 INPUT_TABS = ["Pipeline", "Contacts", "Projects", "Project Tasks", "Partners", "Profile", "Assumptions", "Briefing Sources"]
