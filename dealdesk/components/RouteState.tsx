@@ -1,8 +1,10 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 
-// Route state and missions for one deal. Reads /api/deal/route-state and /api/missions; the only write is "Create
-// mission", which records a mission and starts nothing. A value the deal file does not hold is shown as "unknown".
+// Route state, missions and feedback for one deal. Reads /api/deal/route-state and /api/missions. Writes: "Create
+// mission" (records a mission, starts nothing), "Run next step" (POST /api/missions/ID/step: one step per press, no
+// loop, no model, nothing sent) and the feedback reason (POST /api/deal/feedback). A value the deal file does not
+// hold is shown as "unknown".
 type Blocker = { gate: string; text: string; decisive: boolean };
 type Missing = { gate: string; question: string; why: string; cost: number };
 type Task = { kind: string; question: string; why: string } | null;
@@ -13,9 +15,18 @@ type View = {
   next_task: Task;
   supplier: { supplier: string | null; basis: string };
   contact: { needs_owner_approval: boolean; conversation_mode: boolean };
+  sanctions?: { status: string; label: string; candidates: { name: string }[] };
   not_in_deal_file: string[];
 };
-type MissionRow = { id: string; type: string; goal: string; status: string; cost_budget_usd: number; spent_usd: number; tasks: number; next_decision: string; created_at: string };
+type TaskRow = { key: string; step: string; role: string; persona: string; status: string; attempt: number; review: string; summary: string; sources: string[]; open_questions: string[]; last_error: string };
+type MissionRow = { id: string; type: string; goal: string; status: string; cost_budget_usd: number; spent_usd: number; tasks: number; next_decision: string; created_at: string; task_list?: TaskRow[] };
+// the fixed reason list of lib/outcomes.ts (REASONS); the server refuses anything else
+const REASONS: [string, string][] = [["right_product", "Right product"], ["wrong_spec", "Wrong specification"], ["already_purchased", "Already purchased"], ["timing", "Timing"], ["no_contact", "No contact"],
+  ["uncompetitive_price", "Uncompetitive price"], ["logistics", "Logistics"], ["financing", "Financing"], ["regulatory", "Regulatory"], ["poor_signal", "Poor signal"], ["not_interested", "Not interested"], ["other", "Other"]];
+const TASK_STATUS: Record<string, string> = { queued: "Queued", running: "Running", completed: "Completed", failed: "Failed", cancelled: "Cancelled" };
+const TASK_CHIP: Record<string, string> = { queued: "bg-paper text-muted", running: "bg-watchbg text-watch", completed: "bg-gobg text-go", failed: "bg-nobg text-no", cancelled: "bg-paper text-muted" };
+const SANCTIONS_STATUS: Record<string, string> = { NOT_CHECKED: "Not checked", CHECKED_NO_ISSUE: "Checked, no candidate match", FAILED: "Alert: candidate match", STALE: "Not checked (list out of date)", VERIFIED: "Verified by a qualified person" };
+const TERMINAL = ["completed", "failed", "cancelled"];
 
 const STATE_LABEL: Record<string, string> = { INELIGIBLE: "Ineligible", MISMATCH: "Mismatch", NEEDS_EVIDENCE: "Needs evidence", RESEARCH: "Research", MONITOR: "Monitor",
   READY_FOR_OWNER_REVIEW: "Ready for owner review", READY_FOR_AUTHORIZED_CONTACT: "Ready for authorized contact", ACTIVE: "Active", STOPPED: "Stopped" };
@@ -105,6 +116,9 @@ function RouteCard({ id }: { id: string }) {
       <p className="mt-3 text-sm">{v.contact.needs_owner_approval
         ? <><b>Contact needs owner approval.</b> Every outgoing message is approved one by one; conversation mode is off.</>
         : <b>The send policy could not be confirmed. Treat every message as needing owner approval.</b>}</p>
+      <p className="mt-1 text-sm">Sanctions screen: <b className={v.sanctions?.status === "FAILED" ? "text-no" : "text-ink"}>{SANCTIONS_STATUS[v.sanctions?.status || "NOT_CHECKED"] || "Not checked"}</b>
+        {v.sanctions?.label ? <span className="text-xs text-muted"> {label(v.sanctions.label)}.</span> : null}
+        <span className="text-xs text-muted"> A name screen is a lead to verify, never a clearance.</span></p>
       <p className="mt-1 text-xs text-muted">Built from this deal&apos;s saved records by fixed rules; no model is used and this is not a likelihood of winning. Not in the deal file, so unknown here: {v.not_in_deal_file.join(", ")}.</p>
     </section>
   );
@@ -119,6 +133,21 @@ function Missions({ id }: { id: string }) {
   const [budget, setBudget] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
+  const [stepping, setStepping] = useState("");
+  const [shown, setShown] = useState<Record<string, boolean>>({});
+
+  // One press runs one step and then stops. Nothing here calls it again by itself.
+  async function runStep(missionId: string) {
+    setStepping(missionId); setMsg("");
+    try {
+      const r = await fetch(`/api/missions/${encodeURIComponent(missionId)}/step`, { method: "POST" });
+      const j = await r.json().catch(() => ({}));
+      if (j.mission) { setRows((cur) => (cur || []).map((m) => (m.id === missionId ? (j.mission as MissionRow) : m))); setShown((x) => ({ ...x, [missionId]: true })); }
+      setMsg(r.status === 403 ? "View-only account: running a step needs the analyst role." : r.status === 401 ? "Sign in again to run a step."
+        : j.mission ? `${j.ran ? "Ran one step" : "No step ran"}: ${j.note || j.error || ""}` : j.error || "The step could not be run.");
+    } catch { setMsg("The step could not be run."); }
+    setStepping("");
+  }
 
   const load = useCallback(async () => {
     try {
@@ -151,7 +180,7 @@ function Missions({ id }: { id: string }) {
         <h2 className={H2}>Missions</h2>
         {!err && <button type="button" onClick={() => { setOpen(!open); setMsg(""); }} aria-expanded={open} className="rounded-md border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent hover:text-white">{open ? "Cancel" : "Create mission"}</button>}
       </div>
-      <p className="mt-1 text-xs text-muted">A mission records a goal and a cost budget for this deal. Creating one starts no task, calls no model and sends nothing.</p>
+      <p className="mt-1 text-xs text-muted">A mission records a goal and a cost budget for this deal. Creating one starts no task. &quot;Run next step&quot; runs one step by fixed rules: no model is called, nothing is sent, and a step that needs a person or an outside answer stops with its question.</p>
       {open && (
         <form onSubmit={create} className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-[12rem_1fr_9rem_auto] md:items-end">
           <label className="text-xs font-semibold text-muted">Type
@@ -178,7 +207,29 @@ function Missions({ id }: { id: string }) {
               <li key={m.id} className="py-2 text-sm">
                 <div className="font-semibold">{m.goal}</div>
                 <div className="text-xs text-muted">{MISSION_TYPE[m.type] || label(m.type)} · Status: <b className="text-ink">{MISSION_STATUS[m.status] || label(m.status)}</b> · {usd(m.spent_usd)} spent of {usd(m.cost_budget_usd)} · {m.tasks} {m.tasks === 1 ? "task" : "tasks"} · {m.created_at.slice(0, 10)} · {m.id}</div>
-                {m.next_decision && <div className="text-xs">Next decision: {m.next_decision}</div>}
+                {m.next_decision && <div className="mt-0.5 text-xs"><b>Next decision:</b> {m.next_decision}</div>}
+                <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                  {!TERMINAL.includes(m.status) && <button type="button" onClick={() => runStep(m.id)} disabled={!!stepping} className="rounded-md bg-accent px-3 py-1.5 text-xs font-bold text-white hover:bg-blue disabled:opacity-40">{stepping === m.id ? "Running one step..." : "Run next step"}</button>}
+                  {!!m.task_list?.length && <button type="button" onClick={() => setShown((x) => ({ ...x, [m.id]: !x[m.id] }))} aria-expanded={!!shown[m.id]} className="rounded-md border border-line px-3 py-1.5 text-xs font-semibold text-ink hover:bg-paper">{shown[m.id] ? "Hide tasks" : `Show tasks (${m.task_list.length})`}</button>}
+                </div>
+                {shown[m.id] && !!m.task_list?.length && (
+                  <ol className="mt-2 space-y-2 border-l-2 border-line pl-3">
+                    {m.task_list.map((t) => (
+                      <li key={t.key} className="text-xs">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-semibold">{label(t.step)}</span>
+                          <span className={`rounded-full px-2 py-0.5 font-bold ${TASK_CHIP[t.status] || "bg-paper text-muted"}`}>{TASK_STATUS[t.status] || label(t.status)}</span>
+                          <span className="text-muted">{t.persona}</span>
+                          {t.review && <span className="text-muted">Review: {t.review}</span>}
+                        </div>
+                        {t.summary && <p className="mt-0.5 text-sm">{t.summary}</p>}
+                        {!t.summary && t.last_error && <p className="mt-0.5 text-muted">Not accepted: {t.last_error}</p>}
+                        {t.open_questions.length > 0 && <p className="mt-0.5">Open: {t.open_questions.join(" · ")}</p>}
+                        {t.sources.length > 0 && <p className="mt-0.5 break-words text-muted">Sources: {t.sources.map((src, i) => <span key={i}>{i ? " · " : ""}{/^https?:\/\//.test(src) ? <a href={src} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">{src}</a> : src}</span>)}</p>}
+                      </li>
+                    ))}
+                  </ol>
+                )}
               </li>
             ))}
           </ul>
@@ -187,6 +238,40 @@ function Missions({ id }: { id: string }) {
   );
 }
 
+function Feedback({ id }: { id: string }) {
+  const [reason, setReason] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState("");
+  async function save(ev: React.FormEvent) {
+    ev.preventDefault();
+    if (!reason) { setMsg("Pick a reason."); return; }
+    setBusy(true); setMsg("");
+    try {
+      const r = await fetch("/api/deal/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ deal_id: id, reason }) });
+      const j = await r.json().catch(() => ({}));
+      setMsg(r.ok && j.ok ? "Feedback saved." : r.status === 403 ? "View-only account: feedback needs the analyst role." : r.status === 401 ? "Sign in again to save feedback." : j.error || "The feedback could not be saved.");
+      if (r.ok && j.ok) setReason("");
+    } catch { setMsg("The feedback could not be saved."); }
+    setBusy(false);
+  }
+  return (
+    <section className={CARD} aria-label="Feedback">
+      <h2 className={H2}>Feedback on this deal</h2>
+      <form onSubmit={save} className="mt-2 flex flex-wrap items-end gap-3">
+        <label className="text-xs font-semibold text-muted">Reason
+          <select value={reason} onChange={(x) => setReason(x.target.value)} className={`${INPUT} mt-1 block`}>
+            <option value="">Pick a reason</option>
+            {REASONS.map(([k, t]) => <option key={k} value={k}>{t}</option>)}
+          </select>
+        </label>
+        <button type="submit" disabled={busy || !reason} className="rounded-md border border-accent px-3 py-2 text-xs font-semibold text-accent hover:bg-accent hover:text-white disabled:opacity-40">{busy ? "Saving..." : "Save feedback"}</button>
+        {msg && <span className="text-sm" role="status">{msg}</span>}
+      </form>
+      <p className="mt-1 text-xs text-muted">Stored in the outcome record with your name and the time. It changes no deal record and no ranking.</p>
+    </section>
+  );
+}
+
 export default function RouteState({ id }: { id: string }) {
-  return <><RouteCard id={id} /><Missions id={id} /></>;
+  return <><RouteCard id={id} /><Missions id={id} /><Feedback id={id} /></>;
 }

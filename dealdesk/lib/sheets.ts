@@ -11,6 +11,8 @@ const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", 
   "Users", "Profiles", "Push", "Workspace strategy", "Client Dossiers", "Prospects", "My Network", "Assertions", "Decisions", "Outbox",
   // missions (lib/missionstore-sheets.ts): append-only rows, created hidden on the first append
   "Missions",
+  // outcome ledger (lib/outcomestore-sheets.ts): append-only rows, created hidden on the first append
+  "Outcomes",
   // idempotency keys of real e-mail sends (lib/sendguard.ts): written and read back around every send, so it must be fast
   "Send Guard"]);
 const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;

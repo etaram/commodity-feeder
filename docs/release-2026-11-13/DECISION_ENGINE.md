@@ -107,10 +107,11 @@ document hashes; this engine takes `source_family` as given and does not call it
 - No persistence of routes or evaluations: the route state is computed on each read and not stored.
 - One route per deal only (see "Wired"); several routes for one demand are not built or ranked in the product.
 - No calibrated probabilities. No win likelihood and no expected value.
-- No source-family detection, no sanctions screening (the alert is an input flag), no cash-flow model beyond
-  one capital-need figure, no currency conversion, no multi-supplier comparison inside one route.
+- No source-family detection, no cash-flow model beyond one capital-need figure, no currency conversion, no
+  multi-supplier comparison inside one route. The engine itself does no sanctions screening: the alert is an
+  input flag, set by the caller from a name screen (see "Wired").
 
-## Wired (11 Nov 2026, branch release/wire)
+## Wired (11 Nov 2026, branches release/wire and release/runner)
 
 Connected:
 
@@ -149,19 +150,114 @@ How a deal file becomes a route (anything not listed is null or "unknown"):
 | engagement | `in_contact` when the chosen supplier's party status is contacted, replied, quoted or selected |
 
 Never in a deal file, so always unknown to the card: capital need (so `profit_statement` is always "blocked"),
-demand visibility, required delivery date. `sanctions_alert` is always false because no screening result is
-stored on a deal: the card says sanctions are not screened here. It does not mean "screened and clear".
+demand visibility, required delivery date.
+
+### Sanctions screen into the route (release/runner)
+
+`lib/sanctions.ts` gained a structured name screen next to the existing text one (`sanctionsFacts`, unchanged in
+output): `screenWith(index, parties, now)` is pure, `screenParties(parties, now)` reads the daily index built by
+`leads/sanctions.py` and never throws. `routemap.dealParties()` lists who is screened: the buyer (deal party,
+else the notice's buyer), every live supplier, partner, finance and logistics party, and every quoting supplier.
+`GET /api/deal/route-state` runs the screen on each read and passes it to `routeFromDeal` as `ctx.sanctions`.
+
+| Screen result | Status | Route flag | The card says |
+|---------------|--------|-----------|---------------|
+| at least one candidate name match, any strength | `FAILED` | `sanctions_alert = true`, state STOPPED | "Alert: candidate match", qualified review required |
+| no candidate match, index not older than 3 days | `CHECKED_NO_ISSUE` | false | "checked, no candidate match on <date>", stated as not a clearance |
+| no candidate match in an index older than 3 days | `STALE` | false | not checked against current lists |
+| index unreadable (or no answer in 8 s), or no name to screen, or no screen passed in | `NOT_CHECKED` | false | "not checked" |
+
+`VERIFIED` is in the vocabulary and is never produced by code: only a qualified person's review could set it, and
+nothing records one yet. Name matching only (the same token rules as before): a hit is a lead to verify, never a
+verdict, and "no match" does not cover lists or aliases outside the index. On the route card the screen is
+computed on each read and not stored, so an alert there lasts as long as the match is in the index; inside a
+mission the recorded alert stays for the life of the mission (below).
+
+### Mission runner (release/runner)
+
+`lib/missionrun.ts` plans and runs a mission with existing code. No model is called and nothing is sent.
+
+- `planMission(mission, context)` returns the task list of a mission type: one task per step, each depending on
+  the one before it, idempotency key `<mission id>:<step>`, cost reservation 0 USD.
+
+| Type | Steps, in order (role) |
+|------|------------------------|
+| supply_winner | award verification (source_evidence), remaining procurement hypothesis (tender_project), supplier match (technical_sourcing), sanctions screen (logistics_compliance), economics (finance), route evaluation (commercial_strategy), independent review (red_team), owner decision |
+| win_tender | notice verification, requirements reading (tender_project), supplier match, sanctions screen, economics, route evaluation (`prime_bid`), independent review, owner decision |
+| client_bd | prospect verification, demand hypothesis, sanctions screen, economics, route evaluation (`client_bd`), independent review, owner decision |
+| strategic_signal | signal verification, demand hypothesis, supplier match, independent review, owner decision (no route, no sanctions screen) |
+
+- `runNext(missionId, deps)` runs exactly one step per call: reserve (0 USD), record the output, reconcile the
+  cost (0), review. An output is a list of claims, each with a source and a basis label (official-source-asserted,
+  deal-record, quote, assumption, computed, hypothesis, supplier-index, name-screening, ...), plus open questions.
+- What each step uses: the tender index entry with the deal's id and the awards index (`winners`, same id); the
+  deal records; `supplierSearch` with `noExpand` (classification by `lib/supmatch.ts`); `screenParties`;
+  `compareQuotes` rows and `cashCheck` (only when sale, cost, both payment days and the rate are all recorded);
+  `routeFromDeal` then `evaluateRoute`. Economics inputs that are missing stay null and become questions.
+- A step that cannot be done from those sources records nothing on its task and stops the mission with the
+  question: `needs_owner` (no notice for the deal id, awarded with no named winner, no requirement on file for a
+  tender, no product title, a product title not in Latin script, a prospect with no source) or
+  `waiting_on_external` (award not published yet, supplier index or deal file unreadable, sanctions index
+  unreadable or stale). "Run next step" on a stopped mission checks again; without the answer the same question
+  comes back and no attempt is used.
+- A hypothesis step always says "not confirmed demand".
+- Sanctions: a candidate match completes the screen task with the candidates and sets the mission to
+  `paused_on_risk` ("qualified review required"). `runNext` never resumes a paused mission. If a person resumes
+  it through the library, the route built later still carries the alert and evaluates to STOPPED.
+- Review: each completed task is checked at once by its reviewer role (red_team; red_team's own work by
+  source_evidence) with fixed assertions: every claim has a source, a claim with a number has a basis label from
+  the fixed list, a hypothesis says "not confirmed demand". A failed review sends the task back (three attempts,
+  as in `lib/mission.ts`) and sets `needs_owner` naming the claim. The independent review task runs the same
+  assertions over all outputs together, re-runs the gates on the stored route (the stated state may not be above,
+  or different from, what the gates give) and checks that a recorded sanctions candidate is on the route. If it
+  finds anything, the mission stops at `needs_owner` and no recommendation is made.
+- The last step writes the decision for the owner and leaves the mission at `needs_owner`. A mission run by this
+  runner never reaches `completed` by itself: the decision is the owner's.
+- Restart safety: a task left running is executed again and completed once; a task completed and not reviewed is
+  reviewed, not executed again; a completed task is never executed again.
+- `lib/mission.ts` gained `needOwner(ctx, workspace, id, question)`; nothing else in it changed.
+- `POST /api/missions/[id]/step` (analyst or admin; the audit session is refused in the route and by
+  `lib/auditscope.ts`) calls `runNext` once and returns the mission with its task list. `GET /api/missions` now
+  also returns each task's status, persona (`ROLE_PERSONAS`; "internal review" for the red team), output summary,
+  sources and open questions. The deal page shows them with a "Run next step" button. One press, one step: there
+  is no loop and no schedule.
+- Tests: `tests/missionrun.test.ts`, `tests/runner-api.test.ts`.
+
+### Outcome ledger (release/runner)
+
+- `lib/outcomestore-sheets.ts`: the ledger of `lib/outcomes.ts` on the tab "Outcomes" (append-only; columns at,
+  workspace, case_id, route_id, type, proof, data JSON). "Outcomes" is in `STATE_TABS`. Created hidden on the first
+  append. Tests: `tests/outcomestore.test.ts`.
+- Events written from real actions (`lib/outcomelog.ts`): when the owner approves a message in the deal agent and
+  `lib/sendguard.ts` reports it sent, `rfq_authorized` (proof: the approval id) and `rfq_sent` (proof: the mailer's
+  message id); when the first version of a quote record is saved on a deal (deal API or the agent's record tool),
+  `quote_received` (proof: the record id and its stated source). The deal id is the case id and the route id.
+  The approval logic of `lib/dealagent.ts` is unchanged; the ledger call comes after the status row, the party
+  record and the owner's confirmation.
+- `POST /api/deal/feedback {deal_id, reason}` (analyst or admin) stores a `feedback` event with a reason from the
+  fixed list. Feedback is a new event type outside the funnel: it never changes a case's stage or label. The deal
+  page has a small "Feedback on this deal" control.
+- A ledger write that fails or takes longer than 6 seconds is logged and dropped; it never blocks a send or a
+  save. The feedback API is the one exception that reports the failure (503), because storing is all it does.
 
 Not connected:
 
-- No mission task is added, reserved, run or reviewed anywhere in the product. No model call. Creating a mission
-  writes one row and one activity-log line.
+- No mission step runs by itself: no loop, no cron. A step runs only when a person presses "Run next step".
+  No model call anywhere in the runner. Creating a mission writes one row and one activity-log line.
+- No API or screen to resume a mission paused on a risk, to record the owner's decision, to cancel a mission or
+  to raise its budget. A mission whose independent review failed, or whose inputs changed after a step
+  completed, is not re-run: completed steps are never executed again, so a new mission is needed.
+- The tender documents are not read (requirements come from the deal's requirement records), the winner is not
+  contacted, and no supplier capability is verified: those need a model, a person or a counterparty.
+- No screen or report reads the outcome ledger yet, nothing is trained or ranked on it, and `rfq_responded` and
+  later stages are not recorded by any action.
 - `mandate.decideSend` is not part of any sending path. `lib/dealagent.ts`, the outbox and per-message approval
   are unchanged. `routemap.contactPolicy()` calls `decideSend` with no mandate and conversation mode off, only to
   print "Contact needs owner approval" on the card.
 - No mandate store on Sheets, no way to create or approve a conversation mandate in the product.
 - The route state is not shown in `panel.html`, Telegram or the daily brief, and does not gate any action.
-- The live sheet was not touched from this branch: whether a "Missions" tab already exists there is not checked.
+- The live sheet was not touched from these branches: whether a "Missions" or an "Outcomes" tab already exists
+  there is not checked, and the new routes were not exercised against live data.
 
 Mapping decisions that need the owner's confirmation:
 
@@ -172,3 +268,11 @@ Mapping decisions that need the owner's confirmation:
 - One past owner-approved message makes the mandate `per_message` for the whole deal.
 - A deal that is not in the tender index has no field for demand status and stays in RESEARCH unless its stage is
   won or lost.
+- Any name match of any strength, including a partial one, is a sanctions candidate: it stops the route and
+  pauses a mission. This will produce false alerts on common names; each needs a qualified person.
+- A sanctions index older than 3 days does not count as a check.
+- With no supplier on the deal file, a mission carries the first candidate of the index match into the route
+  (labelled "selected by nobody") and takes its match bucket as the technical fit.
+- The award of a notice is looked up in the awards index by the notice id only.
+- Every first-version quote record is logged as `quote_received`, including one the deal agent recorded from its
+  own research; the record's stated source is the only proof.

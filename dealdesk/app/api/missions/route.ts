@@ -3,15 +3,16 @@ import { gate } from "@/lib/gate";
 import { logActivity } from "@/lib/activity";
 import { createMission, MISSION_TYPES, type Mission, type MissionType } from "@/lib/mission";
 import { sheetsMissionStore } from "@/lib/missionstore-sheets";
+import { missionView } from "@/lib/missionview";
 
 export const dynamic = "force-dynamic";
 
-// Missions of the caller's workspace (lib/mission.ts on the "Missions" tab). This step records a mission and lists
-// missions; it adds no task, runs no task and calls no model. Analysts and admins only. The workspace and the
+// Missions of the caller's workspace (lib/mission.ts on the "Missions" tab). This route records a mission and lists
+// missions; it adds no task, runs no task and calls no model. One step at a time is run by POST /api/missions/ID/step. Analysts and admins only. The workspace and the
 // represented organisation come from the session, never from the request.
 const MAX_BUDGET_USD = 1000; // ceiling for one mission in this release; nothing spends it yet
-const summary = (m: Mission) => ({ id: m.id, type: m.type, goal: m.goal, deal_id: m.deal_id, status: m.status, cost_budget_usd: m.cost_budget_usd, spent_usd: m.spent_usd,
-  next_decision: m.next_decision, tasks: m.tasks.length, created_at: m.created_at, updated_at: m.updated_at });
+// tasks: the count, as before; task_list: each task's status, persona, output summary and sources (lib/missionview.ts)
+const summary = (m: Mission) => missionView(m);
 
 // GET [?deal_id=DEAL]: the workspace's missions, newest first.
 export async function GET(req: NextRequest) {
