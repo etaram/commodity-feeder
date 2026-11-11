@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status]
+        options: [status, harden-ssh, stack-up]
         default: status
 permissions:
   contents: read
