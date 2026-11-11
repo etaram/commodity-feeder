@@ -1,6 +1,7 @@
 import { anthropicHeaders } from "@/lib/anthropic";
 import { appendRow, appendRows, ENGINE_SHEET, lookupContact, readRanges } from "./sheets";
-import { listUsers } from "./users";
+import { listUsers, workspaceOf } from "./users";
+import { ownWorkspace } from "./scope";
 import { allTenders, searchTendersSmart, supplierSearch, getRange } from "./panel";
 import { routeOptions } from "./routes";
 import { biddersBasis } from "./verdict";
@@ -498,7 +499,7 @@ Facts: cite figures exactly as the tools returned them; never invent companies, 
           else if (u.name === "plays") out = await plays(c3, 5);
           else if (u.name === "prices") out = await prices(u.input.product || "", (u.input.origin || "").toUpperCase().slice(0, 3));
           else if (u.name === "suppliers") out = await suppliers(u.input.product || "", 6, he);
-          else if (u.name === "supplier_contact") out = JSON.stringify((await lookupContact(u.input.company || "", c3).catch(() => null)) || { note: "no contact on record" });
+          else if (u.name === "supplier_contact") out = JSON.stringify((ownWorkspace(await workspaceOf(link.email)) && await lookupContact(u.input.company || "", c3).catch(() => null)) || { note: "no contact on record" });
         } catch (e) { out = "error: " + String(e).slice(0, 120); }
         return { type: "tool_result", tool_use_id: u.id, content: out.replace(/<a href="([^"]+)">([^<]*)<\/a>/g, "$2 (open: $1)").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").slice(0, 6000) };
       }));

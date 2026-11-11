@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
   if (typeof prompt !== "string" || !prompt) return NextResponse.json({ ok: false }, { status: 400 });
   const input = prompt.slice(0, 20000);
   await logActivity(g.s, "ai_quick", input.replace(/\s+/g, " ").slice(0, 100), `${input.length} chars`);
-  const h = createHash("sha256").update(input).digest("hex");
+  // the key carries the workspace: a cached answer is only ever served inside the workspace that asked
+  const h = createHash("sha256").update(`${g.s.ws}\n${input}`).digest("hex");
   const hit = cache.get(h);
   if (hit && Date.now() - hit.at < 86400000) return NextResponse.json({ ok: true, text: hit.text, cached: true });
   const today = new Date().toISOString().slice(0, 10);

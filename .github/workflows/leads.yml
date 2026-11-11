@@ -9,6 +9,10 @@ on:
         description: "comma-separated steps to run (empty = all)"
         required: false
         default: ""
+      allow_shrink:
+        description: "1 = accept an empty or halved merged list (otherwise the merge fails and the run is red)"
+        required: false
+        default: ""
 permissions:
   contents: write
 concurrency:
@@ -22,6 +26,7 @@ jobs:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
       CHILE_TICKET: ${{ secrets.CHILE_TICKET }}
       ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.only || '' }}
+      LEADS_ALLOW_SHRINK: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_shrink || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -340,7 +345,9 @@ jobs:
         continue-on-error: true
       - name: health
         if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
-        run: set -o pipefail; python -m leads.health 2>&1 | tee -a data/leads/run.log
+        # health exits 1 when the merge failed (error_merge.txt): an empty or halved merge turns the run red here,
+        # after the remaining steps and before the commit, which still runs (always())
+        run: set -o pipefail; python -m leads.source_status 2>&1 | tee -a data/leads/run.log; python -m leads.health 2>&1 | tee -a data/leads/run.log
       - name: source quality (freshness, completeness, duplicates, expired)
         if: ${{ always() && (env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,')) }}
         run: python -m leads.source_quality 2>&1 | tail -1 | tee -a data/leads/run.log

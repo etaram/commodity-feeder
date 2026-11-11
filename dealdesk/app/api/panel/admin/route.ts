@@ -8,6 +8,8 @@ import { getSourceQuality, getSources } from "@/lib/data";
 import { intel } from "@/lib/intel";
 import { getRange } from "@/lib/panel";
 import { readAssertions } from "@/lib/assertionstore";
+import { visibleTo } from "@/lib/assertions";
+import { ownWorkspace } from "@/lib/scope";
 
 // The admin panel's data in one call: system health, data volumes and quality, matching measurements, verification
 // and assertion counts, model usage, recent warnings. Every part is read independently and fails on its own, so one
@@ -44,7 +46,7 @@ export async function GET() {
       const byDay = recent.reduce((m, r) => { const d = String(r[6]).slice(0, 10); m[d] = (m[d] || 0) + 1; return m; }, {} as Record<string, number>);
       return { total: v.length, by_label: by(3), by_method: by(7), last14_by_day: byDay };
     })),
-    safe(readAssertions().then((rows) => ({ total: rows.length, by_status: rows.reduce((m, r) => { m[r.status] = (m[r.status] || 0) + 1; return m; }, {} as Record<string, number>),
+    safe(readAssertions().then((all) => visibleTo(all, s.ws)).then((rows) => ({ total: rows.length, by_status: rows.reduce((m, r) => { m[r.status] = (m[r.status] || 0) + 1; return m; }, {} as Record<string, number>),
       by_property: rows.reduce((m, r) => { m[r.property] = (m[r.property] || 0) + 1; return m; }, {} as Record<string, number>) }))),
     safe(getSources()),
     safe(getSourceQuality()),
@@ -59,7 +61,8 @@ export async function GET() {
       }
       return { days, jobs: Object.entries(jobs).map(([job, a]) => ({ job, ...a, usd: Math.round(a.usd * 1000) / 1000, avg_ms: a.calls ? Math.round(a.ms / a.calls) : 0 })).sort((a, b) => b.usd - a.usd) };
     })),
-    safe(readRanges(ENGINE_SHEET, ["'App Log'!A1:H3000"]).then((g) => {
+    // the application log is one tab for every workspace (messages carry e-mails and targets): original workspace only
+    safe((ownWorkspace(s.ws) ? readRanges(ENGINE_SHEET, ["'App Log'!A1:H3000"]) : Promise.resolve([[]] as string[][][])).then((g) => {
       const v = (g?.[0] || []).filter((r) => r[1] === "error" || r[1] === "warn");
       // collapse repeats: same level, area and message counted once with the latest time
       const m = new Map<string, { time: string; level: string; area: string; message: string; detail: string; count: number }>();
@@ -83,6 +86,8 @@ export async function POST(req: Request) {
   const { s, res } = await gate("admin");
   if (!s) return res;
   const b = await req.json().catch(() => ({}));
+  // the backfill reads the original workspace's private 'Panel Jobs' tab
+  if (!ownWorkspace(s.ws)) return NextResponse.json({ ok: false, code: "forbidden", error: "Not available in this workspace" }, { status: 403 });
   if (b.action !== "backfill_research") return NextResponse.json({ ok: false, error: "unknown action" }, { status: 400 });
   const { backfillJobs } = await import("@/lib/researchmemory");
   return NextResponse.json({ ok: true, ...(await backfillJobs(500)) });

@@ -109,7 +109,9 @@ After that, on its own last line, write SUPPLIERS_JSON: followed by a JSON array
       try { const m = text.match(/\{[\s\S]*\}/); contacts = m ? JSON.parse(m[0]) : undefined; } catch { contacts = undefined; }
     }
     const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
-    if (sheetsEnabled()) {
+    // 'Panel Jobs' is the original workspace's private tab (panel key "jobs"): another workspace's research is kept
+    // only in its own research memory below, never in a tab the original workspace reads
+    if (sheetsEnabled() && canWriteOwnerTabs(session.ws)) {
       try {
         await appendRow("Panel Jobs", [id || "J" + Date.now().toString(36).toUpperCase(), stamp, type || "other", target_id || "", String(target || "").slice(0, 300),
           JSON.stringify(context || {}).slice(0, 4000), String(request || "").slice(0, 2000), "done", result.slice(0, 20000), sources[0]?.url || "", stamp, `web instant; ${session.email || ""}`]);

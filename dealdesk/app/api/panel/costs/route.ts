@@ -26,7 +26,8 @@ export async function POST(req: NextRequest) {
   // a tender not in the index (a project, a manual deal) can still be costed from what the panel sends
   const title = String(t?.t || b.title || "").slice(0, 400), country = String(t?.c || b.country || "").slice(0, 3).toUpperCase();
   if (!title || !country) return NextResponse.json({ ok: false, error: "title and country are required" }, { status: 400 });
-  const key = `${id || title}|${country}`;
+  // the key carries the workspace: an answer built from one workspace's deal (its title, its value) is never served to another
+  const key = `${auth.s.ws}|${id || title}|${country}`;
   const hit = cache.get(key);
   if (hit && Date.now() - hit.at < 7 * 86400e3) return NextResponse.json({ ok: true, ...hit.data, cached: true });
   await logActivity(auth.s, "tender_costs", id || title.slice(0, 80), country);

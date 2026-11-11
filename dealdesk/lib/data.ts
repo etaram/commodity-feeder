@@ -66,3 +66,26 @@ export async function getPriceChanges(): Promise<PriceData | null> {
     return r.ok ? await r.json() : null;
   } catch { return null; }
 }
+
+// Per-source status of the collectors (data/leads/source_status.json, written on every run by leads/source_status.py):
+// a failed, refused, throttled, empty, halved or stale source is listed as such and never as a success.
+export type SourceStatus = { source: string; status: string; rows: number; rows_last_good: number; last_good_at: string; last_run_at?: string; error_class?: string; warning?: string; cadence_h?: number; age_h?: number | null };
+export type SourceStatusFile = { generated: string; not_ok: number; sources: SourceStatus[]; merge?: Partial<SourceStatus> };
+export const SOURCE_STATUS_LABEL: Record<string, string> = {
+  OK: "OK", DEGRADED: "Degraded: empty or far fewer rows", STALE: "Stale: no good run within its schedule", DOWN: "Down: the collector failed",
+  DENIED: "Denied: the site refused access", RATE_LIMITED: "Rate limited: the site throttled us",
+};
+const STATUS_ORDER = ["DOWN", "DENIED", "RATE_LIMITED", "STALE", "DEGRADED", "OK"];
+/** Sources that are not OK first (worst first), then by name. An unknown status is treated as not OK. */
+export function sortSourceStatus(list: SourceStatus[]): SourceStatus[] {
+  const rank = (s: SourceStatus) => { const i = STATUS_ORDER.indexOf(s.status); return i < 0 ? 0 : i; };
+  return [...list].sort((a, b) => rank(a) - rank(b) || a.source.localeCompare(b.source));
+}
+export async function getSourceStatus(): Promise<SourceStatusFile | null> {
+  try {
+    const r = await fetch(`${RAW}/data/leads/source_status.json`, { next: { revalidate: 300 } });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return j && Array.isArray(j.sources) ? { generated: String(j.generated || ""), not_ok: Number(j.not_ok) || 0, sources: sortSourceStatus(j.sources), merge: j.merge || undefined } : null;
+  } catch { return null; }
+}
