@@ -31,10 +31,12 @@ class Fake:
         if self.script:
             return self.script.pop(0)
         user = payload["messages"][0]["content"]
-        ranks = [json.loads(line)["rank"] for line in user.splitlines() if line.startswith("{")]
-        items = [{"rank": r, "label": "relevant", "reason": "makes it"} for r in ranks]
-        if '"rank": 0' in user:
-            items.insert(0, {"rank": 0, "label": "goods", "reason": "buys gloves"})
+        # the prompt is blind: rows arrive as numbered items in a shuffled order, the word rank never appears
+        assert '"rank"' not in user
+        ranks = [json.loads(line)["item"] for line in user.splitlines() if line.startswith("{")]
+        items = [{"item": r, "label": "relevant", "reason": "makes it"} for r in ranks]
+        if '"item": 0' in user:
+            items.insert(0, {"item": 0, "label": "goods", "reason": "buys gloves"})
         return _ok(items)
 
 
@@ -63,7 +65,7 @@ def test_verdict_fields_never_reach_the_prompt(tmp_path, monkeypatch):
     for p in fake.payloads:
         for line in p["messages"][0]["content"].splitlines():
             if line.startswith("{"):
-                assert set(json.loads(line)) == set(el.ROW_FIELDS)
+                assert set(json.loads(line)) == (set(el.ROW_FIELDS) - {"rank"}) | {"item"}
     # the public output has counts only
     assert "Co Q01" not in said and "makes" not in said
 
@@ -126,7 +128,7 @@ def test_tender_gets_a_rank_zero_line(tmp_path, monkeypatch):
     labels, strata, bad = es.read_labels(str(tmp_path / "labels.jsonl"))
     assert strata == {"T02": "non_goods"} and len(labels) == 2 and not bad
     # a tender reply without the rank 0 object is invalid; a product request never asks for one
-    assert el.TENDER_ASK in fake.payloads[0]["messages"][0]["content"]
+    assert el.blind(el.TENDER_ASK) in fake.payloads[0]["messages"][0]["content"]
     with pytest.raises(ValueError):
         el.parse_reply(json.dumps(reply[1:]), [1, 2], True)
 
@@ -138,7 +140,7 @@ def test_more_than_forty_rows_are_sent_in_batches(tmp_path, monkeypatch):
     assert code == 0 and len(fake.payloads) == 2 and len(lines) == 46 and "2 API calls" in said
     first, second = (p["messages"][0]["content"] for p in fake.payloads)
     assert first.count("\n{") == 40 and second.count("\n{") == 5
-    assert el.TENDER_ASK in first and el.TENDER_ASK not in second and "already decided that it buys: goods" in second
+    assert el.blind(el.TENDER_ASK) in first and el.blind(el.TENDER_ASK) not in second and "already decided that it buys: goods" in second
 
 
 @pytest.mark.parametrize("name", ["verdicts.jsonl", "human_labels.jsonl", "summary.json", "other.jsonl"])
@@ -177,3 +179,22 @@ def test_a_refused_key_stops_the_run_without_retrying(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
     code, lines, fake, said = _run(tmp_path, [_row("Q01", 1), _row("Q02", 1)], fake=Fake([(401, {"error": {"type": "authentication_error"}})]))
     assert code == 1 and lines == [] and len(fake.payloads) == 1 and "HTTP 401" in said
+
+
+def test_order_is_shuffled_and_real_ranks_come_back(tmp_path, monkeypatch):
+    rows = [_row("Q09", r, evidence=f"ev-{r}") for r in range(1, 13)]
+    fake = Fake()
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    code, lines, _ = _run(tmp_path, rows, fake=fake)[:3]
+    user = fake.payloads[0]["messages"][0]["content"]
+    shown = [json.loads(l) for l in user.splitlines() if l.startswith("{")]
+    assert [x["item"] for x in shown] == list(range(1, 13))                      # numbered 1..n as shown
+    assert [x["evidence"] for x in shown] != [f"ev-{r}" for r in range(1, 13)]   # not in the matcher's order
+    assert code == 0 and sorted(x["rank"] for x in lines) == list(range(1, 13))  # every real rank labelled once
+
+
+def test_stops_at_the_spending_ceiling(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "k")
+    monkeypatch.setattr(el, "MAX_USD", 0.0)
+    code, lines, fake, said = _run(tmp_path, [_row("Q01", 1)])
+    assert code == 1 and lines == [] and "ceiling" in said and not fake.payloads

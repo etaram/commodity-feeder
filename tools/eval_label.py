@@ -26,6 +26,7 @@ EVAL_LABEL_MODEL (default: the web app's cheapest model, dealdesk/lib/anthropic.
 """
 import argparse
 import json
+import random
 import os
 import sys
 import time
@@ -86,6 +87,14 @@ TENDER_ASK = ('This is a tender request. Put one extra object first in the list:
 
 class Refused(Exception):
     """An input or output path the blind labeller must not touch."""
+
+
+GUIDE_BLIND = (GUIDE.replace('"rank": <the rank given>', '"item": <the item number given>').replace("Ignore rank and country.", "Ignore country.")
+               + "\nThe companies are numbered as items in a random order; the numbers carry no meaning.")
+# Spending ceiling approved by the owner (EVAL_LABEL_MAX_USD), counted at list prices per million tokens as in dealdesk/lib/anthropic.ts.
+MAX_USD = float(os.environ.get("EVAL_LABEL_MAX_USD") or 5)
+PRICE_IN, PRICE_OUT = float(os.environ.get("AI_PRICE_IN") or 1), float(os.environ.get("AI_PRICE_OUT") or 5)
+spent = lambda stats: (stats["input_tokens"] * PRICE_IN + stats["output_tokens"] * PRICE_OUT) / 1e6
 
 
 def checked_path(path, kind):
@@ -205,10 +214,12 @@ class Fatal(Exception):
 
 def call_model(prompt, ranks, ask_stratum, model, api_key, transport, stats, sleep=time.sleep):
     """One batch: up to TRIES attempts. Returns the validated list, or None when every attempt failed."""
-    payload = {"model": model, "max_tokens": 4096, "system": GUIDE, "messages": [{"role": "user", "content": prompt}]}
+    payload = {"model": model, "max_tokens": 4096, "system": GUIDE_BLIND, "messages": [{"role": "user", "content": prompt}]}
     for attempt in range(TRIES):
         if attempt:
             sleep(min(60, 5 * 3 ** (attempt - 1)))
+        if spent(stats) >= MAX_USD:   # the owner's spending ceiling: stop before the call that would pass it
+            raise Fatal(f"spending ceiling reached (about {spent(stats):.2f} of {MAX_USD:.2f} USD at list prices)")
         stats["api_calls"] += 1
         status, body = transport(payload, api_key)
         if status == 429 or status >= 500:
@@ -223,24 +234,34 @@ def call_model(prompt, ranks, ask_stratum, model, api_key, transport, stats, sle
         try:
             if body.get("stop_reason") == "max_tokens":
                 raise ValueError("reply cut off")
-            return parse_reply(text, ranks, ask_stratum)
+            return parse_reply(text.replace('"item"', '"rank"'), ranks, ask_stratum)
         except ValueError:
             stats["invalid_replies"] += 1
     return None
 
 
+def blind(text):
+    """The labeller never sees the word rank: the numbers it gets are arbitrary item numbers in a random order."""
+    return text.replace('"rank"', '"item"')
+
+
 def label_request(req, model, api_key, transport, stats, sleep=time.sleep):
-    """All batches of one request. Returns the label lines, or None if a batch failed (nothing is written then)."""
+    """All batches of one request. Returns the label lines, or None if a batch failed (nothing is written then).
+    Blind to the matcher's order: each batch is shuffled (same shuffle on every run, so a re-run is comparable) and the
+    rows are numbered 1..n as items; the real rank is put back only here, after the reply."""
     lines, stratum = [], ""
     for i in range(0, len(req["rows"]), BATCH):
-        batch = req["rows"][i:i + BATCH]
+        batch = list(req["rows"][i:i + BATCH])
+        random.Random(f"{req['set']}:{req['query_id']}:{i}").shuffle(batch)
+        real = {n: int(r["rank"]) for n, r in enumerate(batch, 1)}
+        shown = [{**r, "rank": n} for n, r in enumerate(batch, 1)]
         ask = req["tender"] and i == 0
-        got = call_model(build_prompt(req, batch, ask, stratum), [int(r["rank"]) for r in batch], ask, model, api_key, transport, stats, sleep)
+        got = call_model(blind(build_prompt(req, shown, ask, stratum)), list(real), ask, model, api_key, transport, stats, sleep)
         if got is None:
             return None
         if ask:
             stratum = got[0]["label"]
-        lines += [{"set": req["set"], "query_id": req["query_id"], **x} for x in got]
+        lines += [{"set": req["set"], "query_id": req["query_id"], **x, "rank": real.get(x["rank"], 0)} for x in got]
     return sorted(lines, key=lambda x: x["rank"])
 
 
@@ -314,7 +335,8 @@ def run(rows_path, tenders_path, out_path, limit=None, dry_run=False, transport=
     say(f"requests done: {n_req}; rows labelled: {n_rows}; requests failed after {TRIES} tries: {failed}")
     say("labels: " + (", ".join(f"{k} {dist[k]}" for k in list(LABELS) + [f"tender buys {s}" for s in STRATA] if dist[k]) or "none"))
     say(f"API calls: {stats['api_calls']} (retried for HTTP 429/5xx: {stats['http_retryable']}, invalid replies: {stats['invalid_replies']}); "
-        f"input tokens: {stats['input_tokens']}; output tokens: {stats['output_tokens']}")
+        f"input tokens: {stats['input_tokens']}; output tokens: {stats['output_tokens']}; "
+        f"about {spent(stats):.2f} USD at list prices (ceiling {MAX_USD:.2f})")
     return 1 if failed else 0
 
 

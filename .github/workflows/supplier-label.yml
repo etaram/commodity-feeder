@@ -48,6 +48,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           EVAL_LABEL_MODEL: ${{ inputs.model }}
+          EVAL_LABEL_MAX_USD: "5"   # the owner's approved ceiling for one run (11 Nov 2026)
         run: |
           set -o pipefail
           args=(--rows "$WORK/rows.jsonl" --out "$WORK/labels.jsonl")
