@@ -6,7 +6,7 @@ permissions:
   contents: write
 jobs:
   dump:
-    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4

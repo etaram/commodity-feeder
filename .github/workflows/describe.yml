@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   describe:
-    runs-on: ${{ vars.RUNNER_LABEL || 'ubuntu-latest' }}
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
     timeout-minutes: 58
     steps:
       - uses: actions/checkout@v4
