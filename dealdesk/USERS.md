@@ -42,7 +42,7 @@ Google accounts never get a password here; they are matched by verified email to
 ## Email on new access requests
 
 Every new request (password or Google) emails the admin through Resend.
-Vercel env: `RESEND_API_KEY` (required), `NOTIFY_EMAIL` (default: the owner), `NOTIFY_FROM` (optional).
+Vercel env: `RESEND_API_KEY` (required), `NOTIFY_EMAIL` (required: no address is kept in the code; when it is unset the notification is skipped and one event is logged), `NOTIFY_FROM` (optional).
 Without a verified domain in Resend, mail can only go to the email the Resend account was opened with.
 
 ## Activity log

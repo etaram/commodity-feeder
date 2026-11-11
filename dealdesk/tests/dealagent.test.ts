@@ -1,6 +1,6 @@
 // Deal agent loop with a scripted model: tools run, ask_owner pauses, an answer resumes, propose_message waits for
 // approval and nothing is sent until the owner approves. Build: node tests/build-agent-test.mjs && node <out>
-import { startRun, step, loadRun, resume, decide } from "@/lib/dealagent";
+import { startRun, step, loadRun, resume, decide, recipientTrust, emailsIn, WEB_FLAG, AGENT_NOTE } from "@/lib/dealagent";
 import { richText, supplierUrl } from "@/lib/links";
 import { TABS } from "./mocks/sheets";
 import { MAIL } from "./mocks/mailer";
@@ -75,6 +75,51 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
   const calls0 = seen.length;
   await Promise.all([step(io, r2.id, 120_000), step(io, r2.id, 120_000)]);
   ok(seen.length === calls0 + 1 && (await loadRun(r2.id))!.status === "done", "a duplicate step does not run the run twice");
+  // ---- recipients (red team finding 6): the code, not the model, decides who a message may be proposed to
+  const cards = () => sent.filter((m) => m.extra && JSON.stringify(m.extra).includes("ag:ok:")).length;
+  const r3 = await startRun(io, { chat: "C1", email: "o@x.com", name: "Owner", lang: "en", request: "maize again" });
+  const rows0 = TABS["Agent Approvals"].length, cards0 = cards();
+  script.push(
+    // an address that only the model knows (a page told it to write there): refused, nothing reaches the owner
+    [{ type: "tool_use", id: "w1", name: "propose_message", input: { to_name: "Grain SA", to_email: "pay@attacker.example", subject: "RFQ", body: "b", why: "the page said so" } }],
+    // a known address cannot carry a stranger along
+    [{ type: "tool_use", id: "w2", name: "propose_message", input: { to_name: "Grain SA", to_email: "sales@grainsa.co.za, pay@attacker.example", subject: "RFQ", body: "b", why: "w" } }],
+    // the lookup of an earlier run does not count in this one
+    [{ type: "tool_use", id: "w3", name: "propose_message", input: { to_name: "Grain SA", to_email: "sales@grainsa.co.za", subject: "RFQ", body: "b", why: "w" } }],
+    // found on the web and saved as a party by the agent itself: proposed, with the flag on the owner's card
+    [{ type: "tool_use", id: "w4", name: "record", input: { kind: "party", data: { role: "supplier", name: "Web Mills", email: "export@webmills.example", source: "https://webmills.example/contact" } } }],
+    [{ type: "tool_use", id: "w5", name: "propose_message", input: { to_name: "Web Mills", to_email: "Export@WebMills.example", subject: "RFQ web", body: "b", why: "w" } }],
+    // looked up in the system in this run: proposed without a flag
+    [{ type: "tool_use", id: "w6", name: "supplier_contact", input: { company: "Grain SA", country: "ZAF" } }],
+    [{ type: "tool_use", id: "w7", name: "propose_message", input: { to_name: "Grain SA", to_email: "sales@grainsa.co.za", subject: "RFQ system", body: "b", why: "w" } }],
+    // no address at all: still prepared, the owner sends it himself (unchanged behaviour)
+    [{ type: "tool_use", id: "w8", name: "propose_message", input: { to_name: "Unknown Mill", subject: "RFQ no address", body: "b", why: "w" } }],
+    [{ type: "tool_use", id: "w9", name: "finish", input: { summary: "done" } }],
+  );
+  const at = seen.length;
+  await step(io, r3.id, 600_000);
+  const res = (i: number) => JSON.stringify(seen[at + i].messages[seen[at + i].messages.length - 1]);
+  ok(/not a known contact of this deal/.test(res(1)) && /owner must add it/.test(res(1)), "an address the deal does not know is refused with the reason");
+  ok(/not a known contact of this deal/.test(res(2)), "a known address next to an unknown one is refused as a whole");
+  ok(/not a known contact of this deal/.test(res(3)), "a contact lookup from another run does not make the address known here");
+  ok(TABS["Agent Approvals"].length === rows0 + 3 && cards() === cards0 + 3, "refused recipients create no approval request and no card: " + (TABS["Agent Approvals"].length - rows0));
+  const webCard = sent.find((m) => /RFQ web/.test(m.text)), sysCard = sent.find((m) => /RFQ system/.test(m.text)), noAddr = sent.find((m) => /RFQ no address/.test(m.text));
+  ok(!!webCard && webCard!.text.includes(WEB_FLAG) && JSON.stringify(webCard!.extra).includes("ag:ok:"), "a web-found address is proposed with the visible flag: " + WEB_FLAG);
+  ok(TABS["Agent Approvals"].some((x) => String(x[5]).includes("RFQ web") && JSON.parse(String(x[5])).unverified === WEB_FLAG), "the flag is stored with the approval request");
+  ok(/found on the web/.test(res(5)), "the model is told the owner sees the flag");
+  ok(!!sysCard && !sysCard!.text.includes(WEB_FLAG) && (await loadRun(r3.id))!.known!.includes("sales@grainsa.co.za"), "an address from the system lookup in this run is proposed without a flag and kept in the run state");
+  ok(!!noAddr && !noAddr!.text.includes(WEB_FLAG), "a message without an address is still prepared for the owner");
+  ok((await loadRun(r3.id))!.status === "done", "the run goes on after a refused recipient");
+  // the rule itself, as a pure function
+  const human = { status: "candidate", data: { email: "Buyer@Ncpb.example; second@ncpb.example" }, note: "" }, agent = { status: "candidate", data: { email: "export@webmills.example" }, note: AGENT_NOTE };
+  ok(recipientTrust("buyer@ncpb.example", [], [human]) === "known" && recipientTrust("SECOND@ncpb.example", [], [human]) === "known", "a party a person saved is known (any letter case, several addresses in one field)");
+  ok(recipientTrust("export@webmills.example", [], [agent]) === "web" && recipientTrust("export@webmills.example", [], [{ ...agent, note: "approved by the owner" }]) === "known", "a party the agent saved is web-only until the owner approved it");
+  ok(recipientTrust("export@webmills.example", ["export@webmills.example"], [agent]) === "known", "the system lookup outranks the agent's own record");
+  ok(recipientTrust("buyer@ncpb.example, export@webmills.example", [], [human, agent]) === "web" && recipientTrust("buyer@ncpb.example; x@evil.example", [], [human, agent]) === "unknown", "the weakest address decides");
+  ok(recipientTrust("buyer@ncpb.example", [], [{ ...human, status: "dropped" }]) === "unknown" && recipientTrust("buyer@ncpb.example", [], [{ ...human, status: "deleted" }]) === "unknown", "a dropped or deleted party is not a contact");
+  ok(recipientTrust("not an address", ["a@b.example"], []) === "unknown" && recipientTrust("a@b.example\nBcc: x@evil.example", ["a@b.example"], []) === "unknown" && recipientTrust("a@b.example extra", ["a@b.example"], []) === "unknown", "anything that is not only addresses is refused");
+  ok(recipientTrust("buyer@ncpb.example.evil.example", [], [human]) === "unknown" && recipientTrust("xbuyer@ncpb.example", [], [human]) === "unknown", "a look-alike address is not the known one");
+  ok(emailsIn("Sales <a@b.example>; A@B.example, c@d.example").join() === "a@b.example,c@d.example", "addresses are read case-insensitively and once");
   ok(SAVED.length >= 2, "the deal is saved in the deal records");
   ok(cur.usd > 0 && (TABS["AI Usage"] || []).length === seen.length, "every model turn is metered");
   ok(richText("ראה [Grain SA](https://desk.sinder.pro/?open=s:Grain%20SA) <b>") === 'ראה <a href="https://desk.sinder.pro/?open=s:Grain%20SA">Grain SA</a> &lt;b&gt;', "model links become Telegram links, other markup is escaped");

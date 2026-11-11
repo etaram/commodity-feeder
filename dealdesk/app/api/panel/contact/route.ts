@@ -1,14 +1,13 @@
-import { auditSession } from "@/lib/gate";
+import { gate } from "@/lib/gate";
 import { logEvent } from "@/lib/log";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
 import { lookupContact } from "@/lib/sheets";
 import { cleanPhones } from "@/lib/phone";
 import { emailKind } from "@/lib/contactkind";
 import { readAssertions } from "@/lib/assertionstore";
 import { expire, normaliseEntityKey, resolve, visibleTo } from "@/lib/assertions";
 import { DEFAULT_WS } from "@/lib/auth";
+import { canRead } from "@/lib/scope";
 
 // What earlier manual research found for this company (assertions ledger, this workspace), used only to fill what
 // the supplier record lacks, and labelled as research so it never reads as the registry or the company's own record.
@@ -28,21 +27,25 @@ async function fromResearch(name: string, country: string, ws: string): Promise<
   return out;
 }
 
-// Contact details for one supplier, read from the private Supplier Universe sheet only when a signed-in user opens it.
+// Contact details for one supplier, read from the private Supplier Universe sheet only when a signed-in user of the
+// original workspace opens it. The cache key carries the workspace, so one workspace never gets another's answer.
 const cache = new Map<string, { at: number; v: Record<string, string> | null }>();
 
 export async function POST(req: NextRequest) {
-  const sess = (verifySession((await cookies()).get("dd_session")?.value) || (await auditSession()));
-  if (!sess) return NextResponse.json({ ok: false }, { status: 401 });
+  const { s: sess, res } = await gate("viewer");
+  if (!sess) return res;
   const ws = sess.ws || DEFAULT_WS;
+  // the Supplier Universe contact columns are the original workspace's private records (lib/scope.ts, "contacts" is
+  // not a public key): another workspace gets only what its own research found, never the stored e-mail or phone
+  const own = canRead(ws, "contacts");
   const { name, country } = await req.json().catch(() => ({}));
   if (typeof name !== "string" || !name.trim()) return NextResponse.json({ ok: false }, { status: 400 });
   const k = `${ws}|${name}|${country || ""}`;
   const hit = cache.get(k);
   if (hit && Date.now() - hit.at < 3600_000) return NextResponse.json({ ok: true, contact: hit.v });
   try {
-    let v = await lookupContact(name.trim(), String(country || "").trim());
-    if (!v && country) v = await lookupContact(name.trim(), "");
+    let v = own ? await lookupContact(name.trim(), String(country || "").trim()) : null;
+    if (own && !v && country) v = await lookupContact(name.trim(), "");
     // gaps filled from earlier research, never overwriting what the record has
     const rs = await fromResearch(name.trim(), String(country || "").trim(), ws).catch(() => ({} as Record<string, string>));
     if (Object.keys(rs).length) {

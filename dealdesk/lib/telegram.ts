@@ -16,6 +16,8 @@ import { funnel } from "./quotes";
 import { startRun, resume, waitingRun, stopLatest, decide, retryLatest, type Io } from "./dealagent";
 import { mailCheck } from "./mailer";
 import { commodityStats } from "./commodities";
+import { createLimiter } from "./ratelimit";
+import { logEvent } from "./log";
 import { addWatch, listProjects, listWatches, openProject, projectCallback, watchCallback } from "./projects";
 
 // The deal agent's link to Telegram: messages go out through the bot, each next step is a call to /api/agent/step
@@ -122,13 +124,25 @@ export async function isOwner(email: string): Promise<boolean> {
 }
 
 // The link code is derived from the user's email and the bot token, so the panel can show it without a store:
-// first 6 chars of a hash. The code is private to the signed-in user; the bot checks it against the active users.
+// first 10 chars of a hash (40 bits; it was 6 chars, 24 bits, which a patient guesser could walk through). The code is
+// private to the signed-in user; the bot checks it against the active users.
+export const LINK_CODE_LEN = 10;
 export async function linkCode(email: string): Promise<string> {
   const { createHmac } = await import("crypto");
-  return createHmac("sha256", tgEnv().token || "x").update(email.toLowerCase()).digest("hex").slice(0, 6).toUpperCase();
+  return createHmac("sha256", tgEnv().token || "x").update(email.toLowerCase()).digest("hex").slice(0, LINK_CODE_LEN).toUpperCase();
 }
+// Wrong codes per chat: 5 per hour, then the chat waits. In memory, so per server instance (a cold start forgets and
+// each warm instance counts on its own): it slows guessing, it is not a hard global cap until the shared store exists.
+export const LINK_MAX_FAILS = 5, LINK_WINDOW_MS = 60 * 60e3;
+export const linkLimiter = createLimiter(LINK_MAX_FAILS, LINK_WINDOW_MS);
 
 async function linkChat(chatId: string, code: string, lang: "he" | "en"): Promise<string> {
+  const lk = `tg:${chatId}`, wait = linkLimiter.retryAfter(lk);
+  if (wait) {
+    if (linkLimiter.noteBlocked(lk)) await logEvent("warn", "telegram", "link code attempts blocked", `chat ${chatId}`);
+    const min = Math.ceil(wait / 60);
+    return lang === "he" ? `יותר מדי קודים שגויים. אפשר לנסות שוב בעוד ${min} דקות.` : `Too many wrong codes. Try again in ${min} minutes.`;
+  }
   const users = (await listUsers(true)).filter((u) => u.status === "active");
   // the shared team login (TEAM_USER) has no Users row but signs in to the panel and sees its own code
   const team = (process.env.TEAM_USER || "").trim().toLowerCase();
@@ -137,9 +151,11 @@ async function linkChat(chatId: string, code: string, lang: "he" | "en"): Promis
     if ((await linkCode(u.email)) === code.toUpperCase()) {
       await appendRow(TAB, [chatId, u.email, u.name || "", new Date().toISOString().slice(0, 16), lang, "on"]);
       await logActivity({ email: u.email, name: u.name, role: u.role }, "telegram_link", chatId, "");
+      linkLimiter.clear(lk);
       return lang === "he" ? `מקושר ל-${u.name || u.email}. שלח /help לרשימת הפקודות.` : `Linked to ${u.name || u.email}. Send /help for the commands.`;
     }
   }
+  linkLimiter.fail(lk);
   return lang === "he" ? "קוד לא מוכר. הקוד מופיע במערכת: היום בשבילך > טלגרם, בתחתית העמוד." : "Unknown code. The code is shown in the panel: Today for you > Telegram, at the bottom.";
 }
 
@@ -333,9 +349,9 @@ export async function handle(chatId: string, text: string, _from: string, langCo
   const t = text.trim();
   const he = link ? link.lang === "he" : tgLang(langCode) ? tgLang(langCode) === "he" : /[֐-׿]/.test(t);
   if (!link) {
-    const m = t.match(/^\/start(?:@\w+)?\s*([A-Za-z0-9]{6})?$/) || t.match(/^([A-Za-z0-9]{6})$/);
+    const m = t.match(/^\/start(?:@\w+)?\s*([A-Za-z0-9]{10})?$/) || t.match(/^([A-Za-z0-9]{10})$/);
     if (m && m[1]) return send(chatId, await linkChat(chatId, m[1], he ? "he" : "en"));
-    return send(chatId, he ? "שלום. כדי לקשר את הצ'אט למשתמש שלך שלח את הקוד מהמערכת (היום בשבילך > טלגרם, בתחתית העמוד), למשל: /start AB12CD" : "Hello. To link this chat to your account send the code from the panel (Today for you > Telegram, at the bottom), e.g. /start AB12CD");
+    return send(chatId, he ? "שלום. כדי לקשר את הצ'אט למשתמש שלך שלח את הקוד מהמערכת (היום בשבילך > טלגרם, בתחתית העמוד), למשל: /start AB12CD34EF" : "Hello. To link this chat to your account send the code from the panel (Today for you > Telegram, at the bottom), e.g. /start AB12CD34EF");
   }
   const who = { email: link.email, name: link.name };
   const [cmd, ...rest] = t.split(/\s+/);

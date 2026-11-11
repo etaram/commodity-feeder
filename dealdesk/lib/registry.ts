@@ -1,4 +1,5 @@
 import { logEvent } from "@/lib/log";
+import { notifyTo } from "@/lib/notify";
 import { sanctionsFacts, norm } from "@/lib/sanctions";
 // Verified registry checks for the business-intelligence report. Official open data only.
 // Israel: data.gov.il (Registrar of Companies, Official Receiver liquidation file).
@@ -91,10 +92,14 @@ async function czech(name: string): Promise<string[]> {
   return ["Czech ARES register (best matches by name, verify):", ...rs.map((r: any) => `- ${r.obchodniJmeno}, IC ${r.ico}, ${r.sidlo?.textovaAdresa || ""}, founded ${r.datumVzniku || "n/a"}.`)];
 }
 
-// US listed companies: SEC EDGAR (no key; the SEC asks for a contact in the User-Agent).
-const SEC_UA = { headers: { "User-Agent": "Sinder Deal Desk research etamar.ramot@gmail.com", Accept: "application/json" } };
+// US listed companies: SEC EDGAR (no key; the SEC asks for a contact in the User-Agent). The contact is NOTIFY_EMAIL
+// only, no address is kept in the code: without it the EDGAR lookup is skipped and one event is logged.
+const secUa = (contact: string) => ({ headers: { "User-Agent": `Sinder Deal Desk research ${contact}`, Accept: "application/json" } });
 let secTickers: { at: number; rows: { cik: number; title: string; ticker: string; n: string }[] } | null = null;
 async function edgar(name: string): Promise<string[]> {
+  const contact = notifyTo()[0] || "";
+  if (!contact) { await logEvent("warn", "registry", "NOTIFY_EMAIL is not set: SEC EDGAR lookup skipped"); return ["SEC EDGAR: not checked (the contact address the SEC asks for is not configured)."]; }
+  const SEC_UA = secUa(contact);
   if (!secTickers || Date.now() - secTickers.at > 24 * 3600_000) {
     const d = await j("https://www.sec.gov/files/company_tickers.json", SEC_UA);
     secTickers = { at: Date.now(), rows: Object.values(d).map((x: any) => ({ cik: x.cik_str, title: x.title, ticker: x.ticker, n: norm(x.title).replace(/\b(inc|corp|corporation|co|company|ltd|plc|holdings|group|the)\b/g, "").replace(/\s+/g, " ").trim() })) };

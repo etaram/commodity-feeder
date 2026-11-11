@@ -5,7 +5,9 @@ import { findUser } from "./users";
 
 // Session + role check for API routes: 401 when signed out, 403 {code:"forbidden"} when the role is too low.
 // The self-check (/api/health) calls the panel's own routes with x-dd-audit = AUDIT_TOKEN, a long random value set in
-// Vercel only while an audit runs; without that variable this path does not exist.
+// Vercel only while an audit runs; without that variable this path does not exist. The header is the only form (never
+// the address, which ends up in logs), and the middleware limits what this session may call (lib/auditscope.ts): it
+// reads, it cannot send, approve or change access.
 export async function auditSession(): Promise<Session | null> {
   const tok = process.env.AUDIT_TOKEN || "";
   const { headers } = await import("next/headers");

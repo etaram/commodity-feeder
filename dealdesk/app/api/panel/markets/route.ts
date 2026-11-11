@@ -1,14 +1,13 @@
-import { auditSession } from "@/lib/gate";
+import { gate } from "@/lib/gate";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession } from "@/lib/auth";
 import { markets } from "@/lib/markets";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function POST() {
-  if (!(verifySession((await cookies()).get("dd_session")?.value) || (await auditSession()))) return NextResponse.json({ ok: false }, { status: 401 });
+  const { s, res } = await gate("viewer");
+  if (!s) return res;
   try { return NextResponse.json({ ok: true, ...(await markets() as object) }); }
   catch (e) { return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 }); }
 }
