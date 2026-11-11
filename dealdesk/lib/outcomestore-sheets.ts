@@ -9,7 +9,7 @@ import { eventProblems, type OutcomeEvent, type OutcomeStore } from "@/lib/outco
 import { appendRow, ENGINE_SHEET, readRanges, sheetsEnabled } from "@/lib/sheets";
 
 export const OUTCOMES_TAB = "Outcomes";
-const RANGE = `'${OUTCOMES_TAB}'!A2:G20000`;
+const RANGE = `'${OUTCOMES_TAB}'!A1:G20000`;
 export const MAX_JSON = 8_000;
 
 const canon = (e: OutcomeEvent): OutcomeEvent => ({ type: e.type, case_id: e.case_id, route_id: e.route_id, workspace: e.workspace, at: e.at, actor: e.actor, counterparty: e.counterparty,

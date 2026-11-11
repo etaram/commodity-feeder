@@ -104,9 +104,10 @@ export const contentKey = (to: string, subject: string, body: string, day: strin
 
 // ---- production dependencies (Sheets) ---------------------------------------------------------------------------
 // A tab that does not exist yet is an empty list; any other read failure is an error, so the guard stops the send.
-async function tab(name: string, cols: string): Promise<string[][]> {
+// from: first row to read. Tabs this module creates itself have no header row (appendRow starts at row 1), so they are read from 1.
+async function tab(name: string, cols: string, from = 2): Promise<string[][]> {
   try {
-    const r = await readRanges(ENGINE_SHEET, [`'${name}'!A2:${cols}50000`]);
+    const r = await readRanges(ENGINE_SHEET, [`'${name}'!A${from}:${cols}50000`]);
     if (!r) throw new Error("Sheets is not configured");
     return r[0] || [];
   } catch (e) { if (String((e as Error).message || e).includes("Unable to parse range")) return []; throw e; }
@@ -115,7 +116,7 @@ const rowsOf = async (name: string): Promise<Row[]> => (await tab(name, "H")).ma
 
 // Rows of 'Send Guard': A time, B ws, C key, D status, E token, F to, G subject, H approved_by, I approval_ref, J context, K detail.
 export class SheetsSentKeys implements SentKeys {
-  private async rows(ws: string, key: string) { return (await tab(SEND_GUARD, "K")).filter((r) => asWs(r[1]) === ws && r[2] === key).map((r) => ({ status: r[3] || "", token: r[4] || "" })); }
+  private async rows(ws: string, key: string) { return (await tab(SEND_GUARD, "K", 1)).filter((r) => asWs(r[1]) === ws && r[2] === key).map((r) => ({ status: r[3] || "", token: r[4] || "" })); }
   async status(ws: string, key: string) { return keyState(await this.rows(ws, key)).status; }
   async reserve(ws: string, key: string, token: string, at: string, m: KeyMeta) {
     await appendRow(SEND_GUARD, [at, ws, key, "reserved", token, m.to, m.subject, m.approved_by, m.approval_ref, m.context, m.detail]);

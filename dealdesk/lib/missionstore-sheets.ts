@@ -9,7 +9,7 @@ import { rebuild, type Mission, type MissionRow, type MissionStore } from "@/lib
 import { appendRow, ENGINE_SHEET, readRanges, sheetsEnabled } from "@/lib/sheets";
 
 export const MISSIONS_TAB = "Missions";
-const RANGE = `'${MISSIONS_TAB}'!A2:H20000`;
+const RANGE = `'${MISSIONS_TAB}'!A1:H20000`;
 export const MAX_JSON = 45_000;
 
 export function missionRowToCells(r: MissionRow): (string | number)[] {
