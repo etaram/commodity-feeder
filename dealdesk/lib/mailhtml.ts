@@ -5,6 +5,7 @@
 import { TEAM } from "@/lib/team";
 
 export const FIRM = "Sinder";
+export const TAGLINE = process.env.MAIL_TAGLINE || "From tender to delivery";
 // Brand colours of the logo (public/brand): navy and gold.
 const INK = "#1c2433", GREEN = "#172b4d", BRASS = "#b8902e", MUTED = "#526175", RULE = "#e2e5ea";
 const site = () => (process.env.MAIL_SITE_URL || "https://sinder.pro").replace(/\/+$/, "");
@@ -48,7 +49,11 @@ ${who.title ? `<div style="font-size:13px;color:${MUTED};padding-top:2px">${esc(
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f4f1"><tr><td align="center" style="padding:24px 12px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid ${RULE}">
 <tr><td dir="ltr" style="padding:22px 32px 16px 32px;border-bottom:2px solid ${BRASS};text-align:${side}">
-<a href="${esc(site())}" style="text-decoration:none"><img src="${esc(logo())}" width="44" height="44" alt="" style="vertical-align:middle;border:0"><span style="font-family:${font};font-size:22px;font-weight:bold;letter-spacing:2px;color:${GREEN};vertical-align:middle;padding-left:12px">SINDER</span></a></td></tr>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" dir="ltr" align="${side}"><tr>
+<td style="vertical-align:middle"><a href="${esc(site())}"><img src="${esc(logo())}" width="44" height="44" alt="" style="display:block;border:0"></a></td>
+<td style="vertical-align:middle;padding-left:12px;font-family:${font};text-align:left">
+<a href="${esc(site())}" style="text-decoration:none;font-size:22px;line-height:24px;font-weight:bold;letter-spacing:2px;color:${GREEN}">SINDER</a>
+<div style="font-size:12px;line-height:16px;letter-spacing:0.4px;color:${BRASS};padding-top:2px">${esc(TAGLINE)}</div></td></tr></table></td></tr>
 <tr><td dir="${dir}" style="padding:28px 32px 30px 32px;font-family:${font};font-size:15px;line-height:1.6;color:${INK};text-align:${side}">
 ${paras}${sig}</td></tr>
 </table></td></tr></table></body></html>`;
