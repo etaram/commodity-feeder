@@ -85,6 +85,16 @@ ${teamBrief(r.name || "the owner")}
 Talk to the owner (report, ask_owner, finish) in ${he ? "simple, plain Hebrew, short lines, no jargon, no English terms where a Hebrew word exists, no em-dashes, no emojis" : "plain English, short lines"}. Use report after each main stage. Make names clickable: write a supplier, a tender or the deal as [name](open link), using the "open" links the tools return; the deal page is ${dealUrl(r.deal_id)}. The deal id is ${r.deal_id}. Today is ${now().slice(0, 10)}.`;
 }
 
+// Tools that only read the system's data: the MCP endpoint (app/api/mcp) exposes exactly these, never the ones that
+// write records, prepare messages or talk to the owner.
+export const READ_ONLY_TOOLS = new Set(["search_suppliers", "supplier_contact", "search_tenders", "search_winners", "company_footprint", "buyer_profile", "tender_routes", "deal_economics", "logistics_options"]);
+export function readOnlyToolDefs() { return TOOLS.filter((t) => READ_ONLY_TOOLS.has(t.name)); }
+export async function readOnlyTool(name: string, x: Record<string, unknown>): Promise<string> {
+  if (!READ_ONLY_TOOLS.has(name)) throw new Error("unknown tool");
+  const r = { id: "mcp", chat: "", email: "mcp", name: "mcp", lang: "en", ws: "", deal_id: "", request: "", msgs: [], turns: 0, status: "running", usd: 0, started: now() } as Run;
+  return runTool(r, { send: async () => {}, kick: async () => {} }, name, x);
+}
+
 async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>): Promise<string> {
   const s = (k: string, n = 200) => String(x[k] ?? "").slice(0, n);
   if (name === "search_suppliers") {
