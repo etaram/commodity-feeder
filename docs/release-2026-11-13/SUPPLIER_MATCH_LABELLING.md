@@ -57,3 +57,11 @@ The request is a tender title. First decide what the tender buys.
 ## Scoring (after labelling, on your own machine - the output names companies)
     python3 tools/eval_score.py rows.jsonl verdicts.jsonl labels.jsonl --tenders tenders.jsonl \
         --summary summary.json --human human_labels.jsonl
+
+## Labelling by a model (workflow `supplier-label`)
+
+`tools/eval_label.py` applies this guide through the Anthropic API. It is given `rows.jsonl` and the title and sector
+from `tenders.jsonl` only, refuses every other file, and always writes its own rank 0 line for a tender (it never sees
+the stratum). It cannot open web sites, so it judges from `evidence` alone. The workflow takes the run's timestamp,
+writes `labels.jsonl`, `score.txt` and `score.json` into the same folders (server and Google Drive) and logs
+aggregate numbers only. Try it first with `limit` = 3.
