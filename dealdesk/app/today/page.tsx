@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getDeals, getIsrael, num, usd, pct, ROUTE_LABEL, type Row } from "@/lib/data";
 import { facet } from "@/lib/index";
-import { verdict, portfolioLine } from "@/lib/verdict";
+import { verdict, portfolioLine, biddersText, NO_WIN_PROBABILITY } from "@/lib/verdict";
 import Decide from "@/components/Decide";
 import FilterBar, { type Field } from "@/components/FilterBar";
 
@@ -106,9 +106,9 @@ export default async function Today({ searchParams }: { searchParams: Promise<SP
                 <div className="mt-3 rounded-lg bg-paper px-3 py-2 text-sm"><b className="text-go">{v.action}.</b> {v.next}</div>
                 <div className="mt-3 grid grid-cols-3 gap-3 border-t border-line pt-3 text-sm md:grid-cols-6">
                   <div><div className="text-[11px] text-muted">Deal value</div><div className="font-semibold">{usd(num(d.deal_value_usd))}</div></div>
-                  <div><div className="text-[11px] text-muted">Win prob.</div><div className="font-semibold">{pct(d.p_win_market)}</div></div>
-                  <div><div className="text-[11px] text-muted">Net margin</div><div className="font-semibold">{pct(d.net_margin_pct, 1)}</div></div>
-                  <div><div className="text-[11px] text-muted">Expected value</div><div className="font-semibold text-go">{usd(num(d.ev_usd))}</div></div>
+                  <div><div className="text-[11px] text-muted">Bidders</div><div className="font-semibold" title={NO_WIN_PROBABILITY}>{biddersText(d)}</div></div>
+                  <div><div className="text-[11px] text-muted">Net margin (sector-typical, assumption)</div><div className="font-semibold">{pct(d.net_margin_pct, 1)}</div></div>
+                  <div><div className="text-[11px] text-muted">Engine ranking value (assumption)</div><div className="font-semibold text-go">{usd(num(d.ev_usd))}</div></div>
                   <div><div className="text-[11px] text-muted">Deadline</div><div className="font-semibold">{d.deadline || "-"}{d.days_left !== "" ? ` (${d.days_left}d)` : ""}</div></div>
                   <div className="text-right"><Link href={`/deal/${encodeURIComponent(d.id)}`} className="text-sm font-semibold text-accent hover:underline">Open deal file</Link></div>
                 </div>

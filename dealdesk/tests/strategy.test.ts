@@ -9,4 +9,5 @@ const st = applyStrategy(g, "acme", { partners: ["GHA"], focus: ["energy"], excl
 ok(st.length === 3, "excluded market dropped");
 ok(st[2][3] === "58" && /local partner \(your workspace\)/.test(st[2][5]) && /focus sector/.test(st[2][5]), "own partner and focus credit added");
 ok(st[1][3] === "55", "non-partner row keeps the scrubbed score");
+ok(/local partner \(your workspace\): fixed \+5 points/.test(st[2][5]) && /focus sector \(your workspace\): fixed \+3 points/.test(st[2][5]), "the fixed bonus points are named in the text the user reads");
 console.log(`${n - bad}/${n} strategy checks pass`); if (bad) process.exit(1);

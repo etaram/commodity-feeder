@@ -34,3 +34,39 @@ d = ECON.deal({ role: "principal", sale_price: 1000, cost_goods: "" }); near(d.g
 // agent: commission only, no capital
 d = ECON.deal({ role: "agent", sale_price: 200000, commission_pct: 3, customer_day: 60 }); near(d.net, 6000); assert.equal(d.peak, 0);
 console.log("deal cash flows: 9 checks passed");
+// provenance: a default is an assumption until the user confirms it, and it decides the title of the result
+assert.equal(ECON.title({ cost: "confirmed", freight: "assumption" }), "scenario");
+assert.equal(ECON.title({ cost: "quote", freight: "benchmark" }), "scenario");
+assert.equal(ECON.title({ cost: "quote", freight: "confirmed" }), "quotes");
+assert.equal(ECON.title({}), "scenario");
+let b = ECON.basis({ role: "principal", sale_price: "120000", cost_goods: "100000", freight: "", freight_in_quote: false, fin_rate_pct: "" }, 100000);
+assert.equal(b.sale_price, "confirmed"); assert.equal(b.cost_goods, "quote"); assert.equal(b.freight, "assumption"); assert.equal(b.fin_rate_pct, "assumption"); assert.equal(b.customer_day, "assumption");
+assert.equal(ECON.title(b), "scenario");
+b = ECON.basis({ role: "principal", sale_price: 1, cost_goods: 99, freight_in_quote: true, insurance_in_quote: true, inspection: 0, duty_pct: 0, contingency_pct: 0, bank_pct: 0, fin_rate_pct: 9, deposit_pct: 30, deposit_day: 0, balance_day: 30, customer_day: 90 }, 100);
+assert.equal(b.cost_goods, "confirmed"); assert.equal(b.freight, "quote"); assert.equal(ECON.title(b), "quotes");
+assert.equal(ECON.title(ECON.basis({ role: "agent", sale_price: 5, commission_pct: 3, customer_day: 60 })), "quotes");
+// bidders: only a recorded count with its source; the engine default is unknown, never a number
+assert.deepEqual(ECON.bidders({ est_bidders: "3.0", why: "deal $1 x net 5.0%; 3 bidders (buyer history); foreign win rate 4% (sector)" }), { n: 3, src: "buyer history" });
+assert.equal(ECON.bidders({ est_bidders: "4.0", why: "4 bidders (default)" }).n, null);
+assert.equal(ECON.bidders({ est_bidders: "", why: "" }).n, null);
+assert.equal(ECON.bidders({ est_bidders: "5" }).n, null);
+console.log("provenance: 17 checks passed");
+// no win probability anywhere in the panel: no model, no input, no percentage row, no expected profit
+for (const gone of ["winChance", "e-wown", "est_win", "est_ev", "est_best", "sc_pwin", "sc_ev", "win_chance:", "r.p_win_market", "Win chance", "win chance\"", "Expected profit", "model estimate, not a fact"])
+  assert.ok(!html.includes(gone), `still in the panel: ${gone}`);
+assert.ok(!/\bw \* pr\b|ev: isFinite\(w\)/.test(html), "expected profit from a win chance is still computed");
+// the prefilled percentages come from ECON.DEFAULTS and carry an "assumption" label; the result is titled by its basis
+assert.deepEqual(ECON.DEFAULTS, { freight_pct: 8, duty_pct: 0, other_pct: 7, bidders: 3 });
+for (const id of ["e-fr", "e-duty", "e-oth"]) assert.ok(new RegExp(`id="${id}"[^>]*value="\\$\\{ECON\\.DEFAULTS\\.[a-z_]+\\}"[^>]*> <span class="pill warn" id="${id}-b">\\$\\{esc\\(t\\("b_assumption"\\)\\)\\}`).test(html), `${id} is not labelled`);
+assert.ok(html.includes('t("ttl_" + ECON.title(basis))') && html.includes('t("ttl_" + ECON.title(bs))') && html.includes('t("no_pwin")'));
+// bilingual: every new string exists once in English and once in Hebrew, and the two say the same thing
+const str = k => [...html.matchAll(new RegExp(`(?<![A-Za-z0-9_])${k}: "((?:[^"\\\\]|\\\\.)*)"`, "g"))].map(m => m[1]);
+for (const k of ["b_quote", "b_benchmark", "b_confirmed", "b_assumption", "b_blank", "ttl_scenario", "ttl_quotes", "bid_h", "bid_unknown", "bid_assumed", "no_pwin", "ev_basis", "est_inputs", "est_v_won", "est_ptw", "est_note2", "sc_n", "dw_e_note"]) {
+  const v = str(k); assert.equal(v.length, 2, `${k}: ${v.length} strings`); assert.ok(/[a-z]/.test(v[0]) && /[֐-׿]/.test(v[1]) && !/[֐-׿]/.test(v[0]), `${k}: English then Hebrew`);
+}
+assert.deepEqual(str("ttl_scenario"), ["Scenario estimate", "אומדן תרחיש"]);
+assert.ok(str("ttl_quotes")[0].startsWith("Estimate from quotes"));
+assert.deepEqual(str("b_assumption"), ["assumption", "הנחה"]);
+assert.ok(/No win probability is calculated/.test(str("no_pwin")[0]) && /לא מחושב סיכוי זכייה/.test(str("no_pwin")[1]));
+for (const k of ["est_ptw"]) for (const v of str(k)) assert.ok(["{lo}", "{mid}", "{src}", "{n}", "{b}"].every(x => v.includes(x)), `${k} placeholders`);
+console.log("labels and no win probability: 44 checks passed");

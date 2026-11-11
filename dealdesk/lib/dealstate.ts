@@ -45,6 +45,27 @@ export function readiness(records: DealRecord[], routes: RouteRow[], today = new
   return { reached, next, missing, validation_only: true, execution_approved: false };
 }
 
+/** Provenance of one economics input: "quote" (a supplier quote recorded on the deal), "benchmark" (a dated public
+ *  price), "confirmed" (a value the owner stated) or "assumption" (a default, or a value nobody confirmed). A default
+ *  is never presented as a finding: a result that rests on at least one assumption or benchmark is a scenario. */
+export type Basis = "quote" | "benchmark" | "confirmed" | "assumption";
+export type EconInput = { value: number; basis: Basis; note?: string };
+export const ECON_DEFAULTS: Record<string, number> = { freight: 0, other_costs: 0, fin_rate_pct: 10, supplier_pay_day: 0, customer_pay_day: 60 };
+export const SCENARIO = "Scenario estimate", FROM_QUOTES = "Estimate from quotes";
+export function econInputs(x: Record<string, unknown>, claims: Record<string, unknown> = {}, hasQuote = false): Record<string, EconInput> {
+  const out: Record<string, EconInput> = {};
+  for (const k of ["sale_price", "cost_goods", ...Object.keys(ECON_DEFAULTS)]) {
+    const given = x[k] != null && x[k] !== "" && Number.isFinite(Number(x[k]));
+    if (!given) { out[k] = { value: ECON_DEFAULTS[k] ?? 0, basis: "assumption", note: "default, not given" }; continue; }
+    const c = String(claims[k] || "");
+    if (c === "quote" && !hasQuote) out[k] = { value: Number(x[k]), basis: "assumption", note: "no quote is recorded on this deal" };
+    else if (c === "quote" || c === "benchmark" || c === "confirmed") out[k] = { value: Number(x[k]), basis: c };
+    else out[k] = { value: Number(x[k]), basis: "assumption", note: "no basis stated" };
+  }
+  return out;
+}
+export const econTitle = (inputs: Record<string, EconInput>) => Object.values(inputs).every((i) => i.basis === "quote" || i.basis === "confirmed") ? FROM_QUOTES : SCENARIO;
+
 /** Deal economics in the stated model of sinder-deal-economics: daily simple interest on a negative balance,
  *  peak funding including accrued financing, a supplied funding limit and the warnings the skill requires. */
 export type CashEvent = { day: number; amount: number };
