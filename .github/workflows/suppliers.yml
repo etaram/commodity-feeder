@@ -143,7 +143,7 @@ jobs:
           for i in 1 2 3 4 5; do
             git fetch -q origin main && git reset -q --hard origin/main
             cp -r /tmp/own/. .
-            git add -A $P
+            for f in $P; do [ -e "$f" ] && git add -A "$f"; done   # a file a skipped step did not write must not fail the commit
             if git diff --cached --quiet; then ok=1; break; fi
             git commit -q -m "suppliers: $(date -u +%Y-%m-%dT%H:%MZ)"
             if git push -q origin HEAD:main; then ok=1; break; fi

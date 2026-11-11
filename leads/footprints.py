@@ -102,6 +102,12 @@ def build():
 def main():
     key = os.environ.get("WEB_INDEX_KEY", "")
     if not key:
+        try:   # same fallback as the supplier index and the winners feed: the key kept in the universe sheet's Config tab
+            from .push import UNIVERSE_SHEET, Sheets
+            key = next((r[1] for r in Sheets().values(UNIVERSE_SHEET, "Config!A1:B5") if len(r) > 1 and r[0] == "WEB_INDEX_KEY"), "")
+        except Exception as e:  # noqa: BLE001
+            log.warning("footprints key from sheet: %s", e)
+    if not key:
         log.warning("footprints: WEB_INDEX_KEY not set - nothing written"); return
     data = build()
     if not data["companies"]:
