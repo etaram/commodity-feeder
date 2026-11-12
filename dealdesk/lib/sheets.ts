@@ -20,7 +20,9 @@ const STATE_TABS = new Set(["Activity", "App Log", "AI Usage", "Telegram Chat", 
   // the agents' shared spend ledger (lib/agentbudget.ts): appended and read back around every paid model call
   "Agent Budget",
   // one row per role run of the pipeline (lib/pipeline.ts): who did which stage, on what input, with what result
-  "Agent Handoffs"]);
+  "Agent Handoffs",
+  // the cases the owner starts and decides on (lib/casestore.ts): append-only rows, the last row of a case wins
+  "Agent Cases"]);
 const tabOf = (range: string) => (range.match(/^'([^']+)'/) || range.match(/^([^!]+)!/) || [])[1] || range;
 // A test copy of the site (staging) must never write to the live spreadsheets. Two settings make that a property of the
 // code, not of care: STATE_TABS_EXTRA names further tabs that live in the state sheet (in staging: every tab the app
