@@ -2,8 +2,7 @@ name: agent-brief
 
 # Builds the compact "Agent Brief" tab every morning before the scheduled AI agents run (no AI, no tokens).
 on:
-  schedule:
-    - cron: "40 2 * * *"   # 04:40 Israel time (winter)
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
 
 concurrency:

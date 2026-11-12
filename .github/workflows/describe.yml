@@ -4,8 +4,7 @@ name: describe
 # Reads the company checks read-only; keeps its own cache, so it never overwrites another workflow's files. Only the
 # counts (data/leads/describe_progress.json) are public.
 on:
-  schedule:
-    - cron: "50 * * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_run:            # the hourly schedule of a new workflow can take a day to start firing: it also follows the company checks
     workflows: ["company-check"]
     types: [completed]

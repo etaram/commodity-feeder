@@ -1,7 +1,6 @@
 name: press
 on:
-  schedule:
-    - cron: "50 5,15 * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
 permissions:
   contents: write

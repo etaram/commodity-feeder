@@ -2,8 +2,7 @@ name: coffee-sellers
 # Coffee producers, cooperatives and exporters from public marketplace seller profiles (leads/coffee_sellers.py).
 # A few hundred profiles a run, resumes where it stopped. Public profile facts only.
 on:
-  schedule:
-    - cron: "35 */2 * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
     inputs:
       scheduled:

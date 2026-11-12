@@ -3,8 +3,7 @@ name: trends
 # Google Trends search interest for the top market signals (pytrends, unofficial; no AI, no tokens).
 # Weekly, small batch, results cached between runs. Replace with the official Trends API when access is granted.
 on:
-  schedule:
-    - cron: "17 3 * * 1"   # Monday 05:17 Israel time (winter)
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
     inputs:
       limit:

@@ -4,8 +4,7 @@ name: company-check
 # Every hour (public repository: Actions minutes are free); the private supplier list is restored read-only from the suppliers workflow's cache, and the checks
 # keep their own cache, so this job never overwrites the suppliers workflow's private files.
 on:
-  schedule:
-    - cron: "20 * * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
     inputs:
       limit:
