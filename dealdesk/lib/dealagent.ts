@@ -314,7 +314,8 @@ const OPEN_AGAIN = ["needs_review", "delivery_unknown", "send_failed"];
  *  claimed first (a double press or a retry finds it claimed), the key is built from the approval id (so even a lost
  *  status row cannot cause a second send), and a send that may have left (a timeout after the message data started, or
  *  a call that died mid-way) becomes delivery_unknown / needs_review, never a silent second send. */
-export async function decide(io: Io, chat: string, approvalId: string, ok: boolean, again = false) {
+// by: the account of the person who pressed (the linked chat's user); it is what the send record names as approver
+export async function decide(io: Io, chat: string, approvalId: string, ok: boolean, again = false, by = "") {
   const g = (await readRanges(ENGINE_SHEET, [`'${APPROVALS}'!A2:F5000`]).catch(() => null))?.[0] || [];
   const mine = g.filter((x) => x[0] === approvalId);
   const row = mine[mine.length - 1], first = mine[0];
@@ -346,7 +347,7 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
       // without a connected mailbox nothing is sent, but the checks still run: an opted-out recipient is not handed over for manual sending either
       : await guardedSend(sheetsGuardDeps(ready ? {} : { mailer: async () => ({ ok: false, error: "mailbox not configured", stage: "config" }) }), {
         workspace: run?.ws || DEFAULT_WS, to: String(m.to_email), subject: m.subject || "", text: m.body || "", idempotency_key: `approval:${approvalId}${round ? `:again${round}` : ""}`,
-        approved_by: run?.email || `telegram:${chat}`, approval_ref: `${APPROVALS}:${approvalId}`, context: `deal agent run ${row[1]}` });
+        approved_by: by || run?.email || `telegram:${chat}`, approval_ref: `${APPROVALS}:${approvalId}`, context: `deal agent run ${row[1]}` });
     const sent = res.outcome === "sent" || (res.reason === "duplicate" && res.prior === "sent");
     // refused by a check that the owner can clear (emergency stop, lists unreadable): the approval stays open for another press
     const reopen = res.reason === "kill_switch" || res.reason === "checks_unavailable";

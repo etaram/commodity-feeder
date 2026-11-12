@@ -69,7 +69,7 @@ export async function agentCallback(chatId: string, data: string, queryId: strin
   const m = data.match(/^ag:(ok|no|re):([A-Z0-9]+)$/);
   if (!m) return;
   if (!(await isOwner(link.email))) { await logActivity({ email: link.email, name: link.name }, "tg_approval_denied", m[2], "not the owner"); return send(chatId, "Only the owner can approve or reject a message."); }
-  await decide(agentIo, chatId, m[2], m[1] !== "no", m[1] === "re");
+  await decide(agentIo, chatId, m[2], m[1] !== "no", m[1] === "re", link.email);
 }
 
 // Talking to the Deal Desk from Telegram. A chat is linked to a system user once, with a code the user takes from
