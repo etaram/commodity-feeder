@@ -552,6 +552,10 @@ def _awards():
                     continue
 
 
+SANCTIONS_COMPREHENSIVE = {"IRN", "SYR", "PRK", "CUB"}
+SANCTIONS_SECTORAL = {"RUS", "BLR", "VEN", "MMR"}
+
+
 def build():
     rates = _rates()
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
@@ -896,6 +900,12 @@ def build():
     out.sort(key=lambda r: (r["tier"], r["_svc"], -r["quality"], -r["won_usd_est"]))
     for r in out:
         r.pop("_svc", None)  # best tier first, then quality
+    # Sanctions risk is shown, not filtered: the records stay (owner, 12 Nov 2026: an international company), each one
+    # carries the risk so a person or an agent sees it before any contact. Comprehensive = country-wide sanctions
+    # (UN/US/EU, and enemy-state rules for an Israeli owner); sectoral = sanctions on parts of the economy.
+    for r in out:
+        c = str(r.get("country") or "").upper()
+        r["sanctions_risk"] = "comprehensive" if c in SANCTIONS_COMPREHENSIVE else "sectoral" if c in SANCTIONS_SECTORAL else ""
     out = balance_regions(out)
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)
