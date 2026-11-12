@@ -482,7 +482,9 @@ def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="",
             time.sleep(5)
             if time.time() - last_status > 60:
                 last_status = time.time()
-                write_status(d, q, sites, done, stats, t_start, recent, lanes, state="running", reg_stats=reg_stats)
+                with lock:  # the workers add to these while the status is written: a snapshot
+                    snap = (dict(sites), {k: set(v) for k, v in done.items()}, Counter(stats), list(recent), json.loads(json.dumps(reg_stats)))
+                write_status(d, q, snap[0], snap[1], snap[2], t_start, snap[3], lanes, state="running", reg_stats=snap[4])
             if time.time() - last_export > 2 * 3600:  # the hourly company-check workflow picks up the newest export
                 last_export = time.time()
                 with lock:
