@@ -1,6 +1,37 @@
 [
-  { "id": "server", "name": "Company server (desk.sinder.pro)", "monthly_usd": null, "status": "to confirm", "note": "monthly price of the server plan" },
-  { "id": "domain", "name": "Domain sinder.pro", "monthly_usd": null, "status": "to confirm", "note": "yearly renewal divided by 12" },
-  { "id": "mailbox", "name": "Mailbox (Zoho)", "monthly_usd": null, "status": "to confirm", "note": "plan price per month" },
-  { "id": "phone", "name": "Phone number", "monthly_usd": null, "status": "to confirm", "note": "monthly price of the number" }
+  {
+    "id": "server",
+    "name": "Company server (desk.sinder.pro)",
+    "monthly_usd": 20,
+    "status": "confirmed",
+    "note": "InterServer VPS, USD 20 a month (owner, 12 Nov 2026)"
+  },
+  {
+    "id": "claude",
+    "name": "Claude subscription (build and operations)",
+    "monthly_usd": 142.4,
+    "status": "confirmed",
+    "note": "ILS 450 a month (owner, 12 Nov 2026) at the Bank of Israel rate of 10 Nov 2026 (0.3164 USD per ILS)"
+  },
+  {
+    "id": "domain",
+    "name": "Domain sinder.pro",
+    "monthly_usd": null,
+    "status": "to confirm",
+    "note": "yearly renewal divided by 12"
+  },
+  {
+    "id": "mailbox",
+    "name": "Mailbox (Zoho)",
+    "monthly_usd": null,
+    "status": "to confirm",
+    "note": "plan price per month"
+  },
+  {
+    "id": "phone",
+    "name": "Phone number",
+    "monthly_usd": null,
+    "status": "to confirm",
+    "note": "monthly price of the number"
+  }
 ]
