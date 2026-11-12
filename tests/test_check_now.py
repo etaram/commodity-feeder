@@ -1,7 +1,10 @@
 """Check-now worker, pure parts (no network): python3 tests/test_check_now.py"""
 from datetime import datetime, timezone
 
-from leads.check_now import clean_site, item_for, pick_new, row_for_sheet
+import tempfile
+from pathlib import Path
+
+from leads.check_now import clean_site, item_for, lookup_universe, pick_new, row_for_sheet
 from leads.company_check import SHEET_HEAD
 
 NOW = datetime(2026, 11, 12, 12, 30, tzinfo=timezone.utc)
@@ -58,6 +61,20 @@ def test_item_for_uses_request_then_universe():
     assert item_for((3, "Nobody", "FRA", "", "", "t"), ({}, {}))[3] == ""            # discovery inside check_one
 
 
+def test_lookup_universe_streams_only_the_named():
+    d = Path(tempfile.mkdtemp()) / "universe.csv"
+    d.write_text("supplier,country,website,email,main_sector\n"
+                 "Acme,ISR,acme.co.il,,Water & wastewater\n"
+                 "Acme Holdings,ISR,acmeh.com,,Finance\n"
+                 "Beta,DEU,,sales@beta.de,Energy\n"
+                 "Gamma,FRA,,me@gmail.com,\n"
+                 '"Other, with Acme in it",USA,o.com,,\n', encoding="utf-8")
+    bk, bn = lookup_universe(["acme", "Beta", "Gamma"], d)
+    assert bk == {"Acme|ISR": ("acme.co.il", "Water & wastewater"), "Beta|DEU": ("beta.de", "Energy"), "Gamma|FRA": ("", "")}, bk
+    assert set(bn) == {"acme", "beta", "gamma"}
+    assert lookup_universe([], d) == ({}, {}) and lookup_universe(["acme"], d.parent / "none.csv") == ({}, {})
+
+
 def test_row_matches_push_sheet_format():
     res = {"key": "Acme|ISR", "supplier": "Acme", "country": "ISR", "checked": "2026-11-12", "checked_at": "2026-11-12T12:30:41Z",
            "verdict": "ok", "emails": [{"email": "sales@acme.com", "kind": "generic"}], "roles": [{"role": "manufacturer", "phrase": "our factory"}]}
@@ -68,6 +85,6 @@ def test_row_matches_push_sheet_format():
 
 if __name__ == "__main__":
     for f in [test_clean_site, test_first_pass_takes_recent_only, test_next_pass_only_new_rows, test_old_requests_left_to_the_hourly_job,
-              test_item_for_uses_request_then_universe, test_row_matches_push_sheet_format]:
+              test_item_for_uses_request_then_universe, test_lookup_universe_streams_only_the_named, test_row_matches_push_sheet_format]:
         f()
     print("check now: all checks passed")

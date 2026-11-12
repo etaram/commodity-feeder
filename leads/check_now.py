@@ -88,7 +88,7 @@ def pick_new(rows, state, now):
 
 def item_for(req, universe):
     """(key, name, country, website, record_sector, reason) for company_check.check_one (pure).
-    universe: {"name|CTY": (website, sector)} and {"name": [(country, website, sector)]} from load_universe."""
+    universe: {"name|CTY": (website, sector)} and {"name": [(country, website, sector)]} from lookup_universe."""
     _, name, country, site, sector, _ = req
     by_key, by_name = universe
     rec = by_key.get(f"{name}|{country}") or next((x[1:] for x in by_name.get(name.lower(), []) if not country or x[0] == country), None)
@@ -96,28 +96,33 @@ def item_for(req, universe):
     return (f"{name}|{country}", name, country, site or w or "", sector or sec or "", "asked in the panel (check now)")
 
 
-def load_universe(path=UNIVERSE_CSV, _cache={}):
-    """Website and sector per company from the private universe.csv, when the file is on the server; reread when it
-    changes. Only the three fields are kept in memory."""
-    try:
-        m = path.stat().st_mtime
-    except OSError:
-        return {}, {}
-    if _cache.get("m") == m:
-        return _cache["u"]
+def lookup_universe(names, path=None):
+    """Website and sector of the named companies from the private universe.csv, when the file is on the server.
+    The file has about a million rows, so it is never held in memory: one streaming pass per batch, a line is parsed
+    only when it contains one of the names. Returns ({"name|CTY": (website, sector)}, {"name": [(cty, website, sector)]})."""
+    path = Path(path or UNIVERSE_CSV)
+    want = {n.strip().lower() for n in names if n and n.strip()}
     by_key, by_name = {}, {}
-    with open(path, encoding="utf-8") as f:
-        for r in csv.DictReader(f):
+    if not want or not path.exists():
+        return by_key, by_name
+    with open(path, encoding="utf-8", errors="replace", newline="") as f:
+        head = next(csv.reader([f.readline()]), [])
+        for line in f:
+            low = line.lower()
+            if not any(n in low for n in want):
+                continue
+            r = dict(zip(head, next(csv.reader([line]), [])))
+            name = (r.get("supplier") or "").strip()
+            if name.lower() not in want:
+                continue
             w = (r.get("website") or "").strip()
             if not w:
                 em = (r.get("email") or "").split(";")[0].strip()
                 if "@" in em and not re.search(r"@(gmail|yahoo|hotmail|outlook|live|icloud|aol|gmx|mail|yandex|qq|163|126)\.", em, re.I):
                     w = em.split("@")[1]
             v = (w, r.get("main_sector", "") or "")
-            by_key[f"{r.get('supplier', '')}|{r.get('country', '')}"] = v
-            by_name.setdefault((r.get("supplier") or "").strip().lower(), []).append((r.get("country", ""), *v))
-    _cache.update(m=m, u=(by_key, by_name))
-    log.info("check now: universe loaded, %d companies", len(by_key))
+            by_key[f"{name}|{r.get('country', '')}"] = v
+            by_name.setdefault(name.lower(), []).append((r.get("country", ""), *v))
     return by_key, by_name
 
 
@@ -182,7 +187,10 @@ def one_pass(S, st):
     if not new:
         return st2, 0
     new = new[-MAX_PER_PASS:]
-    universe = load_universe()
+    t0 = time.time()
+    universe = lookup_universe([r[1] for r in new if not r[3]])   # only requests that came without a website
+    if universe[1]:
+        log.info("check now: universe looked up in %.0fs", time.time() - t0)
     prev = _prev_checks()
     items = [item_for(r, universe) for r in new]
 
