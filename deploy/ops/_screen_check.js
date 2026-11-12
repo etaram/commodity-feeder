@@ -61,6 +61,11 @@ const findTimes = (o) => {          // ISO-like times anywhere in the check's su
   }
   console.log(`self-check: ${checks.length} screens/routes in ${((Date.now() - t0) / 1000).toFixed(0)} s`);
   for (const c of checks) console.log(`  ${String(c.status).padEnd(4)} ${String(c.ms).padStart(6)} ms  ${c.name.padEnd(24)} ${typeof c.rows === "number" ? `${c.rows - 1} rows` : ""}`);
+  // connections (login only, nothing sent): mail box login, bot token present, webhook host
+  const mail = j.mail || {}; const tg = j.telegram;
+  console.log(`mail login (no message sent): ${mail.ok ? "OK" : "FAILED " + String(mail.error || "").replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/g, "<email>").slice(0, 120)}`);
+  console.log(`telegram bot token: ${j.telegram_token ? "present" : "missing"}; webhook: ${tg && typeof tg === "object" ? `host ${tg.url_host || "(none)"}, last error ${tg.last_error ? "yes" : "none"}` : String(tg || "")}`);
+  console.log(`AI key: ${j.ai && j.ai.ok ? "OK" : "FAILED"}`);
   console.log("freshness (time the screen itself shows):"); fresh.forEach((l) => console.log(l));
   console.log(problems.length ? `\nPROBLEMS (${problems.length}):\n${problems.join("\n")}` : "\nOK: every screen answered, none empty, none stale");
   process.exit(problems.length ? 1 : 0);
