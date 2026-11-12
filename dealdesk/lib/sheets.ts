@@ -65,12 +65,20 @@ async function call(jwt: JWT, method: string, url: string, body?: unknown, timeo
   const ro = writeRefused(method, url);
   if (ro) throw new Error(`Sheets write refused: spreadsheet ${ro.slice(0, 6)}... is read-only in this environment`);
   const { token } = await jwt.getAccessToken();
-  const r = await fetch(url, {
+  const go = () => fetch(url, {
     method,
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
     signal: AbortSignal.timeout(timeoutMs),
   });
+  let r = await go();
+  // Google's per-minute read quota (429): reads only, wait and try again twice (2-3 s, then 5-7 s). Writes are never
+  // retried here, so a write can not be applied twice.
+  for (const wait of [2000, 5000]) {
+    if (r.status !== 429 || method !== "GET") break;
+    await new Promise((res) => setTimeout(res, wait + Math.floor(Math.random() * 2000)));
+    r = await go();
+  }
   if (!r.ok) throw new Error(`Sheets ${r.status}: ${(await r.text()).slice(0, 300)}`);
   return r.json();
 }
