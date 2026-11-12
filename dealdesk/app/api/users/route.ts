@@ -19,8 +19,13 @@ export async function GET() {
   const { s, res } = await admin();
   if (!s) return res;
   if (!sheetsEnabled()) return NextResponse.json({ ok: true, users: [] });
-  const users = (await listUsers(true)).filter((u) => sameWs(s, u)).map(publicUser);
-  return NextResponse.json({ ok: true, users });
+  // a cold or slow Users read is retried once; a second failure answers with a reason instead of an empty 500
+  try {
+    const all = await listUsers(true).catch(() => listUsers(true));
+    return NextResponse.json({ ok: true, users: all.filter((u) => sameWs(s, u)).map(publicUser) });
+  } catch (e) {
+    return NextResponse.json({ ok: false, error: `The Users tab could not be read just now (${String((e as Error)?.message || e).slice(0, 80)}). Try again.` }, { status: 503 });
+  }
 }
 
 export async function POST(req: NextRequest) {
