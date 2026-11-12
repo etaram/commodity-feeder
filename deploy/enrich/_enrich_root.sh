@@ -19,6 +19,16 @@ IMG=python:3.12-slim
 LIMITS=(--cpus 1.5 --cpu-shares 128 --memory 3g --memory-swap 3g)
 umask 077; mkdir -p "$E"; chmod 711 "$E"
 
+seal() {   # $1 a file: printed only as ciphertext (hybrid encryption to the reviewer's public key; the private key is not
+           # on this server), in lines of 40,000 characters (GitHub drops longer log lines); join the REVIEW-DATA lines
+  local k; k=$(mktemp)
+  openssl rand -hex 32 > "$k"
+  gzip -c "$1" | openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -out "$k.enc"
+  openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
+  echo "REVIEW-KEY $(base64 -w0 "$k.key")"
+  base64 -w0 "$k.enc" | fold -w 40000 | sed 's/^/REVIEW-DATA /'; echo
+  rm -f "$k" "$k".*
+}
 code() {   # a copy of the code the job runs, so the runner's workspace can change under it
   rm -rf "$E/code.new"; mkdir -p "$E/code.new/dealdesk/lib"
   cp -r "$repo/leads" "$E/code.new/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/code.new/dealdesk/lib/"
@@ -96,13 +106,7 @@ if [ "$mode" = status ]; then
 fi
 if [ "$mode" = review ]; then
   [ -s "$E/review.jsonl" ] || { echo "no review file (run status after a sample)"; exit 1; }
-  # hybrid encryption to the reviewer's public key: only ciphertext is printed (the private key is not on this server)
-  k=$(mktemp); trap 'rm -f "$k" "$k".*' EXIT
-  openssl rand -hex 32 > "$k"
-  gzip -c "$E/review.jsonl" | openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -out "$k.enc"
-  openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
-  echo "REVIEW-KEY $(base64 -w0 "$k.key")"
-  echo "REVIEW-DATA $(base64 -w0 "$k.enc")"
+  seal "$E/review.jsonl"
   exit 0
 fi
 if [ "$mode" = probe ]; then
@@ -126,10 +130,7 @@ if [ "$mode" = probe ]; then
       docker run --rm curlimages/curl:8.10.1 -4 -sS -o /dev/null -w "ipv4 %{http_code} " --max-time 20 "$u" 2>&1 | cut -c1-160; echo
     done
     getent ahosts recherche-entreprises.api.gouv.fr | head -3
-    k=$(mktemp); gzip -c "$E/people_probe.json" > "$k.gz"; openssl rand -hex 32 > "$k"
-    openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -in "$k.gz" -out "$k.enc"
-    openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
-    echo "REVIEW-KEY $(base64 -w0 "$k.key")"; echo "REVIEW-DATA $(base64 -w0 "$k.enc")"; rm -f "$k" "$k".* "$E/people_probe.json"
+    seal "$E/people_probe.json"; rm -f "$E/people_probe.json"
   fi
   echo "== egress from a container"
   for u in https://news.google.com/rss/search?q=test https://html.duckduckgo.com/html/?q=test https://www.wikidata.org/w/api.php https://api.gleif.org/api/v1/lei-records?page%5Bsize%5D=1 https://pypi.org/simple/opencv-python-headless/; do

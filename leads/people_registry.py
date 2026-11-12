@@ -15,7 +15,6 @@ PROBES = [
     ("NO unit", "GET", "https://data.brreg.no/enhetsregisteret/api/enheter/923609016", None),
     ("NO roles", "GET", "https://data.brreg.no/enhetsregisteret/api/enheter/923609016/roller", None),
     ("NO name", "GET", "https://data.brreg.no/enhetsregisteret/api/enheter?navn=equinor&size=5", None),
-    ("CZ vr", "GET", "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty-vr/45274649", None),
     ("CZ name", "POST", "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/vyhledat", {"obchodniJmeno": "ČEZ", "pocet": 5}),
     ("PL krs", "GET", "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/0000028860?rejestr=P&format=json", None),
     ("PL wl", "GET", "https://wl-api.mf.gov.pl/api/search/nip/7740001454?date=" + time.strftime("%Y-%m-%d"), None),
@@ -36,7 +35,7 @@ def probe(out):
     for lab, m, u, body in PROBES:
         try:
             r = s.post(u, json=body, timeout=25) if m == "POST" else s.get(u, timeout=25)
-            res[lab] = {"status": r.status_code, "ctype": r.headers.get("content-type", ""), "body": r.text[:400000],
+            res[lab] = {"status": r.status_code, "ctype": r.headers.get("content-type", ""), "body": r.text[:120000],
                         "rl": {k: v for k, v in r.headers.items() if "limit" in k.lower() or "retry" in k.lower()}}
             print(lab, r.status_code, len(r.text))
         except Exception as e:  # noqa: BLE001
