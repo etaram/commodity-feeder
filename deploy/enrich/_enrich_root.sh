@@ -113,6 +113,11 @@ if [ "$mode" = probe ]; then
   echo "== index"; ls -la $V/data/web/suppliers.enc 2>/dev/null | awk '{print $5, $6, $7, $8}'
   echo "== private data on volume"; ls $V/data/private 2>/dev/null | head; ls $V/data/checks 2>/dev/null | head
   echo "== zbar/opencv on host"; command -v zbarimg || echo "no zbarimg"; python3 -c "import cv2" 2>/dev/null && echo "cv2 on host" || echo "no cv2 on host"
+  if [ -s "$E/queue.jsonl" ] && [ -d "$E/venv" ]; then
+    echo "== queue by country: [country, records, with website, producers] (counts only)"
+    # the runner's checkout, read-only (the running job's code copy is not touched)
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -v "$repo":/r:ro -w /r "$IMG" /e/venv/bin/python -m leads.enrich_server countries --dir /e
+  fi
   echo "== egress from a container"
   for u in https://news.google.com/rss/search?q=test https://html.duckduckgo.com/html/?q=test https://www.wikidata.org/w/api.php https://api.gleif.org/api/v1/lei-records?page%5Bsize%5D=1 https://pypi.org/simple/opencv-python-headless/; do
     docker run --rm curlimages/curl:8.10.1 -s -o /dev/null -w "%{http_code} " --max-time 15 -A "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0)" "$u" || true; echo " ${u%%\?*}"

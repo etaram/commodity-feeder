@@ -605,6 +605,12 @@ def main(argv):
         print(json.dumps(metrics(d, opt("--keys") or None)))
     elif cmd == "export":
         print(export(d))
+    elif cmd == "countries":  # counts only (the log is public): queue size by country, with a website, producers
+        q = [json.loads(x) for x in open(d / "queue.jsonl", encoding="utf-8")]
+        c, w, p = Counter(), Counter(), Counter()
+        for it in q:
+            c[it["country"]] += 1; w[it["country"]] += bool(it["website"]); p[it["country"]] += it["tier"] == 0
+        print(json.dumps({"queue": len(q), "by_country": [[k, n, w[k], p[k]] for k, n in c.most_common(80)]}))
     elif cmd == "status":
         print((d / "status.json").read_text() if (d / "status.json").exists() else "{}")
 
