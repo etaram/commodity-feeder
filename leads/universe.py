@@ -564,8 +564,112 @@ SANCTIONS_COMPREHENSIVE = {"IRN", "SYR", "PRK", "CUB"}
 SANCTIONS_SECTORAL = {"RUS", "BLR", "VEN", "MMR"}
 
 
+PROVEN_GOODS = {"POWER", "ENERGY", "HEALTH", "DEFENCE", "ICT", "MACHINERY", "AGRI_FOOD", "MINING_METALS", "CHEMICALS",
+                "CONSTR_MAT", "LAB", "TRANSPORT_EQ", "WATER"}
+PROVEN_EPC = {"POWER", "ENERGY", "WATER"}
+PROVEN_MIN_USD = 100_000   # one recent focus-sector award of at least this size makes a winner a listed (tier 3) supplier
+PROVEN_DAYS = 730
+# a natural person (sole trader) is not listed as a proven supplier: Ukrainian/Russian patronymics, "FOP"
+PERSON_NAME = re.compile(r"(^|\s)(ФОП|ФЛП|ІП|ИП)\s|\b[А-ЯІЇЄҐA-Z][а-яіїєґ'A-Za-z-]+\s+[А-ЯІЇЄҐ][а-яіїєґ'-]+\s+[А-ЯІЇЄҐ][а-яіїєґ'-]+(ович|евич|йович|івна|ївна|овна|евна|ична|ич)\b", re.I)
+
+
+def focus_award(sec, svc_cpv):
+    """A contract in a Sinder focus sector: goods (not a service or works CPV), or works in power, energy or water (EPC)."""
+    return bool(sec) and ((sec in PROVEN_GOODS and not svc_cpv) or (sec in PROVEN_EPC and svc_cpv))
+
+
+def evidence(a, share, folder=""):
+    """The award behind 'proven': contract title, buyer and its country, date, the winner's share in USD, source, link."""
+    link = a.get("link") or ""
+    if not link and str(a.get("id", "")).startswith("TED-"):
+        link = f"https://ted.europa.eu/en/notice/-/detail/{str(a['id'])[4:]}"
+    return {"t": re.sub(r"\s+", " ", str(a.get("title") or ""))[:140], "b": str(a.get("buyer") or "")[:80],
+            "c": (a.get("country") or "").split(",")[0][:3], "d": (a.get("published") or "")[:10], "u": round(share or 0),
+            "s": str(a.get("source") or folder)[:40], "l": link[:200], "id": str(a.get("id") or "")[:80]}
+
+
+def proven_text(ev):
+    if not ev:
+        return ""
+    v = f", USD {ev['u']:,}" if ev.get("u") else ""
+    return f"won: {ev['t']} ({ev['b']}, {ev['c']}, {ev['d']}{v}) [{ev['s']}{(' ' + ev['l']) if ev.get('l') else ''}; {ev['id']}]"[:420]
+
+
+MANUF_NAME = re.compile(r"\b(manufactur\w*|fabricant\w*|fabrica\w*|f[áa]brica|factory|industr(?:y|ies|ial|ie|ia|ias|ieel)|"
+                        r"mills?|werke?|kabelwerk\w*|steelworks|pharmaceutic\w*|pharma|laborat[oó]rios? farmac\w*|cement\w*|"
+                        r"metallurg\w*|producers?|produ[cç][aã]o|manufaktur\w*|fertigung|завод|фабрика)\b", re.I)
+TRADER_NAME = re.compile(r"\b(trading|traders?|imports?|importers?|exports?|exporters?|impex|import-export|distribu\w*|comercial\w*|"
+                         r"comercializ\w*|handel\w*|handels\w*|n[ée]goce|supplies|suppliers?|general merchants?|wholesal\w*|"
+                         r"commerce|merchandis\w*|торг\w*|постач\w*)\b", re.I)
+EPC_TITLE = re.compile(r"supply,? (?:and|&) install|design,? (?:supply|build)|turn-?key|\bEPC\b|engineering,? procurement|"
+                       r"construction of|construcci[oó]n de|travaux de|obras? de|Bauleistung|rehabilitation of|installation works", re.I)
+
+
+def award_role(name, works, wins, epc="", trader=False, role_read="", title=""):
+    """(role, basis) from the award record and the name; the website check refines it later. A role from the
+    company's own website wins; otherwise works contracts make it a contractor, then the name decides."""
+    if role_read in ("manufacturer", "producer"):
+        return "manufacturer", "its website (read by the website check)"
+    if role_read == "trader":
+        return "trader / distributor", "its website (read by the website check)"
+    if epc:
+        return "EPC / contractor", f"{epc}: {works} of {wins} contracts are works"
+    if wins and works >= max(1, wins / 2):
+        return "EPC / contractor", f"{works} of {wins} contracts are works"
+    m = MANUF_NAME.search(name or "")
+    if m:
+        return "manufacturer", f"company name says '{m.group(0)}' (to confirm on its website)"
+    m = TRADER_NAME.search(name or "")
+    if m or trader:
+        return "trader / distributor", f"company name says '{m.group(0)}'" if m else "listed as a trader"
+    if EPC_TITLE.search(title or ""):
+        return "EPC / contractor", "the award is a supply-and-install or works contract"
+    return "supplier (role to confirm)", "goods awards only; the website check will tell manufacturer or trader"
+
+
+def _dom(u):
+    h = re.sub(r"^https?://", "", (u or "").lower()).split("/")[0].split(":")[0]
+    return h[4:] if h.startswith("www.") else h
+
+
+def promote_proven(out):
+    """Winners with one recent focus-sector award of PROVEN_MIN_USD or more are listed (tier 3) even before a contact is
+    found: the award is the proof, and the website check and the enrichment are queued for them. Not when the record
+    is a natural person, or a duplicate of a listed record (same legal id, or same website domain in the same
+    country). Returns counts."""
+    listed_ids, listed_doms = set(), set()
+    for r in out:
+        if r["tier"] in ("1", "2", "3"):
+            if r.get("legal_id"):
+                listed_ids.add(re.sub(r"\W", "", str(r["legal_id"])).upper())
+            if _dom(r.get("website")):
+                listed_doms.add((_dom(r["website"]), r["country"]))
+    n = {"promoted": 0, "duplicate_legal_id": 0, "duplicate_domain": 0, "person": 0}
+    for r in out:
+        if r["tier"] != "4" or r.get("origin") != "A" or float(r.get("proven_focus_usd") or 0) < PROVEN_MIN_USD:
+            continue
+        if PERSON_NAME.search(r["supplier"]):
+            n["person"] += 1; continue
+        lid = re.sub(r"\W", "", str(r.get("legal_id") or "")).upper()
+        if lid and lid in listed_ids:
+            n["duplicate_legal_id"] += 1; r["dup_hint"] = "same legal id as a listed supplier"; continue
+        if _dom(r.get("website")) and (_dom(r["website"]), r["country"]) in listed_doms:
+            n["duplicate_domain"] += 1; r["dup_hint"] = "same website as a listed supplier"; continue
+        reach = bool(r.get("email") or r.get("phone") or r.get("website"))
+        r["tier"] = "3"
+        r["tier_reason"] = (f"Qualified: proven by award (USD {float(r['proven_focus_usd']) / 1e3:,.0f}K, {r.get('wins')} win"
+                            f"{'s' if str(r.get('wins')) != '1' else ''})" + ("" if reach else ", contact being found"))
+        n["promoted"] += 1
+        if lid:
+            listed_ids.add(lid)
+        if _dom(r.get("website")):
+            listed_doms.add((_dom(r["website"]), r["country"]))
+    return n
+
+
 def build():
     rates = _rates()
+    proven_since = str(today() - __import__("datetime").timedelta(days=PROVEN_DAYS))
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
                                "sectors": defaultdict(int), "sec_usd": defaultdict(float), "cpv": defaultdict(int), "buyer_c": set(), "buyers": set(),
                                "last": "", "first": "9999", "sources": set(), "example": "", "ex_usd": 0,
@@ -627,6 +731,11 @@ def build():
                 x["sources"].add(a.get("source") or f.parent.name)
                 if share >= x["ex_usd"]:
                     x["ex_usd"] = share; x["example"] = f"{a.get('title', '')[:120]} ({a.get('buyer', '')[:60]}, {p})"
+                # award evidence for the proven-supplier layer: the largest recent award in a Sinder focus sector
+                # (goods, or EPC works in power, energy and water), with its source and link
+                if p >= proven_since and (share >= x.get("pf", -1)) and focus_award(sec, svc_cpv):
+                    x["pf"] = share
+                    x["pf_ev"] = evidence(a, share, f.parent.name)
     # contacts captured from notices (private cache)
     n_ct = 0
     for f in PRIVATE.glob("contacts_*.jsonl"):
@@ -888,7 +997,14 @@ def build():
             "email_kind": email_kind(x["email"], x["website"])[0], "email_domain": email_kind(x["email"], x["website"])[1],
             "contact_seen": today() if (x["email"] or x["phone"]) else "",  # last seen in a source, not a deliverability check
             "name_local": x.get("name_local", ""), "province": x.get("province", ""),
+            # proven-supplier layer: the largest recent focus-sector award, and the role it suggests (new columns at the end)
+            "proven": proven_text(x.get("pf_ev")), "proven_focus_usd": round(x["pf"]) if x.get("pf_ev") else "",
+            "award_role": "", "award_role_basis": "", "dup_hint": "",
         })
+        if x.get("pf_ev") or x["wins"]:
+            out[-1]["award_role"], out[-1]["award_role_basis"] = award_role(
+                name, x["works"], x["wins"], out[-1]["epc"], bool(x.get("trader")), x.get("_role_read", ""),
+                (x.get("pf_ev") or {}).get("t", ""))
         rr = x.get("_role_read")  # the role its own website text reads as (open-source model, leads/describe.py): a reading, shown as such
         if rr == "trader":
             out[-1]["trader"] = "yes"
@@ -932,6 +1048,8 @@ def build():
         elif not r["main_sector"] or r.get("sector_why") == "name only (weak)":
             # nothing says what it sells (contracts known only by reference numbers): below the classified ones
             r["quality"] = round(r["quality"] * 0.7); r["_svc"] = True
+    n_prom = promote_proven(out)
+    log.info("proven by award: %s", n_prom)
     # best tier first; goods suppliers before on-site service firms; then quality
     out.sort(key=lambda r: (r["tier"], r["_svc"], -r["quality"], -r["won_usd_est"]))
     for r in out:

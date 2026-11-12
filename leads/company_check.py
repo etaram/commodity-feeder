@@ -46,6 +46,7 @@ OUT = CHECKS / "company_checks.jsonl"
 UA = "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0; +https://github.com/etaram/commodity-feeder)"
 VERSION = "check-4"
 RECHECK_DAYS = 90
+PROVEN_PRIORITY = 1500  # newly award-proven suppliers added to the enrichment priority list after deals and panel asks
 MAX_PAGES = 8
 PAGE_BYTES = 600_000
 
@@ -600,6 +601,22 @@ def queue(rows, checks, limit, today):
                 continue
             n_disc += nosite
             add(r, "refinement: " + ("find the official website" if nosite else "confirm the website on record"), discover=nosite)
+    # 2b'. suppliers newly listed on the strength of a contract award (leads/proven.py): high value, often without a
+    # website on record, so the check first looks for one (discovery capped at a quarter of a run)
+    try:
+        from .proven import queued as proven_queued
+        n_pd = 0
+        for k in proven_queued(limit * 2):
+            r = by_key.get(k)
+            if not r:
+                continue
+            nosite = not (r.get("website") or r.get("email"))
+            if nosite and n_pd >= limit // 4:
+                continue
+            n_pd += nosite
+            add(r, "proven by award: " + ("find the official website" if nosite else "confirm the website on record"), discover=nosite)
+    except Exception as e:  # noqa: BLE001
+        log.info("company check: proven queue not read (%s)", str(e)[:80])
     # 2c. companies known only by a Chinese name (imported directories): a tenth of each run looks for their site in
     # pinyin (Fortune China 500 first), since the generic queue would reach them only after every proven supplier
     from .zh_names import is_cjk
@@ -864,6 +881,13 @@ def write_priority_keys(path):
     from .push import LEADS_SHEET
     rows = list(csv.DictReader(open(src, encoding="utf-8")))
     keys = priority_keys(rows, _sheet_rows(LEADS_SHEET, "'Check queue'!A2:D2000"), _sheet_rows(LEADS_SHEET, "'Deal Records'!A2:J20000"))
+    # then the suppliers newly listed on the strength of a contract award (leads/proven.py), after deals and asks
+    try:
+        from .proven import queued as proven_queued
+        have = set(keys); known = {f"{r['supplier']}|{r['country']}" for r in rows}
+        keys += [k for k in proven_queued(PROVEN_PRIORITY) if k in known and k not in have]
+    except Exception as e:  # noqa: BLE001
+        log.info("priority keys: proven queue not read (%s)", str(e)[:80])
     Path(path).write_text("\n".join(keys) + "\n", encoding="utf-8")
     log.info("priority keys: %d companies (deals and the Check queue)", len(keys))
     return len(keys)

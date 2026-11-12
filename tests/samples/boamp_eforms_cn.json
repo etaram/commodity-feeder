@@ -1,0 +1,1149 @@
+{
+"ContractNotice": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:NoticeSubType": {
+"cbc:SubTypeCode": {
+"@listName": "notice-subtype",
+"#text": "16"
+}
+}
+}
+}
+}
+},
+"cbc:UBLVersionID": "2.3",
+"cbc:CustomizationID": "eforms-sdk-1.13",
+"cbc:ID": {
+"@schemeName": "notice-id",
+"#text": "0e002147-dada-4059-8e87-59e1405f61f5"
+},
+"cbc:ContractFolderID": "e6f90a70-8d68-4337-b650-32d5fbb550fc",
+"cbc:IssueDate": "2026-10-27+01:00",
+"cbc:IssueTime": "12:10:02+01:00",
+"cbc:VersionID": "01",
+"cbc:RegulatoryDomain": "32014L0024",
+"cbc:NoticeTypeCode": {
+"@listName": "competition",
+"#text": "cn-standard"
+},
+"cbc:NoticeLanguageCode": "FRA",
+"cac:TenderingTerms": {
+"cac:TendererQualificationRequest": {
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "exclusion-grounds-source",
+"#text": "epo-procurement-document"
+}
+}
+},
+"cac:LotDistribution": {
+"cbc:MaximumLotsAwardedNumeric": "3",
+"cbc:MaximumLotsSubmittedNumeric": "3"
+}
+},
+"cac:TenderingProcess": {
+"cbc:ProcedureCode": {
+"@languageID": "FRA",
+"@listName": "procurement-procedure-type",
+"#text": "open"
+},
+"cac:ProcessJustification": {
+"cbc:ProcessReasonCode": {
+"@listName": "accelerated-procedure",
+"#text": "false"
+}
+}
+},
+"cac:ProcurementProject": {
+"cbc:ID": "F26PNEU-HYDRO-LUBR",
+"cbc:Name": {
+"@languageID": "FRA",
+"#text": "Accord cadre à bons de commande pour la fourniture et livraison de pneumatiques, divers flexibles, pièces hydrauliques, diverses huiles et produits pétroliers pour l'ensemble du parc véhicules et matériels de la Ville et du CCAS de Vannes"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "L'accord-cadre sera exécuté par l'émission de bons de commande.\nChaque lot fera l'objet d'une attribution séparée.\nLes prestations sont réglées par des prix unitaires.\nLa présente consultation concerne l'accord cadre à bons de commande pour la fourniture et livraison de pneumatiques, divers flexibles, pièces hydrauliques, diverses huiles et produits pétroliers pour l'ensemble du parc véhicules et matériels de la Ville et du CCAS de Vannes\nLes fournitures demandées devront répondre aux normes françaises et européennes en vigueur à la date d'exécution des marchés et sur toute leur durée notamment celles liées à la protection de l'environnement.\nLa présente consultation est lancée conjointement par la Ville de Vannes et le Centre Communal d'Action Sociale de Vannes sous la forme d'un groupement de commandes"
+},
+"cbc:ProcurementTypeCode": {
+"@listName": "contract-nature",
+"#text": "supplies"
+},
+"cbc:Note": {
+"@languageID": "FRA",
+"#text": "Le pouvoir adjudicateur impose la transmission des documents par voie électronique sur le profil d'acheteur. Les modalités de transmission des plis par voie électronique sont définies dans le règlement de la consultation. La signature électronique des documents n'est pas exigée dans le cadre de cette consultation.\nLa présente consultation comporte des conditions d'exécution à caractère environnemental et social"
+},
+"cac:RequestedTenderTotal": {
+"cbc:EstimatedOverallContractAmount": {
+"@currencyID": "EUR",
+"#text": "360000"
+}
+},
+"cac:MainCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "34913200"
+}
+},
+"cac:AdditionalCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "34913200"
+}
+},
+"cac:RealizedLocation": {
+"cac:Address": {
+"cbc:CountrySubentityCode": {
+"@listName": "nuts",
+"#text": "FRH04"
+},
+"cac:Country": {
+"cbc:IdentificationCode": {
+"@listName": "country",
+"#text": "FRA"
+}
+}
+}
+}
+},
+"cac:ProcurementProjectLot": [
+{
+"cbc:ID": {
+"@schemeName": "Lot",
+"#text": "LOT-0001"
+},
+"cac:TenderingTerms": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:SelectionCriteria": [
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-stand-other"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Lettre de candidature et d'habilitation (Dc1 ou forme libre) signée par la personne habilitée à représenter l'entrepriseles documents relatifs aux pouvoirs de la personne habilitée pour engager le candidat (Dc2 ou forme libre)Déclaration sur l'honneur pour justifier que le candidat n'entre dans aucun des cas d'interdiction de soumissionnercopie du ou des jugements prononcés, si le candidat est en redressement judiciairerenseignements sur le respect de l'obligation d'emploi mentionnée aux articles L. 5212-1 à L. 5212-11 du Code du travail"
+}
+},
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-stand-to-spec"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Déclaration concernant le chiffre d'affaires global et le chiffre d'affaires concernant les prestations objet du contrat, réalisées au cours des trois derniers exercices disponibles"
+}
+},
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-abil-ref-services"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Liste des principales prestations effectuées au cours des trois dernières années, indiquant le montant, la date et le destinataire. Elles sont prouvées par des attestations du destinataire ou, à défaut, par une déclaration du candidat"
+}
+}
+]
+}
+}
+}
+},
+"cbc:VariantConstraintCode": {
+"@listName": "permission",
+"#text": "not-allowed"
+},
+"cbc:FundingProgramCode": {
+"@listName": "eu-funded",
+"#text": "no-eu-funds"
+},
+"cbc:RecurringProcurementIndicator": "false",
+"cbc:MultipleTendersCode": {
+"@listName": "permission",
+"#text": "not-allowed"
+},
+"cac:CallForTendersDocumentReference": {
+"cbc:ID": "1885415",
+"cbc:DocumentType": "non-restricted-document",
+"cbc:LanguageID": "FRA",
+"cbc:DocumentStatusCode": {
+"@listName": "linguistic-status",
+"#text": "official"
+},
+"cac:Attachment": {
+"cac:ExternalReference": {
+"cbc:URI": "https://marches.megalis.bretagne.bzh"
+}
+}
+},
+"cac:TendererQualificationRequest": [
+{
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criteria-source",
+"#text": "epo-notice"
+}
+}
+},
+{
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "reserved-procurement",
+"#text": "none"
+}
+}
+}
+],
+"cac:ContractExecutionRequirement": [
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "einvoicing",
+"#text": "required"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "ecatalog-submission",
+"#text": "not-allowed"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "esignature-submission",
+"#text": "false"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "reserved-execution",
+"#text": "no"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "conditions",
+"#text": "performance"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "L'exécution des prestations débute à compter de la date de notification du contrat.\nAucune clause de garantie financière prévue.\nAucune avance prévue.\nLes prix sont révisables.\nLe paiement des prestations se fera dans le respect du délai global de paiement applicable à l'acheteur.\nBudget Ville de Vannes pour les fournitures Ville de Vannes\nBudget CCAS pour les fournitures CCAS de Vannes"
+}
+}
+],
+"cac:AwardingTerms": {
+"cac:AwardingCriterion": {
+"cac:SubordinateAwardingCriterion": [
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "30"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "quality"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Valeur technique"
+}
+},
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "15"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "quality"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Performances en matière de protection de l'environnement"
+}
+},
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "55"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "price"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Prix des prestations"
+}
+}
+]
+}
+},
+"cac:TenderRecipientParty": {
+"cbc:EndpointID": "https://marches.e-megalisbretagne.bzh"
+},
+"cac:TenderValidityPeriod": {
+"cbc:DurationMeasure": {
+"@unitCode": "MONTH",
+"#text": "4"
+}
+},
+"cac:AppealTerms": {
+"cac:PresentationPeriod": {
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Référé pré-contractuel prévu aux articles L.551-1 à L.551-12 du Code de justice administrative (CJA), et pouvant être exercé avant la signature du contrat. Référé contractuel prévu aux articles L.551-13 à L.551-23 du CJA, et pouvant être exercé dans les délais prévus à l'article R. 551-7 du CJA. Recours de pleine juridiction ouvert aux tiers justifiant d'un intérêt lésé, et pouvant être exercé dans les deux mois suivant la date à laquelle la conclusion du contrat est rendue publique"
+}
+},
+"cac:AppealReceiverParty": {
+"cac:PartyIdentification": {
+"cbc:ID": {
+"@schemeName": "organization",
+"#text": "ORG-0003"
+}
+}
+}
+},
+"cac:Language": {
+"cbc:ID": "FRA"
+},
+"cac:PostAwardProcess": {
+"cbc:ElectronicOrderUsageIndicator": "false",
+"cbc:ElectronicPaymentUsageIndicator": "false"
+}
+},
+"cac:TenderingProcess": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efbc:AccessToolName": "AW Solutions"
+}
+}
+}
+},
+"cbc:SubmissionMethodCode": {
+"@listName": "esubmission",
+"#text": "required"
+},
+"cbc:GovernmentAgreementConstraintIndicator": "true",
+"cac:TenderSubmissionDeadlinePeriod": {
+"cbc:EndDate": "2026-11-30+01:00",
+"cbc:EndTime": "12:00:00+01:00"
+},
+"cac:OpenTenderEvent": {
+"cbc:OccurrenceDate": "2026-11-30+01:00",
+"cbc:OccurrenceTime": "14:00:00+01:00"
+},
+"cac:AuctionTerms": {
+"cbc:AuctionConstraintIndicator": "false"
+},
+"cac:FrameworkAgreement": {
+"cbc:MaximumOperatorQuantity": "1"
+},
+"cac:ContractingSystem": [
+{
+"cbc:ContractingSystemTypeCode": {
+"@listName": "framework-agreement",
+"#text": "fa-wo-rc"
+}
+},
+{
+"cbc:ContractingSystemTypeCode": {
+"@listName": "dps-usage",
+"#text": "none"
+}
+}
+]
+},
+"cac:ProcurementProject": {
+"cbc:ID": {
+"@schemeName": "InternalID",
+"#text": "01"
+},
+"cbc:Name": {
+"@languageID": "FRA",
+"#text": "Acquisition de pneumatiques et prestations afférentes"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Acquisition de pneumatiques et prestations afférentes&amp;lt;br/&amp;gt;"
+},
+"cbc:ProcurementTypeCode": {
+"@listName": "contract-nature",
+"#text": "supplies"
+},
+"cac:RequestedTenderTotal": {
+"cbc:EstimatedOverallContractAmount": {
+"@currencyID": "EUR",
+"#text": "200000"
+}
+},
+"cac:MainCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "34913200"
+}
+},
+"cac:AdditionalCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "34913200"
+}
+},
+"cac:RealizedLocation": {
+"cac:Address": {
+"cbc:CityName": "Vannes Cedex",
+"cbc:PostalZone": "56019",
+"cbc:CountrySubentityCode": {
+"@listName": "nuts",
+"#text": "FRH04"
+},
+"cac:Country": {
+"cbc:IdentificationCode": {
+"@listName": "country",
+"#text": "FRA"
+}
+}
+}
+},
+"cac:PlannedPeriod": {
+"cbc:StartDate": "2027-01-01+01:00",
+"cbc:DurationMeasure": {
+"@unitCode": "MONTH",
+"#text": "48"
+}
+}
+}
+},
+{
+"cbc:ID": {
+"@schemeName": "Lot",
+"#text": "LOT-0002"
+},
+"cac:TenderingTerms": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:SelectionCriteria": [
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-stand-other"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Lettre de candidature et d'habilitation (Dc1 ou forme libre) signée par la personne habilitée à représenter l'entrepriseles documents relatifs aux pouvoirs de la personne habilitée pour engager le candidat (Dc2 ou forme libre)Déclaration sur l'honneur pour justifier que le candidat n'entre dans aucun des cas d'interdiction de soumissionnercopie du ou des jugements prononcés, si le candidat est en redressement judiciairerenseignements sur le respect de l'obligation d'emploi mentionnée aux articles L. 5212-1 à L. 5212-11 du Code du travail"
+}
+},
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-stand-to-spec"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Déclaration concernant le chiffre d'affaires global et le chiffre d'affaires concernant les prestations objet du contrat, réalisées au cours des trois derniers exercices disponibles"
+}
+},
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-abil-ref-services"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Liste des principales prestations effectuées au cours des trois dernières années, indiquant le montant, la date et le destinataire. Elles sont prouvées par des attestations du destinataire ou, à défaut, par une déclaration du candidat"
+}
+}
+]
+}
+}
+}
+},
+"cbc:VariantConstraintCode": {
+"@listName": "permission",
+"#text": "not-allowed"
+},
+"cbc:FundingProgramCode": {
+"@listName": "eu-funded",
+"#text": "no-eu-funds"
+},
+"cbc:RecurringProcurementIndicator": "false",
+"cbc:MultipleTendersCode": {
+"@listName": "permission",
+"#text": "not-allowed"
+},
+"cac:CallForTendersDocumentReference": {
+"cbc:ID": "1885415",
+"cbc:DocumentType": "non-restricted-document",
+"cbc:LanguageID": "FRA",
+"cbc:DocumentStatusCode": {
+"@listName": "linguistic-status",
+"#text": "official"
+},
+"cac:Attachment": {
+"cac:ExternalReference": {
+"cbc:URI": "https://marches.megalis.bretagne.bzh"
+}
+}
+},
+"cac:TendererQualificationRequest": [
+{
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criteria-source",
+"#text": "epo-notice"
+}
+}
+},
+{
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "reserved-procurement",
+"#text": "none"
+}
+}
+}
+],
+"cac:ContractExecutionRequirement": [
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "einvoicing",
+"#text": "required"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "ecatalog-submission",
+"#text": "not-allowed"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "esignature-submission",
+"#text": "false"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "reserved-execution",
+"#text": "no"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "conditions",
+"#text": "performance"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "L'exécution des prestations débute à compter de la date de notification du contrat.\nAucune clause de garantie financière prévue.\nAucune avance prévue.\nLes prix sont révisables.\nLe paiement des prestations se fera dans le respect du délai global de paiement applicable à l'acheteur.\nBudget Ville de Vannes pour les fournitures Ville de Vannes\nBudget CCAS pour les fournitures CCAS de Vannes"
+}
+}
+],
+"cac:AwardingTerms": {
+"cac:AwardingCriterion": {
+"cac:SubordinateAwardingCriterion": [
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "30"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "quality"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Valeur technique"
+}
+},
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "15"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "quality"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Performances en matière de protection de l'environnement"
+}
+},
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "55"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "price"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Prix des prestations"
+}
+}
+]
+}
+},
+"cac:TenderRecipientParty": {
+"cbc:EndpointID": "https://marches.e-megalisbretagne.bzh"
+},
+"cac:TenderValidityPeriod": {
+"cbc:DurationMeasure": {
+"@unitCode": "MONTH",
+"#text": "4"
+}
+},
+"cac:AppealTerms": {
+"cac:PresentationPeriod": {
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Référé pré-contractuel prévu aux articles L.551-1 à L.551-12 du Code de justice administrative (CJA), et pouvant être exercé avant la signature du contrat. Référé contractuel prévu aux articles L.551-13 à L.551-23 du CJA, et pouvant être exercé dans les délais prévus à l'article R. 551-7 du CJA. Recours de pleine juridiction ouvert aux tiers justifiant d'un intérêt lésé, et pouvant être exercé dans les deux mois suivant la date à laquelle la conclusion du contrat est rendue publique"
+}
+},
+"cac:AppealReceiverParty": {
+"cac:PartyIdentification": {
+"cbc:ID": {
+"@schemeName": "organization",
+"#text": "ORG-0003"
+}
+}
+}
+},
+"cac:Language": {
+"cbc:ID": "FRA"
+},
+"cac:PostAwardProcess": {
+"cbc:ElectronicOrderUsageIndicator": "false",
+"cbc:ElectronicPaymentUsageIndicator": "false"
+}
+},
+"cac:TenderingProcess": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efbc:AccessToolName": "AW Solutions"
+}
+}
+}
+},
+"cbc:SubmissionMethodCode": {
+"@listName": "esubmission",
+"#text": "required"
+},
+"cbc:GovernmentAgreementConstraintIndicator": "true",
+"cac:TenderSubmissionDeadlinePeriod": {
+"cbc:EndDate": "2026-11-30+01:00",
+"cbc:EndTime": "12:00:00+01:00"
+},
+"cac:OpenTenderEvent": {
+"cbc:OccurrenceDate": "2026-11-30+01:00",
+"cbc:OccurrenceTime": "14:00:00+01:00"
+},
+"cac:AuctionTerms": {
+"cbc:AuctionConstraintIndicator": "false"
+},
+"cac:FrameworkAgreement": {
+"cbc:MaximumOperatorQuantity": "1"
+},
+"cac:ContractingSystem": [
+{
+"cbc:ContractingSystemTypeCode": {
+"@listName": "framework-agreement",
+"#text": "fa-wo-rc"
+}
+},
+{
+"cbc:ContractingSystemTypeCode": {
+"@listName": "dps-usage",
+"#text": "none"
+}
+}
+]
+},
+"cac:ProcurementProject": {
+"cbc:ID": {
+"@schemeName": "InternalID",
+"#text": "02"
+},
+"cbc:Name": {
+"@languageID": "FRA",
+"#text": "Acquisition de fournitures hydrauliques et prestations de service"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Acquisition de fournitures hydrauliques et prestations de service &amp;lt;br/&amp;gt;"
+},
+"cbc:ProcurementTypeCode": {
+"@listName": "contract-nature",
+"#text": "supplies"
+},
+"cac:RequestedTenderTotal": {
+"cbc:EstimatedOverallContractAmount": {
+"@currencyID": "EUR",
+"#text": "80000"
+}
+},
+"cac:MainCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "34913200"
+}
+},
+"cac:AdditionalCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "09211600"
+}
+},
+"cac:RealizedLocation": {
+"cac:Address": {
+"cbc:CityName": "Vannes Cedex",
+"cbc:PostalZone": "56019",
+"cbc:CountrySubentityCode": {
+"@listName": "nuts",
+"#text": "FRH04"
+},
+"cac:Country": {
+"cbc:IdentificationCode": {
+"@listName": "country",
+"#text": "FRA"
+}
+}
+}
+},
+"cac:PlannedPeriod": {
+"cbc:StartDate": "2027-01-01+01:00",
+"cbc:DurationMeasure": {
+"@unitCode": "MONTH",
+"#text": "48"
+}
+}
+}
+},
+{
+"cbc:ID": {
+"@schemeName": "Lot",
+"#text": "LOT-0003"
+},
+"cac:TenderingTerms": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:SelectionCriteria": [
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-stand-other"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Lettre de candidature et d'habilitation (Dc1 ou forme libre) signée par la personne habilitée à représenter l'entrepriseles documents relatifs aux pouvoirs de la personne habilitée pour engager le candidat (Dc2 ou forme libre)Déclaration sur l'honneur pour justifier que le candidat n'entre dans aucun des cas d'interdiction de soumissionnercopie du ou des jugements prononcés, si le candidat est en redressement judiciairerenseignements sur le respect de l'obligation d'emploi mentionnée aux articles L. 5212-1 à L. 5212-11 du Code du travail"
+}
+},
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-stand-to-spec"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Déclaration concernant le chiffre d'affaires global et le chiffre d'affaires concernant les prestations objet du contrat, réalisées au cours des trois derniers exercices disponibles"
+}
+},
+{
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criterion",
+"#text": "slc-abil-ref-services"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Liste des principales prestations effectuées au cours des trois dernières années, indiquant le montant, la date et le destinataire. Elles sont prouvées par des attestations du destinataire ou, à défaut, par une déclaration du candidat"
+}
+}
+]
+}
+}
+}
+},
+"cbc:VariantConstraintCode": {
+"@listName": "permission",
+"#text": "not-allowed"
+},
+"cbc:FundingProgramCode": {
+"@listName": "eu-funded",
+"#text": "no-eu-funds"
+},
+"cbc:RecurringProcurementIndicator": "false",
+"cbc:MultipleTendersCode": {
+"@listName": "permission",
+"#text": "not-allowed"
+},
+"cac:CallForTendersDocumentReference": {
+"cbc:ID": "1885415",
+"cbc:DocumentType": "non-restricted-document",
+"cbc:LanguageID": "FRA",
+"cbc:DocumentStatusCode": {
+"@listName": "linguistic-status",
+"#text": "official"
+},
+"cac:Attachment": {
+"cac:ExternalReference": {
+"cbc:URI": "https://marches.megalis.bretagne.bzh"
+}
+}
+},
+"cac:TendererQualificationRequest": [
+{
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "selection-criteria-source",
+"#text": "epo-notice"
+}
+}
+},
+{
+"cac:SpecificTendererRequirement": {
+"cbc:TendererRequirementTypeCode": {
+"@listName": "reserved-procurement",
+"#text": "none"
+}
+}
+}
+],
+"cac:ContractExecutionRequirement": [
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "einvoicing",
+"#text": "required"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "ecatalog-submission",
+"#text": "not-allowed"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "esignature-submission",
+"#text": "false"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "reserved-execution",
+"#text": "no"
+}
+},
+{
+"cbc:ExecutionRequirementCode": {
+"@listName": "conditions",
+"#text": "performance"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "L'exécution des prestations débute à compter de la date de notification du contrat.\nAucune clause de garantie financière prévue.\nAucune avance prévue.\nLes prix sont révisables.\nLe paiement des prestations se fera dans le respect du délai global de paiement applicable à l'acheteur.\nBudget Ville de Vannes pour les fournitures Ville de Vannes\nBudget CCAS pour les fournitures CCAS de Vannes"
+}
+}
+],
+"cac:AwardingTerms": {
+"cac:AwardingCriterion": {
+"cac:SubordinateAwardingCriterion": [
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "30"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "quality"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Valeur technique"
+}
+},
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "15"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "quality"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Performances en matière de protection de l'environnement"
+}
+},
+{
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efac:AwardCriterionParameter": {
+"efbc:ParameterCode": {
+"@listName": "number-weight",
+"#text": "per-exa"
+},
+"efbc:ParameterNumeric": "55"
+}
+}
+}
+}
+},
+"cbc:AwardingCriterionTypeCode": {
+"@listName": "award-criterion-type",
+"#text": "price"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Prix des prestations"
+}
+}
+]
+}
+},
+"cac:TenderRecipientParty": {
+"cbc:EndpointID": "https://marches.e-megalisbretagne.bzh"
+},
+"cac:TenderValidityPeriod": {
+"cbc:DurationMeasure": {
+"@unitCode": "MONTH",
+"#text": "4"
+}
+},
+"cac:AppealTerms": {
+"cac:PresentationPeriod": {
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Référé pré-contractuel prévu aux articles L.551-1 à L.551-12 du Code de justice administrative (CJA), et pouvant être exercé avant la signature du contrat. Référé contractuel prévu aux articles L.551-13 à L.551-23 du CJA, et pouvant être exercé dans les délais prévus à l'article R. 551-7 du CJA. Recours de pleine juridiction ouvert aux tiers justifiant d'un intérêt lésé, et pouvant être exercé dans les deux mois suivant la date à laquelle la conclusion du contrat est rendue publique"
+}
+},
+"cac:AppealReceiverParty": {
+"cac:PartyIdentification": {
+"cbc:ID": {
+"@schemeName": "organization",
+"#text": "ORG-0003"
+}
+}
+}
+},
+"cac:Language": {
+"cbc:ID": "FRA"
+},
+"cac:PostAwardProcess": {
+"cbc:ElectronicOrderUsageIndicator": "false",
+"cbc:ElectronicPaymentUsageIndicator": "false"
+}
+},
+"cac:TenderingProcess": {
+"ext:UBLExtensions": {
+"ext:UBLExtension": {
+"ext:ExtensionContent": {
+"efext:EformsExtension": {
+"efbc:AccessToolName": "AW Solutions"
+}
+}
+}
+},
+"cbc:SubmissionMethodCode": {
+"@listName": "esubmission",
+"#text": "required"
+},
+"cbc:GovernmentAgreementConstraintIndicator": "true",
+"cac:TenderSubmissionDeadlinePeriod": {
+"cbc:EndDate": "2026-11-30+01:00",
+"cbc:EndTime": "12:00:00+01:00"
+},
+"cac:OpenTenderEvent": {
+"cbc:OccurrenceDate": "2026-11-30+01:00",
+"cbc:OccurrenceTime": "14:00:00+01:00"
+},
+"cac:AuctionTerms": {
+"cbc:AuctionConstraintIndicator": "false"
+},
+"cac:FrameworkAgreement": {
+"cbc:MaximumOperatorQuantity": "1"
+},
+"cac:ContractingSystem": [
+{
+"cbc:ContractingSystemTypeCode": {
+"@listName": "framework-agreement",
+"#text": "fa-wo-rc"
+}
+},
+{
+"cbc:ContractingSystemTypeCode": {
+"@listName": "dps-usage",
+"#text": "none"
+}
+}
+]
+},
+"cac:ProcurementProject": {
+"cbc:ID": {
+"@schemeName": "InternalID",
+"#text": "03"
+},
+"cbc:Name": {
+"@languageID": "FRA",
+"#text": "Acquisition de lubrifiants, graisses, liquide de refroidissement et liquide lave-glace"
+},
+"cbc:Description": {
+"@languageID": "FRA",
+"#text": "Acquisition de lubrifiants, graisses, liquide de refroidissement et liquide lave-glace&amp;lt;br/&amp;gt;"
+},
+"cbc:ProcurementTypeCode": {
+"@listName": "contract-nature",
+"#text": "supplies"
+},
+"cac:RequestedTenderTotal": {
+"cbc:EstimatedOverallContractAmount": {
+"@currencyID": "EUR",
+"#text": "80000"
+}
+},
+"cac:MainCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "34913200"
+}
+},
+"cac:AdditionalCommodityClassification": {
+"cbc:ItemClassificationCode": {
+"@listName": "cpv",
+"#text": "09211000"
+}
+},
+"cac:RealizedLocation": {
+"cac:Address": {
+"cbc:CityName": "Vannes Cedex",
+"cbc:PostalZone": "56019",
+"cbc:CountrySubentityCode": {
+"@listName": "nuts",
+"#text": "FRH04"
+},
+"cac:Country": {
+"cbc:IdentificationCode": {
+"@listName": "country",
+"#text": "FRA"
+}
+}
+}
+},
+"cac:PlannedPeriod": {
+"cbc:StartDate": "2027-01-01+01:00",
+"cbc:DurationMeasure": {
+"@unitCode": "MONTH",
+"#text": "48"
+}
+}
+}
+}
+]
+}
+}

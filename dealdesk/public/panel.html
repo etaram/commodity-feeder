@@ -1603,6 +1603,7 @@ function openTender(r, keep) {
       ${r.contact ? `<dt>${esc(t("contact"))}</dt><dd dir="ltr">${esc(r.contact)}</dd>` : ""}
       <dt>${esc(t("notice"))}</dt><dd>${link(r.link, t("open_notice"))}</dd>
     </dl>
+    ${tenderDetailsHtml(r)}
     ${V2() ? tenderSteps(r, inP) : `<div class="actions">
       <button class="primary" type="button" id="a-sum">${esc(t("a_sum"))}</button>
       <button type="button" id="a-thr">${esc(t("a_thr"))}</button>
@@ -1629,7 +1630,7 @@ function openTender(r, keep) {
   $("#a-quick").onclick = () => quickTender(r);
   $("#a-sum").onclick = () => tenderAsk(r, "sum");
   $("#a-thr").onclick = () => tenderAsk(r, "thr");
-  const eligJob = e => moreInfo({ type: "eligibility", target_id: r.id, target: r.title_en, context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "sector", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "why"]), title_he: he } }, e?.currentTarget, "#more-t");
+  const eligJob = e => moreInfo({ type: "eligibility", target_id: r.id, target: r.title_en, context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "sector", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "why"]), title_he: he, ...(r.details ? { details: String(r.details).slice(0, 6000) } : {}) } }, e?.currentTarget, "#more-t");
   S.eligJob = eligJob;
   $("#a-sup").onclick = () => showSuppliers(r.sector, `${r.title_en} ${r.commodity}`, "#t-out", { kind: "tender", r });
   $("#a-quote").onclick = e => moreInfo({ type: "quote", target_id: "Q:" + r.id, target: "Quote: " + (r.title_en || "").slice(0, 200), context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "est_bidders", "buyer_median_award_usd", "why"]), title_he: he } }, e.currentTarget, "#more-q");
@@ -1650,6 +1651,49 @@ function openTender(r, keep) {
       if (j && j.ok && j.project) { S.botProjects = null; $("#t-out").insertAdjacentHTML("beforeend", `<div class="flash ok">${esc(t("p_opened"))} <a href="/deal/${encodeURIComponent(j.project.deal_id)}" target="_blank" rel="noopener">${esc(t("p_dealfile"))}</a></div>`); return; }
       btn.disabled = false; if (j && j.error) { $("#t-out").insertAdjacentHTML("beforeend", `<div class="flash err">${esc(String(j.error).slice(0, 160))}</div>`); return; } }
     projectJob({ type: "project_start", target_id: "P:" + r.id, target: r.title_en, context: { ...pick(r, ["id", "title_en", "title_original", "buyer", "country", "region", "sector", "commodity", "est_value_usd", "deadline", "access", "link", "contact", "source", "notice_type", "incumbent", "why"]), title_he: he } }, e.currentTarget, "#t-out"); };
+}
+
+/* ---------- bid requirements read from the official notice (leads/tender_details.py, column "details") ----------
+   Every field shows what the publisher's own machine-readable record states, with the source and the date it was read;
+   "not stated" means the record does not give it (the tender documents may). Nothing here is inferred. */
+const TD_FIELDS = [["items", "Items and quantities", "פריטים וכמויות"], ["technical_standards", "Technical standards", "תקנים טכניים"],
+  ["delivery", "Delivery place and terms", "מקום ותנאי אספקה"], ["bid_security", "Bid security", "ערבות הצעה"],
+  ["performance_guarantee", "Performance guarantee", "ערבות ביצוע"], ["eligibility", "Eligibility and experience", "תנאי סף וניסיון"],
+  ["lots", "Lots", "חלוקה למנות"], ["evaluation", "Evaluation method", "שיטת הערכה"], ["clarification_deadline", "Clarification deadline", "מועד אחרון לשאלות הבהרה"],
+  ["documents", "Tender documents", "מסמכי המכרז"], ["submission_url", "Submit at", "הגשה ב"], ["tender_validity", "Bid validity", "תוקף הצעה"]];
+const TD_KEYS = { name: ["", ""], quantity: ["qty", "כמות"], quantity_in_text: ["quantity in the notice", "כמות בהודעה"], lot: ["lot", "מנה"], cpv: ["CPV", "CPV"],
+  required: ["required", "נדרשת"], terms: ["terms", "תנאים"], amount: ["amount", "סכום"], quoted: ["quoted", "ציטוט"], place: ["place", "מקום"], period: ["period", "תקופה"],
+  incoterms: ["Incoterms", "Incoterms"], delivery_time_quoted: ["delivery time", "זמן אספקה"], deliver_by: ["deliver by", "אספקה עד"], count: ["count", "מספר"],
+  method: ["method", "שיטה"], criteria: ["criteria", "קריטריונים"], max_lots_per_tenderer: ["max lots per bidder", "מקסימום מנות למציע"], type: ["", ""], text: ["", ""], title: ["", ""],
+  value: ["value", "שווי"], weight: ["weight", "משקל"], note: ["note", "הערה"], unit_price_est: ["est. unit price", "מחיר יחידה משוער"], item: ["item", "פריט"] };
+function tdVal(v, depth = 0) {
+  if (v === true) return esc(mt("yes", "כן"));
+  if (v === false) return esc(mt("no", "לא"));
+  if (v == null || v === "") return "";
+  if (Array.isArray(v)) {
+    const shown = v.slice(0, 8).map(x => tdVal(x, depth + 1)).filter(Boolean);
+    const more = v.length > 8 ? ` <span class="sub">+${v.length - 8} ${esc(mt("more", "נוספים"))}</span>` : "";
+    return depth ? shown.join("; ") + more : (shown.length > 1 ? `<ul style="margin:2px 0;padding-inline-start:18px">${shown.map(x => `<li>${x}</li>`).join("")}</ul>` : shown.join("")) + more;
+  }
+  if (typeof v === "object") {
+    if (v.url) return link(v.url, v.title || v.type || host(v.url)) + (v.type && v.title ? ` <span class="sub">${esc(v.type)}</span>` : "");
+    if (v.lots && Array.isArray(v.lots)) return `${esc(v.count)} ${esc(mt("lots", "מנות"))}${v.max_lots_per_tenderer ? ` · ${esc(mt("max per bidder", "מקסימום למציע"))} ${esc(v.max_lots_per_tenderer)}` : ""}` + tdVal(v.lots, 0);
+    return Object.entries(v).filter(([, x]) => x !== "" && x != null).map(([k, x]) => { const l = (TD_KEYS[k] || [k, k])[LANG === "he" ? 1 : 0]; return (l ? `<span class="sub">${esc(l)}:</span> ` : "") + tdVal(x, depth + 1); }).join(depth ? ", " : "<br>");
+  }
+  return esc(String(v));
+}
+function tenderDetailsHtml(r) {
+  let d = null;
+  try { d = r.details ? JSON.parse(r.details) : null; } catch (e) { d = null; }
+  if (!d || !d.f) return "";
+  const f = d.f, main = TD_FIELDS.slice(0, 10).filter(([k]) => f[k]);
+  const stated = main.filter(([k]) => f[k].v !== "not stated").length;
+  const read = Object.values(f).map(x => x.a).filter(Boolean).sort().pop() || "";
+  const row = ([k, en, he]) => { const x = f[k]; if (!x) return ""; const ns = x.v === "not stated";
+    return `<dt title="${esc(x.b || "")}">${esc(mt(en, he))}</dt><dd>${ns ? `<span class="muted">${esc(mt("not stated in the notice", "לא צוין בהודעה"))}</span>` : tdVal(x.v)}${x.s && x.s !== d.src ? ` <span class="sub">${link(x.s, mt("source", "מקור"))}</span>` : ""}</dd>`; };
+  return `<details class="section" open><summary>${esc(mt("Bid requirements from the official notice", "דרישות ההגשה מתוך ההודעה הרשמית"))} <span class="pill info">${stated}/${main.length}</span></summary>
+    <dl class="kv">${TD_FIELDS.map(row).join("")}</dl>
+    <div class="sub muted">${esc(mt("Read from the publisher's machine-readable record", "נקרא מהרשומה הממוחשבת של המפרסם"))}: ${link(d.src, host(d.src))} · ${esc(read)}. ${esc(mt("'Not stated' means the record does not give it; check the tender documents.", "'לא צוין' = הרשומה לא מציינת; יש לבדוק במסמכי המכרז."))}</div></details>`;
 }
 
 /* ---------- country intelligence: one page per country from the brain's layers (BRAIN.md) ---------- */
