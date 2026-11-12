@@ -224,7 +224,8 @@ def press_lane(s, it, site):
     r = s.get(GN, params={"q": f'"{names[0]}"', "hl": "en-US", "gl": "US", "ceid": "US:en"}, timeout=15)
     if r.status_code != 200:
         return {"key": it["key"], "checked_at": now(), "error": f"HTTP {r.status_code}"}
-    arts = cp.press_filter(cp.parse_rss(r.text), it["name"], cn, (site or {}).get("domain", ""))
+    notable = bool(it.get("notable") or it.get("em") or it.get("size") == "large")
+    arts = cp.press_filter(cp.parse_rss(r.text), it["name"], cn, (site or {}).get("domain", ""), notable)
     return {"key": it["key"], "checked_at": now(), "press": arts, "query": names[0]}
 
 

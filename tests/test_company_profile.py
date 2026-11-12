@@ -121,8 +121,8 @@ class Precision(unittest.TestCase):
         self.assertEqual(cp.people_on([("https://x.test/about-us/our-customers/", cust)]), [])
 
     def test_whatsapp_national_link(self):
-        wa = cp.whatsapp_on([], ["+912345678"], "PRT")
-        self.assertEqual([x["number"] for x in wa], ["+351912345678"])
+        wa = cp.whatsapp_on([], ["+913456789"], "PRT")
+        self.assertEqual([x["number"] for x in wa], ["+351913456789"])
 
     def test_founded_strict(self):
         page = "<p>Our milestones</p><p>1926</p><p>Product line since 2019.</p><p>Created</p><p>2018</p>"
@@ -132,5 +132,15 @@ class Precision(unittest.TestCase):
     def test_press_case_and_junk(self):
         items = [{"title": "Spike in bird flu at Australian agricultural show", "outlet": "x", "outlet_url": "", "url": "a", "date": ""},
                  {"title": "Example Agricultural Company (EAC.AX) Stock Price, News, Quote & History", "outlet": "y", "outlet_url": "", "url": "b", "date": ""},
-                 {"title": "Example Agricultural Company posts record profit", "outlet": "z", "outlet_url": "", "url": "c", "date": ""}]
+                 {"title": "Example Agricultural Company posts record profit in Australia", "outlet": "z", "outlet_url": "", "url": "c", "date": ""}]
         self.assertEqual([g["url"] for g in cp.press_filter(items, "Example Agricultural Company", ["Australia"])], ["c"])
+
+
+class Precision2(unittest.TestCase):
+    def test_namesakes_and_placeholders(self):
+        items = [{"title": "Meet the founder of Concept Works", "outlet": "x", "outlet_url": "", "url": "a", "date": ""}]
+        self.assertEqual(cp.press_filter(items, "Concept Works SA", ["Luxembourg"]), [])
+        self.assertEqual(len(cp.press_filter(items, "Concept Works SA", ["Luxembourg"], notable=True)), 1)
+        self.assertEqual(cp.whatsapp_on([], ["+27600123456"], "ZAF"), [])
+        page = "<h3>Cadillac Coffee Mug</h3><p>GM Five-Panel Cap</p><h3>North America</h3><p>President &amp; Business Head</p>"
+        self.assertEqual(cp.people_on([("https://x.test/about/leadership", page)]), [])

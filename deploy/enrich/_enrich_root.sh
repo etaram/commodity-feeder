@@ -64,10 +64,17 @@ fi
 if [ "$mode" = start ]; then
   code; venv
   [ -s "$E/queue.jsonl" ] || queue
+  if [ ! -f "$E/full-run-started" ] && [ -s "$E/site.jsonl" ]; then   # the last sample's files move aside: the full run starts clean
+    docker rm -f enrich >/dev/null 2>&1 || true
+    n=1; while [ -d "$E/sample-$n" ]; do n=$((n+1)); done; mkdir -p "$E/sample-$n"
+    for f in site press people wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
+    rm -f "$E/status.json"; echo "sample files moved to sample-$n"
+  fi
   touch "$E/full-run-started"
   lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,wikidata)
   echo "lanes: $lanes"
-  launch unless-stopped --lanes "$lanes" --workers 16
+  # 24 workers: the sample used about 0.5 of its 1.5 CPUs with 16 (the work is waiting on remote sites)
+  launch unless-stopped --lanes "$lanes" --workers 24
   exit 0
 fi
 if [ "$mode" = stop ]; then

@@ -117,8 +117,8 @@ def whatsapp_on(pages, linked, country=""):
             d = _with_cc(d, country)
             if not d:
                 return
-        if not (8 <= len(d) <= 15) or re.fullmatch(r"(\d)\1+", d):
-            return
+        if not (8 <= len(d) <= 15) or re.fullmatch(r"(\d)\1+", d) or re.search(r"123456|234567|000000|999999", d):
+            return  # a template placeholder, not the company's number
         if not _valid(d):
             # a wa.me link written with the national number only (no country code): rebuilt for the company's country
             d = _with_cc(d, country) if country else ""
@@ -163,7 +163,7 @@ def _with_cc(d, country):
 
 # ---------------------------------------------------------------- people by title
 ROLE_TITLES = [
-    ("chief executive", r"chief executive officer|\bCEO\b|managing director|\bM\.?D\.?\b(?= *[,|-])|general manager|\bGM\b|"
+    ("chief executive", r"chief executive officer|\bCEO\b|managing director|\bM\.?D\.?\b(?= *[,|-])|general manager|"
                         r"president(?! of the)|geschäftsführer(?:in)?|gerente general|director general|diretor(?:a)? (?:geral|presidente)|"
                         r"directeur général|PDG|amministratore delegato|direttore generale|总经理|總經理|首席执行官|executive director"),
     ("founder / owner", r"co-?founder|founder|owner|proprietor|propriétaire|fundador(?:a)?|gründer(?:in)?|inhaber(?:in)?|创始人|董事长|chairman|chairwoman|chairperson"),
@@ -188,7 +188,8 @@ NOT_NAME = re.compile(r"\b(company|group|limited|ltd|inc|gmbh|corp|industr|produ
                       r"engineering|technology|production|operations|finance|human|resources|marketing|commercial|copyright|rights|"
                       r"reserved|privacy|policy|cookie|search|menu|street|road|avenue|china|india|turkey|brazil|germany|united|"
                       r"republic|kingdom|states|city|province|district|zone|park|building|floor|room|tel|fax|mobile|whatsapp|wechat|"
-                      r"press|releases?|awards?|outstanding|entrepreneur|investors?|careers?|events?|media|download)\b", re.I)
+                      r"press|releases?|awards?|outstanding|entrepreneur|investors?|careers?|events?|media|download|north|south|east|west|"
+                      r"america|europe|asia|africa|middle|pacific|innovation|mug|cap|coffee|shirt|store|brand)\b", re.I)
 # pages that quote other companies' people (customers, testimonials, case studies, news): no role holders taken there
 NOT_PEOPLE_PAGE = re.compile(r"customer|client|testimonial|case-stud|reference|news|press|blog|award|event|partner|project", re.I)
 NOT_TARGET = re.compile(r"non-?executive|independent (?:director|member)|board member|secretary|auditor|nominee", re.I)
@@ -465,7 +466,7 @@ PRESS_JUNK = re.compile(r"stock price|price, news|quote (and|&) history|seasonal
                         r"stock overview|undervalued|working capital per share|share price|\(\w+\.\w{1,3}\) stock|company profile|org chart", re.I)
 
 
-def press_filter(items, name, country_names, domain=""):
+def press_filter(items, name, country_names, domain="", notable=False):
     """Google News RSS items -> articles about this company: the exact name in the title, and the country named in the
     title or the outlet in that country (or the company's own domain as the source), to keep namesakes out."""
     n = press_name(name)
@@ -480,7 +481,10 @@ def press_filter(items, name, country_names, domain=""):
             continue
         ctry = any(re.search(r"(?<![\w])" + re.escape(c) + r"(?![\w])", t + " " + it.get("outlet", ""), re.I) for c in country_names if c)
         own = domain and domain in it.get("outlet_url", "")
-        distinctive = len(n) >= 14 and len(n.split()) >= 2
+        # without the country or the own domain, only a long name or a notable company (namesakes are common for
+        # two-word names: "Concept Factory", "Works & Engineering")
+        words = [w for w in re.findall(r"[\w'-]+", n) if len(w) > 1]
+        distinctive = (len(words) >= 3 and len(n) >= 18) or (notable and len(words) >= 2)
         if not (ctry or own or distinctive):
             continue
         out.append({**it, "match": "exact name" + (", country named" if ctry else ", own domain" if own else ", distinctive name")})
