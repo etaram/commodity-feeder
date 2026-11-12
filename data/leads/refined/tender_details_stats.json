@@ -1,127 +1,127 @@
 {
- "at": "2026-11-12T16:44+00:00",
+ "at": "2026-11-12T17:06+00:00",
  "version": "details-1",
  "mode": "run",
- "read_now": 436,
+ "read_now": 456,
  "failed": {
+  "ted: package left for the next run": 2,
   "pncp: HTTP 410": 1,
-  "ted: package left for the next run": 1,
-  "boamp: national BOAMP format (not eForms)": 59,
-  "chile: HTTP 429": 3
+  "boamp: national BOAMP format (not eForms)": 40,
+  "chile: HTTP 429": 1
  },
- "published_open": 1476,
- "store": 1536,
+ "published_open": 456,
+ "store": 497,
  "fill_rate_this_run": {
   "items": {
-   "filled": 436,
-   "of": 436,
+   "filled": 456,
+   "of": 456,
    "rate": 1.0
   },
   "technical_standards": {
-   "filled": 14,
-   "of": 436,
-   "rate": 0.032
+   "filled": 24,
+   "of": 456,
+   "rate": 0.053
   },
   "delivery": {
-   "filled": 413,
-   "of": 436,
-   "rate": 0.947
+   "filled": 430,
+   "of": 456,
+   "rate": 0.943
   },
   "bid_security": {
-   "filled": 153,
-   "of": 436,
-   "rate": 0.351
+   "filled": 146,
+   "of": 456,
+   "rate": 0.32
   },
   "performance_guarantee": {
-   "filled": 7,
-   "of": 436,
-   "rate": 0.016
+   "filled": 19,
+   "of": 456,
+   "rate": 0.042
   },
   "eligibility": {
-   "filled": 121,
-   "of": 436,
-   "rate": 0.278
+   "filled": 147,
+   "of": 456,
+   "rate": 0.322
   },
   "lots": {
-   "filled": 307,
-   "of": 436,
-   "rate": 0.704
+   "filled": 325,
+   "of": 456,
+   "rate": 0.713
   },
   "evaluation": {
-   "filled": 325,
-   "of": 436,
-   "rate": 0.745
+   "filled": 314,
+   "of": 456,
+   "rate": 0.689
   },
   "clarification_deadline": {
-   "filled": 137,
-   "of": 436,
-   "rate": 0.314
+   "filled": 162,
+   "of": 456,
+   "rate": 0.355
   },
   "documents": {
-   "filled": 376,
-   "of": 436,
-   "rate": 0.862
+   "filled": 396,
+   "of": 456,
+   "rate": 0.868
   },
   "submission_deadline": {
-   "filled": 436,
-   "of": 436,
+   "filled": 456,
+   "of": 456,
    "rate": 1.0
   },
   "submission_url": {
-   "filled": 315,
-   "of": 436,
-   "rate": 0.722
+   "filled": 338,
+   "of": 456,
+   "rate": 0.741
   },
   "duration": {
-   "filled": 289,
-   "of": 436,
-   "rate": 0.663
+   "filled": 320,
+   "of": 456,
+   "rate": 0.702
   },
   "tender_validity": {
-   "filled": 260,
-   "of": 436,
-   "rate": 0.596
+   "filled": 282,
+   "of": 456,
+   "rate": 0.618
   },
   "variants": {
-   "filled": 164,
-   "of": 436,
-   "rate": 0.376
+   "filled": 173,
+   "of": 456,
+   "rate": 0.379
   },
   "framework": {
-   "filled": 88,
-   "of": 436,
-   "rate": 0.202
+   "filled": 150,
+   "of": 456,
+   "rate": 0.329
   },
   "procedure": {
-   "filled": 436,
-   "of": 436,
+   "filled": 456,
+   "of": 456,
    "rate": 1.0
   },
   "quantities": {
-   "filled": 162,
-   "of": 436,
-   "rate": 0.372
+   "filled": 157,
+   "of": 456,
+   "rate": 0.344
   }
  },
  "by_source_this_run": {
   "TED (EU)": {
-   "n": 246,
+   "n": 251,
    "items": 1.0,
-   "technical_standards": 0.04,
+   "technical_standards": 0.08,
    "delivery": 0.99,
-   "bid_security": 0.52,
-   "performance_guarantee": 0.0,
-   "eligibility": 0.33,
+   "bid_security": 0.45,
+   "performance_guarantee": 0.01,
+   "eligibility": 0.38,
    "lots": 1.0,
-   "evaluation": 0.82,
-   "clarification_deadline": 0.24,
+   "evaluation": 0.75,
+   "clarification_deadline": 0.33,
    "documents": 1.0,
-   "quantities": 0.07
+   "quantities": 0.03
   },
   "PNCP (Brazil)": {
-   "n": 70,
+   "n": 68,
    "items": 1.0,
-   "technical_standards": 0.04,
+   "technical_standards": 0.01,
    "delivery": 1.0,
    "bid_security": 0.0,
    "performance_guarantee": 0.0,
@@ -129,53 +129,53 @@
    "lots": 0.0,
    "evaluation": 1.0,
    "clarification_deadline": 0.0,
-   "documents": 1.0,
+   "documents": 0.99,
    "quantities": 1.0
-  },
-  "World Bank": {
-   "n": 29,
-   "items": 1.0,
-   "technical_standards": 0.0,
-   "delivery": 0.28,
-   "bid_security": 0.55,
-   "performance_guarantee": 0.0,
-   "eligibility": 0.52,
-   "lots": 0.31,
-   "evaluation": 0.34,
-   "clarification_deadline": 0.03,
-   "documents": 0.28,
-   "quantities": 0.14
   },
   "Prozorro (Ukraine)": {
    "n": 33,
    "items": 1.0,
-   "technical_standards": 0.0,
+   "technical_standards": 0.03,
    "delivery": 1.0,
-   "bid_security": 0.18,
-   "performance_guarantee": 0.21,
-   "eligibility": 0.7,
+   "bid_security": 0.33,
+   "performance_guarantee": 0.52,
+   "eligibility": 0.76,
    "lots": 1.0,
    "evaluation": 1.0,
    "clarification_deadline": 1.0,
    "documents": 1.0,
    "quantities": 1.0
   },
-  "BOAMP (France)": {
-   "n": 19,
+  "World Bank": {
+   "n": 29,
    "items": 1.0,
-   "technical_standards": 0.0,
-   "delivery": 1.0,
-   "bid_security": 0.21,
+   "technical_standards": 0.03,
+   "delivery": 0.17,
+   "bid_security": 0.52,
    "performance_guarantee": 0.0,
-   "eligibility": 0.16,
+   "eligibility": 0.69,
+   "lots": 0.24,
+   "evaluation": 0.34,
+   "clarification_deadline": 0.0,
+   "documents": 0.38,
+   "quantities": 0.17
+  },
+  "BOAMP (France)": {
+   "n": 34,
+   "items": 1.0,
+   "technical_standards": 0.03,
+   "delivery": 1.0,
+   "bid_security": 0.18,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.21,
    "lots": 1.0,
-   "evaluation": 0.53,
-   "clarification_deadline": 0.26,
+   "evaluation": 0.44,
+   "clarification_deadline": 0.15,
    "documents": 1.0,
-   "quantities": 0.0
+   "quantities": 0.06
   },
   "ChileCompra": {
-   "n": 39,
+   "n": 41,
    "items": 1.0,
    "technical_standards": 0.0,
    "delivery": 1.0,
@@ -191,115 +191,115 @@
  },
  "fill_rate_published": {
   "items": {
-   "filled": 1476,
-   "of": 1476,
+   "filled": 456,
+   "of": 456,
    "rate": 1.0
   },
   "technical_standards": {
-   "filled": 90,
-   "of": 1476,
-   "rate": 0.061
+   "filled": 24,
+   "of": 456,
+   "rate": 0.053
   },
   "delivery": {
-   "filled": 1426,
-   "of": 1476,
-   "rate": 0.966
+   "filled": 430,
+   "of": 456,
+   "rate": 0.943
   },
   "bid_security": {
-   "filled": 578,
-   "of": 1476,
-   "rate": 0.392
+   "filled": 146,
+   "of": 456,
+   "rate": 0.32
   },
   "performance_guarantee": {
-   "filled": 27,
-   "of": 1476,
-   "rate": 0.018
+   "filled": 19,
+   "of": 456,
+   "rate": 0.042
   },
   "eligibility": {
-   "filled": 501,
-   "of": 1476,
-   "rate": 0.339
+   "filled": 147,
+   "of": 456,
+   "rate": 0.322
   },
   "lots": {
-   "filled": 1209,
-   "of": 1476,
-   "rate": 0.819
+   "filled": 325,
+   "of": 456,
+   "rate": 0.713
   },
   "evaluation": {
-   "filled": 1099,
-   "of": 1476,
-   "rate": 0.745
+   "filled": 314,
+   "of": 456,
+   "rate": 0.689
   },
   "clarification_deadline": {
-   "filled": 455,
-   "of": 1476,
-   "rate": 0.308
+   "filled": 162,
+   "of": 456,
+   "rate": 0.355
   },
   "documents": {
-   "filled": 1353,
-   "of": 1476,
-   "rate": 0.917
+   "filled": 396,
+   "of": 456,
+   "rate": 0.868
   },
   "submission_deadline": {
-   "filled": 1476,
-   "of": 1476,
+   "filled": 456,
+   "of": 456,
    "rate": 1.0
   },
   "submission_url": {
-   "filled": 1230,
-   "of": 1476,
-   "rate": 0.833
+   "filled": 338,
+   "of": 456,
+   "rate": 0.741
   },
   "duration": {
-   "filled": 1172,
-   "of": 1476,
-   "rate": 0.794
+   "filled": 320,
+   "of": 456,
+   "rate": 0.702
   },
   "tender_validity": {
-   "filled": 1098,
-   "of": 1476,
-   "rate": 0.744
+   "filled": 282,
+   "of": 456,
+   "rate": 0.618
   },
   "variants": {
-   "filled": 681,
-   "of": 1476,
-   "rate": 0.461
+   "filled": 173,
+   "of": 456,
+   "rate": 0.379
   },
   "framework": {
-   "filled": 463,
-   "of": 1476,
-   "rate": 0.314
+   "filled": 150,
+   "of": 456,
+   "rate": 0.329
   },
   "procedure": {
-   "filled": 1476,
-   "of": 1476,
+   "filled": 456,
+   "of": 456,
    "rate": 1.0
   },
   "quantities": {
-   "filled": 350,
-   "of": 1476,
-   "rate": 0.237
+   "filled": 157,
+   "of": 456,
+   "rate": 0.344
   }
  },
  "by_source_published": {
   "TED (EU)": {
-   "n": 1072,
+   "n": 251,
    "items": 1.0,
    "technical_standards": 0.08,
-   "delivery": 1.0,
-   "bid_security": 0.49,
-   "performance_guarantee": 0.0,
+   "delivery": 0.99,
+   "bid_security": 0.45,
+   "performance_guarantee": 0.01,
    "eligibility": 0.38,
    "lots": 1.0,
-   "evaluation": 0.79,
-   "clarification_deadline": 0.28,
+   "evaluation": 0.75,
+   "clarification_deadline": 0.33,
    "documents": 1.0,
-   "quantities": 0.04
+   "quantities": 0.03
   },
   "PNCP (Brazil)": {
-   "n": 144,
+   "n": 68,
    "items": 1.0,
-   "technical_standards": 0.03,
+   "technical_standards": 0.01,
    "delivery": 1.0,
    "bid_security": 0.0,
    "performance_guarantee": 0.0,
@@ -311,13 +311,13 @@
    "quantities": 1.0
   },
   "Prozorro (Ukraine)": {
-   "n": 67,
+   "n": 33,
    "items": 1.0,
-   "technical_standards": 0.01,
+   "technical_standards": 0.03,
    "delivery": 1.0,
-   "bid_security": 0.25,
-   "performance_guarantee": 0.36,
-   "eligibility": 0.73,
+   "bid_security": 0.33,
+   "performance_guarantee": 0.52,
+   "eligibility": 0.76,
    "lots": 1.0,
    "evaluation": 1.0,
    "clarification_deadline": 1.0,
@@ -325,35 +325,35 @@
    "quantities": 1.0
   },
   "World Bank": {
-   "n": 59,
+   "n": 29,
    "items": 1.0,
-   "technical_standards": 0.02,
-   "delivery": 0.22,
-   "bid_security": 0.53,
+   "technical_standards": 0.03,
+   "delivery": 0.17,
+   "bid_security": 0.52,
    "performance_guarantee": 0.0,
-   "eligibility": 0.61,
-   "lots": 0.27,
+   "eligibility": 0.69,
+   "lots": 0.24,
    "evaluation": 0.34,
-   "clarification_deadline": 0.02,
-   "documents": 0.32,
-   "quantities": 0.15
+   "clarification_deadline": 0.0,
+   "documents": 0.38,
+   "quantities": 0.17
   },
   "BOAMP (France)": {
-   "n": 54,
+   "n": 34,
    "items": 1.0,
-   "technical_standards": 0.02,
+   "technical_standards": 0.03,
    "delivery": 1.0,
-   "bid_security": 0.19,
+   "bid_security": 0.18,
    "performance_guarantee": 0.0,
-   "eligibility": 0.19,
+   "eligibility": 0.21,
    "lots": 1.0,
-   "evaluation": 0.48,
-   "clarification_deadline": 0.2,
+   "evaluation": 0.44,
+   "clarification_deadline": 0.15,
    "documents": 1.0,
-   "quantities": 0.04
+   "quantities": 0.06
   },
   "ChileCompra": {
-   "n": 80,
+   "n": 41,
    "items": 1.0,
    "technical_standards": 0.0,
    "delivery": 1.0,
