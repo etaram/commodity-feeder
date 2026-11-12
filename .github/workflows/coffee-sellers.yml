@@ -5,6 +5,11 @@ on:
   schedule:
     - cron: "35 */2 * * *"
   workflow_dispatch:
+    inputs:
+      scheduled:
+        description: "yes = a timed run started by the company server (behaves like a scheduled run)"
+        required: false
+        default: ""
 permissions:
   contents: write
 concurrency:
@@ -24,7 +29,7 @@ jobs:
       - name: Official exporter registries (weekly)
         timeout-minutes: 40
         run: |
-          if [ ! -f data/leads/registry_cameroon.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/registry_cameroon.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.registries 2>&1 | grep -E 'registry|registries' | tail -40; fi
+          if [ ! -f data/leads/registry_cameroon.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/registry_cameroon.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name == 'workflow_dispatch' && inputs.scheduled != 'yes' }}" = "true" ]; then python -m leads.registries 2>&1 | grep -E 'registry|registries' | tail -40; fi
         continue-on-error: true
       - name: APEDA India exporters (25 minutes a run, resumes where it stopped)
         timeout-minutes: 30
@@ -32,7 +37,7 @@ jobs:
         continue-on-error: true
       - name: Uganda official directory (weekly)
         run: |
-          if [ ! -f data/leads/uganda_directory.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/uganda_directory.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then python -m leads.uganda_directory 2>&1 | tail -8; fi
+          if [ ! -f data/leads/uganda_directory.csv ] || [ $(( $(date +%s) - $(git log -1 --format=%ct -- data/leads/uganda_directory.csv || echo 0) )) -gt 604800 ] || [ "${{ github.event_name == 'workflow_dispatch' && inputs.scheduled != 'yes' }}" = "true" ]; then python -m leads.uganda_directory 2>&1 | tail -8; fi
         continue-on-error: true
       - name: commit
         run: |

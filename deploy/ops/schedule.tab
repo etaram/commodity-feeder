@@ -1,0 +1,27 @@
+# Server-side schedule for GitHub workflows (read by deploy/ops/scheduler/sched.py on the company server).
+# One line per trigger. Times are UTC, standard 5-field cron (minute hour day-of-month month day-of-week).
+# Columns: minute hour dom month dow  workflow-file  max-age-hours  inputs
+#   max-age-hours: schedule-status reports STALE when the last successful run is older than this.
+#   "@continuous" in place of the five cron fields: started again on the first 5-minute tick after the previous run
+#   has finished (back-to-back), never while a run of it is queued or running.
+#   inputs: "-" for none, otherwise key=value pairs separated by commas (no spaces), passed to workflow_dispatch.
+# The crons are the same ones the workflows had under "schedule:" (see SCHEDULE.md). heartbeat and watchdog are not
+# here: they are safety nets that only restart overdue workflows and stay on GitHub's own schedule.
+#
+# min  hour     dom mon dow  workflow            max_h  inputs
+35     *        *   *   *    panel.yml           3      -
+@continuous                  company-check.yml   4      -
+50     *        *   *   *    describe.yml        4      -
+10     */2      *   *   *    leads.yml           6      only=light
+40     4,16     *   *   *    leads.yml           6      only=heavy
+35     */2      *   *   *    coffee-sellers.yml  6      scheduled=yes
+40     1        *   *   *    suppliers.yml       16     -
+40     13       *   *   *    suppliers.yml       16     -
+40     5        *   *   *    feed.yml            18     -
+10     21       *   *   *    feed.yml            18     -
+50     5,15     *   *   *    press.yml           14     -
+40     1        *   *   *    backup.yml          26     -
+40     2        *   *   *    agent-brief.yml     26     -
+50     3        *   *   *    israel.yml          26     -
+20     4        *   *   *    sanctions.yml       26     -
+17     3        *   *   1    trends.yml          170    -

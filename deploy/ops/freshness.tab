@@ -1,0 +1,13 @@
+# Key outputs checked every 30 minutes by the server (deploy/ops/scheduler/sched.py fresh).
+# Columns: name  kind  target  max-age-hours
+#   kind git:  age = time of the last commit on main that touched the path (GitHub API)
+#   kind file: age = modification time of the newest file on the server matching the pattern
+# Thresholds = the normal interval between runs, plus the slowest normal run, plus a margin.
+#
+# name               kind  target                                          max_h
+panel-live           git   data/web/panel_live.sha                         3
+tenders-leads        git   data/web/tenders.json.gz                        5
+supplier-universe    git   data/leads/supplier_sectors.csv                 16
+commodity-feed       git   data/run_log.json                               18
+sheets-export        file  /opt/sinder/backup/sheets/last-manifest.json    26
+db-backup            file  /opt/sinder/backup/db/*.enc                     26

@@ -7,10 +7,11 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority]
         default: status
 permissions:
   contents: read
+  actions: read      # schedule-status reads the last successful run of each workflow
 jobs:
   run:
     runs-on: [self-hosted, sinder]
@@ -18,3 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: bash "deploy/ops/${{ inputs.task }}.sh"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # only the scheduler install task receives the dispatch token (it writes it to a root-only file on the server)
+          SCHED_DISPATCH_TOKEN: ${{ inputs.task == 'scheduler-install' && secrets.SCHED_DISPATCH_TOKEN || '' }}
