@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners]
         default: status
 permissions:
   contents: read
@@ -22,4 +22,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           # only the scheduler install task receives the dispatch token (it writes it to a root-only file on the server)
+          # only the add-runners task receives the one-hour runner registration token
+          RUNNER_REG_TOKEN: ${{ inputs.task == 'add-runners' && secrets.RUNNER_REG_TOKEN || '' }}
           SCHED_DISPATCH_TOKEN: ${{ inputs.task == 'scheduler-install' && secrets.SCHED_DISPATCH_TOKEN || '' }}
