@@ -11,7 +11,10 @@ WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0
 COPY --from=build /app/package.json /app/package-lock.json ./
 COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/.next ./.next
+# .next belongs to the app user: Next writes its prerender, fetch and image caches under .next/cache at run time
+# (EACCES on mkdir .next/cache/fetch-cache when it was root's)
+COPY --from=build --chown=node:node /app/.next ./.next
+RUN mkdir -p /app/.next/cache && chown -R node:node /app/.next/cache
 COPY --from=build /app/public ./public
 COPY --from=build /app/next.config.mjs ./
 USER node

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { ENGINE_SHEET, sheetFor, writeRefused } from "../lib/sheets";
+import { ENGINE_SHEET, readFallback, sheetFor, writeRefused } from "../lib/sheets";
 
 const API = "https://sheets.googleapis.com/v4/spreadsheets";
 // production settings: state tabs go to the state sheet, everything else to the engine sheet, nothing is refused
@@ -19,3 +19,13 @@ assert.equal(writeRefused("POST", `${API}/${ENGINE_SHEET}:batchUpdate`), ENGINE_
 assert.equal(writeRefused("PUT", `${API}/LIVE_STATE/values/x`), "LIVE_STATE", "the live state sheet is refused");
 assert.equal(writeRefused("POST", `${API}/COPY_STATE/values/x:append`), "", "the copy takes writes");
 console.log("ok staging routing and write guard");
+// reads of a moved tab the copy does not have yet fall back to the engine sheet (reads only; writes stay refused)
+const missing = new Error("Sheets 400: Unable to parse range: 'Panel Jobs'!A1:L800");
+process.env.STATE_TABS_EXTRA = "Panel Jobs,Web Suppliers";
+assert.equal(readFallback(ENGINE_SHEET, "COPY_STATE", ["Panel Jobs"], missing), ENGINE_SHEET, "a moved tab missing in the copy is read from the engine sheet");
+assert.equal(readFallback(ENGINE_SHEET, "COPY_STATE", ["App Log"], missing), "", "a state tab never falls back to the engine sheet");
+assert.equal(readFallback(ENGINE_SHEET, "COPY_STATE", ["Panel Jobs"], new Error("Sheets 429: quota")), "", "other errors are not hidden");
+assert.equal(readFallback("OTHER", "OTHER", ["Panel Jobs"], missing), "", "reads of other spreadsheets are untouched");
+assert.equal(writeRefused("GET", `${API}/${ENGINE_SHEET}/values:batchGet?ranges=x`), "", "the fallback read is a GET and allowed");
+assert.equal(writeRefused("POST", `${API}/${ENGINE_SHEET}/values/${encodeURIComponent("'Panel Jobs'!A1")}:append`), ENGINE_SHEET, "a job append to the engine sheet is still refused");
+console.log("ok staging read fallback for moved tabs");

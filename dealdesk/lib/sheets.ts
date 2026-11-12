@@ -31,6 +31,15 @@ export function writeRefused(method: string, url: string): string {
   const id = (url.match(/\/spreadsheets\/([^/:?]+)/) || [])[1] || "";
   return (process.env.SHEETS_READONLY_IDS || "").split(",").map((x) => x.trim()).filter(Boolean).includes(id) ? id : "";
 }
+/** For a read of an engine-sheet tab that STATE_TABS_EXTRA moved to the state sheet, when the state sheet does not
+ *  have that tab yet ("Unable to parse range"): the engine sheet to read instead, else "". Reads only (writeRefused
+ *  still refuses every write to a read-only id). The staging copy starts without these tabs, so its panel showed no
+ *  Panel Jobs at all (server instance, 12 Nov); until the copy has its own tab it shows the live rows. */
+export function readFallback(askedSid: string, readFrom: string, tabs: string[], err: unknown): string {
+  if (askedSid !== SHEET || readFrom === SHEET || !/Unable to parse range/.test(String(err))) return "";
+  const ex = extraTabs();
+  return tabs.length && tabs.every((t) => ex.has(t) && !STATE_TABS.has(t)) ? SHEET : "";
+}
 export function stateSheet(): string { return sheetFor("Activity"); }
 
 export function sheetsEnabled(): boolean {
@@ -52,7 +61,7 @@ async function client(): Promise<JWT | null> {
 // Every Sheets request has a hard time limit: a stalled Google API must never hold a request until the 60 s function
 // limit (on 5 November a stall made every panel read time out together). Callers already fall back to a copy.
 const SHEETS_TIMEOUT_MS = Number(process.env.SHEETS_TIMEOUT_MS || 12000);
-async function call(jwt: JWT, method: string, url: string, body?: unknown) {
+async function call(jwt: JWT, method: string, url: string, body?: unknown, timeoutMs = SHEETS_TIMEOUT_MS) {
   const ro = writeRefused(method, url);
   if (ro) throw new Error(`Sheets write refused: spreadsheet ${ro.slice(0, 6)}... is read-only in this environment`);
   const { token } = await jwt.getAccessToken();
@@ -60,7 +69,7 @@ async function call(jwt: JWT, method: string, url: string, body?: unknown) {
     method,
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
-    signal: AbortSignal.timeout(SHEETS_TIMEOUT_MS),
+    signal: AbortSignal.timeout(timeoutMs),
   });
   if (!r.ok) throw new Error(`Sheets ${r.status}: ${(await r.text()).slice(0, 300)}`);
   return r.json();
@@ -94,7 +103,8 @@ export async function sheetsDiag(): Promise<Record<string, number | string>> {
 }
 
 // Reads several ranges at once (any spreadsheet the service account can open). Returns null when not configured.
-export async function readRanges(sid: string, ranges: string[]): Promise<string[][][] | null> {
+// opts.timeoutMs: a longer limit for reads that run in the background (the panel's live tabs, see lib/panel.ts).
+export async function readRanges(sid: string, ranges: string[], opts: { timeoutMs?: number } = {}): Promise<string[][][] | null> {
   const jwt = await client();
   if (!jwt) return null;
   // engine-sheet ranges of the state tabs are read from the state sheet (see STATE_TABS), in the order asked
@@ -103,7 +113,10 @@ export async function readRanges(sid: string, ranges: string[]): Promise<string[
   for (const id of [...new Set(where)]) {
     const idx = ranges.map((_, i) => i).filter((i) => where[i] === id);
     const q = idx.map((i) => "ranges=" + encodeURIComponent(ranges[i])).join("&");
-    const j = await call(jwt, "GET", `${API}/${id}/values:batchGet?${q}&valueRenderOption=FORMATTED_VALUE`);
+    const get = (from: string) => call(jwt, "GET", `${API}/${from}/values:batchGet?${q}&valueRenderOption=FORMATTED_VALUE`, undefined, opts.timeoutMs);
+    let j;
+    try { j = await get(id); }
+    catch (e) { const alt = readFallback(sid, id, idx.map((i) => tabOf(ranges[i])), e); if (!alt) throw e; j = await get(alt); }
     (j.valueRanges || []).forEach((v: { values?: string[][] }, k: number) => { out[idx[k]] = v.values || []; });
   }
   return out.map((v) => v || []);

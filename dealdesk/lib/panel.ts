@@ -169,28 +169,54 @@ const LIVE: Record<string, [string, string]> = {
 // 4.5 s: a read that takes longer is waiting on a write to the engine sheet (the data workflows rewrite big tabs);
 // the page then shows the last copy at once and the read still finishes in the background for the next request
 const LIVE_TIMEOUT_MS = Number(process.env.LIVE_TIMEOUT_MS || 4500);
-function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
-  return Promise.race([p, new Promise<T>((_, rej) => setTimeout(() => rej(new Error(`${what} timed out after ${ms} ms`)), ms))]);
-}
 // One tab per read: a single batch of all ten tabs grew past the timeout and every page fell back to the snapshot.
-// Each key is cached 30 s, concurrent requests share one read, and a refresh (fresh) skips the cache.
+// Each key is cached 30 s and concurrent requests share one read. After that a copy already in memory is served at
+// once while one read refreshes it in the background (stale-while-revalidate); only a request without any copy (cold
+// instance) or a refresh (fresh) waits, at most LIVE_TIMEOUT_MS.
+// Measured on the server instance (12 Nov): the first read of a spreadsheet Google has not touched for a few minutes
+// takes 13-25 s (engine sheet 13 s, supplier universe 25 s), every read after it 0.2-0.4 s. The old code aborted that
+// first read at 12 s, so the cache never filled and every visit after a quiet spell logged nine "live read failed".
+// The background read now gets LIVE_READ_MS, and a long-running server (not Vercel) keeps the sheets warm.
+const LIVE_READ_MS = Number(process.env.LIVE_READ_MS || 40000);
+class LiveTimeout extends Error {}
 const warnedAt: Record<string, number> = {};
 const liveMem: Record<string, { at: number; data: Grid }> = {}, liveFlight: Record<string, Promise<Grid>> = {};
+async function liveWarn(key: string, e: unknown) {
+  // one warning per key per 10 minutes: during a Sheets stall, a log row per tab per request only adds writes to the stall
+  if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON && Date.now() - (warnedAt[key] || 0) > 600_000) { warnedAt[key] = Date.now(); await logEvent("warn", "sheets", `live read failed (${key}), using the last copy`, String(e).slice(0, 300)).catch(() => {}); }
+}
+function liveRefresh(key: string): Promise<Grid> {
+  return liveFlight[key] || (liveFlight[key] = (async () => {
+    const [sid, range] = LIVE[key];
+    const vals = await readRanges(sid, [range], { timeoutMs: LIVE_READ_MS });
+    if (!vals) throw new Error("no service account");
+    liveMem[key] = { at: Date.now(), data: vals[0] };
+    return vals[0];
+  })().finally(() => { delete liveFlight[key]; }));
+}
+// A server process that keeps running (our own server, not a Vercel function) re-reads the live tabs every minute, so
+// Google keeps the spreadsheets loaded and a page never meets the slow first read. LIVE_KEEPWARM_MS=0 turns it off.
+let warmTimer: ReturnType<typeof setInterval> | null = null;
+function keepWarm() {
+  const ms = Number(process.env.LIVE_KEEPWARM_MS ?? (process.env.VERCEL ? 0 : 60_000));
+  if (warmTimer || !ms || !process.env.GOOGLE_SERVICE_ACCOUNT_JSON) return;
+  const tick = () => { for (const k of Object.keys(LIVE)) liveRefresh(k).catch((e) => liveWarn(k, e)); };
+  warmTimer = setInterval(tick, ms); warmTimer.unref?.();
+  tick();
+}
 async function liveKey(key: string, fresh = false): Promise<Grid | null> {
+  keepWarm();
   const hit = liveMem[key];
   if (hit && !fresh && Date.now() - hit.at < 30_000) return hit.data;
+  const p = liveRefresh(key);
+  if (hit && !fresh) { p.catch((e) => liveWarn(key, e)); return hit.data; }
   try {
-    const p = liveFlight[key] || (liveFlight[key] = (async () => {
-      const [sid, range] = LIVE[key];
-      const vals = await readRanges(sid, [range]);
-      if (!vals) throw new Error("no service account");
-      liveMem[key] = { at: Date.now(), data: vals[0] };
-      return vals[0];
-    })().finally(() => { delete liveFlight[key]; }));
-    return await withTimeout(p, LIVE_TIMEOUT_MS, `live Sheets read (${key})`);
+    return await Promise.race([p, new Promise<Grid>((_, rej) => setTimeout(() => rej(new LiveTimeout(`live Sheets read (${key}) slower than ${LIVE_TIMEOUT_MS} ms`)), LIVE_TIMEOUT_MS))]);
   } catch (e) {
-    // one warning per key per 10 minutes: during a Sheets stall, a log row per tab per request only adds writes to the stall
-    if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON && Date.now() - (warnedAt[key] || 0) > 600_000) { warnedAt[key] = Date.now(); await logEvent("warn", "sheets", `live read failed (${key}), using the last copy`, String(e).slice(0, 300)); }
+    // slow, not failed: the read goes on in the background and fills the cache for the next request; it is logged
+    // only when it then fails
+    if (e instanceof LiveTimeout) p.catch((err) => liveWarn(key, err));
+    else await liveWarn(key, e);
     return hit ? hit.data : null;
   }
 }
