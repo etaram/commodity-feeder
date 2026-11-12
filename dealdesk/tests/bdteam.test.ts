@@ -1,0 +1,24 @@
+// The BD personas: complete, distinct, non-biographical, and the draft rule check catches an invented past.
+import { BD_RULES, BD_TEAM, bdBrief, bdDraftIssues, bdOn } from "@/lib/bdteam";
+import { TEAM } from "@/lib/team";
+let fail = 0;
+const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
+ok(BD_TEAM.length === 4 && new Set(BD_TEAM.map((m) => m.id)).size === 4, "four BD roles with distinct ids");
+ok(BD_TEAM.every((m) => m.name && m.title && m.he && m.does && m.character && m.hands_over && m.knows.length >= 3 && m.never.length >= 3), "every persona has a job, knowledge, character, limits and a hand-over");
+const names = [...TEAM.map((m) => m.name), ...BD_TEAM.map((m) => m.name)];
+ok(new Set(names).size === names.length, "no BD name repeats a name of the deal team");
+ok(BD_TEAM.every((m) => !/\b\d+ years\b|former(ly)? (at|with)|worked (at|for)\b/i.test(JSON.stringify(m))), "no persona definition carries an invented career");
+delete process.env.BD_TEAM;
+ok(bdOn() === false, "the BD team is off unless BD_TEAM=1");
+const b = bdBrief("bd_opener");
+ok(b.includes("Isabel Navarro") && b.includes("not a biography") && BD_RULES.every((r) => b.includes(r)) && !b.includes("Tomas Varga"), "a role's brief holds its own persona and the team rules, and no other persona");
+ok(bdBrief("nobody") === "", "an unknown role has no brief");
+ok(bdDraftIssues("Dear Mr Chen, I saw that your mill lists 304 and 316L coil up to 1,500 mm. Do you supply to East Africa?").length === 0, "a plain, specific first message passes");
+ok(bdDraftIssues("In my 12 years in the steel trade I have rarely seen such a mill.").includes("invented_personal_history"), "years of experience for the sender are caught");
+ok(bdDraftIssues("When I worked at a trading house in Rotterdam we bought from you.").includes("invented_personal_history"), "a former employer is caught");
+ok(bdDraftIssues("We recently closed similar deals with two contractors in Kenya.").includes("invented_personal_history"), "invented closed deals are caught");
+ok(bdDraftIssues("This is your last chance, other buyers are waiting.").includes("false_urgency"), "false urgency is caught");
+const about = "Sinder's team has procurement experience on projects of over USD 250 million.";
+ok(bdDraftIssues(`Hello.\n\n${about}`, about).length === 0, "the firm's approved wording is allowed as written");
+ok(bdDraftIssues("One? Two? Three? Four?").includes("too_many_questions"), "a message that is a questionnaire is caught");
+process.exit(fail ? 1 : 0);
