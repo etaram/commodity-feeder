@@ -11,13 +11,9 @@ IMG=python:3.12-slim
 umask 077; mkdir -p "$E"; chmod 700 "$E"
 
 if [ "$mode" = probe ]; then
-  echo "== host"; nproc; free -m | sed -n 1,2p; df -h / | tail -1; uptime
-  echo "== docker images"; docker images --format '{{.Repository}}:{{.Tag}} {{.Size}}' | grep -E "python|ollama|alpine" | head
-  echo "== containers"; docker ps --format '{{.Names}} {{.Status}}' | head -30
-  echo "== volumes"; docker volume ls --format '{{.Name}}' | head -20
-  echo "== ollama"; docker volume inspect ollama >/dev/null 2>&1 && { ls /var/lib/docker/volumes/ollama/_data/models/manifests/registry.ollama.ai/library 2>/dev/null | tr '\n' ' '; echo; } || echo "no ollama volume"
-  echo "== /opt/sinder"; ls /opt/sinder; du -sh /opt/sinder/* 2>/dev/null | head -20
-  echo "== key"; grep -qE '^WEB_INDEX_KEY=.+' /opt/sinder/repo/deploy/.env && echo "WEB_INDEX_KEY present" || echo "WEB_INDEX_KEY missing"
+  set +e +o pipefail
+  echo "== ollama models"; ls /var/lib/docker/volumes/ollama/_data/models/manifests/registry.ollama.ai/library/qwen3 2>/dev/null | tr '\n' ' '; echo
+  echo "== semantic job"; docker stats --no-stream --format '{{.Name}} {{.CPUPerc}} {{.MemUsage}}' | head
   V=/var/lib/docker/volumes/sinder_repo/_data
   echo "== index"; ls -la $V/data/web/suppliers.enc 2>/dev/null | awk '{print $5, $6, $7, $8}'
   echo "== private data on volume"; ls $V/data/private 2>/dev/null | head; ls $V/data/checks 2>/dev/null | head
