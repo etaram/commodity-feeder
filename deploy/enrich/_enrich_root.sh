@@ -50,12 +50,21 @@ if [ "$mode" = sample ]; then
   code; venv
   [ -s "$E/queue.jsonl" ] || queue
   docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/code "$IMG" /e/venv/bin/python -m leads.enrich_server sample --dir /e --manufacturers 200 --traders 100
-  launch no --only sample --lanes site,press,people,wikidata --workers 16 --minutes 100
+  # a new sample measures the current code: earlier lane files move aside (only before the full run has started)
+  if [ -s "$E/site.jsonl" ] && [ ! -f "$E/full-run-started" ]; then
+    docker rm -f enrich >/dev/null 2>&1 || true
+    n=1; while [ -d "$E/sample-$n" ]; do n=$((n+1)); done; mkdir -p "$E/sample-$n"
+    for f in site press people wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
+    rm -f "$E/status.json" "$E/review.jsonl"; echo "earlier sample files moved to sample-$n"
+  fi
+  # the search-snippet lane (people) answered the first query with a block page on 12 Nov 2026: left out of the sample
+  launch no --only sample --lanes site,press,wikidata --workers 16 --minutes 100
   exit 0
 fi
 if [ "$mode" = start ]; then
   code; venv
   [ -s "$E/queue.jsonl" ] || queue
+  touch "$E/full-run-started"
   lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,wikidata)
   echo "lanes: $lanes"
   launch unless-stopped --lanes "$lanes" --workers 16

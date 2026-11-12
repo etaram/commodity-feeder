@@ -117,7 +117,15 @@ def whatsapp_on(pages, linked, country=""):
             d = _with_cc(d, country)
             if not d:
                 return
-        if not (8 <= len(d) <= 15) or re.fullmatch(r"(\d)\1+", d) or any(x["number"] == "+" + d for x in out):
+        if not (8 <= len(d) <= 15) or re.fullmatch(r"(\d)\1+", d):
+            return
+        if not _valid(d):
+            # a wa.me link written with the national number only (no country code): rebuilt for the company's country
+            d = _with_cc(d, country) if country else ""
+            if not d:
+                return
+            basis += " (country code added)"
+        if any(x["number"] == "+" + d for x in out):
             return
         out.append({"number": "+" + d, "link": f"https://wa.me/{d}", "basis": basis})
 
@@ -127,6 +135,16 @@ def whatsapp_on(pages, linked, country=""):
         for m in WA_LABEL.finditer(_text(page)):
             add(m.group(1), "printed after a WhatsApp label on the site")
     return out[:3]
+
+
+def _valid(d):
+    try:
+        import phonenumbers
+        return phonenumbers.is_valid_number(phonenumbers.parse("+" + d, None))
+    except ImportError:
+        return True
+    except Exception:  # noqa: BLE001
+        return False
 
 
 def _with_cc(d, country):
@@ -169,7 +187,11 @@ NOT_NAME = re.compile(r"\b(company|group|limited|ltd|inc|gmbh|corp|industr|produ
                       r"address|factory|quality|welcome|home|customer|support|market|business|development|purchasing|procurement|"
                       r"engineering|technology|production|operations|finance|human|resources|marketing|commercial|copyright|rights|"
                       r"reserved|privacy|policy|cookie|search|menu|street|road|avenue|china|india|turkey|brazil|germany|united|"
-                      r"republic|kingdom|states|city|province|district|zone|park|building|floor|room|tel|fax|mobile|whatsapp|wechat)\b", re.I)
+                      r"republic|kingdom|states|city|province|district|zone|park|building|floor|room|tel|fax|mobile|whatsapp|wechat|"
+                      r"press|releases?|awards?|outstanding|entrepreneur|investors?|careers?|events?|media|download)\b", re.I)
+# pages that quote other companies' people (customers, testimonials, case studies, news): no role holders taken there
+NOT_PEOPLE_PAGE = re.compile(r"customer|client|testimonial|case-stud|reference|news|press|blog|award|event|partner|project", re.I)
+NOT_TARGET = re.compile(r"non-?executive|independent (?:director|member)|board member|secretary|auditor|nominee", re.I)
 PEOPLE_PAGE = re.compile(r"team|about|leadership|management|board|people|who-we-are|company|contact|direct|staff|founder|"
                          r"quienes|nosotros|equipo|equipe|unternehmen|ueber-uns|über-uns|impressum|imprint|关于|团队|联系", re.I)
 LI_IN = re.compile(r"https?://(?:[a-z]{2,3}\.)?linkedin\.com/in/([A-Za-z0-9\-_%]{3,100})", re.I)
@@ -182,14 +204,18 @@ def _role_of(title):
     return ""
 
 
-def _clean_name(s):
+def _clean_name(s, cjk=False):
     s = re.sub(r"\s+", " ", s).strip(" ,.;:-|–—·•")
     if CJK_NAME.match(s):
-        return s
+        return s if cjk and not re.search(r"中文|英文|简介|介绍|联系|役員|会社|公司|首页|产品|新闻", s) else ""
     m = LATIN_NAME.match(s)
     if not m or NOT_NAME.search(m.group(1)):
         return ""
     n = m.group(1)
+    toks = n.split()
+    # four capitalised words with no initial and no particle are two names run together ("Anna Kowalska Pedro Alvarez")
+    if len(toks) >= 4 and not any(re.fullmatch(r"[A-Z]\.|van|von|de|da|del|di|dos|der|bin|al|el|la|Al|El|Bin|Abu|Abdul|Ul|Ur", t) for t in toks):
+        return ""
     if n.isupper() or len(n) > 45:
         return ""
     return n
@@ -200,9 +226,9 @@ def people_on(pages):
     own site publishes. Strict: a person counts only as a clean personal name right next to a known role title."""
     found = []
 
-    def add(name, title, url, basis, li=""):
-        name, title = _clean_name(name), re.sub(r"\s+", " ", title).strip(" ,.;:-|–—")[:80]
-        role = _role_of(title)
+    def add(name, title, url, basis, li="", cjk=False):
+        name, title = _clean_name(name, cjk), re.sub(r"\s+", " ", title).strip(" ,.;:-|–—()")[:80]
+        role = "" if NOT_TARGET.search(title) else _role_of(title)
         if not name or not role or any(p["name"].lower() == name.lower() for p in found):
             return
         p = {"name": name, "title": title, "role": role, "source": url, "basis": basis, "confidence": "own site"}
@@ -232,7 +258,8 @@ def people_on(pages):
                     for k in ("@graph", "founder", "employee", "member", "author", "contactPoint", "itemListElement", "item"):
                         if k in x:
                             stack.append(x[k])
-        if not PEOPLE_PAGE.search(urlsplit(url).path or "/") and urlsplit(url).path not in ("", "/"):
+        path = urlsplit(url).path or "/"
+        if (not PEOPLE_PAGE.search(path) and path not in ("", "/")) or NOT_PEOPLE_PAGE.search(path):
             continue
         # text blocks: "Name, Title" / "Name - Title" / "Title: Name" on one line, or a name line with the title next to it
         lines = [x.strip() for x in _text(page).split("\n") if x.strip()]
@@ -245,10 +272,12 @@ def people_on(pages):
                 continue
             m = re.match(r"^(.{2,80}?)\s*[:：]\s*(.{2,45})$", line)
             if m and ANY_ROLE.fullmatch(m.group(1).strip()) and not ANY_ROLE.search(m.group(2)):
-                add(m.group(2), m.group(1), url, "title and name on one line")
+                add(m.group(2), m.group(1), url, "title and name on one line", cjk=True)
                 continue
             if ANY_ROLE.fullmatch(line.strip(" ,.;:-|")) or (len(line) <= 60 and ANY_ROLE.search(line) and not re.search(r"[.!?]$", line)):
                 for j in (i - 1, i + 1):  # a team card: the name on the line above (or below) the title
+                    if j == i + 1 and i + 2 < len(lines) and ANY_ROLE.search(lines[i + 2]):
+                        continue  # the line below is the next card's name, with its own title under it
                     if 0 <= j < len(lines) and not ANY_ROLE.search(lines[j]):
                         before = len(found)
                         add(lines[j], line, url, "team card (name next to title)")
@@ -274,8 +303,10 @@ def linkedin_search_url(name, company):
 
 # ---------------------------------------------------------------- size and age
 THIS_YEAR = date.today().year
-FOUNDED = re.compile(r"(?:founded|established|incorporated|set up|started|creat(?:ed)?|since|est\.?|fundad[ao] (?:en|em)|desde|depuis|fondée? en|"
-                     r"gegründet|seit|成立于|始建于|创建于|创立于)\s*(?:in\s+|on\s+|en\s+|em\s+|im jahr\s+)?(?:[A-Za-z]+\s+)?((?:18|19|20)\d\d)\b", re.I)
+# strong wording (founded, established, incorporated) beats "since", which often dates a product line or a branch
+FOUNDED = re.compile(r"(?<![\w])(?:founded|established|incorporated|set up|fundad[ao] (?:en|em)|fondée? en|gegründet|成立于|始建于|创建于|创立于|成立於)"
+                     r"[ \t]*(?:in[ \t]+|on[ \t]+|en[ \t]+|em[ \t]+|im jahr[ \t]+)?(?:[A-Za-z]+[ \t]+(?:\d{1,2},?[ \t]+)?)?((?:18|19|20)\d\d)\b", re.I)
+SINCE = re.compile(r"(?<![\w])(?:since|est\.|desde|depuis|seit)[ \t]+((?:18|19|20)\d\d)\b", re.I)
 EMPLOYEES = re.compile(r"(?:(?:over|more than|about|around|approximately|nearly|almost|>)\s+)?(\d{1,3}(?:[,.\s]\d{3})*|\d+)\s*\+?\s*"
                        r"(?:employees|staff|workers|people|team members|professionals|colaboradores|empleados|funcionários|mitarbeiter(?:innen)?|salariés|名员工|员工|名职工)", re.I)
 EMPLOYEES_ZH = re.compile(r"(?:员工|职工|雇员)(?:人数)?\s*(\d{2,6})\s*(?:余)?\s*(?:名|人)")
@@ -311,6 +342,8 @@ def profile_on(pages, structured=None):
         t = _text(page)
         if "founded" not in out:
             ys = [(int(m.group(1)), m.group(0)) for m in FOUNDED.finditer(t) if 1800 <= int(m.group(1)) <= THIS_YEAR]
+            if not ys and urlsplit(url).path in ("", "/"):  # "since 1987" only on the home page, where it is the company's own line
+                ys = [(int(m.group(1)), m.group(0)) for m in SINCE.finditer(t) if 1800 <= int(m.group(1)) <= THIS_YEAR - 2]
             if ys:
                 y, ph = min(ys)  # the earliest stated year is the founding (later ones are milestones)
                 out["founded"] = {"value": y, "phrase": ph[:80], "source": url, "basis": "stated on the site"}
@@ -428,17 +461,22 @@ def press_name(name):
     return n
 
 
+PRESS_JUNK = re.compile(r"stock price|price, news|quote (and|&) history|seasonal returns|returns chart|number of employees|headcount data|"
+                        r"stock overview|undervalued|working capital per share|share price|\(\w+\.\w{1,3}\) stock|company profile|org chart", re.I)
+
+
 def press_filter(items, name, country_names, domain=""):
     """Google News RSS items -> articles about this company: the exact name in the title, and the country named in the
     title or the outlet in that country (or the company's own domain as the source), to keep namesakes out."""
     n = press_name(name)
     if not n:
         return []
-    rx = re.compile(r"(?<![\w])" + re.escape(n) + r"(?![\w])", re.I)
+    # case-sensitive unless the record is all capitals: "Australian Agricultural" is a name, "Australian agricultural" is not
+    rx = re.compile(r"(?<![\w])" + re.escape(n) + r"(?![\w])", re.I if n.isupper() else 0)
     out = []
     for it in items:
         t = it.get("title", "")
-        if not rx.search(t):
+        if not rx.search(t) or PRESS_JUNK.search(t):
             continue
         ctry = any(re.search(r"(?<![\w])" + re.escape(c) + r"(?![\w])", t + " " + it.get("outlet", ""), re.I) for c in country_names if c)
         own = domain and domain in it.get("outlet_url", "")

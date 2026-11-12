@@ -109,3 +109,28 @@ class Merge(unittest.TestCase):
         cells = ck.profile_cells(res)
         self.assertEqual(len(cells), 10)
         self.assertNotIn("Ali Demir", cells[2])
+
+
+class Precision(unittest.TestCase):
+    """Cases found in the hand-checked sample (12 Nov 2026), rebuilt with invented names."""
+
+    def test_people_noise(self):
+        team = "<h3>Press Releases</h3><p>Chairman</p><h3>Karl Muster Hans Beispiel</h3><p>CEO</p><h3>中文</h3><p>President</p><h3>Lena Roth</h3><p>Non-Executive Director</p>"
+        self.assertEqual(cp.people_on([("https://x.test/team", team)]), [])
+        cust = "<h3>Paul Kunde</h3><p>General Manager of Other Co</p>"
+        self.assertEqual(cp.people_on([("https://x.test/about-us/our-customers/", cust)]), [])
+
+    def test_whatsapp_national_link(self):
+        wa = cp.whatsapp_on([], ["+912345678"], "PRT")
+        self.assertEqual([x["number"] for x in wa], ["+351912345678"])
+
+    def test_founded_strict(self):
+        page = "<p>Our milestones</p><p>1926</p><p>Product line since 2019.</p><p>Created</p><p>2018</p>"
+        self.assertNotIn("founded", cp.profile_on([("https://x.test/about", page)]))
+        self.assertEqual(cp.profile_on([("https://x.test/", "<p>Founded in March 1951 in Lyon.</p>")])["founded"]["value"], 1951)
+
+    def test_press_case_and_junk(self):
+        items = [{"title": "Spike in bird flu at Australian agricultural show", "outlet": "x", "outlet_url": "", "url": "a", "date": ""},
+                 {"title": "Example Agricultural Company (EAC.AX) Stock Price, News, Quote & History", "outlet": "y", "outlet_url": "", "url": "b", "date": ""},
+                 {"title": "Example Agricultural Company posts record profit", "outlet": "z", "outlet_url": "", "url": "c", "date": ""}]
+        self.assertEqual([g["url"] for g in cp.press_filter(items, "Example Agricultural Company", ["Australia"])], ["c"])
