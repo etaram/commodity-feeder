@@ -26,6 +26,9 @@ export function envCap(env: Record<string, string | undefined>, k: string, d: nu
   return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 
+/** Default Anthropic monthly cap: USD 50 in November 2026 (setup month, owner's decision), USD 30 from December. */
+export const defaultCap = (now: number | Date = new Date()) => (new Date(now).toISOString().slice(0, 7) === "2026-11" ? 50 : 30);
+
 export const monthKey = (t: number | Date = Date.now()) => new Date(t).toISOString().slice(0, 7);
 
 /** Estimated USD of the 'AI Usage' rows (A time ISO, B job, ..., I usd) in the given month; also calls and by-job totals. */
@@ -100,7 +103,7 @@ export function spendReport(i: SpendInputs): SpendReport {
   const month = monthKey(i.now), env = i.env;
   const services: ServiceLine[] = [];
   // Anthropic
-  const aiCap = envCap(env, "ANTHROPIC_MONTHLY_CAP_USD", 30);
+  const aiCap = envCap(env, "ANTHROPIC_MONTHLY_CAP_USD", defaultCap(i.now));   // same default as the enforcement (lib/anthropic.ts)
   if ("error" in i.ai) services.push({ id: "anthropic", name: "Anthropic API (AI)", spent_usd: null, cap_usd: aiCap, ...levelOf(null, aiCap), basis: "the system's usage log could not be read", detail: i.ai.error });
   else {
     const a = aiMonth(i.ai.rows, month);

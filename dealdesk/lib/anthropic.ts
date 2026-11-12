@@ -1,6 +1,6 @@
 import { logEvent } from "@/lib/log";
 import { appendRow, ENGINE_SHEET, readRanges } from "@/lib/sheets";
-import { envCap } from "@/lib/spend";
+import { defaultCap, envCap } from "@/lib/spend";
 // Shared Anthropic API client for the web app. Cheapest model by default (Claude Haiku 5.5).
 export const MODEL = process.env.ANTHROPIC_MODEL || "claude-haiku-5-5";
 
@@ -109,7 +109,7 @@ export async function spentToday(fresh = false): Promise<number | null> { return
 export async function spentThisMonth(fresh = false): Promise<number | null> { return (await ledger(fresh))?.monthUsd ?? null; }
 // default by month (UTC): the setup month November 2026 is USD 50 (owner decision 12 Nov 2026 20:35), then USD 30;
 // ANTHROPIC_MONTHLY_CAP_USD, when set, overrides the default for every month
-export const defaultCap = (now = new Date()) => (now.toISOString().slice(0, 7) === "2026-11" ? 50 : 30);
+export { defaultCap };
 export const monthlyCap = () => envCap(process.env, "ANTHROPIC_MONTHLY_CAP_USD", defaultCap());
 const r3 = (x: number) => Math.round(x * 1000) / 1000;
 export async function budgetState() {

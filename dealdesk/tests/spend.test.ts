@@ -45,7 +45,9 @@ const r2 = spendReport({ now, env: {}, ai: { error: "timed out" }, agent: null, 
 ok(r2.services[0].spent_usd === null && r2.total.level === "unknown" && /could not be read/.test(r2.total.words), "an unreadable AI ledger is shown as unknown, never as 0");
 ok(r2.services.find((s) => s.id === "agents")!.level === "off", "no agent ledger = not running");
 const r3 = spendReport({ now, env: {}, ai: { rows: [["2026-11-02T00:00:00Z", "x", "", "", "", "", "", "", "31"]] }, agent: null, fixed: [] });
-ok(r3.services[0].words === "stopped at the cap" && r3.services[0].cap_usd === 30, "default Anthropic cap 30: at 31 the line reads stopped at the cap");
+ok(r3.services[0].words === "within budget" && r3.services[0].cap_usd === 50, "November 2026: the screen shows the same default cap as the enforcement (50)");
+const r4 = spendReport({ now: Date.parse("2026-12-03T00:00:00Z"), env: {}, ai: { rows: [["2026-12-02T00:00:00Z", "x", "", "", "", "", "", "", "31"]] }, agent: null, fixed: [] });
+ok(r4.services[0].words === "stopped at the cap" && r4.services[0].cap_usd === 30, "from December the default cap is 30: at 31 the line reads stopped at the cap");
 
 const msg = capMessage(30.2, 30);
 ok(msg.startsWith(CAP_REFUSAL) && /\$30\.20 of \$30\.00/.test(msg) && /ANTHROPIC_MONTHLY_CAP_USD/.test(msg), "the refusal message says what happened, the figures and the setting");
