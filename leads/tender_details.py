@@ -336,8 +336,9 @@ def parse_eforms(tree, src, at):
             typ = first(c, "AwardingCriterionTypeCode")
             w = ""
             for prm in nodes(c, "UBLExtensions/UBLExtension/ExtensionContent/EformsExtension/AwardCriterionParameter"):
-                if first(prm, "ParameterCode") in ("per-exa", "poi-exa", "per-ran", "poi-ran", "wei"):
-                    w = first(prm, "ParameterNumeric")
+                code_ = first(prm, "ParameterCode")
+                if code_ in ("per-exa", "poi-exa", "per-ran", "poi-ran", "wei", "dec-exa"):
+                    w = first(prm, "ParameterNumeric") + ("%" if code_.startswith("per") else " pts" if code_.startswith("poi") else "")
             row = {"lot": lid, "type": CRIT.get(typ, typ), "name": scrub(first(c, "Name") or first(c, "Description"), 120)}
             if w:
                 row["weight"] = w
@@ -480,6 +481,8 @@ def parse_prozorro(d, src, at):
     lg = [lt.get("guarantee") for lt in d.get("lots") or [] if (lt.get("guarantee") or {}).get("amount")]
     if g.get("amount"):
         bidsec = {"required": True, "amount": f"{g['amount']} {g.get('currency', '')}".strip()}
+        if len(lg) > 1:
+            bidsec["amount_per_lot"] = [f"{x['amount']} {x.get('currency', '')}".strip() for x in lg[:10]]
     elif lg:
         bidsec = {"required": True, "amount_per_lot": [f"{x['amount']} {x.get('currency', '')}".strip() for x in lg[:10]]}
     for c in d.get("criteria") or []:
@@ -487,9 +490,13 @@ def parse_prozorro(d, src, at):
         title = scrub(c.get("title_en") or c.get("title"), 200)
         desc = scrub(c.get("description_en") or c.get("description"), 300)
         if cid.startswith("CRITERION.SELECTION"):
-            sel.append({"type": cid.replace("CRITERION.SELECTION.", "").lower().replace("_", " ").replace(".", ": "), "text": title + (f": {desc}" if desc else "")})
+            row = {"type": cid.replace("CRITERION.SELECTION.", "").lower().replace("_", " ").replace(".", ": "), "text": title + (f": {desc}" if desc else "")}
+            if row not in sel:  # the same criterion is repeated for every lot
+                sel.append(row)
         elif cid == "CRITERION.OTHER.CONTRACT.GUARANTEE":
-            perf.append(title + (f": {desc}" if desc else ""))
+            t_ = title + (f": {desc}" if desc else "")
+            if t_ not in perf:
+                perf.append(t_)
         elif cid == "CRITERION.OTHER.BID.GUARANTEE" and not bidsec:
             bidsec = {"required": True, "terms": title + (f": {desc}" if desc else "")}
     for f_ in d.get("features") or []:
@@ -559,7 +566,7 @@ def parse_pncp(compra, itens, arquivos, srcs, at):
     if dq:
         deliv["delivery_time_quoted"] = dq
     return {
-        "items": field(items[:120], src_i, at, "PNCP itens: descricao, quantidade, unidadeMedida, valorUnitarioEstimado"),
+        "items": field(items[:120] + ([{"note": f"{len(items)} items in all; the first 120 shown"}] if len(items) > 120 else []), src_i, at, "PNCP itens: descricao, quantidade, unidadeMedida, valorUnitarioEstimado"),
         "technical_standards": field(standards(txt + " " + " ".join(i.get("descricao") or "" for i in itens or [])), src_i, at,
                                      "standards named in the purchase object and item descriptions"),
         "delivery": field(deliv, src_c, at, "PNCP purchase record (buyer unit) and terms quoted from it"),
@@ -832,6 +839,12 @@ def fetch_one(s, row, ctx):
         if not compra:
             return None, f"HTTP {st}", u_c
         time.sleep(PAUSE["pncp"]); _, itens = _get(s, u_i)
+        pg = 2
+        while isinstance(itens, list) and len(itens) == 200 * (pg - 1) and pg <= 5:  # more pages of items
+            time.sleep(PAUSE["pncp"]); _, more = _get(s, u_i.replace("pagina=1", f"pagina={pg}"))
+            if not isinstance(more, list) or not more:
+                break
+            itens += more; pg += 1
         time.sleep(PAUSE["pncp"]); _, arqs = _get(s, u_a)
         raw = json.dumps({"compra": compra, "itens": itens, "arquivos": arqs}, ensure_ascii=False).encode()
         return parse_pncp(compra, itens if isinstance(itens, list) else [], arqs if isinstance(arqs, list) else [], (u_c, u_i, u_a), at), raw, u_c

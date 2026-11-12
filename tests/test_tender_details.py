@@ -26,7 +26,7 @@ def test_eforms_xml_all_fields():
     assert v(f, "performance_guarantee")["quoted"][0].startswith("Performance guarantee of 10%")
     assert v(f, "clarification_deadline") == "2026-11-20 12:00"
     assert v(f, "evaluation")["method"] == "best price-quality ratio"
-    assert "price 55: Prix des prestations" in v(f, "evaluation")["criteria"]
+    assert "price 55%: Prix des prestations" in v(f, "evaluation")["criteria"]
     assert v(f, "delivery")["place"] == ["Vannes Cedex, 56019, FRH04, FRA"] and v(f, "delivery")["incoterms"] == ["DAP Chambery"]
     assert v(f, "documents")[0]["url"].startswith("https://")
     assert v(f, "eligibility")[0]["type"] == "other"
@@ -37,7 +37,7 @@ def test_eforms_xml_all_fields():
 def test_eforms_json_matches_xml_and_states_gaps():
     f = td.parse_eforms(td.json_tree(json.loads((S / "boamp_eforms_cn.json").read_text(encoding="utf-8"))), "u", AT)
     assert v(f, "lots")["count"] == 3
-    assert v(f, "evaluation")["criteria"][-1] == "price 55: Prix des prestations"
+    assert v(f, "evaluation")["criteria"][-1] == "price 55%: Prix des prestations"
     # the real notice states no guarantee, no clarification deadline and no standard: never invented
     assert v(f, "bid_security") == td.NS and v(f, "clarification_deadline") == td.NS and v(f, "technical_standards") == td.NS
     assert v(f, "performance_guarantee") == td.NS
