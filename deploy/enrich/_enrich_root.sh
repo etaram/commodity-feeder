@@ -100,7 +100,7 @@ if [ "$mode" = start ]; then
   exit 0
 fi
 if [ "$mode" = people ]; then
-  P="$E/psample"; sha=$(git -c safe.directory='*' -C "$repo" rev-parse --short HEAD 2>/dev/null || echo none)
+  P="$E/psample"; sha=$(git -c safe.directory='*' -C "$repo" rev-parse HEAD 2>/dev/null | cut -c1-12 || echo none)
   if docker ps --filter name=^enrich-people$ --format '{{.Names}}' | grep -q . && [ "$(cat "$P/sha" 2>/dev/null)" = "$sha" ]; then
     echo "people sample running ($(cat "$P/sha" 2>/dev/null))"
     python3 -c "import json; s=json.load(open('$P/status.json')); print(json.dumps({'registry_people': s.get('registry_people'), 'blocked': s.get('blocked')}))" 2>/dev/null || echo "no counts yet"
