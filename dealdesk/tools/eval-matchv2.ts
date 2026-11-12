@@ -19,7 +19,7 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { tenderKind, type TenderKind } from "@/lib/tenderkind";
-import { applyTie, askGeminiForKind, ownFromEvidence, fitRerank, requirementOf, routeTender, tieToBreak, type FitRow, type Kind3, type Ranked } from "@/lib/matchv2";
+import { applyTie, askGeminiForKind, ownFromEvidence, fitRerank, requestRequirement, routeTender, tieToBreak, type FitRow, type Kind3, type Ranked } from "@/lib/matchv2";
 import { decide, fitInput, kindInput, kindQuestions } from "@/lib/gemini";
 
 const say = (s = "") => process.stdout.write(s + "\n");
@@ -69,13 +69,23 @@ async function main(): Promise<number> {
   const save = () => writeFileSync(sp, JSON.stringify(st));
   const stoppedWhy = (): string => (st as { stopped?: string }).stopped || "";
   const canCall = () => !!key && !stoppedWhy() && runCalls < runCap && st.calls < taskCap;
-  const ask = async (what: string, id: string, input: string, qs: Parameters<typeof decide>[1]) => {
-    st.calls++; runCalls++; st.calls_by_phase[phase] = (st.calls_by_phase[phase] || 0) + 1; save();   // counted before it is sent
-    const r = await decide(input, qs, key);
-    st.events.push({ at: new Date().toISOString(), phase, what, id, ok: r.ok, ...(r.ok ? {} : { reason: r.reason }) });
-    if (!r.ok) st.stopped = `${what} ${id}: ${r.reason}`;
-    save();
-    return r;
+  // the free tier refused a fast burst (tuning run 43192935918: HTTP 429 at call 20), so calls are paced; a 429 gets
+  // one more attempt after a minute, and every attempt counts against the caps
+  const PACE_MS = Number(process.env.MATCHV2_PACE_MS || 6000), sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let lastCall = 0;
+  const ask = async (what: string, id: string, input: string, qs: Parameters<typeof decide>[1]): Promise<Awaited<ReturnType<typeof decide>>> => {
+    for (let attempt = 0; ; attempt++) {
+      const wait = lastCall + PACE_MS - Date.now();
+      if (wait > 0) await sleep(wait);
+      st.calls++; runCalls++; st.calls_by_phase[phase] = (st.calls_by_phase[phase] || 0) + 1; save();   // counted before it is sent
+      lastCall = Date.now();
+      const r = await decide(input, qs, key);
+      st.events.push({ at: new Date().toISOString(), phase, what, id, ok: r.ok, ...(r.ok ? {} : { reason: r.reason }) });
+      if (!r.ok && r.status === 429 && attempt === 0 && runCalls < runCap && st.calls < taskCap) { save(); await sleep(65000); continue; }
+      if (!r.ok) st.stopped = `${what} ${id}: ${r.reason}`;
+      save();
+      return r;
+    }
   };
 
   // ---- A. tender kind: rules, then Gemini where the rules are not a strong goods reading
@@ -103,9 +113,7 @@ async function main(): Promise<number> {
     const stratum = isT ? strata.get(id) || "no_label" : "product";
     const k = rulesOf.get(id);
     const route = isT && k ? routeTender(k, gemOf.get(id) ?? null) : undefined;
-    const phrases = k && (k.kind === "goods" || k.kind === "mixed") ? k.goods_phrases : [];
-    const commodity = String(t.commodity || "").trim();
-    const req = isT ? (phrases.length ? requirementOf(String(t.title || ""), phrases) : commodity ? requirementOf(commodity) : { conds: [], product: "" }) : requirementOf(rows[0]?.query || "");
+    const req = requestRequirement(rows[0]?.query || "", isT && k ? { kind: k, title: String(t.title || ""), commodity: String(t.commodity || "") } : undefined);
     const toRow = (r: Row): FitRow => ({ own: ownFromEvidence(r.evidence), kind: r.kind });
     const { kept, dropped } = fitRerank(rows, req.conds, toRow);
     const B = kept.map((x) => x.item);
@@ -116,7 +124,7 @@ async function main(): Promise<number> {
       tieNeeded++;
       const cache = st.fit[id] || {};
       const missing = pos.filter((i) => !cache[String(kept[i].item.rank)]);
-      const product = isT ? (phrases.length ? phrases.join(", ") : commodity || String(t.title || "").slice(0, 120)) : rows[0]?.query || "";
+      const product = req.product;
       if (missing.length && tiebreak && canCall()) {
         const { input, questions } = fitInput(product, missing.map((i) => ({ text: `${kept[i].item.evidence} | type: ${kept[i].item.type || "-"}` })));
         const r = await ask("tie", id, input, questions);
