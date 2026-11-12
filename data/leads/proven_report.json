@@ -1,21 +1,95 @@
 {
  "at": "2026-11-12",
- "new_listed_proven": 0,
+ "new_listed_proven": 19913,
  "was_absent": 0,
- "was_tier_4": 0,
- "without_contact_yet": 0,
- "by_source": {},
- "by_region": {},
+ "was_tier_4": 19913,
+ "without_contact_yet": 18134,
+ "by_source": {
+  "TED": 14981,
+  "Colombia SECOP": 2936,
+  "Brazil PNCP": 1307,
+  "Spain": 209,
+  "USAspending awards": 135,
+  "UK Contracts Finder": 126,
+  "Prozorro (Ukraine)": 107,
+  "unknown": 83,
+  "awards": 22,
+  "Germany": 7
+ },
+ "by_region": {
+  "Europe": 15428,
+  "Latin America": 4326,
+  "North America": 135,
+  "Middle East & North Africa": 17,
+  "unknown": 4,
+  "CIS & Central Asia": 3
+ },
  "weak_regions": {
-  "Middle East & North Africa": 0,
+  "Middle East & North Africa": 17,
   "East Asia": 0,
   "Sub-Saharan Africa": 0,
-  "Latin America": 0
+  "Latin America": 4326
  },
- "by_role": {},
- "by_sector": {},
- "source_by_region": {},
- "listed_with_award_evidence": 0,
+ "by_role": {
+  "supplier (role to confirm)": 17593,
+  "EPC / contractor": 1764,
+  "trader / distributor": 311,
+  "manufacturer": 245
+ },
+ "by_sector": {
+  "Healthcare & pharmaceuticals": 3937,
+  "ICT & telecom": 2510,
+  "Vehicles, rolling stock, ships & aircraft": 2395,
+  "Agriculture & food": 2059,
+  "Power & electrical equipment": 1644,
+  "Industrial & construction machinery": 1444,
+  "Water & wastewater": 1277,
+  "Construction materials & building systems": 1012,
+  "Scientific & measuring instruments": 913,
+  "Energy, fuels & utilities": 870,
+  "Defence & security": 858,
+  "Mining, minerals & metals": 271,
+  "Chemicals & plastics": 255,
+  "Building construction works": 121,
+  "Furniture, appliances & consumer goods": 75
+ },
+ "source_by_region": {
+  "TED": {
+   "Europe": 14961,
+   "Middle East & North Africa": 17,
+   "CIS & Central Asia": 3
+  },
+  "Colombia SECOP": {
+   "Latin America": 2936
+  },
+  "Brazil PNCP": {
+   "Latin America": 1307
+  },
+  "Spain": {
+   "Europe": 209
+  },
+  "USAspending awards": {
+   "North America": 135
+  },
+  "UK Contracts Finder": {
+   "Europe": 126
+  },
+  "Prozorro (Ukraine)": {
+   "Europe": 103,
+   "unknown": 4
+  },
+  "unknown": {
+   "Latin America": 83
+  },
+  "awards": {
+   "Europe": 22
+  },
+  "Germany": {
+   "Europe": 7
+  }
+ },
+ "baseline": "award rule only (no earlier build on record)",
+ "listed_with_award_evidence": 63979,
  "promoted_rule": "one award in a focus sector within 730 days, USD 100k or more (leads/universe.py PROVEN_MIN_USD)",
- "queued_for_website_check_and_enrichment": 0
+ "queued_for_website_check_and_enrichment": 5000
 }
