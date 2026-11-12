@@ -37,7 +37,7 @@ def test_weekly_report_counts_and_change(tmp_path, monkeypatch):
     (part / "etimad.json").write_text(json.dumps({"rows": [{"country": "SAU", "deadline": ""}]}))
     import datetime as dt
     day = str(dt.date.today())
-    (aw / "gebiz" / f"{day}.json").write_text(json.dumps([{"id": "1", "winner": "A Pte Ltd", "country": "SGP"}, {"id": "e", "empty": True}]))
+    (aw / "gebiz" / f"{day}.json").write_text(json.dumps([{"id": "1", "winners": ["A Pte Ltd"], "country": "SGP", "published": day}, {"id": "e", "empty": True}]))
     monkeypatch.setattr(sc, "PARTIAL", part); monkeypatch.setattr(common, "AWARDS", aw)
     monkeypatch.setattr(sc, "REG", reg); monkeypatch.setattr(sc, "REPORT", reg / "r.json"); monkeypatch.setattr(sc, "HISTORY", reg / "h.json")
     monkeypatch.setattr(sc, "CANDIDATES", reg / "none.csv"); monkeypatch.setattr(sc, "PRIVATE", tmp_path / "noprivate")

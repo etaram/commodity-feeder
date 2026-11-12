@@ -240,25 +240,34 @@ def tender_counts():
 
 
 def award_counts(days=365):
-    """award rows with a named winner per region (winner country, else buyer country), last `days` days."""
+    """award rows with a named winner per region (buyer country), last `days` days: day files awards/<source>/*.json
+    and bulk files awards/<source>/*.jsonl (OCDR)."""
     from .common import AWARDS
     cut = str(dt.date.today() - dt.timedelta(days=days))
     out = defaultdict(int)
-    for d in AWARDS.glob("*"):
-        if not d.is_dir():
+
+    def add(a):
+        if a.get("empty") or not (a.get("winners") or a.get("winner") or a.get("supplier")):
+            return
+        if (a.get("published") or "9999")[:10] < cut and a.get("published"):
+            return
+        c = (a.get("country") or (a.get("winner_country") or "").split(",")[0])[:3]
+        out[_region(c)] += 1
+    for p in AWARDS.glob("*/*.json"):
+        if re.match(r"\d{4}-\d\d-\d\d$", p.stem) and p.stem < cut:
             continue
-        for p in d.glob("*.json"):
-            if p.stem < cut:
-                continue
-            try:
-                lst = json.loads(p.read_text(encoding="utf-8"))
-            except Exception:  # noqa: BLE001
-                continue
-            for a in lst:
-                if a.get("empty") or not (a.get("winner") or a.get("supplier")):
+        try:
+            for a in json.loads(p.read_text(encoding="utf-8")):
+                add(a)
+        except Exception:  # noqa: BLE001
+            continue
+    for p in AWARDS.glob("*/*.jsonl"):
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    add(json.loads(line))
+                except ValueError:
                     continue
-                c = (a.get("country") or a.get("buyer_country") or (a.get("winner_country") or "").split(",")[0])[:3]
-                out[_region(c)] += 1
     return out
 
 
