@@ -24,7 +24,7 @@ STATE = os.environ.get("SERVERPANEL_STATE", "/var/lib/sinder-serverpanel")
 JOURNAL = os.environ.get("SERVERPANEL_JOURNAL", "/var/log/sinder-jobs.log")
 HISTORY_POINTS = 720            # 24 hours at one point every 2 minutes
 HISTORY_COLS = ["t", "cpu", "mem", "disk", "load1", "wc", "queue", "busy_runners"]
-MODEL_RE = re.compile(r"^(ollama|semantic|bench)", re.I)
+MODEL_RE = re.compile(r"^(ollama|semantic|bench|enrich)", re.I)
 # anything that looks like a key or token in a journal line is cut out before it is published
 SECRETISH = re.compile(r"(?i)(bearer\s+\S+|(?:token|key|secret|password|passwd)\S*\s*[=:]\s*\S+|[A-Za-z0-9_\-+/=]{32,}|gh[pousr]_[A-Za-z0-9]{20,})")
 IPV4 = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
@@ -225,6 +225,23 @@ def refine_counts():
     return {k: d.get(k) for k in ("at", "universe", "processed", "websites_checked", "website_check_queue", "needs_ai")}
 
 
+ENRICH_STATUS = os.environ.get("SERVERPANEL_ENRICH", "/opt/sinder/enrich/status.json")
+
+
+def enrich_counts(path=ENRICH_STATUS):
+    """The supplier enrichment job's counts (leads/enrich_server.py writes them; numbers and field names only)."""
+    d = load_json(path, None)
+    if not isinstance(d, dict) or d.get("v") != 1:
+        return None
+    num = lambda v: v if isinstance(v, (int, float)) and not isinstance(v, bool) else None  # noqa: E731
+    fill = d.get("fill") if isinstance(d.get("fill"), dict) else {}
+    tiers = d.get("by_tier") if isinstance(d.get("by_tier"), dict) else {}
+    return {"at": str(d.get("at", ""))[:20], "state": str(d.get("state", ""))[:12], "queue": num(d.get("queue")), "done": num(d.get("done")),
+            "remaining": num(d.get("remaining")), "per_hour": num(d.get("per_hour")), "eta_hours": num(d.get("eta_hours")),
+            "by_tier": {str(k)[:20]: {"done": num((v or {}).get("done")), "total": num((v or {}).get("total"))} for k, v in list(tiers.items())[:6] if isinstance(v, dict)},
+            "fill": {str(k)[:20]: num(v) for k, v in list(fill.items())[:30]}}
+
+
 def clean_line(s):
     s = SECRETISH.sub("[hidden]", s)
     s = IPV4.sub("[ip]", s)
@@ -264,6 +281,7 @@ def collect(state_dir):
         "runners": rs,
         "models": [c["name"] for c in (cs or []) if c["state"] == "running" and MODEL_RE.match(c["name"])],
         "refine": refine_counts(),
+        "enrich": enrich_counts(),
         "journal": journal(),
     }
 
