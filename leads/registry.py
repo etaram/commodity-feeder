@@ -129,6 +129,14 @@ BACKLOG = {
     "S41": ("Equinix Expansions", "https://www.equinix.com/data-centers/expansions", "projects", ""),
     "S42": ("POWERCHINA Procurement", "https://bid.powerchina.cn/", "projects", ""),
 }
+# What was checked before a source was connected (terms of use, licence, robots.txt), with the date and the method
+# used to read it (api / http / stealth / relay). Shown in sources.csv column "terms".
+TERMS = {
+    "iadb_awards": "2026-11-12 api: dataset licence CC BY 4.0 (package_show); data.iadb.org robots.txt allows /api/action/",
+    "gebiz_awards": "2026-11-12 api: Singapore Open Data Licence v1.0 (commercial reuse with attribution); data.gov.sg robots.txt Allow: /",
+    "gleif_bulk": "2026-11-12 api: GLEIF Golden Copy CC0, free of charge (gleif.org/en/about/open-data); goldencopy.gleif.org publish API",
+    "mx_check": "2026-11-12 DNS lookups only (MX, NS, A); no mail sent, no SMTP probing",
+}
 MAX_AGE_H = 30  # a scheduled tender source older than this is degraded
 
 
@@ -195,17 +203,19 @@ def build():
         rows.append({"id": mod, "name": what, "track": track, "kind": track, "geography": "global", "access": access,
                      "status": status, "rows": n, "age_h": age, "note": note, "refresh": "daily to weekly",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
+    for r in rows:
+        r["terms"] = TERMS.get(r["id"], "")
     known = {r["id"] for r in rows}
     for sid, (name, url, track, mapped) in BACKLOG.items():
         if mapped and mapped in known:
             st = next(r["status"] for r in rows if r["id"] == mapped)
             rows.append({"id": sid, "name": name, "track": track, "kind": "backlog", "geography": "", "access": "",
                          "status": st, "rows": "", "age_h": "", "note": f"covered by connector '{mapped}'", "refresh": "",
-                         "parser_version": "", "cost": "", "url": url})
+                         "parser_version": "", "cost": "", "url": url, "terms": ""})
         else:
             rows.append({"id": sid, "name": name, "track": track, "kind": "backlog", "geography": "", "access": "unverified",
                          "status": "discovered", "rows": "", "age_h": "", "note": "researched link only: access, terms and cost not verified",
-                         "refresh": "", "parser_version": "", "cost": "unverified", "url": url})
+                         "refresh": "", "parser_version": "", "cost": "unverified", "url": url, "terms": ""})
     OUT.mkdir(parents=True, exist_ok=True)
     summary = {}
     for r in rows:
