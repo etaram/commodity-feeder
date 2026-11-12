@@ -45,6 +45,9 @@ TENDERS = {
     "ghana": ("Ghana", "public portal (GHANEPS)"), "malawi": ("Malawi", "public portal (PPDA)"),
     "mozambique": ("Mozambique", "public portal (UFSA)"), "dubai": ("UAE (Dubai)", "public portal (eSupply)"),
     "philippines": ("Philippines", "public portal (PhilGEPS)"),
+    "dewa": ("UAE (Dubai) - DEWA state utility", "public list (relay)"), "csg": ("China - China Southern Power Grid (SOE)", "public list (http)"),
+    "ccgp": ("China - central and local government (CCGP)", "public list (http)"), "lebanon": ("Lebanon", "public portal (PPA, http)"),
+    "cameroon": ("Cameroon", "public portal (ARMP, http)"),
 }
 # Built but not scheduled, with the reason
 IMPLEMENTED = {"zambia": ("Zambia", "public portal (ZPPA)", "list page needs a captcha"),
@@ -136,6 +139,10 @@ TERMS = {
     "gebiz_awards": "2026-11-12 api: Singapore Open Data Licence v1.0 (commercial reuse with attribution); data.gov.sg robots.txt Allow: /",
     "gleif_bulk": "2026-11-12 api: GLEIF Golden Copy CC0, free of charge (gleif.org/en/about/open-data); goldencopy.gleif.org publish API",
     "mx_check": "2026-11-12 DNS lookups only (MX, NS, A); no mail sent, no SMTP probing",
+    "dewa": "2026-11-12 relay (runner gets a 403 bot challenge): robots.txt allows the tender list; no terms page restricting automated reading found",
+    "csg": "2026-11-12 http: no robots.txt (404); footer legal/terms links are empty, copyright line only; facts + link kept, no document text",
+    "ccgp": "2026-11-12 http: no robots.txt (404); no terms page, Ministry of Finance copyright footer; statutory public notices, facts + link kept",
+    "bahrain": "2026-11-12 stealth (real browser; system libraries installed by deploy/ops/browser-deps.sh)",
 }
 MAX_AGE_H = 30  # a scheduled tender source older than this is degraded
 
@@ -174,7 +181,8 @@ def build():
         rows.append({"id": mod, "name": _doc(mod), "track": "projects", "kind": "tenders", "geography": geo, "access": access,
                      "status": status, "rows": (h or {}).get("rows", ""), "age_h": (h or {}).get("age_h", ""), "note": note,
                      "refresh": "every 2 h" if mod not in ("bahrain", "nyc", "us_cities", "za", "chile", "india", "germany", "paraguay",
-                                                         "dominican", "france", "spain", "wb_pipeline", "worldbank", "mrgov") else "twice a day",
+                                                         "dominican", "france", "spain", "wb_pipeline", "worldbank", "mrgov",
+                                                         "dewa", "csg", "ccgp", "lebanon", "cameroon") else "twice a day",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
     for mod, (geo, access, why) in IMPLEMENTED.items():
         rows.append({"id": mod, "name": _doc(mod), "track": "projects", "kind": "tenders", "geography": geo, "access": access,
