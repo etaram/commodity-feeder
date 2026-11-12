@@ -197,7 +197,7 @@ function liveRefresh(key: string): Promise<Grid> {
 // A server process that keeps running (our own server, not a Vercel function) re-reads the live tabs every minute, so
 // Google keeps the spreadsheets loaded and a page never meets the slow first read. LIVE_KEEPWARM_MS=0 turns it off.
 let warmTimer: ReturnType<typeof setInterval> | null = null;
-function keepWarm() {
+export function keepWarm() {
   const ms = Number(process.env.LIVE_KEEPWARM_MS ?? (process.env.VERCEL ? 0 : 60_000));
   if (warmTimer || !ms || !process.env.GOOGLE_SERVICE_ACCOUNT_JSON) return;
   const tick = () => { for (const k of Object.keys(LIVE)) liveRefresh(k).catch((e) => liveWarn(k, e)); };
