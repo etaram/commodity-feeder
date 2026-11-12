@@ -7,14 +7,15 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, bench-semantic]
         default: status
 permissions:
   contents: read
 jobs:
   run:
     runs-on: [self-hosted, sinder]
-    timeout-minutes: 30
+    # the semantic bench downloads and runs several models one after another; every other task keeps 30 minutes
+    timeout-minutes: ${{ inputs.task == 'bench-semantic' && 55 || 30 }}
     steps:
       - uses: actions/checkout@v4
       - run: bash "deploy/ops/${{ inputs.task }}.sh"
