@@ -129,3 +129,13 @@ def test_scrub_and_standards():
     assert td.scrub("Call <b>Mr X</b> on +30 210 123 4567 or x.y@z.gr") == "Call Mr X on [phone] or [e-mail]"
     assert td.standards("EN 2026 and EN 50525-2-31 and IEC 60502-2:2014") == ["EN 50525-2-31", "IEC 60502-2:2014"]
     assert td.incoterms("CIP du département") == [] and td.incoterms("Delivery DDP Valletta") == ["DDP Valletta"]
+
+
+def test_ted_package_names_and_wb_french():
+    for n in ("20261103_2026213/00762189_2026.xml", "762189_2026.xml"):
+        m = td.PKG_NAME.search(n)
+        assert (int(m.group(1)), m.group(2)) == (762189, "2026")
+    t = ("Fourniture en trois (3) lots. Le délai d’exécution de chaque lot est de trois (3) mois calendaires. "
+         "Les pondérations suivantes s'appliqueront aux Critères notés : l’offre technique compte pour 50 %.")
+    f = td.parse_worldbank({"notice_text": t}, "u", AT)
+    assert v(f, "lots") == {"count": 3} and v(f, "evaluation")["quoted"] and v(f, "delivery")["delivery_time_quoted"]

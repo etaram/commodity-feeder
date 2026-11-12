@@ -426,7 +426,7 @@ def parse_eforms(tree, src, at):
     inc = incoterms(all_text)
     if inc:
         deliv["incoterms"] = inc
-    dt_ = find_all(DELIV, all_text, 2)
+    dt_ = find_all(DELIV, all_text, 2) or find_all(EXEC, all_text, 1)
     if dt_:
         deliv["delivery_time_quoted"] = dt_
     lots_v = ""
@@ -621,6 +621,14 @@ WB_DOCS = re.compile(r"https?://[^\s\"'<>)]+", re.I)
 WB_CLAR = re.compile(r"(?:clarification|questions?|queries)[^\n.]{0,120}?(\d{1,2}(?:st|nd|rd|th)?\s+[A-Z][a-z]+,?\s+\d{4}|\d{4}-\d{2}-\d{2}|\d{1,2}/\d{1,2}/\d{4})", re.I)
 
 
+WB_LOTS_N = re.compile(r"\b(?:in|en|em)\s+(?:[a-zé]+\s+)?\(?(\d{1,3})\)?\s+lots?\b|\b(\d{1,3})\s+lots?\b", re.I)
+EXEC = re.compile(r"(?:d[ée]lai d.ex[ée]cution|d[ée]lai de livraison|plazo de (?:entrega|ejecuci[oó]n)|prazo de (?:entrega|execu[cç][aã]o)|"
+                  r"delivery (?:period|schedule|time)|completion period|period of performance|contract (?:period|duration))[^.;\n]{0,160}", re.I)
+EVAL_T = re.compile(r"lowest evaluated (?:bid|cost)|most advantageous bid|rated criteria|crit[èe]res not[ée]s|pond[ée]ration\w*|"
+                    r"quality.cost based|offre (?:technique|financi[èe]re) compte pour|moins.disant|oferta evaluada m[aá]s baja|"
+                    r"criterios? de evaluaci[oó]n|menor pre[cç]o avaliado", re.I)
+
+
 def parse_worldbank(n, src, at):
     raw = n.get("notice_text") or ""
     t = re.sub(r"<\s*(br|/p|/li|/tr|/div|/h\d)\s*/?>", "\n", raw, flags=re.I)
@@ -631,6 +639,7 @@ def parse_worldbank(n, src, at):
         r = {"id": m.group(1), "title": scrub(m.group(2), 140)}
         if r not in lots:
             lots.append(r)
+    n_lots = max([int(a or b) for a, b in WB_LOTS_N.findall(t) if (a or b) and int(a or b) < 200] or [0])
     bid = find_all(BID_SEC, t, 2)
     perf = find_all(PERF, t, 2)
     elig = [{"type": "quoted from the notice", "text": scrub(m.group(0), 300)} for m in list(WB_ELIG.finditer(t))[:6]]
@@ -641,8 +650,8 @@ def parse_worldbank(n, src, at):
             docs.append({"url": u, "type": "link in the notice"})
     clar = [m.group(1) for m in WB_CLAR.finditer(t)][:2]
     deliv = {k: v for k, v in (("incoterms", incoterms(t)),
-                                ("delivery_time_quoted", find_all(DELIV, t, 2))) if v}
-    ev = find_all(re.compile(r"lowest evaluated (?:bid|cost)|most advantageous bid|rated criteria|quality.cost based", re.I), t, 2)
+                                ("delivery_time_quoted", find_all(DELIV, t, 2) or find_all(EXEC, t, 2))) if v}
+    ev = find_all(EVAL_T, t, 2)
     items = [{"name": scrub(n.get("bid_description"), 300)}] if n.get("bid_description") else []
     q = find_all(QTY, t, 4)
     if q and items:
@@ -654,7 +663,8 @@ def parse_worldbank(n, src, at):
         "bid_security": field({"quoted": bid} if bid else "", src, at, "notice text (World Bank procurement notice)"),
         "performance_guarantee": field({"quoted": perf} if perf else "", src, at, "notice text"),
         "eligibility": field(elig, src, at, "notice text: qualification and eligibility paragraphs"),
-        "lots": field({"count": len(lots), "lots": lots[:30]} if lots else "", src, at, "notice text: lots listed"),
+        "lots": field({"count": max(len(lots), n_lots), **({"lots": lots[:30]} if lots else {})} if lots or n_lots else "", src, at,
+                      "notice text: lots listed or counted"),
         "evaluation": field({"quoted": ev} if ev else "", src, at, "notice text"),
         "clarification_deadline": field(clar, src, at, "notice text"),
         "documents": field(docs, src, at, "links printed in the notice"),
@@ -693,18 +703,91 @@ def _get(s, url, kind="json", tries=3, **kw):
     return last, None
 
 
-def ted_url(tid):
-    return f"https://ted.europa.eu/en/notice/{tid.replace('TED-', '', 1)}/xml"
+TED_API = "https://api.ted.europa.eu/v3/notices/search"
+TED_PKG = "https://ted.europa.eu/packages/daily/{}"
+PKG_PER_RUN = 14
+PKG_NAME = re.compile(r"(?:^|/)0*(\d{1,8})[_-](\d{4})\.xml$")
+
+
+def ted_issues(s, ids):
+    """publication number -> OJ S issue ('213/2026') from the TED search API, 100 notices per query."""
+    out = {}
+    pns = [i.replace("TED-", "", 1) for i in ids]
+    for k in range(0, len(pns), 100):
+        q = "publication-number IN (" + " ".join(pns[k:k + 100]) + ")"
+        try:
+            r = s.post(TED_API, json={"query": q, "fields": ["publication-number", "ojs-number"], "limit": 250}, timeout=90)
+            for n in (r.json().get("notices") or []) if r.status_code == 200 else []:
+                if n.get("ojs-number"):
+                    out["TED-" + n["publication-number"]] = n["ojs-number"]
+        except Exception as e:  # noqa: BLE001
+            log.warning("TED issue lookup: %s", type(e).__name__)
+        time.sleep(PAUSE["ted"])
+    return out
+
+
+def ted_packages(s, ids, minutes_left):
+    """eForms XML for the given TED ids, read from the official daily packages (one tar.gz per OJ S issue, streamed;
+    only the wanted notices are kept). Returns ({id: xml bytes}, {id: reason})."""
+    import tarfile
+    import tempfile
+    xml, why = {}, {}
+    if not ids:
+        return xml, why
+    iss = ted_issues(s, ids)
+    by_pkg = defaultdict(set)
+    for i in ids:
+        o = iss.get(i)
+        m = re.match(r"(\d+)/(\d{4})$", o or "")
+        if not m:
+            why[i] = "issue not found in the TED API"; continue
+        by_pkg[f"{m.group(2)}{int(m.group(1)):05d}"].add(i)
+    t0 = time.time()
+    for n_pkg, (pkg, want) in enumerate(sorted(by_pkg.items(), key=lambda kv: -len(kv[1]))):
+        if n_pkg >= PKG_PER_RUN or time.time() - t0 > minutes_left * 60:
+            for i in want:
+                why[i] = "package left for the next run"
+            continue
+        url = TED_PKG.format(pkg)
+        try:
+            with tempfile.TemporaryFile() as tmp:
+                with s.get(url, timeout=300, stream=True) as r:
+                    if r.status_code != 200:
+                        for i in want:
+                            why[i] = f"package HTTP {r.status_code}"
+                        continue
+                    for chunk in r.iter_content(1 << 20):
+                        tmp.write(chunk)
+                tmp.seek(0)
+                with tarfile.open(fileobj=tmp, mode="r:gz") as tf:
+                    for mem in tf:
+                        m = PKG_NAME.search(mem.name)
+                        if not m or not mem.isfile():
+                            continue
+                        tid = f"TED-{int(m.group(1))}-{m.group(2)}"
+                        if tid in want:
+                            xml[tid] = tf.extractfile(mem).read()
+        except Exception as e:  # noqa: BLE001
+            for i in want:
+                why.setdefault(i, f"package {type(e).__name__}")
+        for i in want:
+            if i not in xml:
+                why.setdefault(i, "not in its daily package")
+        time.sleep(PAUSE["ted"])
+    log.info("TED daily packages: %d read, %d notices found, %d left", min(len(by_pkg), PKG_PER_RUN), len(xml), len(why))
+    return xml, why
 
 
 def fetch_one(s, row, ctx):
     """(fields, raw bytes, source url) for one tender row, or (None, reason, url)."""
     kind, tid, at = SOURCES.get(row["source"]), row["id"], dt.date.today().isoformat()
     if kind == "ted":
-        url = ted_url(tid)
-        st, raw = _get(s, url, kind="bytes")
+        # the notice page and its /xml link sit behind a bot challenge (HTTP 202, AWS WAF): never worked around. The
+        # same eForms XML comes from TED's official daily packages (ted.europa.eu/packages/daily), read in bulk first
+        url = f"https://ted.europa.eu/en/notice/-/detail/{tid.replace('TED-', '', 1)}"
+        raw = ctx.get("ted_xml", {}).get(tid)
         if raw is None:
-            return None, f"HTTP {st}", url
+            return None, ctx.get("ted_why", {}).get(tid, "not in the daily packages read"), url
         try:
             f = parse_eforms(xml_tree(raw), url, at)
         except ET.ParseError:
@@ -753,11 +836,12 @@ def fetch_one(s, row, ctx):
         raw = json.dumps({"compra": compra, "itens": itens, "arquivos": arqs}, ensure_ascii=False).encode()
         return parse_pncp(compra, itens if isinstance(itens, list) else [], arqs if isinstance(arqs, list) else [], (u_c, u_i, u_a), at), raw, u_c
     if kind == "chile":
-        ticket = os.environ.get("CHILE_TICKET", "")
+        from .chile import DEMO  # the public demo ticket ChileCompra publishes; rate limited, so a longer pause
+        ticket = os.environ.get("CHILE_TICKET", "") or DEMO
         code = tid.replace("CL-", "", 1)
         url = f"https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json?codigo={code}"
-        if not ticket:
-            return None, "no API ticket", url
+        if ticket == DEMO:
+            time.sleep(3)
         st, j = _get(s, url, params={"ticket": ticket})
         x = ((j or {}).get("Listado") or [None])[0]
         if not x:
@@ -932,6 +1016,8 @@ def run(limit=400, minutes=25, ids=None, sample=0):
              dict(Counter(r["source"] for r in todo)))
     s = _session()
     done, fails, raws = [], Counter(), {}
+    ted_ids = [r["id"] for r in todo if SOURCES.get(r["source"]) == "ted"]
+    ctx["ted_xml"], ctx["ted_why"] = ted_packages(s, ted_ids, max(5, minutes * 0.6))
     for r in todo:
         if time.time() - t0 > minutes * 60:
             log.info("tender details: time budget reached after %d", len(done)); break
