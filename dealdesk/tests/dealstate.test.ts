@@ -30,14 +30,22 @@ ok(v(lad2, "local_partner") === "conditional", "an unverified partner is not a w
 
 const R = (kind: string, id: string, data: Record<string, unknown>, version = 1, status = "active"): DealRecord => ({ time: "", deal_id: "D1", kind: kind as DealRecord["kind"], record_id: id, version, status, data, by: "t", source: "test" });
 ok(readiness([], open).reached === "" && readiness([], open).next === "research", "empty deal: research not reached");
-const req = R("requirement", "r1", { name: "white maize", mandatory: true, status: "unknown" });
+const req = R("requirement", "r1", { name: "white maize", mandatory: true, status: "met" });
 const r1 = readiness([req], open);
 ok(r1.reached === "research" && r1.next === "ready_for_rfq" && r1.missing.some((m) => /supplier/.test(m)), "requirement only: research reached, supplier missing");
 ok(!usableSupplier({ role: "supplier", email: "sales@x", source: "site" }) && !usableSupplier({ role: "supplier", email: "a@b.com" }), "an invalid email or an unsourced contact is not usable");
-const sup = R("party", "p1", { role: "supplier", name: "Grain SA", email: "sales@grainsa.co.za", source: "https://grainsa.co.za/contact" });
+const sup = R("party", "p1", { role: "supplier", name: "Grain SA", email: "sales@grainsa.co.za", source: "https://grainsa.co.za/contact", fit_verified: true });
 const r2 = readiness([req, sup], open);
 ok(r2.reached === "ready_for_rfq" && r2.missing.some((m) => /actual offer/.test(m)), "sourced supplier with a valid channel: ready for RFQ");
 ok(readiness([req, sup], open.map((r) => ({ ...r, verdict: "blocked" as const }))).reached === "research", "no feasible route: not ready for RFQ");
+// a contact channel alone never qualifies a supplier; open mandatory gates mean a capability inquiry, not an RFQ
+const unrelated = R("party", "p1", { role: "supplier", name: "Any Co", email: "sales@anyco.com", source: "https://anyco.com" });
+const ru = readiness([req, unrelated], open);
+ok(ru.reached === "research" && ru.missing.some((m) => /product fit/.test(m)), "sourced but unproven supplier with a valid email is not product-qualified");
+const gate = R("requirement", "r2", { name: "33kV TR-XLPE triplex", mandatory: true, status: "missing" });
+const rg = readiness([req, gate, sup], open);
+ok(rg.reached === "research" && rg.missing.some((m) => /capability inquiry/.test(m)), "a missing mandatory gate keeps the deal in qualification");
+ok(rg.execution_approved === false && r2.execution_approved === false, "readiness never becomes sending approval");
 const q = R("quote", "q1", { availability: "indicative", price: 300 });
 ok(readiness([req, sup, q], open).reached === "ready_for_rfq", "an indicative price is not an actual offer");
 const q2 = R("quote", "q1", { availability: "confirmed", price: 300, source_ref: "email 2026-11-06", valid_until: "2099-01-01" }, 2);
