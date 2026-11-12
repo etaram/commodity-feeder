@@ -36,7 +36,7 @@ TOKEN_FILE = os.environ.get("SCHED_TOKEN_FILE", "/opt/sinder/secrets/gh_dispatch
 ENV_FILE = os.environ.get("SCHED_ENV_FILE", "/opt/sinder/repo/deploy/.env")
 CATCH_UP_MIN = 30           # after a server outage, missed times older than this are not started any more
 ALERT_REPEAT_H = 12         # while something stays stale, repeat the Telegram alert this often
-GHOST_H = 6                 # a run still queued this long after creation never got a job; it does not block new starts
+GHOST_H = 6                 # a run queued this long with no job at all is a GitHub ghost; it does not block new starts
 UTC = dt.timezone.utc
 
 
@@ -162,19 +162,29 @@ def api(path, method="GET", body=None, tok=None):
 
 def waiting_runs(wf, tok, states=("queued", "pending", "waiting")):
     """Runs of this workflow that have not started yet (queued, or held by its concurrency group)."""
-    # A run still "queued" hours after it was created never got a job (a GitHub-side ghost: it cannot be cancelled and
-    # never starts). Counting it would skip every later start of that workflow forever (suppliers.yml run 43097147066,
-    # queued since 2026-11-11T20:37Z, blocked the 13:40 rebuild), so only runs created in the last GHOST_H hours count.
+    # One exception: a run still "queued" GHOST_H hours after creation AND with no job at all is a GitHub-side ghost (it
+    # cannot be cancelled and never starts; suppliers.yml 43097147066, queued since 2026-11-11T20:37Z, blocked the 13:40
+    # rebuild). Only that case is ignored, and it is logged with its id. Old pending/waiting runs (concurrency queue,
+    # approvals), queued runs that have a job, and running jobs always count.
     n = 0
     cutoff = dt.datetime.now(UTC) - dt.timedelta(hours=GHOST_H)
     for st in states:
         code, js = api(f"actions/workflows/{wf}/runs?status={st}&per_page=20", tok=tok)
         if code != 200:
             return None
-        if st == "in_progress":
+        if st != "queued":
             n += js.get("total_count", 0)
             continue
-        n += sum(1 for r in js.get("workflow_runs") or [] if (parse_iso(r.get("created_at")) or dt.datetime.now(UTC)) > cutoff)
+        for r in js.get("workflow_runs") or []:
+            created = parse_iso(r.get("created_at"))
+            if created and created < cutoff:
+                jc, jj = api(f"actions/runs/{r.get('id')}/jobs?per_page=1", tok=tok)
+                if jc == 200 and jj and jj.get("total_count", 0) == 0:
+                    log(f"ghost: {wf} run {r.get('id')} queued since {r.get('created_at')} with no job; not counted as waiting")
+                    continue
+                if jc != 200:
+                    return None
+            n += 1
     return n
 
 

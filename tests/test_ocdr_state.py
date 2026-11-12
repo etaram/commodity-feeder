@@ -95,3 +95,37 @@ def test_old_done_without_file_is_recovered(env):
     answers.append(Resp(200, _gz([REL])))
     _, st = ocdr.fetch()
     assert st["recovered"] == 1 and st["files"] == 1 and len(calls) == 1 and "7/2025" in state(tmp)["done"]
+
+
+def _raw_gz(text):
+    return gzip.compress(text.encode())
+
+
+def test_malformed_award_line_is_not_a_valid_empty_result(env):
+    answers, calls, tmp = env
+    answers.append(Resp(200, _raw_gz('{"ocid": "x", "awards": [ broken\n')))
+    _, st = ocdr.fetch()
+    assert st["invalid"] == 1 and st["files"] == 0 and "7/2025" not in state(tmp)["done"]
+    assert state(tmp)["failed"]["7/2025"]["why"].startswith("invalid")
+    assert not (tmp / "awards_ext" / "ocdr_7_2025.jsonl").exists()
+
+
+def test_mixed_valid_and_invalid_keeps_last_good(env):
+    answers, calls, tmp = env
+    out = tmp / "awards_ext"; out.mkdir()
+    (out / "ocdr_7_2025.jsonl").write_text('{"good": 1}\n')
+    (tmp / "ocdr_state.json").write_text(json.dumps({"pubs": [{"id": "7", "title": "Kenya: test", "iso": "KEN", "years": [2025]}],
+                                                    "listed": "2999-01-01", "done": {}}))
+    body = json.dumps(REL) + "\n" + '{"awards": [oops\n' * 3
+    answers.append(Resp(200, _raw_gz(body)))
+    _, st = ocdr.fetch()
+    assert st["invalid"] == 1 and "7/2025" not in state(tmp)["done"]
+    assert (out / "ocdr_7_2025.jsonl").read_text() == '{"good": 1}\n'
+
+
+def test_valid_file_without_awards_is_done_empty(env):
+    answers, calls, tmp = env
+    answers.append(Resp(200, _gz([{"ocid": "x-2", "tender": {"id": "t"}}])))
+    _, st = ocdr.fetch()
+    assert st["files"] == 1 and st["invalid"] == 0 and "7/2025" in state(tmp)["done"]
+    assert (tmp / "awards_ext" / "ocdr_7_2025.jsonl").read_text() == ""

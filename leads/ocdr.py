@@ -4,7 +4,9 @@ every award with a named supplier; supplier contact points go to the private con
 Work is spread over runs (time budget); past years are read once, the current year is re-read monthly.
 A publisher/year is marked done only after a complete read (to the end of the file) and an atomic write of its output.
 A failed download, a file over the size limit and a read cut by the time budget are recorded separately (failed /
-too_large / partial) and stay retryable; a partial read never replaces an earlier complete file."""
+too_large / partial) and stay retryable; a partial read never replaces an earlier complete file. Award lines that are
+not valid JSON/OCDS are counted: a file with rejects and no award, or rejects above 1% of its award lines, is invalid
+(not published, not done, retried); a file without any award line and without rejects is a valid empty result."""
 import datetime as dt
 import gzip
 import io
@@ -56,7 +58,7 @@ def _read(s, pid, year, iso, title, t_end):
         r.close(); return f"http {r.status_code}"
     if int(r.headers.get("content-length") or 0) > MAX_BYTES:
         r.close(); return "too large"
-    rows, contacts, n, complete = [], [], 0, True
+    rows, contacts, n, complete, bad = [], [], 0, True, 0
     src = f"OCDS registry: {title[:60]}"
     with gzip.GzipFile(fileobj=r.raw) as gz:
         for line in io.TextIOWrapper(gz, encoding="utf-8", errors="replace"):
@@ -68,9 +70,13 @@ def _read(s, pid, year, iso, title, t_end):
                 continue
             try:
                 rel = json.loads(line)
-            except ValueError:
+                if not isinstance(rel, dict) or not isinstance(rel.get("awards", []), list):
+                    raise ValueError("not an OCDS release")
+                got = award_rows(rel, source=src, prefix=f"OC{pid}", country=iso)
+            except Exception:  # noqa: BLE001  - a line that is not valid JSON / OCDS is counted, never read as 'no awards'
+                bad += 1
                 continue
-            for a in award_rows(rel, source=src, prefix=f"OC{pid}", country=iso):
+            for a in got:
                 wcs = [iso3(x) or x for x in (a.get("winner_country") or "").split(",") if x]
                 a["winner_country"] = ",".join(wcs) or iso
                 for c in a.pop("contacts", None) or []:
@@ -81,7 +87,10 @@ def _read(s, pid, year, iso, title, t_end):
                 a.pop("email", None); a.pop("link", None)
                 rows.append(a)
     r.close()
-    return rows, contacts, n, complete
+    return rows, contacts, n, complete, bad
+
+
+MAX_BAD_SHARE = 0.01   # rejected award lines above 1% of the award lines (or any reject with no award read): invalid
 
 
 def _write_atomic(path, rows):
@@ -127,7 +136,7 @@ def fetch():
             todo.append((PRIORITY.get(region(p["iso"]), 2), -y, p, y))
     todo.sort(key=lambda x: (x[0], x[1]))
     OUT.mkdir(parents=True, exist_ok=True)
-    stats = {"files": 0, "awards": 0, "contacts": 0, "failed": 0, "partial": 0, "too_large": 0, "recovered": len(recovered)}
+    stats = {"files": 0, "awards": 0, "contacts": 0, "failed": 0, "invalid": 0, "rejected_lines": 0, "partial": 0, "too_large": 0, "recovered": len(recovered)}
     for _, _, p, y in todo:
         if time.time() > t_end - 60:
             break
@@ -144,8 +153,17 @@ def fetch():
                 f = failed.get(k) or {"tries": 0}
                 failed[k] = {"at": str(today()), "tries": int(f.get("tries") or 0) + 1, "why": why[:60]}; stats["failed"] += 1
             continue
-        rows, contacts, n, complete = res
+        rows, contacts, n, complete, bad = res
         path = OUT / f"ocdr_{p['id']}_{y}.jsonl"
+        if bad and (not rows or bad > MAX_BAD_SHARE * (bad + len(rows))):
+            # invalid content: not a valid empty result. Nothing replaced, not done, retried after the failure backoff
+            f = failed.get(k) or {"tries": 0}
+            failed[k] = {"at": str(today()), "tries": int(f.get("tries") or 0) + 1, "why": f"invalid: {bad} rejected lines, {len(rows)} awards"}
+            stats["invalid"] += 1
+            log.warning("OCDR %s %s %s: %d rejected award lines, %d awards read: not published, retried later", p["id"], p["iso"], y, bad, len(rows))
+            continue
+        if bad:
+            stats["rejected_lines"] += bad
         if not complete:
             partial[k] = {"at": str(today()), "releases": n}; stats["partial"] += 1
             if path.exists():               # keep the last complete file; the partial read is dropped
