@@ -397,13 +397,19 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
         others.append(threading.Thread(target=slow_lane, args=("wikidata", wikidata_lane, 1.0), daemon=True))
     for t in site_threads + others:
         t.start()
-    last_status = 0
+    last_status, last_export = 0, time.time()
     try:
         while any(t.is_alive() for t in site_threads + others):
             time.sleep(5)
             if time.time() - last_status > 60:
                 last_status = time.time()
                 write_status(d, q, sites, done, stats, t_start, recent, lanes, state="running")
+            if time.time() - last_export > 2 * 3600:  # the hourly company-check workflow picks up the newest export
+                last_export = time.time()
+                with lock:
+                    for f in fh.values():
+                        f.flush()
+                export(d)
     except KeyboardInterrupt:
         stop.set()
     for f in fh.values():
