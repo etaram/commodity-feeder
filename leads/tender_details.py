@@ -26,7 +26,7 @@ and value first; a record is read again after REFRESH_DAYS (amendments) and drop
 
 Outputs
   data/tenders/details.jsonl.gz              full layer with document hashes (Actions cache tenderdetails-*)
-  data/leads/refined/tender_details.csv      id, source, refined, filled, details (compact JSON) for the open tenders;
+  data/leads/refined/tender_details.csv.gz   id, source, refined, filled, details (compact JSON) for the best open tenders;
                                              public facts from official notices, no personal data
   data/leads/refined/tender_details_stats.json  counts and fill rates per field and per source
 
@@ -52,7 +52,8 @@ from .common import DATA, LEADS, log
 VERSION = "details-1"
 DIR = DATA / "tenders"
 STORE = DIR / "details.jsonl.gz"
-PUB = LEADS / "refined" / "tender_details.csv"
+PUB = LEADS / "refined" / "tender_details.csv.gz"  # gzip: ~5 KB of JSON per tender, about 6x smaller compressed
+PUB_MAX = 6000  # the best open tenders by fit and value; the rest stay in the private store
 STATS = LEADS / "refined" / "tender_details_stats.json"
 MIN_DAYS = 7
 REFRESH_DAYS = 7
@@ -961,16 +962,38 @@ def publish(store, open_ids):
     """Open tenders with details -> the public CSV the app joins to the tender card (compact JSON per row)."""
     PUB.parent.mkdir(parents=True, exist_ok=True)
     rows = []
-    for d in store.values():
+    for d in sorted(store.values(), key=lambda d: (open_ids.get(d["id"]) or (0, 0)))[: PUB_MAX * 2]:
         if d["id"] not in open_ids or not d.get("fields"):
             continue
-        f = {k: d["fields"][k] for k in FIELDS + EXTRA if k in d["fields"]}
+        if len(rows) >= PUB_MAX:
+            break
+        f = {k: trim(d["fields"][k]) for k in FIELDS + EXTRA if k in d["fields"]}
         rows.append({"id": d["id"], "source": d.get("source", ""), "refined": d.get("read", ""), "filled": n_filled(d["fields"]),
                      "details": json.dumps({"v": VERSION, "src": d.get("url", ""), "f": f}, ensure_ascii=False, separators=(",", ":"))})
     rows.sort(key=lambda r: r["id"])
-    with open(PUB, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=["id", "source", "refined", "filled", "details"]); w.writeheader(); w.writerows(rows)
+    import io
+    buf = io.StringIO()
+    w = csv.DictWriter(buf, fieldnames=["id", "source", "refined", "filled", "details"]); w.writeheader(); w.writerows(rows)
+    PUB.write_bytes(gzip.compress(buf.getvalue().encode("utf-8"), 9, mtime=0))
+    old = LEADS / "refined" / "tender_details.csv"
+    old.unlink(missing_ok=True)  # the first runs wrote it uncompressed
     return rows
+
+
+def trim(fld, n_list=40, n_text=280):
+    """Published copy of one field: lists and quoted texts capped (the private store keeps the full reading)."""
+    def t(v, depth=0):
+        if isinstance(v, str):
+            return v if len(v) <= n_text else v[: n_text - 1].rsplit(" ", 1)[0] + "…"
+        if isinstance(v, list):
+            out = [t(x, depth + 1) for x in v[:n_list]]
+            if len(v) > n_list:
+                out.append({"note": f"{len(v)} in all; the first {n_list} shown"})
+            return out
+        if isinstance(v, dict):
+            return {k: t(x, depth + 1) for k, x in v.items()}
+        return v
+    return {**fld, "v": t(fld.get("v"))}
 
 
 def has_quantities(fields):
@@ -1022,7 +1045,7 @@ def run(limit=400, minutes=25, ids=None, sample=0):
     today = dt.date.today()
     t0 = time.time()
     rows = open_tenders()
-    open_ids = {r["id"] for r in rows if _date(r.get("deadline")) >= today.isoformat() or not _date(r.get("deadline"))}
+    open_ids = {r["id"]: priority(r) for r in rows if _date(r.get("deadline")) >= today.isoformat() or not _date(r.get("deadline"))}
     cand = [r for r in rows if eligible(r, today)]
     if ids:
         want = set(ids)
@@ -1062,6 +1085,10 @@ def run(limit=400, minutes=25, ids=None, sample=0):
         time.sleep(PAUSE.get(kind, 1.0))
         if f is None:
             fails[f"{kind}: {raw}"] += 1
+            if not sample and not str(raw).startswith(("package left", "HTTP 429", "HTTP 5")):
+                # a record that cannot be read (national format, gone) is not asked again before REFRESH_DAYS
+                store[r["id"]] = {"id": r["id"], "source": r["source"], "url": url, "read": today.isoformat(), "version": VERSION,
+                                  "deadline": _date(r.get("deadline")), "failed": str(raw)[:80], "fields": None}
             continue
         rec = {"id": r["id"], "source": r["source"], "url": url, "read": today.isoformat(), "version": VERSION,
                "deadline": _date(r.get("deadline")), "hash": hashlib.sha256(raw).hexdigest()[:16], "fields": f}
@@ -1080,7 +1107,7 @@ def run(limit=400, minutes=25, ids=None, sample=0):
              "read_now": len(done), "failed": dict(fails), "published_open": len(pub), "store": len(store),
              "fill_rate_this_run": rates, "by_source_this_run": per_src}
     if not sample:
-        allrates, allsrc = fill_rates([d for d in store.values() if d["id"] in open_ids])
+        allrates, allsrc = fill_rates([d for d in store.values() if d["id"] in open_ids and d.get("fields")])
         stats["fill_rate_published"], stats["by_source_published"] = allrates, allsrc
     log.info("tender details: read %d, failed %s, published %d open, store %d", len(done), dict(fails), len(pub), len(store))
     for k in FIELDS + ["quantities"]:

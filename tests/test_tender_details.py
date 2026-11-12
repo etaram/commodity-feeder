@@ -146,3 +146,20 @@ def test_quota_pick_keeps_every_publisher():
            [{"id": f"P{i}", "source": "PNCP (Brazil)", "_fit": 50, "est_value_usd": ""} for i in range(10)]
     got = td.quota_pick(sorted(rows, key=td.priority), 40, floor=5)
     assert len(got) == 40 and sum(1 for r in got if r["source"] == "PNCP (Brazil)") >= 5
+
+
+def test_publish_trims_and_skips_failed(tmp_path, monkeypatch):
+    import csv as _csv
+    import gzip as _gz
+    import io as _io
+    monkeypatch.setattr(td, "PUB", tmp_path / "td.csv.gz")
+    monkeypatch.setattr(td, "LEADS", tmp_path)
+    f = {"items": td.field([{"name": "x" * 500}] * 50, "u", AT, "b"), "lots": td.field("", "u", AT, "b")}
+    store = {"A": {"id": "A", "source": "TED (EU)", "read": AT, "url": "u", "fields": f},
+             "B": {"id": "B", "source": "BOAMP (France)", "read": AT, "url": "u", "fields": None, "failed": "national format"},
+             "C": {"id": "C", "source": "TED (EU)", "read": AT, "url": "u", "fields": f}}
+    rows = td.publish(store, {"A": (-90, 0), "B": (-80, 0)})
+    assert [r["id"] for r in rows] == ["A"]
+    got = list(_csv.DictReader(_io.StringIO(_gz.decompress((tmp_path / "td.csv.gz").read_bytes()).decode())))
+    items = json.loads(got[0]["details"])["f"]["items"]["v"]
+    assert len(items) == 41 and items[-1]["note"].startswith("50 in all") and len(items[0]["name"]) <= 280

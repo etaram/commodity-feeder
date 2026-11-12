@@ -90,7 +90,7 @@ jobs:
       - name: commit
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
-          P="data/leads/refined/tender_details.csv data/leads/refined/tender_details_stats.json data/leads/refined/tender_details_sample.json data/probe/sources/sealed/tender_details_sample.bin data/leads/proven_report.json"
+          P="data/leads/refined/tender_details.csv.gz data/leads/refined/tender_details_stats.json data/leads/refined/tender_details_sample.json data/probe/sources/sealed/tender_details_sample.bin data/leads/proven_report.json"
           rm -rf /tmp/own && mkdir -p /tmp/own
           # only files this task wrote (newer than its start)
           for f in $P; do [ -e "$f" ] && find "$f" -type f -newer /tmp/tenders-start -exec cp --parents {} /tmp/own/ \; ; done
