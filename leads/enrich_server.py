@@ -30,13 +30,19 @@ line per company and lane), status.json (counts only: the admin panel reads it),
 the company-check workflow, which merges it into the website checks and the refined layer).
 
   python -m leads.enrich_server queue  --index suppliers.enc --dir D      (WEB_INDEX_KEY in the environment)
-  python -m leads.enrich_server run    --dir D [--workers 16] [--lanes site,press,registry,wikidata] [--only sample] [--minutes M]
+  python -m leads.enrich_server run    --dir D [--workers 16] [--procs 1] [--lanes site,press,registry,wikidata] [--only sample] [--minutes M]
+  --procs P: the site lane runs in P processes (one Python process uses at most one CPU: the page analysis is CPU
+  work under the interpreter lock, so threads beyond the network wait do not add speed). Process 0 runs shard 0 of the
+  site lane plus the other lanes, the status and the export; processes 1..P-1 run only their shard of the site lane
+  (stable hash of the key) and append whole lines to site.jsonl with one write() each; process 0 reads those lines
+  back every minute, so the other lanes, the status and the export see every process's results.
   python -m leads.enrich_server sample --dir D --manufacturers 200 --traders 100
   python -m leads.enrich_server people-sample --dir D --out D2 [--per 40]   (the registry lane's measurement set)
   python -m leads.enrich_server status|export|metrics|people-metrics --dir D
 """
 import base64
 import gzip
+import hashlib
 import json
 import os
 import re
@@ -326,7 +332,27 @@ def registry_counts(recs):
     return {k: dict(v) for k, v in c.items()}
 
 
-def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="", minutes=0, limit=0):
+def shard_of(key, n):
+    return int(hashlib.sha1(key.encode("utf-8")).hexdigest()[:8], 16) % n if n > 1 else 0
+
+
+def site_keys(p):
+    """Keys already in site.jsonl (child processes need only the keys, not the records)."""
+    out = set()
+    if p.exists():
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                i = line.find('"key": ')
+                if i < 0:
+                    continue
+                try:
+                    out.add(json.loads(line)["key"])
+                except (ValueError, KeyError):
+                    continue
+    return out
+
+
+def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="", minutes=0, limit=0, shard=0, nshards=1, child=False):
     d = Path(d)
     q = [json.loads(x) for x in open(d / "queue.jsonl", encoding="utf-8")]
     if only:
@@ -335,9 +361,15 @@ def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="",
     if limit:
         q = q[:limit]
     files = {ln: d / f"{ln}.jsonl" for ln in ("site", "press", "registry", "wikidata")}
-    done = {ln: set(keys_in(files[ln])) if ln != "site" else set() for ln in files}
-    sites = {k: light(v) for k, v in keys_in(files["site"]).items()}
-    done["site"] = set(sites)
+    if child:      # a site-lane shard only: keys to skip, nothing else
+        done = {ln: set() for ln in files}
+        sites = {}
+        done["site"] = site_keys(files["site"])
+    else:
+        done = {ln: set(keys_in(files[ln])) if ln != "site" else set() for ln in files}
+        sites = {k: light(v) for k, v in keys_in(files["site"]).items()}
+        done["site"] = set(sites)
+    site_off = files["site"].stat().st_size if files["site"].exists() else 0
     by_key = {it["key"]: it for it in q}
     lock = threading.Lock()
     stop = threading.Event()
@@ -345,17 +377,52 @@ def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="",
     stats = Counter()
     t_start = time.time()
     recent = []  # completion times of the site lane (throughput)
-    reg = keys_in(files["registry"])
-    reg_stats = registry_counts(reg.values())
-    del reg
-    fh = {ln: open(files[ln], "a", encoding="utf-8") for ln in files}
+    if child:
+        reg_stats = {}
+    else:
+        reg = keys_in(files["registry"])
+        reg_stats = registry_counts(reg.values())
+        del reg
+    fh = {ln: open(files[ln], "a", encoding="utf-8") for ln in files if ln != "site"}
+    site_fd = os.open(files["site"], os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
 
     def write(ln, rec):
+        line = json.dumps(rec, ensure_ascii=False) + "\n"
         with lock:
-            fh[ln].write(json.dumps(rec, ensure_ascii=False) + "\n"); fh[ln].flush()
+            if ln == "site":   # shared by the shard processes: one whole line per write() on an O_APPEND file
+                b = line.encode("utf-8"); os.write(site_fd, b)
+            else:
+                fh[ln].write(line); fh[ln].flush()
             done[ln].add(rec["key"])
 
-    todo = iter([it for it in q if it["key"] not in done["site"]])
+    def merge_site_tail():
+        """Lines the other shard processes appended since the last read (process 0 only)."""
+        nonlocal site_off
+        try:
+            with open(files["site"], "rb") as f:
+                f.seek(site_off)
+                chunk = f.read()
+        except OSError:
+            return
+        end = chunk.rfind(b"\n")
+        if end < 0:
+            return
+        site_off += end + 1
+        t = time.time()
+        for raw in chunk[:end].split(b"\n"):
+            try:
+                rec = json.loads(raw)
+            except ValueError:
+                continue
+            k = rec.get("key")
+            if not k:
+                continue
+            with lock:
+                if k not in sites:
+                    sites[k] = light(rec); recent.append(t); stats["site_other"] += 1
+                done["site"].add(k)
+
+    todo = iter([it for it in q if it["key"] not in done["site"] and shard_of(it["key"], nshards) == shard])
 
     def site_worker():
         while not stop.is_set():
@@ -477,10 +544,20 @@ def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="",
     for t in site_threads + others:
         t.start()
     last_status, last_export = 0, time.time()
+    if child:
+        try:
+            for t in site_threads:
+                t.join()
+        except KeyboardInterrupt:
+            stop.set()
+        os.close(site_fd)
+        return stats
     try:
         while any(t.is_alive() for t in site_threads + others):
             time.sleep(5)
             if time.time() - last_status > 60:
+                if nshards > 1:
+                    merge_site_tail()
                 last_status = time.time()
                 with lock:  # the workers add to these while the status is written: a snapshot
                     snap = (dict(sites), {k: set(v) for k, v in done.items()}, Counter(stats), list(recent), json.loads(json.dumps(reg_stats)))
@@ -495,6 +572,9 @@ def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="",
         stop.set()
     for f in fh.values():
         f.close()
+    os.close(site_fd)
+    if nshards > 1:
+        merge_site_tail()
     write_status(d, q, sites, done, stats, t_start, recent, lanes, state="done" if len(done["site"] & set(by_key)) >= len(q) else "paused", reg_stats=reg_stats)
     export(d)
     return stats
@@ -778,7 +858,26 @@ def main(argv):
     elif cmd == "sample":
         print(json.dumps(sample(d, int(opt("--manufacturers", "200")), int(opt("--traders", "100")))))
     elif cmd == "run":
-        st = run(d, int(opt("--workers", "16")), tuple(opt("--lanes", "site,press,registry,wikidata").split(",")), opt("--only"), int(opt("--minutes", "0")), int(opt("--limit", "0")))
+        procs = max(1, int(opt("--procs", "1")))
+        lanes = tuple(opt("--lanes", "site,press,registry,wikidata").split(","))
+        args = (d, int(opt("--workers", "16")))
+        if "--shard" in a:      # a child: one shard of the site lane
+            st = run(*args, ("site",), opt("--only"), int(opt("--minutes", "0")), int(opt("--limit", "0")),
+                     shard=int(opt("--shard")), nshards=procs, child=True)
+            print(json.dumps(dict(st))); return
+        kids = []
+        if procs > 1 and "site" in lanes:
+            import subprocess
+            base = [sys.executable, "-m", "leads.enrich_server", "run", "--dir", str(d), "--workers", opt("--workers", "16"), "--procs", str(procs)]
+            for k in ("--only", "--minutes", "--limit"):
+                if k in a:
+                    base += [k, opt(k)]
+            kids = [subprocess.Popen(base + ["--shard", str(i)]) for i in range(1, procs)]
+        try:
+            st = run(*args, lanes, opt("--only"), int(opt("--minutes", "0")), int(opt("--limit", "0")), shard=0, nshards=procs if kids else 1)
+        finally:
+            for k in kids:
+                k.wait()
         print(json.dumps(dict(st)))
     elif cmd == "metrics":
         print(json.dumps(metrics(d, opt("--keys") or None)))

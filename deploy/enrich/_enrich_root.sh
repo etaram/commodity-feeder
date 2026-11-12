@@ -22,7 +22,7 @@ set -euo pipefail
 mode="$1"; repo="$2"
 E=/opt/sinder/enrich
 IMG=python:3.12-slim
-LIMITS=(--cpus 3 --cpu-shares 128 --memory 5g --memory-swap 5g)
+LIMITS=(--cpus 3 --cpu-shares 128 --memory 6g --memory-swap 6g)
 umask 077; mkdir -p "$E"; chmod 711 "$E"
 
 seal() {   # $1 a file: printed only as ciphertext (hybrid encryption to the reviewer's public key; the private key is not
@@ -95,9 +95,10 @@ if [ "$mode" = start ]; then
   lanes=$(echo "$lanes" | tr ',' '\n' | grep -vx people | paste -sd, -)
   [ -s "$E/.ch.env" ] && echo "Companies House: key present (UK register on)" || echo "Companies House: no key (UK register off)"
   echo "lanes: $lanes"
-  # site-lane workers (registry, press and wikidata lanes keep their own per-source rate limits). 48 workers used about
-  # 1 of the 3 CPUs at 5,411 companies/h (2026-11-12T20:29Z, memory 2.4 of 5 GB): the work waits on remote sites, so 96
-  launch unless-stopped --lanes "$lanes" --workers "${ENRICH_WORKERS:-96}"
+  # The site lane is CPU work in Python (page analysis), so one process tops out at one CPU whatever the thread count:
+  # 48 threads gave 5,411 companies/h and 96 gave 4,596/h, both at ~1.04 CPU (2026-11-12). It now runs in
+  # ENRICH_PROCS processes (default 3 = the container's 3 CPUs), ENRICH_WORKERS threads each (default 32).
+  launch unless-stopped --lanes "$lanes" --procs "${ENRICH_PROCS:-3}" --workers "${ENRICH_WORKERS:-32}"
   exit 0
 fi
 if [ "$mode" = people ]; then
