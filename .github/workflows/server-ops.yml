@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, eval-tenderkind, bench-f10]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, eval-tenderkind, bench-f10, match-v2-tune, match-v2-final]
         default: status
 permissions:
   contents: read
@@ -19,5 +19,6 @@ jobs:
       - uses: actions/checkout@v4
       - run: bash "deploy/ops/${{ inputs.task }}.sh"
         env:
-          # only the benchmark bench-f10 calls Google (Decisions API, free tier); every other task gets an empty value
-          GEMINI_API_KEY: ${{ inputs.task == 'bench-f10' && secrets.GEMINI_API_KEY || '' }}
+          # only the benchmark bench-f10 and the supplier-matching v2 measurement call Google (Decisions API, free tier);
+          # every other task gets an empty value
+          GEMINI_API_KEY: ${{ (inputs.task == 'bench-f10' || inputs.task == 'match-v2-tune' || inputs.task == 'match-v2-final') && secrets.GEMINI_API_KEY || '' }}
