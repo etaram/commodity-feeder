@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { gate } from "@/lib/gate";
 import { appendRow, gviz, gvizLit, UNIVERSE } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
+import { checkedParts, cleanWebsite } from "@/lib/checkreq";
 
 // Company checks (leads/company_check.py, a background job every hour, code only): what the supplier's own website
-// says. GET ?name=&country= -> the latest check for that company, or null. POST {name, country} (analyst) -> puts the
-// company at the front of the next run's queue (tab 'Check queue'). GET ?summary=1 (viewer) -> counts by verdict.
+// says. GET ?name=&country= -> the latest check for that company, or null (checked = date; checked_at = full time when
+// the check-now worker wrote it). POST {name, country, website?, sector?} (analyst) -> one row in the tab 'Check queue'
+// (time, company, country, by, website, sector): the check-now worker on the server (leads/check_now.py) reads it within
+// about 15 s and writes the result within about a minute; the hourly job still reads the same queue.
+// GET ?summary=1 (viewer) -> counts by verdict.
 export const dynamic = "force-dynamic";
 const COLS = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
   "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps", "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"];
@@ -31,7 +35,7 @@ export async function GET(req: NextRequest) {
       gviz(UNIVERSE, "Registry checks", `select * ${where}`).catch(() => [] as string[][]),
     ]);
     const r = rows[0], g = regRows[0];
-    return NextResponse.json({ ok: true, check: r ? Object.fromEntries(COLS.map((c, i) => [c, r[i] ?? ""])) : null,
+    return NextResponse.json({ ok: true, check: r ? { ...Object.fromEntries(COLS.map((c, i) => [c, r[i] ?? ""])), ...checkedParts(r[3] ?? "") } : null,
       registry: g ? Object.fromEntries(REG_COLS.map((c, i) => [c, g[i] ?? ""])) : null });
   } catch (e) {
     // the tab appears after the first background run
@@ -45,7 +49,9 @@ export async function POST(req: NextRequest) {
   const b = await req.json().catch(() => ({}));
   const name = String(b.name || "").trim().slice(0, 200), country = String(b.country || "").trim().toUpperCase().slice(0, 3);
   if (!name) return NextResponse.json({ ok: false, error: "name is required" }, { status: 400 });
-  await appendRow("Check queue", [new Date().toISOString(), name, country, s.email]);
+  const website = cleanWebsite(b.website), sector = String(b.sector || "").trim().slice(0, 80);
+  const at = new Date().toISOString();
+  await appendRow("Check queue", [at, name, country, s.email, website, sector]);
   await logActivity(s, "company_check_request", name, country);
-  return NextResponse.json({ ok: true, queued: true, note: "checked in the next background run (every hour)" });
+  return NextResponse.json({ ok: true, queued: true, requested_at: at, eta_s: 60, note: "checking now: the result appears within about a minute" });
 }

@@ -603,25 +603,33 @@ def queue(rows, checks, limit, today):
     return picked[:limit]
 
 
+SHEET_HEAD = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
+              "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps",
+              "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"]
+
+
+def sheet_row(c):
+    """One check as a row of the 'Company checks' tab (columns SHEET_HEAD; pure). Shared by push_sheet and the
+    check-now worker (leads/check_now.py), so both write exactly the same format."""
+    return [c.get("key", ""), c.get("supplier", ""), c.get("country", ""), c.get("checked", ""), c.get("verdict", ""), c.get("name_match", ""),
+            c.get("website", ""), c.get("domain", ""), c.get("description", "")[:300], "; ".join(c.get("products", [])[:12])[:400], c.get("sector", ""),
+            c.get("record_sector", ""), "yes" if c.get("sector_conflict") else "", "; ".join(f"{x['role']}: {x['phrase']}" for x in c.get("roles", []))[:300],
+            "; ".join(c.get("certificates", [])), c.get("export_wording", ""), " ".join(c.get("export_countries", [])),
+            "; ".join(f"{x['kind']} {x['value']}" for x in c.get("legal_ids", [])), "; ".join(f"{x['email']} ({x['kind']})" for x in c.get("emails", [])),
+            "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", ""),
+            c.get("linkedin", ""), " ".join(c.get("whatsapp", [])), "; ".join(c.get("changes") or [])[:300],
+            "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400]]
+
+
 def push_sheet(checks):
     """Latest check per company into the private sheet tab 'Company checks' for the panel (best first)."""
     try:
         from .push import UNIVERSE_SHEET, Sheets
     except Exception:  # noqa: BLE001
         return
-    head = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
-            "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps",
-            "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"]
-    rows = [head]
+    rows = [SHEET_HEAD]
     for c in sorted(checks.values(), key=lambda c: c.get("checked", ""), reverse=True)[:30000]:
-        rows.append([c.get("key", ""), c.get("supplier", ""), c.get("country", ""), c.get("checked", ""), c.get("verdict", ""), c.get("name_match", ""),
-                     c.get("website", ""), c.get("domain", ""), c.get("description", "")[:300], "; ".join(c.get("products", [])[:12])[:400], c.get("sector", ""),
-                     c.get("record_sector", ""), "yes" if c.get("sector_conflict") else "", "; ".join(f"{x['role']}: {x['phrase']}" for x in c.get("roles", []))[:300],
-                     "; ".join(c.get("certificates", [])), c.get("export_wording", ""), " ".join(c.get("export_countries", [])),
-                     "; ".join(f"{x['kind']} {x['value']}" for x in c.get("legal_ids", [])), "; ".join(f"{x['email']} ({x['kind']})" for x in c.get("emails", [])),
-                     "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", ""),
-                     c.get("linkedin", ""), " ".join(c.get("whatsapp", [])), "; ".join(c.get("changes") or [])[:300],
-                     "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400]])
+        rows.append(sheet_row(c))
     try:
         Sheets().replace_tab(UNIVERSE_SHEET, "Company checks", rows, raw=True)
         log.info("company checks: %d rows written to the sheet", len(rows) - 1)

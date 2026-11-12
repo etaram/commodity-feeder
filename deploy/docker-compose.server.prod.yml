@@ -47,3 +47,22 @@ services:
         exec crond -f -l 8
     depends_on: [server-app]
     networks: [sinder_default]
+  # "Check the website" answered within about a minute (leads/check_now.py): reads new rows of the 'Check queue' tab
+  # every 15 s, reads the company's own site politely (leads/company_check.py) and appends ONE row per company to the
+  # 'Company checks' tab, which the panel polls. Production only: it writes to the live universe sheet.
+  # Only the Google service account is passed in. State and results stay on the server in /opt/sinder/checknow.
+  checknow:
+    build: ./checknow
+    image: sinder-checknow:latest
+    container_name: sinder-server-checknow
+    restart: unless-stopped
+    environment:
+      GOOGLE_SERVICE_ACCOUNT_JSON: "${GOOGLE_SERVICE_ACCOUNT_JSON:-}"
+      CHECKNOW_STATE: /state
+      UNIVERSE_CSV: /state/universe.csv
+    volumes:
+      - ..:/app:ro
+      - /opt/sinder/checknow:/state
+    cpus: 0.5
+    mem_limit: 512m
+    networks: [sinder_default]

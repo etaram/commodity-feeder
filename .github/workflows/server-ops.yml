@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, env-check, server-up, server-env, server-logs, cutover-prepare, cutover-switch, cutover-rollback, screen-check]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, env-check, server-up, server-env, server-logs, cutover-prepare, cutover-switch, cutover-rollback, screen-check, checknow-up, checknow-test]
         default: status
 permissions:
   contents: read

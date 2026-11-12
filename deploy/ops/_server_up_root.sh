@@ -25,6 +25,8 @@ if grep -qE "$RX" $E; then
   sed -E 's/^([A-Za-z_][A-Za-z0-9_]*)=[[:space:]]*#.*$/\1=/' $E > $E.tmp; cat $E.tmp > $E; rm -f $E.tmp; chmod 600 $E
 else echo "none"; fi
 echo "== 2. build (low priority) and start, mode $(server_mode)"
+# the check-now worker (service checknow, production overlay) runs as uid 10001 and keeps its state here
+mkdir -p /opt/sinder/checknow && chown 10001 /opt/sinder/checknow && chmod 700 /opt/sinder/checknow
 cd $D/deploy
 t0=$(date +%s)
 nice -n 15 ionice -c 3 sh -c ". $D/deploy/ops/_server_compose.sh; server_compose build --pull" 2>&1 | grep -E "ERROR|error:|Built|exporting to image|naming to" | tail -5 || true

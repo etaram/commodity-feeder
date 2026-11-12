@@ -149,7 +149,7 @@
   window.DD_COMMODITIES = (q) => getj("/api/panel/commodities?" + new URLSearchParams({ product: (q && q.product) || "", hs6: (q && q.hs6) || "", limit: String((q && q.limit) || 200) }));
   window.DD_CHECK = {
     get: (name, country) => getj("/api/panel/company-check?name=" + encodeURIComponent(name || "") + "&country=" + encodeURIComponent(country || "")),
-    request: (name, country) => post("/api/panel/company-check", { name, country }, "Deal Desk"),
+    request: (name, country, website, sector) => post("/api/panel/company-check", { name, country, website: website || "", sector: sector || "" }, "Deal Desk"),
     summary: () => getj("/api/panel/company-check?summary=1"),
   };
   window.DD_ADMIN = () => getj("/api/panel/admin");

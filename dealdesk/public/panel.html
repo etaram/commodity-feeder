@@ -2893,7 +2893,30 @@ function renderCheck(s, c, g) {
   }
   if (g) el.insertAdjacentHTML("beforeend", registryHtml(g));
   const so = $("#c-social"); if (so && c && (c.linkedin || c.whatsapp)) { so.innerHTML = socialBtns(c.linkedin, c.whatsapp, supMsg(s)); }
-  const b = $("#ck-ask"); if (b) b.onclick = async () => { b.disabled = true; try { await window.DD_CHECK.request(s.supplier, s.country); $("#ck-out").textContent = mt("Queued: checked in the next background run (every hour).", "בתור: ייבדק בריצת הרקע הבאה (כל שעה)."); track("company_check_request", s.supplier); } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; } };
+  const b = $("#ck-ask"); if (b) b.onclick = async () => {
+    b.disabled = true;
+    try {
+      // the check-now worker on the server reads the request within ~15 s and writes the result within about a minute
+      const site = String(s.website || "").split(/[\s;,]+/)[0] || "";
+      const q = await window.DD_CHECK.request(s.supplier, s.country, site, s.main_sector || "");
+      $("#ck-out").textContent = mt("Checking now, the result appears here within about a minute.", "בודק עכשיו, התוצאה תופיע כאן תוך כדקה.");
+      track("company_check_request", s.supplier);
+      pollCheck(s, (q && q.requested_at) || new Date().toISOString());
+    } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; }
+  };
+}
+/* after "check the website": ask every 8 s for up to 3 minutes until a check newer than the request is there, then draw it */
+function pollCheck(s, requestedAt) {
+  const t0 = Date.now(), newer = c => { const a = Date.parse(c && c.checked_at || ""), r = Date.parse(requestedAt); return Number.isFinite(a) && Number.isFinite(r) && a >= r - 5000; };
+  const tick = () => {
+    if (S.sel.c !== s) return;                       // another company is open: stop asking
+    if (Date.now() - t0 > 180000) { const o = $("#ck-out"); if (o) o.textContent = mt("The check is still running, open the company again in a few minutes.", "הבדיקה עדיין רצה, נסה לפתוח שוב בעוד כמה דקות."); const bb = $("#ck-ask"); if (bb) bb.disabled = false; return; }
+    window.DD_CHECK.get(s.supplier, s.country).then(j => {
+      if (S.sel.c !== s) return;
+      if (j && newer(j.check)) renderCheck(s, j.check, j.registry); else setTimeout(tick, 8000);
+    }).catch(() => setTimeout(tick, 8000));
+  };
+  setTimeout(tick, 8000);
 }
 /* facts on record (assertions ledger): each with its status, evidence and reviewer; an analyst can dispute or reject one line without touching the company */
 function renderAssertions(s, rows) {
