@@ -107,6 +107,8 @@ if [ "$mode" = people ]; then
     docker logs --tail 8 enrich-people 2>&1 | grep -vE "https?://|@" | cut -c1-160 || true
     exit 0
   fi
+  echo "previous sample container: $(docker ps -a --filter name=^enrich-people$ --format '{{.Status}}') code $(cat "$P/sha" 2>/dev/null), now $sha"
+  docker logs --tail 12 enrich-people 2>&1 | grep -vE "https?://|@" | cut -c1-200 || true
   if [ -s "$P/registry.jsonl" ] && [ "$(cat "$P/sha" 2>/dev/null)" = "$sha" ]; then
     echo "== people sample metrics (counts only), code $sha"
     docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/pcode "$IMG" /e/venv/bin/python -m leads.enrich_server people-metrics --dir /e/psample
