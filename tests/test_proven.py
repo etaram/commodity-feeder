@@ -57,3 +57,9 @@ def test_diff_and_queue_order():
     assert s["was_absent"] == 1 and s["was_tier_4"] == 1 and s["weak_regions"]["Sub-Saharan Africa"] == 1
     assert s["by_source"] == {"TED": 1, "World Bank": 1}
     assert [x["key"] for x in proven.queue_order(new)] == ["C|KEN", "A|GRC"]  # weak region first
+
+
+def test_diff_without_snapshot_counts_rule_rows():
+    rows = [_row(supplier="A", tier="3", proven="won: x [TED; T-1]", tier_reason="Qualified: proven by award (USD 250K, 1 win)"),
+            _row(supplier="B", tier="3", proven="won: y [TED; T-2]", tier_reason="Qualified: $300K won, 2 wins, reachable")]
+    assert [x["key"] for x in proven.diff({}, rows, "2026-11-12")] == ["A|GRC"]

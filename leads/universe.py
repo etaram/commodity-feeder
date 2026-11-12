@@ -3,6 +3,7 @@ sources, with what it won, where, for whom, and the contact details published in
 Output is private: data/private/universe.csv (git-ignored), pushed to the private Supplier Universe sheet."""
 import csv
 import json
+import os
 import re
 from collections import defaultdict
 
@@ -1064,6 +1065,8 @@ def build():
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)
     try:
+        if os.environ.get("UNIVERSE_NO_SHEET"):  # a measurement build (tenders.yml task=proven) writes no sheet tab
+            raise RuntimeError("UNIVERSE_NO_SHEET set")
         classification_check(out)
     except Exception as e:  # noqa: BLE001
         log.warning("classification check tab: %s", e)

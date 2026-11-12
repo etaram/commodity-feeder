@@ -57,14 +57,23 @@ def source_of(proven):
     return (m.group(1).strip() if m else "") or "unknown"
 
 
+RULE = "Qualified: proven by award"
+
+
 def diff(prev, rows, today):
-    """New listed proven suppliers (pure): rows with award evidence, listed now (tier 1-3), absent before or tier 4."""
+    """New listed proven suppliers (pure): rows with award evidence, listed now (tier 1-3), absent before or tier 4.
+    Without a snapshot (prev empty) the rows listed by the award rule itself are counted (tier reason RULE)."""
     new = []
     for r in rows:
         if not r.get("proven") or r.get("tier") not in ("1", "2", "3") or r.get("dup_of"):
             continue
         k = f"{r['supplier']}|{r['country']}"
-        before = prev.get(k)
+        if not prev:
+            if not str(r.get("tier_reason", "")).startswith(RULE):
+                continue
+            before = "4"
+        else:
+            before = prev.get(k)
         if before in ("1", "2", "3"):
             continue
         new.append({"key": k, "was": "absent" if before is None else f"tier {before}", "source": source_of(r["proven"]),
@@ -97,13 +106,16 @@ def queue_order(new):
 
 def report():
     today = dt.date.today().isoformat()
-    if not PREV.exists():
-        log.warning("proven report: no snapshot from before the build - nothing to compare"); return {}
-    with gzip.open(PREV, "rt", encoding="utf-8") as f:
-        prev = json.load(f)
+    prev = {}
+    if PREV.exists():
+        with gzip.open(PREV, "rt", encoding="utf-8") as f:
+            prev = json.load(f)
+    if not prev:
+        log.info("proven report: no earlier build on record - counting the suppliers the award rule lists")
     rows = list(_rows())
     new = diff(prev, rows, today)
     rep = summarise(new, today)
+    rep["baseline"] = "previous build" if prev else "award rule only (no earlier build on record)"
     rep["listed_with_award_evidence"] = sum(1 for r in rows if r.get("proven") and r.get("tier") in ("1", "2", "3"))
     rep["promoted_rule"] = "one award in a focus sector within 730 days, USD 100k or more (leads/universe.py PROVEN_MIN_USD)"
     state = {}
