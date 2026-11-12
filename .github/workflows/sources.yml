@@ -21,7 +21,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: sources-${{ github.ref_name }}
+  group: sources-${{ (inputs.task || 'cycle') == 'cycle' && github.ref_name || github.run_id }}
   cancel-in-progress: false
 jobs:
   sources:
