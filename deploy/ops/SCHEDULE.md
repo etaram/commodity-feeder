@@ -25,6 +25,7 @@ Times are UTC. Duration: median / slowest of the last 30 successful runs (minute
 | sanctions.yml | `20 4 * * *` | sanctions lists refresh | 0 / 1 | sanctions |
 | trends.yml | `17 3 * * 1` (Monday) | Google Trends for top market signals | 6 / 6 | trends |
 | sources.yml | `23 2 * * 0` (Sunday) task=cycle; `47 5 * * 6` (Saturday) task=gleif | source-expansion cycle: re-probe candidate sources and registration pages, weekly per-region report (data/registry/weekly_report.json); GLEIF Golden Copy bulk match | new | sources-<branch> |
+| tenders.yml | `37 3,9,15,21 * * *` task=details | tender details from official records (TED/BOAMP eForms, Prozorro, PNCP, ChileCompra, World Bank) for open focus-sector tenders: data/leads/refined/tender_details.csv | new | tenders-details-<branch> |
 | heartbeat.yml | `17 */6 * * *` (restart only; it chains itself) | THE SCHEDULER: starts the timed workflows from schedule.tab | 352 / 354 | heartbeat |
 | watchdog.yml | `7 * * * *`, `37 * * * *` | safety net on GitHub's machines: restarts overdue feed, leads, suppliers, company-check | 0 / 0 | watchdog |
 

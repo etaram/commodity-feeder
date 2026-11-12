@@ -978,6 +978,19 @@ def main(a):
     lim = int(a[a.index("--limit") + 1]) if "--limit" in a else 400
     mins = int(a[a.index("--minutes") + 1]) if "--minutes" in a else 25
     ids = a[a.index("--ids") + 1].split(",") if "--ids" in a else None
+    if mode == "probe":  # development aid: how the publishers answer (status, type, size; no content)
+        s = _session()
+        for u in a[1:]:
+            try:
+                r = s.get(u, timeout=60, allow_redirects=True)
+                print("PROBE", r.status_code, r.headers.get("content-type", ""), len(r.content), r.url[:120],
+                      {k: v for k, v in r.headers.items() if k.lower() in ("x-amzn-waf-action", "server", "location", "retry-after", "content-disposition")},
+                      repr(r.content[:160]) if r.status_code != 200 else "")
+            except Exception as e:  # noqa: BLE001
+                print("PROBE", u[:120], type(e).__name__)
+        r = s.post("https://api.ted.europa.eu/v3/notices/search", json={"query": "publication-number=762189-2026", "fields": ["publication-number", "links", "ojs-number"], "limit": 1}, timeout=60)
+        print("PROBE api", r.status_code, r.text[:1500])
+        return
     if mode == "sample":
         n = int(a[1]) if len(a) > 1 and a[1].isdigit() else 50
         stats, done, raws = run(sample=n, minutes=mins, ids=ids)
