@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readRanges, ENGINE_SHEET, sheetsDiag } from "@/lib/sheets";
 import { mailCheck } from "@/lib/mailer";
-import { claude } from "@/lib/anthropic";
+import { budgetState, claude } from "@/lib/anthropic";
 import { tgEnv } from "@/lib/tgenv";
 import { botSelfTest } from "@/lib/telegram";
 import { scenarios } from "@/lib/scenarios";
@@ -43,6 +43,7 @@ const CHECKS: Check[] = [
   { name: "assertions", path: "/api/panel/assertions?entity=test" },
   { name: "admin", path: "/api/panel/admin" },
   { name: "ai-usage", path: "/api/panel/ai-usage?days=7" },
+  { name: "spend", path: "/api/panel/spend" },
   { name: "clients", path: "/api/clients" },
   { name: "campaigns", path: "/api/outreach/campaign" },
   { name: "outbox", path: "/api/outreach/outbox" },
@@ -114,6 +115,7 @@ export async function GET(req: NextRequest) {
     extra.telegram_token = Boolean(tg);
     extra.telegram = tg ? await fetch(`https://api.telegram.org/bot${tg}/getWebhookInfo`).then((r) => r.json()).then((j) => { const w = j.result || {}; return { url_set: !!w.url, url_host: String(w.url || "").split("/")[2], pending: w.pending_update_count, last_error: w.last_error_message || "", last_error_at: w.last_error_date ? new Date(w.last_error_date * 1000).toISOString() : "" }; }).catch((e) => String(e)) : "no token";
     extra.ai = await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).then((r) => ({ ok: true, text: r.text })).catch((e) => ({ ok: false, err: String(e).slice(0, 200) }));
+    extra.ai_month = await budgetState().then((b) => ({ usd: b.month_usd, cap: b.month_cap_usd, stopped: b.month_stopped })).catch((e) => String(e).slice(0, 120));
     extra.mail = await mailCheck().catch((e) => ({ ok: false, error: String(e).slice(0, 200) }));
     const tabs = ["Telegram", "Telegram Chat", "Agent Runs", "Agent Approvals", "Tender Projects", "Tender Watches", "Users", "AI Usage", "App Log", "Activity"];
     extra.tabs = Object.fromEntries(await Promise.all(tabs.map(async (t) => [t, await readRanges(ENGINE_SHEET, [`'${t}'!A1:A20000`]).then((v) => (v?.[0]?.length ?? -1)).catch((e) => String(e).slice(0, 120))])));

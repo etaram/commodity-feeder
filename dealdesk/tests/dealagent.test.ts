@@ -223,5 +223,25 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
   ok(MAIL.sent.length === n10 + 1 && MAIL.sent[n10].to === "f14-b@example.test", "with the right back, Send again sends once");
   await decide(io2, "C1", "M9", false, false, "presser@x.com");
   ok(MAIL.sent.length === n10 + 1, "a reject press on an already sent message changes nothing");
+  // monthly AI cap (lib/anthropic.ts checkMonthlyCap): over the cap no model call leaves; the health ping is exempt
+  {
+    const { claude, checkMonthlyCap, spentThisMonth, CAP_REFUSAL } = await import("@/lib/anthropic");
+    process.env.ANTHROPIC_MONTHLY_CAP_USD = "1";
+    TABS["AI Usage"] = [...(TABS["AI Usage"] || []), [new Date().toISOString(), "brief", "", "m", "0", "0", "0", "0", "2"]];
+    const m = await spentThisMonth(true);
+    ok(m !== null && m >= 2, "this month's spend is read from the usage ledger");
+    const n0 = seen.length;
+    let err = "";
+    await claude({ max_tokens: 10, messages: [{ role: "user", content: "x" }] }, { job: "brief" }).catch((e) => { err = String(e); });
+    ok(err.includes(CAP_REFUSAL) && seen.length === n0, "over the monthly cap a model call is refused before anything is sent");
+    let err2 = ""; await checkMonthlyCap("deal agent").catch((e) => { err2 = String(e); });
+    ok(err2.includes(CAP_REFUSAL), "the deal agent path is refused too");
+    await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).catch(() => {});
+    ok(seen.length === n0 + 1, "the self-check's tiny ping is exempt (still metered)");
+    process.env.ANTHROPIC_MONTHLY_CAP_USD = "1000";
+    let err3 = ""; await checkMonthlyCap("brief").catch((e) => { err3 = String(e); });
+    ok(err3 === "", "under the cap calls go through");
+    delete process.env.ANTHROPIC_MONTHLY_CAP_USD;
+  }
   console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
 })();
