@@ -139,3 +139,10 @@ def test_ted_package_names_and_wb_french():
          "Les pondérations suivantes s'appliqueront aux Critères notés : l’offre technique compte pour 50 %.")
     f = td.parse_worldbank({"notice_text": t}, "u", AT)
     assert v(f, "lots") == {"count": 3} and v(f, "evaluation")["quoted"] and v(f, "delivery")["delivery_time_quoted"]
+
+
+def test_quota_pick_keeps_every_publisher():
+    rows = [{"id": f"T{i}", "source": "TED (EU)", "_fit": 90, "est_value_usd": ""} for i in range(100)] + \
+           [{"id": f"P{i}", "source": "PNCP (Brazil)", "_fit": 50, "est_value_usd": ""} for i in range(10)]
+    got = td.quota_pick(sorted(rows, key=td.priority), 40, floor=5)
+    assert len(got) == 40 and sum(1 for r in got if r["source"] == "PNCP (Brazil)") == 5

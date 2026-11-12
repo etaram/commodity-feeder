@@ -998,6 +998,19 @@ def fill_rates(recs):
     return out, {s: {"n": c["n"], **{k: round(c[k] / c["n"], 2) for k in FIELDS + ["quantities"]}} for s, c in by_src.items()}
 
 
+def quota_pick(rows, limit, floor=25):
+    """Best-first per publisher, each publisher getting its share of the run (at least `floor`), so the best TED
+    notices do not starve the other publishers. rows must be sorted best first."""
+    by = defaultdict(list)
+    for r in rows:
+        by[r["source"]].append(r)
+    tot = len(rows) or 1
+    quota = {k: max(floor, round(limit * len(v) / tot)) for k, v in by.items()}
+    out = [r for k, v in by.items() for r in v[:quota[k]]]
+    out.sort(key=priority)
+    return out[:limit]
+
+
 def run(limit=400, minutes=25, ids=None, sample=0):
     today = dt.date.today()
     t0 = time.time()
@@ -1024,7 +1037,7 @@ def run(limit=400, minutes=25, ids=None, sample=0):
                 picked.append(r); cnt[r["source"]] += 1
         todo = picked
     else:
-        todo = [r for r in cand if due(store.get(r["id"]), r, today)][:limit]
+        todo = quota_pick([r for r in cand if due(store.get(r["id"]), r, today)], limit)
     log.info("tender details: %d open focus tenders from supported publishers, %d to read now (%s)", len(cand), len(todo),
              dict(Counter(r["source"] for r in todo)))
     s = _session()
