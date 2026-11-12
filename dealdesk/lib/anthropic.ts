@@ -88,3 +88,28 @@ export async function claude(body: Record<string, unknown>, meta: CallMeta = {})
   for (const b of out) for (const c of b.citations || []) if (c.url && !seen.has(c.url)) { seen.add(c.url); sources.push({ url: c.url, title: c.title || c.url }); }
   return { text, sources };
 }
+
+export type Usage = { input_tokens?: number; output_tokens?: number; cache_read_input_tokens?: number; server_tool_use?: { web_search_requests?: number } };
+/** True when the price table can be trusted for the configured model: the default model, or prices set explicitly. */
+export const pricesKnown = () => !process.env.ANTHROPIC_MODEL || process.env.ANTHROPIC_MODEL === "claude-haiku-5-5" || (!!process.env.AI_PRICE_IN && !!process.env.AI_PRICE_OUT);
+// Exactly one request, for callers that reserved the worst-case cost of one request beforehand (lib/pipeline.ts under
+// lib/agentbudget.ts). claude() above may make up to three requests (pause_turn, max_tokens continuation), so its
+// cost has no bound a reservation could cover. No tools, no continuation: an answer cut at max_tokens is returned as
+// it is. usage is null when the provider returned none; the caller then keeps the reservation at the worst case.
+export async function claudeOnce(body: { system: string; messages: { role: "user" | "assistant"; content: string }[]; max_tokens: number }, meta: CallMeta = {}): Promise<{ text: string; usage: Usage | null; model: string }> {
+  const job = meta.job || "unnamed", t0 = Date.now();
+  const log = (u: Usage | null, ok: boolean) => void appendRow("AI Usage", [new Date().toISOString(), job, meta.ws || "", MODEL, u?.input_tokens || 0, u?.output_tokens || 0, u?.cache_read_input_tokens || 0, 0, u ? Math.round(estimateCost(u) * 1e5) / 1e5 : 0, Date.now() - t0, ok ? "ok" : "error"]).catch(() => {});
+  let r: Response, j: { usage?: Usage; content?: Block[]; error?: { message?: string; type?: string } };
+  try {
+    r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify({ model: MODEL, system: body.system, messages: body.messages, max_tokens: body.max_tokens }), signal: AbortSignal.timeout(Number(process.env.AI_TIMEOUT_MS || 45000)) });
+    j = await r.json().catch(() => ({}));
+  } catch (e) { log(null, false); throw e; }
+  if (!r.ok) {
+    const msg = `Anthropic ${r.status}: ${String(j?.error?.message || j?.error?.type || "").slice(0, 300)}`;
+    void logEvent("error", "ai", msg, job); log(null, false);
+    throw new Error(msg);
+  }
+  const usage = j.usage && Number.isFinite(Number(j.usage.input_tokens)) && Number.isFinite(Number(j.usage.output_tokens)) ? j.usage : null;
+  log(usage, true);
+  return { text: (j.content || []).filter((b) => b.type === "text").map((b) => b.text || "").join("").trim(), usage, model: MODEL };
+}
