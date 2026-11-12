@@ -5,15 +5,15 @@ import { mailReady } from "@/lib/mailer";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// Proof that a staging (preview) deployment is separated from the live system. Exists only when VERCEL_ENV=preview:
-// on the live site it answers 404. It writes one marked row to the state sheet this deployment uses, tries one write to
+// Proof that a staging (preview) deployment is separated from the live system. Exists only when VERCEL_ENV=preview, or
+// DESK_ENV=server-test (the server copy, deploy/docker-compose.server.yml): on the live site it answers 404. It writes one marked row to the state sheet this deployment uses, tries one write to
 // the live engine sheet (which must be refused before any request leaves), and reports the settings without any secret.
 export async function GET() {
-  if (process.env.VERCEL_ENV !== "preview") return NextResponse.json({ ok: false }, { status: 404 });
+  if (process.env.VERCEL_ENV !== "preview" && process.env.DESK_ENV !== "server-test") return NextResponse.json({ ok: false }, { status: 404 });
   const tail = (s: string) => (s ? "..." + s.slice(-6) : "");
   const marker = `staging-check ${new Date().toISOString()}`;
   const out: Record<string, unknown> = {
-    env: process.env.VERCEL_ENV, deployment: process.env.VERCEL_DEPLOYMENT_ID || "", commit: (process.env.VERCEL_GIT_COMMIT_SHA || "").slice(0, 8),
+    env: process.env.VERCEL_ENV || process.env.DESK_ENV, deployment: process.env.VERCEL_DEPLOYMENT_ID || "", commit: (process.env.VERCEL_GIT_COMMIT_SHA || "").slice(0, 8),
     sheets_configured: sheetsEnabled(), state_sheet: tail(stateSheet()), engine_sheet: tail(ENGINE_SHEET),
     state_is_engine: stateSheet() === ENGINE_SHEET, suppression_goes_to: tail(sheetFor("Suppression")),
     readonly_ids: (process.env.SHEETS_READONLY_IDS || "").split(",").filter(Boolean).map((x) => tail(x.trim())),

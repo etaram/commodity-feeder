@@ -5,7 +5,7 @@
 # server instance so it reads them. After this, the SERVER_* secrets can be deleted from GitHub.
 set -euo pipefail
 . "$(dirname "$0")/_instance_sync.sh"
-KEYS="AUTH_SECRET TEAM_USER TEAM_PASSCODE GOOGLE_SERVICE_ACCOUNT_JSON STATE_SHEET_ID WEB_INDEX_KEY ANTHROPIC_API_KEY ANTHROPIC_WORKSPACE_ID"
+KEYS="AUTH_SECRET TEAM_USER TEAM_PASSCODE GOOGLE_SERVICE_ACCOUNT_JSON WEB_INDEX_KEY ANTHROPIC_API_KEY ANTHROPIC_WORKSPACE_ID"
 umask 077; f=$(mktemp)
 for k in $KEYS; do n="SERVER_$k"; v="${!n:-}"; if [ -n "$v" ]; then printf '%s=%s\n' "$k" "$(printf '%s' "$v" | tr -d '\r\n')" >> "$f"; fi; done
 echo "secrets provided: $(cut -d= -f1 "$f" | tr '\n' ' ')"

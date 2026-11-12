@@ -28,6 +28,13 @@ services:
       RESEND_API_KEY: ""         # lib/notify.ts and the digest: no Resend mail
       VAPID_PRIVATE_KEY: ""      # lib/push.ts: no web push
       TELEGRAM_OFF: "1"          # lib/tgenv.ts: no token, so no webhook setup, no answers, no bot messages
+      # Isolated from the live Google Sheets exactly like the Vercel preview (lib/sheets.ts): the deal state goes to the
+      # staging copy, the outreach lists and other written tabs too, and the live engine sheet, the live state sheet
+      # and the supplier universe refuse every write. Removed together with the lines above when the domain moves.
+      DESK_ENV: server-test
+      STATE_SHEET_ID: 1iRhf8adsAg5BxT9U9wS7itSs9xhkgZ9ao9HER2uNH_0
+      SHEETS_READONLY_IDS: 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y,1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo,1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA
+      STATE_TABS_EXTRA: Campaigns,Campaign Accounts,Suppression,Outreach Log,LinkedIn Tasks,Deal Records,Panel Jobs,Web Suppliers,Check queue
     networks: [sinder_default]
     cpus: 2
     mem_limit: 3g

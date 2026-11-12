@@ -19,6 +19,6 @@ export async function logEvent(level: "error" | "warn" | "info", area: string, m
     if (writes >= 400 || Date.now() - (seen.get(key) || 0) < 600_000) return;
     seen.set(key, Date.now()); writes++;
     const t = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jerusalem" }).slice(0, 19);
-    await appendRow("App Log", [t, level, area, msg, clean(detail, 800), clean(who, 80), process.env.VERCEL_ENV || "local", (process.env.VERCEL_DEPLOYMENT_ID || "").slice(-8)]);
+    await appendRow("App Log", [t, level, area, msg, clean(detail, 800), clean(who, 80), process.env.VERCEL_ENV || process.env.DESK_ENV || "local", (process.env.VERCEL_DEPLOYMENT_ID || "").slice(-8)]);
   } catch { /* logging must never fail a request */ }
 }

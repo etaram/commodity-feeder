@@ -48,8 +48,10 @@ line "app reads data: suppliers index" "$(ex http://data:8080/data/web/suppliers
 line "app reads data: panel page" "$(ex http://data:8080/dealdesk/public/panel.html)   (want 200)"
 line "live gateway data path still serves" "$(code "https://216-158-234-218.sslip.io/$T/deploy/README.md")   (want 200)"
 line "live gateway outside the path" "$(code "https://216-158-234-218.sslip.io/deploy/README.md")   (want 404)"
-echo "== 5. safety switches inside the instance"
-docker exec sinder-server-app sh -c 'for k in AGENT_MAIL_LIVE TELEGRAM_OFF; do echo "$k=$(printenv $k)"; done; for k in RESEND_API_KEY VAPID_PRIVATE_KEY; do [ -n "$(printenv $k)" ] && echo "$k: set (NOT SAFE)" || echo "$k: empty"; done'
+echo "== 5. isolation from the live sheets (/api/staging-check: one marked row to the staging state sheet, one write to the live engine sheet that must be refused)"
+curl -s --max-time 60 "https://$HOST/api/staging-check" | tr ',' '\n' | grep -E '"(env|sheets_configured|state_sheet|engine_sheet|state_is_engine|suppression_goes_to|mail_can_send|write_to_state|read_back_from_state|write_to_live_engine|ok)"' | cut -c1-160
+echo "== safety switches inside the instance"
+docker exec sinder-server-app sh -c 'for k in AGENT_MAIL_LIVE TELEGRAM_OFF DESK_ENV STATE_TABS_EXTRA; do echo "$k=$(printenv $k)"; done; for k in RESEND_API_KEY VAPID_PRIVATE_KEY; do [ -n "$(printenv $k)" ] && echo "$k: set (NOT SAFE)" || echo "$k: empty"; done'
 line "cron service of sinder-server" "$(docker ps -a --format '{{.Names}}' | grep -c '^sinder-server-cron' || true) containers (want 0)"
 echo "== 6. app log"
 N=$(docker logs sinder-server-app 2>&1 | wc -l); E=$(docker logs sinder-server-app 2>&1 | grep -ciE "error|ECONNREFUSED|ENOTFOUND" || true)

@@ -94,6 +94,8 @@ work started). To go back in code: `git checkout vercel-live-2026-11-12`.
 The server system (branch `release/server`, checkout /opt/sinder/server-instance, compose project `sinder-server`,
 address https://desk.216-158-234-218.sslip.io) is a separate instance until the owner moves the domain. While both run it
 cannot send anything: AGENT_MAIL_LIVE=0, no Resend key, no web push key, Telegram off (TELEGRAM_OFF=1), and no cron
-service. It shares the same Google Sheets state, so actions taken in it are real data changes.
+service. It is isolated from the live Google Sheets like the Vercel preview: STATE_SHEET_ID is the staging copy
+(...uNH_0), the written tabs listed in STATE_TABS_EXTRA go there too, and SHEETS_READONLY_IDS makes the live engine
+sheet, the live state sheet and the supplier universe refuse every write (DESK_ENV=server-test; /api/staging-check proves it).
 To remove it: `docker compose -p sinder-server -f /opt/sinder/server-instance/deploy/docker-compose.server.yml down`
 and delete its block from /opt/sinder/gateway/Caddyfile (a copy before the change is kept next to it).
