@@ -447,10 +447,11 @@ def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="",
                     blocked += 1
                     with lock:
                         stats[f"registry_{src}_blocked"] += 1
-                    if blocked >= 3:
-                        log.warning("registry lane %s: the register pushed back 3 times (%s); stopped for this run", src, e)
+                        stats[f"registry_{src}_{str(e).replace(' ', '_')}"] += 1
+                    if blocked >= 5:
+                        log.warning("registry lane %s: the register pushed back 5 times in a row (%s); stopped for this run", src, e)
                         return
-                    time.sleep(600 * blocked); continue
+                    time.sleep(60 * blocked ** 2); continue
                 except Exception as e:  # noqa: BLE001
                     rec = {"key": k, "checked_at": now(), "source": src, "error": type(e).__name__, "supplier": by_key[k]["name"], "country": by_key[k]["country"]}
                 if rec is None:
@@ -513,7 +514,7 @@ def write_status(d, q, sites, done, stats, t_start, recent, lanes, state, reg_st
     st = {"v": 1, "at": now(), "state": state, "lanes": list(lanes), "queue": total, "done": n_done, "remaining": total - n_done,
           "per_hour": rate, "eta_hours": round((total - n_done) / rate, 1) if rate else None,
           "by_tier": {["producer", "goods supplier", "trader", "other"][t]: {"done": a, "total": b} for t, (a, b) in sorted(by_tier.items())},
-          "verdicts": dict(verdicts.most_common(8)), "lane_done": {ln: len(done[ln]) for ln in done}, "blocked": {k: v for k, v in stats.items() if k.endswith("_blocked")},
+          "verdicts": dict(verdicts.most_common(8)), "lane_done": {ln: len(done[ln]) for ln in done}, "blocked": {k: v for k, v in stats.items() if k.endswith("_blocked") or "_HTTP_" in k},
           "registry_people": reg_stats or {},
           "fill": fill_rates(d) if state != "running" or int(time.time()) % 600 < 60 else None}
     if st["fill"] is None:
