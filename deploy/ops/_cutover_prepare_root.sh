@@ -15,8 +15,8 @@ echo "== DNS of $DESK_PUBLIC now (public resolvers)"
 line "  cloudflare" "$(dns_answers https://cloudflare-dns.com/dns-query)"
 line "  google" "$(dns_answers https://dns.google/resolve)"
 line "  points at this server ($SERVER_IP)" "$(dns_points_here && echo yes || echo "no (expected before the switch)")"
-caa=$(curl -s --max-time 10 -H 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=sinder.pro&type=CAA" | grep -oE '"data":"[^"]*"' | cut -d'"' -f4 | tr '\n' ' ')
-line "  CAA of sinder.pro" "${caa:-none (any CA may issue: Let's Encrypt OK)}"
+caa=$(curl -s --max-time 10 -H 'accept: application/dns-json' "https://cloudflare-dns.com/dns-query?name=sinder.pro&type=CAA" | grep -oE '"type": ?257,[^}]*"data": ?"[^"]*"' | sed -E 's/.*"data": ?"//; s/"$//' | tr '\n' ' ')
+[ -n "$caa" ] || caa="none (any CA may issue, Let us Encrypt included)"; line "  CAA of sinder.pro" "$caa"
 echo "== gateway (Caddy)"
 line "  site block $SSLIP" "$(grep -q "^$SSLIP {" $G && echo present || echo MISSING)"
 line "  site block $DESK_PUBLIC" "$(grep -q "^$DESK_PUBLIC {" $G && echo "present (unexpected before the switch)" || echo "absent (added by cutover-switch)")"
