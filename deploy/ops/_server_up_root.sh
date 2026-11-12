@@ -16,12 +16,19 @@ AGE=$([ -n "$L" ] && echo $(( $(date +%s) - $(stat -c %Y "$L") )) || echo 999999
 if [ "$AGE" -gt 21600 ]; then bash /opt/sinder/repo/deploy/ops/_backup_root.sh 2>&1 | tail -6
 else echo "newest backup $(basename "$L") is $((AGE / 60)) minutes old: no new backup"; fi
 
+echo "== 1b. .env lines whose value is only a comment (docker compose reads the comment text as the value)"
+E=/opt/sinder/repo/deploy/.env; RX='^[A-Za-z_][A-Za-z0-9_]*=[[:space:]]*#'
+if grep -qE "$RX" $E; then
+  cp -p $E "$E.bak-$(date -u +%Y%m%dT%H%M%SZ)"; chmod 600 $E.bak-*
+  echo "blanked (were comment text, now empty): $(grep -oE "$RX" $E | cut -d= -f1 | tr '\n' ' ')"
+  sed -E 's/^([A-Za-z_][A-Za-z0-9_]*)=[[:space:]]*#.*$/\1=/' $E > $E.tmp; cat $E.tmp > $E; rm -f $E.tmp; chmod 600 $E
+else echo "none"; fi
 echo "== 2. build (low priority) and start"
 cd $D/deploy
 t0=$(date +%s)
 nice -n 15 ionice -c 3 docker compose -p sinder-server -f docker-compose.server.yml build --pull 2>&1 | grep -E "ERROR|error:|Built|exporting to image|naming to" | tail -5 || true
 echo "build took $(( $(date +%s) - t0 ))s"
-docker compose -p sinder-server -f docker-compose.server.yml up -d 2>&1 | tail -3
+docker compose -p sinder-server -f docker-compose.server.yml up -d --force-recreate 2>&1 | tail -3
 for i in $(seq 1 24); do s=$(docker inspect -f '{{.State.Health.Status}}' sinder-server-app 2>/dev/null || echo none); [ "$s" = healthy ] && break; sleep 5; done
 line "container sinder-server-app" "$s"
 
