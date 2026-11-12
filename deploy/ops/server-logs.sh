@@ -10,3 +10,5 @@ asroot sh -c 'docker logs --since 3h sinder-server-app 2>&1' \
  | cut -c1-220 | sort | uniq -c | sort -rn | head -60
 echo "== requests with status 4xx/5xx (path and status only)"
 asroot sh -c 'docker logs --since 3h sinder-gateway 2>&1' | grep -o '"uri":"[^"]*","[^}]*"status":[45][0-9][0-9]' 2>/dev/null | sed -E 's/"uri":"([^"?]*)[^"]*".*"status":([0-9]+)/\2 \1/' | sort | uniq -c | sort -rn | head -40 || true
+echo "== live Sheets reads from inside the instance (status, ms, row counts only)"
+docker exec -i -w /app sinder-server-app node - < "$(dirname "$0")/_sheets_probe.js" 2>&1 | head -40 || true
