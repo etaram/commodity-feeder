@@ -118,6 +118,14 @@ if [ "$mode" = probe ]; then
     # the runner's checkout, read-only (the running job's code copy is not touched)
     docker run --rm "${LIMITS[@]}" -v "$E":/e -v "$repo":/r:ro -w /r "$IMG" /e/venv/bin/python -m leads.enrich_server countries --dir /e
   fi
+  if [ -d "$E/venv" ]; then
+    echo "== official registers for the people lane: HTTP status and size only; the raw answers are sealed to the reviewer key"
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -v "$repo":/r:ro -w /r "$IMG" /e/venv/bin/python -m leads.people_registry probe /e/people_probe.json
+    k=$(mktemp); gzip -c "$E/people_probe.json" > "$k.gz"; openssl rand -hex 32 > "$k"
+    openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -in "$k.gz" -out "$k.enc"
+    openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
+    echo "REVIEW-KEY $(base64 -w0 "$k.key")"; echo "REVIEW-DATA $(base64 -w0 "$k.enc")"; rm -f "$k" "$k".* "$E/people_probe.json"
+  fi
   echo "== egress from a container"
   for u in https://news.google.com/rss/search?q=test https://html.duckduckgo.com/html/?q=test https://www.wikidata.org/w/api.php https://api.gleif.org/api/v1/lei-records?page%5Bsize%5D=1 https://pypi.org/simple/opencv-python-headless/; do
     docker run --rm curlimages/curl:8.10.1 -s -o /dev/null -w "%{http_code} " --max-time 15 -A "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0)" "$u" || true; echo " ${u%%\?*}"
