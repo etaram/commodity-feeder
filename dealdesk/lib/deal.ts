@@ -70,8 +70,11 @@ function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
 }
 
 // A prepared outgoing message kept on the deal. It is a draft only: saving it never sends anything and creates no
-// approval request; sending goes through the approval flow (lib/sendguard.ts) after the owner approves.
+// approval request. "Submit for approval" (lib/draftsend.ts) turns one version of it into the deal agent's pending
+// approval; only the owner's decision (lib/dealagent.ts decide) moves it on, through lib/sendguard.ts.
+// DRAFT_STATUS: the states a person may save. DRAFT_FLOW_STATUS: set only by the approval flow, never by a save.
 export const DRAFT_STATUS = ["awaiting_owner_approval", "rejected", "superseded"] as const;
+export const DRAFT_FLOW_STATUS = ["submitted", "sent", "refused", "delivery_unknown"] as const;
 function cleanDraft(d: Record<string, unknown>) {
   const x = { from_role: str(d.from_role, 30), from_name: str(d.from_name, 160), to_name: str(d.to_name, 160), to_email: str(d.to_email, 200), channel: str(d.channel, 300),
     language: str(d.language, 30) || "English", subject: str(d.subject, 200), body: String(d.body ?? "").replace(/\r/g, "").trim().slice(0, 4000), why: str(d.why, 400),
@@ -146,6 +149,15 @@ export async function readDeal(dealId: string, ws = DEFAULT_WS): Promise<{ recor
     if (!prev || rec.version >= prev.version) latest.set(k, rec);
   }
   return { records: [...latest.values()].filter((r) => r.status !== "deleted"), versions };
+}
+
+/** Every saved version of the drafts of one deal (who saved it, when, which text revision, which state), newest first. */
+export async function draftHistory(dealId: string, ws = DEFAULT_WS): Promise<{ record_id: string; version: number; rev: number; status: string; time: string; by: string; note: string }[]> {
+  const rows = ((await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:K5000`]).catch(() => null))?.[0] || []).filter((r) => inWs(r, ws));
+  return rows.filter((r) => r && r[1] === dealId && r[2] === "draft").map((r) => {
+    let d: Record<string, unknown> = {}; try { d = JSON.parse(r[6] || "{}"); } catch { d = {}; }
+    return { record_id: r[3] || "", version: Number(r[4]) || 1, rev: Number(d.rev) || 1, status: r[5] || "", time: r[0] || "", by: r[7] || "", note: r[9] || "" };
+  }).sort((a, b) => (a.record_id === b.record_id ? b.version - a.version : a.record_id.localeCompare(b.record_id)));
 }
 
 export async function saveRecord(dealId: string, kind: Kind, recordId: string, version: number, status: string, data: Record<string, unknown>, by: string, note = "", ws = DEFAULT_WS) {

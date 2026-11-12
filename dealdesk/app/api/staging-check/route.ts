@@ -1,7 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { appendRow, appendTo, ENGINE_SHEET, readRanges, sheetFor, sheetsEnabled, stateSheet } from "@/lib/sheets";
 import { mailReady } from "@/lib/mailer";
 import { budgetState, reservedNow, worstCaseCost } from "@/lib/anthropic";
+import { stagingDraftDrill } from "@/lib/draftsend";
+import { isOwner } from "@/lib/telegram";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -9,7 +11,9 @@ export const maxDuration = 60;
 // Proof that a staging (preview) deployment is separated from the live system. Exists only when VERCEL_ENV=preview, or
 // DESK_ENV=server-test (the server copy, deploy/docker-compose.server.yml): on the live site it answers 404. It writes one marked row to the state sheet this deployment uses, tries one write to
 // the live engine sheet (which must be refused before any request leaves), and reports the settings without any secret.
-export async function GET() {
+// ?drill=draft (staging only, mail off only): also runs the draft approval drill on the TEST deal (lib/draftsend.ts):
+// edit -> submit -> duplicate submit -> the real owner check (refused) -> the guarded send path, which mail off refuses.
+export async function GET(req: NextRequest) {
   if (process.env.VERCEL_ENV !== "preview" && process.env.DESK_ENV !== "server-test") return NextResponse.json({ ok: false }, { status: 404 });
   const tail = (s: string) => (s ? "..." + s.slice(-6) : "");
   const marker = `staging-check ${new Date().toISOString()}`;
@@ -32,6 +36,7 @@ export async function GET() {
   catch (e) { out.engine_data_readable = "FAILED: " + String((e as Error).message || e).slice(0, 120); }
   // the monthly AI cap as this deployment applies it (read-only, no model call): spend, reserved in flight, refusing or not
   out.ai_cap = await budgetState().then((b) => ({ ...b, reserved_now: reservedNow(), worst_case_health_ping_usd: worstCaseCost({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }), rule: "refused when spent + reserved + worst case > cap, or when spend is unknown" })).catch((e) => String(e).slice(0, 160));
+  if (req.nextUrl.searchParams.get("drill") === "draft") out.draft_drill = await stagingDraftDrill(isOwner).catch((e) => ({ ran: true, error: String((e as Error).message || e).slice(0, 200) }));
   out.ok = out.write_to_state === "written" && out.read_back_from_state === "marker found" && String(out.write_to_live_engine).startsWith("refused") && out.mail_can_send === false && !out.state_is_engine;
   return NextResponse.json(out);
 }

@@ -129,6 +129,8 @@
     get: async (id) => { const r = await fetch("/api/deal?id=" + encodeURIComponent(id), { credentials: "same-origin" }); const j = await r.json().catch(() => ({})); if (!r.ok || j.ok === false) throw err(j.code || "tool_error", "Deal Desk", j.error || String(r.status)); return j; },
     docs: (deal_id, url) => post("/api/deal/docs", { deal_id, url }, "Deal Desk AI"),
     save: (deal_id, kind, data, record_id, del) => post("/api/deal", { deal_id, kind, data, record_id, delete: !!del }, "Deal Desk"),
+    // "Submit for approval": the draft's current text becomes the owner's pending approval (nothing is sent here)
+    submit: (deal_id, draft_id) => post("/api/deal/draft", { deal_id, draft_id }, "Deal Desk"),
     pipeline: () => getj("/api/deal?pipeline=1"),
   };
   window.DD_TG = () => getj("/api/telegram/code");

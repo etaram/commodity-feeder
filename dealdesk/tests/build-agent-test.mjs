@@ -9,8 +9,10 @@ const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..")
 // "isolation" (4th argument): the whole app runs for real over an in-memory sheet and a recording model stand-in; the
 // activity log is the real module (its rows are part of what is tested), and lib files that import "./sheets" get the
 // same in-memory sheet.
-const isolation = process.argv[4] === "isolation";
-const mocks = isolation ? { "@/lib/sheets": "sheets-isolation", "@/lib/anthropic": "anthropic", "@/lib/mailer": "mailer" } : process.argv[3] ? { "@/lib/sheets": "sheets-routes", "@/lib/activity": "activity", "@/lib/mailer": "mailer" }
+// "realmail": as "isolation", but with the REAL mailer (lib/mailer.ts), for tests that prove AGENT_MAIL_LIVE=0 opens no connection.
+const realmail = process.argv[4] === "realmail";
+const isolation = process.argv[4] === "isolation" || realmail;
+const mocks = realmail ? { "@/lib/sheets": "sheets-isolation", "@/lib/anthropic": "anthropic" } : isolation ? { "@/lib/sheets": "sheets-isolation", "@/lib/anthropic": "anthropic", "@/lib/mailer": "mailer" } : process.argv[3] ? { "@/lib/sheets": "sheets-routes", "@/lib/activity": "activity", "@/lib/mailer": "mailer" }
   : { "@/lib/sheets": "sheets", "@/lib/panel": "panel", "@/lib/index": "index", "@/lib/deal": "deal", "@/lib/activity": "activity", "@/lib/mailer": "mailer" };
 // "@/lib/x" is lib/x.ts, or lib/x/index.ts when x is a folder
 const file = (rel) => { const p = path.join(root, rel); return /\.(json|ts|tsx)$/.test(rel) ? p : existsSync(p + ".ts") ? p + ".ts" : path.join(p, "index.ts"); };

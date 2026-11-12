@@ -129,6 +129,16 @@ export async function isOwner(email: string): Promise<boolean> {
   return !!u && u.status === "active" && u.role === "admin" && (!u.workspace || u.workspace === "sinder");
 }
 
+/** The owner's linked Telegram chat, where approval cards are answered: the first listed approver (SEND_APPROVERS)
+ *  with a linked chat, else the first linked chat whose account passes isOwner. null when none is linked. */
+export async function ownerChat(): Promise<Link | null> {
+  const ls = await links(true);
+  const { approverList } = await import("./approver");
+  for (const e of approverList()) { const l = ls.find((x) => x.email.toLowerCase() === e); if (l && (await isOwner(l.email))) return l; }
+  for (const l of ls) if (await isOwner(l.email)) return l;
+  return null;
+}
+
 // The link code is derived from the user's email and the bot token, so the panel can show it without a store:
 // first 10 chars of a hash (40 bits; it was 6 chars, 24 bits, which a patient guesser could walk through). The code is
 // private to the signed-in user; the bot checks it against the active users.

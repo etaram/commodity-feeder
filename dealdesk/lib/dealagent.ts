@@ -197,11 +197,7 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
     }
     const m = { from_role: by?.id || "", to_name: s("to_name"), to_email: to, language: s("language", 30), subject: s("subject", 200), body: s("body", 4000), why: s("why", 400), ...(trust === "web" ? { unverified: WEB_FLAG } : {}) };
     await appendRow(APPROVALS, [id, r.id, r.chat, now(), "pending", JSON.stringify(m)]);
-    const he = r.lang === "he";
-    const flag = trust === "web" ? `\n<b>${esc(he ? `שים לב: הכתובת נמצאה ברשת ולא אומתה (${WEB_FLAG})` : `Note: ${WEB_FLAG}`)}</b>` : "";
-    await io.send(r.chat, `${he ? "<b>פנייה לאישור</b>" : "<b>Message for approval</b>"}${by ? `\n${esc(he ? "הכין" : "Prepared by")}: ${esc(by.name)}, ${esc(he ? by.he : by.title)}` : ""}\n${esc(he ? "אל" : "To")}: ${esc(m.to_name)}${m.to_email ? ` &lt;${esc(m.to_email)}&gt;` : ""}${flag}\n${esc(he ? "למה" : "Why")}: ${esc(m.why)}\n\n<b>${esc(m.subject)}</b>\n${esc(m.body)}`,
-      { reply_markup: { inline_keyboard: [[{ text: he ? "אשר" : "Approve", callback_data: `ag:ok:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }],
-        [{ text: he ? "פתח את הספק במערכת" : "Open the supplier", url: supplierUrl(m.to_name) }, { text: he ? "פתח את העסקה" : "Open the deal", url: dealUrl(r.deal_id) }]] } });
+    await approvalCard(io, r.chat, id, m, r.lang === "he", r.deal_id);
     return `proposed ${id}; waiting for the owner's approval (not sent)${trust === "web" ? `; the owner sees the note "${WEB_FLAG}"` : ""}. Continue with the rest of the work.`;
   }
   if (name === "logistics_options") {
@@ -211,6 +207,19 @@ async function runTool(r: Run, io: Io, name: string, x: Record<string, unknown>)
   }
   if (name === "report") { await io.send(r.chat, richText(s("text", 2000)), dealButton(r)); return "reported"; }
   return "unknown tool";
+}
+
+/** The owner's approval card with Approve / Reject. Used for the agent's proposed messages and for drafts submitted
+ *  from the deal screen (lib/draftsend.ts): one card, one approval record, one decision path (decide below). */
+export type ApprovalMsg = { from_role?: string; to_name?: string; to_email?: string; subject?: string; body?: string; why?: string; unverified?: string; kind_label?: string; submitted_by?: string };
+export async function approvalCard(io: Io, chat: string, id: string, m: ApprovalMsg, he: boolean, dealId: string) {
+  const by = member(String(m.from_role || ""));
+  const flag = m.unverified ? `\n<b>${esc(he ? `שים לב: ${m.unverified === WEB_FLAG ? `הכתובת נמצאה ברשת ולא אומתה (${WEB_FLAG})` : m.unverified}` : `Note: ${m.unverified}`)}</b>` : "";
+  const kind = m.kind_label ? `\n<b>${esc(m.kind_label)}</b>` : "";
+  const sub = m.submitted_by ? `\n${esc(he ? "הוגש לאישור על ידי" : "Submitted by")}: ${esc(m.submitted_by)}` : "";
+  await io.send(chat, `${he ? "<b>פנייה לאישור</b>" : "<b>Message for approval</b>"}${kind}${by ? `\n${esc(he ? "הכין" : "Prepared by")}: ${esc(by.name)}, ${esc(he ? by.he : by.title)}` : ""}${sub}\n${esc(he ? "אל" : "To")}: ${esc(m.to_name)}${m.to_email ? ` &lt;${esc(m.to_email)}&gt;` : ""}${flag}\n${esc(he ? "למה" : "Why")}: ${esc(m.why)}\n\n<b>${esc(m.subject)}</b>\n${esc(m.body)}`,
+    { reply_markup: { inline_keyboard: [[{ text: he ? "אשר" : "Approve", callback_data: `ag:ok:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }],
+      [{ text: he ? "פתח את הספק במערכת" : "Open the supplier", url: supplierUrl(String(m.to_name || "")) }, { text: he ? "פתח את העסקה" : "Open the deal", url: dealUrl(dealId) }]] } });
 }
 
 // ---- running -----------------------------------------------------------------------------------------------
@@ -322,7 +331,8 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
   if (!row || row[2] !== chat) return io.send(chat, "-");
   const m = JSON.parse(first[5] || "{}");
   const run = await loadRun(row[1]);
-  const he = run ? run.lang === "he" : true;
+  // a draft submitted from the deal screen has no agent run: its language and workspace travel with the approval
+  const he = run ? run.lang === "he" : m.lang ? m.lang === "he" : true;
   let st = row[4];
   // a send that started and never finished: say so, and let the owner decide after checking his Sent folder
   if (st === "sending" && Date.now() - Date.parse(row[3] || "") > STUCK_MS) {
@@ -338,7 +348,7 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
   const lock = await claim(`appr:${approvalId}`, STUCK_MS);
   if (!lock.ok) return io.send(chat, he ? "ההחלטה על הפנייה הזו כבר בטיפול." : "This message is already being handled.");
   try {
-    if (!ok) { await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "rejected", first[5]]); return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`); }
+    if (!ok) { await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "rejected", first[5]]); await draftOutcome(m, approvalId, "rejected", { by }).catch(() => {}); return io.send(chat, he ? `נדחתה: ${esc(m.to_name)}. הפנייה לא תצא.` : `Rejected: ${esc(m.to_name)}. It will not be sent.`); }
     const ready = mailReady() && !!m.to_email;
     if (ready) await appendRow(APPROVALS, [approvalId, row[1], chat, now(), "sending", first[5]]);
     // The idempotency key is the approval id. Only the owner's "Send again", pressed after a send whose delivery is
@@ -347,13 +357,15 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
     const res: GuardResult = !m.to_email ? { outcome: "send_failed", reason: "", message: "", id: "", error: "no recipient address", stage: "address", prior: "" }
       // without a connected mailbox nothing is sent, but the checks still run: an opted-out recipient is not handed over for manual sending either
       : await guardedSend(sheetsGuardDeps(ready ? {} : { mailer: async () => ({ ok: false, error: "mailbox not configured", stage: "config" }) }), {
-        workspace: run?.ws || DEFAULT_WS, to: String(m.to_email), subject: m.subject || "", text: m.body || "", idempotency_key: `approval:${approvalId}${round ? `:again${round}` : ""}`,
-        approved_by: by || run?.email || `telegram:${chat}`, approval_ref: `${APPROVALS}:${approvalId}`, context: `deal agent run ${row[1]}` });
+        workspace: run?.ws || m.ws || DEFAULT_WS, to: String(m.to_email), subject: m.subject || "", text: m.body || "", idempotency_key: `approval:${approvalId}${round ? `:again${round}` : ""}`,
+        approved_by: by || run?.email || `telegram:${chat}`, approval_ref: `${APPROVALS}:${approvalId}`, context: m.draft_id ? `deal ${m.deal_id} draft ${m.draft_id} rev ${m.draft_rev}` : `deal agent run ${row[1]}` });
     const sent = res.outcome === "sent" || (res.reason === "duplicate" && res.prior === "sent");
     // refused by a check that the owner can clear (emergency stop, lists unreadable): the approval stays open for another press
     const reopen = res.reason === "kill_switch" || res.reason === "checks_unavailable";
     const status = sent ? "sent" : res.outcome === "delivery_unknown" || res.reason === "duplicate" ? "delivery_unknown" : res.reason === "opted_out" ? "blocked" : reopen ? "pending" : "send_failed";
     if (status !== "pending" || ready) await appendRow(APPROVALS, [approvalId, row[1], chat, now(), status, JSON.stringify({ ...m, mail_id: res.id, error: sent ? "" : res.error || res.message })]);
+    // a draft from the deal screen shows the result on the draft itself (a failed write leaves it on the approval)
+    await draftOutcome(m, approvalId, status, { by, message_id: sent ? res.id : "", reason: sent ? "" : res.reason || (status === "send_failed" ? "send_failed" : ""), error: sent ? "" : res.error || res.message }).catch(() => {});
     if (run && !reopen && res.reason !== "opted_out") {
       // the supplier moves to contacted when the request actually left; a failed or unconfirmed send leaves it a candidate
       const cur = (await readDeal(run.deal_id, run.ws).catch(() => ({ records: [] as { kind: string; record_id: string; version: number; status: string }[] }))).records;
@@ -379,6 +391,22 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
     return io.send(chat, (he ? `אושרה, אבל לא נשלחה (${esc(res.error || res.message)}). שום דבר לא יצא מהמערכת. הנה ההודעה לשליחה ידנית${m.to_email ? ` אל ${esc(m.to_email)}` : ""}:` : `Approved but not sent (${esc(res.error || res.message)}). Nothing left the system. Here is the message to send yourself${m.to_email ? ` to ${esc(m.to_email)}` : ""}:`)
       + `\n\n<b>${esc(m.subject)}</b>\n<pre>${esc(m.body)}</pre>`, ready ? { reply_markup: { inline_keyboard: [[{ text: he ? "נסה לשלוח שוב" : "Try sending again", callback_data: `ag:re:${approvalId}` }]] } } : undefined);
   } finally { await lock.release(); }
+}
+// A draft submitted from the deal screen (lib/draftsend.ts): the decision and its result are written back onto the
+// draft as a new version of its record, so the deal screen shows the approval id, its state and the result. Only this
+// function sets these states: the panel's save (lib/deal.ts clean) can never mark a draft sent.
+export const DRAFT_STATE_OF: Record<string, string> = { pending: "submitted", sending: "submitted", sent: "sent", rejected: "rejected", blocked: "refused", send_failed: "refused", delivery_unknown: "delivery_unknown", needs_review: "delivery_unknown" };
+async function draftOutcome(m: Record<string, unknown>, approvalId: string, state: string, more: Record<string, unknown>) {
+  const dealId = String(m.deal_id || ""), draftId = String(m.draft_id || "");
+  if (!dealId || !draftId) return;
+  const ws = String(m.ws || DEFAULT_WS);
+  const cur = (await readDeal(dealId, ws)).records.filter((x) => x.kind === "draft" && x.record_id === draftId).sort((a, b) => b.version - a.version)[0];
+  // the draft was edited after it was submitted (a new text): the result stays on the approval of the old text
+  if (!cur || Number(cur.data.rev || 1) !== Number(m.draft_rev || 1)) return;
+  const prev = (cur.data.approval || {}) as Record<string, unknown>;
+  if (prev.id && prev.id !== approvalId) return;
+  await saveRecord(dealId, "draft", draftId, cur.version + 1, DRAFT_STATE_OF[state] || state, { ...cur.data, sent: state === "sent", approval: { ...prev, id: approvalId, state, at: now(), ...more } },
+    String(more.by || "owner"), `approval ${approvalId}: ${state}`, ws);
 }
 const againButtons = (he: boolean, id: string) => ({ reply_markup: { inline_keyboard: [[{ text: he ? "שלח שוב" : "Send again", callback_data: `ag:re:${id}` }, { text: he ? "דחה" : "Reject", callback_data: `ag:no:${id}` }]] } });
 // delivery unknown: never "send it yourself" before the Sent folder was checked, that is how a duplicate happens
