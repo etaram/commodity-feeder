@@ -26,11 +26,11 @@ export const idemKeyFor = (ws: string, campaignId: string, accountId: string, st
 
 export function outboxItems(snap: Snapshot, ws: string, campaignId?: string): OutboxItem[] {
   return [...latest(snap.outbox, ws).values()].map((r) => ({ ...(r.data as unknown as OutboxItem), status: r.status as OutboxItem["status"] }))
-    .filter((x) => !campaignId || x.campaign_id === campaignId).sort((a, b) => a.due_at.localeCompare(b.due_at));
+    .filter((x) => !campaignId || x.campaign_id === campaignId).sort((a, b) => String(a.due_at || "").localeCompare(String(b.due_at || "")));
 }
 export function logRows(snap: Snapshot, ws: string, f: { campaign_id?: string; account_id?: string } = {}): Row[] {
   return inWs(snap.log, ws).filter((r) => (!f.campaign_id || r.campaign_id === f.campaign_id) && (!f.account_id || (r.data as Record<string, unknown>).account_id === f.account_id))
-    .sort((a, b) => b.rev.localeCompare(a.rev));
+    .sort((a, b) => String(b.rev || "").localeCompare(String(a.rev || "")));
 }
 
 async function writeItem(ctx: Ctx, it: OutboxItem, by = "system") {
