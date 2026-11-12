@@ -96,10 +96,13 @@ const small = { max_tokens: 50, messages: [{ role: "user", content: "hi" }] };
   const before = await spentThisMonth(true);
   queue = [{ status: 529 }];
   ok(/Anthropic 529/.test(await errOf(claude(small, { job: "brief" }))) && reservedNow() === 0, "provider error: the reservation is released");
-  queue = [{ throws: true }];
-  ok(/network down/.test(await errOf(modelTurn("deal agent", "", { model: "m", ...small }))) && reservedNow() === 0, "network error in a tool-loop turn: the reservation is released");
   await tick();
-  ok(near(await spentThisMonth(true), before!), "a failed call adds nothing to this month's spend");
+  ok(near(await spentThisMonth(true), before!), "a refused provider answer (HTTP error) adds nothing to this month's spend");
+  const worstSmall = worstCaseCost({ model: "m", ...small });
+  queue = [{ throws: true }];
+  ok(/network down/.test(await errOf(modelTurn("deal agent", "", { model: "m", ...small }))) && reservedNow() === 0, "network error in a tool-loop turn: no longer a live reservation");
+  await tick();
+  ok(near(await spentThisMonth(true), before! + worstSmall), "an ambiguous failure (network/timeout) keeps its worst case counted for the month: a missing usage row is not proof of zero charge");
 
   // 7. multi-turn: each turn reserves through the same function; a continuation that would cross the cap is not sent
   const cur = (await spentThisMonth(true))!;

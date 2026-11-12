@@ -131,7 +131,7 @@ function refuse(job: string, what: string, detail: string, msg: string): never {
   throw new Error(msg);
 }
 
-export type Hold = { id: number; usd: number; settle: (usage: Parameters<typeof estimateCost>[0]) => { usd: number; entry: number }; release: () => void };
+export type Hold = { id: number; usd: number; settle: (usage: Parameters<typeof estimateCost>[0]) => { usd: number; entry: number }; release: () => void; uncertain: () => void };
 /** Reserves the worst-case cost of one model request, or throws the refusal. Settle with the actual usage, or release. */
 export async function reserveCall(job: string, body: Record<string, unknown>): Promise<Hold> {
   const worst = worstCaseCost(body), cap = monthlyCap();
@@ -154,6 +154,14 @@ export async function reserveCall(job: string, body: Record<string, unknown>): P
       return { usd, entry };
     },
     release() { done = true; holds.delete(id); },
+    // the request may have reached the provider (network error, timeout, unreadable answer): it may have been billed.
+    // The worst case stays counted for the rest of the month, since a missing usage row does not prove zero charge.
+    uncertain() {
+      if (done) return;
+      done = true; holds.delete(id);
+      const day = todayKey();
+      unseen.set(++seq, { usd: worst, day, month: day.slice(0, 7), doneAt: null });
+    },
   };
 }
 /** The ledger row holding these settled costs has been appended (or failed: then they stay counted in memory). */
@@ -173,7 +181,7 @@ export async function modelTurn(job: string, ws: string, body: Record<string, un
   try {
     res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify(body) });
     j = await res.json().catch(() => ({}));
-  } catch (e) { hold.release(); throw e; }
+  } catch (e) { hold.uncertain(); throw e; }
   if (!res.ok) { hold.release(); return { ok: false, status: res.status, j, usd: 0 }; }
   const u = j.usage || {}, s = hold.settle(u);
   void ledgered([s.entry], appendRow("AI Usage", [new Date().toISOString(), job, ws, String(body.model || MODEL), u.input_tokens || 0, u.output_tokens || 0, u.cache_read_input_tokens || 0, u.server_tool_use?.web_search_requests || 0, Math.round(s.usd * 1e5) / 1e5, Date.now() - t1, "ok"]));
@@ -210,7 +218,7 @@ export async function claude(body: Record<string, unknown>, meta: CallMeta = {})
     try {
       r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify(req) });
       j = await r.json().catch(() => ({}));
-    } catch (e) { hold.release(); record(false); throw e; }
+    } catch (e) { hold.uncertain(); record(false); throw e; }
     if (!r.ok) {
       hold.release();
       const msg = `Anthropic ${r.status}: ${String(j?.error?.message || j?.error?.type || "").slice(0, 300)}`;
