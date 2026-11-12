@@ -1,0 +1,256 @@
+{
+ "at": "2026-11-12T15:52+00:00",
+ "version": "details-1",
+ "mode": "run",
+ "read_now": 587,
+ "failed": {
+  "ted: package left for the next run": 12,
+  "pncp: HTTP 410": 1
+ },
+ "published_open": 587,
+ "store": 587,
+ "fill_rate_this_run": {
+  "items": {
+   "filled": 587,
+   "of": 587,
+   "rate": 1.0
+  },
+  "technical_standards": {
+   "filled": 52,
+   "of": 587,
+   "rate": 0.089
+  },
+  "delivery": {
+   "filled": 585,
+   "of": 587,
+   "rate": 0.997
+  },
+  "bid_security": {
+   "filled": 282,
+   "of": 587,
+   "rate": 0.48
+  },
+  "performance_guarantee": {
+   "filled": 2,
+   "of": 587,
+   "rate": 0.003
+  },
+  "eligibility": {
+   "filled": 226,
+   "of": 587,
+   "rate": 0.385
+  },
+  "lots": {
+   "filled": 583,
+   "of": 587,
+   "rate": 0.993
+  },
+  "evaluation": {
+   "filled": 447,
+   "of": 587,
+   "rate": 0.761
+  },
+  "clarification_deadline": {
+   "filled": 174,
+   "of": 587,
+   "rate": 0.296
+  },
+  "documents": {
+   "filled": 586,
+   "of": 587,
+   "rate": 0.998
+  },
+  "submission_deadline": {
+   "filled": 587,
+   "of": 587,
+   "rate": 1.0
+  },
+  "submission_url": {
+   "filled": 584,
+   "of": 587,
+   "rate": 0.995
+  },
+  "duration": {
+   "filled": 568,
+   "of": 587,
+   "rate": 0.968
+  },
+  "tender_validity": {
+   "filled": 565,
+   "of": 587,
+   "rate": 0.963
+  },
+  "variants": {
+   "filled": 341,
+   "of": 587,
+   "rate": 0.581
+  },
+  "framework": {
+   "filled": 278,
+   "of": 587,
+   "rate": 0.474
+  },
+  "procedure": {
+   "filled": 587,
+   "of": 587,
+   "rate": 1.0
+  },
+  "quantities": {
+   "filled": 21,
+   "of": 587,
+   "rate": 0.036
+  }
+ },
+ "by_source_this_run": {
+  "TED (EU)": {
+   "n": 583,
+   "items": 1.0,
+   "technical_standards": 0.09,
+   "delivery": 1.0,
+   "bid_security": 0.48,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.39,
+   "lots": 1.0,
+   "evaluation": 0.76,
+   "clarification_deadline": 0.3,
+   "documents": 1.0,
+   "quantities": 0.03
+  },
+  "PNCP (Brazil)": {
+   "n": 4,
+   "items": 1.0,
+   "technical_standards": 0.0,
+   "delivery": 1.0,
+   "bid_security": 0.0,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.0,
+   "lots": 0.0,
+   "evaluation": 1.0,
+   "clarification_deadline": 0.0,
+   "documents": 0.75,
+   "quantities": 1.0
+  }
+ },
+ "fill_rate_published": {
+  "items": {
+   "filled": 587,
+   "of": 587,
+   "rate": 1.0
+  },
+  "technical_standards": {
+   "filled": 52,
+   "of": 587,
+   "rate": 0.089
+  },
+  "delivery": {
+   "filled": 585,
+   "of": 587,
+   "rate": 0.997
+  },
+  "bid_security": {
+   "filled": 282,
+   "of": 587,
+   "rate": 0.48
+  },
+  "performance_guarantee": {
+   "filled": 2,
+   "of": 587,
+   "rate": 0.003
+  },
+  "eligibility": {
+   "filled": 226,
+   "of": 587,
+   "rate": 0.385
+  },
+  "lots": {
+   "filled": 583,
+   "of": 587,
+   "rate": 0.993
+  },
+  "evaluation": {
+   "filled": 447,
+   "of": 587,
+   "rate": 0.761
+  },
+  "clarification_deadline": {
+   "filled": 174,
+   "of": 587,
+   "rate": 0.296
+  },
+  "documents": {
+   "filled": 586,
+   "of": 587,
+   "rate": 0.998
+  },
+  "submission_deadline": {
+   "filled": 587,
+   "of": 587,
+   "rate": 1.0
+  },
+  "submission_url": {
+   "filled": 584,
+   "of": 587,
+   "rate": 0.995
+  },
+  "duration": {
+   "filled": 568,
+   "of": 587,
+   "rate": 0.968
+  },
+  "tender_validity": {
+   "filled": 565,
+   "of": 587,
+   "rate": 0.963
+  },
+  "variants": {
+   "filled": 341,
+   "of": 587,
+   "rate": 0.581
+  },
+  "framework": {
+   "filled": 278,
+   "of": 587,
+   "rate": 0.474
+  },
+  "procedure": {
+   "filled": 587,
+   "of": 587,
+   "rate": 1.0
+  },
+  "quantities": {
+   "filled": 21,
+   "of": 587,
+   "rate": 0.036
+  }
+ },
+ "by_source_published": {
+  "TED (EU)": {
+   "n": 583,
+   "items": 1.0,
+   "technical_standards": 0.09,
+   "delivery": 1.0,
+   "bid_security": 0.48,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.39,
+   "lots": 1.0,
+   "evaluation": 0.76,
+   "clarification_deadline": 0.3,
+   "documents": 1.0,
+   "quantities": 0.03
+  },
+  "PNCP (Brazil)": {
+   "n": 4,
+   "items": 1.0,
+   "technical_standards": 0.0,
+   "delivery": 1.0,
+   "bid_security": 0.0,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.0,
+   "lots": 0.0,
+   "evaluation": 1.0,
+   "clarification_deadline": 0.0,
+   "documents": 0.75,
+   "quantities": 1.0
+  }
+ }
+}
