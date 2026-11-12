@@ -11,6 +11,9 @@ import { NON_LATIN, allWordsRe, toEnglish } from "@/lib/qtranslate";
 import { logEvent } from "@/lib/log";
 import { claude } from "@/lib/anthropic";
 import { tenderKind, type TenderKind } from "@/lib/tenderkind";
+import { applyTie, askGeminiForKind, fitRerank, ownFromEvidence, requestRequirement, routeTender, tieToBreak, type Kind3, type Ranked, type Route } from "@/lib/matchv2";
+import { decide, fitInput, kindInput, kindQuestions } from "@/lib/gemini";
+import { evidenceText } from "@/lib/evalrows";
 
 const RAW = `${RAW_ROOT}/data`;
 type Grid = string[][];
@@ -509,10 +512,69 @@ export function tenderPlan(o: SupQuery, flag = process.env.TENDER_KIND): { kind:
   const usePhrases = (kind.kind === "goods" || kind.kind === "mixed") && kind.confidence === "high" && kind.goods_phrases.length > 0;
   return { kind, block: false, text: usePhrases ? kind.goods_phrases.join(", ") : null };
 }
+// ---- supplier matching v2 (lib/matchv2.ts), behind the flag MATCH_V2=on (default off; with it off nothing below runs) ----
+// Google's gemini-decision-1 is a second opinion only: without GEMINI_API_KEY, on a refusal, after MATCH_V2_GEMINI_DAILY
+// calls on this instance in one day (default 100) or after 4 seconds, the search goes on with code alone. Answers are
+// cached on the instance, so the same tender or the same tie is asked once.
+const v2Kind = new Map<string, Kind3 | null>(), v2Fit = new Map<string, "yes" | "no">();
+const v2Budget = { day: "", calls: 0 };
+async function v2Decide(input: string, qs: Parameters<typeof decide>[1]) {
+  const key = String(process.env.GEMINI_API_KEY || "").trim(), day = new Date().toISOString().slice(0, 10);
+  if (v2Budget.day !== day) { v2Budget.day = day; v2Budget.calls = 0; }
+  if (!key || v2Budget.calls >= Number(process.env.MATCH_V2_GEMINI_DAILY || 100)) return null;
+  v2Budget.calls++;
+  const r = await decide(input, qs, key, { timeoutMs: 4000 });
+  if (!r.ok) { void logEvent("warn", "search", "match v2: Gemini unavailable, code only", r.reason); return null; }
+  return r.answers;
+}
+async function v2Route(o: SupQuery, k: TenderKind): Promise<Route> {
+  if (!askGeminiForKind(k)) return routeTender(k, null);
+  const t = { title: String(o.tender?.title || ""), sector: o.sector, category: o.tender?.category }, ck = kindInput(t);
+  if (!v2Kind.has(ck)) {
+    const a = await v2Decide(ck, kindQuestions());
+    const c = a?.kind?.choice;
+    if (a) v2Kind.set(ck, c === "goods" || c === "non_goods" || c === "mixed" ? c : null);
+    if (v2Kind.size > 5000) v2Kind.clear();
+    if (!a) return routeTender(k, null);
+  }
+  return routeTender(k, v2Kind.get(ck) ?? null);
+}
+/** The re-rank as it was measured (tools/eval-matchv2.ts): the first 25 rows of the search's own order (the evaluation
+ *  window) are judged on the evidence text the labeller saw; rows after them keep their order behind. */
+const V2_WINDOW = 25;
+async function v2Rerank<T extends { s: Supplier }>(scored: T[], o: SupQuery, k: TenderKind | null): Promise<T[]> {
+  const text = String(o.text || ""), title = String(o.tender?.title || "");
+  const commodity = title && text.startsWith(title) ? text.slice(title.length).trim() : "";
+  const req = requestRequirement(text, o.tender && k ? { kind: k, title, commodity } : undefined);
+  const win = scored.slice(0, V2_WINDOW), rest = scored.slice(V2_WINDOW);
+  const { kept } = fitRerank(win, req.conds, (x) => ({ own: ownFromEvidence(evidenceText(x.s)), kind: supplierKind(x.s) }));
+  let ordered: Ranked<T>[] = kept;
+  const pos = tieToBreak(kept);
+  if (pos.length && req.product) {
+    const fk = (x: T) => `${req.product.toLowerCase()}|${dedupeKey(x.s)}`;
+    const missing = pos.filter((i) => !v2Fit.has(fk(kept[i].item)));
+    if (missing.length) {
+      const { input, questions } = fitInput(req.product, missing.map((i) => ({ text: `${evidenceText(kept[i].item.s)} | type: ${kept[i].item.s.ty || "-"}` })));
+      const a = await v2Decide(input, questions);
+      if (a) missing.forEach((i, n) => { const c = a[`r${n + 1}`]?.choice; if (c === "yes" || c === "no") v2Fit.set(fk(kept[i].item), c); });
+      if (v2Fit.size > 20000) v2Fit.clear();
+    }
+    const ans = new Map<number, "yes" | "no">();
+    for (const i of pos) { const c = v2Fit.get(fk(kept[i].item)); if (c) ans.set(i, c); }
+    if (ans.size) ordered = applyTie(kept, ans);
+  }
+  return [...ordered.map((x) => x.item), ...rest];
+}
+
 const SEARCH_HEAD = [...SUP_HEAD, "match", "match_why", "match_evidence", "match_conflicts", "match_gaps", "match_version", "match_url"];
-export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string; note?: string; tender_kind?: string }> {
+export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total: number; origins: [string, number][]; query: string; note?: string; tender_kind?: string; match_v2?: string }> {
+  const v2 = process.env.MATCH_V2 === "on";
   const plan = tenderPlan(o);
-  if (plan?.block) return { values: [SEARCH_HEAD], total: 0, origins: [], query: String(o.text || ""), note: NO_GOODS_NOTE, tender_kind: plan.kind.kind };
+  // v2: the rules and Gemini must agree before a tender's list is emptied (the rules alone decide with v2 off)
+  const v2Kind0 = v2 && o.tender && String(o.tender.title || "").trim() ? plan?.kind ?? tenderKind({ sector: o.sector, ...o.tender }) : null;
+  const route = v2Kind0 ? await v2Route(o, v2Kind0) : null;
+  if (route?.block) return { values: [SEARCH_HEAD], total: 0, origins: [], query: String(o.text || ""), note: NO_GOODS_NOTE, tender_kind: "non_goods", match_v2: route.why };
+  if (plan?.block && !v2) return { values: [SEARCH_HEAD], total: 0, origins: [], query: String(o.text || ""), note: NO_GOODS_NOTE, tender_kind: plan.kind.kind };
   // the text the product is read from: the request text, or (flag on) the product phrases of the tender title
   const asked = plan?.text ?? String(o.text || "");
   const short = asked.trim().length <= 80;
@@ -614,6 +676,9 @@ export async function supplierSearch(o: SupQuery): Promise<{ values: Grid; total
   }
   scored.sort((a, b) => (b.cb || 0) - (a.cb || 0) || BUCKET_RANK[a.m.bucket] - BUCKET_RANK[b.m.bucket] || evidenceRank(a.m.evidence) - evidenceRank(b.m.evidence)
     || KIND_RANK[supplierKind(a.s)] - KIND_RANK[supplierKind(b.s)] || b.sc - a.sc);
-  return { values: [SEARCH_HEAD, ...scored.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION, x.m.url || ""])], total: scored.length,
-    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query, ...(plan ? { tender_kind: plan.kind.kind } : {}) };
+  // v2: supplier fit re-rank of the rows found above (a row that contradicts a stated condition is dropped)
+  const ranked = v2 ? await v2Rerank(scored, o, v2Kind0) : scored;
+  return { values: [SEARCH_HEAD, ...ranked.slice(0, Math.min(100, o.n || 15)).map((x) => [...supRow(x.s), x.m.bucket, x.m.why, x.m.evidence, x.m.conflicts.join("; "), x.m.gaps.join("; "), MATCH_VERSION, x.m.url || ""])], total: ranked.length,
+    origins: [...origins.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15), query, ...(plan ? { tender_kind: plan.kind.kind } : {}),
+    ...(route ? { tender_kind: route.rules, match_v2: route.why } : v2 ? { match_v2: "fit re-rank" } : {}) };
 }
