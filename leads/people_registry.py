@@ -7,7 +7,7 @@ whitelisted fields. Nothing is fetched from linkedin.com: each person gets a Lin
 company) that the owner opens in his own browser.
 
 Registers (verified on 12 Nov 2026 from the company server; free, official data, no login, no CAPTCHA):
-  FRA  API Recherche d'entreprises (recherche-entreprises.api.gouv.fr, DINUM, open, keyless, 7 requests/s; we use 2/s):
+  FRA  API Recherche d'entreprises (recherche-entreprises.api.gouv.fr, DINUM, open, keyless, 7 requests/s; answered 429 at 2/s from our server, so we use 1/s):
        dirigeants of the RNE. Id: SIREN (from a FR VAT number or a SIREN/SIRET/RCS printed on the site), else name.
   NOR  Bronnoysund Register Centre, Enhetsregisteret (data.brreg.no, NLOD licence, keyless): roles (daglig leder,
        styre, innehaver). Id: organisasjonsnummer (NO VAT / Org.nr), else name.
@@ -39,7 +39,7 @@ COUNTRIES = {"FRA": "fr", "NOR": "no", "CZE": "cz", "BRA": "br", "GBR": "gb"}
 SOURCE_NAME = {"fr": "Registre national des entreprises (API Recherche d'entreprises)", "no": "Bronnoysund Enhetsregisteret",
                "cz": "ARES / Czech public register", "br": "Receita Federal CNPJ (QSA)",
                "gb": "Companies House"}
-RATE = {"fr": 2.0, "no": 2.0, "cz": 1.0, "br": 0.5, "gb": 1.5}  # requests per second, under each source's limit
+RATE = {"fr": 1.0, "no": 2.0, "cz": 1.0, "br": 0.5, "gb": 1.5}  # requests per second, under each source's limit
 MAX_PEOPLE = 10
 
 
