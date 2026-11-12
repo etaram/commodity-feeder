@@ -424,7 +424,7 @@ def philippines():
     return out
 
 
-REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "iran": iran, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil, "argentina": argentina, "indonesia": indonesia, "ukraine": ukraine, "colombia": colombia, "chile": chile, "peru": peru, "india": india, "philippines": philippines}
+REGISTRIES = {"cameroon": cameroon, "nigeria": nigeria, "pakistan": pakistan, "vietnam": vietnam, "paraguay": paraguay, "south_africa": south_africa, "brazil": brazil, "argentina": argentina, "indonesia": indonesia, "ukraine": ukraine, "colombia": colombia, "chile": chile, "peru": peru, "india": india, "philippines": philippines}
 
 
 def main(only=None):

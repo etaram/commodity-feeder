@@ -552,6 +552,9 @@ def _awards():
                     continue
 
 
+BLOCKED_COUNTRIES = {"IRN", "SYR", "PRK"}
+
+
 def build():
     rates = _rates()
     sup = defaultdict(lambda: {"names": defaultdict(int), "country": defaultdict(int), "wins": 0, "usd": 0.0,
@@ -896,6 +899,9 @@ def build():
     out.sort(key=lambda r: (r["tier"], r["_svc"], -r["quality"], -r["won_usd_est"]))
     for r in out:
         r.pop("_svc", None)  # best tier first, then quality
+    # Countries Sinder does not trade with (sanctions and Israeli law on trading with enemy states): never in the
+    # supplier universe, whatever source brought them in. Kept as a short explicit list; widen only after legal advice.
+    out = [r for r in out if str(r.get("country") or "").upper() not in BLOCKED_COUNTRIES]
     out = balance_regions(out)
     out = [{"quality": r.pop("quality"), **r} for r in out]
     PRIVATE.mkdir(parents=True, exist_ok=True)

@@ -210,6 +210,7 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
     # entry is proof of status (tier 2); a promotion-council profile is the company's own words (tier 3)
     from .regions import region as _region_of
     for rf in sorted(LEADS.glob("registry_*.csv")):
+        if rf.name == "registry_iran.csv": continue  # not traded with (sanctions); file kept out of the index
         have = {(x.get("n", "").lower(), x.get("c", "")) for x in out}
         n_rf = 0
         for r in csv.DictReader(open(rf, encoding="utf-8")):
