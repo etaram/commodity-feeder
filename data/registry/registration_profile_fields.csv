@@ -1,0 +1,31 @@
+field,used_by,note
+company_legal_name,all,as on the incorporation certificate
+trading_name,most,
+country_of_incorporation,all,
+company_registration_number,all,Israeli company number (ח.פ.)
+date_of_incorporation,UNGM; Tanzania NeST; Ethiopia e-GP; pre-qualification portals,
+legal_form,UNGM; KONEPS; Taiwan PCC,
+tax_id_or_vat_number,all national portals,Israeli VAT / tax file number
+registered_address,all,street; city; postal code; country
+postal_address,UNGM; Vietnam; Ethiopia,if different
+website,all,
+general_email,all,a shared mailbox (tenders@...) rather than a person
+general_phone,all,international format
+contact_person_name,all,the person who manages the portal accounts
+contact_person_title,UNGM; Aramco; ADNOC; QatarEnergy,
+contact_person_email,all,receives verification e-mails
+contact_person_mobile,most,SMS one-time codes on some portals
+directors_and_owners,Tanzania NeST; Uganda eGP; Vietnam; pre-qualification portals,names and nationality; shareholding
+year_established,UNGM; pre-qualification portals,
+number_of_employees,UNGM; pre-qualification portals,
+annual_turnover_last_3_years,pre-qualification portals (Aramco; ADNOC; QatarEnergy),with currency
+business_activities_codes,UNGM (UNSPSC); Aramco; ADNOC; QatarEnergy; Ethiopia,products and services offered
+bank_details,CSD (South Africa); pre-qualification portals,only when a contract is expected
+documents.certificate_of_incorporation,most,PDF scan; some portals want a certified English translation
+documents.tax_registration_certificate,most,
+documents.tax_clearance_certificate,Ghana; Philippines; Tanzania,
+documents.audited_financial_statements,pre-qualification portals,last 2-3 years
+documents.iso_or_quality_certificates,pre-qualification portals,if any
+documents.power_of_attorney_for_signatory,Vietnam; Tunisia; Egypt,who may sign for the company
+digital_signature_certificate,Vietnam; Tunisia; Uzbekistan; Kazakhstan; Korea KONEPS,local certificate authorities; often only for bidding
+local_agent_or_partner,Indonesia; Philippines; Saudi Arabia; Qatar; Oman,needed where a local registration is required

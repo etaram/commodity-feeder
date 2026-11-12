@@ -3,7 +3,8 @@ and a weekly report counts what the system holds per region.
 
   python -m leads.source_cycle probe [ID ...]   probe the candidates (all, or the given ids) -> candidates_wave1.csv + candidates_probe.json
   python -m leads.source_cycle report            data/registry/weekly_report.json (per-region counts, week-over-week change)
-  python -m leads.source_cycle cycle             probe + report (weekly, from deploy/ops/schedule.tab via sources.yml)
+  python -m leads.source_cycle regcheck          check that each registration page in registrations.csv exists (GET only)
+  python -m leads.source_cycle cycle             probe + regcheck + report (weekly, from deploy/ops/schedule.tab via sources.yml)
   python -m leads.source_cycle sample ID|URL [method]   fetch one page and keep it SEALED (developer review, never in the log)
   python -m leads.source_cycle run MODULE        run one collector's fetch() and print counts only (developer check)
   python -m leads.source_cycle gleif [--force]   GLEIF Golden Copy bulk match (leads/gleif_bulk.py), weekly
@@ -216,6 +217,30 @@ def probe(ids=(), keep_bodies=False):
     return rows
 
 
+REGISTRATIONS = REG / "registrations.csv"
+REG_COLS = ["http_status", "page_status", "method_used", "checked_at"]
+
+
+def check_registrations():
+    """Fetch each registration page once (GET only: no form is filled or submitted, no account is created) and
+    record whether it exists. The other columns of registrations.csv are kept as written."""
+    if not REGISTRATIONS.exists():
+        return []
+    rows = list(csv.DictReader(open(REGISTRATIONS, encoding="utf-8")))
+    s = _session()
+    allow = tuple(x for x in os.environ.get("PROBE_METHODS", "http,relay,stealth").split(",") if x)
+    for i, r in enumerate(rows):
+        res, _ = probe_row({"id": f"R{i:02d}", "url": r["registration_url"]}, s, allow)
+        r.update(http_status=res["http_status"], page_status=res["status"], method_used=res["method_used"], checked_at=res["checked_at"])
+        print(f"REG {i:02d} {res['host']} -> {res['status']} {res['http_status']} via {res['method_used'] or '-'} robots={res['robots']}")
+    cols = [k for k in rows[0].keys() if k not in REG_COLS] + REG_COLS
+    with open(REGISTRATIONS, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in cols})
+    return rows
+
+
 # ---------------------------------------------------------------- weekly report
 def _region(c):
     from .regions import region
@@ -383,8 +408,11 @@ def main(argv=None):
         probe(set(a[1:]), keep_bodies=os.environ.get("PROBE_SEAL") == "1")
     elif cmd == "report":
         report()
+    elif cmd == "regcheck":
+        check_registrations()
     elif cmd == "cycle":
         probe()
+        check_registrations()
         report()
     elif cmd == "sample":
         meth = next((x.split("=", 1)[1] for x in a[1:] if x.startswith("--method=")), "http")
