@@ -11,7 +11,7 @@ const near = (a: number | null, b: number) => a !== null && Math.abs(a - b) < 1e
 process.env.ANTHROPIC_API_KEY = "test-key";
 
 // model stand-in: every request is recorded; the next answers are queued; a gate can hold answers back
-type Ans = { status?: number; usage?: Record<string, number>; stop?: string; throws?: boolean };
+type Ans = { status?: number; usage?: Record<string, any> | null; stop?: string; throws?: boolean; badJson?: boolean };
 const sent: Record<string, unknown>[] = [];
 let queue: Ans[] = [], gate: Promise<void> | null = null;
 (globalThis as { fetch: unknown }).fetch = async (_u: string, init: { body: string }) => {
@@ -19,7 +19,8 @@ let queue: Ans[] = [], gate: Promise<void> | null = null;
   const a = queue.shift() || {};
   if (gate) await gate;
   if (a.throws) throw new Error("network down");
-  return { ok: (a.status || 200) < 300, status: a.status || 200, json: async () => (a.status && a.status >= 300 ? { error: { message: "overloaded" } } : { content: [{ type: "text", text: "fine" }], stop_reason: a.stop || "end_turn", usage: a.usage || { input_tokens: 100, output_tokens: 10 } }) };
+  if (a.badJson) return { ok: true, status: 200, json: async () => { throw new SyntaxError("Unexpected end of JSON input"); } };
+  return { ok: (a.status || 200) < 300, status: a.status || 200, json: async () => (a.status && a.status >= 300 ? { error: { message: "overloaded" } } : { content: [{ type: "text", text: "fine" }], stop_reason: a.stop || "end_turn", usage: a.usage === null ? undefined : a.usage || { input_tokens: 100, output_tokens: 10 } }) };
 };
 const errOf = async (p: Promise<unknown>) => { try { await p; return ""; } catch (e) { return String((e as Error).message || e); } };
 const tick = () => new Promise((r) => setTimeout(r, 5));
@@ -103,6 +104,28 @@ const small = { max_tokens: 50, messages: [{ role: "user", content: "hi" }] };
   ok(/network down/.test(await errOf(modelTurn("deal agent", "", { model: "m", ...small }))) && reservedNow() === 0, "network error in a tool-loop turn: no longer a live reservation");
   await tick();
   ok(near(await spentThisMonth(true), before! + worstSmall), "an ambiguous failure (network/timeout) keeps its worst case counted for the month: a missing usage row is not proof of zero charge");
+  // 6b. a 200 answer that cannot be read, or carries no/malformed usage, is ambiguous too (ChatGPT row 115): worst case kept, never settled at 0
+  let base = (await spentThisMonth(true))!;
+  queue = [{ badJson: true }];
+  ok(/unreadable/.test(await errOf(modelTurn("deal agent", "", { model: "m", ...small }))) && reservedNow() === 0, "modelTurn: HTTP 200 with unreadable JSON is an error, not a zero-cost success");
+  await tick();
+  ok(near(await spentThisMonth(true), base + worstSmall), "modelTurn: unreadable 200 keeps the worst case counted");
+  base = (await spentThisMonth(true))!;
+  queue = [{ badJson: true }];
+  ok(/unreadable/.test(await errOf(claude(small, { job: "brief" }))) && reservedNow() === 0, "claude(): HTTP 200 with unreadable JSON is an error");
+  await tick();
+  ok(near(await spentThisMonth(true), base + worstSmall), "claude(): unreadable 200 keeps the worst case counted");
+  base = (await spentThisMonth(true))!;
+  queue = [{ usage: null }];
+  ok(/without usage/.test(await errOf(modelTurn("deal agent", "", { model: "m", ...small }))), "modelTurn: a 200 with no usage block is not settled at zero");
+  queue = [{ usage: { input_tokens: "x", output_tokens: 3 } }];
+  ok(/without usage/.test(await errOf(claude(small, { job: "brief" }))), "claude(): malformed usage is not settled at zero");
+  await tick();
+  ok(near(await spentThisMonth(true), base + 2 * worstSmall) && reservedNow() === 0, "missing and malformed usage both keep their worst case counted");
+  const nSent = sent.length;
+  queue = [{ badJson: true }];
+  await errOf(claude(small, { job: "brief" }));
+  ok(sent.length === nSent + 1, "no blind retry after an ambiguous answer (one request sent)");
 
   // 7. multi-turn: each turn reserves through the same function; a continuation that would cross the cap is not sent
   const cur = (await spentThisMonth(true))!;

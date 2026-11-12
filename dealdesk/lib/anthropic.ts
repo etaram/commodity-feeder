@@ -174,15 +174,27 @@ export async function checkMonthlyCap(job: string): Promise<void> {
   h.release();
 }
 
+/** A 200 answer counts as settled only when it can be read and carries a numeric usage block. An unreadable body or a
+ *  missing/malformed usage is not proof of zero charge: the caller keeps the worst case counted (hold.uncertain). */
+export const UNREADABLE = "Anthropic answer unreadable or without usage; its worst-case cost stays counted for the month";
+async function readSettled(res: Response): Promise<Record<string, any> | null> {
+  let j: Record<string, any>;
+  try { j = await res.json(); } catch { return null; }
+  const u = j && typeof j === "object" ? j.usage : null;
+  if (!u || typeof u !== "object" || !Number.isFinite(Number(u.input_tokens)) || !Number.isFinite(Number(u.output_tokens))
+      || u.input_tokens === null || u.output_tokens === null || u.input_tokens === "" || u.output_tokens === "") return null;
+  return j;
+}
+
 /** One model request through the cap: reserve, send, settle (with its 'AI Usage' row) or release. */
 export async function modelTurn(job: string, ws: string, body: Record<string, unknown>): Promise<{ ok: boolean; status: number; j: Record<string, any>; usd: number }> {
   const hold = await reserveCall(job, body), t1 = Date.now();
-  let res: Response, j: Record<string, any>;
-  try {
-    res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify(body) });
-    j = await res.json().catch(() => ({}));
-  } catch (e) { hold.uncertain(); throw e; }
-  if (!res.ok) { hold.release(); return { ok: false, status: res.status, j, usd: 0 }; }
+  let res: Response;
+  try { res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify(body) }); }
+  catch (e) { hold.uncertain(); throw e; }
+  if (!res.ok) { const je = await res.json().catch(() => ({})); hold.release(); return { ok: false, status: res.status, j: je, usd: 0 }; }
+  const j = await readSettled(res);
+  if (!j) { hold.uncertain(); void logEvent("error", "ai", UNREADABLE, job); throw new Error(UNREADABLE); }
   const u = j.usage || {}, s = hold.settle(u);
   void ledgered([s.entry], appendRow("AI Usage", [new Date().toISOString(), job, ws, String(body.model || MODEL), u.input_tokens || 0, u.output_tokens || 0, u.cache_read_input_tokens || 0, u.server_tool_use?.web_search_requests || 0, Math.round(s.usd * 1e5) / 1e5, Date.now() - t1, "ok"]));
   return { ok: true, status: res.status, j, usd: s.usd };
@@ -214,19 +226,20 @@ export async function claude(body: Record<string, unknown>, meta: CallMeta = {})
     let hold: Hold;
     try { hold = await reserveCall(job, req); }      // every turn, continuations included
     catch (e) { if (turn) record(false); throw e; }
-    let r: Response, j: Record<string, any>;
-    try {
-      r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify(req) });
-      j = await r.json().catch(() => ({}));
-    } catch (e) { hold.uncertain(); record(false); throw e; }
+    let r: Response;
+    try { r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(), body: JSON.stringify(req) }); }
+    catch (e) { hold.uncertain(); record(false); throw e; }
     if (!r.ok) {
+      const j = await r.json().catch(() => ({} as Record<string, any>));
       hold.release();
       const msg = `Anthropic ${r.status}: ${String(j?.error?.message || j?.error?.type || "").slice(0, 300)}`;
       void logEvent("error", "ai", msg, job);
       record(false);
       throw new Error(msg);
     }
-    settled.push(hold.settle(j.usage || {}).entry);
+    const j = await readSettled(r);
+    if (!j) { hold.uncertain(); void logEvent("error", "ai", UNREADABLE, job); record(false); throw new Error(UNREADABLE); }
+    settled.push(hold.settle(j.usage).entry);
     meter(j.usage);
     out.push(...((j.content || []) as Block[]));
     if (j.stop_reason === "pause_turn") { messages = [...messages, { role: "assistant", content: j.content }]; continue; }
