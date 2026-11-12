@@ -102,6 +102,13 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
     const fitText = await fetch(`${RAW}/leads/fit.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
     const fit = new Map<string, [string, string, string]>();
     if (fitText) Papa.parse<Record<string, string>>(fitText, { header: true, skipEmptyLines: true, step: (res) => { const x = res.data; if (x.id) fit.set(own(x.id), [own((x.fit_why || "").slice(0, 160)), own((x.fit_flags || "").slice(0, 160)), iv(x.route || "")]); } });
+    // official bid details per tender (leads/tender_details.py: items, guarantees, eligibility, documents... with
+    // source per field), shown on the tender card as "Bid requirements from the official notice"
+    const details = new Map<string, string>();
+    try {
+      const r = await fetch(`${RAW}/leads/refined/tender_details.csv.gz`, { cache: "no-store", signal: AbortSignal.timeout(20000) });
+      if (r.ok) Papa.parse<Record<string, string>>(gunzipSync(Buffer.from(await r.arrayBuffer())).toString("utf8"), { header: true, skipEmptyLines: true, step: (res) => { const x = res.data; if (x.id && x.details) details.set(own(x.id), own(x.details)); } });
+    } catch { /* the card simply has no official details section */ }
     const sfit = (((await snapshot("static").catch(() => ({} as Snap))).fit) || {}) as Record<string, string[]>;
     let head: string[] = [], R: (new (a: string[]) => TRow) | null = null;
     const rows: TRow[] = [];
@@ -116,13 +123,13 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
       const p = Papa.parse<string[]>(text, { header: false, skipEmptyLines: true }).data;
       if (!p.length) continue;
       const h = p[0];
-      if (!head.length) { head = [...h, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route"].filter((k, j, all) => all.indexOf(k) === j); R = rowClass(head); }
+      if (!head.length) { head = [...h, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route", "details"].filter((k, j, all) => all.indexOf(k) === j); R = rowClass(head); }
       const ix = head.map((k) => h.indexOf(k)), idI = h.indexOf("id"), dlI = h.indexOf("deadline"), scI = h.indexOf("score"), rtI = h.indexOf("route");
       for (let j = 1; j < p.length; j++) {
         const a = p[j], id = a[idI] || "";
         if (!id || isClosed(a[dlI])) continue;
         const f = sfit[id] || [], x = fit.get(id);
-        const extra: Record<string, string> = { fit: f[0] || a[scI] || "", your_suppliers: f[1] || "", tier_AB: f[2] || "", fit_why: x?.[0] || "", fit_flags: x?.[1] || "", route: (rtI >= 0 ? a[rtI] : "") || x?.[2] || "" };
+        const extra: Record<string, string> = { fit: f[0] || a[scI] || "", your_suppliers: f[1] || "", tier_AB: f[2] || "", fit_why: x?.[0] || "", fit_flags: x?.[1] || "", route: (rtI >= 0 ? a[rtI] : "") || x?.[2] || "", details: details.get(id) || "" };
         rows.push(new R!(head.map((k, n) => {
           const v = ix[n] >= 0 ? (a[ix[n]] ?? "") : (extra[k] ?? "");
           if (k in extra && ix[n] < 0) return INTERN.has(k) ? iv(v) : v;
@@ -131,7 +138,7 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
         })));
       }
     }
-    fit.clear(); pool.clear();
+    fit.clear(); pool.clear(); details.clear();
     return { head, rows, byId: new Map(rows.map((r) => [r.id, r])) };
   });
 }
