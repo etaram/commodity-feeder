@@ -22,6 +22,9 @@ export function usableSupplier(d: Record<string, unknown>): boolean {
   return d.role === "supplier" && d.status !== "dropped" && chan && !!String(d.source || "").trim();
 }
 
+/** The supplier's product fit is shown by evidence (set when its datasheet, certificate or reference matches the requirement). */
+export const fitShown = (d: Record<string, unknown>): boolean => d.fit_verified === true || String(d.status || "") === "verified";
+
 export function readiness(records: DealRecord[], routes: RouteRow[], today = new Date().toISOString().slice(0, 10)): Readiness {
   const r = live(records);
   const reqs = r.filter((x) => x.kind === "requirement"), parties = r.filter((x) => x.kind === "party"), quotes = r.filter((x) => x.kind === "quote");
@@ -31,6 +34,11 @@ export function readiness(records: DealRecord[], routes: RouteRow[], today = new
   if (!parties.some((p) => usableSupplier(p.data))) gaps.ready_for_rfq.push("no supplier with a sourced match and a valid contact channel");
   if (!routes.some((x) => x.verdict === "supported" || x.verdict === "conditional")) gaps.ready_for_rfq.push("no feasible entry route");
   if (reqs.some((x) => x.data.mandatory && x.data.status === "not_met")) gaps.ready_for_rfq.push("a mandatory requirement is not met");
+  // a commercial RFQ needs a defined specification and a supplier whose product fit is shown; until then the step is a
+  // capability inquiry (to find out fit), not an RFQ. A contact channel alone never qualifies a supplier.
+  const open = reqs.filter((x) => x.data.mandatory && (x.data.status === "missing" || x.data.status === "unknown")).length;
+  if (open) gaps.ready_for_rfq.push(`${open} mandatory requirement${open === 1 ? " is" : "s are"} still missing or unknown (capability inquiry first, not an RFQ)`);
+  if (!parties.some((p) => usableSupplier(p.data) && fitShown(p.data))) gaps.ready_for_rfq.push("no supplier with product fit shown by evidence (a contact channel alone does not qualify)");
   const actual = quotes.filter((q) => q.data.availability === "confirmed" && q.data.source_ref && (!q.data.valid_until || String(q.data.valid_until) >= today));
   if (!actual.length) gaps.quoted.push("no current, documented actual offer (indicative prices and directory data do not count)");
   if (!econ || !Number(econ.data.sale_price)) gaps.reviewed.push("economics not set on the offer");
