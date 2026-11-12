@@ -232,6 +232,7 @@ def run(max_age_days=7, universe=None, force=False):
         for k, m in matches.items():
             f.write(json.dumps({"key": k, **m}, ensure_ascii=False) + "\n")
     by_region = Counter((meta.get(k) or {}).get("region") or "unknown" for k in matches)
+    stats = dict(stats)
     stats.update({"universe_names": len(idx), "relationships": len(rr), "zip_mb": round((n_rr + n_l1) / 1e6),
                   "publish": pub.get("publish_date", ""), "minutes": round((time.time() - t0) / 60, 1)})
     STATE.write_text(json.dumps({"run": str(dt.date.today()), "stats": dict(stats), "by_region": dict(by_region)}))
