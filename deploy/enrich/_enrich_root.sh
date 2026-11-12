@@ -26,7 +26,7 @@ code() {   # a copy of the code the job runs, so the runner's workspace can chan
   echo "code copied: $(git -C "$repo" rev-parse --short HEAD 2>/dev/null)"
 }
 venv() {
-  if [ -x "$E/venv/bin/python" ] && docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" /e/venv/bin/python -c "import requests, cryptography, phonenumbers, pycountry, pypinyin, cv2" >/dev/null 2>&1; then return 0; fi
+  if [ -d "$E/venv" ] && docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" /e/venv/bin/python -c "import requests, cryptography, phonenumbers, pycountry, pypinyin, cv2" >/dev/null 2>&1; then return 0; fi
   echo "installing requests, cryptography, phonenumbers, pycountry, pypinyin, opencv-python-headless into $E/venv"
   rm -rf "$E/venv"
   docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" sh -c 'python -m venv /e/venv && /e/venv/bin/pip install -q --disable-pip-version-check requests cryptography phonenumbers pycountry pypinyin opencv-python-headless 2>&1 | grep -iE "^error" | head -3; /e/venv/bin/python -c "import cv2, requests; print(\"opencv\", cv2.__version__, \"requests\", requests.__version__)"'
@@ -72,7 +72,7 @@ if [ "$mode" = status ]; then
   [ -f "$E/status.json" ] && python3 -m json.tool "$E/status.json" || echo "no status yet"
   ls -la "$E" | awk 'NR>1 && $9 ~ /jsonl|keys|status/ {print $5, $9}'
   docker logs --tail 15 enrich 2>&1 | grep -vE "https?://|@" | cut -c1-160 || true
-  if [ -s "$E/sample.keys" ] && [ -x "$E/venv/bin/python" ]; then
+  if [ -s "$E/sample.keys" ] && [ -d "$E/venv" ]; then
     echo "== sample metrics (counts and rates only)"
     docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/code "$IMG" /e/venv/bin/python -m leads.enrich_server metrics --dir /e --keys sample.keys
   fi
