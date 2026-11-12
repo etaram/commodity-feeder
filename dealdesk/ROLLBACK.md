@@ -66,3 +66,19 @@ Never revertible by code: e-mails sent, bids submitted, commitments made. These 
 - dpl_8eZMMTDJYcE8DPEcaSd5WxJgf8Vw: baseline before the upgrade.
 To go back one step: promote the previous deployment in Vercel (instant). The "Deal Records" tab can stay; nothing reads it
 once the route is gone.
+
+## Owner-only approval (SEND_APPROVERS), live since 12 Nov 2026 09:04
+
+Production deployment dpl_8oMuMqJFixYTsFSGsDveJtUXCA31. With the variable set, only the listed personal account approves
+an outgoing message (panel, Telegram, campaign authorisation, outbox reconcile).
+
+Going back safely. Removing SEND_APPROVERS, or redeploying an older deployment, brings back the earlier rule in which the
+shared team login can send. That is NOT a safe way back. If this change has to be undone:
+
+1. First set AGENT_MAIL_LIVE=0 for Production and redeploy: nothing can leave (lib/mailer.ts returns before any connection).
+2. Only then remove the variable or redeploy the older deployment (dpl_4zZtjnvvhzYFZcutaYACfiHcUAhE).
+3. Sending is opened again (AGENT_MAIL_LIVE removed) only together with a working approver rule.
+
+Current state: the owner's live account has a password he does not remember and there is no password reset, so nobody
+can approve a send on the live site or by Telegram until his account is restored by him. This is a temporary stop of
+sending, not a finished commercial path.
