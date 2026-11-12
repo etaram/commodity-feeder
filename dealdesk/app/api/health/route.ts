@@ -114,8 +114,9 @@ export async function GET(req: NextRequest) {
     const tg = tgEnv().token;
     extra.telegram_token = Boolean(tg);
     extra.telegram = tg ? await fetch(`https://api.telegram.org/bot${tg}/getWebhookInfo`).then((r) => r.json()).then((j) => { const w = j.result || {}; return { url_set: !!w.url, url_host: String(w.url || "").split("/")[2], pending: w.pending_update_count, last_error: w.last_error_message || "", last_error_at: w.last_error_date ? new Date(w.last_error_date * 1000).toISOString() : "" }; }).catch((e) => String(e)) : "no token";
-    // ?noai=1 (the scheduled screen check): no paid model call and no AI Usage row; only whether the key is configured
-    extra.ai = req.nextUrl.searchParams.get("noai") === "1" ? { ok: Boolean(process.env.ANTHROPIC_API_KEY), skipped: "no paid call (noai=1)" } : await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).then((r) => ({ ok: true, text: r.text })).catch((e) => ({ ok: false, err: String(e).slice(0, 200) }));
+    // the paid AI ping (and its AI Usage row) runs only on explicit request (?aiping=1); by default, and always for the
+    // scheduled screen check (noai=1), only whether the key is configured is reported
+    extra.ai = req.nextUrl.searchParams.get("aiping") !== "1" ? { ok: Boolean(process.env.ANTHROPIC_API_KEY), skipped: "no paid call (add aiping=1 to test the provider)" } : await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).then((r) => ({ ok: true, text: r.text })).catch((e) => ({ ok: false, err: String(e).slice(0, 200) }));
     extra.ai_month = await budgetState().then((b) => ({ usd: b.month_usd, cap: b.month_cap_usd, stopped: b.month_stopped })).catch((e) => String(e).slice(0, 120));
     extra.mail = await mailCheck().catch((e) => ({ ok: false, error: String(e).slice(0, 200) }));
     const tabs = ["Telegram", "Telegram Chat", "Agent Runs", "Agent Approvals", "Tender Projects", "Tender Watches", "Users", "AI Usage", "App Log", "Activity"];

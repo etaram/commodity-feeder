@@ -49,7 +49,10 @@ function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
     email: str(d.email, 200), phone: intlPhone(str(d.phone, 40), str(d.country, 3)) || str(d.phone, 40), wechat: str(d.wechat, 60), website: str(d.website, 240), status: PARTY_STATUS.has(str(d.status, 20)) ? str(d.status, 20) : "candidate",
     note: str(d.note, 600), source: str(d.source, 300), last_contact: isDate(str(d.last_contact, 10)) ? str(d.last_contact, 10) : "",
     // verification of the party's fit in words ("not verified", "conditional"), separate from the contact status
-    verification: str(d.verification, 60), as_of: asOf(d.as_of) };
+    verification: str(d.verification, 60), as_of: asOf(d.as_of),
+    // product fit shown by evidence for THIS deal's requirements (datasheet, certificate, test report, reference): kept only
+    // with the evidence that shows it and the requirements it covers; a flag without evidence is not kept
+    ...(d.fit_verified === true && str(d.fit_evidence, 600) ? { fit_verified: true, fit_evidence: str(d.fit_evidence, 600), fit_covers: str(d.fit_covers, 300) } : {}) };
   if (!x.name) return { ok: false as const, error: "name is required" };
   if (x.role === "partner") {
     const ps = str(d.partner_state, 30);

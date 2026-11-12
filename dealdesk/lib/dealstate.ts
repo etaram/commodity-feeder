@@ -23,7 +23,7 @@ export function usableSupplier(d: Record<string, unknown>): boolean {
 }
 
 /** The supplier's product fit is shown by evidence (set when its datasheet, certificate or reference matches the requirement). */
-export const fitShown = (d: Record<string, unknown>): boolean => d.fit_verified === true || String(d.status || "") === "verified";
+export const fitShown = (d: Record<string, unknown>): boolean => d.fit_verified === true && !!String(d.fit_evidence || "").trim();
 
 export function readiness(records: DealRecord[], routes: RouteRow[], today = new Date().toISOString().slice(0, 10)): Readiness {
   const r = live(records);

@@ -1,4 +1,5 @@
 // Entry routes and readiness gates (skills sinder-tender-route, sinder-deal-orchestrator). Run: npx esbuild ... && node
+import { clean } from "@/lib/deal";
 import { routeOptions, routesHe } from "@/lib/routes";
 import { readiness, cashCheck, usableSupplier } from "@/lib/dealstate";
 import type { DealRecord } from "@/lib/deal";
@@ -34,7 +35,7 @@ const req = R("requirement", "r1", { name: "white maize", mandatory: true, statu
 const r1 = readiness([req], open);
 ok(r1.reached === "research" && r1.next === "ready_for_rfq" && r1.missing.some((m) => /supplier/.test(m)), "requirement only: research reached, supplier missing");
 ok(!usableSupplier({ role: "supplier", email: "sales@x", source: "site" }) && !usableSupplier({ role: "supplier", email: "a@b.com" }), "an invalid email or an unsourced contact is not usable");
-const sup = R("party", "p1", { role: "supplier", name: "Grain SA", email: "sales@grainsa.co.za", source: "https://grainsa.co.za/contact", fit_verified: true });
+const sup = R("party", "p1", { role: "supplier", name: "Grain SA", email: "sales@grainsa.co.za", source: "https://grainsa.co.za/contact", fit_verified: true, fit_evidence: "datasheet WM-2 matches grade and moisture (https://grainsa.co.za/wm2.pdf)" });
 const r2 = readiness([req, sup], open);
 ok(r2.reached === "ready_for_rfq" && r2.missing.some((m) => /actual offer/.test(m)), "sourced supplier with a valid channel: ready for RFQ");
 ok(readiness([req, sup], open.map((r) => ({ ...r, verdict: "blocked" as const }))).reached === "research", "no feasible route: not ready for RFQ");
@@ -46,6 +47,13 @@ const gate = R("requirement", "r2", { name: "33kV TR-XLPE triplex", mandatory: t
 const rg = readiness([req, gate, sup], open);
 ok(rg.reached === "research" && rg.missing.some((m) => /capability inquiry/.test(m)), "a missing mandatory gate keeps the deal in qualification");
 ok(rg.execution_approved === false && r2.execution_approved === false, "readiness never becomes sending approval");
+// the real save path: clean() -> stored data -> readiness (ChatGPT review row 103)
+const viaSave = (data: Record<string, unknown>) => { const c = clean("party", data); if (!c.ok) throw new Error(c.error); return R("party", "p9", c.data); };
+const good = viaSave({ role: "supplier", name: "Grain SA", email: "sales@grainsa.co.za", source: "https://grainsa.co.za/contact", fit_verified: true, fit_evidence: "datasheet WM-2 matches grade (https://grainsa.co.za/wm2.pdf)", fit_covers: "r1" });
+ok(good.data.fit_verified === true && /WM-2/.test(String(good.data.fit_evidence)), "evidenced fit survives the app's party normalisation");
+ok(readiness([req, good], open).reached === "ready_for_rfq", "a supplier saved through the app with evidenced fit can reach the RFQ gate");
+const bare = viaSave({ role: "supplier", name: "Any Co", email: "sales@anyco.com", source: "https://anyco.com", fit_verified: true, status: "verified" });
+ok(bare.data.fit_verified === undefined && readiness([req, bare], open).reached === "research", "a fit flag without evidence (or a 'verified' status) is not kept and does not qualify");
 const q = R("quote", "q1", { availability: "indicative", price: 300 });
 ok(readiness([req, sup, q], open).reached === "ready_for_rfq", "an indicative price is not an actual offer");
 const q2 = R("quote", "q1", { availability: "confirmed", price: 300, source_ref: "email 2026-11-06", valid_until: "2099-01-01" }, 2);

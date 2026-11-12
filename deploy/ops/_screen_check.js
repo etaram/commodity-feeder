@@ -1,7 +1,7 @@
 // Routes called: exactly the CHECKS array in dealdesk/app/api/health/route.ts (read-only panel routes, GET or read POSTs),
 // plus the 'extra' block with noai=1: Telegram getWebhookInfo (read), mail login without sending (mailCheck), a row
-// count of a few tabs (read), env presence. noai=1 skips the paid AI ping, so this check makes no provider call and
-// writes no AI Usage row. Nothing is written to the sheets and nothing is sent.
+// count of a few tabs (read), env presence. the paid AI ping runs only with aiping=1, which this check never sends, so it makes no provider call and
+// writes no AI Usage row. It sends nothing. Writes elsewhere are not claimed absent beyond these routes' own code.
 // Screen check: what the owner's screens would show, measured from inside the server instance (read-only).
 // Runs the app's own self-check (/api/health, every panel route the way the panel calls it, nothing written or sent)
 // with the instance's CRON_SECRET, which never leaves the container. Then judges what a person would see:
