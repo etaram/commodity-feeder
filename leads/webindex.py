@@ -82,8 +82,9 @@ SUP_FIELDS = {"quality": "q", "supplier": "n", "country": "c", "region": "rg", "
               # what the company actually supplied (titles of contracts it won) and its stated industry: the evidence
               # supplier research searches when the product field is empty
               "supplied": "sp", "industries": "in", "web_title": "wt",
-              "employees": "em", "notable": "nt"}  # size signals shown on the company card
-CUT = {"why": 90, "p": 160, "hs": 30, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80, "sp": 200, "in": 80, "wt": 80, "hd": 140}
+              "employees": "em", "notable": "nt",  # size signals shown on the company card
+              "founded": "fy", "size_band": "sz"}  # founding year and size band the company states (refined layer)
+CUT = {"sz": 60, "why": 90, "p": 160, "hs": 30, "cm": 70, "s2": 70, "n": 90, "bc": 40, "web": 80, "sp": 200, "in": 80, "wt": 80, "hd": 140}
 
 
 def _hs_names():

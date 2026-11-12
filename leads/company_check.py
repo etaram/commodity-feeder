@@ -65,7 +65,8 @@ PARKED = re.compile(r"domain (is )?for sale|buy this domain|this domain (may be|
                     r"website is (currently )?(under|being)|default web site page|welcome to nginx|it works!", re.I)
 LINK_HINT = re.compile(r"about|company|who-we-are|quienes|empresa|nosotros|sobre|unternehmen|societe|chi-siamo|profile|"
                        r"product|products|productos|produtos|produits|produkte|solutions|services|catalog|catalogue|range|"
-                       r"contact|contacto|contato|kontakt|impressum|export|certific|quality|calidad|qualidade", re.I)
+                       r"contact|contacto|contato|kontakt|impressum|export|certific|quality|calidad|qualidade|"
+                       r"team|leadership|management|our-people|board|equipo|equipe", re.I)
 ROLE_RULES = [
     ("manufacturer", re.compile(r"\b(we (manufacture|produce)|manufacturer of|leading manufacturer|producer of|our (factory|plant|mill|production (line|facility|plant)s?)|"
                                 r"production capacity|manufacturing (facility|plant|site)|fabricante|fabricamos|fabricação|fabrique|fabricant|hersteller|"
@@ -344,7 +345,7 @@ BOTWALL = re.compile(r"pardon our interruption|made us think you were a bot|are 
 CSSLIKE = re.compile(r"@font-face|font-family|\{[^}]*:[^}]*;|var\(--|function\s*\(|=>")
 
 
-def analyse(name, record_sector, pages):
+def analyse(name, record_sector, pages, country=""):
     """pages: [(url, html)] of one site, home first. Returns the check fields (pure: no network)."""
     home_url, home = pages[0]
     texts = [text_of(p) for _, p in pages]
@@ -406,13 +407,20 @@ def analyse(name, record_sector, pages):
         gaps.append("role not stated (maker, trader, contractor)")
     rec_id = next((k for k, v in SECTORS.items() if v == record_sector), "") if record_sector else ""
     conflict = bool(sec and rec_id and sec != rec_id)
-    return {
+    res = {
         "title": title, "description": desc[:500], "products": prods[:30], "domain": domain, "name_match": nm, "name_share": share,
         "sector": SECTORS.get(sec, "") if sec else "", "sector_basis": how, "sector_score": sec_score, "sector_conflict": conflict,
         "record_sector": record_sector or "", "roles": roles, "certificates": certs, "export_wording": exp.group(0) if exp else "",
         "export_countries": named_countries, "legal_ids": ids[:8], "phones": phones, "emails": mails, "linkedin": linkedin, "whatsapp": whatsapp, "structured": org, "products_basis": "structured data and headings" if ld_prods else "headings", "gaps": gaps,
         "verdict": "name mismatch" if nm == "none" else "ok",
     }
+    # profile fields from the same pages (WeChat, WhatsApp links, role holders, founding year, size, summary)
+    try:
+        from .company_profile import extract
+        res.update(extract(pages, name, country, res))
+    except Exception as e:  # noqa: BLE001  a profile failure never loses the check itself
+        res["profile_error"] = type(e).__name__
+    return res
 
 
 # ---------------------------------------------------------------- network (polite)
@@ -454,12 +462,14 @@ def links(base, page):
         if LINK_HINT.search(urlsplit(u).path) and u not in out:
             out.append(u)
     # about and products before contact; shorter paths first
-    rank = lambda u: (0 if re.search(r"about|company|empresa|profile|unternehmen", u, re.I) else 1 if re.search(r"produc|solution|range|catalog", u, re.I) else 2, len(u))  # noqa: E731
+    # team / leadership pages after about and products (they name the role holders: leads/company_profile.py)
+    rank = lambda u: (0 if re.search(r"about|company|empresa|profile|unternehmen", u, re.I) else 1 if re.search(r"produc|solution|range|catalog", u, re.I)  # noqa: E731
+                      else 2 if re.search(r"team|leadership|management|board|equipo|equipe", u, re.I) else 3, len(u))
     return sorted(out, key=rank)
 
 
-def fetch_site(url):
-    """[(url, html)] for up to MAX_PAGES pages of the site, or (None, reason)."""
+def fetch_site(url, max_pages=MAX_PAGES):
+    """[(url, html)] for up to max_pages pages of the site, or (None, reason)."""
     if not url.startswith("http"):
         url = "http://" + url.strip().strip("/")
     s = _session()
@@ -481,7 +491,7 @@ def fetch_site(url):
         return None, "blocked by bot protection"
     pages = [(final, home)]
     for u in links(base, home):
-        if len(pages) >= MAX_PAGES:
+        if len(pages) >= max_pages:
             break
         if not rp.can_fetch(UA, u):
             continue
@@ -611,9 +621,14 @@ def push_sheet(checks):
         return
     head = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
             "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps",
-            "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"]
+            "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured",
+            # profile and enrichment (leads/company_profile.py; press, search-snippet people and Wikidata from the
+            # server job leads/enrich_server.py). Fields switched off after measurement stay empty (ENRICH_OFF)
+            "wechat", "whatsapp_links", "people", "founded", "employees", "revenue", "size", "summary", "press", "enriched"]
     rows = [head]
-    for c in sorted(checks.values(), key=lambda c: c.get("checked", ""), reverse=True)[:30000]:
+    # the tab holds 30,000 companies: the newest reads first, enriched ones before plain checks of the same day
+    order = lambda c: (c.get("checked", ""), bool(c.get("people") or c.get("press") or c.get("whatsapp_links") or (c.get("wechat") or {}).get("ids")))  # noqa: E731
+    for c in sorted(checks.values(), key=order, reverse=True)[:30000]:
         rows.append([c.get("key", ""), c.get("supplier", ""), c.get("country", ""), c.get("checked", ""), c.get("verdict", ""), c.get("name_match", ""),
                      c.get("website", ""), c.get("domain", ""), c.get("description", "")[:300], "; ".join(c.get("products", [])[:12])[:400], c.get("sector", ""),
                      c.get("record_sector", ""), "yes" if c.get("sector_conflict") else "", "; ".join(f"{x['role']}: {x['phrase']}" for x in c.get("roles", []))[:300],
@@ -621,12 +636,65 @@ def push_sheet(checks):
                      "; ".join(f"{x['kind']} {x['value']}" for x in c.get("legal_ids", [])), "; ".join(f"{x['email']} ({x['kind']})" for x in c.get("emails", [])),
                      "; ".join(c.get("phones", [])), "; ".join(c.get("gaps", [])), c.get("reason", ""), c.get("version", ""), c.get("content_hash", ""),
                      c.get("linkedin", ""), " ".join(c.get("whatsapp", [])), "; ".join(c.get("changes") or [])[:300],
-                     "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400]])
+                     "; ".join(f"{k}: {v}" for k, v in (c.get("structured") or {}).items() if k != "same_as")[:400]] + profile_cells(c))
     try:
         Sheets().replace_tab(UNIVERSE_SHEET, "Company checks", rows, raw=True)
         log.info("company checks: %d rows written to the sheet", len(rows) - 1)
     except (Exception, SystemExit) as e:  # noqa: BLE001
         log.warning("company checks: sheet not written (%s)", str(e)[:120])
+
+
+# fields a measurement found too imprecise stay off everywhere (sheet, refined layer); see leads/enrich_server.py metrics
+ENRICH_OFF = set(filter(None, __import__("os").environ.get("ENRICH_OFF", "people_search").split(",")))
+
+
+def profile_cells(c):
+    """The profile and enrichment columns of the 'Company checks' tab for one check (pure)."""
+    wx = c.get("wechat") or {}
+    prof = c.get("profile") or {}
+    people = [p for p in c.get("people") or [] if not (p.get("confidence") == "search snippet" and "people_search" in ENRICH_OFF)]
+    fy = prof.get("founded") or {}
+    em, rv, sz = prof.get("employees") or {}, prof.get("revenue") or {}, prof.get("size") or {}
+    return [
+        "; ".join([*(f"id {x}" for x in wx.get("ids", [])), *wx.get("decoded", []), *wx.get("links", []), *(f"QR {u}" for u in wx.get("qr_images", []))])[:400] if "wechat" not in ENRICH_OFF else "",
+        " ".join(x["link"] for x in c.get("whatsapp_links") or [])[:200] if "whatsapp" not in ENRICH_OFF else "",
+        "; ".join(f"{p['name']} ({p['title']}, {p.get('confidence', 'own site')}{', ' + p['linkedin'] if p.get('linkedin') else ''})" for p in people)[:600],
+        f"{fy.get('value')} ({fy.get('basis')})" if fy else "",
+        f"{em.get('value')} ({em.get('basis')})" if em else "",
+        f"{rv.get('phrase')} ({rv.get('basis')})" if rv else "",
+        f"{sz.get('band')}: {sz.get('basis')}" if sz.get("band") and sz.get("band") != "not stated" else "",
+        (c.get("summary") or "")[:600],
+        " | ".join(f"{a.get('date', '')} {a.get('outlet', '')}: {a.get('title', '')} {a.get('url', '')}" for a in c.get("press") or [])[:900] if "press" not in ENRICH_OFF else "",
+        c.get("enriched_at", ""),
+    ]
+
+
+def merge_server(checks, path=None):
+    """Records of the server enrichment job (leads/enrich_server.py export, pulled by the workflow) into the checks:
+    a server record replaces the hourly check when it is newer; an older one only adds its enrichment fields."""
+    import gzip
+    path = path or CHECKS / "enrich_server.jsonl.gz"
+    if not path.exists():
+        return 0
+    n = 0
+    for line in gzip.open(path, "rt", encoding="utf-8"):
+        try:
+            d = json.loads(line)
+        except ValueError:
+            continue
+        k = d.get("key")
+        if not k:
+            continue
+        cur = checks.get(k)
+        if not cur or str(d.get("checked_at", "")) >= str(cur.get("checked_at", "")):
+            checks[k] = d
+        else:
+            for f in ("press", "people", "wikidata", "enriched_at", "wechat"):
+                if d.get(f) and not cur.get(f):
+                    cur[f] = d[f]
+        n += 1
+    log.info("company check: %d records from the server enrichment job merged", n)
+    return n
 
 
 def check_one(item, prev):
@@ -655,7 +723,7 @@ def check_one(item, prev):
     h = hashlib.sha1("".join(text_of(p)[:20000] for _, p in pages).encode("utf-8", "ignore")).hexdigest()[:16]
     if prev and prev.get("content_hash") == h and prev.get("version") == VERSION:
         return {**prev, "checked": now[:10], "checked_at": now, "reason": reason, "unchanged": True, "changes": []}
-    res = analyse(name, rec_sector, pages)
+    res = analyse(name, rec_sector, pages, country)
     res["changes"] = changes(prev, res) if prev and prev.get("verdict") == "ok" else []
     return {**base, **res, "website": pages[0][0], "pages": [u for u, _ in pages], "content_hash": h}
 
@@ -687,6 +755,7 @@ def main(limit=1500, minutes=45):
     CHECKS.mkdir(parents=True, exist_ok=True)
     rows = list(csv.DictReader(open(src, encoding="utf-8")))
     checks = load_checks()
+    merge_server(checks)  # the server job's reads count as checks (not read again here)
     today = date.today()
     todo = queue(rows, checks, limit, today)
     deadline = time.time() + minutes * 60

@@ -1,15 +1,94 @@
 #!/usr/bin/env bash
-# Runs as root on the server (called by deploy/ops/enrich-*.sh through asroot). Supplier enrichment job: reads each
-# supplier's own public website (robots.txt respected, polite), plus free public sources (Google News RSS, Wikidata,
-# GLEIF), in a low-priority, capped, resumable container. See leads/enrich_server.py.
-#   probe  <checkout>   what the job can use here (counts and versions only)
+# Runs as root on the server (called by deploy/ops/enrich-*.sh through asroot). Supplier enrichment job
+# (leads/enrich_server.py): each supplier's own public website (robots.txt respected, polite) plus free public sources
+# (Google News RSS, Wikidata, public search snippets when switched on), in a low-priority, capped, resumable container.
+#   probe  <checkout>        what the job can use here (counts and versions only)
+#   sample <checkout>        measurement run: 200 producers + 100 traders, all lanes, in the background (container "enrich")
+#   start  <checkout>        the full run in priority order (container "enrich", restarts with the server, resumes)
+#   status <checkout>        progress counts, lane counts, fill rates; sample metrics when a sample ran
+#   stop   <checkout>        stops the container (the files stay; start resumes where it stopped)
+#   review <checkout>        the 30-record hand-check file, ENCRYPTED to the reviewer's public key (deploy/enrich/review_pub.pem)
+# Limits: 1.5 CPUs, 3 GB, CPU shares 128, nice 19, idle I/O: the database, the data gateway, the website, the collectors,
+# backups and the semantic job keep priority. Folder /opt/sinder/enrich (root only): code copy, venv, queue, lane files,
+# status.json (counts only, readable by the server panel collector), export/enrich.jsonl.gz (for the company-check workflow).
 # THE LOG IS PUBLIC: counts, timings and versions only. No supplier name, contact or URL is printed.
 set -euo pipefail
 mode="$1"; repo="$2"
 E=/opt/sinder/enrich
 IMG=python:3.12-slim
-umask 077; mkdir -p "$E"; chmod 700 "$E"
+LIMITS=(--cpus 1.5 --cpu-shares 128 --memory 3g --memory-swap 3g)
+umask 077; mkdir -p "$E"; chmod 711 "$E"
 
+code() {   # a copy of the code the job runs, so the runner's workspace can change under it
+  rm -rf "$E/code.new"; mkdir -p "$E/code.new/dealdesk/lib"
+  cp -r "$repo/leads" "$E/code.new/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/code.new/dealdesk/lib/"
+  rm -rf "$E/code"; mv "$E/code.new" "$E/code"; chmod -R go-rwx "$E/code"
+  echo "code copied: $(git -C "$repo" rev-parse --short HEAD 2>/dev/null)"
+}
+venv() {
+  if [ -x "$E/venv/bin/python" ] && docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" /e/venv/bin/python -c "import requests, cryptography, phonenumbers, pycountry, pypinyin, cv2" >/dev/null 2>&1; then return 0; fi
+  echo "installing requests, cryptography, phonenumbers, pycountry, pypinyin, opencv-python-headless into $E/venv"
+  rm -rf "$E/venv"
+  docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" sh -c 'python -m venv /e/venv && /e/venv/bin/pip install -q --disable-pip-version-check requests cryptography phonenumbers pycountry pypinyin opencv-python-headless 2>&1 | grep -iE "^error" | head -3; /e/venv/bin/python -c "import cv2, requests; print(\"opencv\", cv2.__version__, \"requests\", requests.__version__)"'
+}
+queue() {   # the supplier index the app reads, decrypted inside the container only; the queue file stays root-only
+  local key_env="$E/.key.env" V=/var/lib/docker/volumes/sinder_repo/_data/data/web
+  grep -E '^WEB_INDEX_KEY=.+' /opt/sinder/repo/deploy/.env > "$key_env" || { rm -f "$key_env"; echo "WEB_INDEX_KEY missing"; return 1; }
+  chmod 600 "$key_env"
+  docker run --rm "${LIMITS[@]}" --env-file "$key_env" -v "$E":/e -v "$V":/web:ro -w /e/code "$IMG" ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server queue --index /web/suppliers.enc --dir /e || { rm -f "$key_env"; return 1; }
+  rm -f "$key_env"
+}
+launch() {   # $1 restart policy, rest: arguments of leads.enrich_server run
+  local pol="$1"; shift
+  docker rm -f enrich >/dev/null 2>&1 || true
+  docker run -d --name enrich --restart "$pol" "${LIMITS[@]}" -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/code "$IMG" \
+    ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server run --dir /e "$@" >/dev/null
+  sleep 20; docker ps --filter name=^enrich$ --format 'container {{.Names}}: {{.Status}}'
+}
+
+if [ "$mode" = sample ]; then
+  code; venv
+  [ -s "$E/queue.jsonl" ] || queue
+  docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/code "$IMG" /e/venv/bin/python -m leads.enrich_server sample --dir /e --manufacturers 200 --traders 100
+  launch no --only sample --lanes site,press,people,wikidata --workers 16 --minutes 100
+  exit 0
+fi
+if [ "$mode" = start ]; then
+  code; venv
+  [ -s "$E/queue.jsonl" ] || queue
+  lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,wikidata)
+  echo "lanes: $lanes"
+  launch unless-stopped --lanes "$lanes" --workers 16
+  exit 0
+fi
+if [ "$mode" = stop ]; then
+  docker stop -t 30 enrich >/dev/null 2>&1 && echo "stopped" || echo "not running"
+  docker rm enrich >/dev/null 2>&1 || true
+  exit 0
+fi
+if [ "$mode" = status ]; then
+  docker ps -a --filter name=^enrich$ --format 'container {{.Names}}: {{.Status}}'
+  docker stats --no-stream --format '{{.Name}} cpu {{.CPUPerc}} mem {{.MemUsage}}' enrich 2>/dev/null || true
+  [ -f "$E/status.json" ] && python3 -m json.tool "$E/status.json" || echo "no status yet"
+  ls -la "$E" | awk 'NR>1 && $9 ~ /jsonl|keys|status/ {print $5, $9}'
+  docker logs --tail 15 enrich 2>&1 | grep -vE "https?://|@" | cut -c1-160 || true
+  if [ -s "$E/sample.keys" ] && [ -x "$E/venv/bin/python" ]; then
+    echo "== sample metrics (counts and rates only)"
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/code "$IMG" /e/venv/bin/python -m leads.enrich_server metrics --dir /e --keys sample.keys
+  fi
+  exit 0
+fi
+if [ "$mode" = review ]; then
+  [ -s "$E/review.jsonl" ] || { echo "no review file (run status after a sample)"; exit 1; }
+  # hybrid encryption to the reviewer's public key: only ciphertext is printed (the private key is not on this server)
+  k=$(mktemp); trap 'rm -f "$k" "$k".*' EXIT
+  openssl rand -hex 32 > "$k"
+  gzip -c "$E/review.jsonl" | openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -out "$k.enc"
+  openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
+  echo "REVIEW-KEY $(base64 -w0 "$k.key")"
+  echo "REVIEW-DATA $(base64 -w0 "$k.enc")"
+  exit 0
+fi
 if [ "$mode" = probe ]; then
   set +e +o pipefail
   echo "== ollama models"; ls /var/lib/docker/volumes/ollama/_data/models/manifests/registry.ollama.ai/library/qwen3 2>/dev/null | tr '\n' ' '; echo
