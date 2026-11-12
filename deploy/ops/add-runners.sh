@@ -5,12 +5,15 @@
 # duration of the install and removed at the end. Never printed. Existing runners are not touched.
 set -euo pipefail
 . "$(dirname "$0")/_root.sh"
+# asroot without -i drops standard input; this task feeds the token and the install script through it
+asroot_i() { docker run --rm -i --privileged --pid=host alpine:3.20 nsenter -t 1 -m -u -n -i -- "$@"; }
 [ -n "${RUNNER_REG_TOKEN:-}" ] || { echo "RUNNER_REG_TOKEN is not set: add the repository secret first"; exit 1; }
 FROM="${RUNNERS_FROM:-4}"; TO="${RUNNERS_TO:-6}"
 tmp=$(mktemp); chmod 600 "$tmp"; printf '%s' "$RUNNER_REG_TOKEN" > "$tmp"
-asroot sh -c "mkdir -p /opt/sinder/secrets && chmod 700 /opt/sinder/secrets && cat > /opt/sinder/secrets/runner_reg.token && chmod 600 /opt/sinder/secrets/runner_reg.token" < "$tmp"
+asroot_i sh -c "mkdir -p /opt/sinder/secrets && chmod 700 /opt/sinder/secrets && cat > /opt/sinder/secrets/runner_reg.token && chmod 600 /opt/sinder/secrets/runner_reg.token" < "$tmp"
 rm -f "$tmp"
-asroot bash -s "$FROM" "$TO" <<'ROOT'
+asroot sh -c "test -s /opt/sinder/secrets/runner_reg.token" && echo "token staged on the server" || { echo "token was not staged"; exit 1; }
+asroot_i bash -s "$FROM" "$TO" <<'ROOT'
 set -euo pipefail
 FROM=$1; TO=$2; TOKEN=$(cat /opt/sinder/secrets/runner_reg.token)
 VER=$(curl -fsS https://api.github.com/repos/actions/runner/releases/latest | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p' | head -1)
