@@ -1010,6 +1010,9 @@ def quota_pick(rows, limit, floor=25):
     tot = sum(rest.values()) or 1
     for k in by:
         quota[k] += int(left * rest[k] / tot)
+    for k in sorted(by, key=lambda k: -rest[k]):  # what rounding left over goes to the largest publishers
+        while sum(quota.values()) < limit and quota[k] < len(by[k]):
+            quota[k] += 1
     out = [r for k, v in by.items() for r in v[:quota[k]]]
     out.sort(key=priority)
     return out[:limit]
