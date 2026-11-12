@@ -8,6 +8,12 @@
 #   status <checkout>        progress counts, lane counts, fill rates; sample metrics when a sample ran
 #   stop   <checkout>        stops the container (the files stay; start resumes where it stopped)
 #   review <checkout>        the 30-record hand-check file, ENCRYPTED to the reviewer's public key (deploy/enrich/review_pub.pem)
+#   people <checkout>        the registry people lane's measurement sample (leads/people_registry.py), in its own folder
+#                            and container ("enrich-people"); the full run is not touched. First call starts it; a call
+#                            while it runs prints counts; a call after it finished prints the metrics and the sealed
+#                            review file. A new commit starts a new sample.
+# Companies House: the key is used only when the repository secret COMPANIES_HOUSE_API_KEY exists (written by
+# deploy/ops/enrich-start.sh and enrich-people.sh to $E/.ch.env, root only); without it the UK register stays off.
 # Limits: 1.5 CPUs, 3 GB, CPU shares 128, nice 19, idle I/O: the database, the data gateway, the website, the collectors,
 # backups and the semantic job keep priority. Folder /opt/sinder/enrich (root only): code copy, venv, queue, lane files,
 # status.json (counts only, readable by the server panel collector), export/enrich.jsonl.gz (for the company-check workflow).
@@ -48,10 +54,12 @@ queue() {   # the supplier index the app reads, decrypted inside the container o
   docker run --rm "${LIMITS[@]}" --env-file "$key_env" -v "$E":/e -v "$V":/web:ro -w /e/code "$IMG" ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server queue --index /web/suppliers.enc --dir /e || { rm -f "$key_env"; return 1; }
   rm -f "$key_env"
 }
+envf() { [ -s "$E/.ch.env" ] && echo "--env-file $E/.ch.env"; }
 launch() {   # $1 restart policy, rest: arguments of leads.enrich_server run
   local pol="$1"; shift
   docker rm -f enrich >/dev/null 2>&1 || true
-  docker run -d --name enrich --restart "$pol" "${LIMITS[@]}" -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/code "$IMG" \
+  # shellcheck disable=SC2046
+  docker run -d --name enrich --restart "$pol" "${LIMITS[@]}" $(envf) -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/code "$IMG" \
     ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server run --dir /e "$@" >/dev/null
   sleep 20; docker ps --filter name=^enrich$ --format 'container {{.Names}}: {{.Status}}'
 }
@@ -64,7 +72,7 @@ if [ "$mode" = sample ]; then
   if [ -s "$E/site.jsonl" ] && [ ! -f "$E/full-run-started" ]; then
     docker rm -f enrich >/dev/null 2>&1 || true
     n=1; while [ -d "$E/sample-$n" ]; do n=$((n+1)); done; mkdir -p "$E/sample-$n"
-    for f in site press people wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
+    for f in site press people registry wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
     rm -f "$E/status.json" "$E/review.jsonl"; echo "earlier sample files moved to sample-$n"
   fi
   # the search-snippet lane (people) answered the first query with a block page on 12 Nov 2026: left out of the sample
@@ -77,14 +85,40 @@ if [ "$mode" = start ]; then
   if [ ! -f "$E/full-run-started" ] && [ -s "$E/site.jsonl" ]; then   # the last sample's files move aside: the full run starts clean
     docker rm -f enrich >/dev/null 2>&1 || true
     n=1; while [ -d "$E/sample-$n" ]; do n=$((n+1)); done; mkdir -p "$E/sample-$n"
-    for f in site press people wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
+    for f in site press people registry wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
     rm -f "$E/status.json"; echo "sample files moved to sample-$n"
   fi
   touch "$E/full-run-started"
-  lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,wikidata)
+  lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,registry,wikidata)
+  [ -s "$E/.ch.env" ] && echo "Companies House: key present (UK register on)" || echo "Companies House: no key (UK register off)"
   echo "lanes: $lanes"
   # 24 workers: the sample used about 0.5 of its 1.5 CPUs with 16 (the work is waiting on remote sites)
   launch unless-stopped --lanes "$lanes" --workers 24
+  exit 0
+fi
+if [ "$mode" = people ]; then
+  P="$E/psample"; sha=$(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo none)
+  if docker ps --filter name=^enrich-people$ --format '{{.Names}}' | grep -q .; then
+    echo "people sample running ($(cat "$P/sha" 2>/dev/null))"
+    python3 -c "import json; s=json.load(open('$P/status.json')); print(json.dumps(s.get('registry_people'), indent=1))" 2>/dev/null || echo "no counts yet"
+    exit 0
+  fi
+  if [ -s "$P/registry.jsonl" ] && [ "$(cat "$P/sha" 2>/dev/null)" = "$sha" ]; then
+    echo "== people sample metrics (counts only), code $sha"
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/pcode "$IMG" /e/venv/bin/python -m leads.enrich_server people-metrics --dir /e/psample
+    echo "== hand-check file (sealed)"; seal "$P/people_review.jsonl"
+    exit 0
+  fi
+  venv
+  # its own code copy: the full run's copy (code/) is not replaced under it
+  rm -rf "$E/pcode"; mkdir -p "$E/pcode/dealdesk/lib"; cp -r "$repo/leads" "$E/pcode/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/pcode/dealdesk/lib/"; chmod -R go-rwx "$E/pcode"
+  rm -rf "$P"; mkdir -p "$P"; echo "$sha" > "$P/sha"
+  docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/pcode "$IMG" /e/venv/bin/python -m leads.enrich_server people-sample --dir /e --out /e/psample --per 40
+  docker rm -f enrich-people >/dev/null 2>&1 || true
+  # shellcheck disable=SC2046
+  docker run -d --name enrich-people --restart no --cpus 0.5 --memory 1g $(envf) -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/pcode "$IMG" \
+    ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server run --dir /e/psample --lanes registry --workers 0 --minutes 40 >/dev/null
+  sleep 15; docker ps -a --filter name=^enrich-people$ --format 'container {{.Names}}: {{.Status}}'
   exit 0
 fi
 if [ "$mode" = stop ]; then

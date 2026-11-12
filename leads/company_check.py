@@ -99,6 +99,14 @@ LEGAL_ID = [
     ("Company no.", re.compile(r"\b(?:Company|Registration|Reg\.?) (?:No|Number)\.?[:\s]*([A-Z]{0,2}\d{6,10})", re.I)),
     ("KRS", re.compile(r"\bKRS[:\s]*(\d{10})")),
     ("HRB", re.compile(r"\bHR[AB][:\s]*(\d{3,7})")),
+    # register numbers the people lane (leads/people_registry.py) looks up by id: France, Norway, Czechia, UK
+    ("SIREN", re.compile(r"\bSIREN[:\s]*(\d{3}\s?\d{3}\s?\d{3})\b")),
+    ("SIRET", re.compile(r"\bSIRET[:\s]*(\d{3}\s?\d{3}\s?\d{3}\s?\d{5})\b")),
+    ("RCS", re.compile(r"\bR\.?C\.?S\.?\s+[A-Za-zÀ-ÿ' -]{2,30}?\s+(?:[AB]\s+)?(\d{3}\s?\d{3}\s?\d{3})\b")),
+    ("Org.nr", re.compile(r"\bOrg(?:anisasjons)?\.?\s*-?n(?:r|o|ummer)\.?[:\s]*(?:NO\s?)?(\d{3}\s?\d{3}\s?\d{3})\b", re.I)),
+    ("ICO", re.compile(r"\bIČO?[:\s]*(\d{8})\b")),
+    ("VAT", re.compile(r"\bDIČ[:\s]*(CZ\d{8,10})\b")),
+    ("Company no.", re.compile(r"\bregistered in (?:England(?: and| &) Wales|England|Scotland|Wales)\D{0,40}?(\d{8}|SC\d{6})\b", re.I)),
 ]
 STRIP = re.compile(r"<(script|style|noscript|svg|template)[^>]*>.*?</\1>", re.I | re.S)
 TAG = re.compile(r"<[^>]+>")
@@ -648,6 +656,11 @@ def push_sheet(checks):
 ENRICH_OFF = set(filter(None, __import__("os").environ.get("ENRICH_OFF", "people_search").split(",")))
 
 
+def person_source(p):
+    conf = p.get("confidence", "own site")
+    return f"register: {p.get('source_name', '')}".replace(",", " ") if conf == "official registry" else conf
+
+
 def profile_cells(c):
     """The profile and enrichment columns of the 'Company checks' tab for one check (pure)."""
     wx = c.get("wechat") or {}
@@ -658,7 +671,8 @@ def profile_cells(c):
     return [
         "; ".join([*(f"id {x}" for x in wx.get("ids", [])), *wx.get("decoded", []), *wx.get("links", []), *(f"QR {u}" for u in wx.get("qr_images", []))])[:400] if "wechat" not in ENRICH_OFF else "",
         " ".join(x["link"] for x in c.get("whatsapp_links") or [])[:200] if "whatsapp" not in ENRICH_OFF else "",
-        "; ".join(f"{p['name']} ({p['title']}, {p.get('confidence', 'own site')}{', ' + p['linkedin'] if p.get('linkedin') else ''})" for p in people)[:600],
+        # "Name (title, source[, LinkedIn profile the company's own site links])"; the panel adds a LinkedIn search link
+        "; ".join(f"{p['name']} ({p['title'].replace(',', ' ')}, {person_source(p)}{', ' + p['linkedin'] if p.get('linkedin') else ''})" for p in people)[:900],
         f"{fy.get('value')} ({fy.get('basis')})" if fy else "",
         f"{em.get('value')} ({em.get('basis')})" if em else "",
         f"{rv.get('phrase')} ({rv.get('basis')})" if rv else "",
@@ -667,6 +681,17 @@ def profile_cells(c):
         " | ".join(f"{a.get('date', '')} {a.get('outlet', '')}: {a.get('title', '')} {a.get('url', '')}" for a in c.get("press") or [])[:900] if "press" not in ENRICH_OFF else "",
         c.get("enriched_at", ""),
     ]
+
+
+def merge_people(cur, people):
+    """People from the server job into a check, one entry per name (the check's own entries stay first)."""
+    if not people:
+        return
+    have = {re.sub(r"\W+", " ", p.get("name", "")).strip().lower() for p in cur.get("people") or []}
+    for p in people:
+        k = re.sub(r"\W+", " ", p.get("name", "")).strip().lower()
+        if k and k not in have:
+            cur.setdefault("people", []).append(p); have.add(k)
 
 
 def merge_server(checks, path=None):
@@ -686,12 +711,23 @@ def merge_server(checks, path=None):
         if not k:
             continue
         cur = checks.get(k)
-        if not cur or str(d.get("checked_at", "")) >= str(cur.get("checked_at", "")):
+        if d.get("people_only"):
+            # register people for a company whose site the server has not read: added to the hourly check (if any),
+            # never in its place, so the hourly check still reads the website (no 'checked' date, no version)
+            if not cur:
+                checks[k] = {kk: v for kk, v in d.items() if kk != "people_only"}
+            else:
+                merge_people(cur, d.get("people"))
+                for f in ("registry_entity", "enriched_at"):
+                    if d.get(f):
+                        cur[f] = d[f]
+        elif not cur or str(d.get("checked_at", "")) >= str(cur.get("checked_at", "")):
             checks[k] = d
         else:
-            for f in ("press", "people", "wikidata", "enriched_at", "wechat"):
+            for f in ("press", "wikidata", "enriched_at", "wechat", "registry_entity"):
                 if d.get(f) and not cur.get(f):
                     cur[f] = d[f]
+            merge_people(cur, d.get("people"))
         n += 1
     log.info("company check: %d records from the server enrichment job merged", n)
     return n

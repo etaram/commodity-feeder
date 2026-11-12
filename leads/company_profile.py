@@ -594,10 +594,13 @@ def wikidata_facts(entity, domain):
             f["revenue"] = {"amount": float(v.get("amount", "0")), "unit_qid": unit, "year": y}
         except ValueError:
             pass
-    for p, k in (("P169", "ceo_qids"), ("P112", "founder_qids")):
-        q = [v.get("id") for v, _ in vals(p) if isinstance(v, dict) and v.get("id")]
+    # people: chief executive (P169), director / manager (P1037), founded by (P112). A statement with an end time
+    # (P582) or a deprecated rank is a former holder and is left out; founders are kept (a founding is not undone)
+    for p, k in (("P169", "ceo_qids"), ("P1037", "director_qids"), ("P112", "founder_qids")):
+        q = [v.get("id") for v, c in vals(p) if isinstance(v, dict) and v.get("id") and c.get("rank") != "deprecated"
+             and (p == "P112" or not (c.get("qualifiers") or {}).get("P582"))]
         if q:
-            f[k] = q[:3]
+            f[k] = list(dict.fromkeys(q))[:3]
     return f
 
 

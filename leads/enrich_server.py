@@ -12,20 +12,28 @@ Lanes (each writes its own file, so a lane can be stopped or switched off withou
   site      the company's own site: up to 10 pages, robots.txt respected, one request at a time per host with a pause;
             WeChat QR images the site labels WeChat are fetched (same site, under 400 KB) and decoded offline (OpenCV)
   press     Google News RSS, exact name in the headline, country or own domain checked (1 request / 3 s)
-  people    public search-result snippets (DuckDuckGo HTML) for linkedin.com/in profiles naming the company and a target
-            title (1 request / 12 s); stops for the run when the engine pushes back. No login, no CAPTCHA, nothing behind
-            a login is read. OFF by default; switched on per run with --lanes
+  registry  key people (directors, managers, owners) from official company registers with free APIs: France, Norway,
+            Czechia, Brazil (CNPJ printed on the site), UK (only with COMPANIES_HOUSE_API_KEY); one thread per register,
+            each under its own rate limit (leads/people_registry.py). Matched by the registration id the company's own
+            site prints, else by exactly one active entity with the same name in the same country. Business role
+            information only; each person carries a LinkedIn people-search link the owner opens himself (linkedin.com
+            is never fetched). Order: companies in deals and the 'Check queue' (priority.keys, written by the
+            company-check workflow), then producers, goods suppliers, traders.
   wikidata  for companies the index marks notable or with stated employees: founding year, employees, revenue, chief
-            executive and founders, only when the entity's official website is this company's domain (1 request / s)
+            executive, directors / managers and founders (current holders only), only when the entity's official
+            website is this company's domain (1 request / s)
+The search-snippet lane (DuckDuckGo results for linkedin.com/in) was removed on 12 Nov 2026: the engine blocked the
+server at the first query, and the owner rules out search-engine scraping.
 
-Files in --dir: queue.jsonl (built once), site.jsonl, press.jsonl, people.jsonl, wikidata.jsonl (append-only, one
+Files in --dir: queue.jsonl (built once), site.jsonl, press.jsonl, registry.jsonl, wikidata.jsonl (append-only, one
 line per company and lane), status.json (counts only: the admin panel reads it), export/enrich.jsonl.gz (merged, for
 the company-check workflow, which merges it into the website checks and the refined layer).
 
   python -m leads.enrich_server queue  --index suppliers.enc --dir D      (WEB_INDEX_KEY in the environment)
-  python -m leads.enrich_server run    --dir D [--workers 16] [--lanes site,press,wikidata] [--only sample] [--minutes M]
+  python -m leads.enrich_server run    --dir D [--workers 16] [--lanes site,press,registry,wikidata] [--only sample] [--minutes M]
   python -m leads.enrich_server sample --dir D --manufacturers 200 --traders 100
-  python -m leads.enrich_server status|export|metrics --dir D
+  python -m leads.enrich_server people-sample --dir D --out D2 [--per 40]   (the registry lane's measurement set)
+  python -m leads.enrich_server status|export|metrics|people-metrics --dir D
 """
 import base64
 import gzip
@@ -229,18 +237,12 @@ def press_lane(s, it, site):
     return {"key": it["key"], "checked_at": now(), "press": arts, "query": names[0]}
 
 
-DDG = "https://html.duckduckgo.com/html/"
-PEOPLE_Q = '(CEO OR "managing director" OR founder OR owner OR "general manager" OR "export manager" OR "sales manager" OR "sales director" OR procurement OR "business development")'
-
-
-def people_lane(s, it, site):
-    n = cp.press_name(it["name"])
-    if not n:
-        return {"key": it["key"], "checked_at": now(), "people": [], "skipped": "name too short or generic"}
-    r = s.post(DDG, data={"q": f'"{n}" site:linkedin.com/in {PEOPLE_Q}'}, timeout=15)
-    if r.status_code != 200 or "result__a" not in r.text and "No results" not in r.text and "no-results" not in r.text:
-        return {"key": it["key"], "checked_at": now(), "blocked": f"HTTP {r.status_code}" if r.status_code != 200 else "unexpected page"}
-    return {"key": it["key"], "checked_at": now(), "people": cp.snippet_people(cp.parse_ddg(r.text), it["name"])}
+def registry_lane(s, src, it, site, rate):
+    from . import people_registry as pr
+    rec = pr.lookup(s, src, it, site, rate)
+    if rec is not None:
+        rec.update({"supplier": it["name"], "country": it["country"]})
+    return rec
 
 
 WD = "https://www.wikidata.org/w/api.php"
@@ -262,17 +264,22 @@ def wikidata_lane(s, it, site, rate):
         f = cp.wikidata_facts(ents.get(q) or {}, dom)
         if f:
             people = []
-            qs = (f.get("ceo_qids") or []) + (f.get("founder_qids") or [])
+            qs = list(dict.fromkeys((f.get("ceo_qids") or []) + (f.get("director_qids") or []) + (f.get("founder_qids") or [])))
             if qs:
                 rate.wait()
-                r = s.get(WD, params={"action": "wbgetentities", "ids": "|".join(qs[:6]), "props": "labels", "languages": "en", "format": "json"}, timeout=20)
+                r = s.get(WD, params={"action": "wbgetentities", "ids": "|".join(qs[:8]), "props": "labels|claims", "languages": "en", "format": "json"}, timeout=20)
                 lab = (r.json().get("entities") or {}) if r.status_code == 200 else {}
-                for qq in qs[:6]:
-                    nm = (((lab.get(qq) or {}).get("labels") or {}).get("en") or {}).get("value")
+                for qq in qs[:8]:
+                    e = lab.get(qq) or {}
+                    # only people (instance of human, Q5): a founding company or a fund is not a role holder
+                    if not any(((c.get("mainsnak") or {}).get("datavalue") or {}).get("value", {}).get("id") == "Q5" for c in (e.get("claims") or {}).get("P31", [])):
+                        continue
+                    nm = ((e.get("labels") or {}).get("en") or {}).get("value")
                     if nm:
-                        title = "chief executive officer" if qq in (f.get("ceo_qids") or []) else "founder"
-                        people.append({"name": nm, "title": title, "role": "chief executive" if title.startswith("chief") else "founder / owner",
-                                       "source": f["source"], "basis": "Wikidata statement", "confidence": "wikidata"})
+                        title, role = (("chief executive officer", "chief executive") if qq in (f.get("ceo_qids") or [])
+                                       else ("director / manager", "director / board") if qq in (f.get("director_qids") or []) else ("founder", "founder / owner"))
+                        people.append({"name": nm, "title": title, "role": role, "source": f["source"], "basis": "Wikidata statement", "confidence": "wikidata",
+                                       "checked": now()[:10], "linkedin_search": cp.linkedin_search_url(nm, cp.press_name(it["name"]) or it["name"])})
             f["people"] = people
             return {"key": it["key"], "checked_at": now(), "wikidata": f}
     return {"key": it["key"], "checked_at": now(), "wikidata": None}
@@ -294,10 +301,32 @@ def keys_in(p):
 
 def light(d):
     """What the lanes need from a site record (keeps memory small on the full run)."""
-    return {k: d.get(k) for k in ("verdict", "name_match", "domain", "roles", "people", "tier")}
+    return {k: d.get(k) for k in ("verdict", "name_match", "domain", "roles", "people", "tier", "legal_ids")}
 
 
-def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, limit=0):
+def priority_keys(d):
+    """Companies in deals and asked for in the panel ('Check queue'): written by the company-check workflow."""
+    try:
+        return set(x.strip() for x in (Path(d) / "priority.keys").read_text(encoding="utf-8").splitlines() if x.strip())
+    except OSError:
+        return set()
+
+
+def registry_counts(recs):
+    """Counters of the registry lane per register (counts only, for status.json)."""
+    c = defaultdict(Counter)
+    for r in recs:
+        src = r.get("source", "?")
+        m = r.get("match") or ("error" if r.get("error") else "?")
+        c[src]["looked"] += 1
+        c[src]["by_id" if m.startswith("registration id") else "by_name" if m == "exact name" else m.replace(" ", "_")[:30]] += 1
+        n = len(r.get("people") or [])
+        c[src]["with_people"] += n > 0
+        c[src]["people"] += n
+    return {k: dict(v) for k, v in c.items()}
+
+
+def run(d, workers=16, lanes=("site", "press", "registry", "wikidata"), only="", minutes=0, limit=0):
     d = Path(d)
     q = [json.loads(x) for x in open(d / "queue.jsonl", encoding="utf-8")]
     if only:
@@ -305,7 +334,7 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
         q = [it for it in q if it["key"] in keep]
     if limit:
         q = q[:limit]
-    files = {ln: d / f"{ln}.jsonl" for ln in ("site", "press", "people", "wikidata")}
+    files = {ln: d / f"{ln}.jsonl" for ln in ("site", "press", "registry", "wikidata")}
     done = {ln: set(keys_in(files[ln])) if ln != "site" else set() for ln in files}
     sites = {k: light(v) for k, v in keys_in(files["site"]).items()}
     done["site"] = set(sites)
@@ -316,6 +345,9 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
     stats = Counter()
     t_start = time.time()
     recent = []  # completion times of the site lane (throughput)
+    reg = keys_in(files["registry"])
+    reg_stats = registry_counts(reg.values())
+    del reg
     fh = {ln: open(files[ln], "a", encoding="utf-8") for ln in files}
 
     def write(ln, rec):
@@ -358,8 +390,6 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
                 cand = [k for k in list(sites) if k not in done[ln] and ok(k) and k in by_key]
             if ln == "wikidata":
                 cand = [k for k in cand if by_key[k].get("notable") or by_key[k].get("em") or (sites[k].get("tier") == 0)]
-            if ln == "people":  # only where the site itself named no role holder
-                cand = [k for k in cand if not sites[k].get("people")]
             cand.sort(key=lambda k: (by_key[k]["tier"], -by_key[k]["ev"]))
             if not cand:
                 if all(not t.is_alive() for t in site_threads):
@@ -387,12 +417,60 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
                 write(ln, rec)
                 stats[ln] += 1
 
+    def registry_worker(src):
+        """One register: suppliers of its countries in priority order (deals and Check queue, then producers, goods
+        suppliers, traders). A company with a website waits for its site read (the site may print the register id)."""
+        from . import people_registry as pr
+        s = _session()
+        rate = Rate(pr.RATE[src])
+        ctry = {c for c, x in pr.COUNTRIES.items() if x == src}
+        blocked = 0
+        mine = [it for it in q if it["country"] in ctry]
+        pos = {it["key"]: i for i, it in enumerate(mine)}
+        while not stop.is_set():
+            if deadline and time.time() > deadline:
+                return
+            prio = priority_keys(d)
+            with lock:
+                cand = [it["key"] for it in mine if it["key"] not in done["registry"] and (it["key"] in sites or not it["website"] or it["key"] in prio)]
+            cand.sort(key=lambda k: (k not in prio, by_key[k]["tier"], pos[k]))
+            if not cand:
+                if all(not t.is_alive() for t in site_threads):
+                    return
+                time.sleep(60); continue
+            for k in cand[:100]:
+                if stop.is_set() or (deadline and time.time() > deadline):
+                    return
+                try:
+                    rec = registry_lane(s, src, by_key[k], sites.get(k), rate)
+                except pr.Blocked as e:
+                    blocked += 1
+                    with lock:
+                        stats[f"registry_{src}_blocked"] += 1
+                    if blocked >= 3:
+                        log.warning("registry lane %s: the register pushed back 3 times (%s); stopped for this run", src, e)
+                        return
+                    time.sleep(600 * blocked); continue
+                except Exception as e:  # noqa: BLE001
+                    rec = {"key": k, "checked_at": now(), "source": src, "error": type(e).__name__, "supplier": by_key[k]["name"], "country": by_key[k]["country"]}
+                if rec is None:
+                    return
+                blocked = 0
+                write("registry", rec)
+                with lock:
+                    for kk, vv in registry_counts([rec]).get(src, {}).items():
+                        reg_stats.setdefault(src, {})[kk] = reg_stats.get(src, {}).get(kk, 0) + vv
+                    stats["registry"] += 1
+
     site_threads = [threading.Thread(target=site_worker, daemon=True) for _ in range(workers if "site" in lanes else 0)]
     others = []
     if "press" in lanes:
         others.append(threading.Thread(target=slow_lane, args=("press", press_lane, 1 / 3), daemon=True))
-    if "people" in lanes:
-        others.append(threading.Thread(target=slow_lane, args=("people", people_lane, 1 / 12), daemon=True))
+    if "registry" in lanes:
+        from . import people_registry as pr
+        for src in sorted(set(pr.COUNTRIES.values())):
+            if pr.available(src):
+                others.append(threading.Thread(target=registry_worker, args=(src,), daemon=True))
     if "wikidata" in lanes:
         others.append(threading.Thread(target=slow_lane, args=("wikidata", wikidata_lane, 1.0), daemon=True))
     for t in site_threads + others:
@@ -403,7 +481,7 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
             time.sleep(5)
             if time.time() - last_status > 60:
                 last_status = time.time()
-                write_status(d, q, sites, done, stats, t_start, recent, lanes, state="running")
+                write_status(d, q, sites, done, stats, t_start, recent, lanes, state="running", reg_stats=reg_stats)
             if time.time() - last_export > 2 * 3600:  # the hourly company-check workflow picks up the newest export
                 last_export = time.time()
                 with lock:
@@ -414,12 +492,12 @@ def run(d, workers=16, lanes=("site", "press", "wikidata"), only="", minutes=0, 
         stop.set()
     for f in fh.values():
         f.close()
-    write_status(d, q, sites, done, stats, t_start, recent, lanes, state="done" if len(done["site"] & set(by_key)) >= len(q) else "paused")
+    write_status(d, q, sites, done, stats, t_start, recent, lanes, state="done" if len(done["site"] & set(by_key)) >= len(q) else "paused", reg_stats=reg_stats)
     export(d)
     return stats
 
 
-def write_status(d, q, sites, done, stats, t_start, recent, lanes, state):
+def write_status(d, q, sites, done, stats, t_start, recent, lanes, state, reg_stats=None):
     """status.json: counts only (no names, no contacts), for the admin panel's Server and tasks view."""
     total = len(q)
     keys = {it["key"] for it in q}
@@ -436,6 +514,7 @@ def write_status(d, q, sites, done, stats, t_start, recent, lanes, state):
           "per_hour": rate, "eta_hours": round((total - n_done) / rate, 1) if rate else None,
           "by_tier": {["producer", "goods supplier", "trader", "other"][t]: {"done": a, "total": b} for t, (a, b) in sorted(by_tier.items())},
           "verdicts": dict(verdicts.most_common(8)), "lane_done": {ln: len(done[ln]) for ln in done}, "blocked": {k: v for k, v in stats.items() if k.endswith("_blocked")},
+          "registry_people": reg_stats or {},
           "fill": fill_rates(d) if state != "running" or int(time.time()) % 600 < 60 else None}
     if st["fill"] is None:
         try:
@@ -449,7 +528,7 @@ def write_status(d, q, sites, done, stats, t_start, recent, lanes, state):
 
 
 FIELDS = ["emails", "phones", "linkedin", "whatsapp_links", "wechat", "wechat_qr", "people_site", "people_linkedin", "founded", "employees",
-          "revenue", "size", "capacity", "summary", "roles", "certificates", "press", "people_search", "wikidata"]
+          "revenue", "size", "capacity", "summary", "roles", "certificates", "press", "people_registry", "people_wikidata", "wikidata"]
 
 
 def has(rec, f):
@@ -462,19 +541,45 @@ def has(rec, f):
             "employees": bool(p.get("employees")), "revenue": bool(p.get("revenue")), "size": (p.get("size") or {}).get("band", "not stated") != "not stated",
             "capacity": bool(p.get("capacity") or p.get("plant_area")), "summary": bool(rec.get("summary")), "roles": bool(rec.get("roles")),
             "certificates": bool(rec.get("certificates")), "press": bool(rec.get("press")),
-            "people_search": any(x.get("confidence") == "search snippet" for x in rec.get("people") or []), "wikidata": bool(rec.get("wikidata"))}[f]
+            "people_registry": any(x.get("confidence") == "official registry" for x in rec.get("people") or []),
+            "people_wikidata": any(x.get("confidence") == "wikidata" for x in rec.get("people") or []), "wikidata": bool(rec.get("wikidata"))}[f]
+
+
+def add_people(r, extra_people):
+    """People from another lane into a record, one entry per person (accents and hyphens folded): an entry already there
+    keeps its fields and gains the other source as corroboration."""
+    from .people_registry import fold
+    have = {fold(p["name"]): p for p in r.get("people") or []}
+    for x in extra_people or []:
+        k = fold(x["name"])
+        if k in have:
+            if x.get("confidence") != have[k].get("confidence"):
+                have[k].setdefault("also", [])
+                tag = x.get("source_name") or x.get("confidence")
+                if tag not in have[k]["also"]:
+                    have[k]["also"].append(tag)
+            continue
+        r.setdefault("people", []).append(x); have[k] = x
+
+
+def with_search_links(r):
+    """Every person gets a LinkedIn people-search link (name and company): opened by the owner, never fetched here."""
+    company = cp.press_name(r.get("supplier") or "") or r.get("supplier") or ""
+    for p in r.get("people") or []:
+        if not p.get("linkedin_search"):
+            p["linkedin_search"] = cp.linkedin_search_url(p["name"], company)
+    return r
 
 
 def merged(d):
-    """site records joined with the press, people and Wikidata lanes (streamed: one site record in memory at a time)."""
+    """site records joined with the press, registry and Wikidata lanes (streamed: one site record in memory at a time);
+    then the companies the registry lane found people for whose site has not been read (or that have no website)."""
     d = Path(d)
-    press, ppl, wd = keys_in(d / "press.jsonl"), keys_in(d / "people.jsonl"), keys_in(d / "wikidata.jsonl")
+    press, reg, wd = keys_in(d / "press.jsonl"), keys_in(d / "registry.jsonl"), keys_in(d / "wikidata.jsonl")
     seen = set()
     p = d / "site.jsonl"
-    if not p.exists():
-        return
     # one line per key (the run skips keys already read); a re-read of the same key keeps the first line here
-    for line in open(p, encoding="utf-8"):
+    for line in (open(p, encoding="utf-8") if p.exists() else []):
         try:
             r = json.loads(line)
         except ValueError:
@@ -486,13 +591,15 @@ def merged(d):
         extra = []
         if r["key"] in press and press[r["key"]].get("press"):
             r["press"] = press[r["key"]]["press"]; extra.append(press[r["key"]]["checked_at"])
-        if r["key"] in ppl and ppl[r["key"]].get("people"):
-            r["people"] = (r.get("people") or []) + [x for x in ppl[r["key"]]["people"] if x["name"] not in {y["name"] for y in r.get("people") or []}]
-            extra.append(ppl[r["key"]]["checked_at"])
+        g = reg.get(r["key"]) or {}
+        if g.get("entity") and g.get("people") is not None:
+            r["registry_entity"] = {**g["entity"], "match": g.get("match"), "source": g.get("source")}
+        if g.get("people"):
+            add_people(r, g["people"]); extra.append(g["checked_at"])
         w = (wd.get(r["key"]) or {}).get("wikidata")
         if w:
             r["wikidata"] = {k: v for k, v in w.items() if k != "people"}
-            r["people"] = (r.get("people") or []) + [x for x in w.get("people", []) if x["name"] not in {y["name"] for y in r.get("people") or []}]
+            add_people(r, w.get("people", []))
             prof = r.setdefault("profile", {})
             if w.get("founded") and not prof.get("founded"):
                 prof["founded"] = {"value": w["founded"], "phrase": "Wikidata inception", "source": w["source"], "basis": "Wikidata (official website matches)"}
@@ -502,7 +609,14 @@ def merged(d):
             prof["size"] = cp.size_band(prof)
             extra.append(wd[r["key"]]["checked_at"])
         r["enriched_at"] = max([r.get("checked_at", "")] + extra)
-        yield r
+        yield with_search_links(r)
+    for k, g in reg.items():
+        if k in seen or not g.get("people"):
+            continue
+        # people only: no site read on this server; the company-check workflow adds these fields to its own check
+        yield with_search_links({"key": k, "supplier": g.get("supplier", ""), "country": g.get("country", ""), "people_only": True,
+                                 "people": g["people"], "registry_entity": {**g["entity"], "match": g.get("match"), "source": g.get("source")},
+                                 "enriched_at": g["checked_at"]})
 
 
 def fill_rates(d):
@@ -524,7 +638,7 @@ def export(d):
     n = 0
     with gzip.open(tmp, "wt", encoding="utf-8") as f:
         for r in merged(d):
-            if r.get("verdict") in ("no website on record",):
+            if r.get("verdict") in ("no website on record",) and not r.get("people"):
                 continue
             f.write(json.dumps(r, ensure_ascii=False) + "\n"); n += 1
     tmp.replace(d / "export" / "enrich.jsonl.gz")
@@ -581,6 +695,68 @@ def metrics(d, keys_file=None):
     return out
 
 
+def people_sample(d, out, per=40):
+    """The registry lane's measurement set, in its own folder (the full run's files are not touched): per register
+    country, companies whose site the full run has read (the site may print the register id) and companies without a
+    website (name match only), producers first, then goods suppliers and traders."""
+    from . import people_registry as pr
+    d, out = Path(d), Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    q = [json.loads(x) for x in open(d / "queue.jsonl", encoding="utf-8")]
+    sites = keys_in(d / "site.jsonl")
+    keep = []
+    for c in pr.COUNTRIES:
+        mine = [it for it in q if it["country"] == c]
+        read = [it for it in mine if it["key"] in sites][: per // 2]
+        noweb = [it for it in mine if not it["website"]]
+        noweb = (sorted(noweb, key=lambda it: it["tier"])[::7] or noweb)[: per - len(read)]
+        keep += read + noweb
+    keys = {it["key"] for it in keep}
+    with open(out / "queue.jsonl", "w", encoding="utf-8") as f:
+        for it in keep:
+            f.write(json.dumps(it, ensure_ascii=False) + "\n")
+    with open(out / "site.jsonl", "w", encoding="utf-8") as f:
+        for k in keys & set(sites):
+            f.write(json.dumps(sites[k], ensure_ascii=False) + "\n")
+    (out / "sample.keys").write_text("\n".join(sorted(keys)), encoding="utf-8")
+    return {"companies": len(keep), "by_country": dict(Counter(it["country"] for it in keep)), "site_read": len(keys & set(sites))}
+
+
+def people_metrics(d, review=20):
+    """Per register: companies looked up, matched by id / by exact name, ambiguous, no match, people per matched company,
+    roles; and a private review file (sealed before it leaves the server) of matched companies for hand checks."""
+    d = Path(d)
+    recs = list(keys_in(d / "registry.jsonl").values())
+    out = registry_counts(recs)
+    for src, c in out.items():
+        m = c.get("by_id", 0) + c.get("by_name", 0)
+        c["match_rate_pct"] = round(100 * m / c["looked"], 1) if c.get("looked") else 0
+        c["people_per_matched"] = round(c.get("people", 0) / m, 2) if m else 0
+        c["roles"] = dict(Counter(p["role"] for r in recs if r.get("source") == src for p in r.get("people") or []))
+    import random
+    random.seed(11)
+    sites = keys_in(d / "site.jsonl")
+    matched = [r for r in recs if r.get("people")]
+    random.shuffle(matched)
+    by_src = defaultdict(list)
+    for r in matched:
+        by_src[r["source"]].append(r)
+    pick, i = [], 0
+    while len(pick) < review and any(by_src.values()):  # round robin over the registers
+        src = sorted(by_src)[i % len(by_src)]
+        if by_src[src]:
+            pick.append(by_src[src].pop())
+        by_src = {k: v for k, v in by_src.items() if v}
+        i += 1
+    with open(d / "people_review.jsonl", "w", encoding="utf-8") as f:
+        for r in pick:
+            st = sites.get(r["key"]) or {}
+            f.write(json.dumps({"key": r["key"], "source": r["source"], "match": r["match"], "entity": r.get("entity"),
+                                "website": st.get("website"), "site_verdict": st.get("verdict"), "site_people": st.get("people"),
+                                "people": [{k: p.get(k) for k in ("name", "title", "role", "since", "source")} for p in r["people"]]}, ensure_ascii=False) + "\n")
+    return out
+
+
 def main(argv):
     import logging
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
@@ -599,10 +775,14 @@ def main(argv):
     elif cmd == "sample":
         print(json.dumps(sample(d, int(opt("--manufacturers", "200")), int(opt("--traders", "100")))))
     elif cmd == "run":
-        st = run(d, int(opt("--workers", "16")), tuple(opt("--lanes", "site,press,wikidata").split(",")), opt("--only"), int(opt("--minutes", "0")), int(opt("--limit", "0")))
+        st = run(d, int(opt("--workers", "16")), tuple(opt("--lanes", "site,press,registry,wikidata").split(",")), opt("--only"), int(opt("--minutes", "0")), int(opt("--limit", "0")))
         print(json.dumps(dict(st)))
     elif cmd == "metrics":
         print(json.dumps(metrics(d, opt("--keys") or None)))
+    elif cmd == "people-sample":
+        print(json.dumps(people_sample(d, opt("--out"), int(opt("--per", "40")))))
+    elif cmd == "people-metrics":
+        print(json.dumps(people_metrics(d)))
     elif cmd == "export":
         print(export(d))
     elif cmd == "countries":  # counts only (the log is public): queue size by country, with a website, producers

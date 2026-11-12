@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, enrich-probe, enrich-sample, enrich-start, enrich-status, enrich-stop, enrich-review, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners]
+        options: [status, enrich-probe, enrich-sample, enrich-start, enrich-status, enrich-stop, enrich-review, enrich-people, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners]
         default: status
 permissions:
   contents: read
@@ -25,3 +25,5 @@ jobs:
           # only the add-runners task receives the one-hour runner registration token
           RUNNER_REG_TOKEN: ${{ inputs.task == 'add-runners' && secrets.RUNNER_REG_TOKEN || '' }}
           SCHED_DISPATCH_TOKEN: ${{ inputs.task == 'scheduler-install' && secrets.SCHED_DISPATCH_TOKEN || '' }}
+          # only the enrichment start and the people sample receive the Companies House key (written root-only on the server)
+          COMPANIES_HOUSE_API_KEY: ${{ (inputs.task == 'enrich-start' || inputs.task == 'enrich-people') && secrets.COMPANIES_HOUSE_API_KEY || '' }}

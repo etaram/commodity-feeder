@@ -370,13 +370,15 @@ def enrich_fields(check, src, fill):
     wa = check.get("whatsapp_links") or []
     if "whatsapp" not in ENRICH_OFF and wa:
         fill("whatsapp_links", " ".join(x["link"] for x in wa), src, "; ".join(dict.fromkeys(x["basis"] for x in wa)))
-    for conf, field in (("own site", "people_site"), ("search snippet", "people_search"), ("wikidata", "people_wikidata")):
+    for conf, field in (("own site", "people_site"), ("search snippet", "people_search"), ("wikidata", "people_wikidata"), ("official registry", "people_registry")):
         ppl = [p for p in check.get("people") or [] if p.get("confidence", "own site") == conf]
         if ppl and field not in ENRICH_OFF:
             fill(field, "; ".join(f"{p['name']} - {p['title']}" + (f" ({p['linkedin']})" if p.get("linkedin") else "") for p in ppl[:8])[:700],
                  ppl[0].get("source") or src, {"own site": "names and titles the company website publishes",
                                                "search snippet": "public search-result snippet of a linkedin.com/in profile naming the company and the title (not verified)",
-                                               "wikidata": "Wikidata statement (chief executive / founder) of the entity whose official website is this site"}[conf])
+                                               "wikidata": "Wikidata statement (chief executive, director / manager, founder) of the entity whose official website is this site",
+                                               "official registry": f"officers the official company register lists ({ppl[0].get('source_name', '')}); company matched by "
+                                                                    f"{(check.get('registry_entity') or {}).get('match') or 'registration id or exact name'}"}[conf])
     prof = check.get("profile") or {}
     for f in ("founded", "employees", "revenue"):
         v = prof.get(f)
