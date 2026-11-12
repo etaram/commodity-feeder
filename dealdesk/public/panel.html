@@ -859,7 +859,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div id="sr-out"></div>
     <details class="section" id="cov-box"><summary><b data-i="cov_h">Coverage radar</b> <span class="sub" data-i="cov_s">where credible supply is thin</span></summary><p class="note" data-i="cov_n"></p><div id="cov-out"></div></details>
   </section>
-  <section class="view" id="v-ops" hidden><h2 style="margin:0 0 4px"><span data-i="tab_ops">Admin panel</span></h2><div id="srv-out"></div><div id="ops-out"></div></section>
+  <section class="view" id="v-ops" hidden><h2 style="margin:0 0 4px"><span data-i="tab_ops">Admin panel</span></h2><div id="spend-out"></div><div id="srv-out"></div><div id="ops-out"></div></section>
   <section class="view" id="v-users" hidden>
     <div class="filters"><h2 style="margin-inline-end:auto" data-i="users_h">User accounts</h2><button type="button" id="users-refresh" data-i="refresh">Refresh</button></div>
     <p class="note" data-i="users_note"></p>
@@ -4456,6 +4456,53 @@ async function renderOps(fresh) {
   const bf = $("#ops-backfill"); if (bf && window.DD_ADMIN_ACT) bf.onclick = async () => { bf.disabled = true; bf.textContent = t("loading"); try { const r = await window.DD_ADMIN_ACT("backfill_research"); bf.textContent = mt(`${r.facts} facts from ${r.jobs} jobs`, `${r.facts} עובדות מ-${r.jobs} מחקרים`); setTimeout(() => renderOps(true), 1500); } catch (e) { bf.textContent = errText(e); } };
 }
 
+/* ---------- Spending this month: every paid service against its monthly cap, and the total (admin) ----------
+   Data: /api/panel/spend (lib/spend.ts). Plain words per line; unknown is shown as unknown, never as 0. */
+const SPD = { data: null, at: 0, busy: false, err: "" };
+const spdWords = { "within budget": "בתוך התקציב", "near the cap": "קרוב לתקרה", "stopped at the cap": "נעצר בתקרה", "over the cap": "מעל התקרה",
+  "not known right now": "לא ידוע כרגע", "no cap set": "לא הוגדרה תקרה", "off (not connected, nothing spent)": "כבוי (לא מחובר, אין הוצאה)", "stopped: the cap is 0": "נעצר: התקרה 0",
+  "not running (no ledger yet)": "לא פועל (אין עדיין יומן)" };
+const spdName = { anthropic: ["Anthropic API (AI)", "Anthropic API (בינה מלאכותית)"], agents: ["Agents (budget ledger)", "סוכנים (יומן תקציב)"], search: ["Search API", "API חיפוש"], whatsapp: ["WhatsApp", "וואטסאפ"] };
+const spdCls = l => l === "within" ? "good" : l === "near" ? "warn" : l === "stopped" ? "bad" : "";
+const spdUsd = v => v === null || v === undefined ? "-" : "$" + Number(v).toFixed(2);
+const spdSay = w => LANG === "he" ? String(w || "").split(", but ").map((x, i) => i ? "אבל " + x.replace(" could not be read", " לא נקרא") : (spdWords[x] || x)).join(", ") : w;
+async function renderSpend(fresh) {
+  const el = $("#spend-out"); if (!el) return;
+  if (!window.DD_ADMIN) { el.innerHTML = ""; return; }
+  if (SPD.busy) return;
+  if (fresh || !SPD.data || Date.now() - SPD.at > 110_000) {
+    SPD.busy = true;
+    if (!SPD.data) el.innerHTML = `<section class="section"><h3>${esc(mt("Spending this month", "הוצאות החודש"))}</h3><div class="sub">${esc(t("loading"))}</div></section>`;
+    try {
+      const r = await fetch("/api/panel/spend", { credentials: "same-origin", cache: "no-store" });
+      if (r.status === 401) { location.href = "/login"; return; }
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || !j.ok) throw new Error(r.status === 404 ? mt("this part of the server is not deployed yet", "החלק הזה בשרת עוד לא הותקן") : (j && j.error) || `HTTP ${r.status}`);
+      SPD.data = j; SPD.at = Date.now(); SPD.err = "";
+    } catch (e) { SPD.err = e.message || String(e); }
+    SPD.busy = false;
+  }
+  el.innerHTML = spdHtml(SPD.data, SPD.err);
+  const b = $("#spend-refresh"); if (b) b.onclick = () => renderSpend(true);
+}
+function spdHtml(d, err) {
+  const head = `<h3>${esc(mt("Spending this month", "הוצאות החודש"))} <span class="muted sub">${d ? esc(d.month) + " · " + esc(mt("updated", "עודכן")) + " " + esc(String(d.at || "").slice(11, 16)) + " UTC" : ""}</span> <button type="button" class="sm" id="spend-refresh">${esc(t("refresh"))}</button></h3>`;
+  if (!d) return `<section class="section srv">${head}<div class="note q-block">${esc(mt("Not available: ", "לא זמין: "))}${esc(err)}</div></section>`;
+  const tt = d.total || {};
+  const say = tt.level === "within" ? mt(`Spending is under control: $${Number(tt.spent_usd).toFixed(2)} of the $${tt.cap_usd} monthly cap.`, `ההוצאות בשליטה: $${Number(tt.spent_usd).toFixed(2)} מתוך תקרה חודשית של $${tt.cap_usd}.`)
+    : mt(`Total this month: $${Number(tt.spent_usd).toFixed(2)} of the $${tt.cap_usd} cap (${tt.words}).`, `סה"כ החודש: $${Number(tt.spent_usd).toFixed(2)} מתוך תקרה של $${tt.cap_usd} (${spdSay(tt.words)}).`);
+  const line = s => `<div class="srv-pr"><div class="srv-prh"><span>${esc(LANG === "he" && spdName[s.id] ? spdName[s.id][1] : s.name)} <span class="pill ${spdCls(s.level)}">${esc(spdSay(s.words))}</span></span><span class="num" dir="ltr">${spdUsd(s.spent_usd)}${s.cap_usd !== null ? " / $" + s.cap_usd : ""}</span></div>${s.cap_usd ? adBar(Math.min(s.spent_usd || 0, s.cap_usd), s.cap_usd, s.level === "stopped" ? "bad" : s.level === "near" ? "warn" : "acc") : ""}
+      <div class="sub muted" dir="ltr">${esc(s.basis)}${s.detail ? " · " + esc(s.detail) : ""}</div></div>`;
+  const fixed = (d.fixed || []).map(f => `<div class="srv-prh"><span>${esc(f.name)}${f.note ? ` <span class="sub muted" dir="ltr">${esc(f.note)}</span>` : ""}</span><span class="num">${f.status === "confirmed" ? spdUsd(f.monthly_usd) : `<span class="pill warn">${esc(mt("to confirm", "לאישור"))}</span>${f.monthly_usd !== null ? ` <span dir="ltr">${spdUsd(f.monthly_usd)}?</span>` : ""}`}</span></div>`).join("");
+  return `<section class="section srv">${head}
+    <div class="srv-say"><b>${esc(say)}</b> <span class="pill ${spdCls(tt.level)}">${esc(spdSay(tt.words))}</span></div>
+    <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Total this month", "סה\"כ החודש"))}</span><span class="num" dir="ltr">${spdUsd(tt.spent_usd)} / $${tt.cap_usd}</span></div>${tt.cap_usd ? adBar(Math.min(tt.spent_usd || 0, tt.cap_usd), tt.cap_usd, tt.level === "stopped" || tt.level === "over" ? "bad" : tt.level === "near" ? "warn" : "acc") : ""}</div>
+    <h4 class="srv-h">${esc(mt("By service", "לפי שירות"))}</h4>${(d.services || []).map(line).join("")}
+    <h4 class="srv-h">${esc(mt("Fixed monthly costs", "עלויות קבועות בחודש"))}</h4>${fixed || `<div class="note">${esc(mt("None configured.", "לא הוגדרו."))}</div>`}
+    ${tt.unconfirmed && tt.unconfirmed.length ? `<div class="sub muted">${esc(mt(`Not in the total until confirmed: ${tt.unconfirmed.join(", ")}.`, `לא נכללים בסה"כ עד שיאושרו: ${tt.unconfirmed.join(", ")}.`))}</div>` : ""}
+    <div class="sub muted">${esc(mt("When the AI line reaches its cap, new AI calls are refused until the 1st of next month (or until the cap is raised). Amounts are estimates from list prices; the invoices are the measured figures.", "כשהשורה של הבינה המלאכותית מגיעה לתקרה, קריאות חדשות נחסמות עד ה-1 בחודש הבא (או עד שהתקרה מועלית). הסכומים הם אומדן לפי מחירון; החשבוניות הן הנתון המדוד."))}</div></section>`;
+}
+
 /* ---------- Server and tasks: the company server, the GitHub workflows and the processing queues (admin) ----------
    Data: /api/panel/server (status files written on the server every 2 minutes, GitHub runs cached 120 s). Refreshed
    every 60 s while the admin tab is open and the page is visible. Unknown values are shown as unknown, never as 0. */
@@ -4605,7 +4652,7 @@ function go(v) {
   try { localStorage.setItem("sinder-panel-view", v); } catch (e) {}
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
   if (v === "users" && S.me?.role === "admin") renderUsers();
-  if (v === "ops" && S.me?.role === "admin") { renderServer(); renderOps(); }
+  if (v === "ops" && S.me?.role === "admin") { renderSpend(); renderServer(); renderOps(); }
   if (v === "forme" && window.DD_PROFILE) renderForMe();
   if (v === "forme") renderFocus();
   if (v === "today") renderTodayGeneral();
