@@ -192,7 +192,11 @@ jobs:
 
       - name: bahrain
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',bahrain,') }}
-        run: set -o pipefail; python -m leads.run --source bahrain 2>&1 | tee -a data/leads/run.log
+        run: |
+          set -o pipefail
+          # the stealth browser needs its binaries, not only the pip package (DOWN 9-12 Nov 2026: "patchright install")
+          pip install -q "scrapling[fetchers]" && (scrapling install >/dev/null 2>&1 || python -m patchright install chromium >/dev/null 2>&1 || true)
+          python -m leads.run --source bahrain 2>&1 | tee -a data/leads/run.log
         timeout-minutes: 25
         continue-on-error: true
 

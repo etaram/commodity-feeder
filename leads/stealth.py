@@ -5,14 +5,31 @@ import sys
 from .common import log
 
 
+_READY = []
+
+
+def _browsers_installed():
+    """True when the Patchright/Playwright browser binaries are on disk (the pip package alone is not enough:
+    Bahrain went DOWN on 9 Nov 2026 with 'patchright install' missing on a runner that had the package cached)."""
+    import glob
+    import os
+    roots = [os.environ.get("PLAYWRIGHT_BROWSERS_PATH", ""), os.path.expanduser("~/.cache/ms-playwright")]
+    return any(r and glob.glob(os.path.join(r, "chromium*")) for r in roots)
+
+
 def fetcher():
     try:
         from scrapling.fetchers import StealthyFetcher
     except ImportError:
         log.info("installing scrapling")
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--break-system-packages", "scrapling[fetchers]"], check=False)
-        subprocess.run(["scrapling", "install"], check=False, timeout=900)
         from scrapling.fetchers import StealthyFetcher
+    if not _READY and not _browsers_installed():
+        log.info("installing the browser binaries (scrapling install)")
+        subprocess.run(["scrapling", "install"], check=False, timeout=900)
+        if not _browsers_installed():
+            subprocess.run([sys.executable, "-m", "patchright", "install", "chromium"], check=False, timeout=900)
+    _READY.append(1)
     return StealthyFetcher
 
 

@@ -17,7 +17,11 @@ last good merge, stops the merge with an error before any output file is written
 (python -m leads.run --merge --allow-shrink, or LEADS_ALLOW_SHRINK=1).
 
   python -m leads.source_status                  recompute staleness and print the sources that are not OK
+  python -m leads.source_status --suppliers      the same for the supplier-side modules (source_status_suppliers.json)
   python -m leads.source_status --accept NAME    accept a source's current row count as the new good baseline
+
+Modules that write files instead of returning rows (awards, grants, markets, importyeti and the supplier-side
+modules in WORK) report the volume they wrote (from their meta); "nothing due" runs are OK, not DEGRADED.
 """
 import datetime as dt
 import json
@@ -36,6 +40,45 @@ LIGHT_CADENCE_H = 8     # light sources run every two hours: four missed runs
 LIGHT = {"ted", "fts", "sam", "canadabuys", "ungm", "undp", "ebrd", "aiib", "isdb", "afdb", "iadb", "simap", "gets", "etimad", "prozorro", "pncp", "secop",
          "contractsfinder", "austender", "oman", "qatar", "kenya", "rwanda", "uganda", "ghana", "malawi", "mozambique", "dubai", "philippines", "moldova", "uruguay", "malaysia"}
 FAILED = ("DOWN", "DENIED", "RATE_LIMITED")
+# Modules that write files (award day files, caches, CSVs) instead of returning rows: their real volume is in the meta
+# they return. name -> (meta keys summed as the row count, test on meta meaning "nothing was due this run").
+WORK = {
+    "awards": (("notices",), lambda m: not m.get("days")),
+    "grants": (("calls",), lambda m: False),
+    "markets": (("refreshed",), lambda m: m.get("due") == 0),
+    "importyeti": (("scanned",), lambda m: m.get("due") == 0),
+    "latam_awards": (("brazil", "colombia"), lambda m: False),
+    "prozorro_awards": (("awards",), lambda m: not m.get("candidates")),
+    "ocdr": (("awards",), lambda m: not m.get("files") and not m.get("pending")),
+    "ext_awards": (("worldbank", "usaspending"), lambda m: not m),
+    "il_exemptions": (("kept",), lambda m: False),
+    "wikidata_companies": (("companies",), lambda m: not m.get("countries")),
+    "listed_companies": (("companies",), lambda m: not m.get("countries")),
+    "commodity_producers": (("companies",), lambda m: m.get("note") == "fresh"),
+    "web_contacts": (("profiles", "discovered"), lambda m: m.get("tried") == 0),
+    "iadb_awards": (("awards",), lambda m: False),
+    "gebiz_awards": (("awards",), lambda m: m.get("note") == "fresh"),
+}
+# supplier-side modules run in suppliers.yml, which commits its own status file (leads.yml owns source_status.json)
+SUPPLIER_SIDE = {"latam_awards", "prozorro_awards", "ocdr", "ext_awards", "il_exemptions", "wikidata_companies", "listed_companies",
+                 "commodity_producers", "web_contacts", "gebiz_awards"}
+SUPPLIER_FILE = "source_status_suppliers.json"
+
+
+def work_from_meta(name, meta):
+    """(rows written, idle) for a file-writing module; (None, False) for a module that returns its rows."""
+    if name not in WORK:
+        return None, False
+    keys, idle = WORK[name]
+    meta = meta or {}
+    n = 0
+    for k in keys:
+        v = meta.get(k)
+        n += v if isinstance(v, int) else len(v) if isinstance(v, (list, dict)) else 0
+    try:
+        return n, bool(idle(meta)) and n == 0
+    except Exception:  # noqa: BLE001
+        return n, False
 
 
 class MergeGuardError(RuntimeError):
@@ -54,24 +97,28 @@ def _iso(t):
     return t.isoformat(timespec="minutes")
 
 
-def _path():
-    return common.LEADS / FILE
+def group_of(name):
+    return "suppliers" if name in SUPPLIER_SIDE else "tenders"
 
 
-def load():
+def _path(group="tenders"):
+    return common.LEADS / (SUPPLIER_FILE if group == "suppliers" else FILE)
+
+
+def load(group="tenders"):
     """{"sources": {name: entry}, "merge": {...}}; an unreadable or missing file is an empty state."""
     try:
-        j = json.loads(_path().read_text(encoding="utf-8"))
+        j = json.loads(_path(group).read_text(encoding="utf-8"))
         return {"sources": {s["source"]: s for s in j.get("sources", []) if s.get("source")}, "merge": j.get("merge") or {}}
     except Exception:  # noqa: BLE001
         return {"sources": {}, "merge": {}}
 
 
-def save(state, now=None):
+def save(state, now=None, group="tenders"):
     order = {s: i for i, s in enumerate(("DOWN", "DENIED", "RATE_LIMITED", "STALE", "DEGRADED", "OK"))}
     rows = sorted(state["sources"].values(), key=lambda s: (order.get(s.get("status"), 0), s["source"]))
     common.LEADS.mkdir(parents=True, exist_ok=True)
-    _path().write_text(json.dumps({"generated": _iso(_now(now)) + "Z", "not_ok": sum(1 for s in rows if s.get("status") != "OK"),
+    _path(group).write_text(json.dumps({"generated": _iso(_now(now)) + "Z", "not_ok": sum(1 for s in rows if s.get("status") != "OK"),
                                    "sources": rows, "merge": state.get("merge") or {}}, indent=1), encoding="utf-8")
 
 
@@ -124,12 +171,13 @@ def _apply_stale(e, now):
 def record_failure(name, exc, now=None):
     """The collector raised: the snapshot on disk is left as it is, and the source is DOWN / DENIED / RATE_LIMITED."""
     now = _now(now)
-    state = load()
+    g = group_of(name)
+    state = load(g)
     e = _entry(state, name)
     status, cls = classify_error(exc)
     e.update(status=status, rows=0, last_run_at=_iso(now), error_class=cls, warning="collector failed; the previous snapshot is kept")
     _apply_stale(e, now)
-    save(state, now)
+    save(state, now, g)
     return e
 
 
@@ -138,11 +186,21 @@ def record_result(name, rows, meta=None, now=None, save_fn=None):
     save_fn(name, rows, meta) writes the snapshot (leads.common.save_partial unless a test passes its own)."""
     now = _now(now)
     save_fn = save_fn or common.save_partial
-    state = load()
+    g = group_of(name)
+    state = load(g)
     e = _entry(state, name)
     n, good = len(rows or []), int(e.get("rows_last_good") or 0)
     e.update(rows=n, last_run_at=_iso(now), error_class="", warning="")
-    if n == 0:
+    work, idle = work_from_meta(name, meta) if n == 0 else (None, False)
+    if work:
+        # a file-writing module: its volume is what it wrote (no row snapshot to keep or replace; volumes vary per run)
+        e.update(status="OK", rows=work, rows_last_good=work, last_good_at=_iso(now), kind="files")
+    elif idle:
+        e.update(status="OK", rows=0, last_good_at=_iso(now), kind="files", warning="nothing due this run (caches are fresh)")
+    elif work == 0:
+        e.update(status="DEGRADED", error_class="zero_work", kind="files",
+                 warning=("wrote nothing although work was due: " + ", ".join(f"{k} {v}" for k, v in (meta or {}).items() if isinstance(v, (int, str)))[:150]))
+    elif n == 0:
         # never overwrite a good snapshot with an empty one; with no history there is nothing to keep, and it is still not OK
         e.update(status="DEGRADED", error_class="zero_rows",
                  warning=f"returned 0 rows; the previous snapshot ({good} rows) is kept" if good else "returned 0 rows and has no good run on record")
@@ -155,35 +213,36 @@ def record_result(name, rows, meta=None, now=None, save_fn=None):
         save_fn(name, rows, meta)
         e.update(status="OK", rows_last_good=n, last_good_at=_iso(now))
     _apply_stale(e, now)
-    save(state, now)
+    save(state, now, g)
     if e["status"] != "OK":
         common.log.warning("source %s: %s (%s)", name, e["status"], e["warning"])
     return e
 
 
-def refresh(names=(), now=None):
+def refresh(names=(), now=None, group="tenders"):
     """Recomputes staleness for every known source (and the given names, so a source that never ran is listed)."""
     now = _now(now)
-    state = load()
+    state = load(group)
     for n in names:
         _entry(state, n)
     for e in state["sources"].values():
         if not e.get("last_good_at") and not e.get("last_run_at"):
             e.update(status="STALE", warning="no run on record")
         _apply_stale(e, now)
-    save(state, now)
+    save(state, now, group)
     return state
 
 
 def accept(name, now=None):
     now = _now(now)
-    state = load()
+    g = group_of(name)
+    state = load(g)
     e = state["sources"].get(name)
     if not e or not e.get("rows"):
         raise SystemExit(f"{name}: no rows on record to accept")
     e.update(status="OK", rows_last_good=e["rows"], last_good_at=e.get("last_run_at") or _iso(now), error_class="", warning="")
     _apply_stale(e, now)
-    save(state, now)
+    save(state, now, g)
     return e
 
 
@@ -217,7 +276,8 @@ def main(argv=None):
         e = accept(argv[1])
         print(f"{e['source']}: baseline is now {e['rows_last_good']} rows")
         return 0
-    state = refresh()
+    group = "suppliers" if "--suppliers" in argv else "tenders"
+    state = refresh(group=group)
     bad = [e for e in state["sources"].values() if e.get("status") != "OK"]
     for e in bad:
         print(f"SOURCE {e['status']:12} {e['source']:18} rows {e.get('rows', 0)} (last good {e.get('rows_last_good', 0)} at {e.get('last_good_at') or '-'}) {e.get('error_class', '')}")

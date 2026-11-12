@@ -101,6 +101,9 @@ jobs:
         run: set -o pipefail; python -m leads.run --source web_contacts 2>&1 | tee -a data/leads/run_suppliers.log
         timeout-minutes: 30
         continue-on-error: true
+      - name: supplier source status (rows each module wrote, staleness)
+        run: python -m leads.source_status --suppliers 2>&1 | tail -15 | tee -a data/leads/run_suppliers.log
+        continue-on-error: true
       - name: universe
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',universe,') }}
         run: set -o pipefail; python -m leads.universe 2>&1 | tee -a data/leads/run_suppliers.log
@@ -133,7 +136,7 @@ jobs:
           git config user.name "commodity-feed-bot"
           git config user.email "actions@users.noreply.github.com"
           mkdir -p data/web
-          P="data/leads/awards data/leads/companies data/leads/run_suppliers.log data/leads/supplier_sectors.csv data/leads/supplier_hs.csv data/web/suppliers.enc data/web/winners.enc data/web/footprints data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv"
+          P="data/leads/awards data/leads/companies data/leads/run_suppliers.log data/leads/source_status_suppliers.json data/leads/supplier_sectors.csv data/leads/supplier_hs.csv data/web/suppliers.enc data/web/winners.enc data/web/footprints data/leads/partial/ocdr_tenders.json data/leads/cache/ocdr_tenders.json data/leads/il_exempt.csv"
           # keep a copy of what this workflow owns, then land it on top of the latest main (other workflows push meanwhile)
           rm -rf /tmp/own && mkdir -p /tmp/own
           for f in $P; do [ -e "$f" ] && cp -r --parents "$f" /tmp/own/; done

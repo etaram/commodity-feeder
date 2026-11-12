@@ -48,12 +48,19 @@ TENDERS = {
 }
 # Built but not scheduled, with the reason
 IMPLEMENTED = {"zambia": ("Zambia", "public portal (ZPPA)", "list page needs a captcha"),
-               "tanzania": ("Tanzania", "official OCDS API (NeST)", "upstream data months late"),
-               "georgia": ("Georgia", "official API", "not scheduled"), "ecuador": ("Ecuador", "official OCDS API", "not scheduled")}
+               "tanzania": ("Tanzania", "official OCDS API (NeST)", "upstream data months late")}
 # Supplier, market and signal sources (not tenders): module -> (track, what, access, output file to date-check)
 OTHER = {
     "awards": ("suppliers", "award notices from all tender sources", "derived", "leads/awards.csv"),
     "ext_awards": ("suppliers", "World Bank contract awards, USAspending", "official APIs", None),
+    "latam_awards": ("suppliers", "Brazil PNCP and Colombia SECOP II contracts (award to supplier)", "official APIs", None),
+    "prozorro_awards": ("suppliers", "Ukraine Prozorro completed tenders with supplier ids", "official API", None),
+    "ocdr": ("suppliers", "OCP Data Registry award releases (~150 publications)", "official bulk downloads", None),
+    "il_exemptions": ("suppliers", "Israel no-tender contract exemptions (data.gov.il)", "official open data", "leads/il_exempt.csv"),
+    "iadb_awards": ("suppliers", "IDB contract award notifications (data.iadb.org, CC BY 4.0)", "official API", None),
+    "gebiz_awards": ("suppliers", "Singapore GeBIZ government awards (data.gov.sg, Singapore Open Data Licence)", "official API", None),
+    "mx_check": ("suppliers", "e-mail domain deliverability (DNS MX / A, parked, disposable)", "DNS", None),
+    "gleif_bulk": ("suppliers", "GLEIF Golden Copy Level 1 + Level 2 bulk (CC0): LEI, legal name, registration authority id, parent", "official bulk download", None),
     "importyeti": ("suppliers", "US customs bills of lading by HS heading (foreign exporters)", "public web pages", "leads/importyeti_state.json"),
     "wikidata_companies": ("suppliers", "notable producers and traders", "official SPARQL", None),
     "listed_companies": ("suppliers", "listed companies", "official SPARQL", None),
@@ -97,7 +104,7 @@ BACKLOG = {
     "S16": ("IDB Procurement Plans", "https://www.iadb.org/en/how-we-can-work-together/procurement/procurement-projects/procurement-plans", "projects", "iadb"),
     "S17": ("IFC Disclosures", "https://disclosures.ifc.org/", "projects", ""),
     "S18": ("Etimad", "https://tenders.etimad.sa/Tender/", "projects", "etimad"),
-    "S19": ("GeBIZ", "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml", "projects", ""),
+    "S19": ("GeBIZ", "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml", "projects", "gebiz_awards"),
     "S20": ("GeM Global Tender Enquiry", "https://bidplus-global.gem.gov.in/", "projects", ""),
     "S21": ("India eProcurement", "https://www.etenders.gov.in/", "projects", "india"),
     "S22": ("China Government Procurement", "https://www.ccgp.gov.cn/", "projects", ""),
@@ -114,10 +121,10 @@ BACKLOG = {
     "S33": ("ProColombia B2B", "https://b2bmarketplace.procolombia.co/es", "suppliers", ""),
     "S34": ("Sri Lanka Export Development Board", "https://www.srilankabusiness.com/exporters/", "suppliers", ""),
     "S35": ("FPEF Exporter Members", "https://www.fpef.co.za/exportermembersextensivelist", "suppliers", ""),
-    "S36": ("GLEIF", "https://www.gleif.org/en/lei-data/access-and-use-lei-data", "suppliers", ""),
-    "S37": ("GDELT", "https://gdeltproject.org/data.html", "signals", ""),
+    "S36": ("GLEIF", "https://www.gleif.org/en/lei-data/access-and-use-lei-data", "suppliers", "lei"),
+    "S37": ("GDELT", "https://gdeltproject.org/data.html", "signals", "gdelt"),
     "S38": ("Google Trends API", "https://developers.google.com/search/apis/trends", "signals", "trends"),
-    "S39": ("Wikimedia Analytics", "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html", "signals", ""),
+    "S39": ("Wikimedia Analytics", "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html", "signals", "attention"),
     "S40": ("ACWA Projects", "https://acwapower.com/en/what-we-do/projects/", "projects", ""),
     "S41": ("Equinix Expansions", "https://www.equinix.com/data-centers/expansions", "projects", ""),
     "S42": ("POWERCHINA Procurement", "https://bid.powerchina.cn/", "projects", ""),
@@ -165,16 +172,28 @@ def build():
         rows.append({"id": mod, "name": _doc(mod), "track": "projects", "kind": "tenders", "geography": geo, "access": access,
                      "status": "implemented", "rows": "", "age_h": "", "note": why, "refresh": "not scheduled",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
+    st = {}
+    for f in ("source_status.json", "source_status_suppliers.json"):
+        try:
+            st.update({s["source"]: s for s in json.loads((LEADS / f).read_text()).get("sources", [])})
+        except Exception:  # noqa: BLE001
+            pass
     for mod, (track, what, access, out) in OTHER.items():
         p = DATA / out if out else None
         age = round((now - p.stat().st_mtime) / 3600, 1) if p and p.exists() else ""
         status = "active" if age != "" and age < 24 * 8 else ("degraded" if out else "active")
+        n = ""
         if mod == "trends":
             note = "unofficial library; the official Google Trends API is restricted alpha (access requested, not granted)"
         else:
             note = "" if status == "active" else "output file missing or older than 8 days"
+        s = st.get(mod)
+        if s:  # the run's own report (rows it wrote, or "nothing due"), leads/source_status.py
+            n, age = s.get("rows", ""), s.get("age_h", age)
+            status = "active" if s.get("status") == "OK" else "degraded"
+            note = s.get("warning") or s.get("error_class") or ("" if status == "active" else s.get("status", ""))
         rows.append({"id": mod, "name": what, "track": track, "kind": track, "geography": "global", "access": access,
-                     "status": status, "rows": "", "age_h": age, "note": note, "refresh": "daily to weekly",
+                     "status": status, "rows": n, "age_h": age, "note": note, "refresh": "daily to weekly",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
     known = {r["id"] for r in rows}
     for sid, (name, url, track, mapped) in BACKLOG.items():
