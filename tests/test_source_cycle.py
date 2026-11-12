@@ -50,3 +50,20 @@ def test_weekly_report_counts_and_change(tmp_path, monkeypatch):
     assert rep["regions"]["Southeast Asia"]["awards_with_winner_12m"] == 1
     assert rep["change_vs_previous_week"]["Sub-Saharan Africa"]["open_notices"] == -4
     assert rep["regions"]["Southeast Asia"]["suppliers"] is None
+
+
+def test_registration_check_only_records_page_state(tmp_path, monkeypatch):
+    import csv
+    src = tmp_path / "registrations.csv"
+    src.write_text("source,country,level,registration_url,foreign_allowed\nUNGM,GLOBAL,multilateral,https://www.ungm.org/Account/Registration,yes\n", encoding="utf-8")
+    monkeypatch.setattr(sc, "REGISTRATIONS", src)
+    seen = []
+
+    def fake(c, s, allow):
+        seen.append(c["url"])
+        return {"host": "www.ungm.org", "status": "open", "http_status": 200, "method_used": "http", "robots": "allowed", "checked_at": "2026-11-12T11:00Z"}, "<html>"
+    monkeypatch.setattr(sc, "probe_row", fake)
+    sc.check_registrations()
+    rows = list(csv.DictReader(open(src, encoding="utf-8")))
+    assert seen == ["https://www.ungm.org/Account/Registration"]
+    assert rows[0]["foreign_allowed"] == "yes" and rows[0]["page_status"] == "open" and rows[0]["http_status"] == "200"
