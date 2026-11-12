@@ -6,6 +6,7 @@ and a weekly report counts what the system holds per region.
   python -m leads.source_cycle cycle             probe + report (weekly, from deploy/ops/schedule.tab via sources.yml)
   python -m leads.source_cycle sample ID|URL [method]   fetch one page and keep it SEALED (developer review, never in the log)
   python -m leads.source_cycle run MODULE        run one collector's fetch() and print counts only (developer check)
+  python -m leads.source_cycle gleif [--force]   GLEIF Golden Copy bulk match (leads/gleif_bulk.py), weekly
 
 Probing is polite: one request per host, 1.5 s apart, a User-Agent that names Sinder and its site, robots.txt read
 and recorded (a disallowed path is never fetched), methods tried in order http -> relay -> stealth (the stealth
@@ -388,6 +389,9 @@ def main(argv=None):
     elif cmd == "sample":
         meth = next((x.split("=", 1)[1] for x in a[1:] if x.startswith("--method=")), "http")
         sample([x for x in a[1:] if not x.startswith("--method=")], meth)
+    elif cmd == "gleif":
+        from .gleif_bulk import run as gleif_run
+        gleif_run(force="--force" in a)
     elif cmd == "run":
         for n in a[1:]:
             try:

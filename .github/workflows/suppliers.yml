@@ -43,6 +43,12 @@ jobs:
           path: data/checks
           key: checks-none
           restore-keys: checks-
+      - name: GLEIF bulk matches (read-only, written by the sources workflow, task gleif)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/gleif
+          key: gleif-none
+          restore-keys: gleif-
       - name: Company descriptions (read-only, written by the describe workflow)
         uses: actions/cache/restore@v4
         with:

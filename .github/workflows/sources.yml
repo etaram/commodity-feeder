@@ -47,13 +47,26 @@ jobs:
           path: data/checks
           key: checks-none
           restore-keys: checks-
+      - name: GLEIF matches (previous run)
+        if: ${{ inputs.task == 'gleif' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: data/gleif
+          key: gleif-none
+          restore-keys: gleif-
       - run: pip install -q requests curl_cffi pycountry certifi aia google-auth cryptography dnspython beautifulsoup4 lxml phonenumbers openpyxl
       - name: stealth browser
         if: ${{ inputs.browser != '0' }}
         run: pip install -q "scrapling[fetchers]" && (scrapling install >/dev/null 2>&1 || true)
         continue-on-error: true
       - name: task
-        run: python -m leads.source_cycle "$TASK" $ARGS 2>&1 | grep -E "^(PROBE|SAMPLE|RUN|probe summary|weekly report|INFO|WARNING|ERROR|Traceback|  File|[A-Za-z]+Error)" | cut -c1-400
+        run: python -m leads.source_cycle "$TASK" $ARGS 2>&1 | grep -E "^(PROBE|SAMPLE|RUN|GLEIF|REG|probe summary|weekly report|INFO|WARNING|ERROR|Traceback|  File|[A-Za-z]+Error)" | cut -c1-400
+      - name: GLEIF matches (save for the universe build)
+        if: ${{ inputs.task == 'gleif' && hashFiles('data/gleif/matches.jsonl') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: data/gleif
+          key: gleif-${{ github.run_id }}
       - name: commit
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
