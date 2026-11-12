@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
     // the paid AI ping (and its AI Usage row) runs only on explicit request (?aiping=1); by default, and always for the
     // scheduled screen check (noai=1), only whether the key is configured is reported
     extra.ai = req.nextUrl.searchParams.get("aiping") !== "1" ? { ok: Boolean(process.env.ANTHROPIC_API_KEY), skipped: "no paid call (add aiping=1 to test the provider)" } : await claude({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }, { job: "health" }).then((r) => ({ ok: true, text: r.text })).catch((e) => ({ ok: false, err: String(e).slice(0, 200) }));
-    extra.ai_month = await budgetState().then((b) => ({ usd: b.month_usd, cap: b.month_cap_usd, stopped: b.month_stopped })).catch((e) => String(e).slice(0, 120));
+    extra.ai_month = await budgetState().then((b) => ({ usd: b.month_usd, reserved: b.month_reserved_usd, inflight: b.month_inflight, cap: b.month_cap_usd, unknown: b.month_unknown, stopped: b.month_stopped })).catch((e) => String(e).slice(0, 120));
     extra.mail = await mailCheck().catch((e) => ({ ok: false, error: String(e).slice(0, 200) }));
     const tabs = ["Telegram", "Telegram Chat", "Agent Runs", "Agent Approvals", "Tender Projects", "Tender Watches", "Users", "AI Usage", "App Log", "Activity"];
     extra.tabs = Object.fromEntries(await Promise.all(tabs.map(async (t) => [t, await readRanges(ENGINE_SHEET, [`'${t}'!A1:A20000`]).then((v) => (v?.[0]?.length ?? -1)).catch((e) => String(e).slice(0, 120))])));

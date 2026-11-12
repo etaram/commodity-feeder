@@ -3,6 +3,7 @@ import { gate } from "@/lib/gate";
 import { ENGINE_SHEET, readRanges } from "@/lib/sheets";
 import { parseFixed, spendReport } from "@/lib/spend";
 import FIXED from "@/lib/fixedcosts.json";
+import { reservedNow } from "@/lib/anthropic";
 
 // Spending this month (admin panel): per service, spent so far this month against its monthly cap, and the total
 // against the total cap, in plain words (lib/spend.ts). Reads the 'AI Usage' ledger and, when it exists, the agents'
@@ -23,5 +24,5 @@ export async function GET() {
   ]);
   const env = process.env as Record<string, string | undefined>;
   const fixed = parseFixed(env.SPEND_FIXED_COSTS && env.SPEND_FIXED_COSTS.trim() ? env.SPEND_FIXED_COSTS : FIXED);
-  return NextResponse.json({ ok: true, ...spendReport({ now: Date.now(), env, ai, agent, fixed }) });
+  return NextResponse.json({ ok: true, ...spendReport({ now: Date.now(), env, ai, agent, fixed, aiReserved: reservedNow() }) });
 }

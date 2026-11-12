@@ -12,7 +12,7 @@
 // Total cap: SPEND_MONTHLY_CAP_USD (60). A cap that is set but unreadable counts as 0: a typo must not open the tap.
 
 export type Level = "within" | "near" | "stopped" | "off" | "unknown";
-export type ServiceLine = { id: string; name: string; spent_usd: number | null; cap_usd: number | null; level: Level; words: string; basis: string; detail?: string; estimated?: boolean };
+export type ServiceLine = { id: string; name: string; spent_usd: number | null; cap_usd: number | null; level: Level; words: string; basis: string; detail?: string; estimated?: boolean; reserved_usd?: number };
 export type FixedCost = { id: string; name: string; monthly_usd: number | null; status: "confirmed" | "to confirm"; note?: string };
 export type SpendReport = { month: string; at: string; services: ServiceLine[]; fixed: FixedCost[]; total: { spent_usd: number; cap_usd: number; level: Level; words: string; unconfirmed: string[] }; note: string };
 
@@ -92,6 +92,7 @@ export type SpendInputs = {
   ai: { rows: string[][] } | { error: string };
   agent: { rows: string[][] } | { error: string } | null;   // null = the ledger tab does not exist
   fixed: FixedCost[];
+  aiReserved?: number;   // worst case of the AI calls in flight on this instance (lib/anthropic.ts reservedNow)
 };
 const r2 = (x: number) => Math.round(x * 100) / 100;
 
@@ -104,8 +105,11 @@ export function spendReport(i: SpendInputs): SpendReport {
   else {
     const a = aiMonth(i.ai.rows, month);
     const top = Object.entries(a.byJob).sort((x, y) => y[1] - x[1]).slice(0, 4).map(([j, u]) => `${j} $${r2(u).toFixed(2)}`).join(", ");
-    services.push({ id: "anthropic", name: "Anthropic API (AI)", spent_usd: r2(a.usd), cap_usd: aiCap, ...levelOf(a.usd, aiCap), estimated: true,
-      basis: `${a.calls} calls this month, from the system's own usage log at list prices (an estimate; the invoice is the measured figure)`, detail: top ? `largest: ${top}` : undefined });
+    const held = i.aiReserved && i.aiReserved > 0 ? i.aiReserved : 0;
+    // the level is what the cap check sees: spent plus the worst case of the calls in flight
+    services.push({ id: "anthropic", name: "Anthropic API (AI)", spent_usd: r2(a.usd), cap_usd: aiCap, ...levelOf(a.usd + held, aiCap), estimated: true, reserved_usd: Math.round(held * 1000) / 1000,
+      basis: `${a.calls} calls this month, from the system's own usage log at list prices (an estimate; the invoice is the measured figure). Each call reserves its worst case first and is refused before it is sent when spent + reserved would pass the cap; if the log cannot be read, AI calls are refused`,
+      detail: [held > 0 ? `$${held.toFixed(3)} reserved for calls in progress` : "", top ? `largest: ${top}` : ""].filter(Boolean).join("; ") || undefined });
   }
   // agents' budget ledger
   const agCap = envCap(env, "AGENT_BUDGET_TOTAL_USD", 5);

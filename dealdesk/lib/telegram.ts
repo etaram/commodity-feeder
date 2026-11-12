@@ -1,4 +1,4 @@
-import { anthropicHeaders, checkMonthlyCap, estimateCost, noteSpend } from "@/lib/anthropic";
+import { modelTurn } from "@/lib/anthropic";
 import { appendRow, appendRows, ENGINE_SHEET, lookupContact, readRanges } from "./sheets";
 import { listUsers, workspaceOf } from "./users";
 import { ownWorkspace } from "./scope";
@@ -467,15 +467,10 @@ Facts: cite figures exactly as the tools returned them; never invent companies, 
     let answer = "";
     const model = process.env.TG_MODEL || process.env.AGENT_MODEL || MODEL;
     for (let turn = 0; turn < 5; turn++) {
-      await checkMonthlyCap("telegram");
-      const t1 = Date.now();
-      const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(),
-        body: JSON.stringify({ model, max_tokens: 1400, system: sys, tools, messages: msgs }) });
-      const j = await r.json();
+      // reserved against the monthly cap per turn, then metered into 'AI Usage' (lib/anthropic.ts modelTurn)
+      const r = await modelTurn("telegram", "", { model, max_tokens: 1400, system: sys, tools, messages: msgs });
+      const j = r.j;
       if (!r.ok) throw new Error(String(j?.error?.message || r.status).slice(0, 200));
-      // metered into 'AI Usage' like every other model call, so the monthly cap and the spending screen see it
-      const usd = estimateCost(j.usage || {}); noteSpend(usd);
-      void appendRow("AI Usage", [new Date().toISOString(), "telegram", "", model, j.usage?.input_tokens || 0, j.usage?.output_tokens || 0, j.usage?.cache_read_input_tokens || 0, j.usage?.server_tool_use?.web_search_requests || 0, Math.round(usd * 1e5) / 1e5, Date.now() - t1, "ok"]).catch(() => {});
       const content = j.content || [];
       const uses = content.filter((b: { type: string }) => b.type === "tool_use") as { id: string; name: string; input: Record<string, string> }[];
       answer = content.filter((b: { type: string }) => b.type === "text").map((b: { text: string }) => b.text).join("").trim() || answer;

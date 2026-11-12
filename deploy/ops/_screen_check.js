@@ -83,7 +83,7 @@ const findTimes = (o) => {          // ISO-like times anywhere in the check's su
   console.log(`mail login (no message sent): ${mail.ok ? "OK" : "FAILED " + String(mail.error || "").replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+/g, "<email>").slice(0, 120)}`);
   console.log(`telegram bot token: ${j.telegram_token ? "present" : "missing"}; webhook: ${tg && typeof tg === "object" ? `host ${tg.url_host || "(none)"}, last error ${tg.last_error ? "yes" : "none"}` : String(tg || "")}`);
   console.log(`AI key: ${j.ai && j.ai.ok ? "OK" : "FAILED"}`);
-  const am = j.ai_month; if (am && typeof am === "object") console.log(`AI spend this month (estimate): ${am.usd === null ? "unknown" : "$" + Number(am.usd).toFixed(2)} of cap $${am.cap}${am.stopped ? " - STOPPED AT THE CAP (AI calls refused)" : ""}`);
+  const am = j.ai_month; if (am && typeof am === "object") console.log(`AI spend this month (estimate): ${am.usd === null ? "unknown (AI calls refused until the usage log can be read)" : "$" + Number(am.usd).toFixed(2)}${am.reserved ? ` + $${Number(am.reserved).toFixed(3)} reserved in flight` : ""} of cap $${am.cap}${am.stopped && am.usd !== null ? " - STOPPED AT THE CAP (AI calls refused)" : ""}`);
   console.log("freshness (time the screen itself shows):"); fresh.forEach((l) => console.log(l));
   console.log(problems.length ? `\nPROBLEMS (${problems.length}):\n${problems.join("\n")}` : "\nOK: every screen answered, none empty, none stale");
   process.exit(problems.length ? 1 : 0);

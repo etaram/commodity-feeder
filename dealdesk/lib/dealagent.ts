@@ -7,7 +7,7 @@
 // state in the hidden tab 'Agent Runs' (one row per saved step, the latest row of a run is its state). Facts come
 // from the system's own data and from web search with sources; the deal is also saved in the deal records, so the
 // panel shows the same deal, but the owner never has to open it.
-import { anthropicHeaders, checkMonthlyCap, estimateCost, MODEL, noteSpend } from "@/lib/anthropic";
+import { MODEL, modelTurn } from "@/lib/anthropic";
 import { appendRow, ENGINE_SHEET, lookupContact, readRanges } from "@/lib/sheets";
 import { searchTendersSmart, supplierSearch } from "@/lib/panel";
 import { buyerProfile, companyFootprint, findWinners, tenders } from "@/lib/index";
@@ -260,14 +260,11 @@ async function stepLocked(io: Io, id: string, budgetMs: number): Promise<boolean
         break;
       }
       r.turns++;
-      const t1 = Date.now();
-      await checkMonthlyCap("deal agent");
-      const res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: anthropicHeaders(),
-        body: JSON.stringify({ model: AGENT_MODEL, max_tokens: 3000, system: system(r), tools: [...TOOLS, { type: "web_search_20250305", name: "web_search", max_uses: 3 }], messages: r.msgs }) });
-      const j = await res.json().catch(() => ({}));
+      // reserved against the monthly cap per turn (refused before sending when it could pass the cap), then metered
+      const res = await modelTurn("deal agent", r.ws, { model: AGENT_MODEL, max_tokens: 3000, system: system(r), tools: [...TOOLS, { type: "web_search_20250305", name: "web_search", max_uses: 3 }], messages: r.msgs });
+      const j = res.j;
       if (!res.ok) throw new Error(`AI ${res.status}: ${String(j?.error?.message || "").slice(0, 160)}`);
-      const usd = estimateCost(j.usage || {}); r.usd += usd; noteSpend(usd);
-      void appendRow("AI Usage", [now(), "deal agent", r.ws, AGENT_MODEL, j.usage?.input_tokens || 0, j.usage?.output_tokens || 0, j.usage?.cache_read_input_tokens || 0, j.usage?.server_tool_use?.web_search_requests || 0, Math.round(usd * 1e5) / 1e5, Date.now() - t1, "ok"]).catch(() => {});
+      r.usd += res.usd;
       // keep only text (without citation payloads) and our own tool calls: web search results are not replayed
       const content: Block[] = (j.content || []).filter((b: Block) => b.type === "text" || b.type === "tool_use").map((b: Block) => (b.type === "text" ? { type: "text", text: String(b.text || "") } : b))
         .filter((b: Block) => b.type !== "text" || String(b.text).trim());
