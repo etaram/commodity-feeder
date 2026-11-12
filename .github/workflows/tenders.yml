@@ -76,7 +76,7 @@ jobs:
             proven)  nice -n 15 python -m leads.proven snapshot 2>&1 | grep -E "proven|Error|Traceback"
                      nice -n 15 python -m leads.universe 2>&1 | grep -E "^INFO:leads:(universe|proven|imports|refined)|Error|Traceback" | cut -c1-2000
                      nice -n 15 python -m leads.proven report 2>&1 | grep -E "proven|Error|Traceback" | cut -c1-2000 ;;
-            probe)   python -m leads.tender_details probe $ARGS 2>&1 | cut -c1-600 ;;
+            probe)   TED_FIELDS="guarantee-required-lot guarantee-required-description-lot additional-information-deadline-lot document-url-lot award-criterion-type-lot award-criterion-number-weight-lot selection-criterion-lot selection-criterion-description-lot quantity-lot description-lot title-lot identifier-lot submission-url-lot place-of-performance-country-lot duration-period-value-lot terms-performance-lot" python -m leads.tender_details probe $ARGS 2>&1 | cut -c1-600 ;;
             *) echo "unknown task $TASK"; exit 1 ;;
           esac
       - name: Tender details store (save)

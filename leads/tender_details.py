@@ -988,8 +988,13 @@ def main(a):
                       repr(r.content[:160]) if r.status_code != 200 else "")
             except Exception as e:  # noqa: BLE001
                 print("PROBE", u[:120], type(e).__name__)
-        r = s.post("https://api.ted.europa.eu/v3/notices/search", json={"query": "publication-number=762189-2026", "fields": ["publication-number", "links", "ojs-number"], "limit": 1}, timeout=60)
-        print("PROBE api", r.status_code, r.text[:1500])
+        r = s.post("https://api.ted.europa.eu/v3/notices/search", json={"query": "publication-number=762189-2026", "fields": ["no-such-field-x"], "limit": 1}, timeout=60)
+        print("PROBE api-bad", r.status_code, r.text[:6000])
+        cands = os.environ.get("TED_FIELDS", "").split()
+        for fld in cands:
+            r = s.post("https://api.ted.europa.eu/v3/notices/search", json={"query": "publication-number=762189-2026", "fields": [fld], "limit": 1}, timeout=60)
+            print("PROBE field", fld, r.status_code, r.text[:300].replace(chr(10), " "))
+            time.sleep(0.5)
         return
     if mode == "sample":
         n = int(a[1]) if len(a) > 1 and a[1].isdigit() else 50
