@@ -14,7 +14,7 @@
 #                            review file. A new commit starts a new sample.
 # Companies House: the key is used only when the repository secret COMPANIES_HOUSE_API_KEY exists (written by
 # deploy/ops/enrich-start.sh and enrich-people.sh to $E/.ch.env, root only); without it the UK register stays off.
-# Limits: 1.5 CPUs, 3 GB, CPU shares 128, nice 19, idle I/O: the database, the data gateway, the website, the collectors,
+# Limits: 3 CPUs, 5 GB (owner 12 Nov: use the server; it ran at its 1.5-CPU cap), CPU shares 128, nice 19, idle I/O: the database, the data gateway, the website, the collectors,
 # backups and the semantic job keep priority. Folder /opt/sinder/enrich (root only): code copy, venv, queue, lane files,
 # status.json (counts only, readable by the server panel collector), export/enrich.jsonl.gz (for the company-check workflow).
 # THE LOG IS PUBLIC: counts, timings and versions only. No supplier name, contact or URL is printed.
@@ -22,7 +22,7 @@ set -euo pipefail
 mode="$1"; repo="$2"
 E=/opt/sinder/enrich
 IMG=python:3.12-slim
-LIMITS=(--cpus 1.5 --cpu-shares 128 --memory 3g --memory-swap 3g)
+LIMITS=(--cpus 3 --cpu-shares 128 --memory 5g --memory-swap 5g)
 umask 077; mkdir -p "$E"; chmod 711 "$E"
 
 seal() {   # $1 a file: printed only as ciphertext (hybrid encryption to the reviewer's public key; the private key is not
@@ -96,7 +96,7 @@ if [ "$mode" = start ]; then
   [ -s "$E/.ch.env" ] && echo "Companies House: key present (UK register on)" || echo "Companies House: no key (UK register off)"
   echo "lanes: $lanes"
   # 24 workers: the sample used about 0.5 of its 1.5 CPUs with 16 (the work is waiting on remote sites)
-  launch unless-stopped --lanes "$lanes" --workers 24
+  launch unless-stopped --lanes "$lanes" --workers 48
   exit 0
 fi
 if [ "$mode" = people ]; then
