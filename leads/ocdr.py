@@ -1,11 +1,15 @@
 """OCP Data Registry (data.open-contracting.org): bulk OCDS downloads from ~150 publishers in ~50 countries (strong
 in Latin America, Africa and Asia). For the Supplier Universe it reads the latest years of each publication and keeps
 every award with a named supplier; supplier contact points go to the private contacts cache.
-Work is spread over runs (time budget); past years are read once, the current year is re-read monthly."""
+Work is spread over runs (time budget); past years are read once, the current year is re-read monthly.
+A publisher/year is marked done only after a complete read (to the end of the file) and an atomic write of its output.
+A failed download, a file over the size limit and a read cut by the time budget are recorded separately (failed /
+too_large / partial) and stay retryable; a partial read never replaces an earlier complete file."""
 import datetime as dt
 import gzip
 import io
 import json
+import os
 import re
 import time
 
@@ -40,16 +44,24 @@ def _publications(s):
     return pubs
 
 
+FAILED_RETRY_DAYS = 1      # a failed publisher/year is tried again after this many days
+TOO_LARGE_RETRY_DAYS = 30
+
+
 def _read(s, pid, year, iso, title, t_end):
+    """(rows, contacts, releases read, complete) or a failure string ('http 503', 'too large')."""
     url = f"{BASE}/publication/{pid}/download?name={year}.jsonl.gz"
     r = s.get(url, stream=True, timeout=120)
-    if r.status_code != 200 or int(r.headers.get("content-length") or 0) > MAX_BYTES:
-        return None
-    rows, contacts, n = [], [], 0
+    if r.status_code != 200:
+        r.close(); return f"http {r.status_code}"
+    if int(r.headers.get("content-length") or 0) > MAX_BYTES:
+        r.close(); return "too large"
+    rows, contacts, n, complete = [], [], 0, True
     src = f"OCDS registry: {title[:60]}"
     with gzip.GzipFile(fileobj=r.raw) as gz:
         for line in io.TextIOWrapper(gz, encoding="utf-8", errors="replace"):
             if time.time() > t_end:
+                complete = False
                 break
             n += 1
             if '"awards"' not in line:
@@ -69,7 +81,20 @@ def _read(s, pid, year, iso, title, t_end):
                 a.pop("email", None); a.pop("link", None)
                 rows.append(a)
     r.close()
-    return rows, contacts, n
+    return rows, contacts, n, complete
+
+
+def _write_atomic(path, rows):
+    tmp = path.with_name(path.name + ".tmp")
+    with open(tmp, "w", encoding="utf-8") as f:
+        for a in rows:
+            f.write(json.dumps(a, ensure_ascii=False) + "\n")
+        f.flush(); os.fsync(f.fileno())
+    os.replace(tmp, path)
+
+
+def _due(rec, days):
+    return not rec or rec.get("at", "") <= str(today() - dt.timedelta(days=days))
 
 
 def fetch():
@@ -78,6 +103,14 @@ def fetch():
     if not state.get("pubs") or state.get("listed", "") < str(today() - dt.timedelta(days=30)):
         state["pubs"] = _publications(s); state["listed"] = str(today())
     done = state.setdefault("done", {})
+    failed = state.setdefault("failed", {})        # key -> {"at", "tries", "why"}; retried after FAILED_RETRY_DAYS
+    partial = state.setdefault("partial", {})      # key -> {"at", "releases"}; cut by the time budget, retried next run
+    too_large = state.setdefault("too_large", {})  # key -> {"at"}; retried after TOO_LARGE_RETRY_DAYS
+    # recovery of the old behaviour (a key was marked done before checking the read): a done key without its output
+    # file was never read, so it goes back to the work list (bounded by the normal per-run time budget)
+    recovered = [k for k in list(done) if not (OUT / f"ocdr_{k.replace('/', '_')}.jsonl").exists()]
+    for k in recovered:
+        done.pop(k, None); failed.setdefault(k, {"at": "", "tries": 0, "why": "marked done without output (before fix)"})
     todo = []
     for p in state["pubs"]:
         if not p["iso"] or not p["years"]:
@@ -85,32 +118,52 @@ def fetch():
         for y in [y for y in p["years"] if y >= today().year - 2][-3:]:
             k = f"{p['id']}/{y}"
             stale = y >= today().year and done.get(k, "") < str(today() - dt.timedelta(days=30))
-            if k not in done or stale:
-                todo.append((PRIORITY.get(region(p["iso"]), 2), -y, p, y))
+            if not (k not in done or stale):
+                continue
+            if k in too_large and not _due(too_large[k], TOO_LARGE_RETRY_DAYS):
+                continue
+            if k in failed and not _due(failed[k], FAILED_RETRY_DAYS):
+                continue
+            todo.append((PRIORITY.get(region(p["iso"]), 2), -y, p, y))
     todo.sort(key=lambda x: (x[0], x[1]))
     OUT.mkdir(parents=True, exist_ok=True)
-    stats = {"files": 0, "awards": 0, "contacts": 0}
+    stats = {"files": 0, "awards": 0, "contacts": 0, "failed": 0, "partial": 0, "too_large": 0, "recovered": len(recovered)}
     for _, _, p, y in todo:
         if time.time() > t_end - 60:
             break
+        k = f"{p['id']}/{y}"
         try:
             res = _read(s, p["id"], y, p["iso"], p["title"], min(t_end, time.time() + 600))
         except Exception as e:  # noqa: BLE001
-            log.warning("OCDR %s/%s: %s", p["id"], y, e); res = None
-        done[f"{p['id']}/{y}"] = str(today())
-        if not res:
+            log.warning("OCDR %s/%s: %s", p["id"], y, e); res = type(e).__name__
+        if isinstance(res, str) or res is None:
+            why = res or "no answer"
+            if why == "too large":
+                too_large[k] = {"at": str(today())}; stats["too_large"] += 1
+            else:
+                f = failed.get(k) or {"tries": 0}
+                failed[k] = {"at": str(today()), "tries": int(f.get("tries") or 0) + 1, "why": why[:60]}; stats["failed"] += 1
             continue
-        rows, contacts, n = res
-        with open(OUT / f"ocdr_{p['id']}_{y}.jsonl", "w", encoding="utf-8") as f:
-            for a in rows:
-                f.write(json.dumps(a, ensure_ascii=False) + "\n")
+        rows, contacts, n, complete = res
+        path = OUT / f"ocdr_{p['id']}_{y}.jsonl"
+        if not complete:
+            partial[k] = {"at": str(today()), "releases": n}; stats["partial"] += 1
+            if path.exists():               # keep the last complete file; the partial read is dropped
+                log.info("OCDR %s %s %s: cut by the time budget after %d releases; earlier file kept", p["id"], p["iso"], y, n)
+                continue
+        _write_atomic(path, rows)
         if contacts:
             with open(PRIVATE / "contacts_ocdr.jsonl", "a", encoding="utf-8") as f:
                 for c in contacts:
                     f.write(json.dumps(c, ensure_ascii=False) + "\n")
-        stats["files"] += 1; stats["awards"] += len(rows); stats["contacts"] += len(contacts)
-        log.info("OCDR %s %s %s: %d releases, %d awards, %d contacts", p["id"], p["iso"], y, n, len(rows), len(contacts))
-    STATE.write_text(json.dumps(state))
+        if complete:
+            done[k] = str(today()); failed.pop(k, None); partial.pop(k, None); too_large.pop(k, None)
+            stats["files"] += 1
+        stats["awards"] += len(rows); stats["contacts"] += len(contacts)
+        log.info("OCDR %s %s %s: %d releases, %d awards, %d contacts%s", p["id"], p["iso"], y, n, len(rows), len(contacts),
+                 "" if complete else " (partial, retried next run)")
+    tmp = STATE.with_name(STATE.name + ".tmp"); tmp.write_text(json.dumps(state)); os.replace(tmp, STATE)
     stats["pending"] = max(0, len(todo) - stats["files"])
+    stats["failed_total"] = len(failed); stats["partial_total"] = len(partial); stats["too_large_total"] = len(too_large)
     log.info("OCDR %s", stats)
     return [], stats
