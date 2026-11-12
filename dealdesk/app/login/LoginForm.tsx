@@ -11,7 +11,7 @@ const input = "mt-1 w-full rounded-md border border-line px-3 py-2 text-sm outli
 const label = "text-xs font-semibold text-muted";
 
 export default function LoginForm({ google, notice }: { google: boolean; notice: string }) {
-  const [mode, setMode] = useState<"login" | "request" | "sent">("login");
+  const [mode, setMode] = useState<"login" | "request" | "sent" | "forgot" | "mailed">("login");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [passcode, setPasscode] = useState("");
@@ -38,6 +38,33 @@ export default function LoginForm({ google, notice }: { google: boolean; notice:
       if (r.ok) setMode("sent");
       else setErr(j.error || "Could not send the request.");
     }
+  }
+
+  async function forgot(e: React.FormEvent) {
+    e.preventDefault(); setBusy(true); setErr("");
+    const r = await fetch("/api/auth/reset", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+    const j = await r.json().catch(() => ({}));
+    setBusy(false);
+    if (r.ok) setMode("mailed"); else setErr(j.error || "Could not send the link.");
+  }
+
+  if (mode === "forgot" || mode === "mailed") {
+    return (
+      <div className="mx-auto mt-16 max-w-sm rounded-xl border border-line bg-white p-8 shadow-sm">
+        <h1 className="text-xl font-bold">Forgot password</h1>
+        {mode === "mailed" ? (
+          <p className="mt-2 text-sm text-muted">If an active account uses this address, a link to set a new password is on its way. It works once, for 30 minutes. Check the spam folder too.</p>
+        ) : (
+          <form onSubmit={forgot} className="mt-6 space-y-4">
+            <div><label className={label}>EMAIL</label>
+              <input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} className={input} /></div>
+            {err && <div className="rounded-md bg-nobg px-3 py-2 text-sm text-no">{err}</div>}
+            <button disabled={busy} className="w-full rounded-md bg-accent py-2 text-sm font-semibold text-white hover:bg-blue disabled:opacity-50">{busy ? "Working..." : "Send me a link"}</button>
+          </form>
+        )}
+        <button onClick={() => { setMode("login"); setErr(""); }} className="mt-6 w-full rounded-md border border-line py-2 text-sm font-semibold hover:bg-paper">Back to sign in</button>
+      </div>
+    );
   }
 
   if (mode === "sent") {
@@ -84,6 +111,7 @@ export default function LoginForm({ google, notice }: { google: boolean; notice:
           {busy ? "Working..." : mode === "login" ? "Sign in" : "Send request"}
         </button>
       </form>
+      {mode === "login" && <button type="button" onClick={() => { setMode("forgot"); setErr(""); }} className="mt-4 w-full text-center text-xs text-accent hover:underline">Forgot password?</button>}
       <button type="button" onClick={() => { setMode(mode === "login" ? "request" : "login"); setErr(""); }} className="mt-4 w-full text-center text-xs text-accent hover:underline">
         {mode === "login" ? "No account yet? Request access" : "Already have an account? Sign in"}
       </button>
