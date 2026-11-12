@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { appendRow, appendTo, ENGINE_SHEET, readRanges, sheetFor, sheetsEnabled, stateSheet } from "@/lib/sheets";
 import { mailReady } from "@/lib/mailer";
+import { budgetState, reservedNow, worstCaseCost } from "@/lib/anthropic";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -29,6 +30,8 @@ export async function GET() {
   catch (e) { out.write_to_live_engine = "refused: " + String((e as Error).message || e).slice(0, 120); }
   try { out.engine_data_readable = ((await readRanges(ENGINE_SHEET, ["'Users'!A1:A2"]))?.[0] || []).length >= 0; }
   catch (e) { out.engine_data_readable = "FAILED: " + String((e as Error).message || e).slice(0, 120); }
+  // the monthly AI cap as this deployment applies it (read-only, no model call): spend, reserved in flight, refusing or not
+  out.ai_cap = await budgetState().then((b) => ({ ...b, reserved_now: reservedNow(), worst_case_health_ping_usd: worstCaseCost({ max_tokens: 5, messages: [{ role: "user", content: "Reply OK" }] }), rule: "refused when spent + reserved + worst case > cap, or when spend is unknown" })).catch((e) => String(e).slice(0, 160));
   out.ok = out.write_to_state === "written" && out.read_back_from_state === "marker found" && String(out.write_to_live_engine).startsWith("refused") && out.mail_can_send === false && !out.state_is_engine;
   return NextResponse.json(out);
 }
