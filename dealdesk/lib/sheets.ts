@@ -72,9 +72,9 @@ async function call(jwt: JWT, method: string, url: string, body?: unknown, timeo
     signal: AbortSignal.timeout(timeoutMs),
   });
   let r = await go();
-  // Google's per-minute read quota (429): reads only, wait and try again twice (2-3 s, then 5-7 s). Writes are never
+  // Google's per-minute read quota (429): reads only, wait and try again three times (2, 6 and 15 s, plus up to 2 s). Writes are never
   // retried here, so a write can not be applied twice.
-  for (const wait of [2000, 5000]) {
+  for (const wait of [2000, 6000, 15000]) {
     if (r.status !== 429 || method !== "GET") break;
     await new Promise((res) => setTimeout(res, wait + Math.floor(Math.random() * 2000)));
     r = await go();

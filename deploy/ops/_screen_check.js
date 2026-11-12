@@ -34,7 +34,20 @@ const findTimes = (o) => {          // ISO-like times anywhere in the check's su
     j = await r.json();
     if (r.status !== 200) { console.log(`ERROR  self-check answered ${r.status}`); process.exit(1); }
   } catch (e) { console.log(`ERROR  self-check did not answer: ${String(e).slice(0, 120)}`); process.exit(1); }
-  const checks = j.checks || [];
+  let checks = j.checks || [];
+  // a screen that failed once is asked again after 45 s, alone: a passing second answer means a passing moment (e.g.
+  // Google's per-minute quota after a restart), and only a screen that fails twice is reported
+  const failed = checks.filter((c) => c.status !== 200 || c.err).map((c) => c.name);
+  if (failed.length) {
+    await new Promise((r) => setTimeout(r, 45000));
+    try {
+      const r2 = await fetch(`${BASE}/api/health?sample=2&only=${encodeURIComponent(failed.join(","))}`, { headers: { authorization: `Bearer ${SECRET}` }, signal: AbortSignal.timeout(200000) });
+      const j2 = await r2.json();
+      const again = Object.fromEntries((j2.checks || []).map((c) => [c.name, c]));
+      checks = checks.map((c) => (again[c.name] ? { ...again[c.name], retried: true } : c));
+      console.log(`asked again after 45 s: ${failed.join(", ")} -> ${failed.filter((n) => again[n] && again[n].status === 200 && !again[n].err).length} now pass`);
+    } catch (e) { console.log(`second ask failed: ${String(e).slice(0, 80)}`); }
+  }
   const by = Object.fromEntries(checks.map((c) => [c.name, c]));
   const problems = [];
   for (const c of checks) {
