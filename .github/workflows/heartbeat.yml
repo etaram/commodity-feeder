@@ -32,7 +32,7 @@ jobs:
           SCHED_LOG: ${{ runner.temp }}/sched.log
           DRY: ${{ inputs.dry_run == 'yes' && '--dry-run' || '' }}
         run: |
-          minutes=345; [ -n "$DRY" ] && minutes=6
+          minutes=345; [ -n "$DRY" ] && minutes=11
           end=$(( $(date +%s) + minutes*60 ))
           while [ "$(date +%s)" -lt "$end" ]; do
             python3 deploy/ops/scheduler/sched.py dispatch $DRY || echo "dispatch tick failed"

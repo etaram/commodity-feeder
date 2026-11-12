@@ -222,6 +222,7 @@ def cmd_dispatch(dry=False):
     for i, e in enumerate(entries):              # back-to-back lines are due on every tick; the run check below decides
         if e["cron"] is None:
             due[i] = now
+    started = 0
     for i, when in sorted(due.items(), key=lambda kv: kv[1]):
         e = entries[i]
         wf, cron = e["workflow"], " ".join(e["cron"]) if e["cron"] else "@continuous"
@@ -245,14 +246,17 @@ def cmd_dispatch(dry=False):
                 continue
         if dry:
             log(f"{tag}: would start {wf} for {iso(when)} [{cron}] inputs {e['inputs'] or '-'}")
+            started += 1
             continue
         code, _ = api(f"actions/workflows/{wf}/dispatches", "POST", {"ref": REF, "inputs": e["inputs"]}, tok)
         ok = code == 204
         log(f"dispatch: {wf} for {iso(when)} [{cron}] -> {'started' if ok else f'FAILED http {code}'}")
         rec.update(last_attempt=iso(now), last_result="started" if ok else f"failed http {code}")
         if ok:
+            started += 1
             rec["last_dispatch"] = iso(now)
             rec["dispatches"] = rec.get("dispatches", 0) + 1
+    log(f"tick {iso(now)}: window from {iso(start)}, {len(due)} line(s) due, {started} {'would start' if dry else 'started'}")
     if not dry:
         st["last_tick"] = iso(now)
         save("dispatch.json", st)
