@@ -209,6 +209,7 @@ def apply_refined(out):
     for r in out:
         r.setdefault("website_basis", ""); r.setdefault("website_rejected", ""); r.setdefault("dup_of", ""); r.setdefault("refine", "")
         r.setdefault("identity", ""); r.setdefault("lei", ""); r.setdefault("legal_name", "")
+        r.setdefault("founded", ""); r.setdefault("size_band", ""); r.setdefault("employees", r.get("employees", ""))
     if os.environ.get("REFINE", "on") == "off":
         return 0
     p = DATA / "checks" / "refine" / "refined.jsonl.gz"
@@ -250,6 +251,13 @@ def apply_refined(out):
             r["lei"] = f["lei"]["value"]
         if f.get("legal_name"):
             r["legal_name"] = f["legal_name"]["value"][:150]
+        # age and size the company states (leads/company_profile.py); contacts stay in the refined layer, not here
+        if f.get("founded"):
+            r["founded"] = f["founded"]["value"][:4]
+        if f.get("size_band"):
+            r["size_band"] = f"{f['size_band']['value']}: {f['size_band']['basis']}"[:120]
+        if not r.get("employees") and f.get("employees"):
+            r["employees"] = f["employees"]["value"].split(" ")[0]
         if not r.get("address") and f.get("registered_address"):
             r["address"] = f["registered_address"]["value"]
         dup = d.get("duplicate") or {}

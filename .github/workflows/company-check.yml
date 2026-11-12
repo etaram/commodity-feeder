@@ -41,6 +41,28 @@ jobs:
           key: checks-${{ github.run_id }}
           restore-keys: checks-
       - run: pip install requests google-auth pycountry phonenumbers pypinyin dnspython
+      - name: Server enrichment results (read-only; only on the company server's runners)
+        # leads/enrich_server.py exports its merged records on the server; company_check merges them into the checks
+        # (a newer server read replaces the hourly read) and refine.py fills the profile fields from them
+        run: |
+          mkdir -p data/checks
+          if docker run --rm -v /opt/sinder/enrich/export:/x:ro alpine:3.20 test -s /x/enrich.jsonl.gz 2>/dev/null; then
+            docker run --rm -v /opt/sinder/enrich/export:/x:ro alpine:3.20 cat /x/enrich.jsonl.gz > data/checks/enrich_server.jsonl.gz
+            echo "server enrichment export: $(stat -c %s data/checks/enrich_server.jsonl.gz) bytes"
+          else
+            echo "no server enrichment export on this runner"
+          fi
+        continue-on-error: true
+      - name: Priority list for the server's people lane (deals and the Check queue; names stay on the server)
+        # leads/enrich_server.py reads /opt/sinder/enrich/priority.keys and looks these suppliers up in the registers first
+        run: |
+          python -m leads.company_check --priority-keys data/checks/priority.keys 2>&1 | tail -1
+          if [ -s data/checks/priority.keys ] && docker run --rm -v /opt/sinder/enrich:/x:ro alpine:3.20 test -d /x 2>/dev/null; then
+            docker run --rm -i -v /opt/sinder/enrich:/x alpine:3.20 sh -c 'umask 077; cat > /x/priority.keys.new && mv /x/priority.keys.new /x/priority.keys' < data/checks/priority.keys
+            echo "priority keys placed on the server: $(wc -l < data/checks/priority.keys)"
+          fi
+          rm -f data/checks/priority.keys
+        continue-on-error: true
       - name: Check companies
         run: python -m leads.company_check --limit ${{ inputs.limit || '4000' }} --minutes 25 2>&1 | tail -20
         continue-on-error: true
@@ -55,6 +77,8 @@ jobs:
       - name: Refine the other modules (tenders, buyers, projects, financing, logistics, importers)
         run: python -m leads.refine_modules --links 2500 --sites 150 --registers 3 2>&1 | grep -E "refine modules|Error|Traceback" | cut -c1-2000
         continue-on-error: true
+      - name: Drop the server export copy (already merged into the checks)
+        run: rm -f data/checks/enrich_server.jsonl.gz
       - name: Publish progress counts
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"

@@ -859,7 +859,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div id="sr-out"></div>
     <details class="section" id="cov-box"><summary><b data-i="cov_h">Coverage radar</b> <span class="sub" data-i="cov_s">where credible supply is thin</span></summary><p class="note" data-i="cov_n"></p><div id="cov-out"></div></details>
   </section>
-  <section class="view" id="v-ops" hidden><h2 style="margin:0 0 4px"><span data-i="tab_ops">Admin panel</span></h2><div id="srv-out"></div><div id="ops-out"></div></section>
+  <section class="view" id="v-ops" hidden><h2 style="margin:0 0 4px"><span data-i="tab_ops">Admin panel</span></h2><div id="spend-out"></div><div id="srv-out"></div><div id="ops-out"></div></section>
   <section class="view" id="v-users" hidden>
     <div class="filters"><h2 style="margin-inline-end:auto" data-i="users_h">User accounts</h2><button type="button" id="users-refresh" data-i="refresh">Refresh</button></div>
     <p class="note" data-i="users_note"></p>
@@ -2405,9 +2405,15 @@ async function compose({ kind, ctx, to }, outSel) {
       : mode === "both" ? `first in ${L[1]} (the business language of the recipient's country, natural and polite as a native business writer would write it), then a line "----- English -----" and the same e-mail in English; the subject line in ${L[1]} followed by " / " and the English subject`
       : "in English (business e-mails to foreign companies are in English)";
     const review = mode === "en" ? "" : `, "review": "the full e-mail translated to ${outLang()} so the sender can check what it says"`;
-    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes. For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Greet the named person if one is given, else use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
+    // Discretion toward suppliers, freight and finance parties: they must not learn who the buyer is or which tender this
+    // is (they could go around Sinder), and Sinder never claims to act for a party it does not represent. Only the buyer
+    // itself (kind "buyer") is addressed with the opportunity's own name.
+    const discreet = kind !== "buyer";
+    const DISCRETION = discreet ? ` DISCRETION (strict): never name the buyer, the end client, the project name, the tender or reference number, the financing institution's project id, or any link; never write that Sinder acts "on behalf of" or represents the buyer or any party. Describe the opportunity only at the level a competitor could not trace: the sector, the type of equipment or goods, the broad region when describing the project (e.g. "East Africa", "Southern Europe"); the delivery country may be named only as the shipping destination for the price, the kind of financing in general terms (e.g. "multilateral-financed", "public utility"), and the size as a range (e.g. "a project in the USD 50-150 million range"). Present Sinder as preparing a competitive supply offer and shortlisting manufacturers for it, and make the supplier want to be on that shortlist: the size of the opportunity, a decision timeline, and that detailed specifications follow once they confirm interest and capability (and sign an NDA if they ask). Business-like and confident, not secretive-sounding.` : "";
+    const ctxSafe = ctx?.r ? pick(ctx.r, discreet ? ["sector", "commodity", "commodity group", "product", "products", "supplied", "supplier", "country", "est_value_usd", "deadline", "Primary commodity group", "market"] : ["title_en", "buyer", "country", "sector", "commodity", "est_value_usd", "deadline", "link", "opportunity", "market", "commodity group", "product", "Account", "Primary commodity group", "products", "supplied", "supplier"]) : {};
+    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement). Do not mention Israel or where Sinder is based; present Sinder simply as an international procurement firm. Keep the message coherent with the opportunity: the delivery destination is the opportunity's own country (in the context below), never Sinder's home country, so Incoterms and freight questions name that destination, chosen as a trade professional would: a public tender usually wants goods delivered to the buyer's own sites, so ask for DAP (or DDP) to the named delivery place in that country as the main price; when the supplier is in the same customs union or reachable by land (e.g. an EU supplier for an EU buyer) the goods travel by truck (reefer for chilled or frozen food) and a port price is irrelevant; only for overseas supply add FOB and CIF to the destination country's main container port (e.g. Constanta for Romania), and note that goods from outside a customs union may carry import duty there. Dates, currency (EUR inside the EU) and certificates (e.g. EU health and export certificates for food) fit that market. Professional, short (under 180 words), concrete, no emojis, no em-dashes.${DISCRETION} For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, the Incoterm and named place chosen as above, payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Greet the named person if one is given, else use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
 Return JSON only: {"subject": "…", "body": "…"${review}} (body as plain text with line breaks).
-Context: ${JSON.stringify(ctx?.r ? pick(ctx.r, ["title_en", "buyer", "country", "sector", "commodity", "est_value_usd", "deadline", "link", "opportunity", "market", "commodity group", "product", "Account", "Primary commodity group", "products", "supplied", "supplier"]) : {})}`;
+Context${discreet ? " (for your understanding only: the exact value is NOT to be written; the country is written only as the delivery destination for prices and freight, never tied to a buyer or a project)" : ""}: ${JSON.stringify(ctxSafe)}`;
     try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || "";
       $("#m-review").innerHTML = j.review ? `<details class="section" open><summary>${esc(t("m_review"))}</summary><div class="ai" dir="auto" style="white-space:pre-wrap">${esc(j.review)}</div><div class="sub">${esc(t("m_review_note"))}</div></details>` : ""; }
     catch (e) { $("#m-body").value = e.text || ""; $("#m-flash").innerHTML = `<div class="flash err">${esc(sampleErr(e))}</div>`; }
@@ -2878,6 +2884,23 @@ function registryHtml(g) {
     ${row(mt("Why", "למה"), g.why)}
     <div class="sub muted">${esc(mt("Read in code from the register itself; verified only when the record is active and in the same name and country.", "נקרא בקוד מהמרשם עצמו; מסומן כמאומת רק כשהרשומה פעילה, באותו שם ובאותה מדינה."))}</div></details>`;
 }
+/* key people from the enrichment ('Company checks' people column: "Name (title, source[, LinkedIn profile on the
+   company's own site])"): official registers, the company's own site, Wikidata. LinkedIn is never read by the system:
+   each person gets a people-search link (name and company) the user opens in his own browser */
+function peopleParse(cell) {
+  return String(cell || "").split(/;\s+/).map(x => { const m = x.match(/^(.+?) \((.*)\)$/); if (!m) return null;
+    const parts = m[2].split(/,\s*/); const li = parts.find(p => /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/in\//i.test(p)) || "";
+    return { name: m[1].trim(), title: parts[0] || "", src: parts.filter(p => p && p !== parts[0] && p !== li).join(", "), li }; }).filter(Boolean);
+}
+function peopleHtml(c) {
+  const ppl = peopleParse(c && c.people); if (!ppl.length) return "";
+  const co = String(c.supplier || "").replace(/[\s,]+(ltd\.?|limited|llc|inc\.?|gmbh|ag|s\.?a\.?s?|s\.?r\.?l\.?|s\.?r\.?o\.?|a\.?s\.?|as|asa|ltda\.?|sas|sarl|plc|b\.?v\.?|co\.?)$/i, "").trim();
+  const srcLab = v => /^register: /.test(v) ? mt("official register", "מרשם רשמי") + " - " + v.slice(10) : v === "own site" ? mt("company website", "אתר החברה") : v === "wikidata" ? "Wikidata" : v;
+  const row = p => `<li><b dir="auto">${esc(p.name)}</b> <span class="muted" dir="auto">${esc(p.title)}</span> <span class="pill ${/^register: /.test(p.src) ? "good" : "info"}">${esc(srcLab(p.src))}</span>
+    ${p.li ? link(p.li, mt("LinkedIn profile (linked from the company site)", "פרופיל לינקדאין (מקושר מאתר החברה)")) + " · " : ""}<a href="https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent((p.name + " " + co).slice(0, 120))}" target="_blank" rel="noopener">${esc(mt("Search on LinkedIn", "חפש בלינקדאין"))}</a></li>`;
+  return `<div class="sub"><b>${esc(mt("Key people", "אנשי מפתח"))}:</b><ul class="rd-list">${ppl.slice(0, 12).map(row).join("")}</ul>
+    <span class="muted">${esc(mt("From official company registers, the company's own website and Wikidata, with the source of each. The LinkedIn link opens a search in your own browser; the system does not read LinkedIn.", "ממרשמי חברות רשמיים, מאתר החברה ומוויקידאטה, עם המקור של כל שם. הקישור ללינקדאין פותח חיפוש בדפדפן שלך; המערכת לא קוראת את לינקדאין."))}</span></div>`;
+}
 function renderCheck(s, c, g) {
   const el = $("#c-check"); if (!el) return;
   const canAsk = ["analyst", "admin"].includes(S.me?.role) && window.DD_CHECK;
@@ -2886,7 +2909,7 @@ function renderCheck(s, c, g) {
   else {
     const ok = c.verdict === "ok";
     const line = (l, v) => v ? `<div class="sub"><b>${esc(l)}:</b> ${esc(v)}</div>` : "";
-    el.innerHTML = `<details class="section" ${ok ? "" : "open"}><summary>${esc(mt("Website check", "בדיקת אתר"))} <span class="pill ${ok ? "good" : "warn"}">${esc(c.verdict)}</span> <span class="pill ${c.name_match === "high" ? "good" : c.name_match === "partial" ? "info" : "bad"}">${esc(mt("name", "שם"))}: ${esc(c.name_match || "-")}</span> <span class="muted">${esc(c.checked)}</span></summary>
+    el.innerHTML = `<details class="section" ${ok ? "" : "open"}><summary>${esc(mt("Website check", "בדיקת אתר"))} <span class="pill ${ok ? "good" : "warn"}">${esc(c.verdict || mt("site not read yet", "האתר עדיין לא נקרא"))}</span> <span class="pill ${c.name_match === "high" ? "good" : c.name_match === "partial" ? "info" : "bad"}">${esc(mt("name", "שם"))}: ${esc(c.name_match || "-")}</span> <span class="muted">${esc(c.checked)}</span></summary>
       ${c.website ? `<div class="sub"><a href="${esc(c.website)}" target="_blank" rel="noopener" dir="ltr">${esc(c.domain || c.website)}</a></div>` : ""}
       ${line(mt("Says", "מה כתוב באתר"), c.description)}${line(mt("Products on the site", "מוצרים באתר"), c.products)}
       ${line(mt("Sector from the site", "סקטור לפי האתר"), c.sector + (c.sector_conflict === "yes" ? `  (${mt("record says", "ברשומה")}: ${c.record_sector})` : ""))}
@@ -2894,6 +2917,7 @@ function renderCheck(s, c, g) {
       ${line(mt("Export", "יצוא"), [c.export, c.export_countries].filter(Boolean).join(" · "))}${line(mt("Registration ids", "מספרי רישום"), c.legal_ids)}
       ${line(mt("E-mails on its own domain", "אימיילים בדומיין שלה"), c.emails)}${line(mt("Phones", "טלפונים"), c.phones)}
       ${c.linkedin || c.whatsapp ? `<div class="sub"><b>${esc(mt("LinkedIn and WhatsApp on its site", "לינקדאין ווואטסאפ מהאתר שלה"))}:</b> ${socialBtns(c.linkedin, c.whatsapp, supMsg(s))}</div>` : ""}
+      ${peopleHtml(c)}
       ${c.changes ? `<div class="sub q-block"><b>${esc(mt("Changed since the last read", "השתנה מאז הקריאה הקודמת"))}:</b> ${esc(c.changes)}</div>` : ""}
       ${line(mt("Structured data the site publishes", "נתונים מובנים שהאתר מפרסם"), c.structured)}
       ${c.gaps ? `<div class="sub q-block"><b>${esc(mt("Missing", "חסר"))}:</b> ${esc(c.gaps)}</div>` : ""}
@@ -2901,7 +2925,30 @@ function renderCheck(s, c, g) {
   }
   if (g) el.insertAdjacentHTML("beforeend", registryHtml(g));
   const so = $("#c-social"); if (so && c && (c.linkedin || c.whatsapp)) { so.innerHTML = socialBtns(c.linkedin, c.whatsapp, supMsg(s)); }
-  const b = $("#ck-ask"); if (b) b.onclick = async () => { b.disabled = true; try { await window.DD_CHECK.request(s.supplier, s.country); $("#ck-out").textContent = mt("Queued: checked in the next background run (every hour).", "בתור: ייבדק בריצת הרקע הבאה (כל שעה)."); track("company_check_request", s.supplier); } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; } };
+  const b = $("#ck-ask"); if (b) b.onclick = async () => {
+    b.disabled = true;
+    try {
+      // the check-now worker on the server reads the request within ~15 s and writes the result within about a minute
+      const site = String(s.website || "").split(/[\s;,]+/)[0] || "";
+      const q = await window.DD_CHECK.request(s.supplier, s.country, site, s.main_sector || "");
+      $("#ck-out").textContent = mt("Checking now, the result appears here within about a minute.", "בודק עכשיו, התוצאה תופיע כאן תוך כדקה.");
+      track("company_check_request", s.supplier);
+      pollCheck(s, (q && q.requested_at) || new Date().toISOString());
+    } catch (e) { $("#ck-out").textContent = errText(e); b.disabled = false; }
+  };
+}
+/* after "check the website": ask every 8 s for up to 3 minutes until a check newer than the request is there, then draw it */
+function pollCheck(s, requestedAt) {
+  const t0 = Date.now(), newer = c => { const a = Date.parse(c && c.checked_at || ""), r = Date.parse(requestedAt); return Number.isFinite(a) && Number.isFinite(r) && a >= r - 5000; };
+  const tick = () => {
+    if (S.sel.c !== s) return;                       // another company is open: stop asking
+    if (Date.now() - t0 > 180000) { const o = $("#ck-out"); if (o) o.textContent = mt("The check is still running, open the company again in a few minutes.", "הבדיקה עדיין רצה, נסה לפתוח שוב בעוד כמה דקות."); const bb = $("#ck-ask"); if (bb) bb.disabled = false; return; }
+    window.DD_CHECK.get(s.supplier, s.country).then(j => {
+      if (S.sel.c !== s) return;
+      if (j && newer(j.check)) renderCheck(s, j.check, j.registry); else setTimeout(tick, 8000);
+    }).catch(() => setTimeout(tick, 8000));
+  };
+  setTimeout(tick, 8000);
 }
 /* facts on record (assertions ledger): each with its status, evidence and reviewer; an analyst can dispute or reject one line without touching the company */
 function renderAssertions(s, rows) {
@@ -4409,6 +4456,53 @@ async function renderOps(fresh) {
   const bf = $("#ops-backfill"); if (bf && window.DD_ADMIN_ACT) bf.onclick = async () => { bf.disabled = true; bf.textContent = t("loading"); try { const r = await window.DD_ADMIN_ACT("backfill_research"); bf.textContent = mt(`${r.facts} facts from ${r.jobs} jobs`, `${r.facts} עובדות מ-${r.jobs} מחקרים`); setTimeout(() => renderOps(true), 1500); } catch (e) { bf.textContent = errText(e); } };
 }
 
+/* ---------- Spending this month: every paid service against its monthly cap, and the total (admin) ----------
+   Data: /api/panel/spend (lib/spend.ts). Plain words per line; unknown is shown as unknown, never as 0. */
+const SPD = { data: null, at: 0, busy: false, err: "" };
+const spdWords = { "within budget": "בתוך התקציב", "near the cap": "קרוב לתקרה", "stopped at the cap": "נעצר בתקרה", "over the cap": "מעל התקרה",
+  "not known right now": "לא ידוע כרגע", "no cap set": "לא הוגדרה תקרה", "off (not connected, nothing spent)": "כבוי (לא מחובר, אין הוצאה)", "stopped: the cap is 0": "נעצר: התקרה 0",
+  "not running (no ledger yet)": "לא פועל (אין עדיין יומן)" };
+const spdName = { anthropic: ["Anthropic API (AI)", "Anthropic API (בינה מלאכותית)"], agents: ["Agents (budget ledger)", "סוכנים (יומן תקציב)"], search: ["Search API", "API חיפוש"], whatsapp: ["WhatsApp", "וואטסאפ"] };
+const spdCls = l => l === "within" ? "good" : l === "near" ? "warn" : l === "stopped" ? "bad" : "";
+const spdUsd = v => v === null || v === undefined ? "-" : "$" + Number(v).toFixed(2);
+const spdSay = w => LANG === "he" ? String(w || "").split(", but ").map((x, i) => i ? "אבל " + x.replace(" could not be read", " לא נקרא") : (spdWords[x] || x)).join(", ") : w;
+async function renderSpend(fresh) {
+  const el = $("#spend-out"); if (!el) return;
+  if (!window.DD_ADMIN) { el.innerHTML = ""; return; }
+  if (SPD.busy) return;
+  if (fresh || !SPD.data || Date.now() - SPD.at > 110_000) {
+    SPD.busy = true;
+    if (!SPD.data) el.innerHTML = `<section class="section"><h3>${esc(mt("Spending this month", "הוצאות החודש"))}</h3><div class="sub">${esc(t("loading"))}</div></section>`;
+    try {
+      const r = await fetch("/api/panel/spend", { credentials: "same-origin", cache: "no-store" });
+      if (r.status === 401) { location.href = "/login"; return; }
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || !j.ok) throw new Error(r.status === 404 ? mt("this part of the server is not deployed yet", "החלק הזה בשרת עוד לא הותקן") : (j && j.error) || `HTTP ${r.status}`);
+      SPD.data = j; SPD.at = Date.now(); SPD.err = "";
+    } catch (e) { SPD.err = e.message || String(e); }
+    SPD.busy = false;
+  }
+  el.innerHTML = spdHtml(SPD.data, SPD.err);
+  const b = $("#spend-refresh"); if (b) b.onclick = () => renderSpend(true);
+}
+function spdHtml(d, err) {
+  const head = `<h3>${esc(mt("Spending this month", "הוצאות החודש"))} <span class="muted sub">${d ? esc(d.month) + " · " + esc(mt("updated", "עודכן")) + " " + esc(String(d.at || "").slice(11, 16)) + " UTC" : ""}</span> <button type="button" class="sm" id="spend-refresh">${esc(t("refresh"))}</button></h3>`;
+  if (!d) return `<section class="section srv">${head}<div class="note q-block">${esc(mt("Not available: ", "לא זמין: "))}${esc(err)}</div></section>`;
+  const tt = d.total || {};
+  const say = tt.level === "within" ? mt(`Spending is under control: $${Number(tt.spent_usd).toFixed(2)} of the $${tt.cap_usd} monthly cap.`, `ההוצאות בשליטה: $${Number(tt.spent_usd).toFixed(2)} מתוך תקרה חודשית של $${tt.cap_usd}.`)
+    : mt(`Total this month: $${Number(tt.spent_usd).toFixed(2)} of the $${tt.cap_usd} cap (${tt.words}).`, `סה"כ החודש: $${Number(tt.spent_usd).toFixed(2)} מתוך תקרה של $${tt.cap_usd} (${spdSay(tt.words)}).`);
+  const line = s => `<div class="srv-pr"><div class="srv-prh"><span>${esc(LANG === "he" && spdName[s.id] ? spdName[s.id][1] : s.name)} <span class="pill ${spdCls(s.level)}">${esc(spdSay(s.words))}</span></span><span class="num" dir="ltr">${spdUsd(s.spent_usd)}${s.cap_usd !== null ? " / $" + s.cap_usd : ""}</span></div>${s.cap_usd ? adBar(Math.min(s.spent_usd || 0, s.cap_usd), s.cap_usd, s.level === "stopped" ? "bad" : s.level === "near" ? "warn" : "acc") : ""}
+      <div class="sub muted" dir="ltr">${esc(s.basis)}${s.detail ? " · " + esc(s.detail) : ""}</div></div>`;
+  const fixed = (d.fixed || []).map(f => `<div class="srv-prh"><span>${esc(f.name)}${f.note ? ` <span class="sub muted" dir="ltr">${esc(f.note)}</span>` : ""}</span><span class="num">${f.status === "confirmed" ? spdUsd(f.monthly_usd) : `<span class="pill warn">${esc(mt("to confirm", "לאישור"))}</span>${f.monthly_usd !== null ? ` <span dir="ltr">${spdUsd(f.monthly_usd)}?</span>` : ""}`}</span></div>`).join("");
+  return `<section class="section srv">${head}
+    <div class="srv-say"><b>${esc(say)}</b> <span class="pill ${spdCls(tt.level)}">${esc(spdSay(tt.words))}</span></div>
+    <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Total this month", "סה\"כ החודש"))}</span><span class="num" dir="ltr">${spdUsd(tt.spent_usd)} / $${tt.cap_usd}</span></div>${tt.cap_usd ? adBar(Math.min(tt.spent_usd || 0, tt.cap_usd), tt.cap_usd, tt.level === "stopped" || tt.level === "over" ? "bad" : tt.level === "near" ? "warn" : "acc") : ""}</div>
+    <h4 class="srv-h">${esc(mt("By service", "לפי שירות"))}</h4>${(d.services || []).map(line).join("")}
+    <h4 class="srv-h">${esc(mt("Fixed monthly costs", "עלויות קבועות בחודש"))}</h4>${fixed || `<div class="note">${esc(mt("None configured.", "לא הוגדרו."))}</div>`}
+    ${tt.unconfirmed && tt.unconfirmed.length ? `<div class="sub muted">${esc(mt(`Not in the total until confirmed: ${tt.unconfirmed.join(", ")}.`, `לא נכללים בסה"כ עד שיאושרו: ${tt.unconfirmed.join(", ")}.`))}</div>` : ""}
+    <div class="sub muted">${esc(mt("When the AI line reaches its cap, new AI calls are refused until the 1st of next month (or until the cap is raised). Amounts are estimates from list prices; the invoices are the measured figures.", "כשהשורה של הבינה המלאכותית מגיעה לתקרה, קריאות חדשות נחסמות עד ה-1 בחודש הבא (או עד שהתקרה מועלית). הסכומים הם אומדן לפי מחירון; החשבוניות הן הנתון המדוד."))}</div></section>`;
+}
+
 /* ---------- Server and tasks: the company server, the GitHub workflows and the processing queues (admin) ----------
    Data: /api/panel/server (status files written on the server every 2 minutes, GitHub runs cached 120 s). Refreshed
    every 60 s while the admin tab is open and the page is visible. Unknown values are shown as unknown, never as 0. */
@@ -4524,6 +4618,15 @@ function srvHtml(d, err) {
       <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Records refined", "רשומות שטויבו"))}</span><span class="num" dir="ltr">${adNum(rf.completed ?? rf.processed)} / ${adNum(rf.universe)}</span></div>${adBar(rf.completed ?? rf.processed ?? 0, rf.universe || 0, "")}
       <div class="sub">${esc(mt("completed from an official source, out of the whole supplier universe", "הושלמו ממקור רשמי, מתוך כל מאגר הספקים"))} · ${esc(mt("cases waiting for the AI review", "מקרים שממתינים לבדיקת AI"))} ${adNum(rf.needs_ai)}${rf.at ? " · " + esc(String(rf.at).replace("T", " ").slice(0, 16)) + " UTC" : ""}</div></div>`;
   }
+  // (e2) supplier enrichment on the server (leads/enrich_server.py): progress by priority tier and fill rates per field
+  const en = st && st.enrich;
+  if (en && en.queue) {
+    const tierName = { producer: mt("producers", "יצרנים"), "goods supplier": mt("goods suppliers", "ספקי טובין"), trader: mt("traders / distributors", "סוחרים / מפיצים"), other: mt("other", "אחר") };
+    const fl = en.fill || {}, fv = k => fl[k] === null || fl[k] === undefined ? "-" : fl[k] + "%";
+    proc += `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Supplier enrichment (server)", "טיוב ספקים (בשרת)"))} <span class="sub" dir="ltr">${esc(en.state)}</span></span><span class="num" dir="ltr">${adNum(en.done)} / ${adNum(en.queue)}</span></div>${adBar(en.done || 0, en.queue, "acc")}
+      <div class="sub">${Object.entries(en.by_tier || {}).map(([k, v]) => `${esc(tierName[k] || k)} ${adNum(v.done)}/${adNum(v.total)}`).join(" · ")}${en.per_hour ? " · " + esc(mt(`about ${adNum(en.per_hour)} per hour`, `כ-${adNum(en.per_hour)} בשעה`)) : ""}${en.eta_hours ? " · " + esc(mt(`about ${Math.round(en.eta_hours / 24 * 10) / 10} days left`, `נותרו כ-${Math.round(en.eta_hours / 24 * 10) / 10} ימים`)) : ""}</div>
+      ${fl.read_ok ? `<div class="sub" dir="ltr">${esc(mt("Of sites read", "מתוך אתרים שנקראו"))} (${adNum(fl.read_ok)}): WhatsApp ${fv("whatsapp_links")} · WeChat ${fv("wechat")} · LinkedIn ${fv("linkedin")} · ${esc(mt("people", "בעלי תפקידים"))} ${fv("people_site")} · ${esc(mt("founded", "שנת הקמה"))} ${fv("founded")} · ${esc(mt("size", "גודל"))} ${fv("size")} · ${esc(mt("press", "כתבות"))} ${fv("press")}</div>` : ""}</div>`;
+  }
   // (f) agent budget
   const ab = d.agent_budget;
   const budget = ab && !ab.error ? `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Today", "היום"))}</span><span class="num" dir="ltr">$${Number(ab.today_usd).toFixed(2)}${ab.day_cap_usd !== null ? " / $" + ab.day_cap_usd : ""}</span></div>${ab.day_cap_usd ? adBar(ab.today_usd, ab.day_cap_usd, ab.today_usd >= ab.day_cap_usd * 0.8 ? "warn" : "acc") : ""}</div>
@@ -4549,7 +4652,7 @@ function go(v) {
   try { localStorage.setItem("sinder-panel-view", v); } catch (e) {}
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
   if (v === "users" && S.me?.role === "admin") renderUsers();
-  if (v === "ops" && S.me?.role === "admin") { renderServer(); renderOps(); }
+  if (v === "ops" && S.me?.role === "admin") { renderSpend(); renderServer(); renderOps(); }
   if (v === "forme" && window.DD_PROFILE) renderForMe();
   if (v === "forme") renderFocus();
   if (v === "today") renderTodayGeneral();

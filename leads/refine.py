@@ -284,6 +284,7 @@ def refine_one(r, check, ai, dup, namesakes, today, reg=None):
             fill("phones_site", good, src, "on the company website, checked against the numbering plan")
             if not good:
                 notes.append("the site's phone numbers do not fit any numbering plan (left out)")
+        enrich_fields(check, src, fill)
     if ai:
         for f_ in ("sector", "role"):
             if ai.get(f_):
@@ -357,6 +358,45 @@ def refine_one(r, check, ai, dup, namesakes, today, reg=None):
     return out
 
 
+def enrich_fields(check, src, fill):
+    """Profile and enrichment fields of a website check (leads/company_profile.py, leads/enrich_server.py), each with its
+    own source and basis. Fields a measurement switched off (company_check.ENRICH_OFF) are not filled."""
+    from .company_check import ENRICH_OFF
+    wx = check.get("wechat") or {}
+    if "wechat" not in ENRICH_OFF and (wx.get("ids") or wx.get("decoded") or wx.get("links")):
+        fill("wechat", "; ".join([*wx.get("ids", []), *wx.get("decoded", []), *wx.get("links", [])])[:300], src, "printed or linked as WeChat on the company website")
+    if "wechat" not in ENRICH_OFF and wx.get("qr_images"):
+        fill("wechat_qr", " ".join(wx["qr_images"])[:400], src, "QR image the company website labels WeChat")
+    wa = check.get("whatsapp_links") or []
+    if "whatsapp" not in ENRICH_OFF and wa:
+        fill("whatsapp_links", " ".join(x["link"] for x in wa), src, "; ".join(dict.fromkeys(x["basis"] for x in wa)))
+    for conf, field in (("own site", "people_site"), ("search snippet", "people_search"), ("wikidata", "people_wikidata"), ("official registry", "people_registry")):
+        ppl = [p for p in check.get("people") or [] if p.get("confidence", "own site") == conf]
+        if ppl and field not in ENRICH_OFF:
+            fill(field, "; ".join(f"{p['name']} - {p['title']}" + (f" ({p['linkedin']})" if p.get("linkedin") else "") for p in ppl[:8])[:700],
+                 ppl[0].get("source") or src, {"own site": "names and titles the company website publishes",
+                                               "search snippet": "public search-result snippet of a linkedin.com/in profile naming the company and the title (not verified)",
+                                               "wikidata": "Wikidata statement (chief executive, director / manager, founder) of the entity whose official website is this site",
+                                               "official registry": f"officers the official company register lists ({ppl[0].get('source_name', '')}); company matched by "
+                                                                    f"{(check.get('registry_entity') or {}).get('match') or 'registration id or exact name'}"}[conf])
+    prof = check.get("profile") or {}
+    for f in ("founded", "employees", "revenue"):
+        v = prof.get(f)
+        if v:
+            fill(f, str(v.get("value")) + (f" {v.get('currency')}" if v.get("currency") else ""), v.get("source") or src, f"{v.get('basis')}: '{v.get('phrase', '')[:80]}'")
+    for f in ("capacity", "plant_area"):
+        if prof.get(f):
+            fill(f, prof[f]["phrase"], prof[f].get("source") or src, prof[f].get("basis", ""))
+    sz = prof.get("size") or {}
+    if sz.get("band") and sz["band"] != "not stated":
+        fill("size_band", sz["band"], src, sz.get("basis", ""))
+    if check.get("summary"):
+        fill("summary", check["summary"][:600], src, "assembled in code from the fields above (no model, nothing inferred)")
+    if check.get("press") and "press" not in ENRICH_OFF:
+        fill("press", " | ".join(f"{a.get('date', '')} {a.get('outlet', '')}: {a.get('title', '')} <{a.get('url', '')}>" for a in check["press"][:5])[:1200],
+             "https://news.google.com/rss", "Google News: exact company name in the headline, country or own domain checked")
+
+
 def load_jsonl(p):
     out = {}
     if p.exists():
@@ -416,7 +456,7 @@ def main(sample=0):
         ck, a, dp, rg = checks.get(k), ai.get(k), dups.get(k), regs.get(k)
         h = sha(REFINE_VERSION, r.get("website"), r.get("email"), r.get("phone"), r.get("legal_id"), r.get("products"), r.get("supplied"),
                 r.get("main_sector"), r.get("hs_codes"), (ck or {}).get("content_hash"), (ck or {}).get("verdict"), json.dumps(a or {}, sort_keys=True), json.dumps(dp or []),
-                (rg or {}).get("checked"), (rg or {}).get("identity"), json.dumps((ck or {}).get("changes") or []))
+                (rg or {}).get("checked"), (rg or {}).get("identity"), json.dumps((ck or {}).get("changes") or []), (ck or {}).get("enriched_at"))
         p = prev.get(k)
         if p and p.get("input_hash") == h and p.get("refined", "") >= stale:
             reused += 1

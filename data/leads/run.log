@@ -1,46 +1,26 @@
-Thu Nov 12 06:13:13 UTC 2026
+Thu Nov 12 14:13:14 UTC 2026
 INFO TED total matching notices: 7329
-INFO TED fetched 7329 notices (31 pages, 3 days) -> 7052 new rows, cache 25768 open (17826412 bytes)
+WARNING TED 429: <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.6</center>
+</body>
+</html>
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page --
+INFO TED fetched 7329 notices (30 pages, 3 days) -> 7052 new rows, cache 25768 open (17826412 bytes)
 INFO ted: 25768 rows (OK)
-INFO FTS new 24, open 173 (pages 1)
-INFO fts: 173 rows (OK)
-INFO SAM set-aside notices: 11703
-INFO SAM full sweep: fetched 9630, open 7697 (5582 open to foreign firms)
-INFO sam: 7697 rows (OK)
-INFO NYC City Record open solicitations: 194
-INFO nyc: 194 rows (OK)
-INFO US city Los Angeles: 196 (open data API)
-INFO US city Chicago: 2 (web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html)
-INFO US city Houston: 4 (web page ok: https://www.houstontx.gov/obo/current_contracting_opportunities.html)
-INFO US city Phoenix: 3 (web page ok: https://solicitations.phoenix.gov/)
-INFO US city Philadelphia: 0 (web page ok: https://www.phila.gov/departments/procurement-department/)
-INFO US city San Antonio: 4 (web page ok: https://webapp1.sanantonio.gov/BidContractOpps/Default.aspx)
-INFO US city San Diego: 1 (web page ok: https://www.sandiego.gov/purchasing/bids-contracts)
-INFO US city Dallas: 0 (web page ok: https://dallascityhall.com/departments/procurement/Pages/default.aspx)
-INFO US city Jacksonville: 1 (web page ok: https://www.jacksonville.gov/departments/office-of-administrative-services/procurement)
-INFO US city Fort Worth: 20 (Bonfire portal)
-INFO US city Austin: 25 (web page ok: https://financeonline.austintexas.gov/afo/account_services/solicitation/solicitations.cfm)
-INFO US city San Jose: 0 (web page http-404: https://www.sanjoseca.gov/your-government/departments-offices/finance/purchasing/bid-opportunities)
-INFO US city Charlotte: 26 (Bonfire portal)
-INFO US city Columbus: 0 (web page ok: https://www.columbus.gov/Government/Departments/Finance-and-Management/Purchasing-Office)
-INFO US city Indianapolis: 0 (web page ok: https://www.indy.gov/activity/bid-on-city-contracts)
-INFO US city San Francisco: 0 (portal needs a browser (JavaScript): not scanned)
-INFO US city Seattle: 2 (web page ok: https://www.seattle.gov/purchasing-and-contracting)
-INFO US city Denver: 9 (web page ok: https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Economic-Development-Opportunity/Bidding-Opportunities)
-INFO US city Oklahoma City: 0 (bids hosted on a commercial platform that requires registration: not scanned)
-INFO US city Nashville: 1 (web page ok: https://www.nashville.gov/departments/finance/procurement)
-INFO US cities: 279 open solicitations from 13 cities
-INFO us_cities: 279 rows (OK)
-INFO CanadaBuys rows 886
-INFO canadabuys: 886 rows (OK)
-WARNING ZA 500
-INFO ZA awards 0
-INFO ZA new 0, open 1218 (pages 1)
-INFO za: 1218 rows (OK)
-INFO EBRD rows 45
-INFO ebrd: 45 rows (OK)
-INFO UNGM total active 1670, new 412, cache 1192 (pages 31)
-INFO ungm: 1192 rows (OK)
+INFO FTS new 29, open 178 (pages 1)
+INFO fts: 178 rows (OK)
+INFO SAM incremental: fetched 1288, open 7906 (5748 open to foreign firms)
+INFO sam: 7906 rows (OK)
+INFO CanadaBuys rows 887
+INFO canadabuys: 887 rows (OK)
+INFO EBRD rows 46
+INFO ebrd: 46 rows (OK)
+INFO UNGM total active 1688, new 486, cache 1271 (pages 37)
+INFO ungm: 1271 rows (OK)
 INFO UNDP new 24, open 18
 INFO undp: 18 rows (OK)
 INFO AIIB new 173, kept 177, awards 294
@@ -49,265 +29,89 @@ INFO IsDB new 39, open 34
 INFO isdb: 34 rows (OK)
 INFO AfDB project feed: 20 items
 INFO AfDB corporate feed: 10 items
-INFO AfDB new 30, open 76
-INFO afdb: 76 rows (OK)
-INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1548139', 'noticeid': '39606', 'type': 'SPECIFIC', 'countryname': 'EL SALVADOR', 'projectnumber': 'ES-L1151', 'proyecturl': 'https://www.iadb.org/en/project/ES-L1151', 'loannumber': '5590/OC-ES', 'noticetitle': 'Construcción del Mirador Turístico Punta', 'ezshareid': 'EZIDB0000251-1883997851-7230', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Programa de Apoyo a la Recuperación y Ex', 'publicationyear': '2026', 'publicationdate': '2026-11-10 08:00:00.000000000', 'deadline': '2026-12-15'}
-INFO IDB dates min=2026-07-16 max=2026-11-10 sample=['2026-11-10 08:00:00.000000000', '2026-11-10 04:00:00.000000000', '2026-11-10 04:00:00.000000000'] deadlines=['2026-12-15', '2026-12-10', '2026-11-24']
-INFO IDB page 0: 1000 recs, 0 old, kept so far 105
-INFO IDB dates min=2026-04-06 max=2026-07-16 sample=['2026-07-16 04:00:00.000000000', '2026-07-16 04:00:00.000000000', '2026-07-16 04:00:00.000000000'] deadlines=['', '', '']
-INFO IDB page 1: 1000 recs, 690 old, kept so far 105
-INFO IDB new 105, open 107
-INFO iadb: 107 rows (OK)
-INFO Chile: 5109 active, 4349 of kept types
-INFO Chile new 4349, open 4380, details 0
-INFO chile: 4380 rows (OK)
+INFO AfDB new 30, open 78
+INFO afdb: 78 rows (OK)
+INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1578039', 'noticeid': '39617', 'type': 'AWARD', 'countryname': 'GUYANA', 'projectnumber': 'GY-G1007', 'proyecturl': 'https://www.iadb.org/en/project/GY-G1007', 'loannumber': 'GRT/NG-19288-GY', 'noticetitle': 'Procurement of Program Coordinator for t', 'ezshareid': 'EZIDB0000287-1509818207-1866', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Guyana Utility Scale Solar Photovoltaic ', 'publicationyear': '2026', 'publicationdate': '2026-11-11 08:00:00.000000000', 'deadline': ''}
+INFO IDB dates min=2026-07-17 max=2026-11-11 sample=['2026-11-11 08:00:00.000000000', '2026-11-11 08:00:00.000000000', '2026-11-11 04:00:00.000000000'] deadlines=['', '2027-01-05', '']
+INFO IDB page 0: 1000 recs, 0 old, kept so far 114
+INFO IDB dates min=2026-04-09 max=2026-07-17 sample=['2026-07-17 08:00:00.000000000', '2026-07-17 08:00:00.000000000', '2026-07-17 08:00:00.000000000'] deadlines=['2026-08-03', '', '2026-08-21']
+INFO IDB page 1: 1000 recs, 666 old, kept so far 114
+INFO IDB new 114, open 116
+INFO iadb: 116 rows (OK)
 INFO SIMAP new 240, open 738
 INFO simap: 738 rows (OK)
 INFO GETS new 403, open 420
 INFO gets: 420 rows (OK)
-INFO India Central (CPPP): 242 organisations with active tenders
-WARNING India Central (CPPP): time budget reached
-INFO India Central (CPPP): 1261 open tenders
-INFO India Central PSUs: 75 organisations with active tenders
-INFO India Central PSUs: 1708 open tenders
-INFO India Defence: 10 organisations with active tenders
-INFO India Defence: 4895 open tenders
-INFO India Maharashtra: 184 organisations with active tenders
-WARNING India Maharashtra: time budget reached
-INFO India Maharashtra: 2152 open tenders
-INFO India Tamil Nadu: 79 organisations with active tenders
-INFO India Tamil Nadu: 7303 open tenders
-INFO India Kerala: 151 organisations with active tenders
-INFO relay used for https://etenders.kerala.gov.in/nicgep/app?component=%24DirectLink&page (ConnectionError)
-WARNING India Kerala: time budget reached
-INFO India Kerala: 921 open tenders
-INFO India Uttar Pradesh: 127 organisations with active tenders
-INFO relay used for https://etender.up.nic.in/nicgep/app?component=%24DirectLink&page=Fron (ConnectionError)
-WARNING India Uttar Pradesh: time budget reached
-INFO India Uttar Pradesh: 10117 open tenders
-WARNING relay https://haryanaeprocurement.gov.in/nicgep/app?page=FrontEndT: TypeError: fetch failed
-WARNING India portal Haryana failed: ConnectTimeout and relay unavailable for https://haryanaeprocurement.gov.in/nicgep/app?page=FrontEndTendersByOr
-INFO India West Bengal: 90 organisations with active tenders
-INFO India West Bengal: 2772 open tenders
-INFO India Odisha: 68 organisations with active tenders
-INFO India Odisha: 3340 open tenders
-INFO India Jharkhand: 50 organisations with active tenders
-INFO India Jharkhand: 570 open tenders
-INFO India Himachal Pradesh: 47 organisations with active tenders
-INFO India Himachal Pradesh: 871 open tenders
-INFO India Uttarakhand: 79 organisations with active tenders
-INFO India Uttarakhand: 808 open tenders
-INFO India Assam: 55 organisations with active tenders
-INFO India Assam: 429 open tenders
-INFO India Madhya Pradesh: 90 organisations with active tenders
-WARNING India Madhya Pradesh: time budget reached
-INFO India Madhya Pradesh: 3588 open tenders
-INFO India Rajasthan: 87 organisations with active tenders
-WARNING India Rajasthan: time budget reached
-INFO India Rajasthan: 1779 open tenders
-INFO India Punjab: 32 organisations with active tenders
-INFO India Punjab: 2536 open tenders
-INFO India Jammu and Kashmir: 29 organisations with active tenders
-INFO India Jammu and Kashmir: 3475 open tenders
-INFO India Chandigarh: 2 organisations with active tenders
-INFO India Chandigarh: 39 open tenders
-INFO India Tripura: 37 organisations with active tenders
-INFO India Tripura: 179 open tenders
-INFO India Meghalaya: 5 organisations with active tenders
-INFO India Meghalaya: 2 open tenders
-INFO India Nagaland: 3 organisations with active tenders
-INFO India Nagaland: 0 open tenders
-INFO India Manipur: 0 organisations with active tenders
-INFO India Manipur: 0 open tenders
-INFO India Mizoram: 0 organisations with active tenders
-INFO India Mizoram: 0 open tenders
-INFO India Goa: 33 organisations with active tenders
-INFO India Goa: 308 open tenders
-INFO India PMGSY rural roads: 15 organisations with active tenders
-INFO India PMGSY rural roads: 292 open tenders
-INFO India new 49345, open 60117
-INFO india: 60117 rows (OK)
-INFO grants.gov: 270 calls
-INFO EU calls: 256
-INFO Israel calls: 1
-INFO grants {'calls': 527, 'grants.gov': 270, 'EU': 256, 'data.gov.il': 1}
-WARNING source grants: DEGRADED (returned 0 rows and has no good run on record)
-INFO grants: 0 rows (DEGRADED)
-INFO Etimad new 100, open 662 (pages 12)
-INFO etimad: 662 rows (OK)
-INFO Prozorro feed pages 52, candidates 2929, fetched 96, open kept 1231
-INFO prozorro: 1231 rows (OK)
+INFO Etimad new 146, open 708 (pages 16)
+INFO etimad: 708 rows (OK)
+INFO Prozorro feed pages 52, candidates 2904, fetched 355, open kept 1313
+INFO prozorro: 1313 rows (OK)
 WARNING PNCP 429 mode 4 p7
-WARNING PNCP 429 mode 6 p8
-INFO PNCP new 234, open 5555
-INFO pncp: 5555 rows (OK)
+WARNING PNCP 429 mode 6 p9
+INFO PNCP new 252, open 5651
+INFO pncp: 5651 rows (OK)
 INFO SECOP new 83, open 881
 INFO secop: 881 rows (OK)
-INFO Germany new 1506, open 13359, award releases seen 759
-INFO germany: 13359 rows (OK)
-INFO Contracts Finder new 35, open 100
-INFO contractsfinder: 100 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T06%3A57%3A03. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T08%3A00%3A01. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T08%3A49%3A10. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T09%3A34%3A50. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T10%3A47%3A27. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T11%3A58%3A57. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T12%3A45%3A51. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T13%3A44%3A45. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T14%3A42%3A07. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T06%3A08%3A42. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T07%3A56%3A26. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T08%3A58%3A00. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T09%3A51%3A02. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T11%3A26%3A22. (ConnectTimeout)
-INFO Uruguay new 24, open 572 (fetched 700 of 2193; categories {'tenderUpdate': 4215, 'award': 7834, 'tender': 2193, 'awardUpdate': 435, 'tenderAmendment': 1949, 'tenderCancellation': 28})
-INFO uruguay: 572 rows (OK)
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/run.py", line 820, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/run.py", line 806, in main
-    run_source(a.source)
-  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
-    rows, meta = m.fetch()
-                 ^^^^^^^^^
-  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/bahrain.py", line 15, in fetch
-    b = html(URL)
-        ^^^^^^^^^
-  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/stealth.py", line 20, in html
-    p = fetcher().fetch(url, headless=True, network_idle=wait, timeout=timeout)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/scrapling/fetchers/stealth_chrome.py", line 62, in fetch
-    with StealthySession(**kwargs) as engine:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/scrapling/engines/_browsers/_base.py", line 117, in __enter__
-    self.start()
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/scrapling/engines/_browsers/_stealth.py", line 89, in start
-    self._create_context()
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/scrapling/engines/_browsers/_stealth.py", line 103, in _create_context
-    self.context = self.playwright.chromium.launch_persistent_context(
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/patchright/sync_api/_generated.py", line 4341, in launch_persistent_context
-    self._sync(
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/patchright/_impl/_sync_base.py", line 91, in _sync
-    return task.result()
-           ^^^^^^^^^^^^^
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/patchright/_impl/_browser_type.py", line 157, in launch_persistent_context
-    result = await self._channel.send_return_as_dict(
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/patchright/_impl/_connection.py", line 88, in send_return_as_dict
-    return await self._connection.wrap_api_call(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/patchright/_impl/_connection.py", line 568, in wrap_api_call
-    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
-patchright._impl._errors.Error: BrowserType.launch_persistent_context: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     patchright install                                     ║
-║                                                            ║
-║ <3 Patchright Team                                         ║
-╚════════════════════════════════════════════════════════════╝
+INFO Contracts Finder new 38, open 103
+INFO contractsfinder: 103 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T14%3A21%3A04. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-09T19%3A02%3A20. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T07%3A35%3A15. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T08%3A42%3A16. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T09%3A38%3A17. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T11%3A00%3A01. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T12%3A23%3A46. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T13%3A28%3A48. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T14%3A32%3A06. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T05%3A55%3A59. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T08%3A12%3A05. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T09%3A07%3A36. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T10%3A00%3A00. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T11%3A46%3A17. (ConnectTimeout)
+INFO Uruguay new 35, open 619 (fetched 700 of 2240; categories {'tenderUpdate': 4252, 'awardUpdate': 440, 'tender': 2240, 'award': 7993, 'tenderAmendment': 1961, 'tenderCancellation': 29})
+INFO uruguay: 619 rows (OK)
 INFO Malaysia page 1: 100 blocks, 100 new, first USIMT202600018 
-INFO Malaysia page 2: 100 blocks, 100 new, first T/1008/11/2026/2029(1) 
-INFO Malaysia page 3: 100 blocks, 86 new, first QT260000000002770 
-INFO Malaysia page 4: 100 blocks, 47 new, first JKR.JUB(S)600-7/1/318 
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T12%3A41%3A56. (ConnectTimeout)
-INFO Malaysia page 5: 100 blocks, 18 new, first MDI/FM/KW/476-TP005/2026 
-INFO Malaysia page 6: 100 blocks, 18 new, first QT260000000020009 
-INFO Malaysia page 7: 100 blocks, 40 new, first UUM/BEN/T508/2026 
-INFO Malaysia page 8: 100 blocks, 2 new, first QT260000000028284 
-INFO Malaysia page 9: 100 blocks, 3 new, first MAIWP/T/032/2026 
-INFO Malaysia page 10: 40 blocks, 2 new, first QT260000000016609 
-INFO Malaysia new 416, open 417
-INFO malaysia: 417 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T13%3A32%3A51. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T14%3A34%3A30. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T06%3A19%3A30. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T08%3A09%3A40. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T09%3A03%3A38. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T09%3A56%3A38. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T11%3A28%3A11. (ConnectTimeout)
-INFO Paraguay new 1, open 97 (fetched 488)
-INFO paraguay: 97 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T13%3A00%3A00. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T14%3A15%3A40. (ConnectTimeout)
-INFO Dominican listed 762, fetched 118, new 116, open 646
-INFO dominican: 646 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T13%3A21%3A03. (ConnectTimeout)
+INFO Malaysia page 2: 100 blocks, 100 new, first UITM/PER/T/7/2/26 
+INFO Malaysia page 3: 100 blocks, 91 new, first QT260000000030879 
+INFO Malaysia page 4: 100 blocks, 51 new, first UMPSA/PPH.T/2026(8) 
+INFO Malaysia page 5: 100 blocks, 19 new, first QT260000000027176 
+INFO Malaysia page 6: 100 blocks, 19 new, first UTM.B 21/2026 
+INFO Malaysia page 7: 100 blocks, 40 new, first QT260000000027102 
+INFO Malaysia page 8: 100 blocks, 2 new, first T/1/9/2026(29) 
+INFO Malaysia page 9: 100 blocks, 2 new, first MAIWP/T/022/2026 
+INFO Malaysia page 10: 50 blocks, 3 new, first QT260000000019491 
+INFO Malaysia new 427, open 427
+INFO malaysia: 427 rows (OK)
 INFO AusTender new 128, open 182
 INFO austender: 182 rows (OK)
-INFO Oman new 50, open 605
-INFO oman: 605 rows (OK)
-INFO BOAMP new 663, open 7007
-INFO france: 7007 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T22%3A00%3A31. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A18%3A48. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A24%3A23. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A25%3A28. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A26%3A28. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A27%3A24. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A28%3A30. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A29%3A03. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A30%3A00. (ConnectTimeout)
-INFO PLACSP pages 5, new 509, open 5211, award entries 1033
-INFO spain: 5211 rows (OK)
+INFO Oman new 50, open 633
+INFO oman: 633 rows (OK)
 WARNING Kenya 429 page 1
-INFO Kenya new 0, open 337 (pages 1)
-INFO kenya: 337 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A31%3A41. (ConnectTimeout)
-INFO Rwanda new 261, open 261 (pages 10)
-INFO rwanda: 261 rows (OK)
-INFO Uganda new 37, open 39 (pages 2, titles looked up 0)
-INFO uganda: 39 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A32%3A40. (ConnectTimeout)
-INFO ghana new 103, open 106 (pages 14)
-INFO ghana: 106 rows (OK)
-INFO Malawi new 34, open 35
-INFO malawi: 35 rows (OK)
-INFO Mozambique new 82, open 82
-INFO mozambique: 82 rows (OK)
-INFO Dubai new 268, open 353 (pages 4)
-INFO dubai: 353 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A33%3A25. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A34%3A50. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A35%3A53. (ConnectTimeout)
-INFO Philippines new 1200, open 1270 (pages 60)
-INFO philippines: 1270 rows (OK)
+INFO Kenya new 0, open 400 (pages 1)
+INFO kenya: 400 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T14%3A48%3A42. (ConnectTimeout)
+INFO Rwanda new 272, open 272 (pages 10)
+INFO rwanda: 272 rows (OK)
+INFO Uganda new 39, open 41 (pages 2, titles looked up 0)
+INFO uganda: 41 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A00%3A29. (ConnectTimeout)
+INFO ghana new 100, open 113 (pages 15)
+INFO ghana: 113 rows (OK)
+INFO Malawi new 39, open 40
+INFO malawi: 40 rows (OK)
+INFO Mozambique new 87, open 87
+INFO mozambique: 87 rows (OK)
+INFO Dubai new 272, open 369 (pages 4)
+INFO dubai: 369 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T08%3A00%3A07. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T09%3A11%3A32. (ConnectTimeout)
+INFO Philippines new 1200, open 1279 (pages 60)
+INFO philippines: 1279 rows (OK)
 WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
 WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
 WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A36%3A28. (ConnectTimeout)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A37%3A58. (ConnectTimeout)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A39%3A02. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T10%3A08%3A29. (ConnectTimeout)
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
@@ -320,38 +124,41 @@ WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A40%3A02. (ConnectTimeout)
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
 WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO Qatar new 276, open 322
-INFO qatar: 322 rows (OK)
-INFO TED awards: 3 days fetched, 3578 notices, 0 days still to back-fill
-WARNING source awards: DEGRADED (returned 0 rows and has no good run on record)
-INFO awards: 0 rows (DEGRADED)
-INFO World Bank pipeline: 956 projects (pipeline + recently approved)
-INFO wb_pipeline: 956 rows (OK)
-INFO World Bank new 340, open cache 734
-INFO worldbank: 734 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A41%3A04. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A41%3A59. (ConnectTimeout)
-INFO mr.gov.il rows: 189
-INFO mrgov: 189 rows (OK)
-WARNING IY 0309: HTTP 404
-WARNING IY 2404: HTTP 404
-WARNING IY 8485: HTTP 404
-WARNING IY: stopping after repeated failures (rate limit)
-INFO ImportYeti headings scanned: 0 (due 681)
-WARNING source importyeti: DEGRADED (returned 0 rows and has no good run on record)
-INFO importyeti: 0 rows (DEGRADED)
-INFO market signals: 0 codes refreshed, 0 due
-WARNING source markets: DEGRADED (returned 0 rows and has no good run on record)
-INFO markets: 0 rows (DEGRADED)
-INFO enrich: looked up 0, cached 4096
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A43%3A10. (ConnectTimeout)
-INFO:leads:US awards (USAspending): 5973 recent contract awards (last 90 days)
-5973 awards; median 227 foreign winners 91
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T11%3A21%3A54. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T12%3A08%3A59. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO Qatar new 388, open 328
+INFO qatar: 328 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T12%3A55%3A22. (ConnectTimeout)
 INFO initializing identifier
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A43%3A47. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T13%3A44%3A59. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A35%3A56. (ConnectTimeout)
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['Spain – Firefighting vehicles – Suministro de vehículos escala para la Jefatura del Cuerpo de Bomberos del Ayuntamiento De Madrid (2 Lotes).'])
 INFO ('apply_packaged_translation', 'Spain – Firefighting vehicles – Suministro de vehículos escala para la Jefatura del Cuerpo de Bomberos del Ayuntamiento De Madrid (2 Lotes).')
@@ -360,23 +167,20 @@ WARNING Language es package default expects mwt, which has been added
 commodity_norm: 3244 rows, 3244 with a known price type {'futures': 58, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 58, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 75 anomalies {'stale': 62, 'jump15': 11, 'sigma3': 2}
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A44%3A56. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A46%3A11. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A47%3A44. (ConnectTimeout)
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A46%3A12. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A47%3A02. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A49%3A09. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A50%3A03. (ConnectTimeout)
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A51%3A10. (ConnectTimeout)
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A48%3A17. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A48%3A27. (ConnectTimeout)
-WARNING:leads:gdelt "Všeobecná fakultní nemocnice v Praze": HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A50%3A23. (ConnectTimeout)
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as P
-INFO:leads:news: 779 deals checked, 6 GDELT queries, 54 linked articles
+INFO:leads:news: 779 deals checked, 4 GDELT queries, 54 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A51%3A02. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A52%3A29. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A52%3A17. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A53%3A14. (ConnectTimeout)
 wrote 80001 rows x 28 cols to Tenders
 wrote 5001 rows x 16 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
@@ -410,9 +214,8 @@ wrote 3001 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
 INFO:leads:web index: 130014 tenders, 90.2 MB raw, 11.2 MB gz
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A53%3A18. (ConnectTimeout)
 INFO:leads:web panel static: tenders 1500, titles 7012, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59986, 2.0 MB encrypted
-INFO:leads:web panel live: bd 48, accounts 51, intel 107, pursuits 56, jobs 60, contacts 481, projects 1, ptasks 1, approvals 1, stats 37, 0.3 MB encrypted
+INFO:leads:web panel live: unchanged
 SOURCE DOWN         bahrain            rows 0 (last good 19 at 2026-11-09T18:38) Error
 SOURCE STALE        moldova            rows 1252 (last good 1252 at 2026-11-11T09:30) 
 SOURCE DEGRADED     awards             rows 0 (last good 0 at -) zero_rows
@@ -420,10 +223,10 @@ SOURCE DEGRADED     grants             rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     markets            rows 0 (last good 0 at -) zero_rows
 source status: 52 sources, 6 not OK
-HEALTH ALERT bahrain: stale 61.3 h, error file present
+HEALTH ALERT bahrain: stale 68.3 h, error file present
 health: 49 sources, 1 alerts
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A53%3A47. (ConnectTimeout)
 {'source': 'UNGM (IRENA)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A54%3A28. (ConnectTimeout)
  "timelines": 2677,
  "timelines_multi_event": 790
 }

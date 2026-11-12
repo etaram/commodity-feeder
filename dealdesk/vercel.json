@@ -1,24 +1,3 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/brief",
-      "schedule": "30 4 * * *"
-    },
-    {
-      "path": "/api/cron/digest",
-      "schedule": "0 5 * * *"
-    },
-    {
-      "path": "/api/cron/verify",
-      "schedule": "20 6 * * *"
-    },
-    {
-      "path": "/api/cron/projects",
-      "schedule": "40 5 * * *"
-    },
-    {
-      "path": "/api/cron/selfcheck",
-      "schedule": "50 6 * * *"
-    }
-  ]
+  "crons": []
 }
