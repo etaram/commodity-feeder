@@ -1,0 +1,49 @@
+# PRODUCTION mode of the server instance (deploy/CUTOVER.md). Layered on docker-compose.server.yml by
+# deploy/ops/_server_compose.sh ONLY when /opt/sinder/server-mode says "production", which the cutover-switch task
+# writes after desk.sinder.pro resolves to this server. It overrides every isolation line of the base file:
+# live state sheet, no read-only sheets, mail and bot allowed, the cron service on. Never start it while
+# desk.sinder.pro still points at Vercel (both would send mail and run the scheduled jobs).
+# ${...} values come from /opt/sinder/repo/deploy/.env (passed as --env-file). No secret is written here; the plain
+# defaults below are the non-secret values of the Vercel production environment.
+services:
+  server-app:
+    environment:
+      DESK_DOMAIN: desk.sinder.pro
+      AGENT_BASE_URL: https://desk.sinder.pro
+      DESK_URL: https://desk.sinder.pro
+      DESK_ENV: production                 # /api/staging-check answers 404
+      STATE_SHEET_ID: 1LrpaLYWZp3OJfMF8aNtNQM6JByy4QpQU-PAKuE_VVVo   # the LIVE state sheet (Vercel production)
+      SHEETS_READONLY_IDS: ""              # empty = no spreadsheet refuses writes (lib/sheets.ts), as on Vercel production
+      STATE_TABS_EXTRA: ""                 # empty = the outreach lists etc. stay in the engine sheet, as on Vercel production
+      AGENT_MAIL_LIVE: "${AGENT_MAIL_LIVE:-1}"   # cutover-switch writes AGENT_MAIL_LIVE=0 into .env unless every mail key is set
+      TELEGRAM_OFF: "${TELEGRAM_OFF:-0}"         # cutover-switch writes TELEGRAM_OFF=1 into .env unless token and secret are set
+      TELEGRAM_BOT_USERNAME: "${TELEGRAM_BOT_USERNAME:-sinder_desk_bot}"
+      RESEND_API_KEY: "${RESEND_API_KEY:-}"
+      VAPID_PRIVATE_KEY: "${VAPID_PRIVATE_KEY:-}"
+      VAPID_PUBLIC_KEY: "${VAPID_PUBLIC_KEY:-BOzUBIr6aX8KbHr6rC7iPRlmG3QupNi3Nqc1A0KnI4Xym4tdN76HBovV9FOss1IHEnfHjOCeZF-spu7z6WOpVKA}"
+      ZOHO_SMTP_HOST: "${ZOHO_SMTP_HOST:-smtp.zoho.com}"
+      ZOHO_FROM_ADDRESS: "${ZOHO_FROM_ADDRESS:-desk@sinder.pro}"
+      MAIL_ABOUT: "${MAIL_ABOUT:-Sinder is an international strategic procurement firm, with procurement experience on projects worth more than USD 250 million.}"
+  # What Vercel Cron did (dealdesk/vercel.json, same UTC times), against this instance. Only CRON_SECRET is passed in.
+  server-cron:
+    image: alpine:3.20
+    container_name: sinder-server-cron
+    restart: unless-stopped
+    environment:
+      CRON_SECRET: "${CRON_SECRET:-}"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache curl >/dev/null
+        [ -n "$$CRON_SECRET" ] || { echo "CRON_SECRET is empty: no schedule"; exec sleep infinity; }
+        A=http://sinder-server-app:3000/api/cron
+        cat > /etc/crontabs/root <<CRON
+        30 4 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" $$A/brief >/dev/null || echo "cron brief failed"
+        0 5 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" $$A/digest >/dev/null || echo "cron digest failed"
+        40 5 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" $$A/projects >/dev/null || echo "cron projects failed"
+        20 6 * * * curl -fsS -m 300 -H "Authorization: Bearer $$CRON_SECRET" $$A/verify >/dev/null || echo "cron verify failed"
+        50 6 * * * curl -fsS -m 600 -H "Authorization: Bearer $$CRON_SECRET" $$A/selfcheck >/dev/null || echo "cron selfcheck failed"
+        CRON
+        exec crond -f -l 8
+    depends_on: [server-app]
+    networks: [sinder_default]

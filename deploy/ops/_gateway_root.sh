@@ -31,6 +31,8 @@ CADDY
 # the server instance of the Deal Desk (deploy/docker-compose.server.yml) is served by this same Caddy, as long as it exists
 if [ -f /opt/sinder/server-instance/deploy/docker-compose.server.yml ]; then
   printf '\n%s {\n\treverse_proxy sinder-server-app:3000\n}\n' "${DESK_HOST:-desk.216-158-234-218.sslip.io}" >> Caddyfile
+  # after the cutover (deploy/CUTOVER.md) the instance also serves the public name
+  if [ "$(cat /opt/sinder/server-mode 2>/dev/null)" = production ]; then printf '\n%s {\n\treverse_proxy sinder-server-app:3000\n}\n' desk.sinder.pro >> Caddyfile; fi
 fi
 chmod 600 Caddyfile
 docker rm -f sinder-gateway >/dev/null 2>&1 || true

@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, env-check, server-up, server-env, server-logs]
+        options: [status, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, env-check, server-up, server-env, server-logs, cutover-prepare, cutover-switch, cutover-rollback]
         default: status
 permissions:
   contents: read
@@ -18,7 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: bash "deploy/ops/${{ inputs.task }}.sh"
-        # only the server-env task receives the SERVER_* secrets (the owner's one step to fill the server .env)
+        # only the server-env task receives the SERVER_* secrets (the owner's one step to fill the server .env);
+        # cutover-prepare receives only HAS_* = true/false (whether such a secret exists), never a value
         env:
           SERVER_AUTH_SECRET: ${{ inputs.task == 'server-env' && secrets.SERVER_AUTH_SECRET || '' }}
           SERVER_TEAM_USER: ${{ inputs.task == 'server-env' && secrets.SERVER_TEAM_USER || '' }}
@@ -27,3 +28,28 @@ jobs:
           SERVER_WEB_INDEX_KEY: ${{ inputs.task == 'server-env' && (secrets.SERVER_WEB_INDEX_KEY || secrets.WEB_INDEX_KEY) || '' }}
           SERVER_ANTHROPIC_API_KEY: ${{ inputs.task == 'server-env' && (secrets.SERVER_ANTHROPIC_API_KEY || secrets.ANTHROPIC_API_KEY) || '' }}
           SERVER_ANTHROPIC_WORKSPACE_ID: ${{ inputs.task == 'server-env' && secrets.SERVER_ANTHROPIC_WORKSPACE_ID || '' }}
+          SERVER_ZOHO_SMTP_USER: ${{ inputs.task == 'server-env' && secrets.SERVER_ZOHO_SMTP_USER || '' }}
+          SERVER_ZOHO_SMTP_PASS: ${{ inputs.task == 'server-env' && secrets.SERVER_ZOHO_SMTP_PASS || '' }}
+          SERVER_SEND_APPROVERS: ${{ inputs.task == 'server-env' && secrets.SERVER_SEND_APPROVERS || '' }}
+          SERVER_NOTIFY_EMAIL: ${{ inputs.task == 'server-env' && secrets.SERVER_NOTIFY_EMAIL || '' }}
+          SERVER_RESEND_API_KEY: ${{ inputs.task == 'server-env' && secrets.SERVER_RESEND_API_KEY || '' }}
+          SERVER_TELEGRAM_BOT_TOKEN: ${{ inputs.task == 'server-env' && secrets.SERVER_TELEGRAM_BOT_TOKEN || '' }}
+          SERVER_TELEGRAM_WEBHOOK_SECRET: ${{ inputs.task == 'server-env' && secrets.SERVER_TELEGRAM_WEBHOOK_SECRET || '' }}
+          SERVER_VAPID_PRIVATE_KEY: ${{ inputs.task == 'server-env' && secrets.SERVER_VAPID_PRIVATE_KEY || '' }}
+          SERVER_VAPID_SUBJECT: ${{ inputs.task == 'server-env' && secrets.SERVER_VAPID_SUBJECT || '' }}
+          HAS_AUTH_SECRET: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_AUTH_SECRET != '') }}
+          HAS_TEAM_USER: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_TEAM_USER != '') }}
+          HAS_TEAM_PASSCODE: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_TEAM_PASSCODE != '') }}
+          HAS_GOOGLE_SERVICE_ACCOUNT_JSON: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_GOOGLE_SERVICE_ACCOUNT_JSON != '' || secrets.GOOGLE_SERVICE_ACCOUNT_JSON != '') }}
+          HAS_WEB_INDEX_KEY: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_WEB_INDEX_KEY != '' || secrets.WEB_INDEX_KEY != '') }}
+          HAS_ANTHROPIC_API_KEY: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_ANTHROPIC_API_KEY != '' || secrets.ANTHROPIC_API_KEY != '') }}
+          HAS_ANTHROPIC_WORKSPACE_ID: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_ANTHROPIC_WORKSPACE_ID != '') }}
+          HAS_ZOHO_SMTP_USER: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_ZOHO_SMTP_USER != '') }}
+          HAS_ZOHO_SMTP_PASS: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_ZOHO_SMTP_PASS != '') }}
+          HAS_SEND_APPROVERS: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_SEND_APPROVERS != '') }}
+          HAS_NOTIFY_EMAIL: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_NOTIFY_EMAIL != '') }}
+          HAS_RESEND_API_KEY: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_RESEND_API_KEY != '') }}
+          HAS_TELEGRAM_BOT_TOKEN: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_TELEGRAM_BOT_TOKEN != '') }}
+          HAS_TELEGRAM_WEBHOOK_SECRET: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_TELEGRAM_WEBHOOK_SECRET != '') }}
+          HAS_VAPID_PRIVATE_KEY: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_VAPID_PRIVATE_KEY != '') }}
+          HAS_VAPID_SUBJECT: ${{ inputs.task == 'cutover-prepare' && (secrets.SERVER_VAPID_SUBJECT != '') }}

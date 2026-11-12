@@ -1,6 +1,7 @@
 #!/bin/sh
 # Runs as root on the server (called by server-up.sh).
 set -eu
+. /opt/sinder/server-instance/deploy/ops/_server_compose.sh   # server_compose: test or production mode (deploy/CUTOVER.md)
 D=/opt/sinder/server-instance; G=/opt/sinder/gateway/Caddyfile; HOST=desk.216-158-234-218.sslip.io
 T=$(cat /opt/sinder/data_token)
 red() { sed "s/$T/<token>/g"; }
@@ -23,12 +24,12 @@ if grep -qE "$RX" $E; then
   echo "blanked (were comment text, now empty): $(grep -oE "$RX" $E | cut -d= -f1 | tr '\n' ' ')"
   sed -E 's/^([A-Za-z_][A-Za-z0-9_]*)=[[:space:]]*#.*$/\1=/' $E > $E.tmp; cat $E.tmp > $E; rm -f $E.tmp; chmod 600 $E
 else echo "none"; fi
-echo "== 2. build (low priority) and start"
+echo "== 2. build (low priority) and start, mode $(server_mode)"
 cd $D/deploy
 t0=$(date +%s)
-nice -n 15 ionice -c 3 docker compose -p sinder-server -f docker-compose.server.yml build --pull 2>&1 | grep -E "ERROR|error:|Built|exporting to image|naming to" | tail -5 || true
+nice -n 15 ionice -c 3 sh -c ". $D/deploy/ops/_server_compose.sh; server_compose build --pull" 2>&1 | grep -E "ERROR|error:|Built|exporting to image|naming to" | tail -5 || true
 echo "build took $(( $(date +%s) - t0 ))s"
-docker compose -p sinder-server -f docker-compose.server.yml up -d --force-recreate 2>&1 | tail -3
+server_compose up -d --force-recreate 2>&1 | tail -3
 for i in $(seq 1 24); do s=$(docker inspect -f '{{.State.Health.Status}}' sinder-server-app 2>/dev/null || echo none); [ "$s" = healthy ] && break; sleep 5; done
 line "container sinder-server-app" "$s"
 
@@ -38,6 +39,8 @@ if ! grep -q "^$HOST {" $G; then
   printf '\n%s {\n\treverse_proxy sinder-server-app:3000\n}\n' "$HOST" >> $G   # append in place: the bind mount keeps the same file
   echo "site block added for $HOST"
 else echo "site block already present"; fi
+if [ "$(server_mode)" = production ] && ! grep -q "^desk.sinder.pro {" $G; then   # production: keep the public name too
+  printf '\n%s {\n\treverse_proxy sinder-server-app:3000\n}\n' desk.sinder.pro >> $G; echo "site block added for desk.sinder.pro (production mode)"; fi
 if docker exec sinder-gateway caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null 2>&1; then
   docker exec sinder-gateway caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile 2>&1 | red | grep -iE "error" | head -3 || true
   echo "gateway config valid, reloaded"
@@ -59,7 +62,7 @@ echo "== 5. isolation from the live sheets (/api/staging-check: one marked row t
 curl -s --max-time 60 "https://$HOST/api/staging-check" | tr ',' '\n' | grep -E '"(env|sheets_configured|state_sheet|engine_sheet|state_is_engine|suppression_goes_to|mail_can_send|write_to_state|read_back_from_state|write_to_live_engine|ok)"' | cut -c1-160
 echo "== safety switches inside the instance"
 docker exec sinder-server-app sh -c 'for k in AGENT_MAIL_LIVE TELEGRAM_OFF DESK_ENV STATE_TABS_EXTRA; do echo "$k=$(printenv $k)"; done; for k in RESEND_API_KEY VAPID_PRIVATE_KEY; do [ -n "$(printenv $k)" ] && echo "$k: set (NOT SAFE)" || echo "$k: empty"; done'
-line "cron service of sinder-server" "$(docker ps -a --format '{{.Names}}' | grep -c '^sinder-server-cron' || true) containers (want 0)"
+line "cron service of sinder-server" "$(docker ps -a --format '{{.Names}}' | grep -c '^sinder-server-cron' || true) containers (want $([ "$(server_mode)" = production ] && echo 1 || echo 0), mode $(server_mode))"
 echo "== 6. app log"
 N=$(docker logs sinder-server-app 2>&1 | wc -l); E=$(docker logs sinder-server-app 2>&1 | grep -ciE "error|ECONNREFUSED|ENOTFOUND" || true)
 line "log lines / error lines" "$N / $E"
