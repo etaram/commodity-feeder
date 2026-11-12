@@ -1004,8 +1004,12 @@ def quota_pick(rows, limit, floor=25):
     by = defaultdict(list)
     for r in rows:
         by[r["source"]].append(r)
-    tot = len(rows) or 1
-    quota = {k: max(floor, round(limit * len(v) / tot)) for k, v in by.items()}
+    quota = {k: min(len(v), floor) for k, v in by.items()}
+    left = max(0, limit - sum(quota.values()))
+    rest = {k: len(v) - quota[k] for k, v in by.items()}
+    tot = sum(rest.values()) or 1
+    for k in by:
+        quota[k] += int(left * rest[k] / tot)
     out = [r for k, v in by.items() for r in v[:quota[k]]]
     out.sort(key=priority)
     return out[:limit]
