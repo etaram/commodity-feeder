@@ -60,7 +60,7 @@ jobs:
         run: pip install -q "scrapling[fetchers]" && (scrapling install 2>&1 | tail -5 || true)
         continue-on-error: true
       - name: task
-        run: python -m leads.source_cycle "$TASK" $ARGS 2>&1 | grep -E "^(PROBE|SAMPLE|RUN|GLEIF|REG|STEALTH|probe summary|weekly report|INFO|WARNING|ERROR|Traceback|  File|[A-Za-z]+Error)" | cut -c1-400
+        run: python -m leads.source_cycle "$TASK" $ARGS 2>&1 | grep -E "^(PROBE|SAMPLE|RUN|GLEIF|REG|STEALTH|DIAG|probe summary|weekly report|INFO|WARNING|ERROR|Traceback|  File|[A-Za-z]+Error)" | cut -c1-400
       - name: GLEIF matches (save for the universe build)
         if: ${{ inputs.task == 'gleif' && hashFiles('data/gleif/matches.jsonl') != '' }}
         uses: actions/cache/save@v4

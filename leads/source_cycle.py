@@ -410,6 +410,16 @@ def main(argv=None):
         probe(set(a[1:]), keep_bodies=os.environ.get("PROBE_SEAL") == "1")
     elif cmd == "report":
         report()
+    elif cmd == "browserdiag":
+        import subprocess
+        for c in ("uname -a", "cat /etc/os-release | head -2", "python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))'",
+                  "ls -la $(python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))')/driver | head",
+                  "file $(python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))')/driver/node",
+                  "ldd $(python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))')/driver/node 2>&1 | grep -i 'not found' | head",
+                  "python -m playwright install chromium 2>&1 | tail -5", "python -m patchright install chromium 2>&1 | tail -5",
+                  "ls ~/.cache/ms-playwright 2>&1 | head", "df -h /tmp ~ | tail -2", "mount | grep -E ' /tmp | /home' | head -3"):
+            r = subprocess.run(c, shell=True, capture_output=True, text=True, timeout=600)
+            print("DIAG", c[:60], "=>", (r.stdout + r.stderr).strip().replace("\n", " | ")[:400])
     elif cmd == "regcheck":
         check_registrations()
     elif cmd == "cycle":
