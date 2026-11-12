@@ -1,10 +1,10 @@
 {
- "generated": "2026-11-12T14:55Z",
+ "generated": "2026-11-12T17:04Z",
  "summary": {
-  "active": 82,
-  "degraded": 3,
-  "implemented": 4,
-  "discovered": 28
+  "degraded": 53,
+  "active": 49,
+  "implemented": 2,
+  "discovered": 24
  },
  "sources": [
   {
@@ -14,14 +14,15 @@
    "kind": "tenders",
    "geography": "EU + EEA",
    "access": "official API (TED Search)",
-   "status": "active",
+   "status": "degraded",
    "rows": 24626,
-   "age_h": 29.6,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "ce232921",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "fts",
@@ -30,14 +31,15 @@
    "kind": "tenders",
    "geography": "UK",
    "access": "official API (Find a Tender OCDS)",
-   "status": "active",
+   "status": "degraded",
    "rows": 180,
-   "age_h": 29.6,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "df5aa36d",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "sam",
@@ -46,14 +48,15 @@
    "kind": "tenders",
    "geography": "USA",
    "access": "official API (SAM.gov, key)",
-   "status": "active",
+   "status": "degraded",
    "rows": 7673,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "b455b11e",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "canadabuys",
@@ -62,14 +65,15 @@
    "kind": "tenders",
    "geography": "Canada",
    "access": "official open data",
-   "status": "active",
+   "status": "degraded",
    "rows": 838,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "38dbb4a4",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "za",
@@ -80,12 +84,13 @@
    "access": "official API (eTenders OCDS)",
    "status": "active",
    "rows": 1191,
-   "age_h": 26.6,
+   "age_h": 28.8,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "c752ad6f",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "worldbank",
@@ -96,12 +101,13 @@
    "access": "official API",
    "status": "active",
    "rows": 774,
-   "age_h": 25.7,
+   "age_h": 27.9,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "34ea8c18",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "ebrd",
@@ -110,14 +116,15 @@
    "kind": "tenders",
    "geography": "EBRD countries",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 42,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "9cceaa71",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "mrgov",
@@ -128,12 +135,13 @@
    "access": "public portal",
    "status": "active",
    "rows": 187,
-   "age_h": 25.7,
+   "age_h": 27.9,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "bbc052df",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "ungm",
@@ -142,14 +150,15 @@
    "kind": "tenders",
    "geography": "Global (UN)",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 1208,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "d84a0419",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "undp",
@@ -158,14 +167,15 @@
    "kind": "tenders",
    "geography": "Global (UNDP)",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 18,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "2e9e7361",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "aiib",
@@ -174,14 +184,15 @@
    "kind": "tenders",
    "geography": "Asia (AIIB)",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 176,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "b15231ca",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "isdb",
@@ -190,14 +201,15 @@
    "kind": "tenders",
    "geography": "IsDB members",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 34,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.7,
+   "note": "data 31.7 h old",
    "refresh": "every 2 h",
    "parser_version": "b1d89baa",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "etimad",
@@ -206,14 +218,15 @@
    "kind": "tenders",
    "geography": "Saudi Arabia",
    "access": "public search page",
-   "status": "active",
+   "status": "degraded",
    "rows": 674,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "2e1b0306",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "prozorro",
@@ -222,14 +235,15 @@
    "kind": "tenders",
    "geography": "Ukraine",
    "access": "official API",
-   "status": "active",
+   "status": "degraded",
    "rows": 1208,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "13afc571",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "pncp",
@@ -238,14 +252,15 @@
    "kind": "tenders",
    "geography": "Brazil",
    "access": "official API (PNCP)",
-   "status": "active",
+   "status": "degraded",
    "rows": 5857,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "28c64a97",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "secop",
@@ -254,14 +269,15 @@
    "kind": "tenders",
    "geography": "Colombia",
    "access": "official open data (Socrata)",
-   "status": "active",
+   "status": "degraded",
    "rows": 858,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "30f9762c",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "germany",
@@ -272,12 +288,13 @@
    "access": "official open data",
    "status": "active",
    "rows": 12665,
-   "age_h": 26.1,
+   "age_h": 28.2,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "14954166",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "contractsfinder",
@@ -286,14 +303,15 @@
    "kind": "tenders",
    "geography": "UK",
    "access": "official API",
-   "status": "active",
+   "status": "degraded",
    "rows": 93,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "028af457",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "paraguay",
@@ -304,12 +322,13 @@
    "access": "official OCDS API",
    "status": "active",
    "rows": 118,
-   "age_h": 26.0,
+   "age_h": 28.1,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "33573586",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "dominican",
@@ -320,12 +339,13 @@
    "access": "official OCDS API",
    "status": "active",
    "rows": 680,
-   "age_h": 26.0,
+   "age_h": 28.1,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "cd8a815b",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "austender",
@@ -334,14 +354,15 @@
    "kind": "tenders",
    "geography": "Australia",
    "access": "official OCDS API",
-   "status": "active",
+   "status": "degraded",
    "rows": 176,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "2444f4f1",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "oman",
@@ -350,14 +371,15 @@
    "kind": "tenders",
    "geography": "Oman",
    "access": "public portal",
-   "status": "active",
+   "status": "degraded",
    "rows": 599,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "c392c4ac",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "france",
@@ -368,12 +390,13 @@
    "access": "official open data (BOAMP)",
    "status": "active",
    "rows": 6920,
-   "age_h": 26.0,
+   "age_h": 28.1,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "f6235c99",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "spain",
@@ -384,12 +407,13 @@
    "access": "official open data (PLACSP)",
    "status": "active",
    "rows": 4961,
-   "age_h": 25.8,
+   "age_h": 27.9,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "da39796a",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "kenya",
@@ -398,14 +422,15 @@
    "kind": "tenders",
    "geography": "Kenya",
    "access": "official API (PPIP)",
-   "status": "active",
+   "status": "degraded",
    "rows": 490,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "da511dea",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "moldova",
@@ -414,14 +439,15 @@
    "kind": "tenders",
    "geography": "Moldova",
    "access": "official API (MTender)",
-   "status": "active",
+   "status": "degraded",
    "rows": 1252,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "1d0d5a27",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "uruguay",
@@ -430,14 +456,15 @@
    "kind": "tenders",
    "geography": "Uruguay",
    "access": "official open data",
-   "status": "active",
+   "status": "degraded",
    "rows": 570,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "1954571d",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "bahrain",
@@ -448,12 +475,13 @@
    "access": "public portal",
    "status": "degraded",
    "rows": 19,
-   "age_h": 68.3,
-   "note": "stale 68.3 h; error file present",
+   "age_h": 70.4,
+   "note": "stale 70.4 h; error file present",
    "refresh": "twice a day",
    "parser_version": "42d82b9c",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": "2026-11-12 stealth (real browser; system libraries installed by deploy/ops/browser-deps.sh)"
   },
   {
    "id": "malaysia",
@@ -462,14 +490,15 @@
    "kind": "tenders",
    "geography": "Malaysia",
    "access": "public portal",
-   "status": "active",
+   "status": "degraded",
    "rows": 430,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "d27416b3",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "qatar",
@@ -478,14 +507,15 @@
    "kind": "tenders",
    "geography": "Qatar",
    "access": "public portal",
-   "status": "active",
+   "status": "degraded",
    "rows": 318,
-   "age_h": 28.9,
-   "note": "",
+   "age_h": 31.1,
+   "note": "data 31.1 h old",
    "refresh": "every 2 h",
    "parser_version": "478529c0",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "israel",
@@ -496,12 +526,13 @@
    "access": "public portals",
    "status": "active",
    "rows": 932,
-   "age_h": 27.4,
+   "age_h": 29.6,
    "note": "",
    "refresh": "every 2 h",
    "parser_version": "05e11ff0",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "nyc",
@@ -512,12 +543,13 @@
    "access": "official open data",
    "status": "active",
    "rows": 194,
-   "age_h": 26.7,
+   "age_h": 28.8,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "dea3332f",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "us_cities",
@@ -528,12 +560,13 @@
    "access": "official open data",
    "status": "active",
    "rows": 278,
-   "age_h": 26.7,
+   "age_h": 28.8,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "5d1c74ea",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "wb_pipeline",
@@ -544,12 +577,13 @@
    "access": "official API",
    "status": "active",
    "rows": 956,
-   "age_h": 25.7,
+   "age_h": 27.9,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "64e8ad5f",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "ocdr_tenders",
@@ -558,14 +592,15 @@
    "kind": "tenders",
    "geography": "~50 countries (OCDS registry)",
    "access": "official bulk downloads",
-   "status": "active",
+   "status": "degraded",
    "rows": 1752,
-   "age_h": 30.0,
-   "note": "",
+   "age_h": 32.2,
+   "note": "data 32.2 h old",
    "refresh": "every 2 h",
    "parser_version": "5b4d765f",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "afdb",
@@ -574,14 +609,15 @@
    "kind": "tenders",
    "geography": "Africa (AfDB)",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 42,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "616363c6",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "iadb",
@@ -590,14 +626,15 @@
    "kind": "tenders",
    "geography": "Latin America (IDB)",
    "access": "public notices page",
-   "status": "active",
+   "status": "degraded",
    "rows": 105,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
-   "parser_version": "14659797",
+   "parser_version": "f166d526",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "chile",
@@ -608,12 +645,13 @@
    "access": "official API (Mercado Publico)",
    "status": "active",
    "rows": 4271,
-   "age_h": 26.6,
+   "age_h": 28.8,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "841a45a5",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "simap",
@@ -622,14 +660,15 @@
    "kind": "tenders",
    "geography": "Switzerland",
    "access": "official API",
-   "status": "active",
+   "status": "degraded",
    "rows": 696,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "cb820c14",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "gets",
@@ -638,14 +677,15 @@
    "kind": "tenders",
    "geography": "New Zealand",
    "access": "public portal",
-   "status": "active",
+   "status": "degraded",
    "rows": 425,
-   "age_h": 29.5,
-   "note": "",
+   "age_h": 31.6,
+   "note": "data 31.6 h old",
    "refresh": "every 2 h",
    "parser_version": "c20162d7",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "india",
@@ -656,12 +696,13 @@
    "access": "public portals (CPPP)",
    "status": "active",
    "rows": 62288,
-   "age_h": 26.1,
+   "age_h": 28.2,
    "note": "",
    "refresh": "twice a day",
    "parser_version": "8908054c",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "rwanda",
@@ -670,14 +711,15 @@
    "kind": "tenders",
    "geography": "Rwanda",
    "access": "public portal (Umucyo)",
-   "status": "active",
+   "status": "degraded",
    "rows": 261,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "540a7407",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "uganda",
@@ -686,14 +728,15 @@
    "kind": "tenders",
    "geography": "Uganda",
    "access": "public portal (eGP)",
-   "status": "active",
+   "status": "degraded",
    "rows": 45,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "0c3f0d26",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "ghana",
@@ -702,14 +745,15 @@
    "kind": "tenders",
    "geography": "Ghana",
    "access": "public portal (GHANEPS)",
-   "status": "active",
+   "status": "degraded",
    "rows": 103,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "aa989551",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "malawi",
@@ -718,14 +762,15 @@
    "kind": "tenders",
    "geography": "Malawi",
    "access": "public portal (PPDA)",
-   "status": "active",
+   "status": "degraded",
    "rows": 40,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "dd05e0e4",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "mozambique",
@@ -734,14 +779,15 @@
    "kind": "tenders",
    "geography": "Mozambique",
    "access": "public portal (UFSA)",
-   "status": "active",
+   "status": "degraded",
    "rows": 85,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "99353008",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "dubai",
@@ -750,14 +796,15 @@
    "kind": "tenders",
    "geography": "UAE (Dubai)",
    "access": "public portal (eSupply)",
-   "status": "active",
+   "status": "degraded",
    "rows": 354,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "35333179",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "philippines",
@@ -766,14 +813,100 @@
    "kind": "tenders",
    "geography": "Philippines",
    "access": "public portal (PhilGEPS)",
-   "status": "active",
+   "status": "degraded",
    "rows": 1337,
-   "age_h": 29.4,
-   "note": "",
+   "age_h": 31.5,
+   "note": "data 31.5 h old",
    "refresh": "every 2 h",
    "parser_version": "43946f68",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "dewa",
+   "name": "Dubai Electricity and Water Authority (DEWA, state utility): the public \"Open Tenders\" list",
+   "track": "projects",
+   "kind": "tenders",
+   "geography": "UAE (Dubai) - DEWA state utility",
+   "access": "public list (relay)",
+   "status": "degraded",
+   "rows": "",
+   "age_h": "",
+   "note": "no health record yet",
+   "refresh": "twice a day",
+   "parser_version": "41f4d716",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 relay (runner gets a 403 bot challenge): robots.txt allows the tender list; no terms page restricting automated reading found"
+  },
+  {
+   "id": "csg",
+   "name": "China Southern Power Grid (CSG, state-owned grid of five southern provinces): tender announcements (招标公告) on its",
+   "track": "projects",
+   "kind": "tenders",
+   "geography": "China - China Southern Power Grid (SOE)",
+   "access": "public list (http)",
+   "status": "degraded",
+   "rows": "",
+   "age_h": "",
+   "note": "no health record yet",
+   "refresh": "twice a day",
+   "parser_version": "0ce54d37",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 http: no robots.txt (404); footer legal/terms links are empty, copyright line only; facts + link kept, no document text"
+  },
+  {
+   "id": "ccgp",
+   "name": "China Government Procurement Network (ccgp.gov.cn, Ministry of Finance): public tender announcements (公开招标公告)",
+   "track": "projects",
+   "kind": "tenders",
+   "geography": "China - central and local government (CCGP)",
+   "access": "public list (http)",
+   "status": "degraded",
+   "rows": "",
+   "age_h": "",
+   "note": "no health record yet",
+   "refresh": "twice a day",
+   "parser_version": "4ed3329f",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 http: no robots.txt (404); no terms page, Ministry of Finance copyright footer; statutory public notices, facts + link kept"
+  },
+  {
+   "id": "lebanon",
+   "name": "Lebanon: Public Procurement Authority central platform (https://www.ppa.gov.lb/en/tenders): every announced",
+   "track": "projects",
+   "kind": "tenders",
+   "geography": "Lebanon",
+   "access": "public portal (PPA, http)",
+   "status": "degraded",
+   "rows": "",
+   "age_h": "",
+   "note": "no health record yet",
+   "refresh": "twice a day",
+   "parser_version": "08fa49f4",
+   "cost": "free",
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "cameroon",
+   "name": "Cameroon: ARMP (Agence de Regulation des Marches Publics) public notices list (https://armp.cm/?page=N): calls for",
+   "track": "projects",
+   "kind": "tenders",
+   "geography": "Cameroon",
+   "access": "public portal (ARMP, http)",
+   "status": "degraded",
+   "rows": "",
+   "age_h": "",
+   "note": "no health record yet",
+   "refresh": "twice a day",
+   "parser_version": "0d1d6169",
+   "cost": "free",
+   "url": "",
+   "terms": ""
   },
   {
    "id": "zambia",
@@ -789,7 +922,8 @@
    "refresh": "not scheduled",
    "parser_version": "c9b4dfd9",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "tanzania",
@@ -805,39 +939,8 @@
    "refresh": "not scheduled",
    "parser_version": "ff0268b0",
    "cost": "free",
-   "url": ""
-  },
-  {
-   "id": "georgia",
-   "name": "(module not loadable: ModuleNotFoundError)",
-   "track": "projects",
-   "kind": "tenders",
-   "geography": "Georgia",
-   "access": "official API",
-   "status": "implemented",
-   "rows": "",
-   "age_h": "",
-   "note": "not scheduled",
-   "refresh": "not scheduled",
-   "parser_version": "",
-   "cost": "free",
-   "url": ""
-  },
-  {
-   "id": "ecuador",
-   "name": "(module not loadable: ModuleNotFoundError)",
-   "track": "projects",
-   "kind": "tenders",
-   "geography": "Ecuador",
-   "access": "official OCDS API",
-   "status": "implemented",
-   "rows": "",
-   "age_h": "",
-   "note": "not scheduled",
-   "refresh": "not scheduled",
-   "parser_version": "",
-   "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "awards",
@@ -846,14 +949,15 @@
    "kind": "suppliers",
    "geography": "global",
    "access": "derived",
-   "status": "active",
-   "rows": "",
-   "age_h": 4.4,
-   "note": "",
+   "status": "degraded",
+   "rows": 0,
+   "age_h": null,
+   "note": "returned 0 rows and has no good run on record",
    "refresh": "daily to weekly",
    "parser_version": "a80c1f61",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "ext_awards",
@@ -869,7 +973,144 @@
    "refresh": "daily to weekly",
    "parser_version": "2913dce2",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "latam_awards",
+   "name": "Brazil PNCP and Colombia SECOP II contracts (award to supplier)",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official APIs",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "9526240f",
+   "cost": "free",
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "prozorro_awards",
+   "name": "Ukraine Prozorro completed tenders with supplier ids",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official API",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "aca4f8d7",
+   "cost": "free",
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "ocdr",
+   "name": "OCP Data Registry award releases (~150 publications)",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official bulk downloads",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "852b077f",
+   "cost": "free",
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "il_exemptions",
+   "name": "Israel no-tender contract exemptions (data.gov.il)",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official open data",
+   "status": "active",
+   "rows": "",
+   "age_h": 5.1,
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "489e520c",
+   "cost": "free",
+   "url": "",
+   "terms": ""
+  },
+  {
+   "id": "iadb_awards",
+   "name": "IDB contract award notifications (data.iadb.org, CC BY 4.0)",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official API",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "3b5ba7b4",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 api: dataset licence CC BY 4.0 (package_show); data.iadb.org robots.txt allows /api/action/"
+  },
+  {
+   "id": "gebiz_awards",
+   "name": "Singapore GeBIZ government awards (data.gov.sg, Singapore Open Data Licence)",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official API",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "e0e34b85",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 api: Singapore Open Data Licence v1.0 (commercial reuse with attribution); data.gov.sg robots.txt Allow: /"
+  },
+  {
+   "id": "mx_check",
+   "name": "e-mail domain deliverability (DNS MX / A, parked, disposable)",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "DNS",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "b9905ce0",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 DNS lookups only (MX, NS, A); no mail sent, no SMTP probing"
+  },
+  {
+   "id": "gleif_bulk",
+   "name": "GLEIF Golden Copy Level 1 + Level 2 bulk (CC0): LEI, legal name, registration authority id, parent",
+   "track": "suppliers",
+   "kind": "suppliers",
+   "geography": "global",
+   "access": "official bulk download",
+   "status": "active",
+   "rows": "",
+   "age_h": "",
+   "note": "",
+   "refresh": "daily to weekly",
+   "parser_version": "29c306e7",
+   "cost": "free",
+   "url": "",
+   "terms": "2026-11-12 api: GLEIF Golden Copy CC0, free of charge (gleif.org/en/about/open-data); goldencopy.gleif.org publish API"
   },
   {
    "id": "importyeti",
@@ -878,14 +1119,15 @@
    "kind": "suppliers",
    "geography": "global",
    "access": "public web pages",
-   "status": "active",
-   "rows": "",
-   "age_h": 4.4,
-   "note": "",
+   "status": "degraded",
+   "rows": 0,
+   "age_h": null,
+   "note": "returned 0 rows and has no good run on record",
    "refresh": "daily to weekly",
-   "parser_version": "dcaa630d",
+   "parser_version": "827a7324",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "wikidata_companies",
@@ -901,7 +1143,8 @@
    "refresh": "daily to weekly",
    "parser_version": "d5c0bc8a",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "listed_companies",
@@ -917,7 +1160,8 @@
    "refresh": "daily to weekly",
    "parser_version": "8e6f9820",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "commodity_producers",
@@ -933,7 +1177,8 @@
    "refresh": "daily to weekly",
    "parser_version": "8044279e",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "web_contacts",
@@ -949,7 +1194,8 @@
    "refresh": "daily to weekly",
    "parser_version": "062c1432",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "sanctions",
@@ -960,12 +1206,13 @@
    "access": "official downloads",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "4f20e3dd",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "integrity",
@@ -976,12 +1223,13 @@
    "access": "official open data",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "e6e6e74e",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "markets",
@@ -990,14 +1238,15 @@
    "kind": "commodities",
    "geography": "global",
    "access": "official APIs",
-   "status": "active",
-   "rows": "",
-   "age_h": 4.4,
-   "note": "",
+   "status": "degraded",
+   "rows": 0,
+   "age_h": null,
+   "note": "returned 0 rows and has no good run on record",
    "refresh": "daily to weekly",
    "parser_version": "eee42951",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "price_trends",
@@ -1008,12 +1257,13 @@
    "access": "World Bank Pink Sheet (monthly, CC BY 4.0) + Commodities Tracker",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "a7d13f81",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "trends",
@@ -1029,7 +1279,8 @@
    "refresh": "daily to weekly",
    "parser_version": "c8b39cf3",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "grants",
@@ -1038,14 +1289,15 @@
    "kind": "projects",
    "geography": "global",
    "access": "public pages",
-   "status": "active",
-   "rows": "",
-   "age_h": 4.4,
-   "note": "",
+   "status": "degraded",
+   "rows": 0,
+   "age_h": null,
+   "note": "returned 0 rows and has no good run on record",
    "refresh": "daily to weekly",
    "parser_version": "45b32f01",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "news",
@@ -1061,7 +1313,8 @@
    "refresh": "daily to weekly",
    "parser_version": "56e61872",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "wb_plans",
@@ -1072,12 +1325,13 @@
    "access": "official APIs",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "c3232a8f",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "lei",
@@ -1088,12 +1342,13 @@
    "access": "official API",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "b643da12",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "social",
@@ -1104,12 +1359,13 @@
    "access": "public feeds",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "432ea498",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "attention",
@@ -1120,12 +1376,13 @@
    "access": "official feeds",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "8e674b62",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "fx",
@@ -1136,12 +1393,13 @@
    "access": "official API",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "d9f0b8a3",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "briefing",
@@ -1152,12 +1410,13 @@
    "access": "public RSS feeds",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "14763ead",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "gdelt",
@@ -1168,12 +1427,13 @@
    "access": "official API",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "2b06c142",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "plays",
@@ -1184,12 +1444,13 @@
    "access": "derived",
    "status": "active",
    "rows": "",
-   "age_h": 4.4,
+   "age_h": 6.6,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "dcc83a7f",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "dealfit",
@@ -1200,12 +1461,13 @@
    "access": "derived",
    "status": "active",
    "rows": "",
-   "age_h": 2.9,
+   "age_h": 5.1,
    "note": "",
    "refresh": "daily to weekly",
    "parser_version": "1ac0c6b8",
    "cost": "free",
-   "url": ""
+   "url": "",
+   "terms": ""
   },
   {
    "id": "S01",
@@ -1221,7 +1483,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.amis-outlook.org/market-monitor"
+   "url": "https://www.amis-outlook.org/market-monitor",
+   "terms": ""
   },
   {
    "id": "S02",
@@ -1237,7 +1500,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://apps.fas.usda.gov/opendataweb/home"
+   "url": "https://apps.fas.usda.gov/opendataweb/home",
+   "terms": ""
   },
   {
    "id": "S03",
@@ -1253,7 +1517,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.fao.org/giews/food-prices/price-tool/en/"
+   "url": "https://www.fao.org/giews/food-prices/price-tool/en/",
+   "terms": ""
   },
   {
    "id": "S04",
@@ -1269,7 +1534,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.worldbank.org/en/research/commodity-markets"
+   "url": "https://www.worldbank.org/en/research/commodity-markets",
+   "terms": ""
   },
   {
    "id": "S05",
@@ -1285,7 +1551,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras/safra-de-graos"
+   "url": "https://www.gov.br/conab/pt-br/atuacao/informacoes-agropecuarias/safras/safra-de-graos",
+   "terms": ""
   },
   {
    "id": "S06",
@@ -1301,7 +1568,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://bepi.mpob.gov.my/"
+   "url": "https://bepi.mpob.gov.my/",
+   "terms": ""
   },
   {
    "id": "S07",
@@ -1317,7 +1585,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries/"
+   "url": "https://www.usgs.gov/centers/national-minerals-information-center/mineral-commodity-summaries/",
+   "terms": ""
   },
   {
    "id": "S08",
@@ -1333,7 +1602,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.eia.gov/opendata/"
+   "url": "https://www.eia.gov/opendata/",
+   "terms": ""
   },
   {
    "id": "S09",
@@ -1342,14 +1612,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'markets'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://uncomtrade.org/docs/subscriptions/"
+   "url": "https://uncomtrade.org/docs/subscriptions/",
+   "terms": ""
   },
   {
    "id": "S10",
@@ -1365,7 +1636,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.fao.org/faostat/"
+   "url": "https://www.fao.org/faostat/",
+   "terms": ""
   },
   {
    "id": "S11",
@@ -1381,7 +1653,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://ec.europa.eu/eurostat/en/web/user-guides/data-browser/api-data-access/api-introduction"
+   "url": "https://ec.europa.eu/eurostat/en/web/user-guides/data-browser/api-data-access/api-introduction",
+   "terms": ""
   },
   {
    "id": "S12",
@@ -1397,7 +1670,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://projects.worldbank.org/en/projects-operations/opportunities"
+   "url": "https://projects.worldbank.org/en/projects-operations/opportunities",
+   "terms": ""
   },
   {
    "id": "S13",
@@ -1413,7 +1687,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.adb.org/business/project-procurement/business-opportunities"
+   "url": "https://www.adb.org/business/project-procurement/business-opportunities",
+   "terms": ""
   },
   {
    "id": "S14",
@@ -1422,14 +1697,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'aiib'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.aiib.org/en/opportunities/business/project-procurement/list.html"
+   "url": "https://www.aiib.org/en/opportunities/business/project-procurement/list.html",
+   "terms": ""
   },
   {
    "id": "S15",
@@ -1438,14 +1714,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'afdb'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.afdb.org/en/projects-and-operations/procurement"
+   "url": "https://www.afdb.org/en/projects-and-operations/procurement",
+   "terms": ""
   },
   {
    "id": "S16",
@@ -1454,14 +1731,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'iadb'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.iadb.org/en/how-we-can-work-together/procurement/procurement-projects/procurement-plans"
+   "url": "https://www.iadb.org/en/how-we-can-work-together/procurement/procurement-projects/procurement-plans",
+   "terms": ""
   },
   {
    "id": "S17",
@@ -1477,7 +1755,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://disclosures.ifc.org/"
+   "url": "https://disclosures.ifc.org/",
+   "terms": ""
   },
   {
    "id": "S18",
@@ -1486,14 +1765,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'etimad'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://tenders.etimad.sa/Tender/"
+   "url": "https://tenders.etimad.sa/Tender/",
+   "terms": ""
   },
   {
    "id": "S19",
@@ -1501,15 +1781,16 @@
    "track": "projects",
    "kind": "backlog",
    "geography": "",
-   "access": "unverified",
-   "status": "discovered",
+   "access": "",
+   "status": "active",
    "rows": "",
    "age_h": "",
-   "note": "researched link only: access, terms and cost not verified",
+   "note": "covered by connector 'gebiz_awards'",
    "refresh": "",
    "parser_version": "",
-   "cost": "unverified",
-   "url": "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml"
+   "cost": "",
+   "url": "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml",
+   "terms": ""
   },
   {
    "id": "S20",
@@ -1525,7 +1806,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://bidplus-global.gem.gov.in/"
+   "url": "https://bidplus-global.gem.gov.in/",
+   "terms": ""
   },
   {
    "id": "S21",
@@ -1541,7 +1823,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.etenders.gov.in/"
+   "url": "https://www.etenders.gov.in/",
+   "terms": ""
   },
   {
    "id": "S22",
@@ -1557,7 +1840,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.ccgp.gov.cn/"
+   "url": "https://www.ccgp.gov.cn/",
+   "terms": ""
   },
   {
    "id": "S23",
@@ -1573,7 +1857,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://chinabidding.mofcom.gov.cn/"
+   "url": "https://chinabidding.mofcom.gov.cn/",
+   "terms": ""
   },
   {
    "id": "S24",
@@ -1582,14 +1867,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'kenya'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.tenders.go.ke/"
+   "url": "https://www.tenders.go.ke/",
+   "terms": ""
   },
   {
    "id": "S25",
@@ -1605,7 +1891,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.etenders.gov.za/Home/Opportunities"
+   "url": "https://www.etenders.gov.za/Home/Opportunities",
+   "terms": ""
   },
   {
    "id": "S26",
@@ -1614,14 +1901,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'pncp'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.gov.br/pncp/pt-br/acesso-a-informacao/dados-abertos"
+   "url": "https://www.gov.br/pncp/pt-br/acesso-a-informacao/dados-abertos",
+   "terms": ""
   },
   {
    "id": "S27",
@@ -1637,7 +1925,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://www.chilecompra.cl/api/"
+   "url": "https://www.chilecompra.cl/api/",
+   "terms": ""
   },
   {
    "id": "S28",
@@ -1646,14 +1935,15 @@
    "kind": "backlog",
    "geography": "",
    "access": "",
-   "status": "active",
+   "status": "degraded",
    "rows": "",
    "age_h": "",
    "note": "covered by connector 'ted'",
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://docs.ted.europa.eu/api/latest/search.html"
+   "url": "https://docs.ted.europa.eu/api/latest/search.html",
+   "terms": ""
   },
   {
    "id": "S29",
@@ -1669,7 +1959,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://sourcing.hktdc.com/en"
+   "url": "https://sourcing.hktdc.com/en",
+   "terms": ""
   },
   {
    "id": "S30",
@@ -1685,7 +1976,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.kotra.or.kr/english/subList/41000046004"
+   "url": "https://www.kotra.or.kr/english/subList/41000046004",
+   "terms": ""
   },
   {
    "id": "S31",
@@ -1701,7 +1993,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www-onepage.taiwantrade.com/mp/services"
+   "url": "https://www-onepage.taiwantrade.com/mp/services",
+   "terms": ""
   },
   {
    "id": "S32",
@@ -1717,7 +2010,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.cantonfair.org.cn/en/index.html"
+   "url": "https://www.cantonfair.org.cn/en/index.html",
+   "terms": ""
   },
   {
    "id": "S33",
@@ -1733,7 +2027,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://b2bmarketplace.procolombia.co/es"
+   "url": "https://b2bmarketplace.procolombia.co/es",
+   "terms": ""
   },
   {
    "id": "S34",
@@ -1749,7 +2044,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.srilankabusiness.com/exporters/"
+   "url": "https://www.srilankabusiness.com/exporters/",
+   "terms": ""
   },
   {
    "id": "S35",
@@ -1765,7 +2061,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.fpef.co.za/exportermembersextensivelist"
+   "url": "https://www.fpef.co.za/exportermembersextensivelist",
+   "terms": ""
   },
   {
    "id": "S36",
@@ -1773,15 +2070,16 @@
    "track": "suppliers",
    "kind": "backlog",
    "geography": "",
-   "access": "unverified",
-   "status": "discovered",
+   "access": "",
+   "status": "active",
    "rows": "",
    "age_h": "",
-   "note": "researched link only: access, terms and cost not verified",
+   "note": "covered by connector 'lei'",
    "refresh": "",
    "parser_version": "",
-   "cost": "unverified",
-   "url": "https://www.gleif.org/en/lei-data/access-and-use-lei-data"
+   "cost": "",
+   "url": "https://www.gleif.org/en/lei-data/access-and-use-lei-data",
+   "terms": ""
   },
   {
    "id": "S37",
@@ -1789,15 +2087,16 @@
    "track": "signals",
    "kind": "backlog",
    "geography": "",
-   "access": "unverified",
-   "status": "discovered",
+   "access": "",
+   "status": "active",
    "rows": "",
    "age_h": "",
-   "note": "researched link only: access, terms and cost not verified",
+   "note": "covered by connector 'gdelt'",
    "refresh": "",
    "parser_version": "",
-   "cost": "unverified",
-   "url": "https://gdeltproject.org/data.html"
+   "cost": "",
+   "url": "https://gdeltproject.org/data.html",
+   "terms": ""
   },
   {
    "id": "S38",
@@ -1813,7 +2112,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "",
-   "url": "https://developers.google.com/search/apis/trends"
+   "url": "https://developers.google.com/search/apis/trends",
+   "terms": ""
   },
   {
    "id": "S39",
@@ -1821,15 +2121,16 @@
    "track": "signals",
    "kind": "backlog",
    "geography": "",
-   "access": "unverified",
-   "status": "discovered",
+   "access": "",
+   "status": "active",
    "rows": "",
    "age_h": "",
-   "note": "researched link only: access, terms and cost not verified",
+   "note": "covered by connector 'attention'",
    "refresh": "",
    "parser_version": "",
-   "cost": "unverified",
-   "url": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html"
+   "cost": "",
+   "url": "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html",
+   "terms": ""
   },
   {
    "id": "S40",
@@ -1845,7 +2146,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://acwapower.com/en/what-we-do/projects/"
+   "url": "https://acwapower.com/en/what-we-do/projects/",
+   "terms": ""
   },
   {
    "id": "S41",
@@ -1861,7 +2163,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://www.equinix.com/data-centers/expansions"
+   "url": "https://www.equinix.com/data-centers/expansions",
+   "terms": ""
   },
   {
    "id": "S42",
@@ -1877,7 +2180,8 @@
    "refresh": "",
    "parser_version": "",
    "cost": "unverified",
-   "url": "https://bid.powerchina.cn/"
+   "url": "https://bid.powerchina.cn/",
+   "terms": ""
   }
  ]
 }
