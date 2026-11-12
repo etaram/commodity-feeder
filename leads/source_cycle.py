@@ -384,7 +384,7 @@ def sample(targets, method="http"):
         url = (c.get("probe_url") or c["url"]) if c else target
         code, host, text, n = _try_http(s, url) if method == "http" else _try_relay(url) if method == "relay" else _try_stealth(url)
         p = save_sealed(f"sample_{c['id'] if c else urlsplit(url).netloc}_{i}_{method}", text or "")
-        print(f"SAMPLE {i} {urlsplit(url).netloc} {method} -> {code} {n} bytes, sealed {p.name if p else '-'}")
+        print(f"SAMPLE {i} {urlsplit(url).netloc} {method} -> {code} {n} bytes, sealed {p.name if p else '-'}" + ("" if code else f" ({host})"))
         time.sleep(1.5)
 
 
