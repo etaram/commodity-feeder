@@ -160,6 +160,14 @@ body:not(.role-admin) [data-v="users"],body:not(.role-admin) [data-v="ops"]{disp
 .adkpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}.adk{background:var(--card,rgba(255,255,255,.04));border:1px solid var(--line,rgba(255,255,255,.1));border-radius:12px;padding:10px 12px}.adk .num{font-size:1.4em;font-weight:700}
 .adgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}.adrow{display:flex;align-items:center;gap:8px;margin:2px 0}
 .adbar{flex:1;display:inline-block;height:8px;border-radius:4px;background:rgba(127,127,127,.18);min-width:40px;overflow:hidden}.adbar>span{display:block;height:100%;background:var(--info,#5b8def);border-radius:4px}.adbar>span.acc{background:var(--acc,#d6b25e)}.adbar>span.warn{background:var(--warn,#f0b35a)}
+.srv-say{margin:8px 0 10px}.srv-say b{font-size:15px}
+.srv-gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0;text-align:center}.srv-g svg{display:block;margin:0 auto}.srv-gl{font-size:12.5px;font-weight:600}
+.srv-sparkw{margin:6px 0 10px}.srv-spark{display:block;width:100%;height:44px}.srv-sparkl{display:flex;justify-content:space-between;gap:6px}
+.srv-chips{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:6px 0}
+.srv-h{margin:14px 0 4px;font-size:13.5px}
+.srv-wf{padding:6px 0;border-bottom:1px solid var(--line)}.srv-wf.late .srv-wfn b{color:var(--bad)}.srv-wfm{margin-top:2px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.srv-pr{margin:6px 0 8px}.srv-prh{display:flex;justify-content:space-between;gap:8px;font-size:13px;margin-bottom:3px}.srv-pr .adbar{display:block;height:10px}
+.srv-j{white-space:pre-wrap;font-size:11.5px;max-height:240px;overflow:auto;background:var(--soft);padding:8px;border-radius:6px}
 body:not(.has-profile-api) [data-v="forme"]{display:none}
 .fm-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--panel)}
 .fm-top{display:flex;gap:10px;align-items:flex-start}
@@ -851,7 +859,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div id="sr-out"></div>
     <details class="section" id="cov-box"><summary><b data-i="cov_h">Coverage radar</b> <span class="sub" data-i="cov_s">where credible supply is thin</span></summary><p class="note" data-i="cov_n"></p><div id="cov-out"></div></details>
   </section>
-  <section class="view" id="v-ops" hidden><h2 style="margin:0 0 4px"><span data-i="tab_ops">Admin panel</span></h2><div id="ops-out"></div></section>
+  <section class="view" id="v-ops" hidden><h2 style="margin:0 0 4px"><span data-i="tab_ops">Admin panel</span></h2><div id="spend-out"></div><div id="srv-out"></div><div id="ops-out"></div></section>
   <section class="view" id="v-users" hidden>
     <div class="filters"><h2 style="margin-inline-end:auto" data-i="users_h">User accounts</h2><button type="button" id="users-refresh" data-i="refresh">Refresh</button></div>
     <p class="note" data-i="users_note"></p>
@@ -2401,11 +2409,11 @@ async function compose({ kind, ctx, to }, outSel) {
     // is (they could go around Sinder), and Sinder never claims to act for a party it does not represent. Only the buyer
     // itself (kind "buyer") is addressed with the opportunity's own name.
     const discreet = kind !== "buyer";
-    const DISCRETION = discreet ? ` DISCRETION (strict): never name the buyer, the end client, the project name, the tender or reference number, the financing institution's project id, or any link; never write that Sinder acts "on behalf of" or represents the buyer or any party. Describe the opportunity only at the level a competitor could not trace: the sector, the type of equipment or goods, the broad region (e.g. "East Africa", "Southern Europe", never the country when it would identify the project), the kind of financing in general terms (e.g. "multilateral-financed", "public utility"), and the size as a range (e.g. "a project in the USD 50-150 million range"). Present Sinder as preparing a competitive supply offer and shortlisting manufacturers for it, and make the supplier want to be on that shortlist: the size of the opportunity, a decision timeline, and that detailed specifications follow once they confirm interest and capability (and sign an NDA if they ask). Business-like and confident, not secretive-sounding.` : "";
+    const DISCRETION = discreet ? ` DISCRETION (strict): never name the buyer, the end client, the project name, the tender or reference number, the financing institution's project id, or any link; never write that Sinder acts "on behalf of" or represents the buyer or any party. Describe the opportunity only at the level a competitor could not trace: the sector, the type of equipment or goods, the broad region when describing the project (e.g. "East Africa", "Southern Europe"); the delivery country may be named only as the shipping destination for the price, the kind of financing in general terms (e.g. "multilateral-financed", "public utility"), and the size as a range (e.g. "a project in the USD 50-150 million range"). Present Sinder as preparing a competitive supply offer and shortlisting manufacturers for it, and make the supplier want to be on that shortlist: the size of the opportunity, a decision timeline, and that detailed specifications follow once they confirm interest and capability (and sign an NDA if they ask). Business-like and confident, not secretive-sounding.` : "";
     const ctxSafe = ctx?.r ? pick(ctx.r, discreet ? ["sector", "commodity", "commodity group", "product", "products", "supplied", "supplier", "country", "est_value_usd", "deadline", "Primary commodity group", "market"] : ["title_en", "buyer", "country", "sector", "commodity", "est_value_usd", "deadline", "link", "opportunity", "market", "commodity group", "product", "Account", "Primary commodity group", "products", "supplied", "supplier"]) : {};
-    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement, Israel). Professional, short (under 180 words), concrete, no emojis, no em-dashes.${DISCRETION} For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, Incoterm (FOB and CIF to destination), payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Greet the named person if one is given, else use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
+    const prompt = `Write ${what}, ${langLine}. Sender: Etamar Ramot Naaman, Sinder (international strategic procurement). Do not mention Israel or where Sinder is based; present Sinder simply as an international procurement firm. Keep the message coherent with the opportunity: the delivery destination is the opportunity's own country (in the context below), never Sinder's home country, so Incoterms and freight questions name that destination, chosen as a trade professional would: a public tender usually wants goods delivered to the buyer's own sites, so ask for DAP (or DDP) to the named delivery place in that country as the main price; when the supplier is in the same customs union or reachable by land (e.g. an EU supplier for an EU buyer) the goods travel by truck (reefer for chilled or frozen food) and a port price is irrelevant; only for overseas supply add FOB and CIF to the destination country's main container port (e.g. Constanta for Romania), and note that goods from outside a customs union may carry import duty there. Dates, currency (EUR inside the EU) and certificates (e.g. EU health and export certificates for food) fit that market. Professional, short (under 180 words), concrete, no emojis, no em-dashes.${DISCRETION} For an RFQ: list the items/specs as known, ask for unit price, MOQ, lead time, the Incoterm and named place chosen as above, payment terms, certificates, and quote validity; give a reply-by date ${kind === "rfq" && ctx?.r?.deadline ? "5 working days before " + ctx.r.deadline : "within 7 days"}. Greet the named person if one is given, else use a neutral greeting (recipients: ${recips.map(r => r.name).join(", ") || "unknown"}).
 Return JSON only: {"subject": "…", "body": "…"${review}} (body as plain text with line breaks).
-Context${discreet ? " (for your understanding only; the country and exact value are NOT to be written)" : ""}: ${JSON.stringify(ctxSafe)}`;
+Context${discreet ? " (for your understanding only: the exact value is NOT to be written; the country is written only as the delivery destination for prices and freight, never tied to a buyer or a project)" : ""}: ${JSON.stringify(ctxSafe)}`;
     try { const j = await sample.json(prompt, { cache: fresh ? false : { gcTime: 3600000 } }); $("#m-sub").value = j.subject || ""; $("#m-body").value = j.body || "";
       $("#m-review").innerHTML = j.review ? `<details class="section" open><summary>${esc(t("m_review"))}</summary><div class="ai" dir="auto" style="white-space:pre-wrap">${esc(j.review)}</div><div class="sub">${esc(t("m_review_note"))}</div></details>` : ""; }
     catch (e) { $("#m-body").value = e.text || ""; $("#m-flash").innerHTML = `<div class="flash err">${esc(sampleErr(e))}</div>`; }
@@ -4430,6 +4438,194 @@ async function renderOps(fresh) {
   const bf = $("#ops-backfill"); if (bf && window.DD_ADMIN_ACT) bf.onclick = async () => { bf.disabled = true; bf.textContent = t("loading"); try { const r = await window.DD_ADMIN_ACT("backfill_research"); bf.textContent = mt(`${r.facts} facts from ${r.jobs} jobs`, `${r.facts} עובדות מ-${r.jobs} מחקרים`); setTimeout(() => renderOps(true), 1500); } catch (e) { bf.textContent = errText(e); } };
 }
 
+/* ---------- Spending this month: every paid service against its monthly cap, and the total (admin) ----------
+   Data: /api/panel/spend (lib/spend.ts). Plain words per line; unknown is shown as unknown, never as 0. */
+const SPD = { data: null, at: 0, busy: false, err: "" };
+const spdWords = { "within budget": "בתוך התקציב", "near the cap": "קרוב לתקרה", "stopped at the cap": "נעצר בתקרה", "over the cap": "מעל התקרה",
+  "not known right now": "לא ידוע כרגע", "no cap set": "לא הוגדרה תקרה", "off (not connected, nothing spent)": "כבוי (לא מחובר, אין הוצאה)", "stopped: the cap is 0": "נעצר: התקרה 0",
+  "not running (no ledger yet)": "לא פועל (אין עדיין יומן)" };
+const spdName = { anthropic: ["Anthropic API (AI)", "Anthropic API (בינה מלאכותית)"], agents: ["Agents (budget ledger)", "סוכנים (יומן תקציב)"], search: ["Search API", "API חיפוש"], whatsapp: ["WhatsApp", "וואטסאפ"] };
+const spdCls = l => l === "within" ? "good" : l === "near" ? "warn" : l === "stopped" ? "bad" : "";
+const spdUsd = v => v === null || v === undefined ? "-" : "$" + Number(v).toFixed(2);
+const spdSay = w => LANG === "he" ? String(w || "").split(", but ").map((x, i) => i ? "אבל " + x.replace(" could not be read", " לא נקרא") : (spdWords[x] || x)).join(", ") : w;
+async function renderSpend(fresh) {
+  const el = $("#spend-out"); if (!el) return;
+  if (!window.DD_ADMIN) { el.innerHTML = ""; return; }
+  if (SPD.busy) return;
+  if (fresh || !SPD.data || Date.now() - SPD.at > 110_000) {
+    SPD.busy = true;
+    if (!SPD.data) el.innerHTML = `<section class="section"><h3>${esc(mt("Spending this month", "הוצאות החודש"))}</h3><div class="sub">${esc(t("loading"))}</div></section>`;
+    try {
+      const r = await fetch("/api/panel/spend", { credentials: "same-origin", cache: "no-store" });
+      if (r.status === 401) { location.href = "/login"; return; }
+      const j = await r.json().catch(() => null);
+      if (!r.ok || !j || !j.ok) throw new Error(r.status === 404 ? mt("this part of the server is not deployed yet", "החלק הזה בשרת עוד לא הותקן") : (j && j.error) || `HTTP ${r.status}`);
+      SPD.data = j; SPD.at = Date.now(); SPD.err = "";
+    } catch (e) { SPD.err = e.message || String(e); }
+    SPD.busy = false;
+  }
+  el.innerHTML = spdHtml(SPD.data, SPD.err);
+  const b = $("#spend-refresh"); if (b) b.onclick = () => renderSpend(true);
+}
+function spdHtml(d, err) {
+  const head = `<h3>${esc(mt("Spending this month", "הוצאות החודש"))} <span class="muted sub">${d ? esc(d.month) + " · " + esc(mt("updated", "עודכן")) + " " + esc(String(d.at || "").slice(11, 16)) + " UTC" : ""}</span> <button type="button" class="sm" id="spend-refresh">${esc(t("refresh"))}</button></h3>`;
+  if (!d) return `<section class="section srv">${head}<div class="note q-block">${esc(mt("Not available: ", "לא זמין: "))}${esc(err)}</div></section>`;
+  const tt = d.total || {};
+  const say = tt.level === "within" ? mt(`Spending is under control: $${Number(tt.spent_usd).toFixed(2)} of the $${tt.cap_usd} monthly cap.`, `ההוצאות בשליטה: $${Number(tt.spent_usd).toFixed(2)} מתוך תקרה חודשית של $${tt.cap_usd}.`)
+    : mt(`Total this month: $${Number(tt.spent_usd).toFixed(2)} of the $${tt.cap_usd} cap (${tt.words}).`, `סה"כ החודש: $${Number(tt.spent_usd).toFixed(2)} מתוך תקרה של $${tt.cap_usd} (${spdSay(tt.words)}).`);
+  const line = s => `<div class="srv-pr"><div class="srv-prh"><span>${esc(LANG === "he" && spdName[s.id] ? spdName[s.id][1] : s.name)} <span class="pill ${spdCls(s.level)}">${esc(spdSay(s.words))}</span></span><span class="num" dir="ltr">${spdUsd(s.spent_usd)}${s.cap_usd !== null ? " / $" + s.cap_usd : ""}</span></div>${s.cap_usd ? adBar(Math.min(s.spent_usd || 0, s.cap_usd), s.cap_usd, s.level === "stopped" ? "bad" : s.level === "near" ? "warn" : "acc") : ""}
+      <div class="sub muted" dir="ltr">${esc(s.basis)}${s.detail ? " · " + esc(s.detail) : ""}</div></div>`;
+  const fixed = (d.fixed || []).map(f => `<div class="srv-prh"><span>${esc(f.name)}${f.note ? ` <span class="sub muted" dir="ltr">${esc(f.note)}</span>` : ""}</span><span class="num">${f.status === "confirmed" ? spdUsd(f.monthly_usd) : `<span class="pill warn">${esc(mt("to confirm", "לאישור"))}</span>${f.monthly_usd !== null ? ` <span dir="ltr">${spdUsd(f.monthly_usd)}?</span>` : ""}`}</span></div>`).join("");
+  return `<section class="section srv">${head}
+    <div class="srv-say"><b>${esc(say)}</b> <span class="pill ${spdCls(tt.level)}">${esc(spdSay(tt.words))}</span></div>
+    <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Total this month", "סה\"כ החודש"))}</span><span class="num" dir="ltr">${spdUsd(tt.spent_usd)} / $${tt.cap_usd}</span></div>${tt.cap_usd ? adBar(Math.min(tt.spent_usd || 0, tt.cap_usd), tt.cap_usd, tt.level === "stopped" || tt.level === "over" ? "bad" : tt.level === "near" ? "warn" : "acc") : ""}</div>
+    <h4 class="srv-h">${esc(mt("By service", "לפי שירות"))}</h4>${(d.services || []).map(line).join("")}
+    <h4 class="srv-h">${esc(mt("Fixed monthly costs", "עלויות קבועות בחודש"))}</h4>${fixed || `<div class="note">${esc(mt("None configured.", "לא הוגדרו."))}</div>`}
+    ${tt.unconfirmed && tt.unconfirmed.length ? `<div class="sub muted">${esc(mt(`Not in the total until confirmed: ${tt.unconfirmed.join(", ")}.`, `לא נכללים בסה"כ עד שיאושרו: ${tt.unconfirmed.join(", ")}.`))}</div>` : ""}
+    <div class="sub muted">${esc(mt("When the AI line reaches its cap, new AI calls are refused until the 1st of next month (or until the cap is raised). Amounts are estimates from list prices; the invoices are the measured figures.", "כשהשורה של הבינה המלאכותית מגיעה לתקרה, קריאות חדשות נחסמות עד ה-1 בחודש הבא (או עד שהתקרה מועלית). הסכומים הם אומדן לפי מחירון; החשבוניות הן הנתון המדוד."))}</div></section>`;
+}
+
+/* ---------- Server and tasks: the company server, the GitHub workflows and the processing queues (admin) ----------
+   Data: /api/panel/server (status files written on the server every 2 minutes, GitHub runs cached 120 s). Refreshed
+   every 60 s while the admin tab is open and the page is visible. Unknown values are shown as unknown, never as 0. */
+const SVP = { data: null, at: 0, busy: false, err: "" };
+const srvPct = v => v === null || v === undefined ? null : Math.max(0, Math.min(100, Number(v)));
+const srvAgo = iso => { const ms = Date.now() - Date.parse(iso || ""); if (!isFinite(ms)) return mt("unknown", "לא ידוע"); const m = Math.round(ms / 60000);
+  return m < 1 ? mt("just now", "עכשיו") : m < 60 ? mt(`${m} min ago`, `לפני ${m} דק'`) : m < 2880 ? mt(`${Math.round(m / 60)} h ago`, `לפני ${Math.round(m / 60)} שע'`) : mt(`${Math.round(m / 1440)} days ago`, `לפני ${Math.round(m / 1440)} ימים`); };
+const srvDur = s => s === null || s === undefined ? "-" : s < 60 ? `${s}s` : s < 3600 ? `${Math.round(s / 60)}m` : `${Math.floor(s / 3600)}h${String(Math.round(s % 3600 / 60)).padStart(2, "0")}`;
+const srvLevel = p => p === null ? "" : p >= 85 ? "bad" : p >= 60 ? "warn" : "good";
+// a ring gauge: value in %, label under it, colour by level
+function srvGauge(p, label, sub) {
+  const r = 30, c = 2 * Math.PI * r, v = srvPct(p), col = v === null ? "var(--muted)" : `var(--${srvLevel(v)})`;
+  return `<div class="srv-g"><svg viewBox="0 0 76 76" width="76" height="76" aria-hidden="true"><circle cx="38" cy="38" r="${r}" fill="none" stroke="var(--line)" stroke-width="8"/>${v === null ? "" : `<circle cx="38" cy="38" r="${r}" fill="none" stroke="${col}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c * (1 - v / 100)).toFixed(1)}" transform="rotate(-90 38 38)"/>`}<text x="38" y="43" text-anchor="middle" font-size="15" font-weight="700" fill="currentColor">${v === null ? "-" : Math.round(v) + "%"}</text></svg><div class="srv-gl">${esc(label)}</div>${sub ? `<div class="sub muted" dir="ltr">${esc(sub)}</div>` : ""}</div>`;
+}
+// a sparkline of the last 24 hours (values 0-100), inline SVG, gaps where the server published nothing
+function srvSpark(t, vals) {
+  const pts = (t || []).map((x, i) => [x, vals[i]]).filter(p => p[1] !== null && p[1] !== undefined);
+  if (pts.length < 2) return `<div class="sub muted">${esc(mt("The 24-hour line fills in as the server reports (every 2 minutes).", "הקו של 24 השעות מתמלא ככל שהשרת מדווח (כל 2 דקות)."))}</div>`;
+  const W = 300, Hh = 44, t1 = Date.now(), t0 = t1 - 864e5, x = v => ((v - t0) / 864e5 * W).toFixed(1), y = v => (Hh - 2 - Math.max(0, Math.min(100, v)) / 100 * (Hh - 4)).toFixed(1);
+  let d = "", prev = null;
+  for (const [tt, v] of pts) { d += (prev !== null && tt - prev > 600e3 ? "M" : d ? "L" : "M") + x(tt) + " " + y(v); prev = tt; }
+  const peak = Math.max(...pts.map(p => p[1])), avg = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+  return `<svg class="srv-spark" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none" role="img" aria-label="${esc(mt("CPU over 24 hours", "מעבד ב-24 שעות"))}"><line x1="0" x2="${W}" y1="${y(60)}" y2="${y(60)}" stroke="var(--line)" stroke-dasharray="3 3"/><path d="${d}" fill="none" stroke="var(--info)" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>
+    <div class="sub muted srv-sparkl" dir="ltr"><bdi>${esc(mt("24 h ago", "לפני 24 שע'"))}</bdi><bdi>${esc(mt(`average ${Math.round(avg)}%, peak ${Math.round(peak)}%`, `ממוצע ${Math.round(avg)}%, שיא ${Math.round(peak)}%`))}</bdi><bdi>${esc(mt("now", "עכשיו"))}</bdi></div>`;
+}
+const srvChip = (cls, text, title) => `<span class="pill ${cls}" dir="ltr"${title ? ` title="${esc(title)}"` : ""}>${esc(text)}</span>`;
+function srvContainerChip(c) {
+  const down = (c.state !== "running" && c.want_running) || c.health === "unhealthy";
+  const cls = down ? "bad" : c.state === "running" ? "good" : "";
+  const extra = c.state === "running" ? [c.cpu_pct !== null ? `${c.cpu_pct}%` : "", c.mem_mb !== null ? `${c.mem_mb >= 1024 ? (c.mem_mb / 1024).toFixed(1) + " GB" : Math.round(c.mem_mb) + " MB"}` : ""].filter(Boolean).join(" · ") : c.state;
+  return srvChip(cls, `${c.name.replace(/^sinder[-_]/, "").replace(/-1$/, "")}${extra ? " · " + extra : ""}`, `${c.state}${c.health ? " (" + c.health + ")" : ""}`);
+}
+function srvRunChip(w) {
+  if (w.last_status === "in_progress") return srvChip("info", mt("running", "רץ"));
+  if (w.last_status && w.last_status !== "completed") return srvChip("", mt("waiting", "ממתין"));
+  const c = w.last_conclusion;
+  return c === "success" ? srvChip("good", mt("success", "הצליח")) : c === "failure" || c === "timed_out" || c === "startup_failure" ? srvChip("bad", mt("failed", "נכשל")) : c ? srvChip("", c === "cancelled" ? mt("cancelled", "בוטל") : c === "skipped" ? mt("skipped", "דולג") : c) : srvChip("", mt("no run", "אין ריצה"));
+}
+async function srvFetch() {
+  const r = await fetch("/api/panel/server", { credentials: "same-origin", cache: "no-store" });
+  if (r.status === 401) { location.href = "/login"; throw new Error("signed out"); }
+  const j = await r.json().catch(() => null);
+  if (!r.ok || !j || !j.ok) throw new Error(r.status === 404 ? mt("this part of the server is not deployed yet", "החלק הזה בשרת עוד לא הותקן") : (j && j.error) || `HTTP ${r.status}`);
+  return j;
+}
+async function renderServer(fresh) {
+  const el = $("#srv-out"); if (!el) return;
+  if (!window.DD_ADMIN) { el.innerHTML = ""; return; }
+  if (SVP.busy) return;
+  if (fresh || !SVP.data || Date.now() - SVP.at > 55_000) {
+    SVP.busy = true;
+    if (!SVP.data) el.innerHTML = `<section class="section"><h3>${esc(mt("Server and tasks", "שרת ומשימות"))}</h3><div class="sub">${esc(t("loading"))}</div></section>`;
+    try { SVP.data = await srvFetch(); SVP.at = Date.now(); SVP.err = ""; } catch (e) { SVP.err = e.message || String(e); }
+    SVP.busy = false;
+  }
+  el.innerHTML = srvHtml(SVP.data, SVP.err);
+  const b = $("#srv-refresh"); if (b) b.onclick = () => renderServer(true);
+}
+// website checks per hour: from the server's 24-hour history; otherwise from two visits of this page (kept in this browser)
+function srvRate(d, wc) {
+  const r = d.server?.website_rate; if (r && r.per_hour !== null) return { per_hour: r.per_hour, over_h: r.over_h, from: "server" };
+  if (wc === null || wc === undefined) return null;
+  let prev = null; try { prev = JSON.parse(localStorage.getItem("sinder-srv-wc") || "null"); } catch (e) {}
+  const now = Date.now();
+  if (!prev || wc < prev.v || now - prev.t > 2 * 864e5) { try { localStorage.setItem("sinder-srv-wc", JSON.stringify({ v: wc, t: now })); } catch (e) {} return null; }
+  const h = (now - prev.t) / 3600e3; if (h < 0.5 || wc === prev.v) return null;
+  return { per_hour: Math.round((wc - prev.v) / h), over_h: Math.round(h * 10) / 10, from: "browser" };
+}
+function srvHtml(d, err) {
+  const head = `<h3>${esc(mt("Server and tasks", "שרת ומשימות"))} <span class="muted sub">${d ? esc(mt("updated", "עודכן")) + " " + esc(String(d.at || "").slice(11, 16)) + " UTC · " : ""}${esc(mt("refreshes every minute", "מתרענן כל דקה"))}</span> <button type="button" class="sm" id="srv-refresh">${esc(t("refresh"))}</button></h3>`;
+  if (!d) return `<section class="section srv">${head}<div class="note q-block">${esc(mt("Not available: ", "לא זמין: "))}${esc(err)}</div></section>`;
+  const sv = d.server || {}, st = sv.available ? sv.status : null, h = st ? st.host : null, hi = sv.history || null;
+  const wfs = Array.isArray(d.actions?.workflows) ? d.actions.workflows : [];
+  // (a) gauges and (b) the plain-words line
+  let top;
+  if (!st) {
+    top = `<div class="note">${esc(mt("Server status is not available in this environment", "מצב השרת לא זמין בסביבה הזו"))}${sv.reason || sv.error ? ": " + esc(sv.reason || sv.error) : ""}.</div>`;
+  } else {
+    const cpu = h.cpu_busy_pct, mem = h.mem.total_mb ? 100 * h.mem.used_mb / h.mem.total_mb : null, dk = h.disk ? h.disk.used_pct : null;
+    const gb = mb => mb === null ? "-" : (mb / 1024).toFixed(1);
+    const running = wfs.filter(w => w.running > 0).map(w => w.name);
+    const busyR = (st.runners || []).filter(r => r.busy).length, allR = (st.runners || []).length;
+    const word = cpu === null ? mt("load unknown", "עומס לא ידוע") : cpu >= 85 ? mt("very busy", "עמוס מאוד") : cpu >= 60 ? mt("busy", "עמוס") : cpu >= 25 ? mt("comfortable", "בנוח") : mt("mostly idle", "כמעט פנוי");
+    const stale = st.age_s !== null && st.age_s > 600;
+    top = `<div class="srv-say"><b>${cpu === null ? esc(mt("The server's load is unknown right now.", "העומס על השרת לא ידוע כרגע.")) : esc(mt(`The server is working at ${Math.round(cpu)}% of capacity (${word}).`, `השרת עובד ב-${Math.round(cpu)}% מהיכולת (${word}).`))}</b>
+      <div class="sub">${esc(mt(`Memory ${Math.round(mem ?? 0)}% used, disk ${Math.round(dk ?? 0)}% full, ${busyR} of ${allR} task runners busy.`, `זיכרון ${Math.round(mem ?? 0)}% בשימוש, דיסק ${Math.round(dk ?? 0)}% מלא, ${busyR} מתוך ${allR} מריצי משימות עסוקים.`))}
+      ${running.length || st.models.length ? esc(mt("Heavy work now: ", "עבודה כבדה עכשיו: ")) + [...running.map(n => `<bdi dir="ltr">${esc(n)}</bdi>`), ...st.models.map(m => `${esc(mt("model", "מודל"))} <bdi dir="ltr">${esc(m)}</bdi>`)].join(", ") : esc(mt("No heavy job is running now.", "אין משימה כבדה שרצה עכשיו."))}</div>
+      ${stale ? `<div class="note q-block">${esc(mt(`The server last reported ${srvAgo(st.at)}: these numbers may be old.`, `השרת דיווח לאחרונה ${srvAgo(st.at)}: ייתכן שהמספרים ישנים.`))}</div>` : ""}</div>
+      <div class="srv-gauges">${srvGauge(cpu, mt("Processor", "מעבד"), `${h.cpus ?? "-"} CPU · load ${h.load[0] ?? "-"}`)}${srvGauge(mem, mt("Memory", "זיכרון"), `${gb(h.mem.used_mb)} / ${gb(h.mem.total_mb)} GB`)}${srvGauge(dk, mt("Disk", "דיסק"), h.disk ? `${h.disk.free_gb} GB ${mt("free", "פנוי")}` : "")}</div>
+      <div class="srv-sparkw"><div class="sub">${esc(mt("Processor, last 24 hours", "מעבד, 24 השעות האחרונות"))}</div>${hi ? srvSpark(hi.t, hi.cpu) : `<div class="sub muted">${esc(mt("No history yet.", "אין עדיין היסטוריה."))}</div>`}</div>
+      <div class="srv-chips"><span class="sub">${esc(mt("Services", "שירותים"))}:</span> ${st.containers === null ? `<span class="sub muted">${esc(mt("not reported", "לא דווח"))}</span>` : st.containers.map(srvContainerChip).join(" ") || `<span class="sub muted">-</span>`}</div>
+      <div class="srv-chips"><span class="sub">${esc(mt("Task runners", "מריצי משימות"))}:</span> ${(st.runners || []).map(r => srvChip(!r.active ? "bad" : r.busy ? "good" : "", `${r.name} · ${!r.active ? mt("down", "מושבת") : r.busy ? mt("working", "עובד") : mt("idle", "פנוי")}`)).join(" ") || `<span class="sub muted">${esc(mt("none found", "לא נמצאו"))}</span>`}</div>`;
+  }
+  // (d) tasks: one row per workflow
+  const a = d.actions || {};
+  const lateN = wfs.filter(w => w.late).length, failN = wfs.filter(w => w.last_conclusion === "failure").length;
+  const wrow = w => `<div class="srv-wf${w.late ? " late" : ""}"><div class="srv-wfn"><b dir="ltr">${esc(w.name)}</b>${w.late ? ` <span class="pill bad">${esc(mt("late", "באיחור"))}</span>` : ""}</div>
+      <div class="srv-wfm">${srvRunChip(w)} <span class="sub">${w.last_at ? esc(srvAgo(w.last_at)) : esc(mt("no run seen", "לא נראתה ריצה"))}${w.last_duration_s !== null ? " · " + esc(srvDur(w.last_duration_s)) : ""}${w.runs_24h ? " · " + esc(mt(`24h: ${w.success_24h} ok, ${w.failure_24h} failed`, `24 שע': ${w.success_24h} הצליחו, ${w.failure_24h} נכשלו`)) : ""}${w.interval_h ? " · " + esc(mt(`every ${w.interval_h < 1 ? Math.round(w.interval_h * 60) + " min" : w.interval_h + " h"}`, `כל ${w.interval_h < 1 ? Math.round(w.interval_h * 60) + " דק'" : w.interval_h + " שע'"}`)) : ""}</span></div></div>`;
+  const timed = wfs.filter(w => w.interval_h), other = wfs.filter(w => !w.interval_h);
+  const tasks = a.error ? `<div class="note q-block">${esc(mt("GitHub runs are not available: ", "ריצות GitHub לא זמינות: "))}${esc(a.error)}</div>`
+    : `${a.note ? `<div class="note q-block">${esc(a.note)}</div>` : ""}<div class="sub">${lateN ? `<span class="pill bad">${lateN} ${esc(mt("late", "באיחור"))}</span> ` : `<span class="pill good">${esc(mt("nothing late", "אין איחורים"))}</span> `}${failN ? `<span class="pill bad">${failN} ${esc(mt("last run failed", "ריצה אחרונה נכשלה"))}</span> ` : ""}${esc(mt(`Late = last run older than twice its schedule. From GitHub, ${srvAgo(a.fetched_at)}.`, `באיחור = הריצה האחרונה ישנה מפעמיים מרווח התזמון. מ-GitHub, ${srvAgo(a.fetched_at)}.`))}</div>
+      ${timed.map(wrow).join("")}${other.length ? `<details><summary class="sub">${esc(mt(`Other workflows (started by hand or by another workflow): ${other.length}`, `תהליכים אחרים (מופעלים ידנית או מתהליך אחר): ${other.length}`))}</summary>${other.map(wrow).join("")}</details>` : ""}`;
+  // (e) processing
+  const rf = d.refine && !d.refine.error ? d.refine : (st && st.refine) || null;
+  const ck = AD.data && AD.data.company_checks && !AD.data.company_checks.error ? AD.data.company_checks : null;
+  let proc;
+  if (!rf) proc = `<div class="note">${esc(mt("Processing counters are not published yet.", "מוני העיבוד עוד לא פורסמו."))}</div>`;
+  else {
+    const done = rf.websites_checked, q = rf.website_check_queue, tot = (done || 0) + (q || 0), rate = srvRate(d, done);
+    const daysLeft = rate && rate.per_hour > 0 && q ? q / rate.per_hour / 24 : null;
+    proc = `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Website checks", "בדיקות אתרים"))}</span><span class="num" dir="ltr">${adNum(done)} / ${adNum(tot)}</span></div>${adBar(done || 0, tot, "acc")}
+      <div class="sub">${esc(mt("done", "בוצעו"))} ${adNum(done)} · ${esc(mt("waiting in the queue", "ממתינים בתור"))} ${adNum(q)} · ${rate ? esc(mt(`about ${adNum(rate.per_hour)} per hour (over ${rate.over_h} h)`, `כ-${adNum(rate.per_hour)} בשעה (על פני ${rate.over_h} שע')`)) : esc(mt("rate: needs two snapshots, shown from the next update", "קצב: נדרשות שתי מדידות, יוצג מהעדכון הבא"))}${daysLeft !== null ? " · " + esc(mt(`queue done in about ${daysLeft < 1 ? "less than a day" : Math.round(daysLeft) + " days"} at this rate`, `התור יסתיים בעוד כ-${daysLeft < 1 ? "פחות מיום" : Math.round(daysLeft) + " ימים"} בקצב הזה`)) : ""}${ck ? ` · ${adNum(ck.by_verdict?.ok || 0)} ${esc(mt("confirmed", "אומתו"))}` : ""}</div></div>
+      <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Records refined", "רשומות שטויבו"))}</span><span class="num" dir="ltr">${adNum(rf.completed ?? rf.processed)} / ${adNum(rf.universe)}</span></div>${adBar(rf.completed ?? rf.processed ?? 0, rf.universe || 0, "")}
+      <div class="sub">${esc(mt("completed from an official source, out of the whole supplier universe", "הושלמו ממקור רשמי, מתוך כל מאגר הספקים"))} · ${esc(mt("cases waiting for the AI review", "מקרים שממתינים לבדיקת AI"))} ${adNum(rf.needs_ai)}${rf.at ? " · " + esc(String(rf.at).replace("T", " ").slice(0, 16)) + " UTC" : ""}</div></div>`;
+  }
+  // (e2) supplier enrichment on the server (leads/enrich_server.py): progress by priority tier and fill rates per field
+  const en = st && st.enrich;
+  if (en && en.queue) {
+    const tierName = { producer: mt("producers", "יצרנים"), "goods supplier": mt("goods suppliers", "ספקי טובין"), trader: mt("traders / distributors", "סוחרים / מפיצים"), other: mt("other", "אחר") };
+    const fl = en.fill || {}, fv = k => fl[k] === null || fl[k] === undefined ? "-" : fl[k] + "%";
+    proc += `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Supplier enrichment (server)", "טיוב ספקים (בשרת)"))} <span class="sub" dir="ltr">${esc(en.state)}</span></span><span class="num" dir="ltr">${adNum(en.done)} / ${adNum(en.queue)}</span></div>${adBar(en.done || 0, en.queue, "acc")}
+      <div class="sub">${Object.entries(en.by_tier || {}).map(([k, v]) => `${esc(tierName[k] || k)} ${adNum(v.done)}/${adNum(v.total)}`).join(" · ")}${en.per_hour ? " · " + esc(mt(`about ${adNum(en.per_hour)} per hour`, `כ-${adNum(en.per_hour)} בשעה`)) : ""}${en.eta_hours ? " · " + esc(mt(`about ${Math.round(en.eta_hours / 24 * 10) / 10} days left`, `נותרו כ-${Math.round(en.eta_hours / 24 * 10) / 10} ימים`)) : ""}</div>
+      ${fl.read_ok ? `<div class="sub" dir="ltr">${esc(mt("Of sites read", "מתוך אתרים שנקראו"))} (${adNum(fl.read_ok)}): WhatsApp ${fv("whatsapp_links")} · WeChat ${fv("wechat")} · LinkedIn ${fv("linkedin")} · ${esc(mt("people", "בעלי תפקידים"))} ${fv("people_site")} · ${esc(mt("founded", "שנת הקמה"))} ${fv("founded")} · ${esc(mt("size", "גודל"))} ${fv("size")} · ${esc(mt("press", "כתבות"))} ${fv("press")}</div>` : ""}</div>`;
+  }
+  // (f) agent budget
+  const ab = d.agent_budget;
+  const budget = ab && !ab.error ? `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Today", "היום"))}</span><span class="num" dir="ltr">$${Number(ab.today_usd).toFixed(2)}${ab.day_cap_usd !== null ? " / $" + ab.day_cap_usd : ""}</span></div>${ab.day_cap_usd ? adBar(ab.today_usd, ab.day_cap_usd, ab.today_usd >= ab.day_cap_usd * 0.8 ? "warn" : "acc") : ""}</div>
+      <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Whole period", "כל התקופה"))}</span><span class="num" dir="ltr">$${Number(ab.total_usd).toFixed(2)}${ab.total_cap_usd !== null ? " / $" + ab.total_cap_usd : ""}</span></div>${ab.total_cap_usd ? adBar(ab.total_usd, ab.total_cap_usd, ab.total_usd >= ab.total_cap_usd * 0.8 ? "warn" : "") : ""}
+      <div class="sub muted">${esc(mt("Estimated from list prices; open reservations count at their worst case.", "אומדן לפי מחירון; הזמנות פתוחות נספרות לפי המקרה הגרוע."))}</div></div>`
+    : `<div class="note">${esc(ab && ab.error ? mt("Not available: ", "לא זמין: ") + ab.error : mt("The agents' budget ledger does not exist yet.", "יומן התקציב של הסוכנים עוד לא קיים."))}</div>`;
+  // the server scheduler's freshness check, and the job journal, when they exist
+  const sc = d.schedule && !d.schedule.error && Array.isArray(d.schedule.items) ? d.schedule : null;
+  const fresh = sc ? `<div class="srv-chips">${sc.items.map(i => srvChip(i.status === "OK" ? "good" : i.status === "STALE" ? "bad" : "", `${i.name} · ${i.age_h ?? "-"}h`, `max ${i.max_h}h`)).join(" ")}</div>` : `<div class="note">${esc(mt("The server scheduler's freshness check is not installed yet.", "בדיקת הטריות של המתזמן בשרת עוד לא הותקנה."))}</div>`;
+  const jr = st && Array.isArray(st.journal) && st.journal.length ? `<details><summary class="sub">${esc(mt("Job journal on the server (newest last)", "יומן משימות בשרת (החדש בסוף)"))}</summary><pre class="srv-j" dir="ltr">${esc(st.journal.join("\n"))}</pre></details>` : "";
+  return `<section class="section srv">${head}${top}
+    <h4 class="srv-h">${esc(mt("Tasks", "משימות"))}</h4>${tasks}
+    <h4 class="srv-h">${esc(mt("Processing", "עיבוד"))}</h4>${proc}
+    <h4 class="srv-h">${esc(mt("Agent budget", "תקציב הסוכנים"))}</h4>${budget}
+    <h4 class="srv-h">${esc(mt("Freshness of key data", "טריות הנתונים המרכזיים"))}</h4>${fresh}${jr}</section>`;
+}
+
 /* ---------- navigation and wiring ---------- */
 const VIEWS = ["ops", "today", "forme", "world", "clients", "outreach", "pipeline", "finance", "logistics", "tenders", "companies", "research", "deals", "markets", "desk", "grants", "country", "reverse", "intel", "contacts", "projects", "jobs", "users"];
 function go(v) {
@@ -4438,7 +4634,7 @@ function go(v) {
   try { localStorage.setItem("sinder-panel-view", v); } catch (e) {}
   if (location.hash !== "#" + v) history.replaceState(null, "", "#" + v);
   if (v === "users" && S.me?.role === "admin") renderUsers();
-  if (v === "ops" && S.me?.role === "admin") renderOps();
+  if (v === "ops" && S.me?.role === "admin") { renderSpend(); renderServer(); renderOps(); }
   if (v === "forme" && window.DD_PROFILE) renderForMe();
   if (v === "forme") renderFocus();
   if (v === "today") renderTodayGeneral();
@@ -4535,6 +4731,8 @@ window.addEventListener("hashchange", () => { const v = location.hash.slice(1); 
   bootMe();
   loadAll(false);
   openFromLink().catch(() => {});
+  // Server and tasks: every 60 s while the admin tab is open and the page is visible
+  setInterval(() => { if (!document.hidden && S.view === "ops" && S.me?.role === "admin") renderServer(true); }, 60000);
   setInterval(async () => { if (document.hidden || !mcp) return; if (!(S.data.jobs || []).some(j => j.status === "queued" || j.status === "running")) return; await load("jobs", true); renderJobs(); renderToday(); renderCards(); }, 30000);
 })();
 })();

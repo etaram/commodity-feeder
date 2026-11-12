@@ -10,8 +10,7 @@ on:
       allow_shrink:
         description: 'Sheets tabs allowed to have lost more than half their rows ("all" or names separated by commas)'
         default: ""
-  schedule:
-    - cron: "40 1 * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
 permissions:
   contents: read
 concurrency:

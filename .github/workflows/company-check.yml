@@ -4,8 +4,7 @@ name: company-check
 # Every hour (public repository: Actions minutes are free); the private supplier list is restored read-only from the suppliers workflow's cache, and the checks
 # keep their own cache, so this job never overwrites the suppliers workflow's private files.
 on:
-  schedule:
-    - cron: "20 * * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
     inputs:
       limit:
@@ -42,6 +41,18 @@ jobs:
           key: checks-${{ github.run_id }}
           restore-keys: checks-
       - run: pip install requests google-auth pycountry phonenumbers pypinyin
+      - name: Server enrichment results (read-only; only on the company server's runners)
+        # leads/enrich_server.py exports its merged records on the server; company_check merges them into the checks
+        # (a newer server read replaces the hourly read) and refine.py fills the profile fields from them
+        run: |
+          mkdir -p data/checks
+          if docker run --rm -v /opt/sinder/enrich/export:/x:ro alpine:3.20 test -s /x/enrich.jsonl.gz 2>/dev/null; then
+            docker run --rm -v /opt/sinder/enrich/export:/x:ro alpine:3.20 cat /x/enrich.jsonl.gz > data/checks/enrich_server.jsonl.gz
+            echo "server enrichment export: $(stat -c %s data/checks/enrich_server.jsonl.gz) bytes"
+          else
+            echo "no server enrichment export on this runner"
+          fi
+        continue-on-error: true
       - name: Check companies
         run: python -m leads.company_check --limit ${{ inputs.limit || '4000' }} --minutes 25 2>&1 | tail -20
         continue-on-error: true
@@ -53,6 +64,8 @@ jobs:
       - name: Refine the other modules (tenders, buyers, projects, financing, logistics, importers)
         run: python -m leads.refine_modules --links 2500 --sites 150 --registers 3 2>&1 | grep -E "refine modules|Error|Traceback" | cut -c1-2000
         continue-on-error: true
+      - name: Drop the server export copy (already merged into the checks)
+        run: rm -f data/checks/enrich_server.jsonl.gz
       - name: Publish progress counts
         run: |
           git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"

@@ -1,0 +1,71 @@
+name: sources
+# Permanent source-expansion cycle (leads/source_cycle.py): re-probes the candidate sources, updates their status in
+# data/registry/candidates_wave1.csv and writes data/registry/weekly_report.json (per-region counts, week-over-week).
+# Weekly, started by the company server (deploy/ops/schedule.tab, task=cycle). Manual tasks: probe, sample, run, report.
+# The log shows counts, status codes and host names only; page samples are sealed (encrypted) before they are written.
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "cycle | probe | report | sample | run"
+        required: false
+        default: "cycle"
+      args:
+        description: "arguments for the task (candidate ids, a module name, ...)"
+        required: false
+        default: ""
+      browser:
+        description: "1 = install the stealth browser (Scrapling) for pages that need one"
+        required: false
+        default: "1"
+permissions:
+  contents: write
+concurrency:
+  group: sources-${{ github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  sources:
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    timeout-minutes: 120
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      TASK: ${{ inputs.task || 'cycle' }}
+      ARGS: ${{ inputs.args }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Private supplier list (read-only, for the per-region supplier counts)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/private
+          key: private-none
+          restore-keys: private-
+      - name: Company checks (read-only, MX verdicts)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/checks
+          key: checks-none
+          restore-keys: checks-
+      - run: pip install -q requests curl_cffi pycountry certifi aia google-auth cryptography dnspython beautifulsoup4 lxml phonenumbers openpyxl
+      - name: stealth browser
+        if: ${{ inputs.browser != '0' }}
+        run: pip install -q "scrapling[fetchers]" && (scrapling install >/dev/null 2>&1 || true)
+        continue-on-error: true
+      - name: task
+        run: python -m leads.source_cycle "$TASK" $ARGS 2>&1 | grep -E "^(PROBE|SAMPLE|RUN|probe summary|weekly report|INFO|WARNING|ERROR|Traceback|  File|[A-Za-z]+Error)" | cut -c1-400
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
+          P="data/registry/candidates_wave1.csv data/registry/candidates_probe.json data/registry/weekly_report.json data/registry/weekly_history.json data/registry/registrations.csv data/probe/sources data/leads/partial/gebiz_awards.json"
+          rm -rf /tmp/own && mkdir -p /tmp/own
+          for f in $P; do [ -e "$f" ] && cp -r --parents "$f" /tmp/own/; done
+          B="${{ github.ref_name }}"
+          for i in 1 2 3 4 5; do
+            git fetch -q origin "$B" && git reset -q --hard "origin/$B"
+            cp -r /tmp/own/. .
+            for f in $P; do [ -e "$f" ] && git add -A "$f"; done
+            git diff --cached --quiet && break
+            git commit -q -m "sources: $TASK $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin "HEAD:$B" && break
+            sleep $((i * 10))
+          done

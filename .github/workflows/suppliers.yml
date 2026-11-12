@@ -1,8 +1,6 @@
 name: suppliers
 on:
-  schedule:
-    - cron: "40 1 * * *"
-    - cron: "40 13 * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
   workflow_dispatch:
     inputs:
       only:

@@ -79,7 +79,7 @@ def test_row_matches_push_sheet_format():
     res = {"key": "Acme|ISR", "supplier": "Acme", "country": "ISR", "checked": "2026-11-12", "checked_at": "2026-11-12T12:30:41Z",
            "verdict": "ok", "emails": [{"email": "sales@acme.com", "kind": "generic"}], "roles": [{"role": "manufacturer", "phrase": "our factory"}]}
     row = row_for_sheet(res)
-    assert len(row) == len(SHEET_HEAD) == 28
+    assert len(row) == len(SHEET_HEAD) == 38
     assert row[3] == "2026-11-12T12:30:41Z" and row[4] == "ok" and row[18] == "sales@acme.com (generic)" and row[13] == "manufacturer: our factory"
 
 

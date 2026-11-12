@@ -5,8 +5,7 @@ on:
       runner:
         description: where to run (empty = default; sinder = the company server)
         default: ""
-  schedule:
-    - cron: "20 4 * * *"
+  # timed by the company server (deploy/ops/schedule.tab), not by GitHub: see deploy/ops/SCHEDULE.md
 permissions:
   contents: write
 concurrency:
