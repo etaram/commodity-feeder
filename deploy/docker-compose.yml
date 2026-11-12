@@ -1,6 +1,7 @@
 # Sinder Deal Desk - the whole system on one server.
 #   app      the Deal Desk (Next.js), reads the engine's data from the private "data" service
-#   data     serves the repository checkout (data/, dealdesk/public/) to the app only; never exposed to the internet
+#   data     serves the repository checkout (data/, dealdesk/public/) to the app only; never exposed to the internet;
+#            /_server/ holds the server status files of the admin panel (deploy/ops/serverpanel)
 #   sync     keeps that checkout current (git pull every 2 minutes)
 #   cron     calls the app's scheduled routes (what Vercel Cron did), with the same CRON_SECRET
 #   db       PostgreSQL 16 for the deal state (next step of the migration; nothing reads it yet)
@@ -26,8 +27,30 @@ services:
   data:
     image: caddy:2-alpine
     restart: unless-stopped
-    command: caddy file-server --root /srv/repo --listen :8080
-    volumes: ["repo:/srv/repo:ro"]
+    # /_server/* : the server status for the admin panel (deploy/ops/serverpanel), from a host folder mounted read-only,
+    # so nothing is written into the repository checkout. Everything else: the checkout, as before.
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        cat > /etc/caddy/data.Caddyfile <<'CADDY'
+        {
+            admin off
+            auto_https off
+        }
+        :8080 {
+            handle_path /_server/* {
+                header Cache-Control "no-store"
+                root * /srv/server
+                file_server
+            }
+            handle {
+                root * /srv/repo
+                file_server
+            }
+        }
+        CADDY
+        exec caddy run --config /etc/caddy/data.Caddyfile --adapter caddyfile
+    volumes: ["repo:/srv/repo:ro", "/opt/sinder/serverpanel/public:/srv/server:ro"]
   sync:
     image: alpine/git:latest
     restart: unless-stopped
