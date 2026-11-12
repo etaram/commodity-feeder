@@ -90,3 +90,22 @@ class Profile(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Merge(unittest.TestCase):
+    def test_refine_fields_and_sheet_cells(self):
+        from leads import company_check as ck
+        from leads.refine import enrich_fields
+        page = ABOUT
+        res = ck.analyse("Example Mills", "", [("https://example-mills.test/", page), ("https://example-mills.test/team", TEAM)], "TUR")
+        res["people"].append({"name": "Ali Demir", "title": "Export Manager", "role": "sales / export", "confidence": "search snippet", "source": "s"})
+        filled = {}
+        enrich_fields(res, "https://example-mills.test/", lambda f, v, s, b: filled.__setitem__(f, v) if v else None)
+        self.assertIn("wa.me/905321112244", filled["whatsapp_links"])
+        self.assertEqual(filled["founded"], "1987")
+        self.assertEqual(filled["size_band"], "mid")
+        self.assertIn("Anna Kowalska", filled["people_site"])
+        self.assertNotIn("people_search", filled)  # off until measured
+        cells = ck.profile_cells(res)
+        self.assertEqual(len(cells), 10)
+        self.assertNotIn("Ali Demir", cells[2])
