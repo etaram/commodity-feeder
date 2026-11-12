@@ -466,6 +466,13 @@ def main(sample=0):
             "gaps": {k[5:]: v for k, v in stats.most_common() if k.startswith("gap: ")},
             "conflicts": {k[10:]: v for k, v in stats.most_common(40) if k.startswith("conflict: ")},
             "notes": {k[6:]: v for k, v in stats.most_common(40) if k.startswith("note: ")}}
+    try:  # e-mail deliverability per supplier (leads/mx_check.py): counts only
+        from .mx_check import load_results, summary
+        mxr = load_results()
+        prog["email_mx"] = summary(rows, mxr)
+        prog["email_domains_checked"] = sum(1 for v in mxr.values() if v.get("verdict") != "error")
+    except Exception as e:  # noqa: BLE001
+        log.warning("refine: mx counts skipped (%s)", type(e).__name__)
     (LEADS / "refine_progress.json").write_text(json.dumps(prog, ensure_ascii=False, indent=1), encoding="utf-8")
     push_sheet(out, prog)
     log.info("refine: %s", json.dumps({k: v for k, v in prog.items() if k not in ("gaps", "conflicts")}))

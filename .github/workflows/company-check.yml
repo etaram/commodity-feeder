@@ -40,12 +40,15 @@ jobs:
           path: data/checks
           key: checks-${{ github.run_id }}
           restore-keys: checks-
-      - run: pip install requests google-auth pycountry phonenumbers pypinyin
+      - run: pip install requests google-auth pycountry phonenumbers pypinyin dnspython
       - name: Check companies
         run: python -m leads.company_check --limit ${{ inputs.limit || '4000' }} --minutes 25 2>&1 | tail -20
         continue-on-error: true
       - name: Official registers (GLEIF LEI, EU VIES)
         run: python -m leads.registry_check --minutes 10 2>&1 | tail -5
+        continue-on-error: true
+      - name: E-mail domain deliverability (DNS MX, parked, disposable; low priority, resumes where it stopped)
+        run: python -m leads.mx_check --minutes 6 --workers 12 2>&1 | tail -2
         continue-on-error: true
       - name: Refine every supplier record (unchanged records are reused)
         run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5
