@@ -7,6 +7,9 @@ import requests
 
 UA = "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0; +https://github.com/etaram/commodity-feeder)"
 PROBES = [
+    ("CZ vr small", "GET", "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty-vr/03479919", None),
+    ("SK entity", "GET", "https://api.statistics.sk/rpo/v1/entity/1003617?showHistoricalData=false&showOrganizationUnits=false", None),
+    ("PL krs spzoo", "GET", "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/0000140528?rejestr=P&format=json", None),
     ("FR id", "GET", "https://recherche-entreprises.api.gouv.fr/search?q=542051180&per_page=2", None),
     ("FR name", "GET", "https://recherche-entreprises.api.gouv.fr/search?q=danone&per_page=5", None),
     ("NO unit", "GET", "https://data.brreg.no/enhetsregisteret/api/enheter/923609016", None),
@@ -33,7 +36,7 @@ def probe(out):
     for lab, m, u, body in PROBES:
         try:
             r = s.post(u, json=body, timeout=25) if m == "POST" else s.get(u, timeout=25)
-            res[lab] = {"status": r.status_code, "ctype": r.headers.get("content-type", ""), "body": r.text[:60000],
+            res[lab] = {"status": r.status_code, "ctype": r.headers.get("content-type", ""), "body": r.text[:400000],
                         "rl": {k: v for k, v in r.headers.items() if "limit" in k.lower() or "retry" in k.lower()}}
             print(lab, r.status_code, len(r.text))
         except Exception as e:  # noqa: BLE001

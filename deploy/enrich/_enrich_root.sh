@@ -121,6 +121,11 @@ if [ "$mode" = probe ]; then
   if [ -d "$E/venv" ]; then
     echo "== official registers for the people lane: HTTP status and size only; the raw answers are sealed to the reviewer key"
     docker run --rm "${LIMITS[@]}" -v "$E":/e -v "$repo":/r:ro -w /r "$IMG" /e/venv/bin/python -m leads.people_registry probe /e/people_probe.json
+    for u in https://recherche-entreprises.api.gouv.fr/search?q=542051180 https://api.insee.fr/; do   # connection detail only
+      docker run --rm curlimages/curl:8.10.1 -sS -o /dev/null -w "%{http_code} %{remote_ip} " --max-time 20 -A "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0)" "$u" 2>&1 | cut -c1-160; echo " ${u%%\?*}"
+      docker run --rm curlimages/curl:8.10.1 -4 -sS -o /dev/null -w "ipv4 %{http_code} " --max-time 20 "$u" 2>&1 | cut -c1-160; echo
+    done
+    getent ahosts recherche-entreprises.api.gouv.fr | head -3
     k=$(mktemp); gzip -c "$E/people_probe.json" > "$k.gz"; openssl rand -hex 32 > "$k"
     openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -in "$k.gz" -out "$k.enc"
     openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
