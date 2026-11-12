@@ -19,3 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: bash "deploy/ops/${{ inputs.task }}.sh"
+        env:
+          # only the semantic jobs read the supplier index: the index key (repository secret, else the Config tab read
+          # with the service account, as supplier-eval does); every other task gets empty values
+          WEB_INDEX_KEY: ${{ (inputs.task == 'bench-semantic' || inputs.task == 'embed-universe') && secrets.WEB_INDEX_KEY || '' }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ (inputs.task == 'bench-semantic' || inputs.task == 'embed-universe') && secrets.GOOGLE_SERVICE_ACCOUNT_JSON || '' }}

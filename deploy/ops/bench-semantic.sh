@@ -4,4 +4,5 @@
 # timings and metrics only (the log is public); row detail stays on the server and goes to Google Drive.
 set -uo pipefail
 . "$(dirname "$0")/_root.sh"
-asroot bash "$GITHUB_WORKSPACE/deploy/ops/_semantic_root.sh" bench "$GITHUB_WORKSPACE" "$GITHUB_RUN_ID"
+. "$(dirname "$0")/_semantic_key.sh"
+asroot env SEM_KEYFILE="$KEYF" bash "$GITHUB_WORKSPACE/deploy/ops/_semantic_root.sh" bench "$GITHUB_WORKSPACE" "$GITHUB_RUN_ID"

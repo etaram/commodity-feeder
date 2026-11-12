@@ -25,7 +25,7 @@ umask 077; mkdir -p "$S/models"; chmod 700 "$S"
 run() { docker run --rm "${LIMITS[@]}" -e HF_HUB_DISABLE_TELEMETRY=1 -e PYTHONUNBUFFERED=1 -v "$S":/s -v "$repo":/w:ro "$@"; }
 
 venv() {   # the packages, installed once into a virtual environment on the server
-  if [ -x "$S/venv/bin/python" ] && run "$IMG" ionice -c 3 nice -n 19 /s/venv/bin/python -c "import fastembed, numpy, cryptography" >/dev/null 2>&1; then return 0; fi
+  if [ -f "$S/venv/pyvenv.cfg" ] && run "$IMG" ionice -c 3 nice -n 19 /s/venv/bin/python -c "import fastembed, numpy, cryptography" >/dev/null 2>&1; then return 0; fi
   echo "installing fastembed (ONNX runtime), numpy and cryptography into $S/venv"
   rm -rf "$S/venv"
   run "$IMG" sh -c 'python -m venv /s/venv && /s/venv/bin/pip install -q --disable-pip-version-check fastembed==0.9.1 numpy cryptography 2>&1 | grep -iE "^error" | head -3; /s/venv/bin/python -c "import fastembed, onnxruntime; print(\"fastembed\", fastembed.__version__, \"onnxruntime\", onnxruntime.__version__)"'
@@ -34,7 +34,10 @@ venv() {   # the packages, installed once into a virtual environment on the serv
 universe() {   # decrypts the supplier index the app reads into one text line per company (root-only file)
   local src="" key_env="$S/.key.env"
   if docker volume inspect sinder_repo >/dev/null 2>&1; then src="vol"; fi
-  grep -E '^WEB_INDEX_KEY=.+' /opt/sinder/repo/deploy/.env > "$key_env" 2>/dev/null || { rm -f "$key_env"; echo "WEB_INDEX_KEY is not in the server's deploy/.env: cannot read the supplier universe"; return 1; }
+  # the key: the file the workflow step wrote (repository secret or the Config tab), else the server's deploy/.env
+  if [ -n "${SEM_KEYFILE:-}" ] && [ -s "$SEM_KEYFILE" ]; then cp "$SEM_KEYFILE" "$key_env"
+  elif grep -qE '^WEB_INDEX_KEY=[A-Za-z0-9+/_"-]' /opt/sinder/repo/deploy/.env 2>/dev/null; then grep -E '^WEB_INDEX_KEY=' /opt/sinder/repo/deploy/.env > "$key_env"
+  else echo "index key not available (workflow step and the server's deploy/.env): cannot read the supplier universe"; return 1; fi
   chmod 600 "$key_env"
   if [ "$src" = vol ]; then
     echo "supplier index: read from the data service volume (the copy the app reads)"

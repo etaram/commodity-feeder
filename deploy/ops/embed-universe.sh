@@ -5,4 +5,5 @@
 # (product description or official website) first. Prints counts only.
 set -uo pipefail
 . "$(dirname "$0")/_root.sh"
-asroot bash "$GITHUB_WORKSPACE/deploy/ops/_semantic_root.sh" embed "$GITHUB_WORKSPACE"
+. "$(dirname "$0")/_semantic_key.sh"
+asroot env SEM_KEYFILE="$KEYF" bash "$GITHUB_WORKSPACE/deploy/ops/_semantic_root.sh" embed "$GITHUB_WORKSPACE"
