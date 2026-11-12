@@ -13,7 +13,7 @@ rm -f "$tmp"
 asroot bash -s "$FROM" "$TO" <<'ROOT'
 set -euo pipefail
 FROM=$1; TO=$2; TOKEN=$(cat /opt/sinder/secrets/runner_reg.token)
-VER=$(ls -d /home/runner/r1/bin >/dev/null 2>&1 && cat /home/runner/r1/.runner 2>/dev/null >/dev/null; curl -fsS https://api.github.com/repos/actions/runner/releases/latest | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p' | head -1)
+VER=$(curl -fsS https://api.github.com/repos/actions/runner/releases/latest | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p' | head -1)
 ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
 for i in $(seq "$FROM" "$TO"); do
   d=/home/runner/r$i
