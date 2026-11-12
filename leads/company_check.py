@@ -820,10 +820,62 @@ def main(limit=1500, minutes=45):
     return {"queued": len(todo), **stats, "on_record": len(checks)}
 
 
+def priority_keys(rows, queue_rows, deal_rows):
+    """Supplier keys (name|country) the server's people lane looks up first: companies asked for in the panel ('Check
+    queue': time, company, country, by) and suppliers in deals ('Deal Records': party records with the supplier role,
+    quotes with a supplier). Pure: the sheet rows are passed in."""
+    by_key = {f"{r['supplier']}|{r['country']}": r for r in rows}
+    by_name = defaultdict(list)
+    for r in rows:
+        by_name[r["supplier"].strip().lower()].append(r)
+    out = []
+
+    def add(name, country):
+        name, country = str(name or "").strip(), str(country or "").strip().upper()
+        if not name:
+            return
+        k = f"{name}|{country}"
+        cands = [by_key[k]] if k in by_key else [r for r in by_name.get(name.lower(), []) if not country or r["country"] == country][:2]
+        for r in cands:
+            kk = f"{r['supplier']}|{r['country']}"
+            if kk not in out:
+                out.append(kk)
+    for d in deal_rows:
+        d = list(d) + [""] * 10
+        try:
+            data = json.loads(d[6] or "{}")
+        except ValueError:
+            continue
+        if d[2] == "party" and data.get("role", "supplier") == "supplier":
+            add(data.get("name"), data.get("country"))
+        elif d[2] == "quote" and data.get("supplier"):
+            add(data.get("supplier"), data.get("country"))
+    for qr in queue_rows[-500:]:
+        qr = list(qr) + [""] * 4
+        add(qr[1], qr[2])
+    return out
+
+
+def write_priority_keys(path):
+    """priority.keys for the server enrichment job (copied to the server by the company-check workflow)."""
+    src = PRIVATE / "universe.csv"
+    if not src.exists():
+        return 0
+    from .push import LEADS_SHEET
+    rows = list(csv.DictReader(open(src, encoding="utf-8")))
+    keys = priority_keys(rows, _sheet_rows(LEADS_SHEET, "'Check queue'!A2:D2000"), _sheet_rows(LEADS_SHEET, "'Deal Records'!A2:J20000"))
+    Path(path).write_text("\n".join(keys) + "\n", encoding="utf-8")
+    log.info("priority keys: %d companies (deals and the Check queue)", len(keys))
+    return len(keys)
+
+
 if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.INFO)
     a = sys.argv[1:]
+    if "--priority-keys" in a:
+        print(write_priority_keys(a[a.index("--priority-keys") + 1]))
+        sys.exit(0)
     lim = int(a[a.index("--limit") + 1]) if "--limit" in a else 4000
     mins = int(a[a.index("--minutes") + 1]) if "--minutes" in a else 40
     print(main(lim, mins))

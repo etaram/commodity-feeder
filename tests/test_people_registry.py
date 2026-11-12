@@ -208,3 +208,12 @@ def test_merge_server_adds_register_people_without_replacing_the_check(tmp_path)
     assert "checked" not in checks["B|NOR"] and "people_only" not in checks["B|NOR"]  # the hourly check still reads its site
     cell = cc.profile_cells(checks["A|FRA"])[2]
     assert cell == "Jeanne Dupont (CEO, own site); Luc Bernard (Administrateur, register: Registre)"
+
+
+def test_priority_keys_from_deals_and_check_queue():
+    from leads import company_check as cc
+    rows = [{"supplier": "Acme Fromages", "country": "FRA"}, {"supplier": "Nordfisk", "country": "NOR"}, {"supplier": "Nordfisk", "country": "SWE"}]
+    deals = [["t", "D1", "party", "P1", "1", "candidate", json.dumps({"role": "supplier", "name": "Nordfisk", "country": "NOR"})],
+             ["t", "D1", "party", "P2", "1", "candidate", json.dumps({"role": "finance", "name": "Acme Fromages", "country": "FRA"})],
+             ["t", "D1", "quote", "Q1", "1", "", json.dumps({"supplier": "Acme Fromages"})]]
+    assert cc.priority_keys(rows, [["t", "Unknown Co", "DEU", "x"]], deals) == ["Nordfisk|NOR", "Acme Fromages|FRA"]

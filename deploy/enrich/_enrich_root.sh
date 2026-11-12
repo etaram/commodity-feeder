@@ -39,7 +39,7 @@ code() {   # a copy of the code the job runs, so the runner's workspace can chan
   rm -rf "$E/code.new"; mkdir -p "$E/code.new/dealdesk/lib"
   cp -r "$repo/leads" "$E/code.new/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/code.new/dealdesk/lib/"
   rm -rf "$E/code"; mv "$E/code.new" "$E/code"; chmod -R go-rwx "$E/code"
-  echo "code copied: $(git -C "$repo" rev-parse --short HEAD 2>/dev/null)"
+  echo "code copied: $(git -c safe.directory='*' -C "$repo" rev-parse --short HEAD 2>/dev/null)"
 }
 venv() {
   if [ -d "$E/venv" ] && docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" /e/venv/bin/python -c "import requests, cryptography, phonenumbers, pycountry, pypinyin, cv2" >/dev/null 2>&1; then return 0; fi
@@ -90,6 +90,9 @@ if [ "$mode" = start ]; then
   fi
   touch "$E/full-run-started"
   lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,registry,wikidata)
+  # a lanes file written before the registry lane existed (12 Nov 2026) gains it; "people" (search snippets) is gone
+  case ",$lanes," in *,registry,*) ;; *) lanes="$lanes,registry" ;; esac
+  lanes=$(echo "$lanes" | tr ',' '\n' | grep -vx people | paste -sd, -)
   [ -s "$E/.ch.env" ] && echo "Companies House: key present (UK register on)" || echo "Companies House: no key (UK register off)"
   echo "lanes: $lanes"
   # 24 workers: the sample used about 0.5 of its 1.5 CPUs with 16 (the work is waiting on remote sites)
@@ -97,7 +100,7 @@ if [ "$mode" = start ]; then
   exit 0
 fi
 if [ "$mode" = people ]; then
-  P="$E/psample"; sha=$(git -C "$repo" rev-parse --short HEAD 2>/dev/null || echo none)
+  P="$E/psample"; sha=$(git -c safe.directory='*' -C "$repo" rev-parse --short HEAD 2>/dev/null || echo none)
   if docker ps --filter name=^enrich-people$ --format '{{.Names}}' | grep -q .; then
     echo "people sample running ($(cat "$P/sha" 2>/dev/null))"
     python3 -c "import json; s=json.load(open('$P/status.json')); print(json.dumps(s.get('registry_people'), indent=1))" 2>/dev/null || echo "no counts yet"

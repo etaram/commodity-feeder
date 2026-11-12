@@ -8,7 +8,9 @@ import { logActivity } from "@/lib/activity";
 // company at the front of the next run's queue (tab 'Check queue'). GET ?summary=1 (viewer) -> counts by verdict.
 export const dynamic = "force-dynamic";
 const COLS = ["key", "supplier", "country", "checked", "verdict", "name_match", "website", "domain", "description", "products", "sector",
-  "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps", "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured"];
+  "record_sector", "sector_conflict", "roles", "certificates", "export", "export_countries", "legal_ids", "emails", "phones", "gaps", "reason", "version", "content_hash", "linkedin", "whatsapp", "changes", "structured",
+  // profile and enrichment columns (leads/company_check.py profile_cells): people are "Name (title, source[, LinkedIn profile])"
+  "wechat", "whatsapp_links", "people", "founded", "employees", "revenue", "size", "summary", "press", "enriched"];
 
 const REG_COLS = ["key", "supplier", "country", "checked", "identity", "source", "lei", "legal_name", "register_address", "entity_status", "lei_status",
   "registered_as", "name_score", "evidence", "vat", "vat_from", "vat_verdict", "vat_name", "vat_address", "why", "version"];

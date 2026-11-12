@@ -64,7 +64,7 @@ def person_case(s):
 
 
 def title_case(s):
-    s = re.sub(r"\s+", " ", str(s or "")).strip()
+    s = re.sub(r"\s+", " ", str(s or "")).strip(" :;,.-")
     return (s[:1].upper() + s[1:].lower()) if s.isupper() else s
 
 

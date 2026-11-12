@@ -2884,6 +2884,23 @@ function registryHtml(g) {
     ${row(mt("Why", "למה"), g.why)}
     <div class="sub muted">${esc(mt("Read in code from the register itself; verified only when the record is active and in the same name and country.", "נקרא בקוד מהמרשם עצמו; מסומן כמאומת רק כשהרשומה פעילה, באותו שם ובאותה מדינה."))}</div></details>`;
 }
+/* key people from the enrichment ('Company checks' people column: "Name (title, source[, LinkedIn profile on the
+   company's own site])"): official registers, the company's own site, Wikidata. LinkedIn is never read by the system:
+   each person gets a people-search link (name and company) the user opens in his own browser */
+function peopleParse(cell) {
+  return String(cell || "").split(/;\s+/).map(x => { const m = x.match(/^(.+?) \((.*)\)$/); if (!m) return null;
+    const parts = m[2].split(/,\s*/); const li = parts.find(p => /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/in\//i.test(p)) || "";
+    return { name: m[1].trim(), title: parts[0] || "", src: parts.filter(p => p && p !== parts[0] && p !== li).join(", "), li }; }).filter(Boolean);
+}
+function peopleHtml(c) {
+  const ppl = peopleParse(c && c.people); if (!ppl.length) return "";
+  const co = String(c.supplier || "").replace(/[\s,]+(ltd\.?|limited|llc|inc\.?|gmbh|ag|s\.?a\.?s?|s\.?r\.?l\.?|s\.?r\.?o\.?|a\.?s\.?|as|asa|ltda\.?|sas|sarl|plc|b\.?v\.?|co\.?)$/i, "").trim();
+  const srcLab = v => /^register: /.test(v) ? mt("official register", "מרשם רשמי") + " - " + v.slice(10) : v === "own site" ? mt("company website", "אתר החברה") : v === "wikidata" ? "Wikidata" : v;
+  const row = p => `<li><b dir="auto">${esc(p.name)}</b> <span class="muted" dir="auto">${esc(p.title)}</span> <span class="pill ${/^register: /.test(p.src) ? "good" : "info"}">${esc(srcLab(p.src))}</span>
+    ${p.li ? link(p.li, mt("LinkedIn profile (linked from the company site)", "פרופיל לינקדאין (מקושר מאתר החברה)")) + " · " : ""}<a href="https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent((p.name + " " + co).slice(0, 120))}" target="_blank" rel="noopener">${esc(mt("Search on LinkedIn", "חפש בלינקדאין"))}</a></li>`;
+  return `<div class="sub"><b>${esc(mt("Key people", "אנשי מפתח"))}:</b><ul class="rd-list">${ppl.slice(0, 12).map(row).join("")}</ul>
+    <span class="muted">${esc(mt("From official company registers, the company's own website and Wikidata, with the source of each. The LinkedIn link opens a search in your own browser; the system does not read LinkedIn.", "ממרשמי חברות רשמיים, מאתר החברה ומוויקידאטה, עם המקור של כל שם. הקישור ללינקדאין פותח חיפוש בדפדפן שלך; המערכת לא קוראת את לינקדאין."))}</span></div>`;
+}
 function renderCheck(s, c, g) {
   const el = $("#c-check"); if (!el) return;
   const canAsk = ["analyst", "admin"].includes(S.me?.role) && window.DD_CHECK;
@@ -2892,7 +2909,7 @@ function renderCheck(s, c, g) {
   else {
     const ok = c.verdict === "ok";
     const line = (l, v) => v ? `<div class="sub"><b>${esc(l)}:</b> ${esc(v)}</div>` : "";
-    el.innerHTML = `<details class="section" ${ok ? "" : "open"}><summary>${esc(mt("Website check", "בדיקת אתר"))} <span class="pill ${ok ? "good" : "warn"}">${esc(c.verdict)}</span> <span class="pill ${c.name_match === "high" ? "good" : c.name_match === "partial" ? "info" : "bad"}">${esc(mt("name", "שם"))}: ${esc(c.name_match || "-")}</span> <span class="muted">${esc(c.checked)}</span></summary>
+    el.innerHTML = `<details class="section" ${ok ? "" : "open"}><summary>${esc(mt("Website check", "בדיקת אתר"))} <span class="pill ${ok ? "good" : "warn"}">${esc(c.verdict || mt("site not read yet", "האתר עדיין לא נקרא"))}</span> <span class="pill ${c.name_match === "high" ? "good" : c.name_match === "partial" ? "info" : "bad"}">${esc(mt("name", "שם"))}: ${esc(c.name_match || "-")}</span> <span class="muted">${esc(c.checked)}</span></summary>
       ${c.website ? `<div class="sub"><a href="${esc(c.website)}" target="_blank" rel="noopener" dir="ltr">${esc(c.domain || c.website)}</a></div>` : ""}
       ${line(mt("Says", "מה כתוב באתר"), c.description)}${line(mt("Products on the site", "מוצרים באתר"), c.products)}
       ${line(mt("Sector from the site", "סקטור לפי האתר"), c.sector + (c.sector_conflict === "yes" ? `  (${mt("record says", "ברשומה")}: ${c.record_sector})` : ""))}
@@ -2900,6 +2917,7 @@ function renderCheck(s, c, g) {
       ${line(mt("Export", "יצוא"), [c.export, c.export_countries].filter(Boolean).join(" · "))}${line(mt("Registration ids", "מספרי רישום"), c.legal_ids)}
       ${line(mt("E-mails on its own domain", "אימיילים בדומיין שלה"), c.emails)}${line(mt("Phones", "טלפונים"), c.phones)}
       ${c.linkedin || c.whatsapp ? `<div class="sub"><b>${esc(mt("LinkedIn and WhatsApp on its site", "לינקדאין ווואטסאפ מהאתר שלה"))}:</b> ${socialBtns(c.linkedin, c.whatsapp, supMsg(s))}</div>` : ""}
+      ${peopleHtml(c)}
       ${c.changes ? `<div class="sub q-block"><b>${esc(mt("Changed since the last read", "השתנה מאז הקריאה הקודמת"))}:</b> ${esc(c.changes)}</div>` : ""}
       ${line(mt("Structured data the site publishes", "נתונים מובנים שהאתר מפרסם"), c.structured)}
       ${c.gaps ? `<div class="sub q-block"><b>${esc(mt("Missing", "חסר"))}:</b> ${esc(c.gaps)}</div>` : ""}
