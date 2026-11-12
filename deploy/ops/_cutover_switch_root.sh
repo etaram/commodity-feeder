@@ -26,6 +26,8 @@ cp -p "$E" "$E.bak-$TS"; chmod 600 "$E.bak-$TS"
 env_has CRON_SECRET || { setkv CRON_SECRET "$(head -c 64 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | cut -c1-48)"; echo "  CRON_SECRET generated on the server"; }
 if env_has ZOHO_SMTP_USER && env_has ZOHO_SMTP_PASS && env_has SEND_APPROVERS; then delkv AGENT_MAIL_LIVE; echo "  mail: ON (AGENT_MAIL_LIVE removed)"
 else setkv AGENT_MAIL_LIVE 0; echo "  mail: stays OFF (AGENT_MAIL_LIVE=0): ZOHO_SMTP_USER, ZOHO_SMTP_PASS and SEND_APPROVERS are not all set"; fi
+# the webhook secret is ours to choose: setWebhook (step 6) registers it with Telegram, so a new one replaces Vercel's
+tg_token_set && ! env_has TELEGRAM_WEBHOOK_SECRET && { setkv TELEGRAM_WEBHOOK_SECRET "$(head -c 64 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | cut -c1-48)"; echo "  TELEGRAM_WEBHOOK_SECRET generated on the server (registered with Telegram in step 6)"; }
 if tg_token_set && env_has TELEGRAM_WEBHOOK_SECRET; then delkv TELEGRAM_OFF; TG=on; echo "  telegram: ON (TELEGRAM_OFF removed)"
 else setkv TELEGRAM_OFF 1; TG=off; echo "  telegram: stays OFF (token or TELEGRAM_WEBHOOK_SECRET missing); the webhook is not touched"; fi
 line "  web push" "$(env_has VAPID_PRIVATE_KEY && echo on || echo "off (VAPID_PRIVATE_KEY missing)")"
