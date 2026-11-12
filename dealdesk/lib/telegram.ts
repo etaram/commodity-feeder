@@ -27,6 +27,7 @@ import { addWatch, listProjects, listWatches, openProject, projectCallback, watc
 const BASE = process.env.AGENT_BASE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "https://desk.sinder.pro");
 export const agentIo: Io = {
   send: (chat, text, extra) => send(chat, text, extra),
+  approver: (email) => isOwner(email),
   kick: async (id) => { await fetch(`${BASE}/api/agent/step`, { method: "POST", headers: { "content-type": "application/json", "x-agent-secret": process.env.TELEGRAM_WEBHOOK_SECRET || "" }, body: JSON.stringify({ id }), signal: AbortSignal.timeout(8000) }).catch(() => null); },
 };
 // The approval buttons need callback_query updates; a webhook set before the agent existed did not ask for them.

@@ -193,5 +193,35 @@ const seen: { messages: { role: string; content: unknown }[] }[] = [];
     `the ledger has rfq_authorized and rfq_sent once for each of the ${sentIds.length} sent approvals, with the approval id as proof`);
   ok(out.every((e) => e.proof.kind === "message" && e.proof.id === "<id@x>" && e.case_id === cur.deal_id && e.actor === "o@x.com" && e.workspace === "sinder") && !auth.some((e) => /:(M4|M5)$/.test(e.proof.id)),
     "rfq_sent carries the mailer's message id; a blocked (opted-out) message writes no event");
+  // ---- F14 at the moment of dispatch: who pressed, what was approved, and a right taken away before the send
+  let allowed = true; const asked: string[] = [];
+  const io2 = { ...io, approver: async (e: string) => { asked.push(e); return allowed; } };
+  const orig = { to_name: "Grain SA", to_email: "f14-a@example.test", subject: "F14 original", body: "original body" };
+  TABS["Agent Approvals"].push(["M9", r.id, "C1", new Date().toISOString(), "pending", JSON.stringify(orig)]);
+  // a later row under the same approval id with another recipient and body (a change after the message was shown)
+  TABS["Agent Approvals"].push(["M9", r.id, "C1", new Date().toISOString(), "pending", JSON.stringify({ ...orig, to_email: "f14-changed@example.test", subject: "F14 changed", body: "changed body" })]);
+  const n9 = MAIL.sent.length;
+  allowed = false;
+  await decide(io2, "C1", "M9", true, false, "presser@x.com");
+  ok(MAIL.sent.length === n9 && st("M9") === "pending,pending" && asked.join() === "presser@x.com", "approval right taken away before dispatch: nothing sent, nothing recorded as sending, and the presser is the one checked");
+  allowed = true;
+  await decide(io2, "C1", "M9", true, false, "presser@x.com");
+  const m9 = MAIL.sent.slice(n9);
+  ok(m9.length === 1 && m9[0].to === "f14-a@example.test" && m9[0].subject === "F14 original", "what leaves is the message that was shown for approval; a later change of recipient or text is not sent");
+  const g9 = (TABS["Send Guard"] || []).filter((x) => x[2] === "approval:M9");
+  ok(g9.length > 0 && g9.every((x) => x[7] === "presser@x.com") && !g9.some((x) => x[7] === "o@x.com"), "the send record names the person who pressed approve, not the account that started the run");
+  // a stuck send, then the right is taken away: Send again does not pass
+  TABS["Agent Approvals"].push(["M10", r.id, "C1", new Date(Date.now() - 3600e3).toISOString(), "pending", JSON.stringify({ ...orig, to_email: "f14-b@example.test" })]);
+  TABS["Agent Approvals"].push(["M10", r.id, "C1", new Date(Date.now() - 3600e3).toISOString(), "sending", ""]);
+  await decide(io2, "C1", "M10", true, false, "presser@x.com");
+  allowed = false;
+  const n10 = MAIL.sent.length;
+  await decide(io2, "C1", "M10", true, true, "presser@x.com");
+  ok(MAIL.sent.length === n10, "Send again after the right was taken away sends nothing");
+  allowed = true;
+  await decide(io2, "C1", "M10", true, true, "presser@x.com");
+  ok(MAIL.sent.length === n10 + 1 && MAIL.sent[n10].to === "f14-b@example.test", "with the right back, Send again sends once");
+  await decide(io2, "C1", "M9", false, false, "presser@x.com");
+  ok(MAIL.sent.length === n10 + 1, "a reject press on an already sent message changes nothing");
   console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
 })();

@@ -37,7 +37,9 @@ export type Run = { id: string; chat: string; email: string; name: string; lang:
   /** addresses the system's own contact lookup returned in this run (supplier_contact): the only ones a message may go to unflagged, besides the deal's own parties */
   known?: string[] };
 
-export type Io = { send: (chat: string, text: string, extra?: Record<string, unknown>) => Promise<void>; kick: (id: string) => Promise<void> };
+// approver: asked at the moment of dispatch, for every press including "Send again": an approval right that was
+// taken away after the message was drafted, or between a failed send and its retry, stops the send here.
+export type Io = { send: (chat: string, text: string, extra?: Record<string, unknown>) => Promise<void>; kick: (id: string) => Promise<void>; approver?: (email: string) => Promise<boolean> };
 
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]!));
 const now = () => new Date().toISOString();
@@ -334,6 +336,7 @@ export async function decide(io: Io, chat: string, approvalId: string, ok: boole
   if (OPEN_AGAIN.includes(st) && (again || !ok)) st = "pending";
   if (st === "needs_review" || st === "delivery_unknown") return io.send(chat, unknownText(he, m), againButtons(he, approvalId));
   if (st !== "pending") return io.send(chat, he ? `כבר טופל: ${label(st, true)}.` : `Already handled: ${st}.`);
+  if (ok && io.approver && !(await io.approver(by).catch(() => false))) return io.send(chat, he ? "אין לחשבון הזה הרשאה לאשר פנייה. הפנייה לא יצאה." : "This account may not approve a message. Nothing was sent.");
   const lock = await claim(`appr:${approvalId}`, STUCK_MS);
   if (!lock.ok) return io.send(chat, he ? "ההחלטה על הפנייה הזו כבר בטיפול." : "This message is already being handled.");
   try {
