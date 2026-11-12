@@ -61,6 +61,16 @@ jobs:
         run: set -o pipefail; python -m leads.run --source prozorro_awards 2>&1 | tee -a data/leads/run_suppliers.log
         timeout-minutes: 16
         continue-on-error: true
+      - name: iadb_awards
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',iadb_awards,') }}
+        run: set -o pipefail; python -m leads.run --source iadb_awards 2>&1 | tee -a data/leads/run_suppliers.log
+        timeout-minutes: 20
+        continue-on-error: true
+      - name: gebiz_awards
+        if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',gebiz_awards,') }}
+        run: set -o pipefail; python -m leads.run --source gebiz_awards 2>&1 | tee -a data/leads/run_suppliers.log
+        timeout-minutes: 15
+        continue-on-error: true
       - name: ocdr
         if: ${{ inputs.only == '' || contains(format(',{0},', inputs.only), ',ocdr,') }}
         run: set -o pipefail; python -m leads.run --source ocdr 2>&1 | tee -a data/leads/run_suppliers.log

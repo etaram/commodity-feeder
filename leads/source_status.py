@@ -61,7 +61,7 @@ WORK = {
 }
 # supplier-side modules run in suppliers.yml, which commits its own status file (leads.yml owns source_status.json)
 SUPPLIER_SIDE = {"latam_awards", "prozorro_awards", "ocdr", "ext_awards", "il_exemptions", "wikidata_companies", "listed_companies",
-                 "commodity_producers", "web_contacts", "gebiz_awards"}
+                 "commodity_producers", "web_contacts", "gebiz_awards", "iadb_awards"}
 SUPPLIER_FILE = "source_status_suppliers.json"
 
 
