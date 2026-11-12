@@ -19,7 +19,9 @@ async function csv(name: string): Promise<Row[]> {
 }
 
 export async function readBrief(lang: string): Promise<{ date: string; text: string; items: number; by: string } | null> {
-  const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:E2000`]).catch(() => null))?.[0] || [];
+  // a failed read is an error, not "no brief yet": treating it as missing rebuilt the brief (one paid AI call each
+  // time) whenever Google answered slowly. The caller shows the error and spends nothing.
+  const rows = (await readRanges(ENGINE_SHEET, [`'${TAB}'!A2:E2000`]))?.[0] || [];
   for (let i = rows.length - 1; i >= 0; i--) {
     const r = rows[i];
     if (r && r[0] === today() && r[1] === lang) return { date: r[0], text: r[2] || "", items: Number(r[3]) || 0, by: r[4] || "" };
@@ -27,7 +29,19 @@ export async function readBrief(lang: string): Promise<{ date: string; text: str
   return null;
 }
 
-export async function buildBrief(lang: "he" | "en", by: string): Promise<{ date: string; text: string; items: number; by: string; cached: boolean }> {
+// one build per key at a time: a second request while the first is being written waits for it instead of paying again
+const inflight = new Map<string, Promise<{ date: string; text: string; items: number; by: string; cached: boolean }>>();
+const once = <T extends { cached: boolean }>(key: string, f: () => Promise<T>): Promise<T> => {
+  const k = `${today()}|${key}`;
+  const p = inflight.get(k) as Promise<T> | undefined;
+  if (p) return p.then((r) => ({ ...r, cached: true }));
+  const q = f().finally(() => setTimeout(() => inflight.delete(k), 60_000));
+  inflight.set(k, q as unknown as Promise<{ date: string; text: string; items: number; by: string; cached: boolean }>);
+  return q;
+};
+
+export function buildBrief(lang: "he" | "en", by: string) { return once(`brief-${lang}`, () => buildBriefNow(lang, by)); }
+async function buildBriefNow(lang: "he" | "en", by: string): Promise<{ date: string; text: string; items: number; by: string; cached: boolean }> {
   const cached = await readBrief(lang);
   if (cached) return { ...cached, cached: true };
   const [items, plays] = await Promise.all([csv("briefing_items.csv"), csv("plays.csv")]);
@@ -63,7 +77,8 @@ Format (Markdown, headings exactly as given, each section 2-5 bullets, skip a se
 // changes of government, sanctions and tariffs, wars and ceasefires, central banks, shipping chokepoints), read from
 // a live web search and cached once a day per language (rows "geo-he" / "geo-en" in the same tab). Each bullet says
 // what happened and what it changes for a sourcing firm, with its source; nothing beyond what the sources say.
-export async function buildGeo(lang: "he" | "en", by: string): Promise<{ date: string; text: string; items: number; by: string; cached: boolean }> {
+export function buildGeo(lang: "he" | "en", by: string) { return once(`geo-${lang}`, () => buildGeoNow(lang, by)); }
+async function buildGeoNow(lang: "he" | "en", by: string): Promise<{ date: string; text: string; items: number; by: string; cached: boolean }> {
   const key = `geo-${lang}`;
   const cached = await readBrief(key);
   if (cached) return { ...cached, cached: true };

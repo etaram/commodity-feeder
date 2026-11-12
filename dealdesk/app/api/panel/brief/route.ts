@@ -14,7 +14,8 @@ export async function GET(req: NextRequest) {
   if (!s) return res;
   const lang = req.nextUrl.searchParams.get("lang") === "en" ? "en" : "he";
   const geo = req.nextUrl.searchParams.get("kind") === "geo";
-  return NextResponse.json({ ok: true, brief: await readBrief(geo ? `geo-${lang}` : lang) });
+  try { return NextResponse.json({ ok: true, brief: await readBrief(geo ? `geo-${lang}` : lang) }); }
+  catch (e) { return NextResponse.json({ ok: false, error: `The brief could not be read just now, try again in a minute (${String(e).slice(0, 80)})` }, { status: 503 }); }
 }
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("viewer");

@@ -436,7 +436,7 @@ export async function handle(chatId: string, text: string, _from: string, langCo
       if (tr) return send(chatId, await tenderSuppliers(tr, 6, he));
       return send(chatId, he ? "לאיזה מוצר? למשל:\n/suppliers power transformer\nאו לחץ \"ספקים מתאימים\" מתחת למכרז." : "Which product? For example:\n/suppliers power transformer\nor tap \"Matching suppliers\" under a tender.");
     }
-    if (/^\/brief/.test(cmd)) { await logActivity(who, "tg_brief", link.lang); const b = (await readBrief(link.lang)) || (await buildBrief(link.lang, link.email)); return send(chatId, b.text ? b.text.replace(/^## (.*)$/gm, "<b>$1</b>").replace(/\n---[\s\S]*$/, "") : (he ? "אין עדיין מקורות להיום." : "No sources collected yet today.")); }
+    if (/^\/brief/.test(cmd)) { await logActivity(who, "tg_brief", link.lang); const b = (await readBrief(link.lang).catch(() => undefined)) ?? (await buildBrief(link.lang, link.email)); return send(chatId, b.text ? b.text.replace(/^## (.*)$/gm, "<b>$1</b>").replace(/\n---[\s\S]*$/, "") : (he ? "אין עדיין מקורות להיום." : "No sources collected yet today.")); }
     // free text: the AI picks tools from the same set and phrases the result from their output only; the last few
     // exchanges of this chat come along, so a follow-up ("and in Germany?", "the second one") is understood
     await logActivity(who, "tg_ask", t.slice(0, 200)); await typing(chatId);
