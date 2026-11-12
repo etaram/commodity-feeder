@@ -5,3 +5,6 @@
 set -euo pipefail
 . "$(dirname "$0")/_instance_sync.sh"
 instance_run _cutover_switch_root.sh
+
+echo "== screen check after cutover-switch"
+bash "$(dirname "$0")/screen-check.sh"

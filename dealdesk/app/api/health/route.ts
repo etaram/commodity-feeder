@@ -85,6 +85,9 @@ export async function GET(req: NextRequest) {
   if (req.nextUrl.searchParams.get("only") === "bot") return NextResponse.json({ ok: true, bot: await botSelfTest() });
   if (req.nextUrl.searchParams.get("diag")) return NextResponse.json({ ok: true, region: process.env.VERCEL_REGION || "", sheets: await sheetsDiag(), again: await sheetsDiag() });
   const base = `https://${req.headers.get("host")}`;
+  // the routes are called with the audit token while an audit runs, otherwise with the app's own self-check key (the
+  // scheduled check authenticates with CRON_SECRET, and an empty header would leave every route signed out)
+  const hdr = tok.length >= 32 ? tok : await selfKey();
   const only = req.nextUrl.searchParams.get("only") || "";
   const sample = Number(req.nextUrl.searchParams.get("sample") || 0);
   const out: Record<string, unknown>[] = [];
@@ -94,7 +97,7 @@ export async function GET(req: NextRequest) {
     out.push(...(await Promise.all(list.slice(i, i + 6).map(async (c) => {
       const t0 = Date.now();
       try {
-        const r = await fetch(base + c.path, { method: c.method || "GET", headers: { "content-type": "application/json", "x-dd-audit": tok }, body: c.body ? JSON.stringify(c.body) : undefined, signal: AbortSignal.timeout(70000) });
+        const r = await fetch(base + c.path, { method: c.method || "GET", headers: { "content-type": "application/json", "x-dd-audit": hdr }, body: c.body ? JSON.stringify(c.body) : undefined, signal: AbortSignal.timeout(70000) });
         const txt = await r.text();
         let j: unknown = null; try { j = JSON.parse(txt); } catch { /* html or text */ }
         const values = (j as { values?: unknown[][] })?.values;

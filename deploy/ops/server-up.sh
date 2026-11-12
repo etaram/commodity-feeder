@@ -5,3 +5,6 @@
 set -euo pipefail
 . "$(dirname "$0")/_instance_sync.sh"
 instance_run _server_up_root.sh
+
+echo "== screen check after server-up"
+bash "$(dirname "$0")/screen-check.sh"

@@ -25,3 +25,6 @@ echo "secrets provided: $(cut -d= -f1 "$f" | tr '\n' ' ')"
 instance_run ""   # brings the server-instance checkout up to date (no script run)
 docker run --rm -i --privileged --pid=host alpine:3.20 nsenter -t 1 -m -u -n -i -- sh /opt/sinder/server-instance/deploy/ops/_server_env_root.sh < "$f"
 rm -f "$f"
+
+echo "== screen check after server-env"
+bash "$(dirname "$0")/screen-check.sh"
