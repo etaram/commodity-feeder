@@ -570,6 +570,8 @@ PROVEN_GOODS = {"POWER", "ENERGY", "HEALTH", "DEFENCE", "ICT", "MACHINERY", "AGR
 PROVEN_EPC = {"POWER", "ENERGY", "WATER"}
 PROVEN_MIN_USD = 100_000   # one recent focus-sector award of at least this size makes a winner a listed (tier 3) supplier
 PROVEN_DAYS = 730
+PROVEN_MAX = 40_000  # bound on what the rule adds to the app's index per build (about +10% rows)
+PROVEN_WEAK = {"Middle East & North Africa", "East Asia", "Sub-Saharan Africa", "Latin America"}
 # a natural person (sole trader) is not listed as a proven supplier: Ukrainian/Russian patronymics, "FOP"
 PERSON_NAME = re.compile(r"(^|\s)(ФОП|ФЛП|ІП|ИП)\s|\b[А-ЯІЇЄҐA-Z][а-яіїєґ'A-Za-z-]+\s+[А-ЯІЇЄҐ][а-яіїєґ'-]+\s+[А-ЯІЇЄҐ][а-яіїєґ'-]+(ович|евич|йович|івна|ївна|овна|евна|ична|ич)\b", re.I)
 
@@ -645,10 +647,13 @@ def promote_proven(out):
                 listed_ids.add(re.sub(r"\W", "", str(r["legal_id"])).upper())
             if _dom(r.get("website")):
                 listed_doms.add((_dom(r["website"]), r["country"]))
-    n = {"promoted": 0, "duplicate_legal_id": 0, "duplicate_domain": 0, "person": 0}
-    for r in out:
-        if r["tier"] != "4" or r.get("origin") != "A" or float(r.get("proven_focus_usd") or 0) < PROVEN_MIN_USD:
-            continue
+    n = {"promoted": 0, "duplicate_legal_id": 0, "duplicate_domain": 0, "person": 0, "over_cap": 0}
+    cands = [r for r in out if r["tier"] == "4" and r.get("origin") == "A" and float(r.get("proven_focus_usd") or 0) >= PROVEN_MIN_USD]
+    # weak regions first, then the size of the proving award; at most PROVEN_MAX listed per build (index size)
+    cands.sort(key=lambda r: (r.get("region") not in PROVEN_WEAK, -float(r.get("proven_focus_usd") or 0)))
+    for r in cands:
+        if n["promoted"] >= PROVEN_MAX:
+            n["over_cap"] += 1; continue
         if PERSON_NAME.search(r["supplier"]):
             n["person"] += 1; continue
         lid = re.sub(r"\W", "", str(r.get("legal_id") or "")).upper()

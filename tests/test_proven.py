@@ -39,7 +39,7 @@ def test_promote_proven_dedupe_and_persons():
     d = _row(supplier="ФЕДОРІН ОЛЕКСАНДР ОЛЕКСАНДРОВИЧ", country="UKR")  # a natural person
     e = _row(supplier="Small Co", proven_focus_usd=50000)  # below the threshold
     n = u.promote_proven([listed, a, b, c, d, e])
-    assert n == {"promoted": 1, "duplicate_legal_id": 1, "duplicate_domain": 1, "person": 1}
+    assert n == {"promoted": 1, "duplicate_legal_id": 1, "duplicate_domain": 1, "person": 1, "over_cap": 0}
     assert a["tier"] == "3" and "proven by award" in a["tier_reason"] and "contact being found" in a["tier_reason"]
     assert b["tier"] == c["tier"] == d["tier"] == e["tier"] == "4"
 
@@ -63,3 +63,11 @@ def test_diff_without_snapshot_counts_rule_rows():
     rows = [_row(supplier="A", tier="3", proven="won: x [TED; T-1]", tier_reason="Qualified: proven by award (USD 250K, 1 win)"),
             _row(supplier="B", tier="3", proven="won: y [TED; T-2]", tier_reason="Qualified: $300K won, 2 wins, reachable")]
     assert [x["key"] for x in proven.diff({}, rows, "2026-11-12")] == ["A|GRC"]
+
+
+def test_promote_cap_prefers_weak_regions(monkeypatch):
+    monkeypatch.setattr(u, "PROVEN_MAX", 1)
+    eu = _row(supplier="Big EU", proven_focus_usd=9e6)
+    ke = _row(supplier="Nairobi Supplies", country="KEN", region="Sub-Saharan Africa", proven_focus_usd=2e5)
+    n = u.promote_proven([eu, ke])
+    assert n["promoted"] == 1 and n["over_cap"] == 1 and ke["tier"] == "3" and eu["tier"] == "4"
