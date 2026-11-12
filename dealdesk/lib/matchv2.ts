@@ -116,8 +116,9 @@ const LEX: [string, CondKind, string, string][] = [
   ["polycrystalline", "material", "poly[- ]?crystalline", "mono[- ]?crystalline"],
   ["refined", "form", "refined|refinery|refining|rbd", "crude"],
   ["anhydrous", "form", "anhydrous", ""],
-  ["granular", "form", "granul(?:ar|ated)", "prill(?:ed|s)?"],
-  ["prilled", "form", "prill(?:ed|s)?", "granul(?:ar|ated)"],
+  // urea form is a preference, not identity (lib/panel.ts FLEX_WORDS; the labels agree): proven when stated, never a conflict
+  ["granular", "form", "granul(?:ar|ated)", ""],
+  ["prilled", "form", "prill(?:ed|s)?", ""],
   ["brackish", "form", "brackish(?: water)?|low[- ]energy|bw ?30", "sea ?water|swro|sw ?30"],
   ["seawater", "form", "sea ?water|swro|sw ?30", "brackish|bw ?30"],
   ["containerized", "form", "containeri[sz]ed|container(?:i[sz]ed)? (?:plants?|systems?|units?)|skid[- ]?mounted|mobile (?:plants?|units?)", ""],
@@ -212,6 +213,16 @@ function parsePhrase(raw: string): { alt: { req: string[]; opt: string[] }; spec
   const req = [...new Set(ws.filter((w) => !CLASS.has(w)).map(stem))].slice(0, 6), opt = [...new Set(ws.filter((w) => CLASS.has(w)).map(stem))];
   return { alt: { req, opt }, specs, words: ws.join(" ") };
 }
+/** The requirement of one search request, the same way for the app and the evaluation. A tender is read from the
+ *  product phrases the rules found in its title; without one, from its commodity; without that, no condition (the
+ *  re-rank then only puts makers before traders). Also the product named in a tie-break question. */
+export function requestRequirement(text: string, tender?: { kind: TenderKind; title: string; commodity?: string }): Requirement {
+  if (!tender) { const r = requirementOf(text); return { ...r, product: String(text || "").trim().slice(0, 120) }; }
+  const ph = tender.kind.kind === "goods" || tender.kind.kind === "mixed" ? tender.kind.goods_phrases : [];
+  const commodity = String(tender.commodity || "").trim();
+  const r = ph.length ? requirementOf(tender.title, ph) : commodity ? requirementOf(commodity) : { conds: [], product: "" };
+  return { conds: r.conds, product: ph.length ? ph.join(", ") : commodity || String(tender.title || "").slice(0, 120) };
+}
 const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** "iso 2531" also reads "ISO2531" and "ISO-2531"; "18-46-0" also "18 46 0" */
 const looseRx = (k: string) => k.split(/[\s\-]+/).filter(Boolean).map(esc).join("[\\s\\-]?");
@@ -271,8 +282,11 @@ export function tieToBreak<T>(kept: Ranked<T>[], top = 15, minTie = 5, screen = 
 export function applyTie<T>(kept: Ranked<T>[], answers: Map<number, "yes" | "no">): Ranked<T>[] {
   const out = kept.map((x, i) => ({ ...x, tie: answers.get(i) }));
   const order = (x: Ranked<T>) => (x.tie === "yes" ? 0 : x.tie === "no" ? 2 : 1);
+  // the slots of a tie: its rows from the first answered one to the last answered one (rows past the asked window stay)
+  const span = new Map<string, [number, number]>();
+  out.forEach((x, i) => { if (answers.has(i)) { const s = span.get(x.key); span.set(x.key, s ? [s[0], i] : [i, i]); } });
   const slots = new Map<string, number[]>();
-  out.forEach((x, i) => { if (answers.has(i)) slots.set(x.key, [...(slots.get(x.key) || []), i]); });
+  out.forEach((x, i) => { const s = span.get(x.key); if (s && i >= s[0] && i <= s[1]) slots.set(x.key, [...(slots.get(x.key) || []), i]); });
   const res = [...out];
   for (const pos of slots.values()) {
     const group = pos.map((i) => out[i]).sort((a, b) => order(a) - order(b) || a.was - b.was);

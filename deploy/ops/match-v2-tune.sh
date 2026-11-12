@@ -9,7 +9,7 @@ set -uo pipefail
 TS=20261111T181953Z
 HALF="${MATCHV2_HALF:-tune}"
 RUN_CAP="${MATCHV2_RUN_CAP:-25}"
-TIEBREAK="${MATCHV2_TIEBREAK:-off}"
+TIEBREAK="${MATCHV2_TIEBREAK:-on}"
 W="$RUNNER_TEMP/m2-$GITHUB_RUN_ID"; rm -rf "$W"; mkdir -m 700 "$W"
 trap 'rm -rf "$W"' EXIT
 
