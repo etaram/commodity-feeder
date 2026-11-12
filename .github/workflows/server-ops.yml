@@ -23,7 +23,7 @@ jobs:
           SERVER_AUTH_SECRET: ${{ inputs.task == 'server-env' && secrets.SERVER_AUTH_SECRET || '' }}
           SERVER_TEAM_USER: ${{ inputs.task == 'server-env' && secrets.SERVER_TEAM_USER || '' }}
           SERVER_TEAM_PASSCODE: ${{ inputs.task == 'server-env' && secrets.SERVER_TEAM_PASSCODE || '' }}
-          SERVER_GOOGLE_SERVICE_ACCOUNT_JSON: ${{ inputs.task == 'server-env' && secrets.SERVER_GOOGLE_SERVICE_ACCOUNT_JSON || '' }}
+          SERVER_GOOGLE_SERVICE_ACCOUNT_JSON: ${{ inputs.task == 'server-env' && (secrets.SERVER_GOOGLE_SERVICE_ACCOUNT_JSON || secrets.GOOGLE_SERVICE_ACCOUNT_JSON) || '' }}
           SERVER_WEB_INDEX_KEY: ${{ inputs.task == 'server-env' && secrets.SERVER_WEB_INDEX_KEY || '' }}
-          SERVER_ANTHROPIC_API_KEY: ${{ inputs.task == 'server-env' && secrets.SERVER_ANTHROPIC_API_KEY || '' }}
+          SERVER_ANTHROPIC_API_KEY: ${{ inputs.task == 'server-env' && (secrets.SERVER_ANTHROPIC_API_KEY || secrets.ANTHROPIC_API_KEY) || '' }}
           SERVER_ANTHROPIC_WORKSPACE_ID: ${{ inputs.task == 'server-env' && secrets.SERVER_ANTHROPIC_WORKSPACE_ID || '' }}

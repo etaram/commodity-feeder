@@ -6,6 +6,10 @@ cp -p "$E" "$E.bak-$(date -u +%Y%m%dT%H%M%SZ)"; chmod 600 "$E".bak-*
 N=$(mktemp); cat > "$N"
 cut -d= -f1 "$N" | while read -r k; do grep -vE "^$k=" "$E" > "$E.tmp" || true; cat "$E.tmp" > "$E"; rm -f "$E.tmp"; done
 cat "$N" >> "$E"; echo "written: $(cut -d= -f1 "$N" | tr '\n' ' ')"; rm -f "$N"; chmod 600 "$E"
+# The server instance signs its own sessions: a fresh random AUTH_SECRET when none is set (never copied from Vercel,
+# never printed). Sessions of the two instances are therefore separate, which is what we want until the domain moves.
+if ! grep -qE '^AUTH_SECRET=.{32,}' "$E"; then grep -v '^AUTH_SECRET=' "$E" > "$E.tmp" || true; cat "$E.tmp" > "$E"; rm -f "$E.tmp"
+  printf 'AUTH_SECRET=%s\n' "$(head -c 64 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | cut -c1-48)" >> "$E"; chmod 600 "$E"; echo "AUTH_SECRET generated on the server"; fi
 cd /opt/sinder/server-instance/deploy && docker compose -p sinder-server -f docker-compose.server.yml up -d --force-recreate 2>&1 | tail -2
 sleep 30; printf "%-40s %s\n" "https://desk.216-158-234-218.sslip.io/login" "$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 https://desk.216-158-234-218.sslip.io/login)"
 echo "isolation check (/api/staging-check):"
