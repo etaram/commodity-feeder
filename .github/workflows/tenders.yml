@@ -1,0 +1,102 @@
+name: tenders
+# Tender details (leads/tender_details.py): reads the official machine-readable record of the best open tenders in the
+# Sinder focus sectors (TED and BOAMP eForms, Prozorro, PNCP, ChileCompra, World Bank) and publishes the fields a bid
+# needs (items and quantities, standards, delivery, guarantees, eligibility, lots, evaluation, clarification deadline,
+# documents) to data/leads/refined/tender_details.csv, which the tender card shows.
+# Timed by the company server (deploy/ops/schedule.tab, task=details). Manual tasks:
+#   sample  measure fill rates on 50 tenders; 10 raw records are sealed to the reviewer key for the spot check
+#   proven  rebuild the supplier universe in this run only (caches restored read-only, nothing saved or pushed to a
+#           sheet) and count the suppliers the award-proven rule adds, by source and region (leads/proven.py)
+# The log shows counts only. Low priority (nice), one request at a time per publisher.
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "details | sample | proven"
+        required: false
+        default: "details"
+      args:
+        description: "arguments (details: --limit N --minutes M; sample: N)"
+        required: false
+        default: ""
+permissions:
+  contents: write
+concurrency:
+  group: tenders-${{ inputs.task || 'details' }}-${{ github.ref_name }}
+  cancel-in-progress: false
+jobs:
+  tenders:
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    timeout-minutes: 120
+    env:
+      TASK: ${{ inputs.task || 'details' }}
+      ARGS: ${{ inputs.args }}
+      CHILE_TICKET: ${{ secrets.CHILE_TICKET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q requests cryptography pycountry phonenumbers
+      - if: ${{ env.TASK == 'proven' }}
+        run: pip install -q curl_cffi langid aia certifi google-auth pypinyin
+      - name: Tender details store (previous run)
+        if: ${{ env.TASK == 'details' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: data/tenders
+          key: tenderdetails-none
+          restore-keys: tenderdetails-
+      - name: Private supplier data (read-only)
+        if: ${{ env.TASK == 'proven' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: data/private
+          key: private-none
+          restore-keys: private-
+      - name: Company checks (read-only)
+        if: ${{ env.TASK == 'proven' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: data/checks
+          key: checks-none
+          restore-keys: checks-
+      - name: Company descriptions (read-only)
+        if: ${{ env.TASK == 'proven' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: data/describe
+          key: describe-none
+          restore-keys: describe-
+      - name: task
+        run: |
+          touch /tmp/tenders-start && sleep 1
+          case "$TASK" in
+            details) nice -n 10 python -m leads.tender_details run $ARGS 2>&1 | grep -vE "https?://" | cut -c1-300 ;;
+            sample)  nice -n 10 python -m leads.tender_details sample $ARGS 2>&1 | grep -vE "https?://" | cut -c1-300 ;;
+            proven)  nice -n 15 python -m leads.proven snapshot 2>&1 | grep -E "proven|Error|Traceback"
+                     nice -n 15 python -m leads.universe 2>&1 | grep -E "^INFO:leads:(universe|proven|imports|refined)|Error|Traceback" | cut -c1-2000
+                     nice -n 15 python -m leads.proven report 2>&1 | grep -E "proven|Error|Traceback" | cut -c1-2000 ;;
+            *) echo "unknown task $TASK"; exit 1 ;;
+          esac
+      - name: Tender details store (save)
+        if: ${{ env.TASK == 'details' && hashFiles('data/tenders/details.jsonl.gz') != '' }}
+        uses: actions/cache/save@v4
+        with:
+          path: data/tenders
+          key: tenderdetails-${{ github.run_id }}
+      - name: commit
+        run: |
+          git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
+          P="data/leads/refined/tender_details.csv data/leads/refined/tender_details_stats.json data/leads/refined/tender_details_sample.json data/probe/sources/sealed/tender_details_sample.bin data/leads/proven_report.json"
+          rm -rf /tmp/own && mkdir -p /tmp/own
+          # only files this task wrote (newer than its start)
+          for f in $P; do [ -e "$f" ] && find "$f" -type f -newer /tmp/tenders-start -exec cp --parents {} /tmp/own/ \; ; done
+          B="${{ github.ref_name }}"
+          for i in 1 2 3 4 5; do
+            git fetch -q origin "$B" && git reset -q --hard "origin/$B"
+            cp -r /tmp/own/. .
+            for f in $P; do [ -e "$f" ] && git add -A "$f"; done
+            git diff --cached --quiet && break
+            git commit -q -m "tenders: $TASK $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin "HEAD:$B" && break
+            sleep $((i * 10))
+          done
