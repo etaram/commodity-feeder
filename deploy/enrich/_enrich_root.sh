@@ -95,8 +95,9 @@ if [ "$mode" = start ]; then
   lanes=$(echo "$lanes" | tr ',' '\n' | grep -vx people | paste -sd, -)
   [ -s "$E/.ch.env" ] && echo "Companies House: key present (UK register on)" || echo "Companies House: no key (UK register off)"
   echo "lanes: $lanes"
-  # 24 workers: the sample used about 0.5 of its 1.5 CPUs with 16 (the work is waiting on remote sites)
-  launch unless-stopped --lanes "$lanes" --workers 48
+  # site-lane workers (registry, press and wikidata lanes keep their own per-source rate limits). 48 workers used about
+  # 1 of the 3 CPUs at 5,411 companies/h (2026-11-12T20:29Z, memory 2.4 of 5 GB): the work waits on remote sites, so 96
+  launch unless-stopped --lanes "$lanes" --workers "${ENRICH_WORKERS:-96}"
   exit 0
 fi
 if [ "$mode" = people ]; then
