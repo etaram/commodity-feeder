@@ -82,3 +82,18 @@ shared team login can send. That is NOT a safe way back. If this change has to b
 Current state: the owner's live account has a password he does not remember and there is no password reset, so nobody
 can approve a send on the live site or by Telegram until his account is restored by him. This is a temporary stop of
 sending, not a finished commercial path.
+
+## Server instance next to the live site (12 Nov 2026)
+
+The live system on Vercel is kept untouched as the fallback: production deployment dpl_8oMuMqJFixYTsFSGsDveJtUXCA31,
+previous dpl_4zZtjnvvhzYFZcutaYACfiHcUAhE. Nothing in Vercel (settings, deployments, domain, Telegram webhook) is changed.
+
+Code backup: tag `vercel-live-2026-11-12` = commit bb2e6c23d4adf8b52ce0e07d4a7e74c2c9610a1a (origin/main when the server
+work started). To go back in code: `git checkout vercel-live-2026-11-12`.
+
+The server system (branch `release/server`, checkout /opt/sinder/server-instance, compose project `sinder-server`,
+address https://desk.216-158-234-218.sslip.io) is a separate instance until the owner moves the domain. While both run it
+cannot send anything: AGENT_MAIL_LIVE=0, no Resend key, no web push key, Telegram off (TELEGRAM_OFF=1), and no cron
+service. It shares the same Google Sheets state, so actions taken in it are real data changes.
+To remove it: `docker compose -p sinder-server -f /opt/sinder/server-instance/deploy/docker-compose.server.yml down`
+and delete its block from /opt/sinder/gateway/Caddyfile (a copy before the change is kept next to it).

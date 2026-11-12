@@ -1,0 +1,42 @@
+# The Deal Desk as a SECOND instance on our server, next to the live site on Vercel (owner decision, 12 Nov 2026).
+#   docker compose -p sinder-server -f docker-compose.server.yml up -d --build
+# Runs from /opt/sinder/server-instance (branch release/server), never from /opt/sinder/repo, so the data service and
+# its sync keep serving main to the live site. It joins the existing network of the data stack (sinder_default) to read
+# http://data:8080, like the app service in docker-compose.yml.
+# HTTPS: ports 80/443 already belong to the data gateway (container sinder-gateway, a Caddy). That same Caddy carries
+# a second site block for DESK_HOST and forwards it to this container (see deploy/ops/_server_up_root.sh); the domain
+# is an sslip.io name that resolves to the server's IPv4, so the certificate needs no DNS change.
+# No secrets here: the values come from /opt/sinder/repo/deploy/.env on the server.
+name: sinder-server
+services:
+  server-app:
+    build: ../dealdesk
+    image: sinder-server-app:latest
+    container_name: sinder-server-app
+    restart: unless-stopped
+    env_file: /opt/sinder/repo/deploy/.env
+    environment:
+      DESK_DOMAIN: desk.216-158-234-218.sslip.io
+      DATA_BASE_URL: http://data:8080
+      AGENT_BASE_URL: https://desk.216-158-234-218.sslip.io
+      DESK_URL: https://desk.216-158-234-218.sslip.io
+      # SAFETY while the live site on Vercel still runs. The two instances share the same Google Sheets state and the
+      # same Zoho mailbox, so this one must not send anything and must not touch the bot. These four lines are removed
+      # only when the domain moves to this server and Vercel is retired. The cron service is deliberately not part of
+      # this file for the same reason (digests and scheduled jobs would run twice).
+      AGENT_MAIL_LIVE: "0"       # lib/mailer.ts: no SMTP connection is opened
+      RESEND_API_KEY: ""         # lib/notify.ts and the digest: no Resend mail
+      VAPID_PRIVATE_KEY: ""      # lib/push.ts: no web push
+      TELEGRAM_OFF: "1"          # lib/tgenv.ts: no token, so no webhook setup, no answers, no bot messages
+    networks: [sinder_default]
+    cpus: 2
+    mem_limit: 3g
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+networks:
+  sinder_default:
+    external: true
