@@ -2378,7 +2378,11 @@ async function compose({ kind, ctx, to }, outSel) {
     }).catch(() => { flash.innerHTML = `<div class="flash info">${esc(t("fc_notfound"))}</div>`; });
   }
   const write = async (fresh) => {
-    if (!sample) { $("#m-body").value = ""; $("#m-flash").innerHTML = `<div class="flash info">${esc(t("hand_write"))}</div>`; $("#m-draft").disabled = false; return; }
+    if (!sample) { $("#m-body").value = ""; $("#m-flash").innerHTML = `<div class="flash info">${esc(t("hand_write"))}</div>`; $("#m-draft").disabled = false;
+      // Written by hand (no drafting model on the web): Send was never switched on here, so the button stayed grey.
+      // Switched on outside the live site only, until owner-only approval (F14) is proven on staging and live; then the host test goes.
+      if ($("#m-send") && location.hostname !== "desk.sinder.pro") $("#m-send").disabled = false;
+      return; }
     $("#m-draft").disabled = $("#m-again").disabled = true;
     const st = out.querySelector("#m-status"), t0 = Date.now();
     const tick = () => { if (st) st.innerHTML = `<span class="spin"></span> ${esc(t("writing"))} ${Math.round((Date.now() - t0) / 1000)}s`; };
