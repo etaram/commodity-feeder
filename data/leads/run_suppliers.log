@@ -1,15 +1,18 @@
-Wed Nov 11 08:25:25 UTC 2026
-INFO LatAm awards: Brazil 881 (4 days), Colombia 174
-INFO latam_awards: 0 rows
-INFO Prozorro awards: 40009 candidates, 2698 read, 2711 awards
-INFO prozorro_awards: 0 rows
+Thu Nov 12 06:47:47 UTC 2026
+INFO LatAm awards: Brazil 500 (4 days), Colombia 366
+WARNING source latam_awards: DEGRADED (returned 0 rows and has no good run on record)
+INFO latam_awards: 0 rows (DEGRADED)
+INFO Prozorro awards: 39130 candidates, 2194 read, 2197 awards
+WARNING source prozorro_awards: DEGRADED (returned 0 rows and has no good run on record)
+INFO prozorro_awards: 0 rows (DEGRADED)
 INFO OCDR {'files': 0, 'awards': 0, 'contacts': 0, 'pending': 0}
-INFO ocdr: 0 rows
+WARNING source ocdr: DEGRADED (returned 0 rows and has no good run on record)
+INFO ocdr: 0 rows (DEGRADED)
 INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
 INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
-INFO OCDR tenders 110 ECU 2026: 679 open of 124584 releases
-INFO OCDR tenders 142 GTM 2026: 1027 open of 375170 releases
-INFO OCDR tenders 122 HND 2026: 11 open of 46752 releases
+INFO OCDR tenders 110 ECU 2026: 663 open of 124584 releases
+INFO OCDR tenders 142 GTM 2026: 994 open of 375170 releases
+INFO OCDR tenders 122 HND 2026: 8 open of 46752 releases
 INFO OCDR tenders 123 HND 2026: 0 open of 43975 releases
 INFO OCDR tenders 156 LBR 2026: 6 open of 1283 releases
 INFO OCDR tenders 127 NGA 2025: 0 open of 3 releases
@@ -19,7 +22,7 @@ INFO OCDR tenders 118 NGA 2026: 0 open of 3 releases
 INFO OCDR tenders 125 NGA 2025: 0 open of 122 releases
 INFO OCDR tenders 135 PER 2026: 13 open of 134917 releases
 INFO OCDR tenders 152 TZA 2026: 0 open of 62293 releases
-INFO OCDR tenders 43 URY 2026: 16 open of 64000 releases
+INFO OCDR tenders 43 URY 2026: 12 open of 64000 releases
 INFO OCDR tenders 3 ZMB 2026: 0 open of 26157 releases
 INFO OCDR tenders 101 IDN 2120: 0 open of 1 releases
 INFO OCDR tenders 160 TWN 2026: 0 open of 8 releases
@@ -34,8 +37,8 @@ INFO OCDR tenders 149 MEX 2026: 0 open of 4256 releases
 INFO OCDR tenders 32 MEX 2025: 0 open of 26 releases
 INFO OCDR tenders 132 MEX 2025: 0 open of 702 releases
 INFO OCDR tenders 34 MDA 2026: 0 open of 47356 releases
-INFO OCDR tenders {'publications': 29, 'read': 29, 'releases': 1143432, 'open_tenders': 1752, 'countries': 6}
-INFO ocdr_tenders: 1752 rows
+INFO OCDR tenders {'publications': 29, 'read': 29, 'releases': 1143432, 'open_tenders': 1696, 'countries': 6}
+INFO ocdr_tenders: 1696 rows (OK)
 INFO IL exemptions: 5000/165705 read, 0 kept
 INFO IL exemptions: 10000/165705 read, 0 kept
 INFO IL exemptions: 15000/165705 read, 0 kept
@@ -71,39 +74,170 @@ INFO IL exemptions: 160000/165705 read, 129 kept
 INFO IL exemptions: 165000/165705 read, 142 kept
 INFO IL exemptions: 165705/165705 read, 143 kept
 INFO IL exemptions {'read': 165705, 'kept': 143, 'next 6 months': 58, 'ended - re-procurement due': 2, '6-18 months': 37, 'later': 46}
-INFO il_exemptions: 0 rows
+WARNING source il_exemptions: DEGRADED (returned 0 rows and has no good run on record)
+INFO il_exemptions: 0 rows (DEGRADED)
 INFO external awards {}
-INFO ext_awards: 0 rows
-INFO commodity_producers: 0 rows
+WARNING source ext_awards: DEGRADED (returned 0 rows and has no good run on record)
+INFO ext_awards: 0 rows (DEGRADED)
+WARNING source commodity_producers: DEGRADED (returned 0 rows and has no good run on record)
+INFO commodity_producers: 0 rows (DEGRADED)
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
 WARNING wikidata 504
-WARNING wikidata 502
-WARNING wikidata 502
-WARNING wikidata: Expecting property name enclosed in double quotes: line 2852 column 9 (char 65536)
 WARNING wikidata 504
 WARNING wikidata 504
-WARNING wikidata 502
+WARNING wikidata 504
+WARNING wikidata 504
+WARNING wikidata 504
+INFO wikidata companies: 0 countries refreshed (0 companies), 52 countries cached
+WARNING source wikidata_companies: DEGRADED (returned 0 rows and has no good run on record)
+INFO wikidata_companies: 0 rows (DEGRADED)
 INFO listed companies: 0 countries refreshed (0 companies), 202 cached
-INFO listed_companies: 0 rows
-INFO wikidata companies: 1 countries refreshed (223 companies), 52 countries cached
-INFO wikidata_companies: 0 rows
-INFO web profiles: 2920 read, 387 websites discovered of 1500 tried
-INFO web_contacts: 0 rows
+WARNING source listed_companies: DEGRADED (returned 0 rows and has no good run on record)
+INFO listed_companies: 0 rows (DEGRADED)
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/robots.txt): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ff6028eed5309737b095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:32:46 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ff6028eed5309737b095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:32:46 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ff9028eed53095471095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:32:58 GMT\r\nContent-Length: 1944\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ff9028eed53095471095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:32:58 GMT\r\nContent-Length: 1944\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ff8028eed5309c860095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:08 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ff8028eed5309c860095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:08 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contact-us): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffb028eed5309bdb0095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:18 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffb028eed5309bdb0095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:18 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contacts): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffa028eed53098d07095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:29 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffa028eed53098d07095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:29 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contacto): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffd028eed5309c25b095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:40 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffd028eed5309c25b095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:40 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contato): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffc028eed5309b22d095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:50 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffc028eed5309b22d095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:33:50 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/kontakt): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9fff028eed5309a7a4095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:00 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9fff028eed5309a7a4095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:00 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/en/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffe028eed53092d61095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:11 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9ffe028eed53092d61095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:11 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contact-us.html): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f01038eed53096e0b095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:21 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f01038eed53096e0b095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:21 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/contactus): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f03038eed5309733a095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:32 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f03038eed5309733a095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:32 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/about/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f02038eed530956db095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:42 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f02038eed530956db095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:42 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/company/contact): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f05038eed53097817095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:53 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f05038eed53097817095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:34:53 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/investors): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f04038eed530976c2095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:03 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f04038eed530976c2095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:03 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/investor-relations): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f07038eed5309b772095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:14 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f07038eed5309b772095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:14 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/impressum): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f06038eed5309a769095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:24 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f06038eed5309a769095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:24 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/about): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f09038eed53090909095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:34 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f09038eed53090909095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:34 GMT\r\nContent-Length: 1163\r\n\r\n'
+WARNING Failed to parse headers (url=http://www.sanpoly.com:80/about-us): [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f08038eed5309e3eb095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:45 GMT\r\nContent-Length: 1163\r\n\r\n'
+Traceback (most recent call last):
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 641, in getresponse
+    assert_header_parsing(httplib_response.msg)
+  File "/home/runner/r3/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/response.py", line 88, in assert_header_parsing
+    raise HeaderParsingError(defects=defects, unparsed_data=unparsed_data)
+urllib3.exceptions.HeaderParsingError: [MissingHeaderBodySeparatorDefect()], unparsed data: 'X-XSS-Protection : 1; mode=block\r\nSet-Cookie: _d_id=9f08038eed5309e3eb095f7c93e691; Path=/; HttpOnly; SameSite=Lax\r\nDate: Thu, 12 Nov 2026 07:35:45 GMT\r\nContent-Length: 1163\r\n\r\n'
+INFO web profiles: 2864 read, 377 websites discovered of 1500 tried
+WARNING source web_contacts: DEGRADED (returned 0 rows and has no good run on record)
+INFO web_contacts: 0 rows (DEGRADED)
 INFO:leads:import china-directory-2026-11-05: 19837 rows
 INFO:leads:import commodity-databases-2026-11-05: 135 rows
 INFO:leads:import global-suppliers-2026-11: 58151 rows
 INFO:leads:imports: 78123 rows, 76085 new suppliers, 1959 merged into existing ones
-INFO:leads:refined layer applied to 1040373 suppliers
-INFO:leads:classification check: 24 sectors, 10754 flagged
-INFO:leads:universe {'awards': 4630110, 'suppliers': 1043458, 'with_email': 409379, 'with_phone': 334288, 'exporters': 61352, 'goods': 366725, 'contacts_matched': 1096932, 'customs_exporters': 18225, 'customs_new': 17843, 'tier_A': 937226, 'tier_B_notable': 10535, 'tier_1_strategic': 29319, 'tier_2_proven': 112789, 'tier_3_qualified': 209817, 'tier_4_unproven': 691533, 'with_website': 263089, 'notable_total': 13350, 'notable_with_email': 4080, 'notable_with_phone': 3797, 'notable_with_website': 8756, 'quality_40_plus': 154435, 'with_any_contact': 710071, 'region: Europe': 516246, 'region: Latin America': 209148, 'region: Sub-Saharan Africa': 83031, 'region: North America': 59610, 'region: South Asia': 47096, 'region: East Asia': 41780, 'region: Oceania': 34848, 'region: unknown': 24626, 'region: Southeast Asia': 12040, 'region: CIS & Central Asia': 7409, 'region: Middle East & North Africa': 5164, 'region: Other': 1501, 'region: Israel': 959}
+INFO:leads:refined layer applied to 1043289 suppliers
+INFO:leads:classification check: 24 sectors, 6870 flagged
+INFO:leads:universe {'awards': 4635233, 'suppliers': 1044807, 'with_email': 404492, 'with_phone': 325168, 'exporters': 61354, 'goods': 361906, 'contacts_matched': 1099311, 'customs_exporters': 18225, 'customs_new': 17843, 'tier_A': 938575, 'tier_B_notable': 10535, 'tier_1_strategic': 29264, 'tier_2_proven': 112751, 'tier_3_qualified': 209985, 'tier_4_unproven': 692807, 'with_website': 260210, 'notable_total': 13350, 'notable_with_email': 3700, 'notable_with_phone': 3167, 'notable_with_website': 8778, 'quality_40_plus': 148506, 'with_any_contact': 710895, 'region: Europe': 517351, 'region: Latin America': 209391, 'region: Sub-Saharan Africa': 83031, 'region: North America': 59610, 'region: South Asia': 47096, 'region: East Asia': 41780, 'region: Oceania': 34848, 'region: unknown': 24627, 'region: Southeast Asia': 12040, 'region: CIS & Central Asia': 7409, 'region: Middle East & North Africa': 5164, 'region: Other': 1501, 'region: Israel': 959}
 wrote 150001 rows to Supplier Universe
 INFO:leads:origin exporters: 1462 commodity pages moved to the front of 5362 queued
-WARNING:leads:origin exporters: HTTP 403 on /suppliers/product-country/bell-pepper-spain
-WARNING:leads:origin exporters: HTTP 403 on /suppliers/product-country/pineapple-thailand
+WARNING:leads:origin exporters: HTTP 403 on /suppliers/product-country/rice-thailand
+WARNING:leads:origin exporters: HTTP 403 on /suppliers/category-country/coffee-tea-united-kingdom
 WARNING:leads:origin exporters: 10 refusals in a row, stopping this run
 INFO:leads:origin exporters: {"pages": 10, "failed": 10, "queued": 5362, "suppliers": 5382, "countries": 105, "top": [["FRA", 389], ["USA", 382], ["GBR", 332], ["ITA", 310], ["ESP", 307], ["TUR", 297], ["ZAF", 291], ["ARG", 288], ["IDN", 275], ["THA", 267], ["VNM", 264], ["POL", 263]]}
 INFO:leads:web index: 36 Ethiopian coffee exporters (official export record and marketplace)
@@ -114,7 +248,7 @@ INFO:leads:web index: 105 from registry_brazil.csv
 INFO:leads:web index: 45 from registry_cameroon.csv
 INFO:leads:web index: 60 from registry_chile.csv
 INFO:leads:web index: 19 from registry_colombia.csv
-INFO:leads:web index: 1463 from registry_india.csv
+INFO:leads:web index: 5623 from registry_india.csv
 INFO:leads:web index: 24 from registry_indonesia.csv
 INFO:leads:web index: 60 from registry_iran.csv
 INFO:leads:web index: 6 from registry_nigeria.csv
@@ -125,9 +259,9 @@ INFO:leads:web index: 16 from registry_philippines.csv
 INFO:leads:web index: 65 from registry_south_africa.csv
 INFO:leads:web index: 25 from registry_ukraine.csv
 INFO:leads:web index: 107 from registry_vietnam.csv
-INFO:leads:web index: 5342 origin exporters from directories
-INFO:leads:web index: 261595 suppliers, 30.3 MB encrypted
-INFO:leads:winners: 4190486 award rows read, 4468 leads kept since 2026-06-14: {"contractor": 3125, "commodity": 1343}; sources {"World Bank awards": 837, "OCDS registry: United Kingdom: Find a Te": 350, "TED": 350, "USAspending": 350, "OCDS registry: United Kingdom: Contracts": 350, "OCDS registry: Canada: Qu\u00e9bec: Secr\u00e9tari": 350, "OCDS registry: Uganda: Public Procuremen": 350, "OCDS registry: Dominican Republic: Direc": 350}
+INFO:leads:web index: 5336 origin exporters from directories
+INFO:leads:web index: 265749 suppliers, 22.8 MB encrypted
+INFO:leads:winners: 4190486 award rows read, 4464 leads kept since 2026-06-15: {"contractor": 3120, "commodity": 1344}; sources {"World Bank awards": 836, "OCDS registry: United Kingdom: Find a Te": 350, "TED": 350, "USAspending": 350, "OCDS registry: United Kingdom: Contracts": 350, "OCDS registry: Canada: Qu\u00e9bec: Secr\u00e9tari": 350, "OCDS registry: Uganda: Public Procuremen": 350, "OCDS registry: Dominican Republic: Direc": 350}
 INFO:leads:winners top: 2026-09-17 |  CHINA HENAN INTERNATIONAL COOPERATION  (CHN) -> MOZ | Construction of BRT Infrastructure (Runways, Terminals and Stations, B | USD 119,209,075 | needs: cement, steel rebar, roofing sheets, tiles and sanitary ware
 INFO:leads:winners top: 2026-10-27 | MARRA SERVICES INC (USA) -> IND | Rehabilitation of Existing Sewer Lines on Western Side of City of Ahme | USD 11,830,217 | needs: HDPE and ductile iron pipes, valves and fittings, pumps, water treatment chemicals
 INFO:leads:winners top: 2026-10-16 | CHINA RAILWAY SEVENTH GROUP CO LTD (CHN) -> SLE | Design and build of two climate-resilient long span bridges and their  | USD 20,701,111 | needs: structural steel, steel rebar, cement, bearings and expansion joints
@@ -140,9 +274,9 @@ INFO:leads:winners top: 2026-09-14 | CHEC CONSTRUCTION (M) SDN.BHD. (MYS) -> THA
 INFO:leads:winners top: 2026-10-29 | MOTT MACDONALD LIMITED (GBR) -> GBR | Lot 2 - Highways and Infrastructure Design Support Services | USD 134,227,100 | needs: bitumen, cement, steel rebar, aggregates
 INFO:leads:winners top: 2026-09-18 | CHINA CIVIL ENGINEERING CONSTRUCTION COR (CHN) -> MKD | Travaux de construction des systèmes d'alimentation en eau potable à l | USD 41,466,575 | needs: HDPE and ductile iron pipes, valves and fittings, pumps, water treatment chemicals
 INFO:leads:winners top: 2026-10-27 | GYPSUM STRUCTURAL INDIA PRIVATE LIMITED (IND) -> IND | Rehabilitation of Existing Sewer Lines on Eastern Side of City of Ahme | USD 17,668,794 | needs: HDPE and ductile iron pipes, valves and fittings, pumps, water treatment chemicals
-INFO:leads:winner dossier: 111670 suppliers with a website in the index
-INFO:leads:winner dossier: 250 looked up this run; cache 755 winners, 215 with an official website, 103 with a published contact
-INFO:leads:winners: 4468 leads, 0.41 MB encrypted
+INFO:leads:winner dossier: 109519 suppliers with a website in the index
+INFO:leads:winner dossier: 250 looked up this run; cache 1005 winners, 282 with an official website, 140 with a published contact
+INFO:leads:winners: 4464 leads, 0.41 MB encrypted
 INFO:leads:footprints: 4190486 award rows, 710276 companies, 95233 buyers before cuts
-INFO:leads:footprints: kept 388676 companies, 57117 buyers
-INFO:leads:footprints: 32 shards, 63.7 MB encrypted; companies by size {"small": 309388, "mid": 70417, "large": 8871}
+INFO:leads:footprints: kept 387077 companies, 57117 buyers
+INFO:leads:footprints: 32 shards, 63.6 MB encrypted; companies by size {"small": 309673, "mid": 69079, "large": 8325}
