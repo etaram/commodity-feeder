@@ -143,7 +143,7 @@ def _try_stealth(url):
         body = p.html_content or ""
         return int(p.status or 0), urlsplit(url).netloc, body, len(body)
     except Exception as e:  # noqa: BLE001
-        return 0, "stealth " + type(e).__name__, "", 0
+        return 0, "stealth " + type(e).__name__ + ": " + re.sub(r"\s+", " ", str(e))[:160], "", 0
 
 
 def probe_row(c, s, allow=("http", "relay", "stealth")):
@@ -165,6 +165,8 @@ def probe_row(c, s, allow=("http", "relay", "stealth")):
         code, host, text, n = _try_http(s, url) if m == "http" else _try_relay(url) if m == "relay" else _try_stealth(url)
         st = classify_page(code, text)
         res["tries"].append({"method": m, "code": code, "host": host if code else "", "bytes": n, "page": st})
+        if not code and m == "stealth":
+            print(f"STEALTH-FAIL {c['id']} {host}")
         if best is None or (st == "open" and best[4] != "open") or (best[4] in ("unreachable", "error", "challenge") and st in ("login",)):
             best, body = (m, code, host, n, st), text
         time.sleep(1.5)
@@ -425,7 +427,7 @@ def main(argv=None):
             try:
                 run_module(n)
             except Exception as e:  # noqa: BLE001
-                print(f"RUN {n}: failed {type(e).__name__}")
+                print(f"RUN {n}: failed {type(e).__name__}: {re.sub(chr(10), ' ', str(e))[:200]}")
     else:
         raise SystemExit(__doc__)
     return 0
