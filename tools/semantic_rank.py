@@ -98,23 +98,22 @@ def cgroup_peak_mb():
     return None
 
 
-def dir_bytes(path):
-    """Size of the files a model download left in the cache (hub layout: real files under blobs/, links elsewhere)."""
+def model_bytes(model):
+    """Size of the files this model reads: its ONNX file(s) and the tokenizer and config files beside them (one
+    repository can hold several ONNX variants; only the one in use counts)."""
+    inner = getattr(model, "model", None)
+    d, desc = getattr(inner, "_model_dir", None), getattr(inner, "model_description", None)
+    if not d or not desc:
+        return 0
+    used = {desc.model_file, *(desc.additional_files or [])}
     n = 0
-    for root, _, files in os.walk(path):
+    for root, _, files in os.walk(str(d)):
         for f in files:
-            p = os.path.join(root, f)
-            if not os.path.islink(p):
-                n += os.path.getsize(p)
+            rel = os.path.relpath(os.path.join(root, f), str(d))
+            if (rel.endswith(".onnx") or rel.endswith(".onnx_data")) and rel not in used:
+                continue
+            n += os.path.getsize(os.path.realpath(os.path.join(root, f)))
     return n
-
-
-def cache_size_for(cache, repos):
-    total = 0
-    for name in os.listdir(cache) if os.path.isdir(cache) else []:
-        if any(name.endswith(r.replace("/", "--")) or name.endswith(r.split("/")[-1]) for r in repos):
-            total += dir_bytes(os.path.join(cache, name))
-    return total
 
 
 # ---------------------------------------------------------------- supplier text (mirror of dealdesk/lib/evalrows.ts)
@@ -148,11 +147,19 @@ def dedupe_key(s):
 def cmd_universe(a):
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     import base64
-    key = os.environ.get("WEB_INDEX_KEY", "")
-    if not key:
+    raw = os.environ.get("WEB_INDEX_KEY", "").strip()
+    # the value in an env file may carry quotes or a trailing comment; Node's decoder also takes the URL-safe alphabet
+    tok = (raw.split() or [""])[0].strip("\"'")
+    if not tok:
         raise SystemExit("WEB_INDEX_KEY is not set")
+    t = tok.replace("-", "+").replace("_", "/")
+    key = base64.b64decode(t + "=" * (-len(t) % 4))
+    if len(key) not in (16, 24, 32) and re.fullmatch(r"[0-9a-fA-F]{64}", tok):
+        key = bytes.fromhex(tok)
+    if len(key) not in (16, 24, 32):
+        raise SystemExit(f"WEB_INDEX_KEY does not decode to an AES key (decoded length {len(key)} bytes, token length {len(tok)})")
     b = open(a.src, "rb").read()
-    plain = AESGCM(base64.b64decode(key)).decrypt(b[:12], b[12:], None)   # body followed by the 16-byte tag
+    plain = AESGCM(key).decrypt(b[:12], b[12:], None)   # body followed by the 16-byte tag
     rows = json.loads(gzip.decompress(plain).decode("utf-8"))
     seen, kept, empty, chars = {}, 0, 0, 0
     # keep one record per company: the first one, or the one that has a website title (as the evaluation does)
@@ -267,11 +274,16 @@ def cmd_bench(a):
         write_json(os.path.join(a.data, f"speed_{sp}.json"), {"model": a.model, "kind": kind, "licence": spec["lic"], "loaded": False})
         return
     load_s = time.time() - t0
-    size = cache_size_for(a.cache, repos)
+    size = model_bytes(model)
     say(f"  loaded in {load_s:.0f} s; files on disk {size / 2**20:.0f} MB")
 
     out, n_pairs, t_score = [], 0, 0.0
-    for qid in sorted(by_q):
+    scores_file = os.path.join(a.data, f"scores_{sp}.jsonl")
+    if a.keep_scores and os.path.exists(scores_file):   # scored by an earlier run on the same rows: speed only
+        out = read_jsonl(scores_file)
+        n_pairs = len(out)
+        say(f"  scores kept from the earlier run ({n_pairs} rows); measuring speed only")
+    for qid in (sorted(by_q) if not out else []):
         pool = [r for r in by_q[qid] if (qid, int(r["rank"])) in labels]
         if not pool:
             continue
@@ -288,7 +300,7 @@ def cmd_bench(a):
         n_pairs += len(docs)
         for r, s in zip(pool, scores):
             out.append({"query_id": qid, "rank": int(r["rank"]), "score": round(s, 6)})
-    with open(os.path.join(a.data, f"scores_{sp}.jsonl"), "w", encoding="utf-8") as f:
+    with open(scores_file, "w", encoding="utf-8") as f:
         for o in out:
             f.write(json.dumps(o) + "\n")
     say(f"  scored {n_pairs} labelled rows of {len({o['query_id'] for o in out})} tuning requests in {t_score:.1f} s")
@@ -496,8 +508,12 @@ def cmd_embed(a):
 
 
 def _part(np, model, out, i, texts, ids, done, batch):
-    if i in done:
-        return 0
+    if i in done:   # a part cut short by an earlier limit is embedded again in full
+        try:
+            if len(json.load(open(os.path.join(out, "parts", f"part-{i:05d}.ids.json"), encoding="utf-8"))) == len(texts):
+                return 0
+        except (OSError, ValueError):
+            pass
     v = embed(model, texts, batch=batch).astype("float16")
     np.save(os.path.join(out, "parts", f"part-{i:05d}.tmp.npy"), v)
     with open(os.path.join(out, "parts", f"part-{i:05d}.ids.json"), "w", encoding="utf-8") as f:
@@ -575,7 +591,7 @@ def main(argv=None):
     u = sub.add_parser("universe"); u.add_argument("--src", required=True); u.add_argument("--out", required=True)
     b = sub.add_parser("bench"); b.add_argument("--data", required=True); b.add_argument("--model", required=True)
     b.add_argument("--cache", required=True); b.add_argument("--universe", default=""); b.add_argument("--sample", type=int, default=2000)
-    b.add_argument("--batch", type=int, default=32)
+    b.add_argument("--batch", type=int, default=32); b.add_argument("--keep-scores", action="store_true")
     r = sub.add_parser("report"); r.add_argument("--data", required=True)
     e = sub.add_parser("embed"); e.add_argument("--universe", required=True); e.add_argument("--out", required=True)
     e.add_argument("--model", required=True); e.add_argument("--cache", required=True); e.add_argument("--part", type=int, default=8192)

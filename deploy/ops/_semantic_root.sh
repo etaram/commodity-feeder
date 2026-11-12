@@ -78,13 +78,16 @@ PY
   venv
   if [ ! -s "$S/universe.jsonl" ] || [ -n "$(find "$S/universe.jsonl" -mmin +720 2>/dev/null)" ]; then universe || echo "continuing without the universe sample (throughput is then not measured)"; fi
   [ -f "$S/universe.jsonl.meta.json" ] && python3 -c "import json;m=json.load(open('$S/universe.jsonl.meta.json'));print('universe on the server:', m['written'], 'companies, mean text', m['mean_chars'], 'characters')"
+  # the rows are the frozen tuning rows, so scores from an earlier run are kept and only the speed is measured again
+  ls "$OUT"/scores_*.jsonl >/dev/null 2>&1 && cp "$OUT"/scores_*.jsonl "$W/" && echo "scores of $(ls "$W"/scores_*.jsonl | wc -l) models kept from the earlier run"
   t0=$(date +%s)
   # smallest first; the job has 55 minutes, so a model is skipped once 30 minutes have gone
   for m in multilingual-e5-small bge-reranker-v2-m3-int8 paraphrase-multilingual-MiniLM-L12-v2 multilingual-e5-base Qwen3-Embedding-0.6B-int8 bge-reranker-v2-m3; do
     el=$(( $(date +%s) - t0 ))
     if [ "$el" -gt 1800 ]; then echo "== $m: skipped, time budget used ($el s)"; continue; fi
     timeout 600 docker run --rm --name semantic-bench "${LIMITS[@]}" -e HF_HUB_DISABLE_TELEMETRY=1 -e PYTHONUNBUFFERED=1 -v "$S":/s -v "$repo":/w:ro "$IMG" \
-      ionice -c 3 nice -n 19 /s/venv/bin/python /w/tools/semantic_rank.py bench --data "/s/work-$rid" --model "$m" --cache /s/models --universe /s/universe.jsonl --sample 2000 2>/dev/null \
+      ionice -c 3 nice -n 19 /s/venv/bin/python /w/tools/semantic_rank.py bench --data "/s/work-$rid" --model "$m" --cache /s/models --universe /s/universe.jsonl --keep-scores \
+      --sample "$( [ "$m" = Qwen3-Embedding-0.6B-int8 ] && echo 300 || echo 2000 )" 2>/dev/null \
       || { echo "  the bench step ended with an error or hit 10 minutes for $m"; docker rm -f semantic-bench >/dev/null 2>&1 || true; }
   done
   echo "== host after the models"; free -m | sed -n 2p; uptime
@@ -98,6 +101,43 @@ PY
     if rclone copy "$OUT" "gdrive:Sinder-Eval/$TS/semantic" --quiet; then echo "copied to Google Drive: Sinder-Eval/$TS/semantic ($(rclone lsf "gdrive:Sinder-Eval/$TS/semantic" | wc -l) files there)"
     else echo "GOOGLE DRIVE COPY FAILED: the files are on the server only"; fi
   else echo "GOOGLE DRIVE NOT CONNECTED: the files are on the server only"; fi
+  exit 0
+fi
+
+MODEL="${SEM_MODEL:-multilingual-e5-small}"
+progress() {   # counts only: parts done, vectors embedded, rate
+  local d; d=$(cat "$S/vectors/LATEST" 2>/dev/null || ls -1t "$S/vectors" 2>/dev/null | grep -v LATEST | head -1 || true)
+  [ -n "$d" ] && [ -f "$S/vectors/$d/progress.json" ] && python3 -c "import json;p=json.load(open('$S/vectors/$d/progress.json'));print('progress: parts', p['parts_done'], 'of', p['parts'], '| embedded this session', p['embedded_this_session'], '| per s', p['per_s'], '| at', p['utc'])"
+  [ -n "$d" ] && [ -f "$S/vectors/$d/manifest.json" ] && python3 -c "import json;m=json.load(open('$S/vectors/$d/manifest.json'));print('finished file:', m['count'], 'of', m['universe_total'], 'vectors,', m['dim'], 'dimensions,', m['dtype'], ',', m['finished_utc'])"
+  docker ps --filter name=semantic-embed --format 'embed container: {{.Status}}' | grep . || echo "embed container: not running"
+  return 0
+}
+
+if [ "$mode" = status ]; then progress; exit 0; fi
+
+if [ "$mode" = embed ]; then
+  if docker ps --format '{{.Names}}' | grep -qx semantic-embed; then echo "the embedding job is already running"; progress; exit 0; fi
+  venv
+  # the universe file is kept between starts so a run resumes on the same records (a new file has a new hash and a
+  # new vector folder); SEM_REFRESH=1 reads the supplier index again
+  if [ ! -s "$S/universe.jsonl" ] || [ "${SEM_REFRESH:-}" = 1 ]; then universe || exit 1; fi
+  sp="$OUT/speed_$(printf %s "$MODEL" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9]\+/_/g; s/^_//; s/_$//').json"
+  [ -f "$sp" ] || { echo "no measured throughput for $MODEL (run bench-semantic first)"; exit 1; }
+  # the estimate: measured throughput on an even sample of the universe at the same limits, times the record count
+  read -r total prio rate < <(python3 -c "import json;m=json.load(open('$S/universe.jsonl.meta.json'));s=json.load(open('$sp'));print(m['written'], m['completed_first'], s['items_per_s'])")
+  est_all=$(python3 -c "print(round($total/$rate/3600,1))"); est_prio=$(python3 -c "print(round($prio/$rate/3600,1))")
+  echo "model $MODEL; universe $total companies ($prio completed records first); measured $rate per s; estimate: all $est_all h, completed records $est_prio h"
+  limit=0
+  if python3 -c "import sys; sys.exit(0 if $total/$rate/3600 <= 12 else 1)"; then echo "estimate within 12 hours: embedding all $total"
+  else limit=$prio; echo "estimate above 12 hours: embedding the $prio completed records first; the rest ($((total-prio))) needs about $(python3 -c "print(round(($total-$prio)/$rate/3600,1))") h more (run embed-universe again once these are done)"; fi
+  # once the completed records are finished, the next start embeds the rest (the finished parts are kept)
+  if [ "$limit" != 0 ] && python3 -c "import json,glob,sys;sys.exit(0 if any(json.load(open(f))['count']>=$prio for f in glob.glob('$S/vectors/*/manifest.json')) else 1)" 2>/dev/null; then
+    limit=0; echo "the completed records are already embedded: this start embeds the rest"; fi
+  mkdir -p "$S/vectors"; cp "$repo/tools/semantic_rank.py" "$S/semantic_rank.py"
+  # detached, low priority, removed when done; resumes from the last finished part if started again
+  docker run -d --rm --name semantic-embed "${LIMITS[@]}" -e HF_HUB_DISABLE_TELEMETRY=1 -e PYTHONUNBUFFERED=1 -v "$S":/s "$IMG" \
+    ionice -c 3 nice -n 19 /s/venv/bin/python /s/semantic_rank.py embed --universe /s/universe.jsonl --out /s/vectors --model "$MODEL" --cache /s/models --limit "$limit" >/dev/null
+  echo "embedding job started (container semantic-embed, limit $limit, 0 = all) at $(date -u +%FT%TZ)"
   exit 0
 fi
 
