@@ -895,6 +895,34 @@ def build():
         elif rr and "manufacturer" not in out[-1]["type"]:
             out[-1]["type"] = (out[-1]["type"] + "; " if out[-1]["type"] else "") + ("manufacturer" if rr == "manufacturer" else "producer") + " (read from its website)"
     n_ref = apply_refined(out)
+    try:  # e-mail domain deliverability (leads/mx_check.py, company-check cache restored read-only): mx_ok / no_mx / parked / disposable
+        from .mx_check import load_results, verdict_for
+        mxr = load_results()
+    except Exception as e:  # noqa: BLE001
+        log.warning("mx verdicts not loaded: %s", type(e).__name__); mxr = {}
+    for r in out:
+        r["email_mx"] = verdict_for(r.get("email"), mxr) if r.get("email") and mxr else ""
+    try:  # GLEIF Golden Copy bulk match (leads/gleif_bulk.py, cache "gleif-" restored read-only): LEI, register id, parent
+        from .gleif_bulk import load_matches
+        gl = load_matches()
+    except Exception as e:  # noqa: BLE001
+        log.warning("gleif matches not loaded: %s", type(e).__name__); gl = {}
+    n_gl = 0
+    for r in out:
+        m = gl.get(f"{r['supplier']}|{r['country']}")
+        r["lei_ra_id"], r["lei_city"], r["lei_parent"] = "", "", ""
+        if not m:
+            continue
+        n_gl += 1
+        r["lei"] = r.get("lei") or m["lei"]
+        r["legal_name"] = r.get("legal_name") or m["legal_name"][:150]
+        r["lei_ra_id"] = f"{m.get('ra', '')}:{m.get('ra_entity_id', '')}".strip(":")
+        r["lei_city"] = m.get("city", "")[:60]
+        up = m.get("ultimate_parent_name") or m.get("parent_name")
+        if up:
+            r["lei_parent"] = f"{up[:100]} ({m.get('ultimate_parent_lei') or m.get('parent_lei')})"
+    if gl:
+        log.info("gleif bulk: %d suppliers carry a matched LEI", n_gl)
     for r in out:
         r["quality"] = quality(r)
         r["tier"], r["tier_reason"] = supplier_tier(r)
@@ -935,7 +963,9 @@ def build():
              "notable_with_phone": sum(1 for r in out if r["notable"] and r["phone"]),
              "notable_with_website": sum(1 for r in out if r["notable"] and r["website"]),
              "quality_40_plus": sum(1 for r in out if r["quality"] >= 40),
-             "with_any_contact": sum(1 for r in out if r["email"] or r["phone"] or r["website"] or r["address"])}
+             "with_any_contact": sum(1 for r in out if r["email"] or r["phone"] or r["website"] or r["address"]),
+             **{f"email_{v}": sum(1 for r in out if r.get("email_mx") == v) for v in ("mx_ok", "no_mx", "parked", "disposable")},
+             "with_lei": sum(1 for r in out if r.get("lei")), "with_lei_parent": sum(1 for r in out if r.get("lei_parent"))}
     by_region = defaultdict(int)
     for r in out:
         by_region[r["region"] or "unknown"] += 1

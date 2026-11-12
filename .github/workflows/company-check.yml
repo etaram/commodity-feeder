@@ -40,7 +40,7 @@ jobs:
           path: data/checks
           key: checks-${{ github.run_id }}
           restore-keys: checks-
-      - run: pip install requests google-auth pycountry phonenumbers pypinyin
+      - run: pip install requests google-auth pycountry phonenumbers pypinyin dnspython
       - name: Server enrichment results (read-only; only on the company server's runners)
         # leads/enrich_server.py exports its merged records on the server; company_check merges them into the checks
         # (a newer server read replaces the hourly read) and refine.py fills the profile fields from them
@@ -68,6 +68,9 @@ jobs:
         continue-on-error: true
       - name: Official registers (GLEIF LEI, EU VIES)
         run: python -m leads.registry_check --minutes 10 2>&1 | tail -5
+        continue-on-error: true
+      - name: E-mail domain deliverability (DNS MX, parked, disposable; low priority, resumes where it stopped)
+        run: python -m leads.mx_check --minutes 6 --workers 12 2>&1 | tail -2
         continue-on-error: true
       - name: Refine every supplier record (unchanged records are reused)
         run: python -m leads.refine --sample ${{ inputs.sample || '0' }} 2>&1 | grep -v "^ " | tail -5

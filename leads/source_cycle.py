@@ -3,9 +3,11 @@ and a weekly report counts what the system holds per region.
 
   python -m leads.source_cycle probe [ID ...]   probe the candidates (all, or the given ids) -> candidates_wave1.csv + candidates_probe.json
   python -m leads.source_cycle report            data/registry/weekly_report.json (per-region counts, week-over-week change)
-  python -m leads.source_cycle cycle             probe + report (weekly, from deploy/ops/schedule.tab via sources.yml)
+  python -m leads.source_cycle regcheck          check that each registration page in registrations.csv exists (GET only)
+  python -m leads.source_cycle cycle             probe + regcheck + report (weekly, from deploy/ops/schedule.tab via sources.yml)
   python -m leads.source_cycle sample ID|URL [method]   fetch one page and keep it SEALED (developer review, never in the log)
   python -m leads.source_cycle run MODULE        run one collector's fetch() and print counts only (developer check)
+  python -m leads.source_cycle gleif [--force]   GLEIF Golden Copy bulk match (leads/gleif_bulk.py), weekly
 
 Probing is polite: one request per host, 1.5 s apart, a User-Agent that names Sinder and its site, robots.txt read
 and recorded (a disallowed path is never fetched), methods tried in order http -> relay -> stealth (the stealth
@@ -141,7 +143,7 @@ def _try_stealth(url):
         body = p.html_content or ""
         return int(p.status or 0), urlsplit(url).netloc, body, len(body)
     except Exception as e:  # noqa: BLE001
-        return 0, "stealth " + type(e).__name__, "", 0
+        return 0, "stealth " + type(e).__name__ + ": " + re.sub(r"\s+", " ", str(e))[:160], "", 0
 
 
 def probe_row(c, s, allow=("http", "relay", "stealth")):
@@ -163,6 +165,8 @@ def probe_row(c, s, allow=("http", "relay", "stealth")):
         code, host, text, n = _try_http(s, url) if m == "http" else _try_relay(url) if m == "relay" else _try_stealth(url)
         st = classify_page(code, text)
         res["tries"].append({"method": m, "code": code, "host": host if code else "", "bytes": n, "page": st})
+        if not code and m == "stealth":
+            print(f"STEALTH-FAIL {c['id']} {host}")
         if best is None or (st == "open" and best[4] != "open") or (best[4] in ("unreachable", "error", "challenge") and st in ("login",)):
             best, body = (m, code, host, n, st), text
         time.sleep(1.5)
@@ -215,6 +219,30 @@ def probe(ids=(), keep_bodies=False):
     return rows
 
 
+REGISTRATIONS = REG / "registrations.csv"
+REG_COLS = ["http_status", "page_status", "method_used", "checked_at"]
+
+
+def check_registrations():
+    """Fetch each registration page once (GET only: no form is filled or submitted, no account is created) and
+    record whether it exists. The other columns of registrations.csv are kept as written."""
+    if not REGISTRATIONS.exists():
+        return []
+    rows = list(csv.DictReader(open(REGISTRATIONS, encoding="utf-8")))
+    s = _session()
+    allow = tuple(x for x in os.environ.get("PROBE_METHODS", "http,relay,stealth").split(",") if x)
+    for i, r in enumerate(rows):
+        res, _ = probe_row({"id": f"R{i:02d}", "url": r["registration_url"]}, s, allow)
+        r.update(http_status=res["http_status"], page_status=res["status"], method_used=res["method_used"], checked_at=res["checked_at"])
+        print(f"REG {i:02d} {res['host']} -> {res['status']} {res['http_status']} via {res['method_used'] or '-'} robots={res['robots']}")
+    cols = [k for k in rows[0].keys() if k not in REG_COLS] + REG_COLS
+    with open(REGISTRATIONS, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in cols})
+    return rows
+
+
 # ---------------------------------------------------------------- weekly report
 def _region(c):
     from .regions import region
@@ -240,25 +268,34 @@ def tender_counts():
 
 
 def award_counts(days=365):
-    """award rows with a named winner per region (winner country, else buyer country), last `days` days."""
+    """award rows with a named winner per region (buyer country), last `days` days: day files awards/<source>/*.json
+    and bulk files awards/<source>/*.jsonl (OCDR)."""
     from .common import AWARDS
     cut = str(dt.date.today() - dt.timedelta(days=days))
     out = defaultdict(int)
-    for d in AWARDS.glob("*"):
-        if not d.is_dir():
+
+    def add(a):
+        if a.get("empty") or not (a.get("winners") or a.get("winner") or a.get("supplier")):
+            return
+        if (a.get("published") or "9999")[:10] < cut and a.get("published"):
+            return
+        c = (a.get("country") or (a.get("winner_country") or "").split(",")[0])[:3]
+        out[_region(c)] += 1
+    for p in AWARDS.glob("*/*.json"):
+        if re.match(r"\d{4}-\d\d-\d\d$", p.stem) and p.stem < cut:
             continue
-        for p in d.glob("*.json"):
-            if p.stem < cut:
-                continue
-            try:
-                lst = json.loads(p.read_text(encoding="utf-8"))
-            except Exception:  # noqa: BLE001
-                continue
-            for a in lst:
-                if a.get("empty") or not (a.get("winner") or a.get("supplier")):
+        try:
+            for a in json.loads(p.read_text(encoding="utf-8")):
+                add(a)
+        except Exception:  # noqa: BLE001
+            continue
+    for p in AWARDS.glob("*/*.jsonl"):
+        with open(p, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    add(json.loads(line))
+                except ValueError:
                     continue
-                c = (a.get("country") or a.get("buyer_country") or (a.get("winner_country") or "").split(",")[0])[:3]
-                out[_region(c)] += 1
     return out
 
 
@@ -338,13 +375,17 @@ def report(now=None):
 
 
 # ---------------------------------------------------------------- developer helpers
-def sample(target, method="http"):
-    c = next((r for r in load_candidates() if r["id"] == target), None) if not target.startswith("http") else None
-    url = (c.get("probe_url") or c["url"]) if c else target
+def sample(targets, method="http"):
+    """fetch each target (candidate id or URL) once and seal the body; the log shows host, status and size only."""
     s = _session()
-    code, host, text, n = _try_http(s, url) if method == "http" else _try_relay(url) if method == "relay" else _try_stealth(url)
-    p = save_sealed(f"sample_{c['id'] if c else urlsplit(url).netloc}_{method}", text or "")
-    print(f"SAMPLE {urlsplit(url).netloc} {method} -> {code} {n} bytes, sealed {p.name if p else '-'}")
+    cands = {r["id"]: r for r in load_candidates()} if CANDIDATES.exists() else {}
+    for i, target in enumerate(targets):
+        c = cands.get(target)
+        url = (c.get("probe_url") or c["url"]) if c else target
+        code, host, text, n = _try_http(s, url) if method == "http" else _try_relay(url) if method == "relay" else _try_stealth(url)
+        p = save_sealed(f"sample_{c['id'] if c else urlsplit(url).netloc}_{i}_{method}", text or "")
+        print(f"SAMPLE {i} {urlsplit(url).netloc} {method} -> {code} {n} bytes, sealed {p.name if p else '-'}" + ("" if code else f" ({host})"))
+        time.sleep(1.5)
 
 
 def run_module(name):
@@ -369,17 +410,34 @@ def main(argv=None):
         probe(set(a[1:]), keep_bodies=os.environ.get("PROBE_SEAL") == "1")
     elif cmd == "report":
         report()
+    elif cmd == "browserdiag":
+        import subprocess
+        for c in ("uname -a", "cat /etc/os-release | head -2", "python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))'",
+                  "ls -la $(python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))')/driver | head",
+                  "file $(python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))')/driver/node",
+                  "ldd $(python -c 'import playwright,os;print(os.path.dirname(playwright.__file__))')/driver/node 2>&1 | grep -i 'not found' | head",
+                  "python -m playwright install chromium 2>&1 | tail -5", "python -m patchright install chromium 2>&1 | tail -5",
+                  "ls ~/.cache/ms-playwright 2>&1 | head", "df -h /tmp ~ | tail -2", "mount | grep -E ' /tmp | /home' | head -3"):
+            r = subprocess.run(c, shell=True, capture_output=True, text=True, timeout=600)
+            print("DIAG", c[:60], "=>", (r.stdout + r.stderr).strip().replace("\n", " | ")[:400])
+    elif cmd == "regcheck":
+        check_registrations()
     elif cmd == "cycle":
         probe()
+        check_registrations()
         report()
     elif cmd == "sample":
-        sample(a[1], a[2] if len(a) > 2 else "http")
+        meth = next((x.split("=", 1)[1] for x in a[1:] if x.startswith("--method=")), "http")
+        sample([x for x in a[1:] if not x.startswith("--method=")], meth)
+    elif cmd == "gleif":
+        from .gleif_bulk import run as gleif_run
+        gleif_run(force="--force" in a)
     elif cmd == "run":
         for n in a[1:]:
             try:
                 run_module(n)
             except Exception as e:  # noqa: BLE001
-                print(f"RUN {n}: failed {type(e).__name__}")
+                print(f"RUN {n}: failed {type(e).__name__}: {re.sub(chr(10), ' ', str(e))[:200]}")
     else:
         raise SystemExit(__doc__)
     return 0

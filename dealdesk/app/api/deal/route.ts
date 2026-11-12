@@ -42,13 +42,14 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST {deal_id, kind: quote|requirement|economics, record_id?, data, delete?}: a new version of one record.
+// POST {deal_id, kind: quote|requirement|economics|party|stage|draft, record_id?, data, delete?}: a new version of one
+// record. A draft is kept on the deal only: it is never sent from here and creates no approval request.
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("analyst");
   if (!s) return res;
   const b = await req.json().catch(() => ({}));
   const dealId = String(b.deal_id || "").slice(0, 120), kind = String(b.kind || "") as Kind;
-  if (!dealId || !["quote", "requirement", "economics", "party", "stage"].includes(kind)) return NextResponse.json({ ok: false, error: "deal_id and kind are required" }, { status: 400 });
+  if (!dealId || !["quote", "requirement", "economics", "party", "stage", "draft"].includes(kind)) return NextResponse.json({ ok: false, error: "deal_id and kind are required" }, { status: 400 });
   try {
     const cur = await readDeal(dealId, s.ws);
     const recordId = String(b.record_id || (kind === "economics" ? "econ" : kind === "stage" ? "stage" : `${kind[0].toUpperCase()}${Date.now().toString(36).toUpperCase()}`)).slice(0, 60);

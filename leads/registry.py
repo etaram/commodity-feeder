@@ -45,15 +45,25 @@ TENDERS = {
     "ghana": ("Ghana", "public portal (GHANEPS)"), "malawi": ("Malawi", "public portal (PPDA)"),
     "mozambique": ("Mozambique", "public portal (UFSA)"), "dubai": ("UAE (Dubai)", "public portal (eSupply)"),
     "philippines": ("Philippines", "public portal (PhilGEPS)"),
+    "dewa": ("UAE (Dubai) - DEWA state utility", "public list (relay)"), "csg": ("China - China Southern Power Grid (SOE)", "public list (http)"),
+    "ccgp": ("China - central and local government (CCGP)", "public list (http)"), "lebanon": ("Lebanon", "public portal (PPA, http)"),
+    "cameroon": ("Cameroon", "public portal (ARMP, http)"),
 }
 # Built but not scheduled, with the reason
 IMPLEMENTED = {"zambia": ("Zambia", "public portal (ZPPA)", "list page needs a captcha"),
-               "tanzania": ("Tanzania", "official OCDS API (NeST)", "upstream data months late"),
-               "georgia": ("Georgia", "official API", "not scheduled"), "ecuador": ("Ecuador", "official OCDS API", "not scheduled")}
+               "tanzania": ("Tanzania", "official OCDS API (NeST)", "upstream data months late")}
 # Supplier, market and signal sources (not tenders): module -> (track, what, access, output file to date-check)
 OTHER = {
     "awards": ("suppliers", "award notices from all tender sources", "derived", "leads/awards.csv"),
     "ext_awards": ("suppliers", "World Bank contract awards, USAspending", "official APIs", None),
+    "latam_awards": ("suppliers", "Brazil PNCP and Colombia SECOP II contracts (award to supplier)", "official APIs", None),
+    "prozorro_awards": ("suppliers", "Ukraine Prozorro completed tenders with supplier ids", "official API", None),
+    "ocdr": ("suppliers", "OCP Data Registry award releases (~150 publications)", "official bulk downloads", None),
+    "il_exemptions": ("suppliers", "Israel no-tender contract exemptions (data.gov.il)", "official open data", "leads/il_exempt.csv"),
+    "iadb_awards": ("suppliers", "IDB contract award notifications (data.iadb.org, CC BY 4.0)", "official API", None),
+    "gebiz_awards": ("suppliers", "Singapore GeBIZ government awards (data.gov.sg, Singapore Open Data Licence)", "official API", None),
+    "mx_check": ("suppliers", "e-mail domain deliverability (DNS MX / A, parked, disposable)", "DNS", None),
+    "gleif_bulk": ("suppliers", "GLEIF Golden Copy Level 1 + Level 2 bulk (CC0): LEI, legal name, registration authority id, parent", "official bulk download", None),
     "importyeti": ("suppliers", "US customs bills of lading by HS heading (foreign exporters)", "public web pages", "leads/importyeti_state.json"),
     "wikidata_companies": ("suppliers", "notable producers and traders", "official SPARQL", None),
     "listed_companies": ("suppliers", "listed companies", "official SPARQL", None),
@@ -97,7 +107,7 @@ BACKLOG = {
     "S16": ("IDB Procurement Plans", "https://www.iadb.org/en/how-we-can-work-together/procurement/procurement-projects/procurement-plans", "projects", "iadb"),
     "S17": ("IFC Disclosures", "https://disclosures.ifc.org/", "projects", ""),
     "S18": ("Etimad", "https://tenders.etimad.sa/Tender/", "projects", "etimad"),
-    "S19": ("GeBIZ", "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml", "projects", ""),
+    "S19": ("GeBIZ", "https://www.gebiz.gov.sg/ptn/opportunity/BOListing.xhtml", "projects", "gebiz_awards"),
     "S20": ("GeM Global Tender Enquiry", "https://bidplus-global.gem.gov.in/", "projects", ""),
     "S21": ("India eProcurement", "https://www.etenders.gov.in/", "projects", "india"),
     "S22": ("China Government Procurement", "https://www.ccgp.gov.cn/", "projects", ""),
@@ -114,13 +124,25 @@ BACKLOG = {
     "S33": ("ProColombia B2B", "https://b2bmarketplace.procolombia.co/es", "suppliers", ""),
     "S34": ("Sri Lanka Export Development Board", "https://www.srilankabusiness.com/exporters/", "suppliers", ""),
     "S35": ("FPEF Exporter Members", "https://www.fpef.co.za/exportermembersextensivelist", "suppliers", ""),
-    "S36": ("GLEIF", "https://www.gleif.org/en/lei-data/access-and-use-lei-data", "suppliers", ""),
-    "S37": ("GDELT", "https://gdeltproject.org/data.html", "signals", ""),
+    "S36": ("GLEIF", "https://www.gleif.org/en/lei-data/access-and-use-lei-data", "suppliers", "lei"),
+    "S37": ("GDELT", "https://gdeltproject.org/data.html", "signals", "gdelt"),
     "S38": ("Google Trends API", "https://developers.google.com/search/apis/trends", "signals", "trends"),
-    "S39": ("Wikimedia Analytics", "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html", "signals", ""),
+    "S39": ("Wikimedia Analytics", "https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/documentation/getting-started.html", "signals", "attention"),
     "S40": ("ACWA Projects", "https://acwapower.com/en/what-we-do/projects/", "projects", ""),
     "S41": ("Equinix Expansions", "https://www.equinix.com/data-centers/expansions", "projects", ""),
     "S42": ("POWERCHINA Procurement", "https://bid.powerchina.cn/", "projects", ""),
+}
+# What was checked before a source was connected (terms of use, licence, robots.txt), with the date and the method
+# used to read it (api / http / stealth / relay). Shown in sources.csv column "terms".
+TERMS = {
+    "iadb_awards": "2026-11-12 api: dataset licence CC BY 4.0 (package_show); data.iadb.org robots.txt allows /api/action/",
+    "gebiz_awards": "2026-11-12 api: Singapore Open Data Licence v1.0 (commercial reuse with attribution); data.gov.sg robots.txt Allow: /",
+    "gleif_bulk": "2026-11-12 api: GLEIF Golden Copy CC0, free of charge (gleif.org/en/about/open-data); goldencopy.gleif.org publish API",
+    "mx_check": "2026-11-12 DNS lookups only (MX, NS, A); no mail sent, no SMTP probing",
+    "dewa": "2026-11-12 relay (runner gets a 403 bot challenge): robots.txt allows the tender list; no terms page restricting automated reading found",
+    "csg": "2026-11-12 http: no robots.txt (404); footer legal/terms links are empty, copyright line only; facts + link kept, no document text",
+    "ccgp": "2026-11-12 http: no robots.txt (404); no terms page, Ministry of Finance copyright footer; statutory public notices, facts + link kept",
+    "bahrain": "2026-11-12 stealth (real browser; system libraries installed by deploy/ops/browser-deps.sh)",
 }
 MAX_AGE_H = 30  # a scheduled tender source older than this is degraded
 
@@ -159,34 +181,49 @@ def build():
         rows.append({"id": mod, "name": _doc(mod), "track": "projects", "kind": "tenders", "geography": geo, "access": access,
                      "status": status, "rows": (h or {}).get("rows", ""), "age_h": (h or {}).get("age_h", ""), "note": note,
                      "refresh": "every 2 h" if mod not in ("bahrain", "nyc", "us_cities", "za", "chile", "india", "germany", "paraguay",
-                                                         "dominican", "france", "spain", "wb_pipeline", "worldbank", "mrgov") else "twice a day",
+                                                         "dominican", "france", "spain", "wb_pipeline", "worldbank", "mrgov",
+                                                         "dewa", "csg", "ccgp", "lebanon", "cameroon") else "twice a day",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
     for mod, (geo, access, why) in IMPLEMENTED.items():
         rows.append({"id": mod, "name": _doc(mod), "track": "projects", "kind": "tenders", "geography": geo, "access": access,
                      "status": "implemented", "rows": "", "age_h": "", "note": why, "refresh": "not scheduled",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
+    st = {}
+    for f in ("source_status.json", "source_status_suppliers.json"):
+        try:
+            st.update({s["source"]: s for s in json.loads((LEADS / f).read_text()).get("sources", [])})
+        except Exception:  # noqa: BLE001
+            pass
     for mod, (track, what, access, out) in OTHER.items():
         p = DATA / out if out else None
         age = round((now - p.stat().st_mtime) / 3600, 1) if p and p.exists() else ""
         status = "active" if age != "" and age < 24 * 8 else ("degraded" if out else "active")
+        n = ""
         if mod == "trends":
             note = "unofficial library; the official Google Trends API is restricted alpha (access requested, not granted)"
         else:
             note = "" if status == "active" else "output file missing or older than 8 days"
+        s = st.get(mod)
+        if s:  # the run's own report (rows it wrote, or "nothing due"), leads/source_status.py
+            n, age = s.get("rows", ""), s.get("age_h", age)
+            status = "active" if s.get("status") == "OK" else "degraded"
+            note = s.get("warning") or s.get("error_class") or ("" if status == "active" else s.get("status", ""))
         rows.append({"id": mod, "name": what, "track": track, "kind": track, "geography": "global", "access": access,
-                     "status": status, "rows": "", "age_h": age, "note": note, "refresh": "daily to weekly",
+                     "status": status, "rows": n, "age_h": age, "note": note, "refresh": "daily to weekly",
                      "parser_version": _ver(mod), "cost": "free", "url": ""})
+    for r in rows:
+        r["terms"] = TERMS.get(r["id"], "")
     known = {r["id"] for r in rows}
     for sid, (name, url, track, mapped) in BACKLOG.items():
         if mapped and mapped in known:
             st = next(r["status"] for r in rows if r["id"] == mapped)
             rows.append({"id": sid, "name": name, "track": track, "kind": "backlog", "geography": "", "access": "",
                          "status": st, "rows": "", "age_h": "", "note": f"covered by connector '{mapped}'", "refresh": "",
-                         "parser_version": "", "cost": "", "url": url})
+                         "parser_version": "", "cost": "", "url": url, "terms": ""})
         else:
             rows.append({"id": sid, "name": name, "track": track, "kind": "backlog", "geography": "", "access": "unverified",
                          "status": "discovered", "rows": "", "age_h": "", "note": "researched link only: access, terms and cost not verified",
-                         "refresh": "", "parser_version": "", "cost": "unverified", "url": url})
+                         "refresh": "", "parser_version": "", "cost": "unverified", "url": url, "terms": ""})
     OUT.mkdir(parents=True, exist_ok=True)
     summary = {}
     for r in rows:

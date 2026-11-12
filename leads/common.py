@@ -234,6 +234,23 @@ def save_awards(source, rows, keep_days=370):
     return len(rows)
 
 
+def quarantine_future(rows, source, field="published", slack_days=1):
+    """Records dated in the future (beyond today + slack) are not loaded: they go to data/leads/quarantine/<source>.jsonl
+    for review, and the rest is returned. Returns (kept, number quarantined)."""
+    lim = str(today() + dt.timedelta(days=slack_days))
+    keep, bad = [], []
+    for r in rows:
+        (bad if (r.get(field) or "")[:10] > lim else keep).append(r)
+    if bad:
+        q = LEADS / "quarantine"
+        q.mkdir(parents=True, exist_ok=True)
+        with open(q / f"{source}.jsonl", "a", encoding="utf-8") as f:
+            for r in bad:
+                f.write(json.dumps({"quarantined": str(today()), "reason": f"{field} in the future", **r}, ensure_ascii=False) + "\n")
+        log.warning("%s: %d records dated in the future quarantined", source, len(bad))
+    return keep, len(bad)
+
+
 def award_days(source):
     d = AWARDS / source
     return {p.stem for p in d.glob("*.json")} if d.exists() else set()

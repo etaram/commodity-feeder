@@ -12,7 +12,8 @@ from .sectors import classify
 RESOURCE = "856aabfd-2c6a-48fb-a8b8-19f3ff443618"
 API = "https://data.iadb.org/api/action/datastore_search"
 PAGE, MAX_PAGES = 1000, 6
-SKIP = ("AWARD", "CONTRACT AWARD")  # award notifications are not open tenders
+SKIP = ("AWARD", "CONTRACT AWARD")  # award notifications are not open tenders; they carry no winner here (a PDF link only):
+# the winners come from the IDB contract awards dataset, leads/iadb_awards.py
 
 
 def fetch():

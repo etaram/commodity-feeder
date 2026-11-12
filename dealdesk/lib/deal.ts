@@ -7,7 +7,7 @@ import { appendRow, ENGINE_SHEET, readRanges } from "./sheets";
 // Append-only journal: every save is a new version of a record; the latest version wins; nothing is overwritten,
 // so any change can be traced and undone by saving the earlier version again.
 // Columns: A time, B deal_id, C kind, D record_id, E version, F status, G data_json, H by, I source, J note.
-export type Kind = "quote" | "requirement" | "economics" | "party" | "stage";
+export type Kind = "quote" | "requirement" | "economics" | "party" | "stage" | "draft";
 export type DealRecord = { time: string; deal_id: string; kind: Kind; record_id: string; version: number; status: string; data: Record<string, unknown>; by: string; source: string; note?: string };
 const TAB = "Deal Records";
 
@@ -16,6 +16,11 @@ const REQ_STATUS = new Set(["met", "not_met", "unknown", "missing"]);
 const str = (v: unknown, n = 300) => String(v ?? "").replace(/[\r\t]+/g, " ").trim().slice(0, n);
 const numOrNull = (v: unknown) => { if (v === "" || v == null) return null; const n = Number(v); return Number.isFinite(n) ? n : NaN; };
 const isDate = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v);
+const asOf = (v: unknown) => (isDate(str(v, 10)) ? str(v, 10) : "");
+const strList = (v: unknown, max: number, n: number) => (Array.isArray(v) ? v.map((x) => str(x, n)).filter(Boolean).slice(0, max) : []);
+// The deal's source register: a short key the other records cite (S0, S1...), what it is, and its address.
+const sourceList = (v: unknown) => (Array.isArray(v) ? v : []).slice(0, 30).map((x) => { const o = (x || {}) as Record<string, unknown>;
+  const url = str(o.url, 400); return { key: str(o.key, 12), label: str(o.label, 240), url: /^https?:\/\//i.test(url) ? url : "" }; }).filter((x) => x.key && (x.label || x.url));
 
 // Validates and cleans one record's data; returns an error message or the clean data. Unknown stays empty, never zero.
 // The deal's process: one stage record (where it stands, the next step and its date, the owner) and the parties
@@ -31,14 +36,20 @@ function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
   if (kind === "stage") {
     const st = str(d.stage, 20);
     const x = { stage: (STAGES as readonly string[]).includes(st) ? st : "lead", next_step: str(d.next_step, 240), next_date: isDate(str(d.next_date, 10)) ? str(d.next_date, 10) : "",
-      owner: str(d.owner, 120), title: str(d.title, 240), country: str(d.country, 3).toUpperCase(), sector: str(d.sector, 80), value_usd: numOrNull(d.value_usd), deadline: str(d.deadline, 10), note: str(d.note, 600) };
+      owner: str(d.owner, 120), title: str(d.title, 240), country: str(d.country, 3).toUpperCase(), sector: str(d.sector, 80), value_usd: numOrNull(d.value_usd), deadline: str(d.deadline, 10), note: str(d.note, 600),
+      // the dossier around the stage (all optional): where qualification stands in words, the decision taken, the
+      // next actions in order, the value as the buyer states it, the sources the records cite and the evidence date
+      status_label: str(d.status_label, 60), decision: str(d.decision, 600), actions: strList(d.actions, 12, 300), value_note: str(d.value_note, 200),
+      deadline_note: str(d.deadline_note, 200), sources: sourceList(d.sources), as_of: asOf(d.as_of) };
     if (Number.isNaN(x.value_usd)) x.value_usd = null;
     return { ok: true as const, data: x, status: x.stage };
   }
   const role = str(d.role, 20);
   const x = { role: ROLES.has(role) ? role : "supplier", name: str(d.name, 200), country: str(d.country, 3).toUpperCase(), contact_name: str(d.contact_name, 160),
     email: str(d.email, 200), phone: intlPhone(str(d.phone, 40), str(d.country, 3)) || str(d.phone, 40), wechat: str(d.wechat, 60), website: str(d.website, 240), status: PARTY_STATUS.has(str(d.status, 20)) ? str(d.status, 20) : "candidate",
-    note: str(d.note, 600), source: str(d.source, 300), last_contact: isDate(str(d.last_contact, 10)) ? str(d.last_contact, 10) : "" };
+    note: str(d.note, 600), source: str(d.source, 300), last_contact: isDate(str(d.last_contact, 10)) ? str(d.last_contact, 10) : "",
+    // verification of the party's fit in words ("not verified", "conditional"), separate from the contact status
+    verification: str(d.verification, 60), as_of: asOf(d.as_of) };
   if (!x.name) return { ok: false as const, error: "name is required" };
   if (x.role === "partner") {
     const ps = str(d.partner_state, 30);
@@ -55,8 +66,21 @@ function cleanProcess(kind: "party" | "stage", d: Record<string, unknown>) {
   return { ok: true as const, data: x, status: x.status };
 }
 
+// A prepared outgoing message kept on the deal. It is a draft only: saving it never sends anything and creates no
+// approval request; sending goes through the approval flow (lib/sendguard.ts) after the owner approves.
+export const DRAFT_STATUS = ["awaiting_owner_approval", "rejected", "superseded"] as const;
+function cleanDraft(d: Record<string, unknown>) {
+  const x = { from_role: str(d.from_role, 30), from_name: str(d.from_name, 160), to_name: str(d.to_name, 160), to_email: str(d.to_email, 200), channel: str(d.channel, 300),
+    language: str(d.language, 30) || "English", subject: str(d.subject, 200), body: String(d.body ?? "").replace(/\r/g, "").trim().slice(0, 4000), why: str(d.why, 400),
+    rules: strList(d.rules, 12, 200), source: str(d.source, 300), as_of: asOf(d.as_of), sent: false };
+  if (!x.to_name || !x.subject || !x.body) return { ok: false as const, error: "a draft needs a recipient, a subject and a body" };
+  const st = str(d.status, 30);
+  return { ok: true as const, data: x, status: (DRAFT_STATUS as readonly string[]).includes(st) ? st : "awaiting_owner_approval" };
+}
+
 export function clean(kind: Kind, d: Record<string, unknown>): { ok: true; data: Record<string, unknown>; status: string } | { ok: false; error: string } {
   if (kind === "party" || kind === "stage") return cleanProcess(kind, d);
+  if (kind === "draft") return cleanDraft(d);
   if (kind === "quote") {
     const q = {
       supplier: str(d.supplier, 160), country: str(d.country, 3).toUpperCase(), product: str(d.product, 200), grade: str(d.grade, 120),
@@ -78,7 +102,7 @@ export function clean(kind: Kind, d: Record<string, unknown>): { ok: true; data:
   }
   if (kind === "requirement") {
     const r = { item: str(d.item, 300), source_doc: str(d.source_doc, 160), page: str(d.page, 20), mandatory: d.mandatory !== false,
-      status: REQ_STATUS.has(String(d.status)) ? String(d.status) : "unknown", evidence: str(d.evidence, 500), owner: str(d.owner, 80) };
+      status: REQ_STATUS.has(String(d.status)) ? String(d.status) : "unknown", evidence: str(d.evidence, 500), owner: str(d.owner, 80), group: str(d.group, 40), as_of: asOf(d.as_of) };
     if (!r.item) return { ok: false, error: "requirement text is required" };
     if (r.status === "met" && !r.evidence) return { ok: false, error: "a met requirement needs its evidence (document or reference)" };
     return { ok: true, data: r, status: r.status };
@@ -90,6 +114,10 @@ export function clean(kind: Kind, d: Record<string, unknown>): { ok: true; data:
     for (const k of keys) e[k] = ["role", "notes"].includes(k) ? str(d[k], 300) : ["freight_in_quote", "insurance_in_quote"].includes(k) ? d[k] === true : numOrNull(d[k]);
     if (Object.values(e).some((v) => typeof v === "number" && Number.isNaN(v))) return { ok: false, error: "economics inputs must be numbers" };
     e.role = e.role === "agent" ? "agent" : "principal";
+    // the reconciled skeleton: one line per input with its basis (S sourced term, A owner-approved assumption, Q quote
+    // required, C calculated) and treatment. Text only, never a number that could be read as a price.
+    e.lines = (Array.isArray(d.lines) ? d.lines : []).slice(0, 20).map((x) => { const o = (x || {}) as Record<string, unknown>; return { input: str(o.input, 120), basis: str(o.basis, 20), treatment: str(o.treatment, 400) }; }).filter((x) => x.input);
+    e.as_of = asOf(d.as_of);
     return { ok: true, data: e, status: "assumption" };
   }
   return { ok: false, error: "unknown record kind" };

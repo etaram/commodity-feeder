@@ -98,6 +98,9 @@ def fetch(per_run=PER_RUN):
                 state[h] = str(t)  # heading with no US sea shipments
             else:
                 fails += 1  # page served without the company list: view limit for this IP
+        elif r is not None and r.status_code == 404:
+            state[h] = str(t)  # no page for this heading: not a rate limit, try again next cycle
+            log.info("IY %s: no page (404)", h)
         else:
             fails += 1
             log.warning("IY %s: HTTP %s", h, getattr(r, "status_code", "ERR"))
