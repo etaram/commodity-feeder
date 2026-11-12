@@ -56,12 +56,12 @@
  },
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-12T22:42Z",
+  "at": "2026-11-12T22:57Z",
   "sample": null,
-  "links_checked_this_run": 1649,
-  "links_on_record": 57911,
+  "links_checked_this_run": 1354,
+  "links_on_record": 59265,
   "sites_read_this_run": 0,
-  "registers_this_run": 79,
+  "registers_this_run": 80,
   "buyers": {
    "processed": 3463,
    "completed": 3317,
@@ -113,15 +113,15 @@
   },
   "tenders": {
    "processed": 130001,
-   "completed": 119431,
+   "completed": 119842,
    "contact_found": 37175,
-   "with_conflicts": 302,
+   "with_conflicts": 304,
    "with_gaps": 119510,
    "cleaned": 97,
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 6232,
-   "reused_unchanged": 128971,
+   "reused_unchanged": 129235,
    "gaps": {
     "no estimated value": 110277,
     "no contact in the notice": 92826,
@@ -130,7 +130,7 @@
     "no English title": 4
    },
    "conflicts": {
-    "official link returns # (checked #)": 166,
+    "official link returns # (checked #)": 170,
     "deadline # is more than # years ahead": 137
    },
    "cleaned_fields": {
@@ -208,15 +208,15 @@
   },
   "importers": {
    "processed": 5470,
-   "completed": 1020,
+   "completed": 1032,
    "contact_found": 0,
    "with_conflicts": 6,
    "with_gaps": 5470,
    "cleaned": 5470,
    "duplicates": 2,
-   "verified_identity": 790,
+   "verified_identity": 802,
    "closed_by_deadline": 0,
-   "reused_unchanged": 5454,
+   "reused_unchanged": 5456,
    "gaps": {
     "no contact channel (customs records carry none)": 5470,
     "no official website": 5057,
