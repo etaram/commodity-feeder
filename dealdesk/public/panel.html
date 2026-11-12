@@ -1296,7 +1296,8 @@ function dealShare(head, kv) {
 }
 
 const ECODE = { forbidden: "err_forbidden", needs_reauth: "err_reauth", server_not_connected: "err_notconn", selection_required: "err_sel", approval_required: "err_approval", not_in_manifest: "err_manifest", blocked_by_policy: "err_policy", server_unavailable: "err_unavail", tool_error: "err_tool" };
-const errText = (e, s) => t(ECODE[e?.code] || "err_other", { s: e?.server || s }) + ((e?.code === "tool_error" || e?.code === "forbidden") && e.message ? " " + String(e.message).slice(0, 160) : "");
+// a refused approval is an answer, not a connection problem: say what was refused
+const errText = (e, s) => e?.code === "not_approver" ? (LANG === "he" ? "ההודעה לא נשלחה. רק החשבון האישי של הבעלים יכול לאשר שליחה; הכניסה המשותפת של הצוות לא יכולה." : "Not sent. Only the owner's personal account can approve a message; the shared team login cannot.") : t(ECODE[e?.code] || "err_other", { s: e?.server || s }) + ((e?.code === "tool_error" || e?.code === "forbidden") && e.message ? " " + String(e.message).slice(0, 160) : "");
 const SUPS = () => SHEETS + " (" + t("sup_db") + ")";
 
 async function load(key, fresh) {
