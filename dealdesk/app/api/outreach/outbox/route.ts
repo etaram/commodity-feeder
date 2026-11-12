@@ -4,6 +4,7 @@ import { outboxItems, reconcileDelivery } from "@/lib/outreach/outbox";
 import { bad, body, fail, q } from "@/lib/outreach/http";
 import { logActivity } from "@/lib/activity";
 import { routeDeps } from "@/lib/outreach";
+import { APPROVER_REFUSAL, mayApprove } from "@/lib/approver";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("admin");
   if (!s) return res;
+  const ap = await mayApprove(s.email);
+  if (!ap.ok) return NextResponse.json({ ok: false, code: "not_approver", error: APPROVER_REFUSAL }, { status: 403 });
   try {
     const b = await body(req);
     if (b.action !== "reconcile") return bad("unknown action");

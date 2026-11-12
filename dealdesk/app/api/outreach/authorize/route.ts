@@ -4,6 +4,7 @@ import { logActivity } from "@/lib/activity";
 import { authorizeCampaign } from "@/lib/outreach/campaign";
 import { bad, body, fail } from "@/lib/outreach/http";
 import { routeDeps } from "@/lib/outreach";
+import { APPROVER_REFUSAL, mayApprove } from "@/lib/approver";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,11 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   const { s, res } = await gate("admin");
   if (!s) return res;
+  const ap = await mayApprove(s.email);
+  if (!ap.ok) {
+    await logActivity(s, "outreach_authorize_denied", "", ap.reason).catch(() => {});
+    return NextResponse.json({ ok: false, code: "not_approver", error: APPROVER_REFUSAL }, { status: 403 });
+  }
   try {
     const b = await body(req);
     const cid = String(b.campaign_id || "");

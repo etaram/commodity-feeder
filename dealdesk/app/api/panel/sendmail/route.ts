@@ -5,6 +5,7 @@ import { contentKey, guardedSend, sheetsGuardDeps } from "@/lib/sendguard";
 import { sha } from "@/lib/outreach/store";
 import { appendRow } from "@/lib/sheets";
 import { logActivity } from "@/lib/activity";
+import { APPROVER_REFUSAL, mayApprove } from "@/lib/approver";
 
 // Send one composed message from the panel, from the connected mailbox. The person pressed Send and then confirmed,
 // with the recipients, subject and body on screen: that press is the approval. Each recipient gets a separate
@@ -24,6 +25,12 @@ export async function POST(req: NextRequest) {
   const auth = await gate("admin");
   if (!auth.s) return auth.res;
   if (auth.s.ws && auth.s.ws !== "sinder") return NextResponse.json({ ok: false, error: "Sending from this mailbox is limited to the owner" }, { status: 403 });
+  // F14: with SEND_APPROVERS set, the press counts as approval only from the owner's personal account (lib/approver.ts)
+  const ap = await mayApprove(auth.s.email);
+  if (!ap.ok) {
+    await logActivity(auth.s, "mail_send_denied", "panel", ap.reason).catch(() => {});
+    return NextResponse.json({ ok: false, code: "not_approver", error: APPROVER_REFUSAL }, { status: 403 });
+  }
   if (!mailReady()) return NextResponse.json({ ok: false, error: "No mailbox is connected" }, { status: 503 });
   const b = await req.json().catch(() => ({}));
   const to = (Array.isArray(b.to) ? b.to : String(b.to || "").split(/[,;\s]+/)).map((x: unknown) => String(x).trim()).filter((x: string) => /@/.test(x)).slice(0, 5);

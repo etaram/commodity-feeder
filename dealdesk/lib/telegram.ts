@@ -119,6 +119,9 @@ async function withLang(link: Link, code?: string): Promise<Link> {
 export async function isOwner(email: string): Promise<boolean> {
   const e = (email || "").trim().toLowerCase();
   if (!e) return false;
+  // F14: with SEND_APPROVERS set, only the listed personal account counts (lib/approver.ts); the team login does not
+  const { approverList, mayApprove } = await import("./approver");
+  if (approverList().length) return (await mayApprove(e)).ok;
   const team = (process.env.TEAM_USER || "").trim().toLowerCase();
   if (team && e === team) return true;
   const u = (await listUsers(true).catch(() => [])).find((x) => x.email.toLowerCase() === e);
