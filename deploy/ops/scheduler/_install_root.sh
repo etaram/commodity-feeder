@@ -19,7 +19,7 @@ TimeoutStartSec=240"
 unit sinder-sched-dispatch.timer "[Unit]
 Description=Sinder: workflow dispatcher every 5 minutes
 [Timer]
-OnCalendar=*:0/5:20
+OnCalendar=*:2/5:40
 AccuracySec=5s
 [Install]
 WantedBy=timers.target"

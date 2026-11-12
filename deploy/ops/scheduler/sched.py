@@ -170,6 +170,13 @@ def waiting_runs(wf, tok, states=("queued", "pending", "waiting")):
     return n
 
 
+def runs_created_since(wf, t, tok):
+    """Runs of this workflow created at or after t, by any trigger (GitHub's schedule, a dispatch, a re-run)."""
+    q = urllib.request.quote(">=" + t.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    code, js = api(f"actions/workflows/{wf}/runs?created={q}&per_page=1", tok=tok)
+    return js.get("total_count", 0) if code == 200 and js else None
+
+
 # ---------- state ----------
 
 def load(name, default):
@@ -199,7 +206,9 @@ def cmd_dispatch(dry=False):
         return 0
     st = load("dispatch.json", {})
     now = now_min()
-    last = parse_iso(st.get("last_tick")) or now - dt.timedelta(minutes=5)
+    # a fresh start (new heartbeat job, or after an outage) looks back CATCH_UP_MIN minutes; the run check below
+    # stops a time slot that already has a run from being started twice
+    last = parse_iso(st.get("last_tick")) or now - dt.timedelta(minutes=CATCH_UP_MIN)
     start = max(last + dt.timedelta(minutes=1), now - dt.timedelta(minutes=CATCH_UP_MIN))
     due = {}
     t = start
@@ -217,20 +226,25 @@ def cmd_dispatch(dry=False):
         e = entries[i]
         wf, cron = e["workflow"], " ".join(e["cron"]) if e["cron"] else "@continuous"
         rec = wfs.setdefault(wf, {})
-        if dry:
-            log(f"dispatch (dry run): would start {wf} for {iso(when)} [{cron}]" + (" if no run is active" if not e["cron"] else ""))
-            continue
+        tag = "dispatch (dry run)" if dry else "dispatch"
         if e["cron"] is None:
-            recent = parse_iso(rec.get("last_dispatch"))
-            if recent and now - recent < dt.timedelta(minutes=4):
-                continue                         # a run started a moment ago may not be listed by the API yet
-            active = waiting_runs(wf, tok, ("queued", "pending", "waiting", "in_progress"))
-            if active != 0:
+            if runs_created_since(wf, now - dt.timedelta(minutes=4), tok) != 0:
+                continue                         # started a moment ago (the API may not list it as running yet)
+            if waiting_runs(wf, tok, ("queued", "pending", "waiting", "in_progress")) != 0:
                 continue                         # still running (or the API did not answer): try again next tick
-        w = waiting_runs(wf, tok)
-        if w:
-            log(f"dispatch: {wf} already has {w} run(s) waiting to start; skipped [{cron}]")
-            rec.update(last_skip=iso(now), last_result="skipped: already waiting")
+        else:
+            n = runs_created_since(wf, when - dt.timedelta(minutes=1), tok)
+            if n != 0:                           # this time slot already has a run (GitHub's schedule or an earlier tick)
+                log(f"{tag}: {wf} for {iso(when)} [{cron}] already has a run created since then; skipped" if n else
+                    f"{tag}: {wf} for {iso(when)} [{cron}] could not be checked (api); skipped this tick")
+                continue
+            w = waiting_runs(wf, tok)
+            if w:
+                log(f"{tag}: {wf} already has {w} run(s) waiting to start; skipped [{cron}]")
+                rec.update(last_skip=iso(now), last_result="skipped: already waiting")
+                continue
+        if dry:
+            log(f"{tag}: would start {wf} for {iso(when)} [{cron}] inputs {e['inputs'] or '-'}")
             continue
         code, _ = api(f"actions/workflows/{wf}/dispatches", "POST", {"ref": REF, "inputs": e["inputs"]}, tok)
         ok = code == 204
@@ -399,7 +413,7 @@ def cmd_report():
     print(f"telegram alert: bot token {'yes' if tg.get('bot_token') else 'missing'}, owner chat id {'yes' if tg.get('chat_id') else 'missing'}")
     print(f"status file served by the data gateway: {'yes (_status/freshness.json)' if st.get('status_file_served') else 'no'}")
     print(f"last dispatcher tick: {st.get('dispatch', {}).get('last_tick') or 'never'}")
-    print("== workflows (last dispatch by the server, last success on GitHub)")
+    print("== workflows (last workflow_dispatch start, last success)")
     print(f"{'workflow':<20} {'last dispatch':<18} {'last success':<18} {'age_h':>6} {'max_h':>6}  status")
     disp = st.get("dispatch", {}).get("workflows", {})
     seen, counts = {}, {"OK": 0, "STALE": 0, "UNKNOWN": 0}
@@ -408,10 +422,12 @@ def cmd_report():
     for wf, max_h in seen.items():
         code, js = api(f"actions/workflows/{wf}/runs?status=success&per_page=1", tok=tok)
         last = parse_iso(js["workflow_runs"][0]["updated_at"]) if code == 200 and js and js.get("workflow_runs") else None
+        code2, js2 = api(f"actions/workflows/{wf}/runs?event=workflow_dispatch&per_page=1", tok=tok)
+        ld = parse_iso(js2["workflow_runs"][0]["created_at"]) if code2 == 200 and js2 and js2.get("workflow_runs") else None
         a = age_h(last, now)
         s = "UNKNOWN" if a is None else ("STALE" if a > max_h else "OK")
         counts[s] += 1
-        print(f"{wf:<20} {disp.get(wf, {}).get('last_dispatch') or '-':<18} {iso(last) or '-':<18} {a if a is not None else '-':>6} {max_h:>6g}  {s}")
+        print(f"{wf:<20} {iso(ld) or '-':<18} {iso(last) or '-':<18} {a if a is not None else '-':>6} {max_h:>6g}  {s}")
     print("== company checks and refinement (the build of the supplier universe)")
     since = now - dt.timedelta(hours=24)
     code, js = api(f"actions/workflows/company-check.yml/runs?created=%3E%3D{since.strftime('%Y-%m-%dT%H:%M:%SZ')}&per_page=100", tok=tok)

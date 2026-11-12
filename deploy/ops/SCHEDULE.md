@@ -24,45 +24,45 @@ Times are UTC. Duration: median / slowest of the last 30 successful runs (minute
 | israel.yml | `50 3 * * *` | tenders pages of ~1,000 Israeli public bodies | 1 / 22 | israel |
 | sanctions.yml | `20 4 * * *` | sanctions lists refresh | 0 / 1 | sanctions |
 | trends.yml | `17 3 * * 1` (Monday) | Google Trends for top market signals | 6 / 6 | trends |
-| heartbeat.yml | `17 */6 * * *` | safety net: restarts overdue workflows (stays on GitHub) | 352 / 354 | heartbeat |
-| watchdog.yml | `7 * * * *`, `37 * * * *` | safety net: restarts overdue workflows (stays on GitHub) | 0 / 0 | watchdog |
+| heartbeat.yml | `17 */6 * * *` (restart only; it chains itself) | THE SCHEDULER: starts the timed workflows from schedule.tab | 352 / 354 | heartbeat |
+| watchdog.yml | `7 * * * *`, `37 * * * *` | safety net on GitHub's machines: restarts overdue feed, leads, suppliers, company-check | 0 / 0 | watchdog |
 
-15 scheduled workflows; 13 move to the server scheduler (`deploy/ops/schedule.tab`). heartbeat and watchdog stay on
-GitHub: they only start a workflow that is overdue, so with a working server scheduler they find nothing to do.
+15 scheduled workflows; 13 are timed by `deploy/ops/schedule.tab`, and their own GitHub `schedule:` triggers are
+removed (`workflow_dispatch` stays), so nothing runs twice. heartbeat and watchdog keep their GitHub schedules.
 Slowest: suppliers (up to 3 hours, the universe rebuild runs last), leads (up to 2h16m), press (up to 1h51m).
 Most important for the live panel and the Sheets: panel, leads, suppliers, feed and backup.
 
-## How the server starts them
+## How they are started
 
 - `deploy/ops/schedule.tab`: one line per trigger, cron in UTC, the workflow, the max age for STALE, and inputs.
   leads gets `only=light` / `only=heavy` (the same step sets GitHub's two crons chose); coffee-sellers gets
   `scheduled=yes` (so a timed run does not force the weekly registry refresh that a manual run forces).
 - company-check is `@continuous`: the build of the supplier universe needs it all day (12 Nov: 1,043,458 records,
   309,818 websites in the check queue, 18,167 checked; GitHub ran the "hourly" job 8 times in 24 hours, busy 24% of
-  the time). The dispatcher starts it again on the first 5-minute tick after the previous run has finished, never
-  while a run is queued or running; its concurrency group `company-check` is the second guard against overlap.
+  the time). It is started again on the first 5-minute tick after the previous run has finished, never while a run
+  is queued or running; its concurrency group `company-check` is the second guard against overlap.
   describe follows each company-check run (workflow_run), so it speeds up with it.
-- `sinder-sched-dispatch.timer` runs `sched.py dispatch` every 5 minutes (at :00:20, :05:20, ...). It starts every
-  line whose cron time fell since the previous tick (at most 30 minutes back after an outage, one start per line).
-  It does not start a workflow that already has a run waiting to start; a running one is left to its concurrency group.
-- Every start and skip is logged in `/var/log/sinder-sched.log`; the state is in `/var/lib/sinder-sched/dispatch.json`.
-- Credentials: a fine-grained GitHub token limited to this repository with "Actions: read and write" only, stored on
-  the server in `/opt/sinder/secrets/gh_dispatch.token` (root only, mode 600). The owner adds it as the repository
-  secret `SCHED_DISPATCH_TOKEN`; the server-ops task `scheduler-install` writes it to that file. The token of the
-  self-hosted runners is a registration token and cannot start workflows.
+- The dispatcher is `deploy/ops/scheduler/sched.py dispatch`, run every 5 minutes (at :00:20, :05:20, ...) by
+  `heartbeat.yml` with that job's own token (`actions: write`; a workflow_dispatch started with it does run). No
+  extra credential is needed. heartbeat runs on a GitHub-hosted machine (free for a public repository), so it no longer
+  holds one of the three company runners; each copy lives ~5h45m and starts the next copy at the end.
+- Each tick starts every line whose cron time fell since the previous tick (30 minutes back when a copy starts, one
+  start per line). It skips a time slot that already has a run of that workflow created since that time (so a new
+  heartbeat copy, GitHub, or a second dispatcher never start the same slot twice), and a workflow that already has a
+  run waiting to start. Every decision is printed in the heartbeat log.
+- Optional, not active: the same dispatcher as a server timer (`sinder-sched-dispatch.timer`, ticks at :02:40,
+  :07:40, ...), installed by `scheduler-install` but enabled only when a token is on the server: a fine-grained GitHub
+  token limited to this repository with "Actions: read and write" only, added by the owner as the repository secret
+  `SCHED_DISPATCH_TOKEN` and written by `scheduler-install` to `/opt/sinder/secrets/gh_dispatch.token` (root only,
+  mode 600), and only when main has no GitHub schedule left for these workflows. It is a fallback if heartbeat is ever
+  retired; both can run together because of the per-slot run check. The runners' registration token cannot start
+  workflows.
 
-## No double runs
+## No double runs, and going back
 
-The dispatcher is enabled by `scheduler-install` only when both are true: the token works, and the workflows on `main`
-no longer have GitHub `schedule:` triggers. Until then the GitHub schedules stay as they are and the dispatcher is
-installed but disabled. To switch over:
-
-1. Owner: add the repository secret `SCHED_DISPATCH_TOKEN` (see above).
-2. `bash deploy/ops/scheduler/remove-github-schedules.sh`, commit `.github/workflows`, merge to main.
-3. Run the server-ops task `scheduler-install` (from main). It writes the token and enables the dispatcher.
-
-To go back: put the `schedule:` blocks back (git revert of step 2) and run `scheduler-install` again; it disables the
-dispatcher because main has schedules again.
+The GitHub schedules of the 13 workflows were removed in the same change that made heartbeat the dispatcher
+(`deploy/ops/scheduler/remove-github-schedules.sh` does it and can be re-run; `sched.py check-schedules .` verifies).
+To go back to GitHub's own schedules: revert that commit and the heartbeat change together.
 
 ## Freshness check and alert
 
