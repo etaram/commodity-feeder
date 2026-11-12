@@ -30,7 +30,7 @@ ok(levelOf(5, 30).words === "within budget" && levelOf(25, 30).words === "near t
 ok(levelOf(0, 0).level === "off" && levelOf(null, 30).level === "unknown", "cap 0 with nothing spent = off; unknown spend says so");
 
 const fx = parseFixed(FIXED);
-ok(fx.length === 4 && fx.every((f) => f.status === "to confirm" && f.monthly_usd === null), "shipped fixed costs: server, domain, mailbox, phone, all 'to confirm' (no invented prices)");
+ok(fx.every((f) => (f.status === "confirmed") === (typeof f.monthly_usd === "number")), "shipped fixed costs: an amount only on a line the owner confirmed, every other line 'to confirm' (no invented prices)");
 const fx2 = parseFixed('[{"name":"Server","monthly_usd":20,"status":"confirmed"},{"name":"Domain","monthly_usd":2},{"name":"Phone","monthly_usd":"x","status":"confirmed"}]');
 ok(fx2[0].status === "confirmed" && fx2[1].status === "to confirm" && fx2[2].monthly_usd === null && fx2[2].status === "to confirm", "an amount counts only when confirmed; an unreadable amount is 'to confirm'");
 ok(parseFixed("not json").length === 0, "unreadable configuration = no fixed lines");
