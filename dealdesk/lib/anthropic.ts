@@ -107,7 +107,10 @@ async function ledger(fresh = false): Promise<{ usd: number; monthUsd: number } 
 export async function spentToday(fresh = false): Promise<number | null> { return (await ledger(fresh))?.usd ?? null; }
 /** This calendar month's (UTC) estimated AI spend, or null when it cannot be read right now (the cap then refuses). */
 export async function spentThisMonth(fresh = false): Promise<number | null> { return (await ledger(fresh))?.monthUsd ?? null; }
-export const monthlyCap = () => envCap(process.env, "ANTHROPIC_MONTHLY_CAP_USD", 30);
+// default by month (UTC): the setup month November 2026 is USD 50 (owner decision 12 Nov 2026 20:35), then USD 30;
+// ANTHROPIC_MONTHLY_CAP_USD, when set, overrides the default for every month
+export const defaultCap = (now = new Date()) => (now.toISOString().slice(0, 7) === "2026-11" ? 50 : 30);
+export const monthlyCap = () => envCap(process.env, "ANTHROPIC_MONTHLY_CAP_USD", defaultCap());
 const r3 = (x: number) => Math.round(x * 1000) / 1000;
 export async function budgetState() {
   const usd = await spentToday(), m = await spentThisMonth(), cap = monthlyCap(), held = reservedNow();

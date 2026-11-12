@@ -3,7 +3,7 @@
 // replaced by the actual cost on completion and released on an error, and multi-turn calls reserved per turn.
 // Built with the in-memory sheet (tests/build-agent-test.mjs); no request leaves the process.
 import { TABS } from "./mocks/sheets";
-import { CAP_REFUSAL, CAP_UNKNOWN, checkMonthlyCap, claude, estimateCost, modelTurn, reservedNow, spentThisMonth, worstCaseCost, budgetState } from "@/lib/anthropic";
+import { defaultCap, CAP_REFUSAL, CAP_UNKNOWN, checkMonthlyCap, claude, estimateCost, modelTurn, reservedNow, spentThisMonth, worstCaseCost, budgetState } from "@/lib/anthropic";
 import { spendReport } from "@/lib/spend";
 let fail = 0;
 const ok = (c: boolean, m: string) => { console.log(`${c ? "ok  " : "FAIL"} ${m}`); if (!c) fail++; };
@@ -116,4 +116,5 @@ const small = { max_tokens: 50, messages: [{ role: "user", content: "hi" }] };
   ok(mt.ok && reservedNow() === 0 && TABS["AI Usage"].some((r: (string | number)[]) => r[1] === "telegram"), "a tool-loop turn (Telegram, deal agent) is reserved, metered and written to the ledger");
   delete process.env.ANTHROPIC_MONTHLY_CAP_USD;
   console.log(fail ? `${fail} FAILED` : "all passed"); process.exit(fail ? 1 : 0);
-})();
+})()ok(defaultCap(new Date("2026-11-20T00:00:00Z")) === 50 && defaultCap(new Date("2026-12-01T00:00:00Z")) === 30 && defaultCap(new Date("2026-10-31T23:00:00Z")) === 30, "default cap: USD 50 in November 2026 (setup month), USD 30 otherwise");
+;
