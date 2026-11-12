@@ -41,18 +41,22 @@ FORMS = {
     "kft", "zrt", "nyrt", "sp z o o", "sp zoo", "spzoo", "s c", "sro", "s r o", "as", "doo", "d o o", "jsc", "ojsc", "pjsc", "cjsc", "ooo", "oao", "zao",
     "pao", "tov", "llp", "lp", "fze", "fzco", "fz llc", "wll", "w l l", "spc", "saog", "saoc", "bsc", "qsc", "psc", "pjsc", "sae", "s a e",
     "tbk", "pt", "bhd", "sdn bhd", "sdn", "berhad", "jsc", "co ltd", "company limited", "the", "se", "kk", "k k",
+    "ад", "еад", "оод", "еоод", "ооо", "ао", "пао", "тоо", "тов", "ae", "αε", "επε", "ικε", "οε", "εε",
     "gk", "yk", "cv", "c v", "ci", "sasu", "eurl", "sca", "scs", "snc", "cooperative", "coop", "ltda me", "ltda epp", "ab publ", "publ",
 }
-_NON = re.compile(r"[^a-z0-9 ]+")
+PREFIXES = {"pt", "the", "cv", "ooo", "tov", "pao", "oao", "zao", "ооо", "оао", "зао", "пао", "ао", "тов", "тоо", "ип", "чп"}
+_NONW = re.compile(r"[\W_]+")
 _SP = re.compile(r"\s+")
 
 
 def norm_name(s):
-    """lower-case ASCII, punctuation out, trailing legal forms out ('Siemens Aktiengesellschaft' stays distinct from
-    'Siemens'; 'ACME Trading Co., Ltd.' -> 'acme trading')."""
-    s = unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
-    s = s.replace("&", " ")
-    s = _SP.sub(" ", _NON.sub(" ", s)).strip()
+    """case-folded, accents off, punctuation out, trailing legal forms out ('ACME Trading Co., Ltd.' -> 'acme trading').
+    Letters of every script are kept (a Cyrillic or Greek name is not reduced to its digits: precision check of
+    12 Nov 2026 found 'СН АМ СТРУМА ЛОТ 3.1' matched to another company through '3 1'). A name with fewer than three
+    letters normalises to ''."""
+    s = unicodedata.normalize("NFKD", str(s or ""))
+    s = "".join(ch for ch in s if not unicodedata.combining(ch)).casefold()
+    s = _SP.sub(" ", _NONW.sub(" ", s.replace("&", " "))).strip()
     words = s.split()
     changed = True
     while words and changed:
@@ -60,9 +64,10 @@ def norm_name(s):
         for n in (3, 2, 1):
             if len(words) > n and " ".join(words[-n:]) in FORMS:
                 words = words[:-n]; changed = True; break
-        if words and len(words) > 1 and words[0] in ("pt", "the", "cv", "ooo", "tov", "pao", "oao", "zao"):
+        if words and len(words) > 1 and words[0] in PREFIXES:
             words = words[1:]; changed = True
-    return " ".join(words)
+    out = " ".join(words)
+    return out if sum(ch.isalpha() for ch in out) >= 3 else ""
 
 
 @functools.lru_cache(maxsize=512)

@@ -38,6 +38,8 @@ def test_norm_name():
     assert G.norm_name("PT Wijaya Karya (Persero) Tbk") == "wijaya karya persero"
     assert G.norm_name("Siemens Energy Global GmbH & Co. KG") == "siemens energy global"
     assert G.norm_name("Société Générale S.A.") == "societe generale"
+    assert G.norm_name("СН АМ СТРУМА ЛОТ 3.1") != G.norm_name("ЕЙ И ЕС - 3С МАРИЦА ИЗТОК 1")   # precision check 12 Nov 2026
+    assert G.norm_name("ООО Ромашка") == "ромашка" and G.norm_name("12 3") == ""
 
 
 def test_match_with_parent_and_ambiguity(tmp_path):
