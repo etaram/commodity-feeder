@@ -1,0 +1,164 @@
+{
+ "at": "2026-11-12T15:33+00:00",
+ "version": "details-1",
+ "mode": "sample",
+ "read_now": 16,
+ "failed": {
+  "ted: HTTP 202": 28,
+  "pncp: HTTP 410": 1,
+  "boamp: national BOAMP format (not eForms)": 2,
+  "chile: no API ticket": 3
+ },
+ "published_open": 0,
+ "store": 16,
+ "fill_rate_this_run": {
+  "items": {
+   "filled": 16,
+   "of": 16,
+   "rate": 1.0
+  },
+  "technical_standards": {
+   "filled": 0,
+   "of": 16,
+   "rate": 0.0
+  },
+  "delivery": {
+   "filled": 13,
+   "of": 16,
+   "rate": 0.812
+  },
+  "bid_security": {
+   "filled": 7,
+   "of": 16,
+   "rate": 0.438
+  },
+  "performance_guarantee": {
+   "filled": 2,
+   "of": 16,
+   "rate": 0.125
+  },
+  "eligibility": {
+   "filled": 5,
+   "of": 16,
+   "rate": 0.312
+  },
+  "lots": {
+   "filled": 8,
+   "of": 16,
+   "rate": 0.5
+  },
+  "evaluation": {
+   "filled": 10,
+   "of": 16,
+   "rate": 0.625
+  },
+  "clarification_deadline": {
+   "filled": 3,
+   "of": 16,
+   "rate": 0.188
+  },
+  "documents": {
+   "filled": 12,
+   "of": 16,
+   "rate": 0.75
+  },
+  "submission_deadline": {
+   "filled": 16,
+   "of": 16,
+   "rate": 1.0
+  },
+  "submission_url": {
+   "filled": 9,
+   "of": 16,
+   "rate": 0.562
+  },
+  "duration": {
+   "filled": 5,
+   "of": 16,
+   "rate": 0.312
+  },
+  "tender_validity": {
+   "filled": 5,
+   "of": 16,
+   "rate": 0.312
+  },
+  "variants": {
+   "filled": 3,
+   "of": 16,
+   "rate": 0.188
+  },
+  "framework": {
+   "filled": 3,
+   "of": 16,
+   "rate": 0.188
+  },
+  "procedure": {
+   "filled": 16,
+   "of": 16,
+   "rate": 1.0
+  },
+  "quantities": {
+   "filled": 9,
+   "of": 16,
+   "rate": 0.562
+  }
+ },
+ "by_source_this_run": {
+  "PNCP (Brazil)": {
+   "n": 5,
+   "items": 1.0,
+   "technical_standards": 0.0,
+   "delivery": 1.0,
+   "bid_security": 0.0,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.0,
+   "lots": 0.0,
+   "evaluation": 1.0,
+   "clarification_deadline": 0.0,
+   "documents": 0.8,
+   "quantities": 1.0
+  },
+  "Prozorro (Ukraine)": {
+   "n": 3,
+   "items": 1.0,
+   "technical_standards": 0.0,
+   "delivery": 1.0,
+   "bid_security": 1.0,
+   "performance_guarantee": 0.67,
+   "eligibility": 1.0,
+   "lots": 1.0,
+   "evaluation": 1.0,
+   "clarification_deadline": 1.0,
+   "documents": 1.0,
+   "quantities": 1.0
+  },
+  "World Bank": {
+   "n": 3,
+   "items": 1.0,
+   "technical_standards": 0.0,
+   "delivery": 0.0,
+   "bid_security": 1.0,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.33,
+   "lots": 0.0,
+   "evaluation": 0.0,
+   "clarification_deadline": 0.0,
+   "documents": 0.0,
+   "quantities": 0.33
+  },
+  "BOAMP (France)": {
+   "n": 5,
+   "items": 1.0,
+   "technical_standards": 0.0,
+   "delivery": 1.0,
+   "bid_security": 0.2,
+   "performance_guarantee": 0.0,
+   "eligibility": 0.2,
+   "lots": 1.0,
+   "evaluation": 0.4,
+   "clarification_deadline": 0.0,
+   "documents": 1.0,
+   "quantities": 0.0
+  }
+ }
+}
