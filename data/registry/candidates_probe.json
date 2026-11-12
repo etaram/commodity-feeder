@@ -1,10 +1,11 @@
 {
  "C01": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:42Z",
+  "checked_at": "2026-11-12T15:14Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:42Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "etenders.gov.eg",
@@ -41,24 +42,25 @@
   "url": "https://etenders.gov.eg/Tender/DoSearch"
  },
  "C02": {
-  "bytes": 288921,
-  "checked_at": "2026-11-12T10:43Z",
+  "bytes": 288915,
+  "checked_at": "2026-11-12T15:19Z",
   "final_host": "www.marchespublics.gov.ma",
   "first_seen": "2026-11-12T10:43Z",
   "history": [
+   "2026-11-12 login 200",
    "2026-11-12 login 200"
   ],
   "host": "www.marchespublics.gov.ma",
   "http_status": 200,
   "id": "C02",
-  "last_reachable": "2026-11-12T10:43Z",
+  "last_reachable": "2026-11-12T15:19Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "unreadable",
   "status": "login",
   "tries": [
    {
-    "bytes": 288921,
+    "bytes": 288915,
     "code": 200,
     "host": "www.marchespublics.gov.ma",
     "method": "http",
@@ -69,16 +71,17 @@
  },
  "C03": {
   "bytes": 237,
-  "checked_at": "2026-11-12T10:43Z",
+  "checked_at": "2026-11-12T15:19Z",
   "final_host": "www.joneps.gov.jo",
   "first_seen": "2026-11-12T10:43Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.joneps.gov.jo",
   "http_status": 200,
   "id": "C03",
-  "last_reachable": "2026-11-12T10:43Z",
+  "last_reachable": "2026-11-12T15:19Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -95,21 +98,22 @@
   "url": "https://www.joneps.gov.jo/"
  },
  "C04": {
-  "bytes": 0,
-  "checked_at": "2026-11-12T10:43Z",
-  "final_host": "",
+  "bytes": 2787828,
+  "checked_at": "2026-11-12T15:19Z",
+  "final_host": "www.tuneps.tn",
   "first_seen": "2026-11-12T10:43Z",
   "history": [
-   "2026-11-12 unreachable ERR"
+   "2026-11-12 unreachable ERR",
+   "2026-11-12 open 200"
   ],
   "host": "www.tuneps.tn",
-  "http_status": "ERR",
+  "http_status": 200,
   "id": "C04",
-  "last_reachable": "",
-  "method_used": "",
-  "reachable": "no",
+  "last_reachable": "2026-11-12T15:19Z",
+  "method_used": "stealth",
+  "reachable": "yes",
   "robots": "unreadable",
-  "status": "unreachable",
+  "status": "open",
   "tries": [
    {
     "bytes": 0,
@@ -126,21 +130,22 @@
     "page": "unreachable"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 2787828,
+    "code": 200,
+    "host": "www.tuneps.tn",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "open"
    }
   ],
   "url": "https://www.tuneps.tn/index.do"
  },
  "C05": {
   "bytes": 5581,
-  "checked_at": "2026-11-12T10:43Z",
+  "checked_at": "2026-11-12T15:20Z",
   "final_host": "capt.gov.kw",
   "first_seen": "2026-11-12T10:43Z",
   "history": [
+   "2026-11-12 challenge 403",
    "2026-11-12 challenge 403"
   ],
   "host": "capt.gov.kw",
@@ -167,34 +172,35 @@
     "page": "challenge"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 46905,
+    "code": 404,
+    "host": "capt.gov.kw",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://capt.gov.kw/en/tenders/"
  },
  "C06": {
-  "bytes": 1794176,
-  "checked_at": "2026-11-12T10:44Z",
+  "bytes": 1793482,
+  "checked_at": "2026-11-12T15:20Z",
   "final_host": "www.ppa.gov.lb",
   "first_seen": "2026-11-12T10:44Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.ppa.gov.lb",
   "http_status": 200,
   "id": "C06",
-  "last_reachable": "2026-11-12T10:44Z",
+  "last_reachable": "2026-11-12T15:20Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
   "status": "open",
   "tries": [
    {
-    "bytes": 1794176,
+    "bytes": 1793482,
     "code": 200,
     "host": "www.ppa.gov.lb",
     "method": "http",
@@ -205,10 +211,11 @@
  },
  "C07": {
   "bytes": 26075,
-  "checked_at": "2026-11-12T10:44Z",
+  "checked_at": "2026-11-12T15:20Z",
   "final_host": "www.adgpg.gov.ae",
   "first_seen": "2026-11-12T10:44Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "www.adgpg.gov.ae",
@@ -235,21 +242,22 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 66865,
+    "code": 404,
+    "host": "www.adgpg.gov.ae",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.adgpg.gov.ae/en/For-Suppliers/Public-Tenders"
  },
  "C08": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:44Z",
+  "checked_at": "2026-11-12T15:20Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:44Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "www.bomop.anep.com.dz",
@@ -286,24 +294,25 @@
   "url": "https://www.bomop.anep.com.dz/"
  },
  "C09": {
-  "bytes": 278183,
-  "checked_at": "2026-11-12T10:44Z",
+  "bytes": 278201,
+  "checked_at": "2026-11-12T15:21Z",
   "final_host": "mop.gov.iq",
   "first_seen": "2026-11-12T10:44Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "mop.gov.iq",
   "http_status": 200,
   "id": "C09",
-  "last_reachable": "2026-11-12T10:44Z",
+  "last_reachable": "2026-11-12T15:21Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
   "status": "open",
   "tries": [
    {
-    "bytes": 278183,
+    "bytes": 278201,
     "code": 200,
     "host": "mop.gov.iq",
     "method": "http",
@@ -313,31 +322,32 @@
   "url": "https://mop.gov.iq/"
  },
  "C10": {
-  "bytes": 335852,
-  "checked_at": "2026-11-12T10:45Z",
+  "bytes": 335079,
+  "checked_at": "2026-11-12T15:21Z",
   "final_host": "www.dewa.gov.ae",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.dewa.gov.ae",
   "http_status": 200,
   "id": "C10",
-  "last_reachable": "2026-11-12T10:45Z",
+  "last_reachable": "2026-11-12T15:21Z",
   "method_used": "relay",
   "reachable": "yes",
   "robots": "unreadable",
   "status": "open",
   "tries": [
    {
-    "bytes": 442,
+    "bytes": 440,
     "code": 403,
     "host": "www.dewa.gov.ae",
     "method": "http",
     "page": "challenge"
    },
    {
-    "bytes": 335852,
+    "bytes": 335079,
     "code": 200,
     "host": "www.dewa.gov.ae",
     "method": "relay",
@@ -348,16 +358,17 @@
  },
  "C11": {
   "bytes": 121749,
-  "checked_at": "2026-11-12T10:45Z",
+  "checked_at": "2026-11-12T15:21Z",
   "final_host": "www.qatarenergy.qa",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.qatarenergy.qa",
   "http_status": 200,
   "id": "C11",
-  "last_reachable": "2026-11-12T10:45Z",
+  "last_reachable": "2026-11-12T15:21Z",
   "method_used": "relay",
   "reachable": "yes",
   "robots": "allowed",
@@ -381,27 +392,35 @@
   "url": "https://www.qatarenergy.qa/en/MediaCenter/Pages/Tenders.aspx"
  },
  "C12": {
-  "bytes": 178639,
-  "checked_at": "2026-11-12T10:45Z",
+  "bytes": 178730,
+  "checked_at": "2026-11-12T15:21Z",
   "final_host": "www.km.qa",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.km.qa",
   "http_status": 200,
   "id": "C12",
-  "last_reachable": "2026-11-12T10:45Z",
-  "method_used": "http",
+  "last_reachable": "2026-11-12T15:21Z",
+  "method_used": "relay",
   "reachable": "yes",
-  "robots": "no robots.txt",
+  "robots": "unreadable",
   "status": "open",
   "tries": [
    {
-    "bytes": 178639,
+    "bytes": 0,
+    "code": 0,
+    "host": "",
+    "method": "http",
+    "page": "unreachable"
+   },
+   {
+    "bytes": 178730,
     "code": 200,
     "host": "www.km.qa",
-    "method": "http",
+    "method": "relay",
     "page": "open"
    }
   ],
@@ -409,10 +428,11 @@
  },
  "C13": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:45Z",
+  "checked_at": "2026-11-12T15:22Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "www.one.org.ma",
@@ -450,10 +470,11 @@
  },
  "C14": {
   "bytes": 5544,
-  "checked_at": "2026-11-12T10:45Z",
+  "checked_at": "2026-11-12T15:22Z",
   "final_host": "www.ocpgroup.ma",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 challenge 403",
    "2026-11-12 challenge 403"
   ],
   "host": "www.ocpgroup.ma",
@@ -480,27 +501,28 @@
     "page": "challenge"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 44615,
+    "code": 403,
+    "host": "www.ocpgroup.ma",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "challenge"
    }
   ],
   "url": "https://www.ocpgroup.ma/"
  },
  "C15": {
   "bytes": 734,
-  "checked_at": "2026-11-12T10:45Z",
+  "checked_at": "2026-11-12T15:23Z",
   "final_host": "www.se.com.sa",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.se.com.sa",
   "http_status": 200,
   "id": "C15",
-  "last_reachable": "2026-11-12T10:45Z",
+  "last_reachable": "2026-11-12T15:23Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
@@ -518,16 +540,17 @@
  },
  "C16": {
   "bytes": 626,
-  "checked_at": "2026-11-12T10:45Z",
+  "checked_at": "2026-11-12T15:23Z",
   "final_host": "www.eehc.gov.eg",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.eehc.gov.eg",
   "http_status": 200,
   "id": "C16",
-  "last_reachable": "2026-11-12T10:45Z",
+  "last_reachable": "2026-11-12T15:23Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -544,11 +567,12 @@
   "url": "https://www.eehc.gov.eg/"
  },
  "C17": {
-  "bytes": 581125,
-  "checked_at": "2026-11-12T10:45Z",
+  "bytes": 576392,
+  "checked_at": "2026-11-12T15:23Z",
   "final_host": "sonatrach.com",
   "first_seen": "2026-11-12T10:45Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "sonatrach.com",
@@ -557,39 +581,40 @@
   "last_reachable": "",
   "method_used": "",
   "reachable": "no",
-  "robots": "unreadable",
+  "robots": "allowed",
   "status": "error",
   "tries": [
    {
-    "bytes": 581125,
+    "bytes": 576392,
     "code": 404,
     "host": "sonatrach.com",
     "method": "http",
     "page": "error"
    },
    {
-    "bytes": 574586,
+    "bytes": 574437,
     "code": 404,
     "host": "sonatrach.com",
     "method": "relay",
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 564413,
+    "code": 404,
+    "host": "sonatrach.com",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://sonatrach.com/appels-doffres"
  },
  "C18": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:46Z",
+  "checked_at": "2026-11-12T15:24Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "lpse.pu.go.id",
@@ -627,10 +652,11 @@
  },
  "C19": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:46Z",
+  "checked_at": "2026-11-12T15:24Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "lpse.jakarta.go.id",
@@ -668,10 +694,11 @@
  },
  "C20": {
   "bytes": 8243,
-  "checked_at": "2026-11-12T10:46Z",
+  "checked_at": "2026-11-12T15:24Z",
   "final_host": "lpse.jatimprov.go.id",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
+   "2026-11-12 error 403",
    "2026-11-12 error 403"
   ],
   "host": "lpse.jatimprov.go.id",
@@ -698,21 +725,22 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 8080,
+    "code": 403,
+    "host": "lpse.jatimprov.go.id",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://lpse.jatimprov.go.id/eproc4/lelang"
  },
  "C21": {
-  "bytes": 34767,
-  "checked_at": "2026-11-12T10:46Z",
+  "bytes": 34746,
+  "checked_at": "2026-11-12T15:24Z",
   "final_host": "spse.inaproc.id",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
+   "2026-11-12 error 403",
    "2026-11-12 error 403"
   ],
   "host": "spse.inaproc.id",
@@ -725,7 +753,7 @@
   "status": "error",
   "tries": [
    {
-    "bytes": 34767,
+    "bytes": 34746,
     "code": 403,
     "host": "spse.inaproc.id",
     "method": "http",
@@ -739,31 +767,32 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 36044,
+    "code": 403,
+    "host": "spse.inaproc.id",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "challenge"
    }
   ],
   "url": "https://spse.inaproc.id/"
  },
  "C22": {
-  "bytes": 0,
-  "checked_at": "2026-11-12T10:46Z",
-  "final_host": "",
+  "bytes": 418861,
+  "checked_at": "2026-11-12T15:26Z",
+  "final_host": "eproc.pln.co.id",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
-   "2026-11-12 unreachable ERR"
+   "2026-11-12 unreachable ERR",
+   "2026-11-12 open 200"
   ],
   "host": "eproc.pln.co.id",
-  "http_status": "ERR",
+  "http_status": 200,
   "id": "C22",
-  "last_reachable": "",
-  "method_used": "",
-  "reachable": "no",
+  "last_reachable": "2026-11-12T15:26Z",
+  "method_used": "stealth",
+  "reachable": "yes",
   "robots": "unreadable",
-  "status": "unreachable",
+  "status": "open",
   "tries": [
    {
     "bytes": 0,
@@ -780,27 +809,28 @@
     "page": "unreachable"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 418861,
+    "code": 200,
+    "host": "eproc.pln.co.id",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "open"
    }
   ],
   "url": "https://eproc.pln.co.id/"
  },
  "C23": {
   "bytes": 465185,
-  "checked_at": "2026-11-12T10:46Z",
+  "checked_at": "2026-11-12T15:27Z",
   "final_host": "muasamcong.mof.gov.vn",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "muasamcong.mpi.gov.vn",
   "http_status": 200,
   "id": "C23",
-  "last_reachable": "2026-11-12T10:46Z",
+  "last_reachable": "2026-11-12T15:27Z",
   "method_used": "relay",
   "reachable": "yes",
   "robots": "unreadable",
@@ -825,10 +855,11 @@
  },
  "C24": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:46Z",
+  "checked_at": "2026-11-12T15:27Z",
   "final_host": "process5.gprocurement.go.th",
   "first_seen": "2026-11-12T10:46Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "process5.gprocurement.go.th",
@@ -866,16 +897,17 @@
  },
  "C25": {
   "bytes": 1137,
-  "checked_at": "2026-11-12T10:47Z",
+  "checked_at": "2026-11-12T15:27Z",
   "final_host": "data.gov.sg",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "data.gov.sg",
   "http_status": 200,
   "id": "C25",
-  "last_reachable": "2026-11-12T10:47Z",
+  "last_reachable": "2026-11-12T15:27Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
@@ -893,10 +925,11 @@
  },
  "C26": {
   "bytes": 27301,
-  "checked_at": "2026-11-12T10:47Z",
+  "checked_at": "2026-11-12T15:27Z",
   "final_host": "www.tnb.com.my",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "www.tnb.com.my",
@@ -923,21 +956,22 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 26148,
+    "code": 404,
+    "host": "www.tnb.com.my",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.tnb.com.my/suppliers/tender-notices"
  },
  "C27": {
   "bytes": 142750,
-  "checked_at": "2026-11-12T10:47Z",
+  "checked_at": "2026-11-12T15:28Z",
   "final_host": "www.egat.co.th",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "www.egat.co.th",
@@ -964,21 +998,22 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 143192,
+    "code": 404,
+    "host": "www.egat.co.th",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.egat.co.th/home/en/procurement/"
  },
  "C28": {
-  "bytes": 216806,
-  "checked_at": "2026-11-12T10:47Z",
+  "bytes": 216822,
+  "checked_at": "2026-11-12T15:28Z",
   "final_host": "quezoncity.gov.ph",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "quezoncity.gov.ph",
@@ -991,48 +1026,49 @@
   "status": "error",
   "tries": [
    {
-    "bytes": 216806,
+    "bytes": 216822,
     "code": 404,
     "host": "quezoncity.gov.ph",
     "method": "http",
     "page": "error"
    },
    {
-    "bytes": 216705,
+    "bytes": 216730,
     "code": 404,
     "host": "quezoncity.gov.ph",
     "method": "relay",
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 468075,
+    "code": 404,
+    "host": "quezoncity.gov.ph",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://quezoncity.gov.ph/bids-and-awards/"
  },
  "C29": {
-  "bytes": 25534,
-  "checked_at": "2026-11-12T10:47Z",
+  "bytes": 25527,
+  "checked_at": "2026-11-12T15:28Z",
   "final_host": "www.ccgp.gov.cn",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.ccgp.gov.cn",
   "http_status": 200,
   "id": "C29",
-  "last_reachable": "2026-11-12T10:47Z",
+  "last_reachable": "2026-11-12T15:28Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
   "status": "open",
   "tries": [
    {
-    "bytes": 25534,
+    "bytes": 25527,
     "code": 200,
     "host": "www.ccgp.gov.cn",
     "method": "http",
@@ -1043,16 +1079,17 @@
  },
  "C30": {
   "bytes": 109372,
-  "checked_at": "2026-11-12T10:47Z",
+  "checked_at": "2026-11-12T15:28Z",
   "final_host": "chinabidding.mofcom.gov.cn",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "chinabidding.mofcom.gov.cn",
   "http_status": 200,
   "id": "C30",
-  "last_reachable": "2026-11-12T10:47Z",
+  "last_reachable": "2026-11-12T15:28Z",
   "method_used": "relay",
   "reachable": "yes",
   "robots": "unreadable",
@@ -1076,24 +1113,25 @@
   "url": "https://chinabidding.mofcom.gov.cn/"
  },
  "C31": {
-  "bytes": 8960,
-  "checked_at": "2026-11-12T10:47Z",
+  "bytes": 8999,
+  "checked_at": "2026-11-12T15:28Z",
   "final_host": "ecp.sgcc.com.cn",
   "first_seen": "2026-11-12T10:47Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "ecp.sgcc.com.cn",
   "http_status": 200,
   "id": "C31",
-  "last_reachable": "2026-11-12T10:47Z",
+  "last_reachable": "2026-11-12T15:28Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "unreadable",
   "status": "open",
   "tries": [
    {
-    "bytes": 8960,
+    "bytes": 8999,
     "code": 200,
     "host": "ecp.sgcc.com.cn",
     "method": "http",
@@ -1103,24 +1141,25 @@
   "url": "https://ecp.sgcc.com.cn/ecp2.0/portal/"
  },
  "C32": {
-  "bytes": 110912,
-  "checked_at": "2026-11-12T10:48Z",
+  "bytes": 111260,
+  "checked_at": "2026-11-12T15:29Z",
   "final_host": "www.bidding.csg.cn",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.bidding.csg.cn",
   "http_status": 200,
   "id": "C32",
-  "last_reachable": "2026-11-12T10:48Z",
+  "last_reachable": "2026-11-12T15:29Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
   "status": "open",
   "tries": [
    {
-    "bytes": 110912,
+    "bytes": 111260,
     "code": 200,
     "host": "www.bidding.csg.cn",
     "method": "http",
@@ -1131,16 +1170,17 @@
  },
  "C33": {
   "bytes": 1144,
-  "checked_at": "2026-11-12T10:48Z",
+  "checked_at": "2026-11-12T15:29Z",
   "final_host": "bid.powerchina.cn",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "bid.powerchina.cn",
   "http_status": 200,
   "id": "C33",
-  "last_reachable": "2026-11-12T10:48Z",
+  "last_reachable": "2026-11-12T15:29Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -1157,24 +1197,25 @@
   "url": "https://bid.powerchina.cn/"
  },
  "C34": {
-  "bytes": 641816,
-  "checked_at": "2026-11-12T10:48Z",
+  "bytes": 641764,
+  "checked_at": "2026-11-12T15:29Z",
   "final_host": "www.chnenergybidding.com.cn",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.chnenergybidding.com.cn",
   "http_status": 200,
   "id": "C34",
-  "last_reachable": "2026-11-12T10:48Z",
+  "last_reachable": "2026-11-12T15:29Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
   "status": "open",
   "tries": [
    {
-    "bytes": 641816,
+    "bytes": 641764,
     "code": 200,
     "host": "www.chnenergybidding.com.cn",
     "method": "http",
@@ -1184,24 +1225,25 @@
   "url": "https://www.chnenergybidding.com.cn/bidweb/"
  },
  "C35": {
-  "bytes": 88602,
-  "checked_at": "2026-11-12T10:48Z",
+  "bytes": 88209,
+  "checked_at": "2026-11-12T15:29Z",
   "final_host": "ec.sinopec.com",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "ec.sinopec.com",
   "http_status": 200,
   "id": "C35",
-  "last_reachable": "2026-11-12T10:48Z",
+  "last_reachable": "2026-11-12T15:29Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
   "status": "open",
   "tries": [
    {
-    "bytes": 88602,
+    "bytes": 88209,
     "code": 200,
     "host": "ec.sinopec.com",
     "method": "http",
@@ -1212,10 +1254,11 @@
  },
  "C36": {
   "bytes": 292,
-  "checked_at": "2026-11-12T10:48Z",
+  "checked_at": "2026-11-12T15:29Z",
   "final_host": "apis.data.go.kr",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 error 400",
    "2026-11-12 error 400"
   ],
   "host": "apis.data.go.kr",
@@ -1242,27 +1285,28 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 238,
+    "code": 400,
+    "host": "apis.data.go.kr",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://apis.data.go.kr/1230000/BidPublicInfoService04"
  },
  "C37": {
   "bytes": 44116,
-  "checked_at": "2026-11-12T10:48Z",
+  "checked_at": "2026-11-12T15:29Z",
   "final_host": "web.pcc.gov.tw",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "web.pcc.gov.tw",
   "http_status": 200,
   "id": "C37",
-  "last_reachable": "2026-11-12T10:48Z",
+  "last_reachable": "2026-11-12T15:29Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "unreadable",
@@ -1280,16 +1324,17 @@
  },
  "C38": {
   "bytes": 45232,
-  "checked_at": "2026-11-12T10:48Z",
+  "checked_at": "2026-11-12T15:30Z",
   "final_host": "egazette.gld.gov.hk",
   "first_seen": "2026-11-12T10:48Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.gld.gov.hk",
   "http_status": 200,
   "id": "C38",
-  "last_reachable": "2026-11-12T10:48Z",
+  "last_reachable": "2026-11-12T15:30Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -1307,16 +1352,17 @@
  },
  "C39": {
   "bytes": 151225,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:30Z",
   "final_host": "www.jetro.go.jp",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.jetro.go.jp",
   "http_status": 200,
   "id": "C39",
-  "last_reachable": "2026-11-12T10:49Z",
+  "last_reachable": "2026-11-12T15:30Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
@@ -1334,10 +1380,11 @@
  },
  "C40": {
   "bytes": 5192,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:30Z",
   "final_host": "www.tender.gov.mn",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 challenge 403",
    "2026-11-12 challenge 403"
   ],
   "host": "www.tender.gov.mn",
@@ -1364,27 +1411,28 @@
     "page": "challenge"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 4692,
+    "code": 403,
+    "host": "www.tender.gov.mn",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "challenge"
    }
   ],
   "url": "https://www.tender.gov.mn/en"
  },
  "C41": {
   "bytes": 158797,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:30Z",
   "final_host": "www.mtr.com.hk",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.mtr.com.hk",
   "http_status": 200,
   "id": "C41",
-  "last_reachable": "2026-11-12T10:49Z",
+  "last_reachable": "2026-11-12T15:30Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
@@ -1402,10 +1450,11 @@
  },
  "C42": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:30Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 robots_disallow ",
    "2026-11-12 robots_disallow "
   ],
   "host": "srm.kepco.net",
@@ -1421,10 +1470,11 @@
  },
  "C43": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:30Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "egp.ppa.gov.et",
@@ -1451,21 +1501,22 @@
     "page": "unreachable"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 38,
+    "code": 404,
+    "host": "egp.ppa.gov.et",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://egp.ppa.gov.et/egp/home"
  },
  "C44": {
   "bytes": 158,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:31Z",
   "final_host": "tenderbulletin.eskom.co.za",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "tenderbulletin.eskom.co.za",
@@ -1492,27 +1543,28 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 188,
+    "code": 404,
+    "host": "tenderbulletin.eskom.co.za",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://tenderbulletin.eskom.co.za/webapi/api/Lots?TENDER_TYPE=&Status=Open"
  },
  "C45": {
   "bytes": 10533,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:31Z",
   "final_host": "transnetetenders.azurewebsites.net",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "transnetetenders.azurewebsites.net",
   "http_status": 200,
   "id": "C45",
-  "last_reachable": "2026-11-12T10:49Z",
+  "last_reachable": "2026-11-12T15:31Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -1530,10 +1582,11 @@
  },
  "C46": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:31Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "www.randwater.co.za",
@@ -1560,27 +1613,28 @@
     "page": "unreachable"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 554,
+    "code": 404,
+    "host": "www.randwater.co.za",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.randwater.co.za/tenders.php"
  },
  "C47": {
   "bytes": 13313,
-  "checked_at": "2026-11-12T10:49Z",
+  "checked_at": "2026-11-12T15:31Z",
   "final_host": "web1.capetown.gov.za",
   "first_seen": "2026-11-12T10:49Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "web1.capetown.gov.za",
   "http_status": 200,
   "id": "C47",
-  "last_reachable": "2026-11-12T10:49Z",
+  "last_reachable": "2026-11-12T15:31Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -1598,10 +1652,11 @@
  },
  "C48": {
   "bytes": 6603,
-  "checked_at": "2026-11-12T10:50Z",
+  "checked_at": "2026-11-12T15:31Z",
   "final_host": "www.kplc.co.ke",
   "first_seen": "2026-11-12T10:50Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "www.kplc.co.ke",
@@ -1628,25 +1683,26 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 6882,
+    "code": 404,
+    "host": "www.kplc.co.ke",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.kplc.co.ke/category/view/50/tenders"
  },
  "C49": {
-  "bytes": 254381,
-  "checked_at": "2026-11-12T10:50Z",
+  "bytes": 7249,
+  "checked_at": "2026-11-12T15:31Z",
   "final_host": "www.kengen.co.ke",
   "first_seen": "2026-11-12T10:50Z",
   "history": [
-   "2026-11-12 error 404"
+   "2026-11-12 error 404",
+   "2026-11-12 error 522"
   ],
   "host": "www.kengen.co.ke",
-  "http_status": 404,
+  "http_status": 522,
   "id": "C49",
   "last_reachable": "",
   "method_used": "",
@@ -1655,35 +1711,36 @@
   "status": "error",
   "tries": [
    {
-    "bytes": 254381,
-    "code": 404,
+    "bytes": 7249,
+    "code": 522,
     "host": "www.kengen.co.ke",
     "method": "http",
     "page": "error"
    },
    {
-    "bytes": 254381,
-    "code": 404,
+    "bytes": 7250,
+    "code": 522,
     "host": "www.kengen.co.ke",
     "method": "relay",
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 6888,
+    "code": 522,
+    "host": "www.kengen.co.ke",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.kengen.co.ke/index.php/business-with-us/tenders.html"
  },
  "C50": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:50Z",
+  "checked_at": "2026-11-12T15:33Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:50Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "www.kpa.co.ke",
@@ -1720,21 +1777,22 @@
   "url": "https://www.kpa.co.ke/Pages/Tenders.aspx"
  },
  "C51": {
-  "bytes": 0,
-  "checked_at": "2026-11-12T10:50Z",
-  "final_host": "",
+  "bytes": 61518,
+  "checked_at": "2026-11-12T15:33Z",
+  "final_host": "www.tanesco.co.tz",
   "first_seen": "2026-11-12T10:50Z",
   "history": [
-   "2026-11-12 unreachable ERR"
+   "2026-11-12 unreachable ERR",
+   "2026-11-12 open 200"
   ],
   "host": "www.tanesco.co.tz",
-  "http_status": "ERR",
+  "http_status": 200,
   "id": "C51",
-  "last_reachable": "",
-  "method_used": "",
-  "reachable": "no",
+  "last_reachable": "2026-11-12T15:33Z",
+  "method_used": "stealth",
+  "reachable": "yes",
   "robots": "unreadable",
-  "status": "unreachable",
+  "status": "open",
   "tries": [
    {
     "bytes": 0,
@@ -1751,27 +1809,28 @@
     "page": "unreachable"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 61518,
+    "code": 200,
+    "host": "www.tanesco.co.tz",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "open"
    }
   ],
   "url": "https://www.tanesco.co.tz/procurement/tenders"
  },
  "C52": {
   "bytes": 73991,
-  "checked_at": "2026-11-12T10:50Z",
+  "checked_at": "2026-11-12T15:34Z",
   "final_host": "uetcl.go.ug",
   "first_seen": "2026-11-12T10:50Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.uetcl.go.ug",
   "http_status": 200,
   "id": "C52",
-  "last_reachable": "2026-11-12T10:50Z",
+  "last_reachable": "2026-11-12T15:34Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
@@ -1789,10 +1848,11 @@
  },
  "C53": {
   "bytes": 196,
-  "checked_at": "2026-11-12T10:51Z",
+  "checked_at": "2026-11-12T15:34Z",
   "final_host": "www.zesco.co.zm",
   "first_seen": "2026-11-12T10:51Z",
   "history": [
+   "2026-11-12 error 404",
    "2026-11-12 error 404"
   ],
   "host": "www.zesco.co.zm",
@@ -1819,21 +1879,22 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 143,
+    "code": 404,
+    "host": "www.zesco.co.zm",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://www.zesco.co.zm/tenders"
  },
  "C54": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:51Z",
+  "checked_at": "2026-11-12T15:34Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:51Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "www.ppadb.co.bw",
@@ -1871,16 +1932,17 @@
  },
  "C55": {
   "bytes": 32624,
-  "checked_at": "2026-11-12T10:52Z",
+  "checked_at": "2026-11-12T15:38Z",
   "final_host": "egp.praz.org.zw",
   "first_seen": "2026-11-12T10:52Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "egp.praz.org.zw",
   "http_status": 200,
   "id": "C55",
-  "last_reachable": "2026-11-12T10:52Z",
+  "last_reachable": "2026-11-12T15:38Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -1898,10 +1960,11 @@
  },
  "C56": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:52Z",
+  "checked_at": "2026-11-12T15:38Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:52Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "www.marchespublics.sn",
@@ -1939,16 +2002,17 @@
  },
  "C57": {
   "bytes": 12104,
-  "checked_at": "2026-11-12T10:53Z",
+  "checked_at": "2026-11-12T15:42Z",
   "final_host": "www.marchespublics.ci",
   "first_seen": "2026-11-12T10:53Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.marchespublics.ci",
   "http_status": 200,
   "id": "C57",
-  "last_reachable": "2026-11-12T10:53Z",
+  "last_reachable": "2026-11-12T15:42Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -1965,24 +2029,25 @@
   "url": "https://www.marchespublics.ci/"
  },
  "C58": {
-  "bytes": 766668,
-  "checked_at": "2026-11-12T10:53Z",
+  "bytes": 760240,
+  "checked_at": "2026-11-12T15:42Z",
   "final_host": "armp.cm",
   "first_seen": "2026-11-12T10:53Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "armp.cm",
   "http_status": 200,
   "id": "C58",
-  "last_reachable": "2026-11-12T10:53Z",
+  "last_reachable": "2026-11-12T15:42Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
   "status": "open",
   "tries": [
    {
-    "bytes": 766668,
+    "bytes": 760240,
     "code": 200,
     "host": "armp.cm",
     "method": "http",
@@ -1993,10 +2058,11 @@
  },
  "C59": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:53Z",
+  "checked_at": "2026-11-12T15:43Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:53Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "ppa.lagosstate.gov.ng",
@@ -2033,48 +2099,64 @@
   "url": "https://ppa.lagosstate.gov.ng/"
  },
  "C60": {
-  "bytes": 196024,
-  "checked_at": "2026-11-12T10:53Z",
-  "final_host": "old.goszakup.gov.kz",
+  "bytes": 226770,
+  "checked_at": "2026-11-12T15:43Z",
+  "final_host": "goszakup.gov.kz",
   "first_seen": "2026-11-12T10:53Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "goszakup.gov.kz",
   "http_status": 200,
   "id": "C60",
-  "last_reachable": "2026-11-12T10:53Z",
-  "method_used": "http",
+  "last_reachable": "2026-11-12T15:43Z",
+  "method_used": "stealth",
   "reachable": "yes",
   "robots": "unreadable",
   "status": "open",
   "tries": [
    {
-    "bytes": 196024,
-    "code": 200,
-    "host": "old.goszakup.gov.kz",
+    "bytes": 0,
+    "code": 0,
+    "host": "",
     "method": "http",
+    "page": "unreachable"
+   },
+   {
+    "bytes": 0,
+    "code": 0,
+    "host": "",
+    "method": "relay",
+    "page": "unreachable"
+   },
+   {
+    "bytes": 226770,
+    "code": 200,
+    "host": "goszakup.gov.kz",
+    "method": "stealth",
     "page": "open"
    }
   ],
   "url": "https://goszakup.gov.kz/ru/search/lots"
  },
  "C61": {
-  "bytes": 7445,
-  "checked_at": "2026-11-12T10:54Z",
+  "bytes": 106013,
+  "checked_at": "2026-11-12T15:45Z",
   "final_host": "zakup.sk.kz",
   "first_seen": "2026-11-12T10:54Z",
   "history": [
-   "2026-11-12 challenge 200"
+   "2026-11-12 challenge 200",
+   "2026-11-12 open 200"
   ],
   "host": "zakup.sk.kz",
   "http_status": 200,
   "id": "C61",
-  "last_reachable": "",
-  "method_used": "",
-  "reachable": "no",
+  "last_reachable": "2026-11-12T15:45Z",
+  "method_used": "stealth",
+  "reachable": "yes",
   "robots": "no robots.txt",
-  "status": "challenge",
+  "status": "open",
   "tries": [
    {
     "bytes": 7445,
@@ -2091,27 +2173,28 @@
     "page": "challenge"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 106013,
+    "code": 200,
+    "host": "zakup.sk.kz",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "open"
    }
   ],
   "url": "https://zakup.sk.kz/"
  },
  "C62": {
   "bytes": 1952,
-  "checked_at": "2026-11-12T10:54Z",
+  "checked_at": "2026-11-12T15:45Z",
   "final_host": "xarid.uzex.uz",
   "first_seen": "2026-11-12T10:54Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "xarid.uzex.uz",
   "http_status": 200,
   "id": "C62",
-  "last_reachable": "2026-11-12T10:54Z",
+  "last_reachable": "2026-11-12T15:45Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -2129,10 +2212,11 @@
  },
  "C63": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:54Z",
+  "checked_at": "2026-11-12T15:45Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:54Z",
   "history": [
+   "2026-11-12 unreachable ERR",
    "2026-11-12 unreachable ERR"
   ],
   "host": "etender.gov.az",
@@ -2170,16 +2254,17 @@
  },
  "C64": {
   "bytes": 1383,
-  "checked_at": "2026-11-12T10:55Z",
+  "checked_at": "2026-11-12T15:50Z",
   "final_host": "zakupki.gov.kg",
   "first_seen": "2026-11-12T10:55Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "zakupki.gov.kg",
   "http_status": 200,
   "id": "C64",
-  "last_reachable": "2026-11-12T10:55Z",
+  "last_reachable": "2026-11-12T15:50Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -2197,10 +2282,11 @@
  },
  "C65": {
   "bytes": 0,
-  "checked_at": "2026-11-12T10:55Z",
+  "checked_at": "2026-11-12T15:50Z",
   "final_host": "",
   "first_seen": "2026-11-12T10:55Z",
   "history": [
+   "2026-11-12 robots_disallow ",
    "2026-11-12 robots_disallow "
   ],
   "host": "tenders.procurement.gov.ge",
@@ -2216,16 +2302,17 @@
  },
  "C66": {
   "bytes": 33627,
-  "checked_at": "2026-11-12T10:55Z",
+  "checked_at": "2026-11-12T15:50Z",
   "final_host": "armeps.am",
   "first_seen": "2026-11-12T10:55Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "armeps.am",
   "http_status": 200,
   "id": "C66",
-  "last_reachable": "2026-11-12T10:55Z",
+  "last_reachable": "2026-11-12T15:50Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "no robots.txt",
@@ -2242,17 +2329,18 @@
   "url": "https://armeps.am/"
  },
  "C67": {
-  "bytes": 192264,
-  "checked_at": "2026-11-12T10:55Z",
+  "bytes": 192236,
+  "checked_at": "2026-11-12T15:50Z",
   "final_host": "www.adb.org",
   "first_seen": "2026-11-12T10:55Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.adb.org",
   "http_status": 200,
   "id": "C67",
-  "last_reachable": "2026-11-12T10:55Z",
+  "last_reachable": "2026-11-12T15:50Z",
   "method_used": "relay",
   "reachable": "yes",
   "robots": "unreadable",
@@ -2266,7 +2354,7 @@
     "page": "challenge"
    },
    {
-    "bytes": 192264,
+    "bytes": 192236,
     "code": 200,
     "host": "www.adb.org",
     "method": "relay",
@@ -2277,16 +2365,17 @@
  },
  "C68": {
   "bytes": 99252,
-  "checked_at": "2026-11-12T10:55Z",
+  "checked_at": "2026-11-12T15:50Z",
   "final_host": "www.afdb.org",
   "first_seen": "2026-11-12T10:55Z",
   "history": [
+   "2026-11-12 open 200",
    "2026-11-12 open 200"
   ],
   "host": "www.afdb.org",
   "http_status": 200,
   "id": "C68",
-  "last_reachable": "2026-11-12T10:55Z",
+  "last_reachable": "2026-11-12T15:50Z",
   "method_used": "http",
   "reachable": "yes",
   "robots": "allowed",
@@ -2304,10 +2393,11 @@
  },
  "C69": {
   "bytes": 83,
-  "checked_at": "2026-11-12T10:55Z",
+  "checked_at": "2026-11-12T15:50Z",
   "final_host": "contratacionesabiertas.oece.gob.pe",
   "first_seen": "2026-11-12T10:55Z",
   "history": [
+   "2026-11-12 error 403",
    "2026-11-12 error 403"
   ],
   "host": "contratacionesabiertas.oece.gob.pe",
@@ -2334,11 +2424,11 @@
     "page": "error"
    },
    {
-    "bytes": 0,
-    "code": 0,
-    "host": "",
+    "bytes": 109,
+    "code": 403,
+    "host": "contratacionesabiertas.oece.gob.pe",
     "method": "stealth",
-    "page": "unreachable"
+    "page": "error"
    }
   ],
   "url": "https://contratacionesabiertas.oece.gob.pe/api/v1/releases?page=1"
