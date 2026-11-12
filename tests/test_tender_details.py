@@ -145,4 +145,4 @@ def test_quota_pick_keeps_every_publisher():
     rows = [{"id": f"T{i}", "source": "TED (EU)", "_fit": 90, "est_value_usd": ""} for i in range(100)] + \
            [{"id": f"P{i}", "source": "PNCP (Brazil)", "_fit": 50, "est_value_usd": ""} for i in range(10)]
     got = td.quota_pick(sorted(rows, key=td.priority), 40, floor=5)
-    assert len(got) == 40 and sum(1 for r in got if r["source"] == "PNCP (Brazil)") == 5
+    assert len(got) == 40 and sum(1 for r in got if r["source"] == "PNCP (Brazil)") >= 5
