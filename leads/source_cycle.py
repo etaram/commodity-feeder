@@ -338,13 +338,17 @@ def report(now=None):
 
 
 # ---------------------------------------------------------------- developer helpers
-def sample(target, method="http"):
-    c = next((r for r in load_candidates() if r["id"] == target), None) if not target.startswith("http") else None
-    url = (c.get("probe_url") or c["url"]) if c else target
+def sample(targets, method="http"):
+    """fetch each target (candidate id or URL) once and seal the body; the log shows host, status and size only."""
     s = _session()
-    code, host, text, n = _try_http(s, url) if method == "http" else _try_relay(url) if method == "relay" else _try_stealth(url)
-    p = save_sealed(f"sample_{c['id'] if c else urlsplit(url).netloc}_{method}", text or "")
-    print(f"SAMPLE {urlsplit(url).netloc} {method} -> {code} {n} bytes, sealed {p.name if p else '-'}")
+    cands = {r["id"]: r for r in load_candidates()} if CANDIDATES.exists() else {}
+    for i, target in enumerate(targets):
+        c = cands.get(target)
+        url = (c.get("probe_url") or c["url"]) if c else target
+        code, host, text, n = _try_http(s, url) if method == "http" else _try_relay(url) if method == "relay" else _try_stealth(url)
+        p = save_sealed(f"sample_{c['id'] if c else urlsplit(url).netloc}_{i}_{method}", text or "")
+        print(f"SAMPLE {i} {urlsplit(url).netloc} {method} -> {code} {n} bytes, sealed {p.name if p else '-'}")
+        time.sleep(1.5)
 
 
 def run_module(name):
@@ -373,7 +377,8 @@ def main(argv=None):
         probe()
         report()
     elif cmd == "sample":
-        sample(a[1], a[2] if len(a) > 2 else "http")
+        meth = next((x.split("=", 1)[1] for x in a[1:] if x.startswith("--method=")), "http")
+        sample([x for x in a[1:] if not x.startswith("--method=")], meth)
     elif cmd == "run":
         for n in a[1:]:
             try:
