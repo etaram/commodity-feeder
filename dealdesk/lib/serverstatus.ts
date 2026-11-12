@@ -21,6 +21,9 @@ export type ServerStatus = {
   containers: Container[] | null; runners: Runner[]; models: string[];
   refine: { at: string; websites_checked: number | null; website_check_queue: number | null; needs_ai: number | null; universe: number | null } | null;
   journal: string[] | null;
+  /** supplier enrichment job on the server (leads/enrich_server.py): counts and fill rates only */
+  enrich: { at: string; state: string; queue: number | null; done: number | null; remaining: number | null; per_hour: number | null; eta_hours: number | null;
+    by_tier: Record<string, { done: number | null; total: number | null }>; fill: Record<string, number | null> } | null;
 };
 
 /** The status file as the panel may show it, or null when it is not a status file at all. */
@@ -35,6 +38,8 @@ export function parseStatus(raw: unknown, now = Date.now()): ServerStatus | null
       want_running: typeof c.want_running === "boolean" ? c.want_running : null };
   }).filter((c) => c.name);
   const rf = d.refine ? obj(d.refine) : null;
+  const en = d.enrich ? obj(d.enrich) : null;
+  const numMap = (v: unknown, n = 30): Record<string, number | null> => Object.fromEntries(Object.entries(obj(v)).slice(0, n).map(([k, x]) => [k.slice(0, 20), num(x)]));
   return {
     at: d.at.slice(0, 25), age_s: Number.isFinite(at) ? Math.max(0, Math.round((now - at) / 1000)) : null,
     host: { uptime_s: num(h.uptime_s), cpus: num(h.cpus), load: arr(h.load).slice(0, 3).map(num), cpu_busy_pct: num(h.cpu_busy_pct),
@@ -46,6 +51,9 @@ export function parseStatus(raw: unknown, now = Date.now()): ServerStatus | null
     models: arr(d.models).slice(0, 10).map((x) => str(x, 60)).filter(Boolean),
     refine: rf ? { at: str(rf.at, 25), websites_checked: num(rf.websites_checked), website_check_queue: num(rf.website_check_queue), needs_ai: num(rf.needs_ai), universe: num(rf.universe) } : null,
     journal: d.journal === null || d.journal === undefined ? null : arr(d.journal).slice(-20).map((x) => str(x, 160)),
+    enrich: en ? { at: str(en.at, 20), state: str(en.state, 12), queue: num(en.queue), done: num(en.done), remaining: num(en.remaining), per_hour: num(en.per_hour),
+      eta_hours: num(en.eta_hours), by_tier: Object.fromEntries(Object.entries(obj(en.by_tier)).slice(0, 6).map(([k, v]) => [k.slice(0, 20), { done: num(obj(v).done), total: num(obj(v).total) }])),
+      fill: numMap(en.fill) } : null,
   };
 }
 

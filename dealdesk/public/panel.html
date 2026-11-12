@@ -4524,6 +4524,15 @@ function srvHtml(d, err) {
       <div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Records refined", "רשומות שטויבו"))}</span><span class="num" dir="ltr">${adNum(rf.completed ?? rf.processed)} / ${adNum(rf.universe)}</span></div>${adBar(rf.completed ?? rf.processed ?? 0, rf.universe || 0, "")}
       <div class="sub">${esc(mt("completed from an official source, out of the whole supplier universe", "הושלמו ממקור רשמי, מתוך כל מאגר הספקים"))} · ${esc(mt("cases waiting for the AI review", "מקרים שממתינים לבדיקת AI"))} ${adNum(rf.needs_ai)}${rf.at ? " · " + esc(String(rf.at).replace("T", " ").slice(0, 16)) + " UTC" : ""}</div></div>`;
   }
+  // (e2) supplier enrichment on the server (leads/enrich_server.py): progress by priority tier and fill rates per field
+  const en = st && st.enrich;
+  if (en && en.queue) {
+    const tierName = { producer: mt("producers", "יצרנים"), "goods supplier": mt("goods suppliers", "ספקי טובין"), trader: mt("traders / distributors", "סוחרים / מפיצים"), other: mt("other", "אחר") };
+    const fl = en.fill || {}, fv = k => fl[k] === null || fl[k] === undefined ? "-" : fl[k] + "%";
+    proc += `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Supplier enrichment (server)", "טיוב ספקים (בשרת)"))} <span class="sub" dir="ltr">${esc(en.state)}</span></span><span class="num" dir="ltr">${adNum(en.done)} / ${adNum(en.queue)}</span></div>${adBar(en.done || 0, en.queue, "acc")}
+      <div class="sub">${Object.entries(en.by_tier || {}).map(([k, v]) => `${esc(tierName[k] || k)} ${adNum(v.done)}/${adNum(v.total)}`).join(" · ")}${en.per_hour ? " · " + esc(mt(`about ${adNum(en.per_hour)} per hour`, `כ-${adNum(en.per_hour)} בשעה`)) : ""}${en.eta_hours ? " · " + esc(mt(`about ${Math.round(en.eta_hours / 24 * 10) / 10} days left`, `נותרו כ-${Math.round(en.eta_hours / 24 * 10) / 10} ימים`)) : ""}</div>
+      ${fl.read_ok ? `<div class="sub" dir="ltr">${esc(mt("Of sites read", "מתוך אתרים שנקראו"))} (${adNum(fl.read_ok)}): WhatsApp ${fv("whatsapp_links")} · WeChat ${fv("wechat")} · LinkedIn ${fv("linkedin")} · ${esc(mt("people", "בעלי תפקידים"))} ${fv("people_site")} · ${esc(mt("founded", "שנת הקמה"))} ${fv("founded")} · ${esc(mt("size", "גודל"))} ${fv("size")} · ${esc(mt("press", "כתבות"))} ${fv("press")}</div>` : ""}</div>`;
+  }
   // (f) agent budget
   const ab = d.agent_budget;
   const budget = ab && !ab.error ? `<div class="srv-pr"><div class="srv-prh"><span>${esc(mt("Today", "היום"))}</span><span class="num" dir="ltr">$${Number(ab.today_usd).toFixed(2)}${ab.day_cap_usd !== null ? " / $" + ab.day_cap_usd : ""}</span></div>${ab.day_cap_usd ? adBar(ab.today_usd, ab.day_cap_usd, ab.today_usd >= ab.day_cap_usd * 0.8 ? "warn" : "acc") : ""}</div>
