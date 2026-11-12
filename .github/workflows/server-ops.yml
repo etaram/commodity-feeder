@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, enrich-probe, enrich-sample, enrich-start, enrich-status, enrich-stop, enrich-review, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners, env-check, server-up, server-env, server-logs, cutover-prepare, cutover-switch, cutover-rollback, screen-check, checknow-up, checknow-test]
+        options: [status, enrich-probe, enrich-sample, enrich-start, enrich-status, enrich-stop, enrich-review, enrich-people, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners, env-check, server-up, server-env, server-logs, cutover-prepare, cutover-switch, cutover-rollback, screen-check, checknow-up, checknow-test]
         default: status
 permissions:
   contents: read
@@ -25,6 +25,8 @@ jobs:
           # only the add-runners task receives the one-hour runner registration token
           RUNNER_REG_TOKEN: ${{ inputs.task == 'add-runners' && secrets.RUNNER_REG_TOKEN || '' }}
           SCHED_DISPATCH_TOKEN: ${{ inputs.task == 'scheduler-install' && secrets.SCHED_DISPATCH_TOKEN || '' }}
+          # only the enrichment start and the people sample receive the Companies House key (written root-only on the server)
+          COMPANIES_HOUSE_API_KEY: ${{ (inputs.task == 'enrich-start' || inputs.task == 'enrich-people') && secrets.COMPANIES_HOUSE_API_KEY || '' }}
         # only the server-env task receives the SERVER_* secrets (the owner's one step to fill the server .env);
         # cutover-prepare receives only HAS_* = true/false (whether such a secret exists), never a value
           SERVER_AUTH_SECRET: ${{ inputs.task == 'server-env' && secrets.SERVER_AUTH_SECRET || '' }}

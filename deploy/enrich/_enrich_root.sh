@@ -8,6 +8,12 @@
 #   status <checkout>        progress counts, lane counts, fill rates; sample metrics when a sample ran
 #   stop   <checkout>        stops the container (the files stay; start resumes where it stopped)
 #   review <checkout>        the 30-record hand-check file, ENCRYPTED to the reviewer's public key (deploy/enrich/review_pub.pem)
+#   people <checkout>        the registry people lane's measurement sample (leads/people_registry.py), in its own folder
+#                            and container ("enrich-people"); the full run is not touched. First call starts it; a call
+#                            while it runs prints counts; a call after it finished prints the metrics and the sealed
+#                            review file. A new commit starts a new sample.
+# Companies House: the key is used only when the repository secret COMPANIES_HOUSE_API_KEY exists (written by
+# deploy/ops/enrich-start.sh and enrich-people.sh to $E/.ch.env, root only); without it the UK register stays off.
 # Limits: 1.5 CPUs, 3 GB, CPU shares 128, nice 19, idle I/O: the database, the data gateway, the website, the collectors,
 # backups and the semantic job keep priority. Folder /opt/sinder/enrich (root only): code copy, venv, queue, lane files,
 # status.json (counts only, readable by the server panel collector), export/enrich.jsonl.gz (for the company-check workflow).
@@ -19,11 +25,21 @@ IMG=python:3.12-slim
 LIMITS=(--cpus 1.5 --cpu-shares 128 --memory 3g --memory-swap 3g)
 umask 077; mkdir -p "$E"; chmod 711 "$E"
 
+seal() {   # $1 a file: printed only as ciphertext (hybrid encryption to the reviewer's public key; the private key is not
+           # on this server), in lines of 40,000 characters (GitHub drops longer log lines); join the REVIEW-DATA lines
+  local k; k=$(mktemp)
+  openssl rand -hex 32 > "$k"
+  gzip -c "$1" | openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -out "$k.enc"
+  openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
+  echo "REVIEW-KEY $(base64 -w0 "$k.key")"
+  base64 -w0 "$k.enc" | fold -w 40000 | sed 's/^/REVIEW-DATA /'; echo
+  rm -f "$k" "$k".*
+}
 code() {   # a copy of the code the job runs, so the runner's workspace can change under it
   rm -rf "$E/code.new"; mkdir -p "$E/code.new/dealdesk/lib"
   cp -r "$repo/leads" "$E/code.new/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/code.new/dealdesk/lib/"
   rm -rf "$E/code"; mv "$E/code.new" "$E/code"; chmod -R go-rwx "$E/code"
-  echo "code copied: $(git -C "$repo" rev-parse --short HEAD 2>/dev/null)"
+  echo "code copied: $(git -c safe.directory='*' -C "$repo" rev-parse --short HEAD 2>/dev/null)"
 }
 venv() {
   if [ -d "$E/venv" ] && docker run --rm "${LIMITS[@]}" -v "$E":/e "$IMG" /e/venv/bin/python -c "import requests, cryptography, phonenumbers, pycountry, pypinyin, cv2" >/dev/null 2>&1; then return 0; fi
@@ -38,10 +54,12 @@ queue() {   # the supplier index the app reads, decrypted inside the container o
   docker run --rm "${LIMITS[@]}" --env-file "$key_env" -v "$E":/e -v "$V":/web:ro -w /e/code "$IMG" ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server queue --index /web/suppliers.enc --dir /e || { rm -f "$key_env"; return 1; }
   rm -f "$key_env"
 }
+envf() { [ -s "$E/.ch.env" ] && echo "--env-file $E/.ch.env"; }
 launch() {   # $1 restart policy, rest: arguments of leads.enrich_server run
   local pol="$1"; shift
   docker rm -f enrich >/dev/null 2>&1 || true
-  docker run -d --name enrich --restart "$pol" "${LIMITS[@]}" -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/code "$IMG" \
+  # shellcheck disable=SC2046
+  docker run -d --name enrich --restart "$pol" "${LIMITS[@]}" $(envf) -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/code "$IMG" \
     ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server run --dir /e "$@" >/dev/null
   sleep 20; docker ps --filter name=^enrich$ --format 'container {{.Names}}: {{.Status}}'
 }
@@ -54,7 +72,7 @@ if [ "$mode" = sample ]; then
   if [ -s "$E/site.jsonl" ] && [ ! -f "$E/full-run-started" ]; then
     docker rm -f enrich >/dev/null 2>&1 || true
     n=1; while [ -d "$E/sample-$n" ]; do n=$((n+1)); done; mkdir -p "$E/sample-$n"
-    for f in site press people wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
+    for f in site press people registry wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
     rm -f "$E/status.json" "$E/review.jsonl"; echo "earlier sample files moved to sample-$n"
   fi
   # the search-snippet lane (people) answered the first query with a block page on 12 Nov 2026: left out of the sample
@@ -67,14 +85,46 @@ if [ "$mode" = start ]; then
   if [ ! -f "$E/full-run-started" ] && [ -s "$E/site.jsonl" ]; then   # the last sample's files move aside: the full run starts clean
     docker rm -f enrich >/dev/null 2>&1 || true
     n=1; while [ -d "$E/sample-$n" ]; do n=$((n+1)); done; mkdir -p "$E/sample-$n"
-    for f in site press people wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
+    for f in site press people registry wikidata; do [ -f "$E/$f.jsonl" ] && mv "$E/$f.jsonl" "$E/sample-$n/"; done
     rm -f "$E/status.json"; echo "sample files moved to sample-$n"
   fi
   touch "$E/full-run-started"
-  lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,wikidata)
+  lanes=$(cat "$E/lanes" 2>/dev/null || echo site,press,registry,wikidata)
+  # a lanes file written before the registry lane existed (12 Nov 2026) gains it; "people" (search snippets) is gone
+  case ",$lanes," in *,registry,*) ;; *) lanes="$lanes,registry" ;; esac
+  lanes=$(echo "$lanes" | tr ',' '\n' | grep -vx people | paste -sd, -)
+  [ -s "$E/.ch.env" ] && echo "Companies House: key present (UK register on)" || echo "Companies House: no key (UK register off)"
   echo "lanes: $lanes"
   # 24 workers: the sample used about 0.5 of its 1.5 CPUs with 16 (the work is waiting on remote sites)
   launch unless-stopped --lanes "$lanes" --workers 24
+  exit 0
+fi
+if [ "$mode" = people ]; then
+  P="$E/psample"; sha=$(git -c safe.directory='*' -C "$repo" rev-parse HEAD 2>/dev/null | cut -c1-12 || echo none)
+  if docker ps --filter name=^enrich-people$ --format '{{.Names}}' | grep -q . && [ "$(cat "$P/sha" 2>/dev/null)" = "$sha" ]; then
+    echo "people sample running ($(cat "$P/sha" 2>/dev/null))"
+    python3 -c "import json; s=json.load(open('$P/status.json')); print(json.dumps({'registry_people': s.get('registry_people'), 'blocked': s.get('blocked')}))" 2>/dev/null || echo "no counts yet"
+    docker logs --tail 8 enrich-people 2>&1 | grep -vE "https?://|@" | cut -c1-160 || true
+    exit 0
+  fi
+  echo "previous sample container: $(docker ps -a --filter name=^enrich-people$ --format '{{.Status}}') code $(cat "$P/sha" 2>/dev/null), now $sha"
+  docker logs --tail 12 enrich-people 2>&1 | grep -vE "https?://|@" | cut -c1-200 || true
+  if [ -s "$P/registry.jsonl" ] && [ "$(cat "$P/sha" 2>/dev/null)" = "$sha" ]; then
+    echo "== people sample metrics (counts only), code $sha"
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/pcode "$IMG" /e/venv/bin/python -m leads.enrich_server people-metrics --dir /e/psample
+    echo "== hand-check file (sealed)"; seal "$P/people_review.jsonl"
+    exit 0
+  fi
+  venv
+  # its own code copy: the full run's copy (code/) is not replaced under it
+  rm -rf "$E/pcode"; mkdir -p "$E/pcode/dealdesk/lib"; cp -r "$repo/leads" "$E/pcode/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/pcode/dealdesk/lib/"; chmod -R go-rwx "$E/pcode"
+  rm -rf "$P"; mkdir -p "$P"; echo "$sha" > "$P/sha"
+  docker run --rm "${LIMITS[@]}" -v "$E":/e -w /e/pcode "$IMG" /e/venv/bin/python -m leads.enrich_server people-sample --dir /e --out /e/psample --per 40
+  docker rm -f enrich-people >/dev/null 2>&1 || true
+  # shellcheck disable=SC2046
+  docker run -d --name enrich-people --restart no --cpus 0.5 --memory 1g $(envf) -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/pcode "$IMG" \
+    ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server run --dir /e/psample --lanes registry --workers 0 --minutes 40 >/dev/null
+  sleep 15; docker ps -a --filter name=^enrich-people$ --format 'container {{.Names}}: {{.Status}}'
   exit 0
 fi
 if [ "$mode" = stop ]; then
@@ -96,13 +146,7 @@ if [ "$mode" = status ]; then
 fi
 if [ "$mode" = review ]; then
   [ -s "$E/review.jsonl" ] || { echo "no review file (run status after a sample)"; exit 1; }
-  # hybrid encryption to the reviewer's public key: only ciphertext is printed (the private key is not on this server)
-  k=$(mktemp); trap 'rm -f "$k" "$k".*' EXIT
-  openssl rand -hex 32 > "$k"
-  gzip -c "$E/review.jsonl" | openssl enc -aes-256-cbc -pbkdf2 -salt -pass file:"$k" -out "$k.enc"
-  openssl pkeyutl -encrypt -pubin -inkey "$repo/deploy/enrich/review_pub.pem" -pkeyopt rsa_padding_mode:oaep -in "$k" -out "$k.key"
-  echo "REVIEW-KEY $(base64 -w0 "$k.key")"
-  echo "REVIEW-DATA $(base64 -w0 "$k.enc")"
+  seal "$E/review.jsonl"
   exit 0
 fi
 if [ "$mode" = probe ]; then
@@ -113,6 +157,21 @@ if [ "$mode" = probe ]; then
   echo "== index"; ls -la $V/data/web/suppliers.enc 2>/dev/null | awk '{print $5, $6, $7, $8}'
   echo "== private data on volume"; ls $V/data/private 2>/dev/null | head; ls $V/data/checks 2>/dev/null | head
   echo "== zbar/opencv on host"; command -v zbarimg || echo "no zbarimg"; python3 -c "import cv2" 2>/dev/null && echo "cv2 on host" || echo "no cv2 on host"
+  if [ -s "$E/queue.jsonl" ] && [ -d "$E/venv" ]; then
+    echo "== queue by country: [country, records, with website, producers] (counts only)"
+    # the runner's checkout, read-only (the running job's code copy is not touched)
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -v "$repo":/r:ro -w /r "$IMG" /e/venv/bin/python -m leads.enrich_server countries --dir /e
+  fi
+  if [ -d "$E/venv" ]; then
+    echo "== official registers for the people lane: HTTP status and size only; the raw answers are sealed to the reviewer key"
+    docker run --rm "${LIMITS[@]}" -v "$E":/e -v "$repo":/r:ro -w /r "$IMG" /e/venv/bin/python -m leads.people_registry probe /e/people_probe.json
+    for u in https://recherche-entreprises.api.gouv.fr/search?q=542051180 https://api.insee.fr/; do   # connection detail only
+      docker run --rm curlimages/curl:8.10.1 -sS -o /dev/null -w "%{http_code} %{remote_ip} " --max-time 20 -A "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0)" "$u" 2>&1 | cut -c1-160; echo " ${u%%\?*}"
+      docker run --rm curlimages/curl:8.10.1 -4 -sS -o /dev/null -w "ipv4 %{http_code} " --max-time 20 "$u" 2>&1 | cut -c1-160; echo
+    done
+    getent ahosts recherche-entreprises.api.gouv.fr | head -3
+    seal "$E/people_probe.json"; rm -f "$E/people_probe.json"
+  fi
   echo "== egress from a container"
   for u in https://news.google.com/rss/search?q=test https://html.duckduckgo.com/html/?q=test https://www.wikidata.org/w/api.php https://api.gleif.org/api/v1/lei-records?page%5Bsize%5D=1 https://pypi.org/simple/opencv-python-headless/; do
     docker run --rm curlimages/curl:8.10.1 -s -o /dev/null -w "%{http_code} " --max-time 15 -A "Mozilla/5.0 (compatible; SinderCompanyCheck/1.0)" "$u" || true; echo " ${u%%\?*}"

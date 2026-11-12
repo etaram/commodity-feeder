@@ -99,6 +99,14 @@ LEGAL_ID = [
     ("Company no.", re.compile(r"\b(?:Company|Registration|Reg\.?) (?:No|Number)\.?[:\s]*([A-Z]{0,2}\d{6,10})", re.I)),
     ("KRS", re.compile(r"\bKRS[:\s]*(\d{10})")),
     ("HRB", re.compile(r"\bHR[AB][:\s]*(\d{3,7})")),
+    # register numbers the people lane (leads/people_registry.py) looks up by id: France, Norway, Czechia, UK
+    ("SIREN", re.compile(r"\bSIREN[:\s]*(\d{3}\s?\d{3}\s?\d{3})\b")),
+    ("SIRET", re.compile(r"\bSIRET[:\s]*(\d{3}\s?\d{3}\s?\d{3}\s?\d{5})\b")),
+    ("RCS", re.compile(r"\bR\.?C\.?S\.?\s+[A-Za-zÀ-ÿ' -]{2,30}?\s+(?:[AB]\s+)?(\d{3}\s?\d{3}\s?\d{3})\b")),
+    ("Org.nr", re.compile(r"\bOrg(?:anisasjons)?\.?\s*-?n(?:r|o|ummer)\.?[:\s]*(?:NO\s?)?(\d{3}\s?\d{3}\s?\d{3})\b", re.I)),
+    ("ICO", re.compile(r"\bIČO?[:\s]*(\d{8})\b")),
+    ("VAT", re.compile(r"\bDIČ[:\s]*(CZ\d{8,10})\b")),
+    ("Company no.", re.compile(r"\bregistered in (?:England(?: and| &) Wales|England|Scotland|Wales)\D{0,40}?(\d{8}|SC\d{6})\b", re.I)),
 ]
 STRIP = re.compile(r"<(script|style|noscript|svg|template)[^>]*>.*?</\1>", re.I | re.S)
 TAG = re.compile(r"<[^>]+>")
@@ -656,6 +664,11 @@ def push_sheet(checks):
 ENRICH_OFF = set(filter(None, __import__("os").environ.get("ENRICH_OFF", "people_search").split(",")))
 
 
+def person_source(p):
+    conf = p.get("confidence", "own site")
+    return f"register: {p.get('source_name', '')}".replace(",", " ") if conf == "official registry" else conf
+
+
 def profile_cells(c):
     """The profile and enrichment columns of the 'Company checks' tab for one check (pure)."""
     wx = c.get("wechat") or {}
@@ -666,7 +679,8 @@ def profile_cells(c):
     return [
         "; ".join([*(f"id {x}" for x in wx.get("ids", [])), *wx.get("decoded", []), *wx.get("links", []), *(f"QR {u}" for u in wx.get("qr_images", []))])[:400] if "wechat" not in ENRICH_OFF else "",
         " ".join(x["link"] for x in c.get("whatsapp_links") or [])[:200] if "whatsapp" not in ENRICH_OFF else "",
-        "; ".join(f"{p['name']} ({p['title']}, {p.get('confidence', 'own site')}{', ' + p['linkedin'] if p.get('linkedin') else ''})" for p in people)[:600],
+        # "Name (title, source[, LinkedIn profile the company's own site links])"; the panel adds a LinkedIn search link
+        "; ".join(f"{p['name']} ({p['title'].replace(',', ' ')}, {person_source(p)}{', ' + p['linkedin'] if p.get('linkedin') else ''})" for p in people)[:900],
         f"{fy.get('value')} ({fy.get('basis')})" if fy else "",
         f"{em.get('value')} ({em.get('basis')})" if em else "",
         f"{rv.get('phrase')} ({rv.get('basis')})" if rv else "",
@@ -675,6 +689,17 @@ def profile_cells(c):
         " | ".join(f"{a.get('date', '')} {a.get('outlet', '')}: {a.get('title', '')} {a.get('url', '')}" for a in c.get("press") or [])[:900] if "press" not in ENRICH_OFF else "",
         c.get("enriched_at", ""),
     ]
+
+
+def merge_people(cur, people):
+    """People from the server job into a check, one entry per name (the check's own entries stay first)."""
+    if not people:
+        return
+    have = {re.sub(r"\W+", " ", p.get("name", "")).strip().lower() for p in cur.get("people") or []}
+    for p in people:
+        k = re.sub(r"\W+", " ", p.get("name", "")).strip().lower()
+        if k and k not in have:
+            cur.setdefault("people", []).append(p); have.add(k)
 
 
 def merge_server(checks, path=None):
@@ -694,12 +719,23 @@ def merge_server(checks, path=None):
         if not k:
             continue
         cur = checks.get(k)
-        if not cur or str(d.get("checked_at", "")) >= str(cur.get("checked_at", "")):
+        if d.get("people_only"):
+            # register people for a company whose site the server has not read: added to the hourly check (if any),
+            # never in its place, so the hourly check still reads the website (no 'checked' date, no version)
+            if not cur:
+                checks[k] = {kk: v for kk, v in d.items() if kk != "people_only"}
+            else:
+                merge_people(cur, d.get("people"))
+                for f in ("registry_entity", "enriched_at"):
+                    if d.get(f):
+                        cur[f] = d[f]
+        elif not cur or str(d.get("checked_at", "")) >= str(cur.get("checked_at", "")):
             checks[k] = d
         else:
-            for f in ("press", "people", "wikidata", "enriched_at", "wechat"):
+            for f in ("press", "wikidata", "enriched_at", "wechat", "registry_entity"):
                 if d.get(f) and not cur.get(f):
                     cur[f] = d[f]
+            merge_people(cur, d.get("people"))
         n += 1
     log.info("company check: %d records from the server enrichment job merged", n)
     return n
@@ -792,10 +828,62 @@ def main(limit=1500, minutes=45):
     return {"queued": len(todo), **stats, "on_record": len(checks)}
 
 
+def priority_keys(rows, queue_rows, deal_rows):
+    """Supplier keys (name|country) the server's people lane looks up first: companies asked for in the panel ('Check
+    queue': time, company, country, by) and suppliers in deals ('Deal Records': party records with the supplier role,
+    quotes with a supplier). Pure: the sheet rows are passed in."""
+    by_key = {f"{r['supplier']}|{r['country']}": r for r in rows}
+    by_name = defaultdict(list)
+    for r in rows:
+        by_name[r["supplier"].strip().lower()].append(r)
+    out = []
+
+    def add(name, country):
+        name, country = str(name or "").strip(), str(country or "").strip().upper()
+        if not name:
+            return
+        k = f"{name}|{country}"
+        cands = [by_key[k]] if k in by_key else [r for r in by_name.get(name.lower(), []) if not country or r["country"] == country][:2]
+        for r in cands:
+            kk = f"{r['supplier']}|{r['country']}"
+            if kk not in out:
+                out.append(kk)
+    for d in deal_rows:
+        d = list(d) + [""] * 10
+        try:
+            data = json.loads(d[6] or "{}")
+        except ValueError:
+            continue
+        if d[2] == "party" and data.get("role", "supplier") == "supplier":
+            add(data.get("name"), data.get("country"))
+        elif d[2] == "quote" and data.get("supplier"):
+            add(data.get("supplier"), data.get("country"))
+    for qr in queue_rows[-500:]:
+        qr = list(qr) + [""] * 4
+        add(qr[1], qr[2])
+    return out
+
+
+def write_priority_keys(path):
+    """priority.keys for the server enrichment job (copied to the server by the company-check workflow)."""
+    src = PRIVATE / "universe.csv"
+    if not src.exists():
+        return 0
+    from .push import LEADS_SHEET
+    rows = list(csv.DictReader(open(src, encoding="utf-8")))
+    keys = priority_keys(rows, _sheet_rows(LEADS_SHEET, "'Check queue'!A2:D2000"), _sheet_rows(LEADS_SHEET, "'Deal Records'!A2:J20000"))
+    Path(path).write_text("\n".join(keys) + "\n", encoding="utf-8")
+    log.info("priority keys: %d companies (deals and the Check queue)", len(keys))
+    return len(keys)
+
+
 if __name__ == "__main__":
     import logging
     logging.basicConfig(level=logging.INFO)
     a = sys.argv[1:]
+    if "--priority-keys" in a:
+        print(write_priority_keys(a[a.index("--priority-keys") + 1]))
+        sys.exit(0)
     lim = int(a[a.index("--limit") + 1]) if "--limit" in a else 4000
     mins = int(a[a.index("--minutes") + 1]) if "--minutes" in a else 40
     print(main(lim, mins))
