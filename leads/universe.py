@@ -593,7 +593,7 @@ def proven_text(ev):
     if not ev:
         return ""
     v = f", USD {ev['u']:,}" if ev.get("u") else ""
-    return f"won: {ev['t']} ({ev['b']}, {ev['c']}, {ev['d']}{v}) [{ev['s']}{(' ' + ev['l']) if ev.get('l') else ''}; {ev['id']}]"[:420]
+    return f"won: {ev['t']} ({ev['b']}, {ev['c']}, {ev['d']}{v}) [{ev['s']}{(' ' + ev['l']) if ev.get('l') else ''}; {ev['id']}]"[:640]
 
 
 MANUF_NAME = re.compile(r"\b(manufactur\w*|fabricant\w*|fabrica\w*|f[áa]brica|factory|industr(?:y|ies|ial|ie|ia|ias|ieel)|"
