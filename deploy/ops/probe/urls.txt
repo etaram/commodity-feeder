@@ -1,2 +1,4 @@
-# round 9
-https://kitchener.bidsandtenders.ca/Module/Tenders/en 200 grep=(Search|ajax|url:|\.json|getJSON)
+# round 10: TED, how many open notices exist (deadline in the future), by query form
+POST https://api.ted.europa.eu/v3/notices/search 400 {"query":"notice-type IN (cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social) AND deadline-receipt-tender-date-lot>=20261113","fields":["publication-number"],"limit":1}
+POST https://api.ted.europa.eu/v3/notices/search 400 {"query":"notice-type IN (cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social) AND DT>=20261113","fields":["publication-number"],"limit":1}
+POST https://api.ted.europa.eu/v3/notices/search 400 {"query":"notice-type IN (cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social) AND PD>=20260815","fields":["publication-number"],"limit":1}
