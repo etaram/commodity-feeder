@@ -1,9 +1,5 @@
-# round 11: Japan KKJ, India GeM open data, Indonesia LKPP open data
-https://www.kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&Count=3 1500
-https://www.kkj.go.jp/doc/ja/api_guide.pdf 200
-https://data.inaproc.id/ 500
-https://isb.lkpp.go.id/isb-2/api/ 300
-https://sirup.lkpp.go.id/sirup/ 300
-https://gem.gov.in/ 300
-https://data.gov.in/catalog/government-e-marketplace-gem 400
-https://eprocure.gov.in/cppp/latestactivetendersnew 300
+# round 12: multi-agency platforms (US/Canada public bodies)
+https://vendor.bonfirehub.com/preview 300 grep=(api/|\.json|opportunit[a-z]*\?|graphql)
+https://vendor.bonfirehub.com/api/v1/opportunities?limit=2 600
+https://procurement.opengov.com/api/v1/project/public?limit=2 400
+https://www.bidnetdirect.com/public/solicitations/open 300
