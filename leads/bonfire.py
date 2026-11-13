@@ -18,6 +18,13 @@ from .sectors import classify
 # (hub, buyer, country). Only public bodies (port authorities, cities, counties, states, utilities, schools).
 HUBS = [
     ("panynj", "Port Authority of New York and New Jersey", "USA"),
+    # Grok, 13 Nov 2026 (Sources rows 691-697, open counts checked on the official Bonfire API)
+    ("philaport", "Port of Philadelphia (PhilaPort)", "USA"),
+    ("weta", "San Francisco Bay Area Water Emergency Transportation Authority", "USA"),
+    ("metra", "Metra (Northeast Illinois Regional Commuter Railroad)", "USA"),
+    ("dfwairport", "Dallas Fort Worth International Airport", "USA"),
+    ("actransit", "AC Transit", "USA"),
+    ("tampabaywater", "Tampa Bay Water", "USA"),
     ("fortworthtexas", "City of Fort Worth, Texas", "USA"),
     ("sedona", "City of Sedona, Arizona", "USA"),
     ("bendoregon", "City of Bend, Oregon", "USA"),
