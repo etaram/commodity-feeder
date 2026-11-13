@@ -114,6 +114,7 @@ def score(r, usd, days, new):
 
 
 def merge_tenders(bm, seen):
+    from . import local_works
     from .regions import region
     from .sectors import SECTORS, classify
     rates, gb, t = _rates(), _group_bench(bm), today()
@@ -133,6 +134,7 @@ def merge_tenders(bm, seen):
     for r in rows:
         if r.get("skip") or r.get("stale"):      # stale = kept as history from a part of a source that did not answer
             continue
+        local_works.label(r)
         g = BY_ID.get(refine_group(r.get("group") or "", r.get("title") or "") or "", {})
         codes = (r.get("cpv") or (r.get("classification") if re.match(r"^\d{8}", r.get("classification") or "") else "")).split()
         sec = r.get("sector") or classify(r.get("title", ""), codes or None)[0]
