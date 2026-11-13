@@ -1,6 +1,5 @@
-# round 20: bids&tenders (Canada municipalities) API, MERX public open list
-https://peelregion.bidsandtenders.ca/Module/Tenders/en 300 grep=(api/[A-Za-z/]{3,60}|Tenders/en/Tender/Search[^"]{0,60})
-https://peelregion.bidsandtenders.ca/Module/Tenders/en/Tender/Search/ac3a5d8a-0000-0000-0000-000000000000 200
-https://peelregion.bidsandtenders.ca/robots.txt 800
-https://www.merx.com/public/solicitations/open 300 grep=(\d[\d,]*\s*results|of\s*[\d,]+|Showing[^<]{0,60}|captcha)
-https://www.merx.com/robots.txt 1500
+# round 21: Taiwan PCC open-for-bid variants
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&dateType=isSpdt&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&basicDateType=isSpdt&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&dateType=isNow&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
+https://web.pcc.gov.tw/prkms/tender/common/noticeDate/readNoticeDate?firstSearch=true&searchType=noticeDate&isBinding=N&isLogIn=N&dateType=isSpdt&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
