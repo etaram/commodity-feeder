@@ -537,6 +537,15 @@ def write_sheet_chunks(tenders):
     log.info("open list: %d notices, %d past their deadline left out, %d duplicates of another source's notice left out", len(rows), expired, dups)
     for i in range(CHUNKS):
         write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
+    # 13 Nov: the 65 chunks hold at most 130,000 rows (the Google Sheet's import limit), so every new source pushed
+    # other notices out of the app. The app reads this one compressed file with ALL open notices (no cap) when present.
+    import gzip
+    import io
+    buf = io.StringIO(); w = csv.writer(buf); w.writerow(SHEET_COLS)
+    for r in rows:
+        w.writerow([r.get(c, "") for c in SHEET_COLS])
+    (LEADS / "sheet" / "tenders_open.csv.gz").write_bytes(gzip.compress(buf.getvalue().encode("utf-8"), mtime=0))
+    log.info("open list file: %d notices in sheet/tenders_open.csv.gz (chunks hold %d)", len(rows), min(len(rows), CHUNK * CHUNKS))
     write("tenders.csv", rows[:CHUNK], SHEET_COLS)
     # the brain's explanations travel beside the chunks (the Tenders tab layout stays fixed; the web index reads this)
     write("fit.csv", [{"id": r.get("id", ""), "fit_why": (r.get("fit_why") or "")[:160], "fit_flags": (r.get("fit_flags") or "")[:160],
