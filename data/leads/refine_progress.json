@@ -1,92 +1,89 @@
 {
  "version": "refine-5",
- "at": "2026-11-13T04:48Z",
+ "at": "2026-11-13T07:12Z",
  "universe": 459054,
  "sample": null,
  "processed": 459054,
- "reused_unchanged": 362287,
- "completed": 140737,
- "contact_found": 80710,
- "official_website": 140736,
- "identity_verified": 624,
- "registry_checked": 1701,
- "with_conflicts": 49002,
- "with_notes": 9589,
- "with_gaps": 414872,
- "cleaned": 1867,
+ "reused_unchanged": 0,
+ "completed": 139996,
+ "contact_found": 79771,
+ "official_website": 139996,
+ "identity_verified": 48,
+ "registry_checked": 248,
+ "with_conflicts": 45044,
+ "with_notes": 9385,
+ "with_gaps": 415948,
+ "cleaned": 1831,
  "in_duplicate_groups": 37733,
  "duplicate_groups": 14827,
- "needs_ai": 43768,
- "websites_checked": 133710,
- "website_check_queue": 106366,
+ "needs_ai": 41255,
+ "websites_checked": 116383,
+ "website_check_queue": 117406,
  "gaps": {
-  "no contact channel": 376605,
-  "no product description from the company": 335341,
-  "no official website": 318318,
-  "role not established": 225838,
-  "website unreachable": 10773,
-  "no official website found": 7769,
-  "website on record not confirmed yet": 3586,
+  "no contact channel": 377544,
+  "no product description from the company": 336577,
+  "no official website": 319058,
+  "role not established": 225997,
+  "website unreachable": 9511,
+  "website on record not confirmed yet": 4160,
   "only a personal mailbox": 1739,
-  "website parked or placeholder page": 499,
-  "website blocked by bot protection": 248
+  "no official website found": 1353,
+  "website parked or placeholder page": 461,
+  "website blocked by bot protection": 223
  },
  "conflicts": {
-  "the site's products share no word with the contracts or ship": 38284,
-  "the site # does not name the company": 4025,
-  "site says Consulting, business & financial services, record ": 2631,
-  "record site # and checked site # differ": 2420,
-  "the same name exists in # countries; shipment evidence match": 1531,
-  "site says Education, social & hospitality services, record s": 1329,
-  "site says Transport & civil infrastructure works, record say": 403,
-  "site says Furniture, appliances & consumer goods, record say": 298,
-  "site says Engineering & architecture services, record says I": 298,
-  "site says Vehicles, rolling stock, ships & aircraft, record ": 258,
-  "site says Building construction works, record says Transport": 251,
-  "site says Power & electrical equipment, record says Building": 210,
-  "site says Scientific & measuring instruments, record says He": 205,
-  "site says Engineering & architecture services, record says B": 155,
-  "site says Healthcare & pharmaceuticals, record says ICT & te": 155,
-  "site says Environment, waste & cleaning, record says Buildin": 136
+  "the site's products share no word with the contracts or ship": 35969,
+  "the site # does not name the company": 2780,
+  "site says Consulting, business & financial services, record ": 2460,
+  "record site # and checked site # differ": 2337,
+  "the same name exists in # countries; shipment evidence match": 1474,
+  "site says Education, social & hospitality services, record s": 1241,
+  "site says Transport & civil infrastructure works, record say": 379,
+  "site says Engineering & architecture services, record says I": 284,
+  "site says Furniture, appliances & consumer goods, record say": 274,
+  "site says Vehicles, rolling stock, ships & aircraft, record ": 254,
+  "site says Building construction works, record says Transport": 230,
+  "site says Power & electrical equipment, record says Building": 206,
+  "site says Scientific & measuring instruments, record says He": 183,
+  "site says Engineering & architecture services, record says B": 150,
+  "site says Healthcare & pharmaceuticals, record says ICT & te": 143,
+  "site says Repair, maintenance & installation, record says Bu": 131,
+  "site says Environment, waste & cleaning, record says Buildin": 122
  },
  "notes": {
   "phone is not a # number (#): head office or a reseller": 3358,
-  "e-mail domain is not the company's (neither the website's no": 3201,
-  "the site's phone numbers do not fit any numbering plan (left": 3081
+  "e-mail domain is not the company's (neither the website's no": 3190,
+  "the site's phone numbers do not fit any numbering plan (left": 2920
  },
  "email_mx": {
-  "mx_ok": 26672,
-  "unchecked": 27146,
-  "no_mx": 473,
-  "parked": 28
+  "mx_ok": 20779,
+  "unchecked": 33114,
+  "no_mx": 402,
+  "parked": 24
  },
- "email_domains_checked": 15094,
+ "email_domains_checked": 7664,
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-13T05:01Z",
+  "at": "2026-11-13T07:26Z",
   "sample": null,
-  "links_checked_this_run": 30,
-  "links_on_record": 70637,
-  "sites_read_this_run": 0,
-  "registers_this_run": 73,
+  "links_checked_this_run": 1447,
+  "links_on_record": 1447,
+  "sites_read_this_run": 150,
+  "registers_this_run": 83,
   "buyers": {
    "processed": 3463,
    "completed": 3317,
    "contact_found": 3317,
    "with_conflicts": 0,
-   "with_gaps": 1475,
+   "with_gaps": 191,
    "cleaned": 14,
    "duplicates": 78,
-   "verified_identity": 76,
+   "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3463,
+   "reused_unchanged": 0,
    "gaps": {
-    "website unreachable": 1045,
-    "website name mismatch": 232,
     "no official website": 191,
-    "no contact channel": 146,
-    "website blocked by bot protection": 5,
-    "website parked or placeholder page": 2
+    "no contact channel": 146
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -96,22 +93,18 @@
   },
   "accounts": {
    "processed": 3991,
-   "completed": 3337,
+   "completed": 3322,
    "contact_found": 3322,
    "with_conflicts": 0,
-   "with_gaps": 1185,
+   "with_gaps": 758,
    "cleaned": 12,
    "duplicates": 1,
-   "verified_identity": 19,
+   "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3991,
+   "reused_unchanged": 0,
    "gaps": {
     "no official website": 758,
-    "no contact channel": 669,
-    "website unreachable": 368,
-    "website name mismatch": 69,
-    "website parked or placeholder page": 2,
-    "website blocked by bot protection": 2
+    "no contact channel": 669
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -120,15 +113,15 @@
   },
   "tenders": {
    "processed": 130001,
-   "completed": 124712,
+   "completed": 37684,
    "contact_found": 37175,
-   "with_conflicts": 388,
+   "with_conflicts": 137,
    "with_gaps": 119510,
    "cleaned": 97,
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 16137,
-   "reused_unchanged": 130001,
+   "reused_unchanged": 0,
    "gaps": {
     "no estimated value": 110277,
     "no contact in the notice": 92826,
@@ -137,7 +130,6 @@
     "no English title": 4
    },
    "conflicts": {
-    "official link returns # (checked #)": 254,
     "deadline # is more than # years ahead": 137
    },
    "cleaned_fields": {
@@ -147,7 +139,7 @@
   },
   "projects": {
    "processed": 2677,
-   "completed": 2643,
+   "completed": 991,
    "contact_found": 0,
    "with_conflicts": 2,
    "with_gaps": 1931,
@@ -155,7 +147,7 @@
    "duplicates": 1,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 2677,
+   "reused_unchanged": 0,
    "gaps": {
     "no project value": 1931,
     "no implementing agency": 965
@@ -170,37 +162,37 @@
   },
   "finance": {
    "processed": 136,
-   "completed": 119,
+   "completed": 118,
    "contact_found": 136,
-   "with_conflicts": 3,
+   "with_conflicts": 4,
    "with_gaps": 1,
    "cleaned": 0,
    "duplicates": 0,
-   "verified_identity": 28,
+   "verified_identity": 22,
    "closed_by_deadline": 0,
-   "reused_unchanged": 136,
+   "reused_unchanged": 0,
    "gaps": {
     "no apply_url": 1
    },
    "conflicts": {
     "source_url: official link's host does not exist (checked #)": 2,
     "apply_url: official link's host does not exist (checked #)": 2,
-    "source_url: official link returns # (checked #)": 1,
-    "apply_url: official link returns # (checked #)": 1
+    "source_url: official link returns # (checked #)": 2,
+    "apply_url: official link returns # (checked #)": 2
    },
    "cleaned_fields": {}
   },
   "logistics": {
    "processed": 148,
-   "completed": 125,
-   "contact_found": 147,
+   "completed": 122,
+   "contact_found": 145,
    "with_conflicts": 5,
    "with_gaps": 8,
    "cleaned": 4,
    "duplicates": 1,
-   "verified_identity": 21,
+   "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 148,
+   "reused_unchanged": 0,
    "gaps": {
     "no contact_url": 8
    },
@@ -215,23 +207,21 @@
   },
   "importers": {
    "processed": 5470,
-   "completed": 1372,
+   "completed": 413,
    "contact_found": 0,
-   "with_conflicts": 9,
+   "with_conflicts": 0,
    "with_gaps": 5470,
    "cleaned": 5470,
    "duplicates": 2,
-   "verified_identity": 1232,
+   "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 5451,
+   "reused_unchanged": 0,
    "gaps": {
     "no contact channel (customs records carry none)": 5470,
     "no official website": 5057,
     "no address": 1
    },
-   "conflicts": {
-    "official register: the register shows the entity as INACTIVE": 9
-   },
+   "conflicts": {},
    "cleaned_fields": {
     "country": 5470
    }
