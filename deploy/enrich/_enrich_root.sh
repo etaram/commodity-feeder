@@ -129,6 +129,28 @@ if [ "$mode" = people ]; then
   sleep 15; docker ps -a --filter name=^enrich-people$ --format 'container {{.Names}}: {{.Status}}'
   exit 0
 fi
+if [ "$mode" = discover ]; then   # website discovery for suppliers with no website (leads.enrich_server discover)
+  if docker ps --filter name=^enrich-discover$ --format '{{.Names}}' | grep -q .; then
+    echo "discovery running: $(docker ps --filter name=^enrich-discover$ --format '{{.Status}}')"
+    docker logs --tail 4 enrich-discover 2>&1 | grep -E "discover" | grep -vE "https?://|@" | cut -c1-200 || true
+    [ -f "$E/discover.jsonl" ] && python3 -c "
+import json,collections;c=collections.Counter()
+for l in open('$E/discover.jsonl'):
+  try: r=json.loads(l)
+  except ValueError: continue
+  c['tried']+=1; c['found']+=r.get('found',False); c['read ok, name high']+=(r.get('verdict')=='ok' and r.get('name_match')=='high')
+print(dict(c))"
+    exit 0
+  fi
+  venv
+  rm -rf "$E/dcode"; mkdir -p "$E/dcode/dealdesk/lib"; cp -r "$repo/leads" "$E/dcode/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/dcode/dealdesk/lib/"; chmod -R go-rwx "$E/dcode"
+  docker rm -f enrich-discover >/dev/null 2>&1 || true
+  docker run -d --name enrich-discover --restart no --cpus 1.5 --cpu-shares 128 --memory 2g -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/dcode "$IMG" \
+    ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server discover --dir /e --workers "${DISCOVER_WORKERS:-48}" >/dev/null
+  sleep 20; docker ps -a --filter name=^enrich-discover$ --format 'container {{.Names}}: {{.Status}}'
+  docker logs --tail 3 enrich-discover 2>&1 | grep -vE "https?://|@" | cut -c1-200
+  exit 0
+fi
 if [ "$mode" = stop ]; then
   docker stop -t 30 enrich >/dev/null 2>&1 && echo "stopped" || echo "not running"
   docker rm enrich >/dev/null 2>&1 || true
