@@ -96,7 +96,7 @@ def test_bonfire_stale_rows_expire(tmp_path, monkeypatch):
     monkeypatch.setattr(bonfire, "_org", lambda s, h: "Org")
     monkeypatch.setattr(bonfire.time, "sleep", lambda s: None)
     common.snapshot("bonfire", [dict(_row(1, "b", country="USA"), last_success="2026-01-01")])
-    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True}}))
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"projects": []}}}))
     monkeypatch.setattr(bonfire, "parse", lambda js, hub, buyer, country, t: [])
     rows, meta = bonfire.fetch()
     assert rows == [] and meta["stale_rows"] == 0
@@ -109,7 +109,7 @@ def test_fresh_bonfire_row_is_active(tmp_path, monkeypatch):
     monkeypatch.setattr(bonfire, "HUBS", [("a", "A", "USA")])
     monkeypatch.setattr(bonfire, "_org", lambda s, h: "Org")
     monkeypatch.setattr(bonfire.time, "sleep", lambda s: None)
-    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True}}))
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"projects": []}}}))
     monkeypatch.setattr(bonfire, "parse", lambda js, hub, buyer, country, t: [_row(7, "a", country="USA")])
     rows, meta = bonfire.fetch()
     e = source_status.record_result("bonfire", rows, meta)
@@ -117,3 +117,57 @@ def test_fresh_bonfire_row_is_active(tmp_path, monkeypatch):
     monkeypatch.setattr(run, "TENDER_SOURCES", ["bonfire"])
     out, _ = run.merge_tenders({}, {})
     assert len(out) == 1
+
+
+def _bonfire_env(tmp_path, monkeypatch, hubs):
+    common, run, source_status = _isolate(tmp_path, monkeypatch)
+    from leads import bonfire
+    monkeypatch.setattr(bonfire, "CACHE", common.CACHE)
+    monkeypatch.setattr(bonfire, "HUBS", hubs)
+    monkeypatch.setattr(bonfire, "_org", lambda s, h: "Org " + h)
+    monkeypatch.setattr(bonfire.time, "sleep", lambda s: None)
+    return common, run, source_status, bonfire
+
+
+def _project(pid, close="2099-12-31 17:00:00"):
+    return {"ProjectID": pid, "ProjectName": f"Supply of valves {pid}", "ProjectVisibilityID": "1", "DateClose": close}
+
+
+def test_bonfire_required_hub_fails_without_cached_rows(tmp_path, monkeypatch):
+    common, run, source_status, bonfire = _bonfire_env(tmp_path, monkeypatch, [("a", "A", "USA"), ("b", "B", "USA")])
+    bonfire._save_hub_history({"a": str(common.today()), "b": str(common.today())})
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"projects": [_project("1")]}}}))
+    rows, meta = bonfire.fetch()                                   # real parser
+    assert meta["stale_rows"] == 0 and meta["parts_failed"] == 1 and meta["complete_snapshot"] == 0
+    e = source_status.record_result("bonfire", rows, meta)
+    assert e["status"] == "DEGRADED"
+
+
+def test_bonfire_schema_drift_keeps_last_good(tmp_path, monkeypatch):
+    common, run, source_status, bonfire = _bonfire_env(tmp_path, monkeypatch, [("a", "A", "USA")])
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"projects": [_project("1")]}}}))
+    rows, meta = bonfire.fetch()
+    source_status.record_result("bonfire", rows, meta)
+    assert len(rows) == 1
+    # the container is renamed: success=true but no 'projects' -> not a valid complete list
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"renamedProjects": [_project("2")]}}}))
+    try:
+        rows2, meta2 = bonfire.fetch()
+    except RuntimeError:
+        rows2, meta2 = None, None                                  # no hub gave a valid answer: run fails, last-good kept
+    if rows2 is not None:
+        assert meta2["complete_snapshot"] == 0
+        source_status.record_result("bonfire", rows2, meta2)
+    assert len(json.loads((common.PARTIAL / "bonfire.json").read_text())["rows"]) == 1
+
+
+def test_bonfire_valid_empty_list_is_cancellation(tmp_path, monkeypatch):
+    common, run, source_status, bonfire = _bonfire_env(tmp_path, monkeypatch, [("a", "A", "USA")])
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"projects": [_project("1")]}}}))
+    rows, meta = bonfire.fetch()
+    source_status.record_result("bonfire", rows, meta)
+    monkeypatch.setattr(bonfire, "session", lambda: _S({"a": {"success": True, "payload": {"projects": []}}}))
+    rows, meta = bonfire.fetch()
+    e = source_status.record_result("bonfire", rows, meta)
+    assert rows == [] and meta["complete_snapshot"] == 1 and e["status"] == "OK"
+    assert json.loads((common.PARTIAL / "bonfire.json").read_text())["rows"] == []

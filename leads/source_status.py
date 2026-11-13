@@ -218,10 +218,11 @@ def record_result(name, rows, meta=None, now=None, save_fn=None):
         save_fn(name, rows, meta)
         e.update(status="OK", rows_last_good=n, last_good_at=_iso(now))
     stale_n = int((meta or {}).get("stale_rows") or 0)
-    if stale_n and e["status"] == "OK":
+    parts_failed = int((meta or {}).get("parts_failed") or 0)
+    if (stale_n or parts_failed) and e["status"] == "OK":
         # part of the source did not answer: its earlier rows are kept as history, not shown as active
         e.update(status="DEGRADED", error_class="partial_failure",
-                 warning=f"{stale_n} rows from parts that did not answer this run are kept as history, not active")
+                 warning=f"{parts_failed} required parts failed; {stale_n} rows from them kept as history, not active")
     _apply_stale(e, now)
     save(state, now, g)
     if e["status"] != "OK":

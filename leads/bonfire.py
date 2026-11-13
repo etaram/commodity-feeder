@@ -256,6 +256,41 @@ def parse(js, hub, buyer, country, fetched):
 
 
 STALE_DAYS = 7
+REQUIRED_DAYS = 30
+HUB_HISTORY = "bonfire_hubs.json"
+
+
+def valid_payload(js):
+    """A hub answer counts only with success=true AND a payload holding a 'projects' list or mapping (empty is fine).
+    A renamed or missing container is schema drift, not an empty list."""
+    if not isinstance(js, dict) or js.get("success") is not True:
+        return False
+    pay = js.get("payload")
+    return isinstance(pay, dict) and "projects" in pay and isinstance(pay["projects"], (list, dict))
+
+
+def _hub_history():
+    import json as _j
+    p = CACHE / HUB_HISTORY
+    try:
+        return _j.loads(p.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001
+        pass
+    # first run with this rule: hubs that have rows in the cache answered recently
+    out, c = {}, CACHE / "bonfire.jsonl"
+    if c.exists():
+        for line in c.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = _j.loads(line)
+                if r["id"].count("-") >= 2:
+                    out[r["id"].split("-")[1]] = str(today())
+    return out
+
+
+def _save_hub_history(h):
+    import json as _j
+    CACHE.mkdir(parents=True, exist_ok=True)
+    (CACHE / HUB_HISTORY).write_text(_j.dumps(h, sort_keys=True), encoding="utf-8")
 
 
 def fetch():
@@ -263,6 +298,10 @@ def fetch():
     t = str(today())
     rows, answered, failed = [], [], 0
     seen = set()
+    hist = _hub_history()
+    cut = str(today() - dt.timedelta(days=REQUIRED_DAYS))
+    required = {h for h, d in hist.items() if d >= cut}      # hubs that answered recently must answer again
+    failed_required = []
     for hub, buyer, country in HUBS:
         if hub in seen:
             continue
@@ -273,8 +312,10 @@ def fetch():
             js = r.json() if r.status_code == 200 else None
         except Exception:  # noqa: BLE001  (wrong hub name, DNS, not JSON)
             js = None
-        if not js or not js.get("success"):
-            failed += 1
+        if not valid_payload(js):
+            failed += 1                     # no answer, an error, or an unexpected shape (schema drift): not complete
+            if hub in required:
+                failed_required.append(hub)
             continue
         org = _org(s, hub)                     # the hub's own name for itself; a guessed label is never shown as fact
         buyer = org or f"{buyer} (organisation not confirmed on the portal)"
@@ -302,6 +343,9 @@ def fetch():
                     r.setdefault("last_success", r.get("fetched") or t)
                     if r["last_success"] >= str(today() - dt.timedelta(days=STALE_DAYS)):
                         stale.append(r)
+    for h, _ in answered:
+        hist[h] = t
+    _save_hub_history(hist)
     rows, q = quarantine_future(rows, "bonfire")
     rows = [x for x in rows if x["deadline"] and x["deadline"] >= t]
     for x in rows:
@@ -311,4 +355,6 @@ def fetch():
     log.info("Bonfire: %d hubs answered, %d did not; %d open from answering hubs, %d kept from earlier runs of hubs that did not answer; per hub: %s",
              len(answered), failed, len(rows), len(stale), ", ".join(f"{h} {n}" for h, n in answered))
     return keep, {"new": len(rows), "quarantined": q, "hubs_tried": len(seen), "hubs_answered": len(answered), "hubs_failed": failed, "stale_rows": len(stale),
-                  "complete_snapshot": 1}
+                  "parts_failed": len(failed_required),
+                  # empty is accepted as real only when every hub that answered before answered again with a valid list
+                  "complete_snapshot": 0 if failed_required else 1}
