@@ -18,7 +18,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-VERSION = "supplier-gate-1 (2026-11-13)"
+VERSION = "supplier-gate-1.1 (2026-11-13)"
 FRESH_DAYS = 180
 ISO3 = re.compile(r"^[A-Z]{3}$")
 NAV = re.compile(r"^(home|homepage|about|about us|who we are|contact|contact us|contacts|news|blog|careers?|jobs|privacy|"
@@ -27,7 +27,20 @@ NAV = re.compile(r"^(home|homepage|about|about us|who we are|contact|contact us|
                  r"welcome|follow us|social|newsletter|quick links|links|useful links|support|help|services|our services|"
                  r"products|our products|solutions|industries|projects|read more|learn more|more|top|language|english|"
                  r"inicio|contacto|nosotros|empresa|accueil|qui sommes-nous|startseite|kontakt|impressum|uber uns|über uns)$", re.I)
-ROLE_OK = {"manufacturer", "producer", "trader", "distributor", "exporter", "contractor", "service", "supplier", "importer", "wholesaler"}
+ROLE_OK = {"manufacturer", "producer", "trader", "distributor", "exporter", "contractor", "epc", "service", "supplier", "importer", "wholesaler"}
+# v1.1: a role word in the company's own title, description or product phrases (site evidence, labelled 'site text').
+# Each pattern names what the company says it is; a bare industry word is not enough.
+SITE_ROLE = [
+    ("manufacturer", re.compile(r"\b(manufactur\w*|fabricante|fabricant|fabrikant|hersteller|produttore|productor|produtor|"
+                                r"producer|factory|mill|foundry|refinery|f[aá]brica|usine|werk)\b", re.I)),
+    ("trader", re.compile(r"\b(distribut\w*|wholesal\w*|importer|importador|exporter|exportador|trading (company|house)|"
+                          r"dealer|stockist|supplier of|suppliers of|proveedor|fornecedor|fournisseur|lieferant|grossiste|"
+                          r"großhandel|comercializadora)\b", re.I)),
+    ("contractor", re.compile(r"\b(contractor|contracting|construction company|constructora|construtora|bauunternehmen|"
+                              r"entreprise de (construction|travaux)|civil works|engineering and construction|epc)\b", re.I)),
+    ("service", re.compile(r"\b(consult\w*|services? (company|provider)|engineering services|maintenance|facility management|"
+                           r"logistics|freight|laborator(y|ies)|software|it solutions)\b", re.I)),
+]
 
 
 def product_phrases(rec):
@@ -65,6 +78,9 @@ def roles_of(rec):
     if rec.get("role"):
         v = str(rec["role"]).lower()
         r |= {k for k in ROLE_OK if k in v}
+    if not r:
+        text = " ".join([str(rec.get("title") or ""), str(rec.get("description") or "")] + product_phrases(rec)[:15])
+        r |= {role for role, rx in SITE_ROLE if rx.search(text)}
     return sorted(r)
 
 
@@ -95,14 +111,15 @@ def gate(rec, today=None):
     except ValueError:
         fails.append("fresh: no check date")
     strong = bool(rec.get("legal_ids"))
-    return not fails, fails, {"roles": roles, "products": len(prods), "contact": contact, "strong_identity": strong, "country": country}
+    basis = "site role phrase" if (rec.get("roles") or rec.get("role")) else "site text" if roles else ""
+    return not fails, fails, {"roles": roles, "role_basis": basis, "products": len(prods), "contact": contact, "strong_identity": strong, "country": country}
 
 
 def run(d):
     d = Path(d)
     n, ok, strong = 0, 0, 0
     first, every = Counter(), Counter()
-    by_country, by_role = Counter(), Counter()
+    by_country, by_role, by_basis = Counter(), Counter(), Counter()
     keys = []
     seen = set()
     with open(d / "site.jsonl", encoding="utf-8") as f:
@@ -122,14 +139,14 @@ def run(d):
             if fails:
                 first[fails[0].split(":")[0] + ": " + fails[0].split(": ", 1)[-1][:40]] += 1
                 continue
-            ok += 1; strong += facts["strong_identity"]
+            ok += 1; strong += facts["strong_identity"]; by_basis[facts["role_basis"]] += 1
             by_country[facts["country"]] += 1
             for r in facts["roles"]:
                 by_role[r] += 1
             keys.append(k)
     (d / "refined.keys").write_text("\n".join(keys), encoding="utf-8")
     out = {"gate": VERSION, "suppliers_checked": n, "refined": ok, "refined_with_legal_id": strong,
-           "refined_countries": len(by_country), "refined_by_role": dict(by_role.most_common()),
+           "refined_countries": len(by_country), "refined_by_role": dict(by_role.most_common()), "refined_by_role_basis": dict(by_basis),
            "refined_top_countries": dict(by_country.most_common(25)),
            "failing_condition_counts": dict(every.most_common()), "first_failure": dict(first.most_common(25))}
     print(json.dumps(out, indent=1, ensure_ascii=False))
