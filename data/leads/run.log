@@ -1,180 +1,16 @@
-Fri Nov 13 09:34:07 UTC 2026
+Fri Nov 13 11:16:09 UTC 2026
 INFO TED total matching notices: 38256
-WARNING TED 429: <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE and Chrome friendly error page -->
-<!-- a padding to disable MSIE and Chrome friendly error page --
-INFO TED fetched 5750 notices (23 pages, window open) -> 5749 new rows, cache 28382 open (19619455 bytes)
-INFO ted: 28382 rows (OK)
-INFO Eskom: 248 open with a future closing date, 230 kept, 0 quarantined
-INFO eskom: 230 rows (OK)
-INFO Transnet: 100 open with a future closing date, 98 kept, 0 quarantined
-INFO transnet: 98 rows (OK)
-WARNING relay https://sedona.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://bouldercolorado.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
-WARNING relay https://scrantonpa.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://mrsc.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
-WARNING relay https://whitehorse.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://victoria.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://fnha.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
-WARNING relay https://portoflosangeles.bonfirehub.com/PublicPortal/getOpen: TypeError: fetch failed
-WARNING relay https://portofseattle.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://dfw.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
-WARNING relay https://austintexas.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://denvergov.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://cityofboise.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://raleighnc.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://nashville.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://tucsonaz.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://phoenix.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://mesaaz.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://saskatoon.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://regina.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://halifax.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://calgary.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://edmonton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://cityofkelowna.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://nanaimo.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://saanich.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://ubc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
-WARNING relay https://bchydro.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://translink.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://metrovancouver.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://cityofmarkham.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://brampton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://mississauga.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://hamilton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://london.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://waterloo.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://guelph.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://kingston.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://barrie.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://oshawa.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://durham.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://yorkregion.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://peelregion.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://ottawa.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://gatineau.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://fredericton.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://moncton.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://stjohns.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://winnipeg.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://cityofsurrey.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://burnaby.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://richmond.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://coquitlam.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://langley.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://abbotsford.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://kamloops.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://princegeorge.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://lethbridge.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://reddeer.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://medicinehat.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://strathcona.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://airdrie.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://albertahealthservices.bonfirehub.com/PublicPortal/ge: TypeError: fetch failed
-WARNING relay https://epcor.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://enmax.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://ttc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
-WARNING relay https://metrolinx.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://novascotia.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://yukon.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://nwt.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
-WARNING relay https://nunavut.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://detroitmi.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://cityofdetroit.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://pittsburghpa.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://baltimorecity.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://richmondgov.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://norfolk.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://portofhouston.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://portoflongbeach.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
-WARNING relay https://portofoakland.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://portoftacoma.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://portofportland.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://massport.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://mwaa.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
-WARNING relay https://flyontario.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://sandiego.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://sanjoseca.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://sacramento.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://fresno.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://longbeach.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://santaana.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://riversideca.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://lasvegasnevada.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://renonv.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://saltlakecity.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://albuquerque.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://elpasotexas.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://houstontx.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://dallascitynews.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://plano.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://okc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
-WARNING relay https://tulsa.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://omaha.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://desmoines.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://minneapolis.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://stpaul.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://milwaukee.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://madison.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://indy.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
-WARNING relay https://memphistn.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://knoxville.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://atlanta.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://savannah.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://orlando.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://tampa.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
-WARNING relay https://miamidade.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://fortlauderdale.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://neworleans.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-WARNING relay https://birminghamal.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://charleston-sc.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://greensboro-nc.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://durhamnc.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://virginiabeach.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://providenceri.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://hartford.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://bostonma.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://buffalony.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://rochesterny.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://newarknj.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://jerseycitynj.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://philadelphia.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
-WARNING relay https://anchorage.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
-WARNING relay https://honolulu.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
-WARNING relay https://spokanecity.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://seattle.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://portlandoregon.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://eugene.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://coloradosprings.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
-WARNING relay https://aurora.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://fortcollins.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
-WARNING relay https://capecod.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://harfordcounty.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
-WARNING relay https://vernon.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://nelson.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
-WARNING relay https://mission.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
-WARNING relay https://d11.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
-WARNING relay https://jordandistrict.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
-WARNING relay https://louisville.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
-INFO Bonfire: 7 hubs answered, 187 did not; 123 open; per hub: panynj 87, fortworthtexas 16, bendoregon 4, siouxfalls 1, talgov 7, amarillo 2, kcmo 6
-INFO bonfire: 123 rows (OK)
+INFO TED fetched 38256 notices (155 pages, window open) -> 38245 new rows, cache 39110 open (27069850 bytes)
+INFO ted: 39110 rows (OK)
 INFO initializing identifier
-2026-11-13 09:37:50 WARNING: Language es package default expects mwt, which has been added
+2026-11-13 11:27:19 WARNING: Language es package default expects mwt, which has been added
 WARNING translator es->en crashed or timed out in its child process (BrokenProcessPool); skipped for this run
-INFO ('Get https://argos-net.com/v1/translate-pt_en-1_9.argosmodel',)
-INFO ('Got https://argos-net.com/v1/translate-pt_en-1_9.argosmodel',)
-INFO translations: 4891 new, 1592 pending, cache 70094, 924s
-INFO awards 517448 (12m), recent 3000, buyers 60522, competitors 334550
-INFO price trends: 15 groups, 33 series (https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx)
-WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r1/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
-INFO integrity: 207 countries profiled, tenders {'open': 68236, 'caution': 12525, 'no data': 249, 'high risk': 63016}
+2026-11-13 11:27:28 WARNING: Language uk package default expects mwt, which has been added
+WARNING translator uk->en crashed or timed out in its child process (BrokenProcessPool); skipped for this run
+INFO translations: 2877 new, 5006 pending, cache 72967, 930s
+INFO awards 517450 (12m), recent 3000, buyers 60522, competitors 334551
+WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r5/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
+INFO integrity: 207 countries profiled, tenders {'open': 76860, 'caution': 13711, 'no data': 253, 'high risk': 69773}
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 1 items (0 reddit, 1 hn, 0 telegram)
@@ -193,13 +29,14 @@ WARNING feed https://news.google.com/rss/search: HTTP 503
 INFO briefing: 1 items, 0 news leads
 INFO wb procurement plans: 1115 projects with a plan in the last 90 days
 INFO wb contract awards: 23025 rows (FY2026-2027)
-INFO plays: 518 (supply the winner=137, arbitrage gap=201, pre-tender approach=63, news lead=0, procurement plan=117)
-WARNING news rss ISR: HTTP 503
-WARNING news rss CHN: HTTP 503
-WARNING news rss ETH: HTTP 503
-WARNING news rss IND: HTTP 503
+INFO plays: 519 (supply the winner=137, arbitrage gap=202, pre-tender approach=63, news lead=0, procurement plan=117)
 WARNING news rss ISR: HTTP 503
 WARNING gdelt ISR: JSONDecodeError
+WARNING news rss CHN: HTTP 503
+WARNING news rss ETH: HTTP 503
+WARNING gdelt ETH: JSONDecodeError
+WARNING news rss IND: HTTP 503
+WARNING news rss ISR: HTTP 503
 WARNING news rss SOM: HTTP 503
 WARNING news rss UGA: HTTP 503
 WARNING news rss BRA: HTTP 503
@@ -208,10 +45,9 @@ WARNING news rss MYS: HTTP 503
 WARNING news rss COL: HTTP 503
 WARNING gdelt COL: JSONDecodeError
 WARNING news rss TJK: HTTP 503
-WARNING gdelt TJK: JSONDecodeError
 WARNING news rss MDV: HTTP 503
 INFO gdelt news: 0 headlines for 13 countries
-INFO lei: 165 new lookups, 1773 cached, 448 with an LEI, 186 with a parent
+INFO lei: 0 new lookups, 1773 cached, 448 with an LEI, 186 with a parent
 INFO ecb fx: 15 currencies
 INFO trends rss IL: 10 items
 WARNING trends rss CN: HTTP 400
@@ -226,32 +62,29 @@ INFO trends rss MY: 10 items
 INFO trends rss CO: 10 items
 WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
-INFO attention: 18 rows (0 trending, 18 wikipedia)
+INFO attention: 28 rows (0 trending, 28 wikipedia)
 INFO market signals rows 2767
-INFO opportunities.csv trimmed for the sheet: 3961 of 21756 rows
-INFO opportunities 21756
-INFO exempt buys: 787 notices
+INFO opportunities.csv trimmed for the sheet: 3961 of 21825 rows
+INFO opportunities 21825
+INFO exempt buys: 813 notices
 INFO archive: 13 closed notices moved to the archive (25260 there in total); 0 closed ones kept because we worked on them
-INFO open list: 143326 notices, 0 past their deadline left out, 687 duplicates of another source's notice left out
-INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
-INFO hebrew titles: 725 new, 7000 total, 10 pending, 81s
-INFO accounts 33951
+INFO open list: 159862 notices, 0 past their deadline left out, 722 duplicates of another source's notice left out
+INFO hebrew titles: 413 new, 7004 total, 11 pending, 39s
+INFO accounts 38612
 INFO importers.csv trimmed for the sheet: 3988 of 5700 rows
-INFO tenders 144013, importers 5700, suppliers 3420
-/home/runner/r1/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+INFO tenders 160584, importers 5700, suppliers 3420
+/home/runner/r5/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 2 leaked semaphore objects to clean up at shutdown
   warnings.warn('resource_tracker: There appear to be %d '
 commodity_norm: 3243 rows, 3243 with a known price type {'futures': 57, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 57, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 73 anomalies {'stale': 62, 'jump15': 11}
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 815 deals checked, 3 GDELT queries, 51 linked articles
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO:leads:news: 862 deals checked, 5 GDELT queries, 59 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A26%3A31. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A27%3A37. (ConnectTimeout)
 wrote 80001 rows x 28 cols to Tenders
 wrote 5001 rows x 16 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
@@ -259,8 +92,8 @@ wrote 5001 rows x 7 cols to Competitors
 wrote 4001 rows x 16 cols to Accounts
 wrote 5701 rows x 18 cols to Importers
 wrote 317 rows x 9 cols to Sectors
-wrote 241 rows x 5 cols to Countries
-wrote 58 rows x 5 cols to Sources
+wrote 244 rows x 5 cols to Countries
+wrote 59 rows x 5 cols to Sources
 wrote 2768 rows x 17 cols to Market Signals
 wrote 3421 rows x 18 cols to Suppliers
 wrote 20 rows x 7 cols to Groups
@@ -269,40 +102,41 @@ wrote 16 rows x 6 cols to Price Trends
 wrote 34 rows x 8 cols to Price Series
 wrote 1834 rows x 10 cols to Commodity Prices
 wrote 933 rows x 15 cols to Israel
-wrote 52 rows x 7 cols to Press
+wrote 60 rows x 7 cols to Press
 wrote 208 rows x 14 cols to Integrity
-wrote 788 rows x 17 cols to Exempt Buys
+wrote 814 rows x 17 cols to Exempt Buys
 wrote 527 rows x 12 cols to Grants
-wrote 519 rows x 14 cols to Plays
+wrote 520 rows x 14 cols to Plays
 skip Country News (no data)
 wrote 16 rows x 7 cols to FX
-wrote 19 rows x 7 cols to Attention
+wrote 29 rows x 7 cols to Attention
 wrote 1116 rows x 9 cols to WB Plans
 wrote 2 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
-wrote 7001 rows x 2 cols to Titles HE
+wrote 7005 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
-INFO:leads:web index: 130000 tenders, 88.7 MB raw, 11.9 MB gz
-INFO:leads:web panel static: tenders 1500, titles 7001, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
+INFO:leads:web index: 130000 tenders, 87.7 MB raw, 12.5 MB gz
+INFO:leads:web panel static: tenders 1500, titles 7005, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
 INFO:leads:web panel live: bd 51, accounts 51, intel 115, pursuits 56, jobs 62, contacts 481, projects 1, ptasks 1, approvals 1, stats 43, 0.3 MB encrypted
 SOURCE STALE        israel             rows 932 (last good 932 at 2026-11-11T11:29) 
 SOURCE STALE        moldova            rows 1252 (last good 1252 at 2026-11-11T09:30) 
 SOURCE STALE        ocdr_tenders       rows 1752 (last good 1752 at 2026-11-11T08:54) 
 SOURCE DEGRADED     dewa               rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 23 at 2026-11-12T18:07) zero_work
-source status: 60 sources, 5 not OK
-HEALTH ALERT moldova: stale 49.0 h
-HEALTH ALERT israel: stale 47.0 h
+source status: 61 sources, 5 not OK
+HEALTH ALERT moldova: stale 50.8 h
+HEALTH ALERT israel: stale 48.8 h
 HEALTH ALERT dewa: EMPTY, zero rows
-HEALTH ALERT importyeti: stale 42.5 h
-health: 57 sources, 4 alerts
-{'source': 'UNGM (UNV)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
- "timelines": 2737,
- "timelines_multi_event": 839
+HEALTH ALERT kkj: no data, zero rows
+HEALTH ALERT importyeti: stale 44.3 h
+health: 58 sources, 5 alerts
+{'source': 'US city - San Antonio', 'open': 1, 'fresh_7d': 0, 'deadline': 0, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': 'thin parse'}
+ "timelines": 2711,
+ "timelines_multi_event": 830
 }
  ],
- "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 17 projects in this data (recent approvals only, so biased short)"
+ "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 16 projects in this data (recent approvals only, so biased short)"
 }
-registry {'active': 98, 'degraded': 7, 'implemented': 2, 'discovered': 24}
+registry {'active': 98, 'degraded': 8, 'implemented': 2, 'discovered': 24}
