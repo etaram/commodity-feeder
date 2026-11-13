@@ -34,6 +34,8 @@ HUBS = [
     ("broward", "Broward County", "USA"),
     ("tohowater", "Toho Water Authority", "USA"),
     ("ntmwd", "North Texas Municipal Water District", "USA"),
+    ("lcra", "Lower Colorado River Authority", "USA"),
+    ("lipower", "Long Island Power Authority", "USA"),
     ("fortworthtexas", "City of Fort Worth, Texas", "USA"),
     ("sedona", "City of Sedona, Arizona", "USA"),
     ("bendoregon", "City of Bend, Oregon", "USA"),
