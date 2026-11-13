@@ -1,179 +1,253 @@
-Fri Nov 13 08:10:34 UTC 2026
-INFO TED total matching notices: 6749
-INFO TED fetched 6749 notices (28 pages, 3 days) -> 6686 new rows, cache 26787 open (18538161 bytes)
-INFO ted: 26787 rows (OK)
-INFO FTS new 22, open 176 (pages 1)
-INFO fts: 176 rows (OK)
-INFO SAM incremental: fetched 1681, open 8415 (5886 open to foreign firms)
-INFO sam: 8415 rows (OK)
-INFO CanadaBuys rows 848
-INFO canadabuys: 848 rows (OK)
-INFO EBRD rows 44
-INFO ebrd: 44 rows (OK)
-INFO UNGM total active None, new 529, cache 1201 (pages 40)
-INFO ungm: 1201 rows (OK)
-INFO UNDP new 24, open 18
-INFO undp: 18 rows (OK)
-INFO AIIB new 173, kept 177, awards 294
-INFO aiib: 177 rows (OK)
-INFO IsDB new 39, open 34
-INFO isdb: 34 rows (OK)
-INFO AfDB project feed: 20 items
-INFO AfDB corporate feed: 10 items
-INFO AfDB new 30, open 86
-INFO afdb: 86 rows (OK)
-INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1578039', 'noticeid': '39617', 'type': 'AWARD', 'countryname': 'GUYANA', 'projectnumber': 'GY-G1007', 'proyecturl': 'https://www.iadb.org/en/project/GY-G1007', 'loannumber': 'GRT/NG-19288-GY', 'noticetitle': 'Procurement of Program Coordinator for t', 'ezshareid': 'EZIDB0000287-1509818207-1866', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Guyana Utility Scale Solar Photovoltaic ', 'publicationyear': '2026', 'publicationdate': '2026-11-11 08:00:00.000000000', 'deadline': ''}
-INFO IDB dates min=2026-07-17 max=2026-11-11 sample=['2026-11-11 08:00:00.000000000', '2026-11-11 08:00:00.000000000', '2026-11-11 04:00:00.000000000'] deadlines=['', '2027-01-05', '']
-INFO IDB page 0: 1000 recs, 0 old, kept so far 110
-INFO IDB dates min=2026-04-09 max=2026-07-17 sample=['2026-07-17 08:00:00.000000000', '2026-07-17 08:00:00.000000000', '2026-07-17 08:00:00.000000000'] deadlines=['2026-08-21', '2026-09-01', '2026-08-03']
-INFO IDB page 1: 1000 recs, 682 old, kept so far 110
-INFO IDB new 110, open 112
-INFO iadb: 112 rows (OK)
-INFO SIMAP new 240, open 808
-INFO simap: 808 rows (OK)
-INFO GETS new 396, open 417
-INFO gets: 417 rows (OK)
-INFO Etimad new 99, open 682 (pages 11)
-INFO etimad: 682 rows (OK)
-INFO Prozorro feed pages 231, candidates 16397, from feed 0, read one by one 1494, open kept 2746
-INFO prozorro: 2746 rows (OK)
-INFO PNCP fresh lane 34 pages (cut by budget), backfill 20261014..20261113 140 pages (next modality 6 page 141), failed pages 0, new 2024, open 8262, 903s
-INFO pncp: 8262 rows (OK)
-INFO SECOP window 60 days, read 200000, new 3240, open 3547
-INFO secop: 3547 rows (OK)
-INFO Contracts Finder new 32, open 105
-INFO contractsfinder: 105 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T08%3A46%3A11. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T09%3A42%3A06. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T11%3A06%3A11. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T12%3A38%3A06. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T13%3A32%3A27. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T14%3A40%3A01. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T06%3A34%3A07. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T08%3A22%3A18. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T09%3A17%3A49. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T10%3A12%3A07. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T12%3A00%3A00. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T13%3A42%3A13. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T15%3A27%3A55. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A18%3A48. (ConnectTimeout)
-INFO Uruguay new 0, open 589 (fetched 700 of 2295; categories {'tenderUpdate': 4401, 'award': 8207, 'tender': 2295, 'tenderAmendment': 1980, 'awardUpdate': 450, 'tenderCancellation': 30})
-INFO uruguay: 589 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T08%3A19%3A48. (ConnectTimeout)
-INFO Malaysia page 1: 100 blocks, 100 new, first T03/K/2026/7515100/UPM 
-INFO Malaysia page 2: 100 blocks, 100 new, first JKR/IP/CJ/T/2026/35 
-INFO Malaysia page 3: 100 blocks, 84 new, first K/K03/2026/10/4655 
-INFO Malaysia page 4: 100 blocks, 31 new, first QT260000000026556 
-INFO Malaysia page 5: 100 blocks, 16 new, first JKR PERAK BIL. 5/2026 
-INFO Malaysia page 6: 100 blocks, 19 new, first QT260000000026149 
-INFO Malaysia page 7: 100 blocks, 41 new, first MPM(B)/BPK/T3.1/3/2026 
-INFO Malaysia page 8: 100 blocks, 2 new, first QT260000000019816 
-INFO Malaysia page 9: 100 blocks, 3 new, first MAIWP/T/025/2026 
-INFO Malaysia page 10: 21 blocks, 2 new, first JPS/IP/C/BRE/04/2026 
-INFO Malaysia new 398, open 399
-INFO malaysia: 399 rows (OK)
-INFO AusTender new 132, open 187
-INFO austender: 187 rows (OK)
-INFO Oman new 50, open 582
-INFO oman: 582 rows (OK)
-WARNING Kenya 429 page 1
-INFO Kenya new 0, open 352 (pages 1)
-INFO kenya: 352 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T09%3A30%3A00. (ConnectTimeout)
-INFO Rwanda new 268, open 268 (pages 10)
-INFO rwanda: 268 rows (OK)
-INFO Uganda new 35, open 40 (pages 2, titles looked up 0)
-INFO uganda: 40 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T10%3A34%3A27. (ConnectTimeout)
-INFO ghana new 102, open 105 (pages 15)
-INFO ghana: 105 rows (OK)
-INFO Malawi new 27, open 39
-INFO malawi: 39 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T11%3A44%3A51. (ConnectTimeout)
-INFO Mozambique new 91, open 90
-INFO mozambique: 90 rows (OK)
-INFO Dubai new 258, open 302 (pages 4)
-INFO dubai: 302 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T12%3A29%3A48. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T13%3A18%3A07. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A16%3A09. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T23%3A51%3A51. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T07%3A33%3A34. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T08%3A21%3A00. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A11%3A04. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A12%3A05. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A13%3A11. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A14%3A00. (ConnectTimeout)
-INFO Philippines new 4039, open 4115 (pages 203)
-INFO philippines: 4115 rows (OK)
-WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A15%3A01. (ConnectTimeout)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A16%3A12. (ConnectTimeout)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A17%3A20. (ConnectTimeout)
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
-INFO Qatar new 388, open 328
-INFO qatar: 328 rows (OK)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A18%3A03. (ConnectTimeout)
+Fri Nov 13 09:34:07 UTC 2026
+INFO TED total matching notices: 38256
+WARNING TED 429: <html>
+<head><title>429 Too Many Requests</title></head>
+<body>
+<center><h1>429 Too Many Requests</h1></center>
+<hr><center>nginx/1.31.6</center>
+</body>
+</html>
+<!-- a padding to disable MSIE and Chrome friendly error page -->
+<!-- a padding to disable MSIE and Chrome friendly error page --
+INFO TED fetched 5750 notices (23 pages, window open) -> 5749 new rows, cache 28382 open (19619455 bytes)
+INFO ted: 28382 rows (OK)
+INFO Eskom: 248 open with a future closing date, 230 kept, 0 quarantined
+INFO eskom: 230 rows (OK)
+INFO Transnet: 100 open with a future closing date, 98 kept, 0 quarantined
+INFO transnet: 98 rows (OK)
+WARNING relay https://sedona.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://bouldercolorado.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
+WARNING relay https://scrantonpa.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://mrsc.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://whitehorse.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://victoria.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://fnha.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://portoflosangeles.bonfirehub.com/PublicPortal/getOpen: TypeError: fetch failed
+WARNING relay https://portofseattle.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://dfw.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://austintexas.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://denvergov.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://cityofboise.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://raleighnc.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://nashville.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://tucsonaz.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://phoenix.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://mesaaz.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://saskatoon.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://regina.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://halifax.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://calgary.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://edmonton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://cityofkelowna.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://nanaimo.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://saanich.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://ubc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://bchydro.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://translink.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://metrovancouver.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://cityofmarkham.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://brampton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://mississauga.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://hamilton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://london.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://waterloo.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://guelph.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://kingston.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://barrie.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://oshawa.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://durham.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://yorkregion.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://peelregion.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://ottawa.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://gatineau.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://fredericton.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://moncton.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://stjohns.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://winnipeg.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://cityofsurrey.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://burnaby.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://richmond.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://coquitlam.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://langley.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://abbotsford.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://kamloops.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://princegeorge.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://lethbridge.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://reddeer.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://medicinehat.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://strathcona.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://airdrie.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://albertahealthservices.bonfirehub.com/PublicPortal/ge: TypeError: fetch failed
+WARNING relay https://epcor.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://enmax.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://ttc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://metrolinx.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://novascotia.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://yukon.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://nwt.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://nunavut.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://detroitmi.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://cityofdetroit.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://pittsburghpa.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://baltimorecity.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://richmondgov.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://norfolk.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://portofhouston.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://portoflongbeach.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
+WARNING relay https://portofoakland.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://portoftacoma.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://portofportland.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://massport.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://mwaa.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://flyontario.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://sandiego.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://sanjoseca.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://sacramento.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://fresno.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://longbeach.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://santaana.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://riversideca.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://lasvegasnevada.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://renonv.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://saltlakecity.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://albuquerque.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://elpasotexas.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://houstontx.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://dallascitynews.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://plano.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://okc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://tulsa.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://omaha.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://desmoines.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://minneapolis.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://stpaul.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://milwaukee.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://madison.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://indy.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://memphistn.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://knoxville.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://atlanta.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://savannah.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://orlando.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://tampa.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://miamidade.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://fortlauderdale.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://neworleans.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://birminghamal.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://charleston-sc.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://greensboro-nc.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://durhamnc.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://virginiabeach.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://providenceri.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://hartford.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://bostonma.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://buffalony.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://rochesterny.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://newarknj.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://jerseycitynj.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://philadelphia.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://anchorage.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://honolulu.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://spokanecity.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://seattle.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://portlandoregon.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://eugene.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://coloradosprings.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
+WARNING relay https://aurora.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://fortcollins.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://capecod.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://harfordcounty.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://vernon.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://nelson.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://mission.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://d11.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://jordandistrict.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://louisville.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+INFO Bonfire: 7 hubs answered, 187 did not; 123 open; per hub: panynj 87, fortworthtexas 16, bendoregon 4, siouxfalls 1, talgov 7, amarillo 2, kcmo 6
+INFO bonfire: 123 rows (OK)
 INFO initializing identifier
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A19%3A18. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A20%3A21. (ConnectTimeout)
-INFO ('get_installed_languages',)
-INFO ('paragraphs:', ['Spain – Firefighting vehicles – Suministro de vehículos escala para la Jefatura del Cuerpo de Bomberos del Ayuntamiento De Madrid (2 Lotes).'])
-INFO ('apply_packaged_translation', 'Spain – Firefighting vehicles – Suministro de vehículos escala para la Jefatura del Cuerpo de Bomberos del Ayuntamiento De Madrid (2 Lotes).')
-INFO ('Splitting sentences using SBD Model: (es) StanzaSentencizer',)
-WARNING Language es package default expects mwt, which has been added
-commodity_norm: 3244 rows, 3244 with a known price type {'futures': 58, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 58, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
+2026-11-13 09:37:50 WARNING: Language es package default expects mwt, which has been added
+WARNING translator es->en crashed or timed out in its child process (BrokenProcessPool); skipped for this run
+INFO ('Get https://argos-net.com/v1/translate-pt_en-1_9.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-pt_en-1_9.argosmodel',)
+INFO translations: 4891 new, 1592 pending, cache 70094, 924s
+INFO awards 517448 (12m), recent 3000, buyers 60522, competitors 334550
+INFO price trends: 15 groups, 33 series (https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx)
+WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r1/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
+INFO integrity: 207 countries profiled, tenders {'open': 68236, 'caution': 12525, 'no data': 249, 'high risk': 63016}
+WARNING reddit r/supplychain: HTTP 403
+WARNING reddit: no app credentials and the public listing refused; skipping the rest
+INFO social: 1 items (0 reddit, 1 hn, 0 telegram)
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+INFO briefing: 1 items, 0 news leads
+INFO wb procurement plans: 1115 projects with a plan in the last 90 days
+INFO wb contract awards: 23025 rows (FY2026-2027)
+INFO plays: 518 (supply the winner=137, arbitrage gap=201, pre-tender approach=63, news lead=0, procurement plan=117)
+WARNING news rss ISR: HTTP 503
+WARNING news rss CHN: HTTP 503
+WARNING news rss ETH: HTTP 503
+WARNING news rss IND: HTTP 503
+WARNING news rss ISR: HTTP 503
+WARNING gdelt ISR: JSONDecodeError
+WARNING news rss SOM: HTTP 503
+WARNING news rss UGA: HTTP 503
+WARNING news rss BRA: HTTP 503
+WARNING news rss DOM: HTTP 503
+WARNING news rss MYS: HTTP 503
+WARNING news rss COL: HTTP 503
+WARNING gdelt COL: JSONDecodeError
+WARNING news rss TJK: HTTP 503
+WARNING gdelt TJK: JSONDecodeError
+WARNING news rss MDV: HTTP 503
+INFO gdelt news: 0 headlines for 13 countries
+INFO lei: 165 new lookups, 1773 cached, 448 with an LEI, 186 with a parent
+INFO ecb fx: 15 currencies
+INFO trends rss IL: 10 items
+WARNING trends rss CN: HTTP 400
+INFO trends rss ET: 10 items
+INFO trends rss IN: 10 items
+INFO trends rss IL: 10 items
+WARNING trends rss SO: HTTP 400
+INFO trends rss UG: 10 items
+INFO trends rss BR: 10 items
+INFO trends rss DO: 10 items
+INFO trends rss MY: 10 items
+INFO trends rss CO: 10 items
+WARNING trends rss TJ: HTTP 400
+WARNING trends rss MV: HTTP 400
+INFO attention: 18 rows (0 trending, 18 wikipedia)
+INFO market signals rows 2767
+INFO opportunities.csv trimmed for the sheet: 3961 of 21756 rows
+INFO opportunities 21756
+INFO exempt buys: 787 notices
+INFO archive: 13 closed notices moved to the archive (25260 there in total); 0 closed ones kept because we worked on them
+INFO open list: 143326 notices, 0 past their deadline left out, 687 duplicates of another source's notice left out
+INFO ('Get https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
+INFO ('Got https://argos-net.com/v1/translate-en_he-1_5.argosmodel',)
+INFO hebrew titles: 725 new, 7000 total, 10 pending, 81s
+INFO accounts 33951
+INFO importers.csv trimmed for the sheet: 3988 of 5700 rows
+INFO tenders 144013, importers 5700, suppliers 3420
+/home/runner/r1/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+commodity_norm: 3243 rows, 3243 with a known price type {'futures': 57, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 57, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 73 anomalies {'stale': 62, 'jump15': 11}
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A21%3A16. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A22%3A22. (ConnectTimeout)
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A23%3A24. (ConnectTimeout)
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A24%3A29. (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A25%3A39. (ConnectTimeout)
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 779 deals checked, 3 GDELT queries, 54 linked articles
+INFO:leads:news: 815 deals checked, 3 GDELT queries, 51 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
 INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A26%3A31. (ConnectTimeout)
@@ -182,99 +256,53 @@ wrote 80001 rows x 28 cols to Tenders
 wrote 5001 rows x 16 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
 wrote 5001 rows x 7 cols to Competitors
-wrote 4053 rows x 16 cols to Accounts
-wrote 5471 rows x 18 cols to Importers
-wrote 312 rows x 9 cols to Sectors
-wrote 237 rows x 5 cols to Countries
-wrote 50 rows x 5 cols to Sources
+wrote 4001 rows x 16 cols to Accounts
+wrote 5701 rows x 18 cols to Importers
+wrote 317 rows x 9 cols to Sectors
+wrote 241 rows x 5 cols to Countries
+wrote 58 rows x 5 cols to Sources
 wrote 2768 rows x 17 cols to Market Signals
-wrote 3283 rows x 18 cols to Suppliers
+wrote 3421 rows x 18 cols to Suppliers
 wrote 20 rows x 7 cols to Groups
-wrote 8018 rows x 40 cols to Deal Calc
+wrote 8001 rows x 40 cols to Deal Calc
 wrote 16 rows x 6 cols to Price Trends
 wrote 34 rows x 8 cols to Price Series
-wrote 1835 rows x 10 cols to Commodity Prices
+wrote 1834 rows x 10 cols to Commodity Prices
 wrote 933 rows x 15 cols to Israel
-wrote 55 rows x 7 cols to Press
-wrote 209 rows x 14 cols to Integrity
-wrote 751 rows x 17 cols to Exempt Buys
+wrote 52 rows x 7 cols to Press
+wrote 208 rows x 14 cols to Integrity
+wrote 788 rows x 17 cols to Exempt Buys
 wrote 527 rows x 12 cols to Grants
-wrote 466 rows x 14 cols to Plays
-wrote 287 rows x 5 cols to Country News
-wrote 14 rows x 7 cols to FX
-wrote 4 rows x 7 cols to Attention
-wrote 807 rows x 9 cols to WB Plans
-wrote 604 rows x 11 cols to Briefing Items
+wrote 519 rows x 14 cols to Plays
+skip Country News (no data)
+wrote 16 rows x 7 cols to FX
+wrote 19 rows x 7 cols to Attention
+wrote 1116 rows x 9 cols to WB Plans
+wrote 2 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
-wrote 7012 rows x 2 cols to Titles HE
+wrote 7001 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
-INFO:leads:web index: 130014 tenders, 90.2 MB raw, 11.2 MB gz
-INFO:leads:web panel static: tenders 1500, titles 7012, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59986, 2.0 MB encrypted
-INFO:leads:web panel live: unchanged
+INFO:leads:web index: 130000 tenders, 88.7 MB raw, 11.9 MB gz
+INFO:leads:web panel static: tenders 1500, titles 7001, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
+INFO:leads:web panel live: bd 51, accounts 51, intel 115, pursuits 56, jobs 62, contacts 481, projects 1, ptasks 1, approvals 1, stats 43, 0.3 MB encrypted
 SOURCE STALE        israel             rows 932 (last good 932 at 2026-11-11T11:29) 
 SOURCE STALE        moldova            rows 1252 (last good 1252 at 2026-11-11T09:30) 
 SOURCE STALE        ocdr_tenders       rows 1752 (last good 1752 at 2026-11-11T08:54) 
 SOURCE DEGRADED     dewa               rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 23 at 2026-11-12T18:07) zero_work
-source status: 57 sources, 5 not OK
-HEALTH ALERT ted: stale 48.1 h
-HEALTH ALERT fts: stale 48.1 h
-HEALTH ALERT sam: stale 48.1 h
-HEALTH ALERT canadabuys: stale 48.1 h
-HEALTH ALERT za: stale 45.2 h
-HEALTH ALERT worldbank: stale 44.3 h
-HEALTH ALERT ebrd: stale 48.1 h
-HEALTH ALERT mrgov: stale 44.3 h
-HEALTH ALERT ungm: stale 48.1 h
-HEALTH ALERT undp: stale 48.1 h
-HEALTH ALERT aiib: stale 48.1 h
-HEALTH ALERT isdb: stale 48.1 h
-HEALTH ALERT etimad: stale 48.1 h
-HEALTH ALERT prozorro: stale 48.0 h
-HEALTH ALERT pncp: stale 48.0 h
-HEALTH ALERT secop: stale 48.0 h
-HEALTH ALERT germany: stale 44.7 h
-HEALTH ALERT contractsfinder: stale 48.0 h
-HEALTH ALERT paraguay: stale 44.5 h
-HEALTH ALERT dominican: stale 44.5 h
-HEALTH ALERT austender: stale 48.0 h
-HEALTH ALERT oman: stale 48.0 h
-HEALTH ALERT france: stale 44.5 h
-HEALTH ALERT spain: stale 44.3 h
-HEALTH ALERT kenya: stale 47.9 h
-HEALTH ALERT moldova: stale 48.0 h
-HEALTH ALERT uruguay: stale 48.0 h
-HEALTH ALERT bahrain: stale 86.9 h
-HEALTH ALERT malaysia: stale 48.0 h
-HEALTH ALERT qatar: stale 47.5 h
-HEALTH ALERT israel: stale 46.0 h
-HEALTH ALERT nyc: stale 45.2 h
-HEALTH ALERT us_cities: stale 45.2 h
-HEALTH ALERT wb_pipeline: stale 44.3 h
-HEALTH ALERT ocdr_tenders: stale 48.6 h
-HEALTH ALERT afdb: stale 48.1 h
-HEALTH ALERT iadb: stale 48.1 h
-HEALTH ALERT chile: stale 45.2 h
-HEALTH ALERT simap: stale 48.1 h
-HEALTH ALERT gets: stale 48.1 h
-HEALTH ALERT india: stale 44.7 h
-HEALTH ALERT rwanda: stale 47.9 h
-HEALTH ALERT uganda: stale 47.9 h
-HEALTH ALERT ghana: stale 47.9 h
-HEALTH ALERT malawi: stale 47.9 h
-HEALTH ALERT mozambique: stale 47.9 h
-HEALTH ALERT dubai: stale 47.9 h
-HEALTH ALERT philippines: stale 47.9 h
-HEALTH ALERT importyeti: stale 44.3 h
-health: 49 sources, 49 alerts
-{'source': 'UNGM (IRENA)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
-INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A28%3A13. (ConnectTimeout)
- "timelines": 2677,
- "timelines_multi_event": 789
+source status: 60 sources, 5 not OK
+HEALTH ALERT moldova: stale 49.0 h
+HEALTH ALERT israel: stale 47.0 h
+HEALTH ALERT dewa: EMPTY, zero rows
+HEALTH ALERT importyeti: stale 42.5 h
+health: 57 sources, 4 alerts
+{'source': 'UNGM (UNV)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
+ "timelines": 2737,
+ "timelines_multi_event": 839
 }
  ],
- "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 14 projects in this data (recent approvals only, so biased short)"
+ "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 17 projects in this data (recent approvals only, so biased short)"
 }
-registry {'degraded': 68, 'implemented': 2, 'active': 34, 'discovered': 24}
+registry {'active': 98, 'degraded': 7, 'implemented': 2, 'discovered': 24}

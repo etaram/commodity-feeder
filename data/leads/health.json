@@ -1,110 +1,223 @@
 {
- "generated": "2026-11-13T09:29Z",
+ "generated": "2026-11-13T10:31Z",
  "alerts": [
-  "ted: stale 48.1 h",
-  "fts: stale 48.1 h",
-  "sam: stale 48.1 h",
-  "canadabuys: stale 48.1 h",
-  "za: stale 45.2 h",
-  "worldbank: stale 44.3 h",
-  "ebrd: stale 48.1 h",
-  "mrgov: stale 44.3 h",
-  "ungm: stale 48.1 h",
-  "undp: stale 48.1 h",
-  "aiib: stale 48.1 h",
-  "isdb: stale 48.1 h",
-  "etimad: stale 48.1 h",
-  "prozorro: stale 48.0 h",
-  "pncp: stale 48.0 h",
-  "secop: stale 48.0 h",
-  "germany: stale 44.7 h",
-  "contractsfinder: stale 48.0 h",
-  "paraguay: stale 44.5 h",
-  "dominican: stale 44.5 h",
-  "austender: stale 48.0 h",
-  "oman: stale 48.0 h",
-  "france: stale 44.5 h",
-  "spain: stale 44.3 h",
-  "kenya: stale 47.9 h",
-  "moldova: stale 48.0 h",
-  "uruguay: stale 48.0 h",
-  "bahrain: stale 86.9 h",
-  "malaysia: stale 48.0 h",
-  "qatar: stale 47.5 h",
-  "israel: stale 46.0 h",
-  "nyc: stale 45.2 h",
-  "us_cities: stale 45.2 h",
-  "wb_pipeline: stale 44.3 h",
-  "ocdr_tenders: stale 48.6 h",
-  "afdb: stale 48.1 h",
-  "iadb: stale 48.1 h",
-  "chile: stale 45.2 h",
-  "simap: stale 48.1 h",
-  "gets: stale 48.1 h",
-  "india: stale 44.7 h",
-  "rwanda: stale 47.9 h",
-  "uganda: stale 47.9 h",
-  "ghana: stale 47.9 h",
-  "malawi: stale 47.9 h",
-  "mozambique: stale 47.9 h",
-  "dubai: stale 47.9 h",
-  "philippines: stale 47.9 h",
-  "importyeti: stale 44.3 h"
+  "moldova: stale 49.0 h",
+  "israel: stale 47.0 h",
+  "dewa: EMPTY, zero rows",
+  "importyeti: stale 42.5 h"
  ],
  "sources": [
   {
    "source": "ted",
-   "rows": 24626,
+   "rows": 28382,
    "prev_rows": 24626,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 1.0,
+   "flags": []
   },
   {
    "source": "fts",
-   "rows": 180,
+   "rows": 176,
    "prev_rows": 180,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "sam",
-   "rows": 7673,
+   "rows": 8409,
    "prev_rows": 7673,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "canadabuys",
-   "rows": 838,
+   "rows": 848,
    "prev_rows": 838,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "za",
-   "rows": 1191,
+   "rows": 1316,
    "prev_rows": 1191,
-   "age_h": 45.2,
-   "flags": [
-    "stale 45.2 h"
-   ]
+   "age_h": 5.4,
+   "flags": []
   },
   {
    "source": "worldbank",
-   "rows": 774,
+   "rows": 748,
    "prev_rows": 774,
-   "age_h": 44.3,
+   "age_h": 4.5,
+   "flags": []
+  },
+  {
+   "source": "ebrd",
+   "rows": 43,
+   "prev_rows": 42,
+   "age_h": 6.3,
+   "flags": []
+  },
+  {
+   "source": "mrgov",
+   "rows": 187,
+   "prev_rows": 187,
+   "age_h": 4.5,
+   "flags": []
+  },
+  {
+   "source": "ungm",
+   "rows": 1190,
+   "prev_rows": 1208,
+   "age_h": 6.3,
+   "flags": []
+  },
+  {
+   "source": "undp",
+   "rows": 18,
+   "prev_rows": 18,
+   "age_h": 6.3,
+   "flags": []
+  },
+  {
+   "source": "aiib",
+   "rows": 177,
+   "prev_rows": 176,
+   "age_h": 6.3,
+   "flags": []
+  },
+  {
+   "source": "isdb",
+   "rows": 34,
+   "prev_rows": 34,
+   "age_h": 6.3,
+   "flags": []
+  },
+  {
+   "source": "etimad",
+   "rows": 682,
+   "prev_rows": 674,
+   "age_h": 6.3,
+   "flags": []
+  },
+  {
+   "source": "prozorro",
+   "rows": 1262,
+   "prev_rows": 1208,
+   "age_h": 6.2,
+   "flags": []
+  },
+  {
+   "source": "pncp",
+   "rows": 6862,
+   "prev_rows": 5857,
+   "age_h": 6.1,
+   "flags": []
+  },
+  {
+   "source": "secop",
+   "rows": 911,
+   "prev_rows": 858,
+   "age_h": 6.1,
+   "flags": []
+  },
+  {
+   "source": "germany",
+   "rows": 14087,
+   "prev_rows": 12665,
+   "age_h": 4.8,
+   "flags": []
+  },
+  {
+   "source": "contractsfinder",
+   "rows": 105,
+   "prev_rows": 93,
+   "age_h": 6.1,
+   "flags": []
+  },
+  {
+   "source": "paraguay",
+   "rows": 86,
+   "prev_rows": 118,
+   "age_h": 4.7,
+   "flags": []
+  },
+  {
+   "source": "dominican",
+   "rows": 642,
+   "prev_rows": 680,
+   "age_h": 4.7,
+   "flags": []
+  },
+  {
+   "source": "austender",
+   "rows": 187,
+   "prev_rows": 176,
+   "age_h": 5.8,
+   "flags": []
+  },
+  {
+   "source": "oman",
+   "rows": 581,
+   "prev_rows": 599,
+   "age_h": 5.8,
+   "flags": []
+  },
+  {
+   "source": "france",
+   "rows": 6933,
+   "prev_rows": 6920,
+   "age_h": 4.7,
+   "flags": []
+  },
+  {
+   "source": "spain",
+   "rows": 5391,
+   "prev_rows": 4961,
+   "age_h": 4.6,
+   "flags": []
+  },
+  {
+   "source": "kenya",
+   "rows": 352,
+   "prev_rows": 490,
+   "age_h": 5.8,
+   "flags": []
+  },
+  {
+   "source": "moldova",
+   "rows": 1252,
+   "prev_rows": 1252,
+   "age_h": 49.0,
    "flags": [
-    "stale 44.3 h"
+    "stale 49.0 h"
    ]
+  },
+  {
+   "source": "uruguay",
+   "rows": 589,
+   "prev_rows": 570,
+   "age_h": 5.8,
+   "flags": []
+  },
+  {
+   "source": "bahrain",
+   "rows": 19,
+   "prev_rows": 19,
+   "age_h": 4.8,
+   "flags": []
+  },
+  {
+   "source": "malaysia",
+   "rows": 398,
+   "prev_rows": 430,
+   "age_h": 5.8,
+   "flags": []
+  },
+  {
+   "source": "qatar",
+   "rows": 328,
+   "prev_rows": 318,
+   "age_h": 5.6,
+   "flags": []
   },
   {
    "source": "ebrd",
@@ -326,171 +439,196 @@
    "source": "israel",
    "rows": 932,
    "prev_rows": 932,
-   "age_h": 46.0,
+   "age_h": 47.0,
    "flags": [
-    "stale 46.0 h"
+    "stale 47.0 h"
    ]
   },
   {
    "source": "nyc",
-   "rows": 194,
+   "rows": 197,
    "prev_rows": 194,
-   "age_h": 45.2,
-   "flags": [
-    "stale 45.2 h"
-   ]
+   "age_h": 5.4,
+   "flags": []
   },
   {
    "source": "us_cities",
-   "rows": 278,
+   "rows": 262,
    "prev_rows": 278,
-   "age_h": 45.2,
-   "flags": [
-    "stale 45.2 h"
-   ]
+   "age_h": 5.4,
+   "flags": []
   },
   {
    "source": "wb_pipeline",
-   "rows": 956,
+   "rows": 957,
    "prev_rows": 956,
-   "age_h": 44.3,
-   "flags": [
-    "stale 44.3 h"
-   ]
+   "age_h": 4.5,
+   "flags": []
   },
   {
    "source": "ocdr_tenders",
-   "rows": 1752,
+   "rows": 1620,
    "prev_rows": 1752,
-   "age_h": 48.6,
-   "flags": [
-    "stale 48.6 h"
-   ]
+   "age_h": 7.7,
+   "flags": []
   },
   {
    "source": "afdb",
-   "rows": 42,
+   "rows": 86,
    "prev_rows": 42,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "iadb",
-   "rows": 105,
+   "rows": 112,
    "prev_rows": 105,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "chile",
-   "rows": 4271,
+   "rows": 4450,
    "prev_rows": 4271,
-   "age_h": 45.2,
-   "flags": [
-    "stale 45.2 h"
-   ]
+   "age_h": 5.4,
+   "flags": []
   },
   {
    "source": "simap",
-   "rows": 696,
+   "rows": 808,
    "prev_rows": 696,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "gets",
-   "rows": 425,
+   "rows": 417,
    "prev_rows": 425,
-   "age_h": 48.1,
-   "flags": [
-    "stale 48.1 h"
-   ]
+   "age_h": 6.3,
+   "flags": []
   },
   {
    "source": "india",
-   "rows": 62288,
+   "rows": 58220,
    "prev_rows": 62288,
-   "age_h": 44.7,
-   "flags": [
-    "stale 44.7 h"
-   ]
+   "age_h": 4.8,
+   "flags": []
   },
   {
    "source": "rwanda",
-   "rows": 261,
+   "rows": 263,
    "prev_rows": 261,
-   "age_h": 47.9,
-   "flags": [
-    "stale 47.9 h"
-   ]
+   "age_h": 5.8,
+   "flags": []
   },
   {
    "source": "uganda",
-   "rows": 45,
+   "rows": 40,
    "prev_rows": 45,
-   "age_h": 47.9,
-   "flags": [
-    "stale 47.9 h"
-   ]
+   "age_h": 5.8,
+   "flags": []
   },
   {
    "source": "ghana",
-   "rows": 103,
+   "rows": 105,
    "prev_rows": 103,
-   "age_h": 47.9,
-   "flags": [
-    "stale 47.9 h"
-   ]
+   "age_h": 5.7,
+   "flags": []
   },
   {
    "source": "malawi",
-   "rows": 40,
+   "rows": 38,
    "prev_rows": 40,
-   "age_h": 47.9,
-   "flags": [
-    "stale 47.9 h"
-   ]
+   "age_h": 5.7,
+   "flags": []
   },
   {
    "source": "mozambique",
-   "rows": 85,
+   "rows": 88,
    "prev_rows": 85,
-   "age_h": 47.9,
-   "flags": [
-    "stale 47.9 h"
-   ]
+   "age_h": 5.7,
+   "flags": []
   },
   {
    "source": "dubai",
-   "rows": 354,
+   "rows": 271,
    "prev_rows": 354,
-   "age_h": 47.9,
-   "flags": [
-    "stale 47.9 h"
-   ]
+   "age_h": 5.7,
+   "flags": []
   },
   {
    "source": "philippines",
-   "rows": 1337,
+   "rows": 1269,
    "prev_rows": 1337,
-   "age_h": 47.9,
+   "age_h": 5.7,
+   "flags": []
+  },
+  {
+   "source": "dewa",
+   "rows": 0,
+   "prev_rows": null,
+   "age_h": 16.7,
    "flags": [
-    "stale 47.9 h"
+    "EMPTY",
+    "zero rows"
    ]
+  },
+  {
+   "source": "csg",
+   "rows": 210,
+   "prev_rows": null,
+   "age_h": 4.6,
+   "flags": []
+  },
+  {
+   "source": "ccgp",
+   "rows": 1007,
+   "prev_rows": null,
+   "age_h": 4.6,
+   "flags": []
+  },
+  {
+   "source": "lebanon",
+   "rows": 124,
+   "prev_rows": null,
+   "age_h": 4.6,
+   "flags": []
+  },
+  {
+   "source": "cameroon",
+   "rows": 111,
+   "prev_rows": null,
+   "age_h": 4.5,
+   "flags": []
+  },
+  {
+   "source": "transnet",
+   "rows": 98,
+   "prev_rows": null,
+   "age_h": 1.0,
+   "flags": []
+  },
+  {
+   "source": "bonfire",
+   "rows": 123,
+   "prev_rows": null,
+   "age_h": 0.9,
+   "flags": []
+  },
+  {
+   "source": "eskom",
+   "rows": 230,
+   "prev_rows": null,
+   "age_h": 1.0,
+   "flags": []
   },
   {
    "source": "importyeti",
    "rows": 1,
    "prev_rows": 1,
-   "age_h": 44.3,
+   "age_h": 42.5,
    "flags": [
-    "stale 44.3 h"
+    "stale 42.5 h"
    ]
   }
  ]
