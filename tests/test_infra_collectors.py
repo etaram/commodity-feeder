@@ -156,6 +156,12 @@ def test_ccgp_detail():
 
 def test_buyspeed_parse():
     from leads import buyspeed
+    real = ('<thead><tr><th id="a" class="ui-state-default" aria-label="Bid Solicitation #" scope="col">Bid Solicitation #</th>'
+            '<th id="b" aria-label="Organization Name" scope="col">Organization Name</th><th aria-label="Description" scope="col">Description</th>'
+            '<th aria-label="Bid Opening Date" scope="col">Bid Opening Date</th><th aria-label="Status" scope="col">Status</th></tr></thead>'
+            '<tr data-ri="0" class="ui-widget-content"><td role="gridcell"><a href="/bso/external/bidDetail.sda?docId=BD-9">BD-9</a></td>'
+            '<td role="gridcell">MassDOT</td><td role="gridcell">Guardrail supply</td><td role="gridcell">12/15/2026 02:00:00 PM</td><td role="gridcell">Sent</td></tr>')
+    assert buyspeed.parse(real, "https://www.commbuys.com", "US-MA", "Commonwealth of Massachusetts", "2026-11-13")[0]["deadline"] == "2026-12-15"
     page = ('<th role="columnheader"><span>Bid Solicitation #</span></th><th role="columnheader">Organization Name</th>'
             '<th role="columnheader">Description</th><th role="columnheader">Bid Opening Date</th><th role="columnheader">Status</th>'
             '<tr data-ri="0" class="ui-widget-content"><td role="gridcell"><a href="/bso/external/bidDetail.sda?docId=BD-27-1&amp;external=true">BD-27-1</a></td>'

@@ -26,7 +26,8 @@ PATH = "/bso/view/search/external/advancedSearchBid.xhtml?openBids=true"
 MAX_PAGES = 80
 TR = re.compile(r'<tr data-ri="\d+"[^>]*>(.*?)</tr>', re.S)
 TD = re.compile(r"<td[^>]*>(.*?)</td>", re.S)
-TH = re.compile(r'<th[^>]*role="columnheader"[^>]*>(.*?)</th>', re.S)
+TH = re.compile(r'<th\b[^>]*(?:scope="col"|role="columnheader")[^>]*>(.*?)</th>', re.S)
+TH_LABEL = re.compile(r'<th\b[^>]*(?:scope="col"|role="columnheader")[^>]*?(?:aria-label="([^"]*)")?[^>]*>(.*?)</th>', re.S)
 
 
 def _txt(s):
@@ -46,7 +47,7 @@ def _date(s):
 
 def parse(page, base, state, buyer_default, fetched):
     """Rows of one result page. Columns are found by their header text, so a column order change is not a silent error."""
-    heads = [_txt(h).lower() for h in TH.findall(page)]
+    heads = [(_txt(lab) or _txt(body)).lower() for lab, body in TH_LABEL.findall(page)]
     def col(*words):
         return next((i for i, h in enumerate(heads) if all(w in h for w in words)), -1)
     i_no, i_org, i_desc = col("bid", "#") if col("bid", "#") >= 0 else col("bid", "number"), col("organization"), col("description")
@@ -98,7 +99,7 @@ def fetch_portal(s, key, base, state, buyer, fetched):
     tot = re.search(r"\d+-\d+ of (\d+)", page)
     total = int(tot.group(1)) if tot else 0
     rows = parse(page, base, state, buyer, fetched)
-    heads = TH.findall(page)
+    heads = [(_txt(lab) or _txt(body)) for lab, body in TH_LABEL.findall(page)]
     first = 25
     while first < total and first // 25 < MAX_PAGES:
         p = _next_payload(page, first)
@@ -110,7 +111,7 @@ def fetch_portal(s, key, base, state, buyer, fetched):
         if rr.status_code != 200:
             break
         body = html.unescape(rr.text) if "<![CDATA[" in rr.text else rr.text
-        got = parse("".join(f'<th role="columnheader">{h}</th>' for h in heads) + body, base, state, buyer, fetched)
+        got = parse("".join(f'<th scope="col">{h}</th>' for h in heads) + body, base, state, buyer, fetched)
         if not got:
             break
         rows += got
