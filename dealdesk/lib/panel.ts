@@ -114,6 +114,39 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
     const rows: TRow[] = [];
     // downloads run a few files ahead of the parsing (window of 4), so the wait is the slowest file, not the sum of 65;
     // the raw text held at once stays small (at most 4 files)
+    // one data row of the open list -> rows[] (shared by the single compressed file and the 65 chunks)
+    let ix: number[] = [], idI = -1, dlI = -1, scI = -1, rtI = -1;
+    const setHeader = (h: string[]) => {
+      if (!head.length) { head = [...h, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route", "details"].filter((k, j, all) => all.indexOf(k) === j); R = rowClass(head); }
+      ix = head.map((k) => h.indexOf(k)); idI = h.indexOf("id"); dlI = h.indexOf("deadline"); scI = h.indexOf("score"); rtI = h.indexOf("route");
+    };
+    const addRow = (a: string[]) => {
+      const id = a[idI] || "";
+      if (!id || isClosed(a[dlI])) return;
+      const f = sfit[id] || [], x = fit.get(id);
+      const extra: Record<string, string> = { fit: f[0] || a[scI] || "", your_suppliers: f[1] || "", tier_AB: f[2] || "", fit_why: x?.[0] || "", fit_flags: x?.[1] || "", route: (rtI >= 0 ? a[rtI] : "") || x?.[2] || "", details: details.get(id) || "" };
+      rows.push(new R!(head.map((k, n) => {
+        const v = ix[n] >= 0 ? (a[ix[n]] ?? "") : (extra[k] ?? "");
+        if (k in extra && ix[n] < 0) return INTERN.has(k) ? iv(v) : v;
+        if (INTERN.has(k)) return iv(v);
+        return own(TRIM[k] && v.length > TRIM[k] ? v.slice(0, TRIM[k]) : v);
+      })));
+    };
+    // 13 Nov 2026: the 65 chunks hold at most 130,000 rows (the Google Sheet import limit), so every new source pushed
+    // other open notices out. The merge now also publishes ALL open notices in one compressed file; it is read row by
+    // row (streamed) when present, else the 65 chunks as before.
+    let fromFull = false;
+    try {
+      const r = await fetch(`${RAW}/leads/sheet/tenders_open.csv.gz`, { cache: "no-store", signal: AbortSignal.timeout(60000) });
+      if (r.ok) {
+        const txt = gunzipSync(Buffer.from(await r.arrayBuffer())).toString("utf8");
+        let first = true;
+        Papa.parse<string[]>(txt, { header: false, skipEmptyLines: true, step: (res) => { const a = res.data; if (first) { first = false; setHeader(a); } else addRow(a); } });
+        fromFull = rows.length > 0;
+      }
+    } catch { /* fall back to the chunks */ }
+    if (!fromFull) {
+    rows.length = 0;
     const getChunk = (n: number) => fetch(`${RAW}/leads/sheet/tenders_${String(n).padStart(2, "0")}.csv`, { cache: "no-store", signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
     const ahead = new Map<number, Promise<string>>();
     for (let i = 1; i <= 65; i++) {
@@ -122,21 +155,9 @@ export async function allTenders(): Promise<{ head: string[]; rows: TRow[]; byId
       if (!text) continue;
       const p = Papa.parse<string[]>(text, { header: false, skipEmptyLines: true }).data;
       if (!p.length) continue;
-      const h = p[0];
-      if (!head.length) { head = [...h, "fit", "your_suppliers", "tier_AB", "fit_why", "fit_flags", "route", "details"].filter((k, j, all) => all.indexOf(k) === j); R = rowClass(head); }
-      const ix = head.map((k) => h.indexOf(k)), idI = h.indexOf("id"), dlI = h.indexOf("deadline"), scI = h.indexOf("score"), rtI = h.indexOf("route");
-      for (let j = 1; j < p.length; j++) {
-        const a = p[j], id = a[idI] || "";
-        if (!id || isClosed(a[dlI])) continue;
-        const f = sfit[id] || [], x = fit.get(id);
-        const extra: Record<string, string> = { fit: f[0] || a[scI] || "", your_suppliers: f[1] || "", tier_AB: f[2] || "", fit_why: x?.[0] || "", fit_flags: x?.[1] || "", route: (rtI >= 0 ? a[rtI] : "") || x?.[2] || "", details: details.get(id) || "" };
-        rows.push(new R!(head.map((k, n) => {
-          const v = ix[n] >= 0 ? (a[ix[n]] ?? "") : (extra[k] ?? "");
-          if (k in extra && ix[n] < 0) return INTERN.has(k) ? iv(v) : v;
-          if (INTERN.has(k)) return iv(v);
-          return own(TRIM[k] && v.length > TRIM[k] ? v.slice(0, TRIM[k]) : v);
-        })));
-      }
+      setHeader(p[0]);
+      for (let j = 1; j < p.length; j++) addRow(p[j]);
+    }
     }
     fit.clear(); pool.clear(); details.clear();
     return { head, rows, byId: new Map(rows.map((r) => [r.id, r])) };
