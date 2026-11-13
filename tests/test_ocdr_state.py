@@ -129,3 +129,39 @@ def test_valid_file_without_awards_is_done_empty(env):
     _, st = ocdr.fetch()
     assert st["files"] == 1 and st["invalid"] == 0 and "7/2025" in state(tmp)["done"]
     assert (tmp / "awards_ext" / "ocdr_7_2025.jsonl").read_text() == ""
+
+
+def _rel_many(k):
+    return {"ocid": "x-m", "awards": [{"id": f"a{i}", "suppliers": [{"name": f"Co {i} Ltd", "id": f"S{i}"}]} for i in range(k)],
+            "parties": [{"id": f"S{i}", "name": f"Co {i} Ltd", "roles": ["supplier"]} for i in range(k)], "date": "2026-01-01"}
+
+
+def test_one_release_with_many_awards_plus_one_bad_line_is_invalid(env):
+    """row 129: 1 valid release with 200 awards + 1 malformed award line = 50% of award lines rejected"""
+    answers, calls, tmp = env
+    answers.append(Resp(200, _raw_gz(json.dumps(_rel_many(200)) + "\n" + '{"awards": [oops\n')))
+    _, st = ocdr.fetch()
+    assert st["invalid"] == 1 and "7/2025" not in state(tmp)["done"]
+
+
+def test_below_threshold_rejects_published_and_flagged(env):
+    answers, calls, tmp = env
+    body = "".join(json.dumps(dict(REL, ocid=f"x-{i}")) + "\n" for i in range(300)) + '{"awards": [oops\n'
+    answers.append(Resp(200, _raw_gz(body)))
+    _, st = ocdr.fetch()
+    assert st["invalid"] == 0 and st["rejected_lines"] == 1 and "7/2025" in state(tmp)["done"]
+    assert state(tmp)["tolerated"]["7/2025"]["rejected_lines"] == 1
+
+
+def test_award_without_named_winner_is_valid(env):
+    answers, calls, tmp = env
+    answers.append(Resp(200, _gz([{"ocid": "x-3", "awards": [{"id": "a1", "suppliers": []}]}])))
+    _, st = ocdr.fetch()
+    assert st["invalid"] == 0 and st["files"] == 1
+
+
+def test_malformed_line_without_award_text_is_counted(env):
+    answers, calls, tmp = env
+    answers.append(Resp(200, _raw_gz(json.dumps(REL) + "\n" + "garbage-without-the-word\n")))
+    _, st = ocdr.fetch()
+    assert st["invalid"] == 1 and "7/2025" not in state(tmp)["done"]

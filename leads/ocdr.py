@@ -59,6 +59,7 @@ def _read(s, pid, year, iso, title, t_end):
     if int(r.headers.get("content-length") or 0) > MAX_BYTES:
         r.close(); return "too large"
     rows, contacts, n, complete, bad = [], [], 0, True, 0
+    good_lines, other, bad_other = 0, 0, 0   # award lines parsed; lines without an award; of those, not a JSON object
     src = f"OCDS registry: {title[:60]}"
     with gzip.GzipFile(fileobj=r.raw) as gz:
         for line in io.TextIOWrapper(gz, encoding="utf-8", errors="replace"):
@@ -67,12 +68,19 @@ def _read(s, pid, year, iso, title, t_end):
                 break
             n += 1
             if '"awards"' not in line:
+                # cheap integrity check for the lines not parsed (no award text): a JSON object line starts with { and
+                # ends with }. Counted, not certified: a well-formed line here may still be invalid OCDS.
+                other += 1
+                st = line.strip()
+                if st and not (st.startswith("{") and st.endswith("}")):
+                    bad_other += 1
                 continue
             try:
                 rel = json.loads(line)
                 if not isinstance(rel, dict) or not isinstance(rel.get("awards", []), list):
                     raise ValueError("not an OCDS release")
                 got = award_rows(rel, source=src, prefix=f"OC{pid}", country=iso)
+                good_lines += 1
             except Exception:  # noqa: BLE001  - a line that is not valid JSON / OCDS is counted, never read as 'no awards'
                 bad += 1
                 continue
@@ -87,7 +95,7 @@ def _read(s, pid, year, iso, title, t_end):
                 a.pop("email", None); a.pop("link", None)
                 rows.append(a)
     r.close()
-    return rows, contacts, n, complete, bad
+    return rows, contacts, n, complete, {"bad": bad, "good_lines": good_lines, "other": other, "bad_other": bad_other}
 
 
 MAX_BAD_SHARE = 0.01   # rejected award lines above 1% of the award lines (or any reject with no award read): invalid
@@ -153,17 +161,26 @@ def fetch():
                 f = failed.get(k) or {"tries": 0}
                 failed[k] = {"at": str(today()), "tries": int(f.get("tries") or 0) + 1, "why": why[:60]}; stats["failed"] += 1
             continue
-        rows, contacts, n, complete, bad = res
+        rows, contacts, n, complete, integ = res
+        bad, bad_other = integ["bad"], integ["bad_other"]
         path = OUT / f"ocdr_{p['id']}_{y}.jsonl"
-        if bad and (not rows or bad > MAX_BAD_SHARE * (bad + len(rows))):
+        # shares are of INPUT lines (row 129): rejected award lines against all award lines, and malformed other lines
+        # against all other lines; output award rows are not the denominator (one release can carry many awards)
+        if (bad and (not rows or bad > MAX_BAD_SHARE * (bad + integ["good_lines"]))) or \
+                (bad_other and bad_other > MAX_BAD_SHARE * integ["other"]):
             # invalid content: not a valid empty result. Nothing replaced, not done, retried after the failure backoff
             f = failed.get(k) or {"tries": 0}
-            failed[k] = {"at": str(today()), "tries": int(f.get("tries") or 0) + 1, "why": f"invalid: {bad} rejected lines, {len(rows)} awards"}
+            failed[k] = {"at": str(today()), "tries": int(f.get("tries") or 0) + 1, "why": f"invalid: {bad} of {bad + integ['good_lines']} award lines rejected, {bad_other} of {integ['other']} other lines malformed"}
             stats["invalid"] += 1
-            log.warning("OCDR %s %s %s: %d rejected award lines, %d awards read: not published, retried later", p["id"], p["iso"], y, bad, len(rows))
+            log.warning("OCDR %s %s %s: %d of %d award lines rejected, %d of %d other lines malformed: not published, retried later",
+                        p["id"], p["iso"], y, bad, bad + integ["good_lines"], bad_other, integ["other"])
             continue
-        if bad:
-            stats["rejected_lines"] += bad
+        if bad or bad_other:
+            stats["rejected_lines"] += bad + bad_other
+            # tolerated rejects stay visible in the state (never 'complete coverage'); cleared by a clean re-read
+            state.setdefault("tolerated", {})[k] = {"at": str(today()), "releases": n, "rejected_lines": bad + bad_other}
+        else:
+            state.setdefault("tolerated", {}).pop(k, None)
         if not complete:
             partial[k] = {"at": str(today()), "releases": n}; stats["partial"] += 1
             if path.exists():               # keep the last complete file; the partial read is dropped
@@ -182,6 +199,6 @@ def fetch():
                  "" if complete else " (partial, retried next run)")
     tmp = STATE.with_name(STATE.name + ".tmp"); tmp.write_text(json.dumps(state)); os.replace(tmp, STATE)
     stats["pending"] = max(0, len(todo) - stats["files"])
-    stats["failed_total"] = len(failed); stats["partial_total"] = len(partial); stats["too_large_total"] = len(too_large)
+    stats["tolerated_total"] = len(state.get("tolerated") or {}); stats["failed_total"] = len(failed); stats["partial_total"] = len(partial); stats["too_large_total"] = len(too_large)
     log.info("OCDR %s", stats)
     return [], stats
