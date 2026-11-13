@@ -151,6 +151,11 @@ print(dict(c))"
   docker logs --tail 3 enrich-discover 2>&1 | grep -vE "https?://|@" | cut -c1-200
   exit 0
 fi
+if [ "$mode" = procure-stop ]; then   # pause the procurement scan (resumes later: tried companies are skipped)
+  docker stop -t 20 enrich-procure >/dev/null 2>&1 && echo "procure scan stopped" || echo "procure scan not running"
+  docker rm enrich-procure >/dev/null 2>&1 || true
+  exit 0
+fi
 if [ "$mode" = procure ]; then   # corporate procurement pages (leads.enrich_server procure)
   if docker ps --filter name=^enrich-procure$ --format '{{.Names}}' | grep -q .; then
     echo "procure scan running: $(docker ps --filter name=^enrich-procure$ --format '{{.Status}}')"
