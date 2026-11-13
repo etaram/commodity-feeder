@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-13T19:55Z",
+ "generated": "2026-11-13T21:01Z",
  "open_file": "data/leads/sheet/tenders_open.csv.gz",
- "open_file_sha256": "1d79458945f634a1ce49d3cf576d663af95635bc432486c327353ad182ecbe39",
- "open_file_built": "2026-11-13T19:55Z",
- "published_total": 160704,
+ "open_file_sha256": "4465ffcd23fba0393e51d2809cb287b92fa8b7306e3897f1d99bcdff8e38d331",
+ "open_file_built": "2026-11-13T21:00Z",
+ "published_total": 172114,
  "published_unmatched_sources": {},
  "sources": [
   {
@@ -82,12 +82,12 @@
    "source": "buyspeed",
    "enabled": true,
    "status": "OK",
-   "last_run_at": "",
-   "last_good_at": "",
-   "fetched": 0,
-   "snapshot": 0,
-   "active": 0,
-   "published": 0,
+   "last_run_at": "2026-11-13T20:11",
+   "last_good_at": "2026-11-13T20:11",
+   "fetched": 94,
+   "snapshot": 94,
+   "active": 94,
+   "published": 94,
    "warning": ""
   },
   {
@@ -118,12 +118,12 @@
    "source": "ccgp",
    "enabled": true,
    "status": "OK",
-   "last_run_at": "2026-11-13T05:57",
-   "last_good_at": "2026-11-13T05:57",
-   "fetched": 1007,
-   "snapshot": 1007,
-   "active": 1007,
-   "published": 1005,
+   "last_run_at": "2026-11-13T19:24",
+   "last_good_at": "2026-11-13T19:24",
+   "fetched": 1724,
+   "snapshot": 1724,
+   "active": 1724,
+   "published": 1720,
    "warning": ""
   },
   {
@@ -293,6 +293,18 @@
    "active": 105,
    "published": 101,
    "warning": "last good run 10.4 h ago (expected every 8 h)"
+  },
+  {
+   "source": "hk_gld",
+   "enabled": true,
+   "status": "OK",
+   "last_run_at": "2026-11-13T20:19",
+   "last_good_at": "2026-11-13T20:19",
+   "fetched": 52,
+   "snapshot": 52,
+   "active": 52,
+   "published": 52,
+   "warning": ""
   },
   {
    "source": "iadb",
@@ -597,14 +609,14 @@
   {
    "source": "taiwan",
    "enabled": true,
-   "status": "DOWN",
-   "last_run_at": "2026-11-13T19:24",
-   "last_good_at": "",
-   "fetched": 0,
-   "snapshot": 0,
-   "active": 0,
-   "published": 0,
-   "warning": "collector failed; the previous snapshot is kept"
+   "status": "OK",
+   "last_run_at": "2026-11-13T20:19",
+   "last_good_at": "2026-11-13T20:19",
+   "fetched": 10581,
+   "snapshot": 10581,
+   "active": 10581,
+   "published": 10549,
+   "warning": ""
   },
   {
    "source": "ted",

@@ -1,37 +1,18 @@
-Fri Nov 13 19:24:38 UTC 2026
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/run.py", line 835, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/run.py", line 821, in main
-    run_source(a.source)
-  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
-    rows, meta = m.fetch()
-                 ^^^^^^^^^
-  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/taiwan.py", line 98, in fetch
-    raise RuntimeError("Taiwan PCC: no rows read; previous snapshot kept")
-RuntimeError: Taiwan PCC: no rows read; previous snapshot kept
+Fri Nov 13 20:11:16 UTC 2026
+INFO BuySpeed states: 94 open kept; ma_listed 897, ma_read 25, or_listed 177, or_read 25, nv_listed 29, nv_read 25, nj_listed 19, nj_read 19
+INFO buyspeed: 94 rows (OK)
+WARNING taiwan: 128 records dated in the future quarantined
+INFO Taiwan PCC: 10581 open kept of 11771 listed (118 pages)
+INFO taiwan: 10581 rows (OK)
+INFO Hong Kong GLD: 52 open invitations (4 concessions labelled)
+INFO hk_gld: 52 rows (OK)
 INFO initializing identifier
-2026-11-13 19:28:20 WARNING: Language es package default expects mwt, which has been added
+2026-11-13 20:35:28 WARNING: Language es package default expects mwt, which has been added
 WARNING translator es->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 19:28:28 WARNING: Language uk package default expects mwt, which has been added
-WARNING translator uk->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 19:29:45 WARNING: Language cs package default expects mwt, which has been added
-WARNING translator cs->en crashed (exit -8) in its child process; skipped for this run
-WARNING translator ro->en crashed (exit -8) in its child process; skipped for this run
-WARNING translator lt->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 19:30:07 WARNING: Language fi package default expects mwt, which has been added
-WARNING translator fi->en crashed (exit -8) in its child process; skipped for this run
-WARNING translator hu->en crashed (exit -8) in its child process; skipped for this run
-WARNING translator da->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 19:30:33 WARNING: Language id package default expects mwt, which has been added
-WARNING translator id->en crashed (exit -8) in its child process; skipped for this run
-INFO translations: 2 new, 0 pending, cache 77648, 313s
+INFO translations: 9430 new, 7690 pending, cache 87049, 909s
 INFO awards 519841 (12m), recent 3000, buyers 60963, competitors 335988
 WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
-INFO integrity: 207 countries profiled, tenders {'open': 77949, 'caution': 13594, 'no data': 209, 'high risk': 69689}
+INFO integrity: 207 countries profiled, tenders {'open': 78095, 'caution': 13982, 'no data': 10777, 'high risk': 70016}
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 1 items (0 reddit, 1 hn, 0 telegram)
@@ -69,17 +50,17 @@ WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
 INFO attention: 30 rows (1 trending, 29 wikipedia)
 INFO market signals rows 2767
-INFO opportunities.csv trimmed for the sheet: 3961 of 21860 rows
-INFO opportunities 21860
+INFO opportunities.csv trimmed for the sheet: 3973 of 21900 rows
+INFO opportunities 21900
 INFO exempt buys: 813 notices
 INFO archive: 13 closed notices moved to the archive (25260 there in total); 0 closed ones kept because we worked on them
-INFO open list: 160704 notices, 0 past their deadline left out, 724 duplicates of another source's notice left out
-INFO open list file: 160704 notices in sheet/tenders_open.csv.gz (chunks hold 130000)
-INFO hebrew titles: 0 new, 7008 total, 7 pending, 6s
-INFO accounts 39055
+INFO open list: 172114 notices, 0 past their deadline left out, 743 duplicates of another source's notice left out
+INFO open list file: 172114 notices in sheet/tenders_open.csv.gz (chunks hold 130000)
+INFO hebrew titles: 516 new, 7007 total, 8 pending, 45s
+INFO accounts 41522
 INFO importers.csv trimmed for the sheet: 3988 of 5700 rows
-INFO tenders 161428, importers 5700, suppliers 3420
-/home/runner/r4/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
+INFO tenders 172857, importers 5700, suppliers 3420
+/home/runner/r4/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
   warnings.warn('resource_tracker: There appear to be %d '
 wb_pipeline          OK        fetched    957 snapshot    957 active    957 published    949
 worldbank            OK        fetched    748 snapshot    748 active    748 published    726
@@ -87,12 +68,12 @@ za                   OK        fetched   1316 snapshot   1316 active   1316 publ
 commodity_norm: 3243 rows, 3243 with a known price type {'futures': 57, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 57, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 74 anomalies {'stale': 62, 'jump15': 12}
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22%E8%87%: TypeError: fetch failed
+WARNING:leads:gdelt "臺灣銀行股份有限公司": ConnectionError
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22Auftrag: TypeError: fetch failed
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: ConnectionError
-INFO:leads:news: 862 deals checked, 4 GDELT queries, 59 linked articles
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
+INFO:leads:news: 946 deals checked, 5 GDELT queries, 59 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
 wrote 80001 rows x 28 cols to Tenders
@@ -102,8 +83,8 @@ wrote 5001 rows x 7 cols to Competitors
 wrote 4001 rows x 16 cols to Accounts
 wrote 5701 rows x 18 cols to Importers
 wrote 317 rows x 9 cols to Sectors
-wrote 227 rows x 5 cols to Countries
-wrote 60 rows x 5 cols to Sources
+wrote 229 rows x 5 cols to Countries
+wrote 61 rows x 5 cols to Sources
 wrote 2768 rows x 17 cols to Market Signals
 wrote 3421 rows x 18 cols to Suppliers
 wrote 20 rows x 7 cols to Groups
@@ -123,14 +104,13 @@ wrote 31 rows x 7 cols to Attention
 wrote 1116 rows x 9 cols to WB Plans
 wrote 2 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
-wrote 7009 rows x 2 cols to Titles HE
+wrote 7008 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
-INFO:leads:web index: 130000 tenders, 87.7 MB raw, 12.5 MB gz
-INFO:leads:web panel static: tenders 1500, titles 7009, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
-INFO:leads:web panel live: unchanged
-SOURCE DOWN         taiwan             rows 0 (last good 0 at -) RuntimeError
+INFO:leads:web index: 130000 tenders, 86.8 MB raw, 12.7 MB gz
+INFO:leads:web panel static: tenders 1500, titles 7008, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
+INFO:leads:web panel live: bd 51, accounts 51, intel 115, pursuits 56, jobs 64, contacts 481, projects 1, ptasks 1, approvals 1, stats 43, 0.3 MB encrypted
 SOURCE STALE        afdb               rows 86 (last good 86 at 2026-11-13T08:13) 
 SOURCE STALE        aiib               rows 177 (last good 177 at 2026-11-13T08:12) 
 SOURCE STALE        austender          rows 187 (last good 187 at 2026-11-13T09:02) 
@@ -167,15 +147,13 @@ SOURCE STALE        ungm               rows 1201 (last good 1201 at 2026-11-13T0
 SOURCE STALE        uruguay            rows 589 (last good 589 at 2026-11-13T09:01) 
 SOURCE DEGRADED     dewa               rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 23 at 2026-11-12T18:07) zero_work
-source status: 64 sources, 37 not OK
-HEALTH ALERT moldova: stale 58.6 h
-HEALTH ALERT israel: stale 56.6 h
+source status: 65 sources, 36 not OK
+HEALTH ALERT moldova: stale 59.7 h
+HEALTH ALERT israel: stale 57.7 h
 HEALTH ALERT dewa: EMPTY, zero rows
-HEALTH ALERT buyspeed: no data, zero rows
-HEALTH ALERT taiwan: no data, zero rows, error file present
-HEALTH ALERT importyeti: stale 52.1 h
-health: 59 sources, 6 alerts
-{'source': 'Bonfire public portal (amarillo)', 'open': 1, 'fresh_7d': 100, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
+HEALTH ALERT importyeti: stale 53.2 h
+health: 60 sources, 4 alerts
+{'source': 'India e-procurement (Nagaland)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
  "timelines": 2686,
  "timelines_multi_event": 808
 }
