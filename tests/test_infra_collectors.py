@@ -64,7 +64,9 @@ def test_kkj_parse():
     rows, hits = kkj.parse(KKJ_XML, "2026-11-13")
     assert hits == 2 and len(rows) == 2
     r = rows[0]
-    assert r["country"] == "JPN" and r["deadline"] == "2026-12-23" and r["published"] == "2026-11-12"
+    # only an opening date in the data: closing unknown, opening kept separately, not admitted as OPEN
+    assert r["country"] == "JPN" and r["deadline"] == "" and r["opening"] == "2026-12-23" and r["published"] == "2026-11-12"
+    assert r["deadline_basis"] == "unknown"
     assert r["nature"] == "supplies" and r["lang"] == "ja" and r["link"].endswith("koukoku.pdf")
     assert rows[1]["deadline"] == ""          # no date: fetch() does not count it as open
 
@@ -127,12 +129,18 @@ def test_bonfire_rejects_impossible_date():
     assert bonfire.parse(js, "h", "B", "USA", "2026-11-13")[0]["deadline"] == ""
 
 
-def test_kkj_opening_date_needs_margin():
+def test_kkj_closing_needs_stated_evidence():
     import datetime as dt
     from leads import kkj
     t = dt.date(2026, 11, 13)
-    assert kkj.admitted({"deadline": "2026-11-13", "deadline_basis": "submission"}, t)
-    assert not kkj.admitted({"deadline": "2026-11-15", "deadline_basis": "bid_opening"}, t)
-    assert kkj.admitted({"deadline": "2026-11-20", "deadline_basis": "bid_opening"}, t)
-    assert not kkj.admitted({"deadline": "2026-11-16", "deadline_basis": "text"}, t)
-    assert not kkj.admitted({"deadline": ""}, t)
+    # closing stated 12 Nov, opening 1 Dec: closed, not admitted
+    c = kkj.text_closing("入札書の提出期限 令和８年１１月１２日 開札日時 令和８年１２月１日")
+    assert c == "2026-11-12"
+    assert not kkj.admitted({"deadline": c, "deadline_basis": "text_closing"}, t)
+    # start-only or opening-only: unknown closing, never admitted
+    assert not kkj.admitted({"deadline": "", "deadline_basis": "unknown", "opening": "2026-12-20"}, t)
+    # conflicting closing dates: the earliest wins
+    assert kkj.text_closing("提出期限 2026年11月20日 ... 受領期限 2026年11月18日") == "2026-11-18"
+    # same-day closing still open on that date
+    assert kkj.admitted({"deadline": "2026-11-13", "deadline_basis": "text_closing"}, t)
+    assert kkj.text_closing("開札日時 令和８年１２月１日") == ""

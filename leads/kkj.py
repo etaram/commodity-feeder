@@ -32,22 +32,37 @@ DUE_WORD = re.compile(r"(入札日時|入札書の提出期限|提出期限|受�
 DATE_JA = re.compile(r"(令和|R)\s*(\d{1,2})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日|(20\d\d)\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日")
 
 
+# words that introduce the SUBMISSION CLOSING date (not the opening / bid date)
+CLOSE_WORD = re.compile(r"(入札書の提出期限|入札書の受領期限|提出期限|受領期限|締切|締め切り|入札期限|郵便入札の受領期限)")
+
+
+def _dates_after(t, m, span=60):
+    for d in DATE_JA.finditer(t[m.end():m.end() + span]):
+        try:
+            y = 2018 + int(d.group(2)) if d.group(1) else int(d.group(5))
+            mo, da = (int(d.group(3)), int(d.group(4))) if d.group(1) else (int(d.group(6)), int(d.group(7)))
+            yield dt.date(y, mo, da)
+        except (TypeError, ValueError):
+            continue
+        return
+
+
+def text_closing(desc):
+    """Earliest date written right after a submission-closing word, past or future ('' when none). The earliest
+    one wins: a later opening or document date never overrides an earlier closing."""
+    t = (desc or "").translate(FW)
+    found = [d for m in CLOSE_WORD.finditer(t) for d in _dates_after(t, m)]
+    return str(min(found)) if found else ""
+
+
 def text_deadline(desc, today):
-    """Latest date that follows a deadline / bid-date word within 60 characters, if it is today or later
-    (the bid / opening date, not the earlier participation-application date)."""
+    """Kept for compatibility: the latest bid / opening date after a deadline word, if today or later."""
     t = (desc or "").translate(FW)
     best = None
     for m in DUE_WORD.finditer(t):
-        for d in DATE_JA.finditer(t[m.end():m.end() + 60]):
-            try:
-                y = 2018 + int(d.group(2)) if d.group(1) else int(d.group(5))
-                mo, da = (int(d.group(3)), int(d.group(4))) if d.group(1) else (int(d.group(6)), int(d.group(7)))
-                v = dt.date(y, mo, da)
-            except (TypeError, ValueError):
-                continue
+        for v in _dates_after(t, m):
             if v >= today and (best is None or v > best):
                 best = v
-            break
     return str(best) if best else ""
 
 
@@ -60,21 +75,22 @@ def parse(xml_text, fetched):
         key, name = g("Key"), g("ProjectName")
         if not key or not name:
             continue
-        opening, submit = _d(g("OpeningTendersEvent")), _d(g("TenderSubmissionDeadline"))
-        in_text = "" if (opening or submit) else text_deadline(g("ProjectDescription"), dt.date.fromisoformat(fetched))
-        # which date the deadline field holds: only a submission deadline proves bids are still accepted; a bid-opening
-        # date (or a date found in the text) is at or after submission closing, so it is admitted only with a margin
-        basis = "submission" if submit else ("bid_opening" if opening else ("text" if in_text else ""))
+        # KKJ API guide v1.1: TenderSubmissionDeadline is 入札開始日 (bidding START), OpeningTendersEvent is 開札 (opening).
+        # Neither is the submission CLOSING. Closing comes only from the notice text (text_closing); without it the
+        # notice is kept as history with closing unknown and is not counted as OPEN.
+        opening, start = _d(g("OpeningTendersEvent")), _d(g("TenderSubmissionDeadline"))
+        closing = text_closing(g("ProjectDescription"))
+        basis = "text_closing" if closing else "unknown"
         org, pref = g("OrganizationName"), g("PrefectureName")
         cat = g("Category")
         sector, how = classify(name)
         rows.append({"id": "KKJ-" + re.sub(r"[^A-Za-z0-9]", "", key)[:60], "source": "KKJ Japan public procurement portal", "group": "",
                      "sector": sector, "nature": {"物品": "supplies", "工事": "works", "役務": "services"}.get(cat, ""), "cpv": "",
                      "classification": how, "country": "JPN", "buyer": (org + (f" ({pref})" if pref and pref not in org else ""))[:120],
-                     "title": name[:300], "notice_type": (g("ProcedureType") or "公告") + ("" if submit else " (date shown is the bid opening; submission closes on or before it)" if opening else " (date read from the notice text)" if in_text else ""), "stage": "tender",
+                     "title": name[:300], "notice_type": (g("ProcedureType") or "公告") + ("" if closing else " (submission closing not stated in the data)"), "stage": "tender",
                      "access": "Japanese government bidding qualification (全省庁統一資格 or local) usually required" +
                                (f"; grade {g('Certification')}" if g("Certification") else ""),
-                     "published": _d(g("CftIssueDate")), "deadline": submit or opening or in_text, "deadline_basis": basis, "value": "", "currency": "",
+                     "published": _d(g("CftIssueDate")), "deadline": closing, "deadline_basis": basis, "opening": opening, "bid_start": start, "value": "", "currency": "",
                      "link": g("ExternalDocumentURI") or "https://www.kkj.go.jp/", "source_url": "https://www.kkj.go.jp/",
                      "fetched": fetched, "contact": "", "lang": "ja"})
     return rows, hits
@@ -107,18 +123,10 @@ def _slice(s, lg, cat, lo, hi, fetched, out, stats, t0):
         out[x["id"]] = x
 
 
-MARGIN_DAYS = 7     # a bid-opening / text date counts as OPEN only when it is at least this far ahead
-
-
 def admitted(x, t):
-    """OPEN: a submission deadline today or later; or, without one, an opening / text date at least MARGIN_DAYS ahead
-    (submission usually closes 0-5 days before opening). Rows with no date at all are not admitted."""
-    d = x.get("deadline") or ""
-    if not d:
-        return False
-    if x.get("deadline_basis") == "submission":
-        return d >= str(t)
-    return d >= str(t + dt.timedelta(days=MARGIN_DAYS))
+    """OPEN only with a submission-closing date stated in the notice that is today or later. Opening / start dates and
+    rows with unknown closing are never admitted (no guessed offset)."""
+    return x.get("deadline_basis") == "text_closing" and (x.get("deadline") or "") >= str(t)
 
 
 def fetch():
@@ -130,10 +138,14 @@ def fetch():
         for cat in CAT:
             _slice(s, lg, cat, t - dt.timedelta(days=LOOKBACK_DAYS), t, fetched, out, stats, t0)
     rows, q = quarantine_future(list(out.values()), "kkj")
+    pending = [x for x in rows if x.get("deadline_basis") != "text_closing" and (x.get("opening") or "") >= fetched]
     rows = [x for x in rows if admitted(x, t)]
     keep, _ = rolling("kkj", rows)
-    keep = [x for x in keep if admitted(x, t)]      # cached rows age too: re-check the margin every run
-    log.info("KKJ Japan: %d open (future bid-opening or submission date), %d kept, %d quarantined; calls %s, errors %s, truncated %s%s",
-             len(rows), len(keep), q, stats.get("calls", 0), stats.get("errors", 0), stats.get("truncated", 0),
+    keep = [x for x in keep if admitted(x, t)]      # cached rows from before this rule are dropped from active
+    # notices with a future opening but no stated closing: kept as research history, never counted as OPEN
+    pend, _ = rolling("kkj_pending", [dict(x, deadline=x["opening"]) for x in pending])
+    stats["closing_unknown"] = len(pend)
+    log.info("KKJ Japan: %d open (submission closing stated in the notice, today or later), %d kept, %d closing unknown (history only), %d quarantined; calls %s, errors %s, truncated %s%s",
+             len(rows), len(keep), len(pend), q, stats.get("calls", 0), stats.get("errors", 0), stats.get("truncated", 0),
              ", stopped at time budget" if stats.get("budget_stop") else "")
     return keep, {"new": len(rows), "quarantined": q, **stats}
