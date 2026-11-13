@@ -1,28 +1,28 @@
 {
-  "finished_utc": "2026-11-13T05:52:00",
-  "fx_source": "ECB via Frankfurter 2026-11-12",
+  "finished_utc": "2026-11-13T21:21:04",
+  "fx_source": "ECB via Frankfurter 2026-11-13",
   "fx": {
-    "EUR": 1.1080946312815114,
-    "CNY": 0.1499632590015446,
-    "CAD": 0.7018036353428311,
-    "MYR": 0.245188181929631,
-    "JPY": 0.006261740763932374,
-    "ILS": 0.3121878121878122,
-    "GBP": 1.325556733828208,
-    "INR": 0.010633772862611654,
-    "AUD": 0.682081713389264,
-    "BRL": 0.17803414694938488,
-    "NOK": 0.10490427484920009,
-    "CHF": 1.200278464603788,
-    "ZAR": 0.05982650314089141,
-    "KRW": 0.00074956899782625,
+    "EUR": 1.1052044075551772,
+    "CNY": 0.14988234236124642,
+    "CAD": 0.7013606396409033,
+    "MYR": 0.24464831804281342,
+    "JPY": 0.00625,
+    "ILS": 0.31145856043853365,
+    "GBP": 1.3226638449837973,
+    "INR": 0.010610079575596816,
+    "AUD": 0.6785181164337087,
+    "BRL": 0.17656302417147798,
+    "NOK": 0.10456532195662631,
+    "CHF": 1.1927480916030533,
+    "ZAR": 0.058950098741415394,
+    "KRW": 0.0007478704389251605,
     "USD": 1.0
   },
   "sources": {
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 25,
+      "sec": 29,
       "newest_date": "2026-11-13",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -32,7 +32,7 @@
     "westmetall": {
       "ok": true,
       "prices": 6,
-      "sec": 7,
+      "sec": 8,
       "newest_date": "2026-11-12",
       "log": [
         "INFO westmetall: 6 prices"
@@ -40,21 +40,21 @@
     },
     "em_global": {
       "ok": true,
-      "prices": 19,
-      "sec": 74,
+      "prices": 21,
+      "sec": 34,
       "newest_date": "2026-11-13",
       "log": [
         "INFO em_global board: 620 rows",
-        "INFO em_global: 19 prices"
+        "INFO em_global: 21 prices"
       ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 77,
-      "newest_date": "2026-11-12",
+      "sec": 2,
+      "newest_date": "2026-11-13",
       "log": [
-        "INFO cn_spot: 52 prices (2026-11-12)"
+        "INFO cn_spot: 52 prices (2026-11-13)"
       ]
     },
     "eu_agri": {
@@ -82,7 +82,7 @@
     "scrapmonster": {
       "ok": true,
       "prices": 34,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-09-21",
       "log": [
         "INFO scrapmonster: 34 prices, 221 unmapped items"
@@ -92,16 +92,16 @@
       "ok": true,
       "prices": 5,
       "sec": 1,
-      "newest_date": "2026-11-12",
+      "newest_date": "2026-11-13",
       "log": [
-        "INFO smi: 5 prices (as of 2026-11-12)"
+        "INFO smi: 5 prices (as of 2026-11-13)"
       ]
     },
     "usda": {
       "ok": true,
       "prices": 54,
-      "sec": 15,
-      "newest_date": "2026-11-12",
+      "sec": 17,
+      "newest_date": "2026-11-13",
       "log": [
         "INFO usda gdt: 8 prices",
         "INFO usda by-products: 3 prices",
@@ -129,34 +129,34 @@
     },
     "comext": {
       "ok": true,
-      "prices": 1913,
-      "sec": 56,
-      "newest_date": "2026-08-31",
+      "prices": 1915,
+      "sec": 109,
+      "newest_date": "2026-09-30",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
-        "INFO comext: 1913 prices"
+        "INFO comext: 1915 prices"
       ]
     },
     "comtrade": {
       "ok": true,
-      "prices": 1,
-      "sec": 11,
-      "newest_date": "2026-09-30",
+      "prices": 0,
+      "sec": 10,
+      "newest_date": null,
       "log": [
-        "INFO comtrade: 30 HS codes still missing",
+        "INFO comtrade: 28 HS codes still missing",
         "INFO comtrade period 202609 (preview)",
-        "INFO comtrade: 1 prices, 3 calls"
+        "INFO comtrade: 0 prices, 3 calls"
       ]
     }
   },
-  "rows_with_price": 1955,
-  "candidates": 2126,
-  "flagged": 302,
+  "rows_with_price": 1956,
+  "candidates": 2129,
+  "flagged": 265,
   "by_source_selected": {
-    "yahoo": 32,
+    "yahoo": 31,
     "westmetall": 6,
-    "em_global": 3,
-    "cn_spot": 32,
+    "em_global": 4,
+    "cn_spot": 31,
     "eu_agri": 0,
     "dtn": 7,
     "ssb": 2,
@@ -164,14 +164,14 @@
     "smi": 3,
     "usda": 44,
     "census": 0,
-    "comext": 1757,
-    "comtrade": 1,
-    "derived": 29
+    "comext": 1759,
+    "comtrade": 0,
+    "derived": 30
   },
   "by_tier": {
-    "T1 Exchange benchmark": 78,
+    "T1 Exchange benchmark": 79,
     "T2 Official market reporting": 46,
-    "T3 Industry assessment": 73,
-    "T4 Trade statistics (unit value)": 1758
+    "T3 Industry assessment": 72,
+    "T4 Trade statistics (unit value)": 1759
   }
 }
