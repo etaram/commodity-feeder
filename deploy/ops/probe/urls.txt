@@ -1,8 +1,8 @@
-# round 19: Periscope BuySpeed state portals (open bids) + Public Purchase
-https://oregonbuys.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|records|bidNumber|captcha|resultsCount|totalRecords|\d+ - \d+ of)
-https://www.commbuys.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|\d+ - \d+ of|captcha)
-https://nevadaepro.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|\d+ - \d+ of|captcha)
-https://www.njstart.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|\d+ - \d+ of|captcha)
+# round 19b: Periscope BuySpeed state portals (open bids) + Public Purchase; grep has no spaces
+https://oregonbuys.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 300 grep=(\d+\s-\s\d+\sof\s\d+|totalRecords|paginator_top|bidNumber=|captcha)
+https://www.commbuys.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 300 grep=(\d+\s-\s\d+\sof\s\d+|bidNumber=|captcha)
+https://nevadaepro.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 300 grep=(\d+\s-\s\d+\sof\s\d+|bidNumber=|captcha)
+https://www.njstart.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 300 grep=(\d+\s-\s\d+\sof\s\d+|bidNumber=|captcha)
 https://oregonbuys.gov/robots.txt 800
-https://www.publicpurchase.com/gems/bellevue,wa/buyer/public/home 600 grep=(openBids|widget|bid)
+https://www.publicpurchase.com/gems/bellevue,wa/buyer/public/home 300 grep=(openBids|bidId|Open\sBids)
 https://www.publicpurchase.com/robots.txt 800

@@ -46,7 +46,11 @@ def one(line):
         return
     print("   scripts:", re.findall(r'<script[^>]+src="([^"]+)"', t)[:15])
     if grep:
-        for m in list(re.finditer(grep, t))[:8]:
+        try:
+            found = list(re.finditer(grep, t))[:8]
+        except re.error as e:
+            print("   bad grep pattern:", e); found = []
+        for m in found:
             print("   >>" + re.sub(r"\s+", " ", t[max(0, m.start() - 150):m.start() + 350]))
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=re.S)
     t = re.sub(r"\s+", " ", t)
