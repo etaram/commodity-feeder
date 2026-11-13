@@ -62,16 +62,19 @@ def parse(xml_text, fetched):
             continue
         opening, submit = _d(g("OpeningTendersEvent")), _d(g("TenderSubmissionDeadline"))
         in_text = "" if (opening or submit) else text_deadline(g("ProjectDescription"), dt.date.fromisoformat(fetched))
+        # which date the deadline field holds: only a submission deadline proves bids are still accepted; a bid-opening
+        # date (or a date found in the text) is at or after submission closing, so it is admitted only with a margin
+        basis = "submission" if submit else ("bid_opening" if opening else ("text" if in_text else ""))
         org, pref = g("OrganizationName"), g("PrefectureName")
         cat = g("Category")
         sector, how = classify(name)
         rows.append({"id": "KKJ-" + re.sub(r"[^A-Za-z0-9]", "", key)[:60], "source": "KKJ Japan public procurement portal", "group": "",
                      "sector": sector, "nature": {"物品": "supplies", "工事": "works", "役務": "services"}.get(cat, ""), "cpv": "",
                      "classification": how, "country": "JPN", "buyer": (org + (f" ({pref})" if pref and pref not in org else ""))[:120],
-                     "title": name[:300], "notice_type": g("ProcedureType") or "公告", "stage": "tender",
+                     "title": name[:300], "notice_type": (g("ProcedureType") or "公告") + ("" if submit else " (date shown is the bid opening; submission closes on or before it)" if opening else " (date read from the notice text)" if in_text else ""), "stage": "tender",
                      "access": "Japanese government bidding qualification (全省庁統一資格 or local) usually required" +
                                (f"; grade {g('Certification')}" if g("Certification") else ""),
-                     "published": _d(g("CftIssueDate")), "deadline": opening or submit or in_text, "value": "", "currency": "",
+                     "published": _d(g("CftIssueDate")), "deadline": submit or opening or in_text, "deadline_basis": basis, "value": "", "currency": "",
                      "link": g("ExternalDocumentURI") or "https://www.kkj.go.jp/", "source_url": "https://www.kkj.go.jp/",
                      "fetched": fetched, "contact": "", "lang": "ja"})
     return rows, hits
@@ -104,6 +107,20 @@ def _slice(s, lg, cat, lo, hi, fetched, out, stats, t0):
         out[x["id"]] = x
 
 
+MARGIN_DAYS = 7     # a bid-opening / text date counts as OPEN only when it is at least this far ahead
+
+
+def admitted(x, t):
+    """OPEN: a submission deadline today or later; or, without one, an opening / text date at least MARGIN_DAYS ahead
+    (submission usually closes 0-5 days before opening). Rows with no date at all are not admitted."""
+    d = x.get("deadline") or ""
+    if not d:
+        return False
+    if x.get("deadline_basis") == "submission":
+        return d >= str(t)
+    return d >= str(t + dt.timedelta(days=MARGIN_DAYS))
+
+
 def fetch():
     t = today()
     fetched = str(t)
@@ -113,8 +130,9 @@ def fetch():
         for cat in CAT:
             _slice(s, lg, cat, t - dt.timedelta(days=LOOKBACK_DAYS), t, fetched, out, stats, t0)
     rows, q = quarantine_future(list(out.values()), "kkj")
-    rows = [x for x in rows if x["deadline"] and x["deadline"] >= fetched]
+    rows = [x for x in rows if admitted(x, t)]
     keep, _ = rolling("kkj", rows)
+    keep = [x for x in keep if admitted(x, t)]      # cached rows age too: re-check the margin every run
     log.info("KKJ Japan: %d open (future bid-opening or submission date), %d kept, %d quarantined; calls %s, errors %s, truncated %s%s",
              len(rows), len(keep), q, stats.get("calls", 0), stats.get("errors", 0), stats.get("truncated", 0),
              ", stopped at time budget" if stats.get("budget_stop") else "")

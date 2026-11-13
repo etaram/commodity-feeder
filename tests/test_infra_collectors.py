@@ -125,3 +125,14 @@ def test_bonfire_rejects_impossible_date():
     js = {"success": 1, "payload": {"projects": {"1": {"ProjectID": "1", "ReferenceID": "R", "ProjectVisibilityID": "1",
                                                        "ProjectName": "Road salt supply", "DateClose": "2026-99-99 10:00:00"}}}}
     assert bonfire.parse(js, "h", "B", "USA", "2026-11-13")[0]["deadline"] == ""
+
+
+def test_kkj_opening_date_needs_margin():
+    import datetime as dt
+    from leads import kkj
+    t = dt.date(2026, 11, 13)
+    assert kkj.admitted({"deadline": "2026-11-13", "deadline_basis": "submission"}, t)
+    assert not kkj.admitted({"deadline": "2026-11-15", "deadline_basis": "bid_opening"}, t)
+    assert kkj.admitted({"deadline": "2026-11-20", "deadline_basis": "bid_opening"}, t)
+    assert not kkj.admitted({"deadline": "2026-11-16", "deadline_basis": "text"}, t)
+    assert not kkj.admitted({"deadline": ""}, t)
