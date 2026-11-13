@@ -313,7 +313,7 @@ jobs:
       - name: ccgp
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',ccgp,') }}
         run: set -o pipefail; python -m leads.run --source ccgp 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 8
+        timeout-minutes: 45
         continue-on-error: true
       - name: lebanon
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',lebanon,') }}

@@ -144,3 +144,11 @@ def test_kkj_closing_needs_stated_evidence():
     # same-day closing still open on that date
     assert kkj.admitted({"deadline": "2026-11-13", "deadline_basis": "text_closing"}, t)
     assert kkj.text_closing("開札日時 令和８年１２月１日") == ""
+
+
+def test_ccgp_detail():
+    from leads import ccgp
+    page = "<p>并于2026年12月08日09点00分（北京时间）前递交投标文件。</p><p>预算金额：125(万元)</p><p>10、是否可采购进口产品：否</p><td>开标时间</td><td>2026年11月16日 00:00</td>"
+    assert ccgp.detail(page) == ("2026-12-08", 1250000, "no")
+    assert ccgp.detail("截止时间：2026年12月08日09点00分 预算金额：￥980,000.00元")[:2] == ("2026-12-08", 980000)
+    assert ccgp.detail("no dates here") == ("", "", "")
