@@ -96,7 +96,7 @@ def _hs_names():
         return {}
 
 
-def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the universe
+def suppliers(limit=600_000):  # tiers 1-3, plus tier 4 with its own website (13 Nov 2026); was 250k, earlier 90k
     key = os.environ.get("WEB_INDEX_KEY", "")
     if not key:  # kept in the private Supplier Universe sheet (hidden tab Config), readable by the service account
         try:
@@ -144,7 +144,10 @@ def suppliers(limit=250_000):  # tiers 1-3 (about 218k); was 90k, which cut the 
             x["rc"] = 1  # the refined layer found a conflict: shown as "check first", never as proof
         if r.get("website_basis"):
             x["wb"] = r["website_basis"][:80]
-        if x.get("n") and x.get("tr") in ("1", "2", "3"):  # proven (tier 1-2) and qualified (tier 3); tier 4 stays out
+        # proven (tier 1-2) and qualified (tier 3); tier 4 (one award, little other evidence) only with its own website
+        # on record, so the enrichment and the quality gate can examine it (owner, 13 Nov 2026: more refined suppliers,
+        # quality decides). The gate, not the tier, decides what is shown as refined.
+        if x.get("n") and (x.get("tr") in ("1", "2", "3") or (x.get("tr") == "4" and x.get("web"))):
             out.append(x)
     # Ethiopian coffee exporters with a recorded export volume (leads/eth_market.py: the Coffee and Tea Authority's export
     # record): proven by an official record, so they rank as proven suppliers; marketplace-only sellers stay a listing
