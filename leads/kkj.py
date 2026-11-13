@@ -13,7 +13,7 @@ import re
 import time
 import xml.etree.ElementTree as ET
 
-from .common import clean, log, quarantine_future, rolling, session, today
+from .common import clean, log, quarantine_future, rolling, session, today, valid_date
 from .sectors import classify
 
 API = "https://www.kkj.go.jp/api/"
@@ -23,8 +23,7 @@ BUDGET_S = 1500
 
 
 def _d(s):
-    m = re.match(r"(20\d\d-\d\d-\d\d)", str(s or ""))
-    return m.group(1) if m else ""
+    return valid_date(s)
 
 
 FW = str.maketrans("０１２３４５６７８９", "0123456789")

@@ -71,3 +71,15 @@ def test_chatgpt_row_160_failures_v14():
     assert not q.gate(dict(OK, roles=[], title="Acme", description="Our partner is a manufacturer of steel pipes"))[0]
     assert not q.gate(dict(OK, roles=[], title="Acme", description="Our parent company is a leading producer of cement."))[0]
     assert q.gate(dict(OK, roles=[], title="Acme", description="We are a supplier of steel pipes. Our partner is a bank."))[0]
+
+
+def test_chatgpt_row_167_role_attribution_v15():
+    from leads.quality_gate import gate
+    # negated self-description is not a role
+    assert not gate(dict(OK, roles=[], title="Acme", description="We are not a manufacturer of steel pipes. We only publish a directory."))[0]
+    # a role phrase about a third party does not give this company the role
+    assert not gate(dict(OK, roles=[{"role": "manufacturer", "phrase": "Our partner is a manufacturer of steel pipes."}]))[0]
+    # positive controls: the company describing itself, and several legitimate roles
+    assert gate(dict(OK, roles=[{"role": "manufacturer", "phrase": "We manufacture steel pipes in Nairobi."}]))[0]
+    ok, _, f = gate(dict(OK, roles=[], title="Acme", description="We are a leading manufacturer of steel pipes and a distributor of valves."))
+    assert ok and set(f["roles"]) >= {"manufacturer", "trader"}

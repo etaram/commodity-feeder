@@ -192,6 +192,29 @@ def rolling(name, new_rows, max_age_days=120):
     return keep, (p.stat().st_size if p.exists() else 0)
 
 
+def snapshot(name, rows):
+    """For a source whose single pull returns its COMPLETE current list (Transnet, one Bonfire hub): the cache becomes
+    exactly these rows, so a notice that was cancelled or removed upstream disappears at the next good run (rolling()
+    only adds). Call it only after a successful, complete pull; on a failed pull raise instead, so the run is marked
+    failed and the previous snapshot stays as last-good."""
+    CACHE.mkdir(parents=True, exist_ok=True)
+    p = CACHE / f"{name}.jsonl"
+    keep = sorted(rows, key=lambda r: r["id"])
+    p.write_text("\n".join(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in keep) + "\n", encoding="utf-8")
+    return keep, p.stat().st_size
+
+
+def valid_date(s):
+    """'YYYY-MM-DD' when s starts with a real calendar date, else '' (2026-99-99 is rejected)."""
+    m = re.match(r"(\d{4})-(\d{2})-(\d{2})", str(s or ""))
+    if not m:
+        return ""
+    try:
+        return str(dt.date(int(m.group(1)), int(m.group(2)), int(m.group(3))))
+    except ValueError:
+        return ""
+
+
 def cache_empty(name):
     p = CACHE / f"{name}.jsonl"
     return not p.exists() or p.stat().st_size < 10

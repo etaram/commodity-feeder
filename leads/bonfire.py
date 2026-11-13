@@ -11,7 +11,7 @@ import html
 import re
 import time
 
-from .common import clean, log, quarantine_future, rolling, session, today
+from .common import CACHE, clean, log, quarantine_future, session, snapshot, today, valid_date
 from .sectors import classify
 
 # (hub, buyer, country). Only public bodies (port authorities, cities, counties, states, utilities, schools).
@@ -216,8 +216,7 @@ BAD_STATUS = re.compile(r"cancel|award|closed", re.I)
 
 
 def _date(s):
-    m = re.match(r"(20\d\d-\d\d-\d\d)", str(s or ""))
-    return m.group(1) if m else ""
+    return valid_date(s)
 
 
 def _org(s, hub):
@@ -273,14 +272,30 @@ def fetch():
         if not js or not js.get("success"):
             failed += 1
             continue
-        buyer = _org(s, hub) or buyer          # the hub's own name for itself, so a guessed hub never gets a wrong label
+        org = _org(s, hub)                     # the hub's own name for itself; a guessed label is never shown as fact
+        buyer = org or f"{buyer} (organisation not confirmed on the portal)"
         got = parse(js, hub, buyer, country, t)
         answered.append((hub, len(got)))
         rows += got
         time.sleep(0.5)
+    if not answered:
+        raise RuntimeError(f"Bonfire: none of {len(seen)} hubs answered; previous snapshot kept as last-good")
+    # each answering hub returned its complete open list: its rows replace that hub's earlier rows; hubs that did not
+    # answer keep their earlier rows (stale, not refreshed) and are counted separately
+    import json as _j
+    ok_hubs = {h for h, _ in answered}
+    stale = []
+    p = CACHE / "bonfire.jsonl"
+    if p.exists():
+        for line in p.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = _j.loads(line)
+                hub = r["id"].split("-")[1] if r["id"].count("-") >= 2 else ""
+                if hub not in ok_hubs and (r.get("deadline") or "") >= t:
+                    stale.append(r)
     rows, q = quarantine_future(rows, "bonfire")
-    rows = [x for x in rows if x["deadline"] and x["deadline"] >= t]    # OPEN = a future closing date
-    keep, _ = rolling("bonfire", rows)
-    log.info("Bonfire: %d hubs answered, %d did not; %d open; per hub: %s", len(answered), failed, len(rows),
-             ", ".join(f"{h} {n}" for h, n in answered))
-    return keep, {"new": len(rows), "quarantined": q, "hubs": len(answered)}
+    rows = [x for x in rows if x["deadline"] and x["deadline"] >= t]
+    keep, _ = snapshot("bonfire", rows + stale)
+    log.info("Bonfire: %d hubs answered, %d did not; %d open from answering hubs, %d kept from earlier runs of hubs that did not answer; per hub: %s",
+             len(answered), failed, len(rows), len(stale), ", ".join(f"{h} {n}" for h, n in answered))
+    return keep, {"new": len(rows), "quarantined": q, "hubs_tried": len(seen), "hubs_answered": len(answered), "hubs_failed": failed, "stale_rows": len(stale)}

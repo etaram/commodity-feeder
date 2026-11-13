@@ -119,27 +119,57 @@ def sane(src, out):
 _BROKEN = set()
 
 
-def _argos_child(lang, to, texts):
+def _argos_child(lang, to, texts):  # noqa: D401
     import argostranslate.translate as at
     t = at.get_translation_from_codes(lang, to)
     return [t.translate(x[:400]) for x in texts]
 
 
+def _argos_worker(fn, lang, to, texts, q):
+    try:
+        q.put(("ok", (fn or _argos_child)(lang, to, texts)))
+    except Exception as e:  # noqa: BLE001
+        q.put(("err", type(e).__name__))
+
+
 def _argos_isolated(lang, to, texts, timeout=300, fn=None):
     """The full Argos pipeline (Stanza sentence splitting) can crash the whole process with a floating point
     exception (seen 11-13 Nov on es->en: the merge died, so the published index stopped updating). It runs in a
-    child process: a crash loses only this batch, and the language pair is not tried again in this run."""
+    child process with a hard time limit: on a crash, an error or the limit, the child is terminated, the batch keeps
+    its untranslated titles (blank translations) and the language pair is not tried again in this run."""
     if (lang, to) in _BROKEN:
         return [""] * len(texts)
-    import concurrent.futures as cf
     import multiprocessing as mp
+    import queue as _q
+    ctx = mp.get_context("spawn")
+    q = ctx.Queue()
+    p = ctx.Process(target=_argos_worker, args=(fn, lang, to, list(texts), q), daemon=True)
+    p.start()
+    why = ""
+    import time as _t
+    end = _t.time() + timeout
     try:
-        with cf.ProcessPoolExecutor(max_workers=1, mp_context=mp.get_context("spawn")) as ex:
-            return ex.submit(fn or _argos_child, lang, to, list(texts)).result(timeout=timeout)
-    except Exception as e:  # noqa: BLE001  (BrokenProcessPool on a crash, TimeoutError)
-        _BROKEN.add((lang, to))
-        log.warning("translator %s->%s crashed or timed out in its child process (%s); skipped for this run", lang, to, type(e).__name__)
-        return [""] * len(texts)
+        while True:
+            try:
+                kind, val = q.get(timeout=1)
+            except _q.Empty:
+                if not p.is_alive():
+                    why = f"crashed (exit {p.exitcode})"; break
+                if _t.time() > end:
+                    why = "timed out"; break
+                continue
+            if kind == "ok":
+                p.join(5)
+                return val
+            why = val; break
+    finally:
+        if p.is_alive():
+            p.terminate(); p.join(5)
+            if p.is_alive():
+                p.kill(); p.join(5)
+    _BROKEN.add((lang, to))
+    log.warning("translator %s->%s %s in its child process; skipped for this run", lang, to, why or "failed")
+    return [""] * len(texts)
 
 
 def _translate_batch(lang, texts, to="en"):

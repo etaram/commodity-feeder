@@ -7,6 +7,9 @@ scope, division, province, office, closing and published dates, audience, e-tend
 Quality rules: a notice titled as a cancellation, regret letter or award is not an opportunity and is left out; a
 notice published more than a year ago is left out even when its closing date is far ahead (old rate contracts
 re-posted as "as and when required"); OPEN = a future closing date. The officer e-mail in the feed is not kept.
+PAUSED 13 Nov 2026: Eskom's website terms (Sept 2021, sections 2.1, 2.2 and 2.10) require prior written consent for
+automated collection; not scheduled and not merged until consent or an official open-data route (National
+Treasury OCDS, read by leads/za.py) covers it (ChatGPT review row 168).
 Access (checked 2026-11-13 from the server): public, no sign-in, one request per run. Bidding is on
 etendering.eskom.co.za and needs a CSD number; reading the bulletin does not."""
 import datetime as dt

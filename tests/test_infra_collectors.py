@@ -88,3 +88,40 @@ def test_bidnet_parse():
     assert r["title"] == "Concrete Raising" and r["deadline"] == "2026-12-01" and r["published"] == "2026-11-12"
     assert r["country"] == "USA" and "Texas" in r["buyer"] and r["id"] == "BIDNET-444233674884"
     assert r["link"].startswith("https://www.bidnetdirect.com/texas/solicitations/open-bids/")
+
+
+def test_snapshot_drops_removed_and_dates_are_real(tmp_path, monkeypatch):
+    from leads import common
+    monkeypatch.setattr(common, "CACHE", tmp_path)
+    a = {"id": "T-1", "deadline": "2026-12-01"}; b = {"id": "T-2", "deadline": "2026-12-02"}
+    common.snapshot("transnet", [a, b])
+    keep, _ = common.snapshot("transnet", [a])               # T-2 cancelled or removed upstream
+    assert [r["id"] for r in keep] == ["T-1"]
+    assert common.valid_date("2026-99-99") == "" and common.valid_date("2026-12-01T10:00") == "2026-12-01"
+
+
+def test_transnet_schema_change_raises():
+    import pytest
+    from leads import transnet
+    with pytest.raises(ValueError):
+        transnet.parse({"success": False, "message": "error"}, "2026-11-13")
+
+
+def test_bonfire_all_hubs_fail_raises(monkeypatch):
+    import pytest
+    from leads import bonfire
+
+    class S:
+        def get(self, *a, **k):
+            raise ConnectionError("down")
+    monkeypatch.setattr(bonfire, "session", lambda: S())
+    monkeypatch.setattr(bonfire, "HUBS", [("x1", "X", "USA"), ("x2", "Y", "USA")])
+    with pytest.raises(RuntimeError):
+        bonfire.fetch()
+
+
+def test_bonfire_rejects_impossible_date():
+    from leads import bonfire
+    js = {"success": 1, "payload": {"projects": {"1": {"ProjectID": "1", "ReferenceID": "R", "ProjectVisibilityID": "1",
+                                                       "ProjectName": "Road salt supply", "DateClose": "2026-99-99 10:00:00"}}}}
+    assert bonfire.parse(js, "h", "B", "USA", "2026-11-13")[0]["deadline"] == ""

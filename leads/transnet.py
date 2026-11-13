@@ -8,7 +8,7 @@ Bidding needs Transnet supplier registration and CSD; reading the list does not.
 import datetime as dt
 import re
 
-from .common import clean, log, quarantine_future, rolling, session, today
+from .common import clean, log, quarantine_future, session, snapshot, today, valid_date
 from .sectors import classify
 
 PAGE = "https://transnetetenders.azurewebsites.net/Home/AdvertisedTenders"
@@ -37,8 +37,10 @@ def _pick(rec, *subs):
 
 
 def parse(js, fetched):
+    if not isinstance(js, dict) or not isinstance(js.get("result"), list):
+        raise ValueError("Transnet: response has no 'result' list (schema changed or error page)")
     rows = []
-    for r in (js or {}).get("result") or []:
+    for r in js["result"]:
         no = clean(r.get("tenderNumber") or _pick(r, "number"))
         title = clean(r.get("nameOfTender") or _pick(r, "name"))
         if not no or not title:
@@ -58,7 +60,7 @@ def parse(js, fetched):
                      "country": "ZAF", "buyer": buyer, "title": title[:300],
                      "notice_type": clean(str(_pick(r, "type"))) or "Advertised tender", "stage": "tender",
                      "access": "Transnet supplier registration and CSD number required to bid",
-                     "published": _date(_pick(r, "publish")), "deadline": _date(_pick(r, "closing")), "value": "", "currency": "",
+                     "published": valid_date(_date(_pick(r, "publish"))), "deadline": valid_date(_date(_pick(r, "closing"))), "value": "", "currency": "",
                      "link": att if att.startswith("http") else PAGE, "source_url": PAGE, "fetched": fetched, "contact": "", "lang": "en"})
     return rows
 
@@ -70,6 +72,6 @@ def fetch():
     t = str(today())
     rows, q = quarantine_future(parse(r.json(), t), "transnet")
     rows = [x for x in rows if x["deadline"] and x["deadline"] >= t]    # OPEN = a future closing date
-    keep, _ = rolling("transnet", rows)
+    keep, _ = snapshot("transnet", rows)          # complete list: cancelled / removed notices drop out
     log.info("Transnet: %d open with a future closing date, %d kept, %d quarantined", len(rows), len(keep), q)
     return keep, {"new": len(rows), "quarantined": q}

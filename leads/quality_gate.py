@@ -18,7 +18,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-VERSION = "supplier-gate-1.4 (2026-11-13)"
+VERSION = "supplier-gate-1.5 (2026-11-13)"
 FRESH_DAYS = 180
 ISO3 = re.compile(r"^[A-Z]{3}$")
 try:   # the ISO 3166-1 alpha-3 list the app uses (249 codes); a three-letter string alone is not a country
@@ -130,6 +130,11 @@ SELF_ROLE = [
 # v1.4: sentences about a third party (our partner, our client, our parent company...) never describe this company
 THIRD_PARTY = re.compile(r"\b(our|their|its|his|her)\s+(\w+\s+){0,2}(partners?|clients?|customers?|suppliers?|vendors?|principals?|"
                          r"parent( company)?|sister compan(y|ies)|affiliates?|subsidiar(y|ies)|members?|competitors?)\b[^.;!?\n]*", re.I)
+# v1.5: negation in front of a role word, and whole sentences that carry such a negation
+NEG_ROLE = re.compile(r"\b(not|no longer|never|isn't|aren't|neither|nor)\b[^.;!?\n]{0,40}\b(manufactur|produc|maker|distribut|import|export|"
+                      r"supplier|trad|wholesal|dealer|contractor|construct|consult|service)", re.I)
+NEG_SENT = re.compile(r"[^.;!?\n]*\b(not|no longer|never|isn't|aren't)\b[^.;!?\n]{0,40}\b(manufactur|produc|maker|distribut|import|export|"
+                      r"supplier|trad|wholesal|dealer|contractor|construct|consult)[^.;!?\n]*", re.I)
 CUSTOMER_CTX = re.compile(r"\b(for|to|serving|serve|help(s|ing)?|with)\s+(\w+\s+){0,3}(manufacturers|producers|factories|distributors|contractors)\b", re.I)
 
 
@@ -142,11 +147,15 @@ def roles_of(rec):
         phrase = (x.get("phrase") if isinstance(x, dict) else "") or ""
         if NEG.search(v) or NEG.search(phrase[:20]):
             continue
+        # v1.5: the role phrase passes the same checks as page text: no negation before the role word, no third party
+        if phrase and (THIRD_PARTY.search(phrase) or NEG_ROLE.search(phrase)):
+            continue
         r |= {k for k in ROLE_OK if re.search(rf"\b{k}", v)}
     if r:
         return sorted(r), "site role phrase"
     text = " ".join([str(rec.get("title") or ""), str(rec.get("description") or "")])
-    text_wo_customers = CUSTOMER_CTX.sub(" ", THIRD_PARTY.sub(" ", text))
+    # v1.5: a negated sentence ("we are not a manufacturer of ...") is removed before matching
+    text_wo_customers = CUSTOMER_CTX.sub(" ", THIRD_PARTY.sub(" ", NEG_SENT.sub(" ", text)))
     r |= {role for role, rx in SELF_ROLE if rx.search(text_wo_customers)}
     if r:
         return sorted(r), "site text (self-description)"
