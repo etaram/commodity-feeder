@@ -48,6 +48,8 @@ TENDERS = {
     "dewa": ("UAE (Dubai) - DEWA state utility", "public list (relay)"), "csg": ("China - China Southern Power Grid (SOE)", "public list (http)"),
     "ccgp": ("China - central and local government (CCGP)", "public list (http)"), "lebanon": ("Lebanon", "public portal (PPA, http)"),
     "cameroon": ("Cameroon", "public portal (ARMP, http)"),
+    "transnet": ("South Africa - Transnet (SOE: rail, ports, pipelines)", "public list JSON (http)"),
+    "bonfire": ("USA and Canada - public bodies on Bonfire portals", "public portal JSON (http)"),
 }
 # Built but not scheduled, with the reason
 IMPLEMENTED = {"zambia": ("Zambia", "public portal (ZPPA)", "list page needs a captcha"),
@@ -139,6 +141,8 @@ TERMS = {
     "gebiz_awards": "2026-11-12 api: Singapore Open Data Licence v1.0 (commercial reuse with attribution); data.gov.sg robots.txt Allow: /",
     "gleif_bulk": "2026-11-12 api: GLEIF Golden Copy CC0, free of charge (gleif.org/en/about/open-data); goldencopy.gleif.org publish API",
     "mx_check": "2026-11-12 DNS lookups only (MX, NS, A); no mail sent, no SMTP probing",
+    "transnet": "2026-11-13 http: public advertised-tenders list, no sign-in; one request per run",
+    "bonfire": "2026-11-13 http: public open-opportunities list per hub, no sign-in; one request per hub per run",
     "dewa": "2026-11-12 relay (runner gets a 403 bot challenge): robots.txt allows the tender list; no terms page restricting automated reading found",
     "csg": "2026-11-12 http: no robots.txt (404); footer legal/terms links are empty, copyright line only; facts + link kept, no document text",
     "ccgp": "2026-11-12 http: no robots.txt (404); no terms page, Ministry of Finance copyright footer; statutory public notices, facts + link kept",
