@@ -1,53 +1,44 @@
-Fri Nov 13 14:13:18 UTC 2026
-INFO BidNet: 3139 open (closing today or later), 3139 kept, 0 quarantined; 198 pages in 363 s
-INFO bidnet: 3139 rows (OK)
+Fri Nov 13 15:10:30 UTC 2026
 INFO initializing identifier
-2026-11-13 14:22:26 WARNING: Language es package default expects mwt, which has been added
+2026-11-13 15:15:46 WARNING: Language es package default expects mwt, which has been added
 WARNING translator es->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 14:22:34 WARNING: Language uk package default expects mwt, which has been added
+2026-11-13 15:15:56 WARNING: Language uk package default expects mwt, which has been added
 WARNING translator uk->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 14:27:35 WARNING: Language cs package default expects mwt, which has been added
+2026-11-13 15:17:37 WARNING: Language cs package default expects mwt, which has been added
 WARNING translator cs->en crashed (exit -8) in its child process; skipped for this run
 WARNING translator ro->en crashed (exit -8) in its child process; skipped for this run
 WARNING translator lt->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 14:28:41 WARNING: Language fi package default expects mwt, which has been added
+2026-11-13 15:18:12 WARNING: Language fi package default expects mwt, which has been added
 WARNING translator fi->en crashed (exit -8) in its child process; skipped for this run
 WARNING translator hu->en crashed (exit -8) in its child process; skipped for this run
 WARNING translator da->en crashed (exit -8) in its child process; skipped for this run
-2026-11-13 14:29:20 WARNING: Language id package default expects mwt, which has been added
+2026-11-13 15:18:32 WARNING: Language id package default expects mwt, which has been added
 WARNING translator id->en crashed (exit -8) in its child process; skipped for this run
-INFO translations: 3368 new, 0 pending, cache 76332, 564s
+INFO translations: 2 new, 0 pending, cache 77683, 441s
 INFO awards 517450 (12m), recent 3000, buyers 60522, competitors 334551
-WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r1/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
-INFO integrity: 207 countries profiled, tenders {'open': 79914, 'caution': 13585, 'no data': 253, 'high risk': 69669}
+WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
+INFO integrity: 207 countries profiled, tenders {'open': 78339, 'caution': 13587, 'no data': 253, 'high risk': 69668}
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 1 items (0 reddit, 1 hn, 0 telegram)
-INFO briefing: 679 items, 14 news leads
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+WARNING feed https://news.google.com/rss/search: HTTP 503
+INFO briefing: 1 items, 0 news leads
 INFO wb procurement plans: 1115 projects with a plan in the last 90 days
 INFO wb contract awards: 23025 rows (FY2026-2027)
 INFO plays: 518 (supply the winner=137, arbitrage gap=202, pre-tender approach=63, news lead=0, procurement plan=116)
-WARNING news rss ISR: HTTP 503
-WARNING news rss CHN: HTTP 503
-WARNING news rss ETH: HTTP 503
-WARNING news rss IND: HTTP 503
-WARNING gdelt IND: JSONDecodeError
-WARNING news rss ISR: HTTP 503
-WARNING news rss SOM: HTTP 503
-WARNING gdelt SOM: JSONDecodeError
-WARNING news rss UGA: HTTP 503
-WARNING news rss BRA: HTTP 503
-WARNING gdelt BRA: JSONDecodeError
-WARNING news rss DOM: HTTP 503
-WARNING gdelt DOM: JSONDecodeError
-WARNING news rss MYS: HTTP 503
-WARNING gdelt MYS: JSONDecodeError
-WARNING news rss COL: HTTP 503
-WARNING news rss TJK: HTTP 503
-WARNING gdelt TJK: JSONDecodeError
-WARNING news rss MDV: HTTP 503
-INFO gdelt news: 0 headlines for 13 countries
-INFO lei: 0 new lookups, 1773 cached, 448 with an LEI, 186 with a parent
+INFO gdelt news: 286 headlines for 13 countries
+INFO lei: 0 new lookups, 1784 cached, 450 with an LEI, 186 with a parent
 INFO ecb fx: 15 currencies
 INFO trends rss IL: 10 items
 WARNING trends rss CN: HTTP 400
@@ -62,33 +53,27 @@ INFO trends rss MY: 10 items
 INFO trends rss CO: 10 items
 WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
-INFO attention: 21 rows (1 trending, 20 wikipedia)
+INFO attention: 2 rows (1 trending, 1 wikipedia)
 INFO market signals rows 2767
 INFO opportunities.csv trimmed for the sheet: 3961 of 21825 rows
 INFO opportunities 21825
 INFO exempt buys: 813 notices
 INFO archive: 13 closed notices moved to the archive (25260 there in total); 0 closed ones kept because we worked on them
-INFO open list: 162686 notices, 0 past their deadline left out, 722 duplicates of another source's notice left out
-INFO hebrew titles: 168 new, 7008 total, 7 pending, 24s
-INFO accounts 38658
+INFO open list: 161110 notices, 0 past their deadline left out, 724 duplicates of another source's notice left out
+INFO open list file: 161110 notices in sheet/tenders_open.csv.gz (chunks hold 130000)
+INFO hebrew titles: 0 new, 7008 total, 7 pending, 5s
+INFO accounts 39149
 INFO importers.csv trimmed for the sheet: 3988 of 5700 rows
-INFO tenders 163408, importers 5700, suppliers 3420
-/home/runner/r1/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
+INFO tenders 161834, importers 5700, suppliers 3420
+/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
   warnings.warn('resource_tracker: There appear to be %d '
 commodity_norm: 3243 rows, 3243 with a known price type {'futures': 57, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 57, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 74 anomalies {'stale': 62, 'jump15': 12}
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22Auftrag: TypeError: fetch failed
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: ConnectionError
-WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22Aktsias: TypeError: fetch failed
-WARNING:leads:gdelt "Aktsiaselts Ida-Tallinna Keskhaigla": ConnectionError
-WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22AZIENDA: TypeError: fetch failed
-WARNING:leads:gdelt "AZIENDA USL DELLA ROMAGNA": ConnectionError
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-INFO:leads:news: 862 deals checked, 7 GDELT queries, 59 linked articles
+WARNING:leads:gdelt "The Common Services Agency more commonl: ConnectionError
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO:leads:news: 862 deals checked, 3 GDELT queries, 59 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
 wrote 80001 rows x 28 cols to Tenders
@@ -113,11 +98,11 @@ wrote 208 rows x 14 cols to Integrity
 wrote 814 rows x 17 cols to Exempt Buys
 wrote 527 rows x 12 cols to Grants
 wrote 519 rows x 14 cols to Plays
-skip Country News (no data)
+wrote 287 rows x 5 cols to Country News
 wrote 16 rows x 7 cols to FX
-wrote 22 rows x 7 cols to Attention
+wrote 3 rows x 7 cols to Attention
 wrote 1116 rows x 9 cols to WB Plans
-wrote 601 rows x 11 cols to Briefing Items
+wrote 2 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
 wrote 7009 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
@@ -132,17 +117,17 @@ SOURCE STALE        ocdr_tenders       rows 1752 (last good 1752 at 2026-11-11T0
 SOURCE DEGRADED     dewa               rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 23 at 2026-11-12T18:07) zero_work
 source status: 62 sources, 5 not OK
-HEALTH ALERT moldova: stale 53.6 h
-HEALTH ALERT israel: stale 51.6 h
+HEALTH ALERT moldova: stale 54.4 h
+HEALTH ALERT israel: stale 52.4 h
 HEALTH ALERT dewa: EMPTY, zero rows
-HEALTH ALERT kkj: no data, zero rows
-HEALTH ALERT importyeti: stale 47.1 h
+HEALTH ALERT bidnet: no data, zero rows
+HEALTH ALERT importyeti: stale 47.9 h
 health: 58 sources, 5 alerts
 {'source': 'India e-procurement (Nagaland)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
- "timelines": 2694,
- "timelines_multi_event": 816
+ "timelines": 2684,
+ "timelines_multi_event": 809
 }
  ],
- "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 17 projects in this data (recent approvals only, so biased short)"
+ "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 16 projects in this data (recent approvals only, so biased short)"
 }
 registry {'active': 98, 'degraded': 9, 'implemented': 2, 'discovered': 24}
