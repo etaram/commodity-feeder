@@ -1,16 +1,5 @@
-# round 14: large national portals in thin regions (East Asia, Africa, North America)
-https://web.pcc.gov.tw/prkms/tender/common/bulletion/readBulletion?querySentence=&tenderStatusType=%E6%8B%9B%E6%A8%99&sortCol=TENDER_NOTICE_DATE&timeRange=&pageSize=10 600 grep=(tenderCaseNo|總筆數|共\s*\d+|captcha)
-https://pcc.g0v.ronny.tw/api/listbydate?date=20261112 600
-https://ocds-api.etenders.gov.za/api/OCDSReleases?PageNumber=1&PageSize=5&dateFrom=2026-11-01&dateTo=2026-11-13 600
-https://etenders.gov.eg/ 600 grep=(Tender|مناقص|captcha)
-https://nest.go.tz/tenders/published-tenders 600 grep=(tender|api|gateway)
-https://nocopo.bpp.gov.ng/ 600 grep=(ocds|api|tender)
-https://www.donneesquebec.ca/recherche/api/3/action/package_show?id=systeme-electronique-dappel-doffres-seao 1500 grep=(json|url)
-https://purchasing.alberta.ca/api/opportunity/public?limit=5 600
-https://www.txsmartbuy.gov/esbd?page=1 600 grep=(Solicitation|ESBD|captcha|Showing)
-https://caleprocure.ca.gov/pages/Events-BS3/event-search.aspx 600 grep=(Event|captcha)
-https://www.ccgp.gov.cn/cggg/zygg/ 600 grep=(公开招标|共\d+|countPage|captcha)
-https://www.ccgp.gov.cn/cggg/dfgg/gkzb/ 600 grep=(公开招标|countPage|共)
-https://www.etenders.gov.za/Home/opportunities?id=1 400 grep=(tender|Advertised)
-https://gpp.ppda.go.ug/ 400
-https://egp.ppa.gov.et/ 400 grep=(tender|bid)
+# round 15: Taiwan PCC tender list (official), open-for-bidding totals
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=false&searchType=basic&isBinding=N&isLogIn=N&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&basicDateType=isSpdt&tenderStartDate=&tenderEndDate=&basicRadProctrgCate=&policyAdvocacy=&pageSize=100&d-49738-p=1 900 grep=(共有\s*[\d,]+\s*筆|captcha|驗證)
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=false&searchType=basic&isBinding=N&isLogIn=N&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&basicDateType=isNow&tenderStartDate=&tenderEndDate=&basicRadProctrgCate=&policyAdvocacy=&pageSize=100&d-49738-p=1 900 grep=(共有\s*[\d,]+\s*筆|captcha|驗證)
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=false&searchType=basic&isBinding=N&isLogIn=N&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&basicDateType=isDate&tenderStartDate=2026%2F10%2F14&tenderEndDate=2026%2F11%2F13&basicRadProctrgCate=&policyAdvocacy=&pageSize=100&d-49738-p=1 900 grep=(共有\s*[\d,]+\s*筆|captcha|驗證)
+https://web.pcc.gov.tw/robots.txt 800
