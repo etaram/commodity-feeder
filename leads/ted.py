@@ -87,12 +87,22 @@ def _row(n, t):
 
 
 def fetch():
+    """Every run: notices published in the last 3 days. Once a day (the first run after 00:00 UTC, or with an empty
+    cache) a full sweep of every notice whose tender deadline is today or later: 38,256 on 13 Nov 2026, against
+    24,626 held from publication-date windows alone."""
+    import os
     t = today()
-    days = 21 if cache_empty("ted") else 3
-    since = (t - dt.timedelta(days=days)).strftime("%Y%m%d")
-    notices, pages = _search(session(), f"notice-type IN ({NOTICE_TYPES}) AND PD>={since}")
+    now_h = dt.datetime.now(dt.timezone.utc).hour
+    full = cache_empty("ted") or now_h < 2 or os.environ.get("TED_FULL") == "1"
+    if full:
+        q = f"notice-type IN ({NOTICE_TYPES}) AND deadline-receipt-tender-date-lot>={t.strftime('%Y%m%d')}"
+        days = "open"
+    else:
+        days = 3
+        q = f"notice-type IN ({NOTICE_TYPES}) AND PD>={(t - dt.timedelta(days=days)).strftime('%Y%m%d')}"
+    notices, pages = _search(session(), q, max_pages=300 if full else 200)
     new = [r for r in (_row(n, t) for n in notices) if r]
     rows, size = rolling("ted", new)
-    log.info("TED fetched %d notices (%d pages, %d days) -> %d new rows, cache %d open (%d bytes)",
+    log.info("TED fetched %d notices (%d pages, window %s) -> %d new rows, cache %d open (%d bytes)",
              len(notices), pages, days, len(new), len(rows), size)
     return rows, {"fetched": len(notices), "days": days, "cache": len(rows)}

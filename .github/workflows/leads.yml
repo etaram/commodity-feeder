@@ -56,7 +56,7 @@ jobs:
       - name: ted
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',ted,') }}
         run: set -o pipefail; python -m leads.run --source ted 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 20
+        timeout-minutes: 35
         continue-on-error: true
       - name: fts
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',fts,') }}
