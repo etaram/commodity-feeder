@@ -1218,18 +1218,29 @@ function vzBars(items, color, onclick) {
   return items.map(([k, v, lab], i) => `<div class="vbar" data-k="${esc(k)}"><span class="lb">${lab || esc(k)}</span><span class="tr"><i style="width:${(100 * v / mx).toFixed(1)}%;background:${typeof color === "function" ? color(i) : color}"></i></span><span class="vv">${v.toLocaleString("en-US")}</span></div>`).join("");
 }
 function vzGoto(field, val) { go("tenders"); const el = $(field); if (el) { el.value = val; } renderTenders(); }
+/* the infographics count EVERY open notice on the server (/api/panel/stats); the page itself loads only a short list,
+   so local counts are used only when the server endpoint is not there (panel inside Claude, older server) */
+let VZ_STATS = null, VZ_ASKED = false;
+function vzFetch() {
+  if (VZ_ASKED || !/^https?:/.test(location.protocol)) return; VZ_ASKED = true;
+  fetch("/api/panel/stats", { credentials: "same-origin", cache: "no-store" }).then(r => r.ok ? r.json() : null)
+    .then(j => { if (j && j.ok && j.open > 0) { VZ_STATS = j; renderViz(); } }).catch(() => {});
+}
 function renderViz() {
   const box = $("#today-viz"); if (!box) return;
-  const ts = T().filter(r => r.stage !== "planned" && isFinite(num(r.days_left)) && num(r.days_left) >= 0);
-  if (!ts.length) { box.innerHTML = ""; return; }
-  const cnt = f => { const m = new Map(); for (const r of ts) { const k = f(r) || "-"; m.set(k, (m.get(k) || 0) + 1); } return [...m.entries()].sort((a, b) => b[1] - a[1]); };
-  const ctys = new Set(ts.map(r => String(r.country || "").split(",")[0]).filter(c => /^[A-Z]{3}$/.test(c)));
-  const nNew = ts.filter(r => r.new === "NEW").length, n7 = ts.filter(r => num(r.days_left) <= 7).length;
-  const val = ts.reduce((a, r) => a + (num(r.est_value_usd) || 0), 0);
+  vzFetch();
+  const ts = T().filter(r => r.stage !== "planned" && r.stage !== "exemption" && isFinite(num(r.days_left)) && num(r.days_left) >= 0);
+  const st = VZ_STATS;
+  if (!ts.length && !st) { box.innerHTML = ""; return; }
+  const cntL = f => { const m = new Map(); for (const r of ts) { const k = f(r) || "-"; m.set(k, (m.get(k) || 0) + 1); } return [...m.entries()].sort((a, b) => b[1] - a[1]); };
+  const cnt = f => st ? (f === "region" ? st.region : f === "sector" ? st.sector : st.country) : cntL(f === "region" ? (r => r.region) : f === "sector" ? (r => r.sector) : (r => String(r.country || "").split(",")[0]));
+  const ctys = { size: st ? st.countries : new Set(ts.map(r => String(r.country || "").split(",")[0]).filter(c => /^[A-Z]{3}$/.test(c))).size };
+  const nNew = st ? st.fresh : ts.filter(r => r.new === "NEW").length, n7 = st ? st.days[0] : ts.filter(r => num(r.days_left) <= 7).length;
+  const val = st ? st.value_usd : ts.reduce((a, r) => a + (num(r.est_value_usd) || 0), 0);
   const goal = VZ_GOALS.find(([d]) => d >= today()) || VZ_GOALS[VZ_GOALS.length - 1];
   const fmt = v => v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? "$" + (v / 1e6).toFixed(0) + "M" : "$" + Math.round(v).toLocaleString("en-US");
   // region donut
-  const reg = cnt(r => r.region), tot = ts.length; let acc = 0;
+  const reg = cnt("region"), tot = st ? st.open : ts.length; let acc = 0;
   const arcs = reg.map(([k, v], i) => { const a0 = acc / tot * Math.PI * 2, a1 = (acc + v) / tot * Math.PI * 2; acc += v;
     const p = (a, rr) => [90 + rr * Math.sin(a), 90 - rr * Math.cos(a)], [x0, y0] = p(a0, 80), [x1, y1] = p(a1, 80), [x2, y2] = p(a1, 50), [x3, y3] = p(a0, 50), lg = a1 - a0 > Math.PI ? 1 : 0;
     return `<path d="M${x0},${y0} A80,80 0 ${lg} 1 ${x1},${y1} L${x2},${y2} A50,50 0 ${lg} 0 ${x3},${y3} Z" fill="${VZ_COL[i % VZ_COL.length]}"><title>${esc(k)}: ${v}</title></path>`; }).join("");
@@ -1238,10 +1249,10 @@ function renderViz() {
     <div class="vleg">${reg.map(([k, v], i) => `<div data-r="${esc(k)}"><i style="background:${VZ_COL[i % VZ_COL.length]}"></i><span>${esc(k)}</span><b style="margin-inline-start:auto">${(100 * v / tot).toFixed(1)}%</b></div>`).join("")}</div></div>
     ${over.map(r => `<div class="vwarn">${esc(t("vz_over", { r }))}</div>`).join("")}`;
   // deadline histogram
-  const bk = [["d_0_7", 0, 7], ["d_8_14", 8, 14], ["d_15_30", 15, 30], ["d_31_60", 31, 60], ["d_61_90", 61, 90], ["d_90", 91, 1e9]].map(([k, a, b]) => [k, ts.filter(r => num(r.days_left) >= a && num(r.days_left) <= b).length, a]);
+  const bk = [["d_0_7", 0, 7], ["d_8_14", 8, 14], ["d_15_30", 15, 30], ["d_31_60", 31, 60], ["d_61_90", 61, 90], ["d_90", 91, 1e9]].map(([k, a, b], i) => [k, st ? st.days[i] : ts.filter(r => num(r.days_left) >= a && num(r.days_left) <= b).length, a]);
   const hm = Math.max(1, ...bk.map(x => x[1]));
   const hist = `<div class="vhist">${bk.map(([k, v, a], i) => `<div data-d="${a}"><b>${v.toLocaleString("en-US")}</b><i style="height:${Math.max(2, 100 * v / hm)}%;background:${i === 0 ? "var(--bad)" : i === 1 ? "var(--warn)" : "var(--info)"}"></i><span>${esc(t(k))}</span></div>`).join("")}</div>`;
-  const sec = cnt(r => r.sector).slice(0, 8), cty = cnt(r => String(r.country || "").split(",")[0]).slice(0, 10);
+  const sec = cnt("sector").slice(0, 8), cty = cnt("country").slice(0, 10);
   box.innerHTML = `
     <div class="vc w12"><div class="vk">
       <div><b>${tot.toLocaleString("en-US")}</b><span>${esc(t("vz_open"))}</span></div><div><b>${ctys.size}</b><span>${esc(t("vz_cty"))}</span></div>
