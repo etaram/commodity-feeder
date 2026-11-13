@@ -1,6 +1,6 @@
-# round 19c: BuySpeed row HTML and paginator
-https://www.commbuys.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 200 grep=(ui-paginator-current[^<]{0,80}<?[^<]{0,60}|bidDetail[^"]{0,120})
-https://oregonbuys.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 200 grep=(ui-paginator-current[^<]{0,80}<?[^<]{0,60})
-https://nevadaepro.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 200 grep=(ui-paginator-current[^<]{0,80}<?[^<]{0,60})
-https://www.njstart.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 200 grep=(ui-paginator-current[^<]{0,80}<?[^<]{0,60})
-https://www.commbuys.com/robots.txt 600
+# round 20: bids&tenders (Canada municipalities) API, MERX public open list
+https://peelregion.bidsandtenders.ca/Module/Tenders/en 300 grep=(api/[A-Za-z/]{3,60}|Tenders/en/Tender/Search[^"]{0,60})
+https://peelregion.bidsandtenders.ca/Module/Tenders/en/Tender/Search/ac3a5d8a-0000-0000-0000-000000000000 200
+https://peelregion.bidsandtenders.ca/robots.txt 800
+https://www.merx.com/public/solicitations/open 300 grep=(\d[\d,]*\s*results|of\s*[\d,]+|Showing[^<]{0,60}|captcha)
+https://www.merx.com/robots.txt 1500
