@@ -93,8 +93,7 @@ def _model(lang, to="en"):
                 sp = sentencepiece.SentencePieceProcessor(model_file=str(spf))
                 tr = ctranslate2.Translator(str(mb.parent), device="cpu", inter_threads=2, intra_threads=2)
             except Exception:  # noqa: BLE001  newer packages use a BPE tokenizer: let Argos do the whole pipeline
-                import argostranslate.translate as at
-                m = ("argos", at.get_translation_from_codes(lang, to))
+                m = ("argos", None)          # loaded and run only in a child process (_argos_isolated)
                 _models[(lang, to)] = m
                 return m
             m = (tr, sp)
@@ -117,12 +116,38 @@ def sane(src, out):
     return not (len(w) > 8 and len(set(w)) / len(w) < 0.35)
 
 
+_BROKEN = set()
+
+
+def _argos_child(lang, to, texts):
+    import argostranslate.translate as at
+    t = at.get_translation_from_codes(lang, to)
+    return [t.translate(x[:400]) for x in texts]
+
+
+def _argos_isolated(lang, to, texts, timeout=300, fn=None):
+    """The full Argos pipeline (Stanza sentence splitting) can crash the whole process with a floating point
+    exception (seen 11-13 Nov on es->en: the merge died, so the published index stopped updating). It runs in a
+    child process: a crash loses only this batch, and the language pair is not tried again in this run."""
+    if (lang, to) in _BROKEN:
+        return [""] * len(texts)
+    import concurrent.futures as cf
+    import multiprocessing as mp
+    try:
+        with cf.ProcessPoolExecutor(max_workers=1, mp_context=mp.get_context("spawn")) as ex:
+            return ex.submit(fn or _argos_child, lang, to, list(texts)).result(timeout=timeout)
+    except Exception as e:  # noqa: BLE001  (BrokenProcessPool on a crash, TimeoutError)
+        _BROKEN.add((lang, to))
+        log.warning("translator %s->%s crashed or timed out in its child process (%s); skipped for this run", lang, to, type(e).__name__)
+        return [""] * len(texts)
+
+
 def _translate_batch(lang, texts, to="en"):
     m = _model(lang, to)
     if not m:
         return [""] * len(texts)
     if m[0] == "argos":
-        return [m[1].translate(x[:400]) for x in texts]
+        return _argos_isolated(lang, to, texts)
     tr, sp = m
     toks = sp.encode([t[:400] for t in texts], out_type=str)
     res = tr.translate_batch(toks, beam_size=2, max_batch_size=64, max_decoding_length=160,

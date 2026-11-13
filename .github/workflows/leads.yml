@@ -348,7 +348,8 @@ jobs:
         run: set -o pipefail; python -m leads.sam_awards 90 60 2>&1 | tee -a data/leads/run.log
       - name: merge
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,') }}
-        run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log
+        # a hard crash (signal) writes no error file by itself; record it so health turns the run red
+        run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log || { rc=$?; echo "merge exited with code $rc at $(date -u +%FT%TZ)" > data/leads/error_merge.txt; exit $rc; }
         timeout-minutes: 90
         continue-on-error: true
       - name: commodities (normalise, stats; code only)
