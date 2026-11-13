@@ -34,6 +34,9 @@ def one(line):
         return
     t = body.decode("utf-8", "replace")
     print(f"== {url}\n   {st} {ct} {len(body)} bytes")
+    tot = re.findall(r'"(total[A-Za-z]*|count|totalCount)"\s*:\s*(\d+)', t)
+    if tot:
+        print("   totals:", tot[:5])
     if url.endswith(".js"):
         print("   paths:", sorted(set(API.findall(t)))[:60])
         print("   templated:", sorted(set(re.findall(r"\$\{[A-Za-z0-9_$]{1,8}\}(/[A-Za-z0-9_/]{3,60}\??[A-Za-z_=&${}]{0,80})", t)))[:80])
