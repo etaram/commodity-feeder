@@ -1,5 +1,4 @@
-# round 12: multi-agency platforms (US/Canada public bodies)
-https://vendor.bonfirehub.com/preview 300 grep=(api/|\.json|opportunit[a-z]*\?|graphql)
-https://vendor.bonfirehub.com/api/v1/opportunities?limit=2 600
-https://procurement.opengov.com/api/v1/project/public?limit=2 400
-https://www.bidnetdirect.com/public/solicitations/open 300
+# round 13: BidNet from the server (why 0 rows)
+https://www.bidnetdirect.com/solicitations/open-bids 300 grep=(mets-table-row|results</span>|captcha|Access Denied)
+https://www.bidnetdirect.com/texas/solicitations/open-bids 300 grep=(mets-table-row|results</span>|captcha)
+https://www.bidnetdirect.com/robots.txt 1200
