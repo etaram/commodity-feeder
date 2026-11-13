@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-12T21:19:45",
+  "finished_utc": "2026-11-13T05:52:00",
   "fx_source": "ECB via Frankfurter 2026-11-12",
   "fx": {
     "EUR": 1.1080946312815114,
@@ -23,7 +23,7 @@
       "ok": true,
       "prices": 33,
       "sec": 25,
-      "newest_date": "2026-11-12",
+      "newest_date": "2026-11-13",
       "log": [
         "INFO yahoo: no data for JKM=F",
         "INFO yahoo: 33 prices"
@@ -33,25 +33,25 @@
       "ok": true,
       "prices": 6,
       "sec": 7,
-      "newest_date": "2026-11-11",
+      "newest_date": "2026-11-12",
       "log": [
         "INFO westmetall: 6 prices"
       ]
     },
     "em_global": {
       "ok": true,
-      "prices": 21,
-      "sec": 29,
-      "newest_date": "2026-11-12",
+      "prices": 19,
+      "sec": 74,
+      "newest_date": "2026-11-13",
       "log": [
         "INFO em_global board: 620 rows",
-        "INFO em_global: 21 prices"
+        "INFO em_global: 19 prices"
       ]
     },
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 1,
+      "sec": 77,
       "newest_date": "2026-11-12",
       "log": [
         "INFO cn_spot: 52 prices (2026-11-12)"
@@ -91,7 +91,7 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 0,
+      "sec": 1,
       "newest_date": "2026-11-12",
       "log": [
         "INFO smi: 5 prices (as of 2026-11-12)"
@@ -140,7 +140,7 @@
     "comtrade": {
       "ok": true,
       "prices": 1,
-      "sec": 9,
+      "sec": 11,
       "newest_date": "2026-09-30",
       "log": [
         "INFO comtrade: 30 HS codes still missing",
@@ -150,13 +150,13 @@
     }
   },
   "rows_with_price": 1955,
-  "candidates": 2128,
-  "flagged": 299,
+  "candidates": 2126,
+  "flagged": 302,
   "by_source_selected": {
-    "yahoo": 31,
+    "yahoo": 32,
     "westmetall": 6,
-    "em_global": 4,
-    "cn_spot": 30,
+    "em_global": 3,
+    "cn_spot": 32,
     "eu_agri": 0,
     "dtn": 7,
     "ssb": 2,
@@ -166,12 +166,12 @@
     "census": 0,
     "comext": 1757,
     "comtrade": 1,
-    "derived": 31
+    "derived": 29
   },
   "by_tier": {
-    "T1 Exchange benchmark": 80,
+    "T1 Exchange benchmark": 78,
     "T2 Official market reporting": 46,
-    "T3 Industry assessment": 71,
+    "T3 Industry assessment": 73,
     "T4 Trade statistics (unit value)": 1758
   }
 }

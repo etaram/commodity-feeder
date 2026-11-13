@@ -1,46 +1,50 @@
 ts,id,name,price_usd,orig,ccy,date,source
-2026-11-12 23:19,L0001,Crude oil Brent - ICE futures,96.13,96.13,USD,2026-11-12,Yahoo Finance BZ=F (NYM)
-2026-11-12 23:19,L0002,Crude oil WTI - NYMEX futures,88.97,88.97,USD,2026-11-12,Yahoo Finance CL=F (NYM)
-2026-11-12 23:19,L0004,Natural gas Henry Hub - NYMEX futures,3.34,3.34,USD,2026-11-12,Yahoo Finance NG=F (NYM)
-2026-11-12 23:19,L0007,Gasoline RBOB - NYMEX futures,2.6392,2.6392,USD,2026-11-12,Yahoo Finance RB=F (NYM)
-2026-11-12 23:19,L0008,Heating oil / ULSD - NYMEX futures,4.3007,4.3007,USD,2026-11-12,Yahoo Finance HO=F (NYM)
-2026-11-12 23:19,L0009,Gasoil - ICE futures,1284.75,1284.75,USD,2026-11-12,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney
-2026-11-12 23:19,L0016,Gold - COMEX/LBMA futures,3878.3,3878.3,USD,2026-11-12,Yahoo Finance GC=F (CMX)
-2026-11-12 23:19,L0017,Silver - COMEX/LBMA futures,49.92,49.92,USD,2026-11-12,Yahoo Finance SI=F (CMX)
-2026-11-12 23:19,L0018,Platinum - NYMEX/LPPM futures,1517.4,1517.4,USD,2026-11-12,Yahoo Finance PL=F (NYM)
-2026-11-12 23:19,L0019,Palladium - NYMEX/LPPM futures,991.5,991.5,USD,2026-11-12,Yahoo Finance PA=F (NYM)
-2026-11-12 23:19,L0032,Wheat (SRW) - CBOT futures,5.825,582.5,USc,2026-11-12,Yahoo Finance ZW=F (CBT)
-2026-11-12 23:19,L0033,Wheat (HRW) - KCBT futures,6.295,629.5,USc,2026-11-12,Yahoo Finance KE=F (CBT)
-2026-11-12 23:19,L0035,Corn - CBOT futures,4.4225,442.25,USc,2026-11-12,Yahoo Finance ZC=F (CBT)
-2026-11-12 23:19,L0036,Soybeans - CBOT futures,12.195,1219.5,USc,2026-11-12,Yahoo Finance ZS=F (CBT)
-2026-11-12 23:19,L0037,Soybean meal - CBOT futures,323.1,323.1,USD,2026-11-12,Yahoo Finance ZM=F (CBT)
-2026-11-12 23:19,L0038,Soybean oil - CBOT futures,0.6342,63.42,USc,2026-11-12,Yahoo Finance ZL=F (CBT)
-2026-11-12 23:19,L0039,Rough rice - CBOT futures,18.635,18.635,USD,2026-11-12,Yahoo Finance ZR=F (CBT)
-2026-11-12 23:19,L0040,Oats - CBOT futures,3.525,352.5,USc,2026-11-12,Yahoo Finance ZO=F (CBT)
-2026-11-12 23:19,L0051,Lumber - CME futures,518.5,518.5,USD,2026-11-12,Yahoo Finance LBR=F (CME)
-2026-11-12 23:19,L0052,Live cattle - CME futures,2.2305,223.05,USc,2026-11-12,Yahoo Finance LE=F (CME)
-2026-11-12 23:19,L0053,Feeder cattle - CME futures,3.318,331.8,USc,2026-11-12,Yahoo Finance GF=F (CME)
-2026-11-12 23:19,L0054,Lean hogs - CME futures,0.5515,55.15,USc,2026-11-12,Yahoo Finance HE=F (CME)
-2026-11-12 23:19,L0055,Class III milk - CME futures,17.24,17.24,USD,2026-11-12,Yahoo Finance DC=F (CME)
-2026-11-12 23:19,H0063,"Cattle; live, other than pure-bred breeding animals",4.9174,223.05,USc,2026-11-12,Yahoo Finance LE=F (CME) [benchmark for this HS code]
-2026-11-12 23:19,H0099,"Meat; of swine, hams, shoulders and cuts thereof, with bone in, fresh or chilled",1.4107,63.99,USD,2026-11-12,USDA AMS LM_PK602 National Daily Pork FOB Plant - Ham cutout value (215 lb carcass)
-2026-11-12 23:19,H0100,"Meat; of swine, n.e.c. in item no. 0203.1, fresh or chilled",1.5243,69.14,USD,2026-11-12,USDA AMS LM_PK602 National Daily Pork FOB Plant - Carcass cutout value (215 lb carcass)
-2026-11-12 23:19,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",214.0321,582.5,USc,2026-11-12,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0541,"Cereals; oats, other than seed",242.8514,352.5,USc,2026-11-12,Yahoo Finance ZO=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0543,"Cereals; maize (corn), other than seed",174.1063,442.25,USc,2026-11-12,Yahoo Finance ZC=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0544,Cereals; rice in the husk (paddy or rough),410.8309,18.635,USD,2026-11-12,Yahoo Finance ZR=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0586,"Soya beans; other than seed, whether or not broken",448.0894,1219.5,USc,2026-11-12,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0646,"Vegetable oils; soya-bean oil and its fractions, crude, whether or not degummed, not...",1398.17,63.42,USc,2026-11-12,Yahoo Finance ZL=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",356.1567,323.1,USD,2026-11-12,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
-2026-11-12 23:19,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",96.13,96.13,USD,2026-11-12,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
-2026-11-12 23:19,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",2.6392,2.6392,USD,2026-11-12,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
-2026-11-12 23:19,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1284.75,1284.75,USD,2026-11-12,ICE Gasoil G00Y (重柴油当月连续) via Eastmoney [benchmark for this HS code]
-2026-11-12 23:19,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",3.34,3.34,USD,2026-11-12,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
-2026-11-12 23:19,H0914,Boron; tellurium,132.0,132.0,USD,2026-11-12,Strategic Metals Invest - Tellurium
-2026-11-12 23:19,H1316,"Wood; coniferous species, of fir (Abies spp.) and spruce (Picea spp.), sawn or chipped...",219.7276,518.5,USD,2026-11-12,Yahoo Finance LBR=F (CME) [benchmark for this HS code]
-2026-11-12 23:19,H1674,"Metals; silver, unwrought, (but not powder)",1604.9653,49.92,USD,2026-11-12,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
-2026-11-12 23:19,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",124690.2405,3878.3,USD,2026-11-12,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
-2026-11-12 23:19,H1682,"Metals; platinum, unwrought or in powder form",48785.5429,1517.4,USD,2026-11-12,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
-2026-11-12 23:19,H1684,"Metals; palladium, unwrought or in powder form",31877.4653,991.5,USD,2026-11-12,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
-2026-11-12 23:19,H1989,"Hafnium and articles thereof; unwrought, powders, waste and scrap",8855.98,8855.98,USD,2026-11-12,Strategic Metals Invest - Hafnium
-2026-11-12 23:19,H1991,"Rhenium and articles thereof; unwrought, powders, waste and scrap",7016.23,7016.23,USD,2026-11-12,Strategic Metals Invest - Rhenium
+2026-11-13 07:52,L0001,Crude oil Brent - ICE futures,95.59,95.59,USD,2026-11-13,Yahoo Finance BZ=F (NYM)
+2026-11-13 07:52,L0002,Crude oil WTI - NYMEX futures,88.28,88.28,USD,2026-11-13,Yahoo Finance CL=F (NYM)
+2026-11-13 07:52,L0004,Natural gas Henry Hub - NYMEX futures,3.324,3.324,USD,2026-11-13,Yahoo Finance NG=F (NYM)
+2026-11-13 07:52,L0007,Gasoline RBOB - NYMEX futures,2.6154,2.6154,USD,2026-11-13,Yahoo Finance RB=F (NYM)
+2026-11-13 07:52,L0008,Heating oil / ULSD - NYMEX futures,4.2712,4.2712,USD,2026-11-13,Yahoo Finance HO=F (NYM)
+2026-11-13 07:52,L0009,Gasoil - ICE futures,1275.0,1275.0,USD,2026-11-13,ICE Gasoil G26Z (重柴油2612) via Eastmoney
+2026-11-13 07:52,L0016,Gold - COMEX/LBMA futures,3920.8,3920.8,USD,2026-11-13,Yahoo Finance GC=F (CMX)
+2026-11-13 07:52,L0017,Silver - COMEX/LBMA futures,50.18,50.18,USD,2026-11-13,Yahoo Finance SI=F (CMX)
+2026-11-13 07:52,L0018,Platinum - NYMEX/LPPM futures,1535.7,1535.7,USD,2026-11-13,Yahoo Finance PL=F (NYM)
+2026-11-13 07:52,L0019,Palladium - NYMEX/LPPM futures,1008.5,1008.5,USD,2026-11-13,Yahoo Finance PA=F (NYM)
+2026-11-13 07:52,L0020,Copper - LME/COMEX futures,13712.0,13712.0,USD,2026-11-12,LME Copper cash-settlement via Westmetall
+2026-11-13 07:52,L0021,Aluminium - LME futures,3155.5,3155.5,USD,2026-11-12,LME Aluminium cash-settlement via Westmetall
+2026-11-13 07:52,L0022,Zinc - LME futures,3760.5,3760.5,USD,2026-11-12,LME Zinc cash-settlement via Westmetall
+2026-11-13 07:52,L0023,Nickel - LME futures,16010.0,16010.0,USD,2026-11-12,LME Nickel cash-settlement via Westmetall
+2026-11-13 07:52,L0024,Lead - LME futures,1843.0,1843.0,USD,2026-11-12,LME Lead cash-settlement via Westmetall
+2026-11-13 07:52,L0025,Tin - LME futures,46650.0,46650.0,USD,2026-11-12,LME Tin cash-settlement via Westmetall
+2026-11-13 07:52,L0032,Wheat (SRW) - CBOT futures,5.915,591.5,USc,2026-11-13,Yahoo Finance ZW=F (CBT)
+2026-11-13 07:52,L0033,Wheat (HRW) - KCBT futures,6.3875,638.75,USc,2026-11-13,Yahoo Finance KE=F (CBT)
+2026-11-13 07:52,L0035,Corn - CBOT futures,4.4675,446.75,USc,2026-11-13,Yahoo Finance ZC=F (CBT)
+2026-11-13 07:52,L0036,Soybeans - CBOT futures,12.315,1231.5,USc,2026-11-13,Yahoo Finance ZS=F (CBT)
+2026-11-13 07:52,L0037,Soybean meal - CBOT futures,326.6,326.6,USD,2026-11-13,Yahoo Finance ZM=F (CBT)
+2026-11-13 07:52,L0038,Soybean oil - CBOT futures,0.6368,63.68,USc,2026-11-13,Yahoo Finance ZL=F (CBT)
+2026-11-13 07:52,L0039,Rough rice - CBOT futures,18.665,18.665,USD,2026-11-13,Yahoo Finance ZR=F (CBT)
+2026-11-13 07:52,L0040,Oats - CBOT futures,3.5225,352.25,USc,2026-11-13,Yahoo Finance ZO=F (CBT)
+2026-11-13 07:52,L0043,Crude palm oil - Bursa Malaysia futures,1090.3518,4447.0,MYR,2026-11-13,Bursa crude palm oil MPM00Y (棕榈油当月连续) via Eastmoney
+2026-11-13 07:52,L0056,Natural rubber RSS3 - OSE/SGX futures,2.7765,443.4,JPY,2026-11-13,OSE RSS3 rubber JRU27J (日橡胶2704) via Eastmoney
+2026-11-13 07:52,H0535,"Cereals; wheat and meslin, other than durum wheat, other than seed",217.339,591.5,USc,2026-11-13,Yahoo Finance ZW=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0541,"Cereals; oats, other than seed",242.6791,352.25,USc,2026-11-13,Yahoo Finance ZO=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0543,"Cereals; maize (corn), other than seed",175.8779,446.75,USc,2026-11-13,Yahoo Finance ZC=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0544,Cereals; rice in the husk (paddy or rough),411.4923,18.665,USD,2026-11-13,Yahoo Finance ZR=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0586,"Soya beans; other than seed, whether or not broken",452.4987,1231.5,USc,2026-11-13,Yahoo Finance ZS=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0646,"Vegetable oils; soya-bean oil and its fractions, crude, whether or not degummed, not...",1403.902,63.68,USc,2026-11-13,Yahoo Finance ZL=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0656,"Vegetable oils; palm oil and its fractions, crude, not chemically modified",1090.3518,4447.0,MYR,2026-11-13,Bursa crude palm oil MPM00Y (棕榈油当月连续) via Eastmoney [benchmark for this HS code]
+2026-11-13 07:52,H0728,"Oil-cake and other solid residues; whether or not ground or in the form of pellets,...",360.0148,326.6,USD,2026-11-13,Yahoo Finance ZM=F (CBT) [benchmark for this HS code]
+2026-11-13 07:52,H0881,"Oils; petroleum oils and oils obtained from bituminous minerals, crude",95.59,95.59,USD,2026-11-13,Yahoo Finance BZ=F (NYM) [benchmark for this HS code]
+2026-11-13 07:52,H0882,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",2.6154,2.6154,USD,2026-11-13,Yahoo Finance RB=F (NYM) [benchmark for this HS code]
+2026-11-13 07:52,H0883,"Petroleum oils and oils from bituminous minerals, not containing biodiesel, not crude,...",1275.0,1275.0,USD,2026-11-13,ICE Gasoil G26Z (重柴油2612) via Eastmoney [benchmark for this HS code]
+2026-11-13 07:52,H0892,"Petroleum gases and other gaseous hydrocarbons; in gaseous state, natural gas",3.324,3.324,USD,2026-11-13,Yahoo Finance NG=F (NYM) [benchmark for this HS code]
+2026-11-13 07:52,H1216,"Rubber; natural (excluding latex), in smoked sheets",2.7765,443.4,JPY,2026-11-13,OSE RSS3 rubber JRU27J (日橡胶2704) via Eastmoney [benchmark for this HS code]
+2026-11-13 07:52,H1674,"Metals; silver, unwrought, (but not powder)",1613.3245,50.18,USD,2026-11-13,Yahoo Finance SI=F (CMX) [benchmark for this HS code]
+2026-11-13 07:52,H1678,"Metals; gold, non-monetary, unwrought (but not powder)",126056.6473,3920.8,USD,2026-11-13,Yahoo Finance GC=F (CMX) [benchmark for this HS code]
+2026-11-13 07:52,H1682,"Metals; platinum, unwrought or in powder form",49373.9016,1535.7,USD,2026-11-13,Yahoo Finance PL=F (NYM) [benchmark for this HS code]
+2026-11-13 07:52,H1684,"Metals; palladium, unwrought or in powder form",32424.0279,1008.5,USD,2026-11-13,Yahoo Finance PA=F (NYM) [benchmark for this HS code]
+2026-11-13 07:52,H1856,"Copper; refined, unwrought, cathodes and sections of cathodes",13712.0,13712.0,USD,2026-11-12,LME Copper cash-settlement via Westmetall [benchmark for this HS code]
+2026-11-13 07:52,H1889,"Nickel; unwrought, not alloyed",16010.0,16010.0,USD,2026-11-12,LME Nickel cash-settlement via Westmetall [benchmark for this HS code]
+2026-11-13 07:52,H1904,"Aluminium; unwrought, (not alloyed)",3155.5,3155.5,USD,2026-11-12,LME Aluminium cash-settlement via Westmetall [benchmark for this HS code]
+2026-11-13 07:52,H1923,"Lead; unwrought, refined",1843.0,1843.0,USD,2026-11-12,LME Lead cash-settlement via Westmetall [benchmark for this HS code]
+2026-11-13 07:52,H1931,"Zinc; unwrought, (not alloyed), containing by weight 99.99% or more of zinc",3760.5,3760.5,USD,2026-11-12,LME Zinc cash-settlement via Westmetall [benchmark for this HS code]
+2026-11-13 07:52,H1940,"Tin; unwrought, not alloyed",46650.0,46650.0,USD,2026-11-12,LME Tin cash-settlement via Westmetall [benchmark for this HS code]
