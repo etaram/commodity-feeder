@@ -29,7 +29,7 @@ def fetch():
     ids, url, params, pages = [], API, {"descending": 1, "limit": 1000, "opt_fields": FEED_FIELDS}, 0
     feed = {}
     t_feed = time.time()
-    while url and pages < 400 and time.time() - t_feed < 600:
+    while url and pages < 400 and time.time() - t_feed < 300:
         r = s.get(url, params=params, timeout=90); params = None; pages += 1
         if r.status_code != 200:
             log.warning("Prozorro feed %s", r.status_code); break
@@ -51,7 +51,7 @@ def fetch():
     for i in todo:
         d = feed.get(i)
         if d is None:   # the feed did not carry the fields: read the tender (bounded)
-            if time.time() - t0 > 300 or fetched >= 1500:
+            if time.time() - t0 > 540 or fetched >= 4000:
                 continue
             try:
                 d = s.get(f"{API}/{i}", timeout=60).json().get("data") or {}
