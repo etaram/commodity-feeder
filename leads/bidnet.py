@@ -24,7 +24,7 @@ STATES = ["alabama", "alaska", "arizona", "arkansas", "california", "colorado", 
           "new-jersey", "new-mexico", "new-york", "north-carolina", "north-dakota", "ohio", "oklahoma", "oregon", "pennsylvania",
           "rhode-island", "south-carolina", "south-dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington",
           "west-virginia", "wisconsin", "wyoming", "puerto-rico", "guam"]
-ROW = re.compile(r'<tr data-index="\d+" class="mets-table-row.*?</tr>', re.S)
+ROW = re.compile(r'<tr\b[^>]*\bmets-table-row\b[^>]*>.*?</tr>', re.S)   # attribute order differs between server HTML and DOM
 BUDGET_S = 1500
 
 
@@ -42,7 +42,7 @@ def _d(s):
 def parse(page, fetched):
     rows = []
     for r in ROW.findall(page):
-        href = re.search(r'href="([^"]+/solicitations/open-bids/[^"]+)"', r)
+        href = re.search(r'href="([^"]*/solicitations/open-bids/[^"]+)"', r)
         kind = re.search(r'data-mets-tooltip="([^"]+)"', r)
         kind = H.unescape(kind.group(1)) if kind else ""
         if not href or kind.lower().startswith("federal"):
@@ -57,6 +57,8 @@ def parse(page, fetched):
             continue
         sector, how = classify(title)
         link = H.unescape(href.group(1))
+        if link.startswith("/"):
+            link = BASE + link
         rows.append({"id": f"BIDNET-{nid}", "source": "BidNet Direct (USA state and local)", "group": "", "sector": sector, "nature": "",
                      "cpv": "", "classification": how, "country": "USA", "buyer": f"Public agency, {loc} (via BidNet Direct)" if loc else "Public agency (via BidNet Direct)",
                      "title": title[:300], "notice_type": kind or "Open solicitation", "stage": "tender",
@@ -92,6 +94,10 @@ def fetch():
             if r.status_code != 200:
                 break
             got = parse(r.text, t)
+            if not got and "searchResultSol_notice" in r.text and pages <= 2:
+                i = r.text.find("searchResultSol_notice")
+                log.warning("BidNet: rows present but not parsed; HTML near the first row: %s",
+                            re.sub(r"\s+", " ", r.text[max(0, i - 300):i + 500]))
             ids = tuple(x["id"] for x in got)
             if not got or ids == prev:
                 break
