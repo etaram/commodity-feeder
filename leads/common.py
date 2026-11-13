@@ -170,6 +170,8 @@ def polite(sec=2.5):
 
 
 CACHE = LEADS / "cache"
+# collected earlier but paused for rights: their files stay as restricted history and are never counted as active
+PAUSED_SOURCES = {"eskom", "bidnet"}
 
 
 def rolling(name, new_rows, max_age_days=120):

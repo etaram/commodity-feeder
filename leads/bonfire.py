@@ -9,6 +9,7 @@ Access (checked 2026-11-13 from the server, panynj): public, no sign-in; Bonfire
 download some documents and to bid, not to read the list. One request per hub per run."""
 import html
 import re
+import datetime as dt
 import time
 
 from .common import CACHE, clean, log, quarantine_future, session, snapshot, today, valid_date
@@ -254,6 +255,9 @@ def parse(js, hub, buyer, country, fetched):
     return rows
 
 
+STALE_DAYS = 7
+
+
 def fetch():
     s = session()
     t = str(today())
@@ -292,10 +296,19 @@ def fetch():
                 r = _j.loads(line)
                 hub = r["id"].split("-")[1] if r["id"].count("-") >= 2 else ""
                 if hub not in ok_hubs and (r.get("deadline") or "") >= t:
-                    stale.append(r)
+                    # kept as history only: flagged stale so the merge leaves it out of active results; dropped for
+                    # good once its hub has not answered for STALE_DAYS
+                    r["stale"] = True
+                    r.setdefault("last_success", r.get("fetched") or t)
+                    if r["last_success"] >= str(today() - dt.timedelta(days=STALE_DAYS)):
+                        stale.append(r)
     rows, q = quarantine_future(rows, "bonfire")
     rows = [x for x in rows if x["deadline"] and x["deadline"] >= t]
+    for x in rows:
+        x["last_success"] = t
+        x.pop("stale", None)
     keep, _ = snapshot("bonfire", rows + stale)
     log.info("Bonfire: %d hubs answered, %d did not; %d open from answering hubs, %d kept from earlier runs of hubs that did not answer; per hub: %s",
              len(answered), failed, len(rows), len(stale), ", ".join(f"{h} {n}" for h, n in answered))
-    return keep, {"new": len(rows), "quarantined": q, "hubs_tried": len(seen), "hubs_answered": len(answered), "hubs_failed": failed, "stale_rows": len(stale)}
+    return keep, {"new": len(rows), "quarantined": q, "hubs_tried": len(seen), "hubs_answered": len(answered), "hubs_failed": failed, "stale_rows": len(stale),
+                  "complete_snapshot": 1}

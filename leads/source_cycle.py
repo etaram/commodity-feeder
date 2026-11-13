@@ -28,7 +28,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from urllib import robotparser
 
-from .common import DATA, LEADS, PARTIAL, PRIVATE, log
+from .common import DATA, LEADS, PARTIAL, PAUSED_SOURCES, PRIVATE, log
 
 REG = DATA / "registry"
 CANDIDATES = REG / "candidates_wave1.csv"
@@ -254,12 +254,14 @@ def tender_counts():
     notices, sources = defaultdict(int), defaultdict(set)
     t = str(dt.date.today())
     for p in PARTIAL.glob("*.json"):
+        if p.stem in PAUSED_SOURCES:
+            continue
         try:
             rows = json.loads(p.read_text(encoding="utf-8")).get("rows") or []
         except Exception:  # noqa: BLE001
             continue
         for r in rows:
-            if (r.get("deadline") or "9999") < t:
+            if (r.get("deadline") or "9999") < t or r.get("stale") or r.get("skip"):
                 continue
             g = _region((r.get("country") or "")[:3])
             notices[g] += 1

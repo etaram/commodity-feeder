@@ -74,4 +74,4 @@ def fetch():
     rows = [x for x in rows if x["deadline"] and x["deadline"] >= t]    # OPEN = a future closing date
     keep, _ = snapshot("transnet", rows)          # complete list: cancelled / removed notices drop out
     log.info("Transnet: %d open with a future closing date, %d kept, %d quarantined", len(rows), len(keep), q)
-    return keep, {"new": len(rows), "quarantined": q}
+    return keep, {"new": len(rows), "quarantined": q, "complete_snapshot": 1}

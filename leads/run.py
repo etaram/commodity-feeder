@@ -21,7 +21,7 @@ from . import source_status
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
-                  "kenya", "moldova", "uruguay", "bahrain", "malaysia", "qatar", "israel", "nyc", "us_cities", "wb_pipeline", "ocdr_tenders", "afdb", "iadb", "chile", "simap", "gets", "india", "rwanda", "uganda", "ghana", "malawi", "mozambique", "dubai", "philippines", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "kkj", "bidnet"]
+                  "kenya", "moldova", "uruguay", "bahrain", "malaysia", "qatar", "israel", "nyc", "us_cities", "wb_pipeline", "ocdr_tenders", "afdb", "iadb", "chile", "simap", "gets", "india", "rwanda", "uganda", "ghana", "malawi", "mozambique", "dubai", "philippines", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "kkj"]  # bidnet, eskom: paused (rights), see PAUSED_SOURCES
 NEW_MODULES = {"philippines", "rwanda", "uganda", "malawi", "mozambique", "dubai", "grants", "il_exemptions", "afdb", "iadb", "chile", "simap", "gets", "india", "ocdr_tenders", "israel", "nyc", "us_cities", "wb_pipeline", "ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
                "paraguay", "dominican", "oman", "austender", "moldova", "uruguay", "bahrain", "malaysia", "kenya", "france", "spain", "tanzania",
                "ghana", "zambia", "latam_awards", "wikidata_companies", "listed_companies", "web_contacts", "ext_awards", "prozorro_awards", "ocdr", "commodity_producers", "gebiz_awards", "iadb_awards", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "eskom", "kkj", "bidnet"}
@@ -131,7 +131,7 @@ def merge_tenders(bm, seen):
         rows += j["rows"]
     out, dedup = [], {}
     for r in rows:
-        if r.get("skip"):
+        if r.get("skip") or r.get("stale"):      # stale = kept as history from a part of a source that did not answer
             continue
         g = BY_ID.get(refine_group(r.get("group") or "", r.get("title") or "") or "", {})
         codes = (r.get("cpv") or (r.get("classification") if re.match(r"^\d{8}", r.get("classification") or "") else "")).split()

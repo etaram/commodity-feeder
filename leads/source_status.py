@@ -200,6 +200,11 @@ def record_result(name, rows, meta=None, now=None, save_fn=None):
     elif work == 0:
         e.update(status="DEGRADED", error_class="zero_work", kind="files",
                  warning=("wrote nothing although work was due: " + ", ".join(f"{k} {v}" for k, v in (meta or {}).items() if isinstance(v, (int, str)))[:150]))
+    elif n == 0 and (meta or {}).get("complete_snapshot"):
+        # the source answered with its COMPLETE current list and it is empty (last notice cancelled or closed): that is
+        # real, so the empty snapshot replaces the old one and nothing stale stays active
+        save_fn(name, [], meta)
+        e.update(status="OK", rows_last_good=0, last_good_at=_iso(now), warning="validated complete list, currently empty")
     elif n == 0:
         # never overwrite a good snapshot with an empty one; with no history there is nothing to keep, and it is still not OK
         e.update(status="DEGRADED", error_class="zero_rows",
@@ -212,6 +217,11 @@ def record_result(name, rows, meta=None, now=None, save_fn=None):
     else:
         save_fn(name, rows, meta)
         e.update(status="OK", rows_last_good=n, last_good_at=_iso(now))
+    stale_n = int((meta or {}).get("stale_rows") or 0)
+    if stale_n and e["status"] == "OK":
+        # part of the source did not answer: its earlier rows are kept as history, not shown as active
+        e.update(status="DEGRADED", error_class="partial_failure",
+                 warning=f"{stale_n} rows from parts that did not answer this run are kept as history, not active")
     _apply_stale(e, now)
     save(state, now, g)
     if e["status"] != "OK":

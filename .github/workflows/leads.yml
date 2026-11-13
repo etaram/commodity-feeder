@@ -274,7 +274,8 @@ jobs:
         timeout-minutes: 6
         continue-on-error: true
       - name: bidnet
-        if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',bidnet,') }}
+        # paused: BidNet robots.txt disallows AI crawlers; kept off until its terms are reviewed (review 176)
+        if: ${{ false }}
         continue-on-error: true
         timeout-minutes: 30
         run: set -o pipefail; python -m leads.run --source bidnet 2>&1 | tee -a data/leads/run.log
