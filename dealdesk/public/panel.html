@@ -35,6 +35,31 @@ table.cmt td.cm-name{flex:1 1 100%;min-width:0;max-width:none}
 table.cmt td[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--muted)}
 table.cmt td.cm-links{flex:1 1 100%}}.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 body:not(.role-analyst):not(.role-admin) [data-v="clients"],body:not(.role-analyst):not(.role-admin) [data-v="outreach"]{display:none}
+
+/* Today: AI search hero and the infographic panel (13 Nov 2026) */
+.hero-ai{margin:12px 0 16px;padding:18px 18px 14px;border-radius:16px;background:linear-gradient(135deg,var(--info-soft),var(--panel) 55%,var(--good-soft));border:1px solid var(--line);box-shadow:0 6px 24px rgba(20,33,58,.08)}
+.hero-ai-t{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:10px}
+.hero-ai-row{display:flex;gap:8px}.hero-ai-row input{flex:1;min-width:0;font-size:17px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.hero-ai-row button{font-size:16px;padding:0 18px;border-radius:12px;white-space:nowrap}
+.hero-ai-scope{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}.hero-ai-scope button{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:5px 12px;font-size:13px;cursor:pointer}
+.hero-ai-scope button[aria-pressed="true"]{background:var(--info);color:#fff;border-color:var(--info)}
+.hero-ai-ex{font-size:12px;color:var(--muted);margin-inline-start:6px}.hero-ai-ex a{color:var(--info);cursor:pointer;text-decoration:underline dotted}
+.viz{display:grid;gap:12px;grid-template-columns:repeat(12,1fr);margin-bottom:16px}
+.viz .vc{grid-column:span 4;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.viz .vc.w6{grid-column:span 6}.viz .vc.w12{grid-column:span 12}.viz .vc.w8{grid-column:span 8}
+.viz h3{margin:0 0 2px;font-size:15px}.viz .vs{font-size:12px;color:var(--muted);margin-bottom:10px}
+.vk{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.vk div{background:var(--soft);border-radius:12px;padding:12px}
+.vk b{display:block;font-size:26px;font-weight:800;line-height:1.1}.vk span{font-size:12px;color:var(--muted)}
+.vprog{height:12px;border-radius:999px;background:var(--soft);overflow:hidden;margin:8px 0 4px}.vprog i{display:block;height:100%;background:linear-gradient(90deg,var(--info),var(--good));border-radius:999px}
+.vbar{display:grid;grid-template-columns:minmax(80px,38%) 1fr auto;gap:8px;align-items:center;font-size:13px;margin:5px 0;cursor:pointer}
+.vbar .tr{height:10px;border-radius:999px;background:var(--soft);overflow:hidden}.vbar .tr i{display:block;height:100%;border-radius:999px}
+.vbar .lb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vbar .vv{font-variant-numeric:tabular-nums;color:var(--muted)}
+.vdonut{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.vleg{font-size:12.5px;display:grid;gap:4px;flex:1;min-width:140px}
+.vleg div{display:flex;gap:6px;align-items:center;cursor:pointer}.vleg i{width:10px;height:10px;border-radius:3px;flex:none}
+.vhist{display:flex;align-items:flex-end;gap:8px;height:130px;padding-top:6px}.vhist div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;cursor:pointer}
+.vhist i{width:100%;border-radius:8px 8px 3px 3px;min-height:3px}.vhist span{font-size:11px;color:var(--muted);text-align:center}.vhist b{font-size:12px}
+.vwarn{font-size:12px;color:var(--warn);margin-top:6px}
+@media (max-width:900px){.viz .vc,.viz .vc.w6,.viz .vc.w8{grid-column:span 12}.vk{grid-template-columns:repeat(2,1fr)}.hero-ai-t{font-size:17px}}
 </style></head><body>
 <title>Sinder Opportunity Panel</title>
 <meta name="theme-color" content="#172b4d">
@@ -574,6 +599,13 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
   <div id="palette" hidden role="dialog" aria-modal="true" aria-label="Search"><div class="pal"><input id="pal-q" autocomplete="off" spellcheck="false"><ul id="pal-list" role="listbox"></ul></div></div>
   <section class="view" id="v-today">
     <div class="cmdbar" id="cmdbar" role="button" tabindex="0"><span data-i="cmd_ph">Search or command: tender, supplier, country, thesis…</span><kbd>Ctrl K</kbd></div>
+    <form class="hero-ai" id="hero-ai" role="search" aria-label="AI search">
+      <div class="hero-ai-t" data-i="hai_t">Ask the AI: what are you looking for today?</div>
+      <div class="hero-ai-row"><input id="hai-q" autocomplete="off" data-ph="hai_ph"><button class="primary" type="submit" data-i="hai_go">Search with AI</button></div>
+      <div class="hero-ai-scope" role="group"><button type="button" data-s="t" aria-pressed="true" data-i="hai_s_t">Tenders</button><button type="button" data-s="c" aria-pressed="false" data-i="hai_s_c">Suppliers</button><button type="button" data-s="d" aria-pressed="false" data-i="hai_s_d">Deals</button>
+      <span class="hero-ai-ex" id="hai-ex"></span></div>
+    </form>
+    <div class="viz" id="today-viz"></div>
     <div class="v2only" id="greet"></div><div class="v2only sub" id="greet-sub"></div>
     <div class="pulse" id="tg-pulse"></div>
     <div class="today2">
@@ -1158,6 +1190,74 @@ const L = {
 };
 const tOr = (k, fb) => (L[LANG] && L[LANG][k]) ?? L.en[k] ?? fb;
 const t = (k, vars) => { let s = (L[LANG] && L[LANG][k]) ?? L.en[k] ?? k; if (vars) for (const [a, b] of Object.entries(vars)) s = s.replace("{" + a + "}", b); return s; };
+/* ---------- Today: AI search hero and infographic panel (13 Nov 2026) ---------- */
+Object.assign(L.en, { hai_t: "Ask the AI: what are you looking for today?", hai_ph: "e.g. transformers in East Africa closing this month, cement suppliers in Vietnam…", hai_go: "Search with AI",
+  hai_s_t: "Tenders", hai_s_c: "Suppliers", hai_s_d: "Deals", hai_ex: "Try:", vz_open: "Open opportunities", vz_cty: "Countries", vz_new: "New in this run", vz_close7: "Close within 7 days", vz_val: "Known value of open tenders",
+  vz_goal: "Progress to the milestone", vz_goal_s: "{n} of {g} open opportunities by {d}", vz_reg: "Where the opportunities are", vz_reg_s: "Share of open tenders by region (rule: no region above 30%)",
+  vz_sec: "By sector", vz_sec_s: "Open tenders, largest sectors", vz_dl: "Deadline pipeline", vz_dl_s: "Open tenders by days left", vz_cty_h: "Top countries", vz_cty_s: "Open tenders per country",
+  vz_over: "{r} is above 30% of the opportunities", d_0_7: "0-7 days", d_8_14: "8-14", d_15_30: "15-30", d_31_60: "31-60", d_61_90: "61-90", d_90: "90+" });
+Object.assign(L.he, { hai_t: "שאל את ה-AI: מה אתה מחפש היום?", hai_ph: "למשל: שנאים במזרח אפריקה שנסגרים החודש, ספקי מלט בווייטנאם…", hai_go: "חיפוש עם AI",
+  hai_s_t: "מכרזים", hai_s_c: "ספקים", hai_s_d: "עסקאות", hai_ex: "לדוגמה:", vz_open: "הזדמנויות פתוחות", vz_cty: "מדינות", vz_new: "חדשים בריצה האחרונה", vz_close7: "נסגרים תוך 7 ימים", vz_val: "שווי ידוע של המכרזים הפתוחים",
+  vz_goal: "התקדמות ליעד", vz_goal_s: "{n} מתוך {g} הזדמנויות פתוחות עד {d}", vz_reg: "איפה ההזדמנויות", vz_reg_s: "חלק המכרזים הפתוחים לפי אזור (כלל: אף אזור מעל 30%)",
+  vz_sec: "לפי ענף", vz_sec_s: "מכרזים פתוחים, הענפים הגדולים", vz_dl: "צנרת מועדי הגשה", vz_dl_s: "מכרזים פתוחים לפי ימים שנותרו", vz_cty_h: "המדינות המובילות", vz_cty_s: "מכרזים פתוחים לפי מדינה",
+  vz_over: "{r} מעל 30% מההזדמנויות", d_0_7: "0-7 ימים", d_8_14: "8-14", d_15_30: "15-30", d_31_60: "31-60", d_61_90: "61-90", d_90: "90+" });
+const VZ_COL = ["#2f6fb3", "#1f9d6b", "#c9a44a", "#8e5cc7", "#d9604c", "#2aa3b8", "#7a8b2e", "#c75c94", "#5d6779", "#e08a2e", "#3b4f8f", "#9aa5b8"];
+const VZ_GOALS = [["2026-11-15", 150000], ["2026-11-22", 200000], ["2026-11-30", 250000], ["2026-12-31", 400000]];
+let HAI_SCOPE = "t";
+function haiInit() {
+  const f = $("#hero-ai"); if (!f || f.dataset.ok) return; f.dataset.ok = "1";
+  f.querySelectorAll(".hero-ai-scope button").forEach(b => b.onclick = () => { HAI_SCOPE = b.dataset.s; f.querySelectorAll(".hero-ai-scope button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+  const ex = LANG === "he" ? ["צינורות פלדה באפריקה", "ספקי שנאים בטורקיה", "מכרזי מים בהודו"] : ["steel pipes in Africa", "transformer suppliers in Turkey", "water tenders in India"];
+  $("#hai-ex").innerHTML = esc(t("hai_ex")) + " " + ex.map(x => `<a data-x="${esc(x)}">${esc(x)}</a>`).join(" · ");
+  $("#hai-ex").querySelectorAll("a").forEach(a => a.onclick = () => { $("#hai-q").value = a.dataset.x; f.requestSubmit(); });
+  f.addEventListener("submit", e => { e.preventDefault(); const q = $("#hai-q").value.trim(); if (!q) return;
+    const tab = { t: "tenders", c: "companies", d: "deals" }[HAI_SCOPE]; go(tab); $("#askq-" + HAI_SCOPE).value = q; askSubmit(HAI_SCOPE); });
+}
+function vzBars(items, color, onclick) {
+  const mx = Math.max(1, ...items.map(x => x[1]));
+  return items.map(([k, v, lab], i) => `<div class="vbar" data-k="${esc(k)}"><span class="lb">${lab || esc(k)}</span><span class="tr"><i style="width:${(100 * v / mx).toFixed(1)}%;background:${typeof color === "function" ? color(i) : color}"></i></span><span class="vv">${v.toLocaleString("en-US")}</span></div>`).join("");
+}
+function vzGoto(field, val) { go("tenders"); const el = $(field); if (el) { el.value = val; } renderTenders(); }
+function renderViz() {
+  const box = $("#today-viz"); if (!box) return;
+  const ts = T().filter(r => r.stage !== "planned" && isFinite(num(r.days_left)) && num(r.days_left) >= 0);
+  if (!ts.length) { box.innerHTML = ""; return; }
+  const cnt = f => { const m = new Map(); for (const r of ts) { const k = f(r) || "-"; m.set(k, (m.get(k) || 0) + 1); } return [...m.entries()].sort((a, b) => b[1] - a[1]); };
+  const ctys = new Set(ts.map(r => String(r.country || "").split(",")[0]).filter(c => /^[A-Z]{3}$/.test(c)));
+  const nNew = ts.filter(r => r.new === "NEW").length, n7 = ts.filter(r => num(r.days_left) <= 7).length;
+  const val = ts.reduce((a, r) => a + (num(r.est_value_usd) || 0), 0);
+  const goal = VZ_GOALS.find(([d]) => d >= today()) || VZ_GOALS[VZ_GOALS.length - 1];
+  const fmt = v => v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? "$" + (v / 1e6).toFixed(0) + "M" : "$" + Math.round(v).toLocaleString("en-US");
+  // region donut
+  const reg = cnt(r => r.region), tot = ts.length; let acc = 0;
+  const arcs = reg.map(([k, v], i) => { const a0 = acc / tot * Math.PI * 2, a1 = (acc + v) / tot * Math.PI * 2; acc += v;
+    const p = (a, rr) => [90 + rr * Math.sin(a), 90 - rr * Math.cos(a)], [x0, y0] = p(a0, 80), [x1, y1] = p(a1, 80), [x2, y2] = p(a1, 50), [x3, y3] = p(a0, 50), lg = a1 - a0 > Math.PI ? 1 : 0;
+    return `<path d="M${x0},${y0} A80,80 0 ${lg} 1 ${x1},${y1} L${x2},${y2} A50,50 0 ${lg} 0 ${x3},${y3} Z" fill="${VZ_COL[i % VZ_COL.length]}"><title>${esc(k)}: ${v}</title></path>`; }).join("");
+  const over = reg.filter(([, v]) => v / tot > 0.3).map(([k]) => k);
+  const donut = `<div class="vdonut"><svg width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="${esc(t("vz_reg"))}">${arcs}<text x="90" y="86" text-anchor="middle" font-size="22" font-weight="800" fill="var(--ink)">${tot.toLocaleString("en-US")}</text><text x="90" y="106" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(t("vz_open"))}</text></svg>
+    <div class="vleg">${reg.map(([k, v], i) => `<div data-r="${esc(k)}"><i style="background:${VZ_COL[i % VZ_COL.length]}"></i><span>${esc(k)}</span><b style="margin-inline-start:auto">${(100 * v / tot).toFixed(1)}%</b></div>`).join("")}</div></div>
+    ${over.map(r => `<div class="vwarn">${esc(t("vz_over", { r }))}</div>`).join("")}`;
+  // deadline histogram
+  const bk = [["d_0_7", 0, 7], ["d_8_14", 8, 14], ["d_15_30", 15, 30], ["d_31_60", 31, 60], ["d_61_90", 61, 90], ["d_90", 91, 1e9]].map(([k, a, b]) => [k, ts.filter(r => num(r.days_left) >= a && num(r.days_left) <= b).length, a]);
+  const hm = Math.max(1, ...bk.map(x => x[1]));
+  const hist = `<div class="vhist">${bk.map(([k, v, a], i) => `<div data-d="${a}"><b>${v.toLocaleString("en-US")}</b><i style="height:${Math.max(2, 100 * v / hm)}%;background:${i === 0 ? "var(--bad)" : i === 1 ? "var(--warn)" : "var(--info)"}"></i><span>${esc(t(k))}</span></div>`).join("")}</div>`;
+  const sec = cnt(r => r.sector).slice(0, 8), cty = cnt(r => String(r.country || "").split(",")[0]).slice(0, 10);
+  box.innerHTML = `
+    <div class="vc w12"><div class="vk">
+      <div><b>${tot.toLocaleString("en-US")}</b><span>${esc(t("vz_open"))}</span></div><div><b>${ctys.size}</b><span>${esc(t("vz_cty"))}</span></div>
+      <div><b style="color:var(--good)">${nNew.toLocaleString("en-US")}</b><span>${esc(t("vz_new"))}</span></div><div><b style="color:var(--bad)">${n7.toLocaleString("en-US")}</b><span>${esc(t("vz_close7"))}</span></div>
+      <div><b>${esc(fmt(val))}</b><span>${esc(t("vz_val"))}</span></div></div>
+      <div style="margin-top:12px"><b>${esc(t("vz_goal"))}</b> <span class="sub">${esc(t("vz_goal_s", { n: tot.toLocaleString("en-US"), g: goal[1].toLocaleString("en-US"), d: goal[0] }))}</span>
+      <div class="vprog"><i style="width:${Math.min(100, 100 * tot / goal[1]).toFixed(1)}%"></i></div></div></div>
+    <div class="vc w6"><h3>${esc(t("vz_reg"))}</h3><div class="vs">${esc(t("vz_reg_s"))}</div>${donut}</div>
+    <div class="vc w6"><h3>${esc(t("vz_dl"))}</h3><div class="vs">${esc(t("vz_dl_s"))}</div>${hist}</div>
+    <div class="vc w6"><h3>${esc(t("vz_sec"))}</h3><div class="vs">${esc(t("vz_sec_s"))}</div><div id="vz-sec">${vzBars(sec, i => VZ_COL[i % VZ_COL.length])}</div></div>
+    <div class="vc w6"><h3>${esc(t("vz_cty_h"))}</h3><div class="vs">${esc(t("vz_cty_s"))}</div><div id="vz-cty">${vzBars(cty.map(([k, v]) => [k, v, flag(k) + esc(k)]), "var(--info)")}</div></div>`;
+  box.querySelectorAll(".vleg div").forEach(d => d.onclick = () => vzGoto("#tregion", d.dataset.r));
+  box.querySelectorAll("#vz-sec .vbar").forEach(d => d.onclick = () => vzGoto("#tsector", d.dataset.k));
+  box.querySelectorAll("#vz-cty .vbar").forEach(d => d.onclick = () => vzGoto("#tcountry", d.dataset.k));
+  box.querySelectorAll(".vhist div[data-d]").forEach(d => d.onclick = () => { go("tenders"); $("#tdays").value = d.dataset.d; renderTenders(); });
+}
 function applyLang() {
   document.documentElement.lang = LANG; document.documentElement.dir = LANG === "he" ? "rtl" : "ltr";
   document.querySelectorAll("[data-i]").forEach(el => { el.textContent = t(el.dataset.i); });
@@ -1391,6 +1491,7 @@ function fillSelect(sel, values) {
 /* ---------- TODAY ---------- */
 function renderToday() {
   const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
+  haiInit(); try { renderViz(); } catch (e) { console.warn("viz", e); }
   renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderTgToday(); renderAppToday();
   const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (b.new === "NEW") - (a.new === "NEW") || (num(b.score) || 0) - (num(a.score) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   $("#kpis").innerHTML = [
