@@ -1,431 +1,162 @@
-Fri Nov 13 05:08:12 UTC 2026
-INFO NYC City Record open solicitations: 197
-INFO nyc: 197 rows (OK)
-INFO US city Los Angeles: 187 (open data API)
-INFO US city Chicago: 2 (web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html)
-INFO US city Houston: 4 (web page ok: https://www.houstontx.gov/obo/current_contracting_opportunities.html)
-INFO US city Phoenix: 3 (web page ok: https://solicitations.phoenix.gov/)
-INFO US city Philadelphia: 0 (web page ok: https://www.phila.gov/departments/procurement-department/)
-INFO US city San Antonio: 4 (web page ok: https://webapp1.sanantonio.gov/BidContractOpps/Default.aspx)
-INFO US city San Diego: 1 (web page ok: https://www.sandiego.gov/purchasing/bids-contracts)
-INFO US city Dallas: 0 (web page ok: https://dallascityhall.com/departments/procurement/Pages/default.aspx)
-INFO US city Jacksonville: 1 (web page ok: https://www.jacksonville.gov/departments/office-of-administrative-services/procurement)
-INFO US city Fort Worth: 16 (Bonfire portal)
-INFO US city Austin: 23 (web page ok: https://financeonline.austintexas.gov/afo/account_services/solicitation/solicitations.cfm)
-INFO US city San Jose: 0 (web page http-404: https://www.sanjoseca.gov/your-government/departments-offices/finance/purchasing/bid-opportunities)
-INFO US city Charlotte: 22 (Bonfire portal)
-INFO US city Columbus: 0 (web page ok: https://www.columbus.gov/Government/Departments/Finance-and-Management/Purchasing-Office)
-INFO US city Indianapolis: 0 (web page ok: https://www.indy.gov/activity/bid-on-city-contracts)
-INFO US city San Francisco: 0 (portal needs a browser (JavaScript): not scanned)
-INFO US city Seattle: 2 (web page ok: https://www.seattle.gov/purchasing-and-contracting)
-INFO US city Denver: 9 (web page ok: https://www.denvergov.org/Government/Agencies-Departments-Offices/Agencies-Departments-Offices-Directory/Economic-Development-Opportunity/Bidding-Opportunities)
-INFO US city Oklahoma City: 0 (bids hosted on a commercial platform that requires registration: not scanned)
-INFO US city Nashville: 1 (web page ok: https://www.nashville.gov/departments/finance/procurement)
-INFO US cities: 262 open solicitations from 13 cities
-INFO us_cities: 262 rows (OK)
-WARNING ZA 500
-INFO ZA awards 0
-INFO ZA new 300, open 1316 (pages 4)
-INFO za: 1316 rows (OK)
-INFO Chile: 5201 active, 4418 of kept types
-INFO Chile new 4418, open 4450, details 0
-INFO chile: 4450 rows (OK)
-INFO India Central (CPPP): 241 organisations with active tenders
-WARNING India Central (CPPP): time budget reached
-INFO India Central (CPPP): 1273 open tenders
-INFO India Central PSUs: 77 organisations with active tenders
-INFO India Central PSUs: 1705 open tenders
-INFO India Defence: 10 organisations with active tenders
-INFO India Defence: 4863 open tenders
-INFO India Maharashtra: 182 organisations with active tenders
-WARNING India Maharashtra: time budget reached
-INFO India Maharashtra: 2072 open tenders
-INFO India Tamil Nadu: 82 organisations with active tenders
-INFO India Tamil Nadu: 7430 open tenders
-INFO India Kerala: 155 organisations with active tenders
-WARNING India Kerala: time budget reached
-INFO India Kerala: 6972 open tenders
-INFO India Uttar Pradesh: 125 organisations with active tenders
-WARNING India Uttar Pradesh: time budget reached
-INFO India Uttar Pradesh: 10202 open tenders
-WARNING relay https://haryanaeprocurement.gov.in/nicgep/app?page=FrontEndT: TypeError: fetch failed
-WARNING India portal Haryana failed: ConnectTimeout and relay unavailable for https://haryanaeprocurement.gov.in/nicgep/app?page=FrontEndTendersByOr
-INFO India West Bengal: 90 organisations with active tenders
-INFO India West Bengal: 2820 open tenders
-INFO India Odisha: 69 organisations with active tenders
-INFO India Odisha: 3348 open tenders
-INFO India Jharkhand: 50 organisations with active tenders
-INFO India Jharkhand: 583 open tenders
-INFO India Himachal Pradesh: 47 organisations with active tenders
-INFO India Himachal Pradesh: 959 open tenders
-INFO India Uttarakhand: 77 organisations with active tenders
-INFO India Uttarakhand: 768 open tenders
-INFO India Assam: 50 organisations with active tenders
-INFO India Assam: 438 open tenders
-INFO India Madhya Pradesh: 89 organisations with active tenders
-INFO India Madhya Pradesh: 4525 open tenders
-INFO India Rajasthan: 80 organisations with active tenders
-INFO India Rajasthan: 1746 open tenders
-INFO India Punjab: 32 organisations with active tenders
-INFO India Punjab: 2369 open tenders
-INFO India Jammu and Kashmir: 27 organisations with active tenders
-INFO India Jammu and Kashmir: 3418 open tenders
-INFO India Chandigarh: 2 organisations with active tenders
-INFO India Chandigarh: 47 open tenders
-INFO India Tripura: 39 organisations with active tenders
-INFO India Tripura: 168 open tenders
-INFO India Meghalaya: 5 organisations with active tenders
-INFO India Meghalaya: 5 open tenders
-INFO India Nagaland: 3 organisations with active tenders
-INFO India Nagaland: 0 open tenders
-INFO India Manipur: 0 organisations with active tenders
-INFO India Manipur: 0 open tenders
-INFO India Mizoram: 1 organisations with active tenders
-INFO India Mizoram: 1 open tenders
-INFO India Goa: 33 organisations with active tenders
-INFO India Goa: 315 open tenders
-INFO India PMGSY rural roads: 16 organisations with active tenders
-INFO India PMGSY rural roads: 248 open tenders
-INFO India new 56275, open 58220
-INFO india: 58220 rows (OK)
-INFO grants.gov: 270 calls
-INFO EU calls: 255
-INFO Israel calls: 1
-INFO grants {'calls': 526, 'grants.gov': 270, 'EU': 255, 'data.gov.il': 1}
-INFO grants: 0 rows (OK)
-INFO Germany new 1630, open 14087, award releases seen 725
-INFO germany: 14087 rows (OK)
-[2026-11-13 05:42:31] INFO: Fetched (200) <GET https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR> (referer: https://www.google.com/)
-INFO Fetched (200) <GET https://etendering.tenderboard.gov.bh/Tenders/publicDash?CTRL_STRDIRECTION=LTR> (referer: https://www.google.com/)
-INFO Bahrain new 7, open 19
-INFO bahrain: 19 rows (OK)
-INFO Paraguay new 1, open 86 (fetched 499)
-INFO paraguay: 86 rows (OK)
-INFO Dominican listed 1000, fetched 130, new 122, open 642
-INFO dominican: 642 rows (OK)
-INFO BOAMP new 711, open 6933
-INFO france: 6933 rows (OK)
-INFO PLACSP pages 13, new 1382, open 5391, award entries 3026
-INFO spain: 5391 rows (OK)
-INFO relay used for https://www.dewa.gov.ae/en/supplier/services/list-of-tender-documents (HTTP 403)
-INFO DEWA: 0 open on the list, 0 kept, 0 quarantined
-WARNING source dewa: DEGRADED (returned 0 rows and has no good run on record)
-INFO dewa: 0 rows (DEGRADED)
-INFO CSG: 178 notices in the last 7 days (18 pages), 210 kept, 0 quarantined
-INFO csg: 210 rows (OK)
-WARNING CCGP dfgg/gkzb page 25: HTTP 404
-INFO CCGP: 700 open-tender notices in 7 days (36 pages; central 200, local 500), 1007 kept
-INFO ccgp: 1007 rows (OK)
-INFO Lebanon PPA: 124 open (3 pages, 14 local government), 124 kept
-INFO lebanon: 124 rows (OK)
-INFO Cameroon ARMP: 102 open calls (22 pages), 111 kept
-INFO cameroon: 111 rows (OK)
-WARNING TED awards 2026-11-11: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-11-06: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-11-05: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-11-04: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-11-03: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-11-02: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-31: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-30: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-29: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-28: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-27: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-26: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-25: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-23: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-22: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-21: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-20: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-19: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-18: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-16: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-15: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-14: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-13: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-12: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-11: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-09: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-08: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-07: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-06: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-05: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-04: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-02: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-10-01: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-09-30: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-09-29: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-WARNING TED awards 2026-09-28: 429 <html>
-<head><title>429 Too Many Requests</title></head>
-<body>
-<center><h1>429 Too Many Requests</h1></center>
-<hr><center>nginx/1.31.6</center>
-</body>
-</html>
-<!-- a padding to disable MSIE 
-INFO TED awards: 48 days fetched, 4752 notices, 0 days still to back-fill
-INFO awards: 0 rows (OK)
-INFO World Bank pipeline: 957 projects (pipeline + recently approved)
-INFO wb_pipeline: 957 rows (OK)
-INFO World Bank new 343, open cache 748
-INFO worldbank: 748 rows (OK)
-INFO mr.gov.il rows: 187
-INFO mrgov: 187 rows (OK)
-WARNING IY: stopping after repeated failures (rate limit)
-INFO ImportYeti headings scanned: 0 (due 655)
-WARNING source importyeti: DEGRADED (wrote nothing although work was due: scanned 0, due 655)
-INFO importyeti: 0 rows (DEGRADED)
-INFO market signals: 0 codes refreshed, 0 due
-INFO markets: 0 rows (OK)
-INFO enrich: looked up 0, cached 4243
-INFO:leads:US awards (USAspending): 5973 recent contract awards (last 90 days)
-5973 awards; median 225 foreign winners 91
+Fri Nov 13 08:10:34 UTC 2026
+INFO TED total matching notices: 6749
+INFO TED fetched 6749 notices (28 pages, 3 days) -> 6686 new rows, cache 26787 open (18538161 bytes)
+INFO ted: 26787 rows (OK)
+INFO FTS new 22, open 176 (pages 1)
+INFO fts: 176 rows (OK)
+INFO SAM incremental: fetched 1681, open 8415 (5886 open to foreign firms)
+INFO sam: 8415 rows (OK)
+INFO CanadaBuys rows 848
+INFO canadabuys: 848 rows (OK)
+INFO EBRD rows 44
+INFO ebrd: 44 rows (OK)
+INFO UNGM total active None, new 529, cache 1201 (pages 40)
+INFO ungm: 1201 rows (OK)
+INFO UNDP new 24, open 18
+INFO undp: 18 rows (OK)
+INFO AIIB new 173, kept 177, awards 294
+INFO aiib: 177 rows (OK)
+INFO IsDB new 39, open 34
+INFO isdb: 34 rows (OK)
+INFO AfDB project feed: 20 items
+INFO AfDB corporate feed: 10 items
+INFO AfDB new 30, open 86
+INFO afdb: 86 rows (OK)
+INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1578039', 'noticeid': '39617', 'type': 'AWARD', 'countryname': 'GUYANA', 'projectnumber': 'GY-G1007', 'proyecturl': 'https://www.iadb.org/en/project/GY-G1007', 'loannumber': 'GRT/NG-19288-GY', 'noticetitle': 'Procurement of Program Coordinator for t', 'ezshareid': 'EZIDB0000287-1509818207-1866', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Guyana Utility Scale Solar Photovoltaic ', 'publicationyear': '2026', 'publicationdate': '2026-11-11 08:00:00.000000000', 'deadline': ''}
+INFO IDB dates min=2026-07-17 max=2026-11-11 sample=['2026-11-11 08:00:00.000000000', '2026-11-11 08:00:00.000000000', '2026-11-11 04:00:00.000000000'] deadlines=['', '2027-01-05', '']
+INFO IDB page 0: 1000 recs, 0 old, kept so far 110
+INFO IDB dates min=2026-04-09 max=2026-07-17 sample=['2026-07-17 08:00:00.000000000', '2026-07-17 08:00:00.000000000', '2026-07-17 08:00:00.000000000'] deadlines=['2026-08-21', '2026-09-01', '2026-08-03']
+INFO IDB page 1: 1000 recs, 682 old, kept so far 110
+INFO IDB new 110, open 112
+INFO iadb: 112 rows (OK)
+INFO SIMAP new 240, open 808
+INFO simap: 808 rows (OK)
+INFO GETS new 396, open 417
+INFO gets: 417 rows (OK)
+INFO Etimad new 99, open 682 (pages 11)
+INFO etimad: 682 rows (OK)
+INFO Prozorro feed pages 231, candidates 16397, from feed 0, read one by one 1494, open kept 2746
+INFO prozorro: 2746 rows (OK)
+INFO PNCP fresh lane 34 pages (cut by budget), backfill 20261014..20261113 140 pages (next modality 6 page 141), failed pages 0, new 2024, open 8262, 903s
+INFO pncp: 8262 rows (OK)
+INFO SECOP window 60 days, read 200000, new 3240, open 3547
+INFO secop: 3547 rows (OK)
+INFO Contracts Finder new 32, open 105
+INFO contractsfinder: 105 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T08%3A46%3A11. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T09%3A42%3A06. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T11%3A06%3A11. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T12%3A38%3A06. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T13%3A32%3A27. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T14%3A40%3A01. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T06%3A34%3A07. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T08%3A22%3A18. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T09%3A17%3A49. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T10%3A12%3A07. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T12%3A00%3A00. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T13%3A42%3A13. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T15%3A27%3A55. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A18%3A48. (ConnectTimeout)
+INFO Uruguay new 0, open 589 (fetched 700 of 2295; categories {'tenderUpdate': 4401, 'award': 8207, 'tender': 2295, 'tenderAmendment': 1980, 'awardUpdate': 450, 'tenderCancellation': 30})
+INFO uruguay: 589 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T08%3A19%3A48. (ConnectTimeout)
+INFO Malaysia page 1: 100 blocks, 100 new, first T03/K/2026/7515100/UPM 
+INFO Malaysia page 2: 100 blocks, 100 new, first JKR/IP/CJ/T/2026/35 
+INFO Malaysia page 3: 100 blocks, 84 new, first K/K03/2026/10/4655 
+INFO Malaysia page 4: 100 blocks, 31 new, first QT260000000026556 
+INFO Malaysia page 5: 100 blocks, 16 new, first JKR PERAK BIL. 5/2026 
+INFO Malaysia page 6: 100 blocks, 19 new, first QT260000000026149 
+INFO Malaysia page 7: 100 blocks, 41 new, first MPM(B)/BPK/T3.1/3/2026 
+INFO Malaysia page 8: 100 blocks, 2 new, first QT260000000019816 
+INFO Malaysia page 9: 100 blocks, 3 new, first MAIWP/T/025/2026 
+INFO Malaysia page 10: 21 blocks, 2 new, first JPS/IP/C/BRE/04/2026 
+INFO Malaysia new 398, open 399
+INFO malaysia: 399 rows (OK)
+INFO AusTender new 132, open 187
+INFO austender: 187 rows (OK)
+INFO Oman new 50, open 582
+INFO oman: 582 rows (OK)
+WARNING Kenya 429 page 1
+INFO Kenya new 0, open 352 (pages 1)
+INFO kenya: 352 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T09%3A30%3A00. (ConnectTimeout)
+INFO Rwanda new 268, open 268 (pages 10)
+INFO rwanda: 268 rows (OK)
+INFO Uganda new 35, open 40 (pages 2, titles looked up 0)
+INFO uganda: 40 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T10%3A34%3A27. (ConnectTimeout)
+INFO ghana new 102, open 105 (pages 15)
+INFO ghana: 105 rows (OK)
+INFO Malawi new 27, open 39
+INFO malawi: 39 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T11%3A44%3A51. (ConnectTimeout)
+INFO Mozambique new 91, open 90
+INFO mozambique: 90 rows (OK)
+INFO Dubai new 258, open 302 (pages 4)
+INFO dubai: 302 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T12%3A29%3A48. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T13%3A18%3A07. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A16%3A09. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T23%3A51%3A51. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T07%3A33%3A34. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T08%3A21%3A00. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A11%3A04. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A12%3A05. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A13%3A11. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A14%3A00. (ConnectTimeout)
+INFO Philippines new 4039, open 4115 (pages 203)
+INFO philippines: 4115 rows (OK)
+WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
+WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
+WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A15%3A01. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A16%3A12. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A17%3A20. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO Qatar new 388, open 328
+INFO qatar: 328 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A18%3A03. (ConnectTimeout)
 INFO initializing identifier
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A19%3A18. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A20%3A21. (ConnectTimeout)
 INFO ('get_installed_languages',)
 INFO ('paragraphs:', ['Spain – Firefighting vehicles – Suministro de vehículos escala para la Jefatura del Cuerpo de Bomberos del Ayuntamiento De Madrid (2 Lotes).'])
 INFO ('apply_packaged_translation', 'Spain – Firefighting vehicles – Suministro de vehículos escala para la Jefatura del Cuerpo de Bomberos del Ayuntamiento De Madrid (2 Lotes).')
@@ -433,13 +164,20 @@ INFO ('Splitting sentences using SBD Model: (es) StanzaSentencizer',)
 WARNING Language es package default expects mwt, which has been added
 commodity_norm: 3244 rows, 3244 with a known price type {'futures': 58, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 58, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
-commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 79 anomalies {'stale': 62, 'jump15': 15, 'sigma3': 2}
+commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 73 anomalies {'stale': 62, 'jump15': 11}
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A21%3A16. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A22%3A22. (ConnectTimeout)
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A23%3A24. (ConnectTimeout)
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A24%3A29. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A25%3A39. (ConnectTimeout)
 WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 INFO:leads:news: 779 deals checked, 3 GDELT queries, 54 linked articles
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A26%3A31. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A27%3A37. (ConnectTimeout)
 wrote 80001 rows x 28 cols to Tenders
 wrote 5001 rows x 16 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
@@ -474,77 +212,69 @@ wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
 INFO:leads:web index: 130014 tenders, 90.2 MB raw, 11.2 MB gz
 INFO:leads:web panel static: tenders 1500, titles 7012, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59986, 2.0 MB encrypted
-WARNING:leads:web panel bd (try 1): Sheets API retries exhausted
-INFO:leads:web panel live: bd 51, accounts 51, intel 115, pursuits 56, jobs 62, contacts 481, projects 1, ptasks 1, approvals 1, stats 43, 0.3 MB encrypted
+INFO:leads:web panel live: unchanged
 SOURCE STALE        israel             rows 932 (last good 932 at 2026-11-11T11:29) 
 SOURCE STALE        moldova            rows 1252 (last good 1252 at 2026-11-11T09:30) 
 SOURCE STALE        ocdr_tenders       rows 1752 (last good 1752 at 2026-11-11T08:54) 
 SOURCE DEGRADED     dewa               rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 23 at 2026-11-12T18:07) zero_work
 source status: 57 sources, 5 not OK
-HEALTH ALERT ted: stale 44.9 h
-HEALTH ALERT fts: stale 44.9 h
-HEALTH ALERT sam: stale 44.9 h
-HEALTH ALERT canadabuys: stale 44.9 h
-HEALTH ALERT za: stale 42.0 h
-HEALTH ALERT worldbank: stale 41.1 h
-HEALTH ALERT ebrd: stale 44.9 h
-HEALTH ALERT mrgov: stale 41.1 h
-HEALTH ALERT ungm: stale 44.9 h
-HEALTH ALERT undp: stale 44.9 h
-HEALTH ALERT aiib: stale 44.9 h
-HEALTH ALERT isdb: stale 44.9 h
-HEALTH ALERT etimad: stale 44.9 h
-HEALTH ALERT prozorro: stale 44.8 h
-HEALTH ALERT pncp: stale 44.8 h
-HEALTH ALERT secop: stale 44.8 h
-HEALTH ALERT germany: stale 41.5 h
-HEALTH ALERT contractsfinder: stale 44.8 h
-HEALTH ALERT paraguay: stale 41.3 h
-HEALTH ALERT dominican: stale 41.3 h
-HEALTH ALERT austender: stale 44.8 h
-HEALTH ALERT oman: stale 44.8 h
-HEALTH ALERT france: stale 41.3 h
-HEALTH ALERT spain: stale 41.1 h
-HEALTH ALERT kenya: stale 44.7 h
-HEALTH ALERT moldova: stale 44.8 h
-HEALTH ALERT uruguay: stale 44.8 h
-HEALTH ALERT bahrain: stale 83.7 h
-HEALTH ALERT malaysia: stale 44.8 h
-HEALTH ALERT qatar: stale 44.3 h
-HEALTH ALERT israel: stale 42.8 h
-HEALTH ALERT nyc: stale 42.0 h
-HEALTH ALERT us_cities: stale 42.0 h
-HEALTH ALERT wb_pipeline: stale 41.1 h
-HEALTH ALERT ocdr_tenders: stale 45.4 h
-HEALTH ALERT afdb: stale 44.9 h
-HEALTH ALERT iadb: stale 44.9 h
-HEALTH ALERT chile: stale 42.0 h
-HEALTH ALERT simap: stale 44.9 h
-HEALTH ALERT gets: stale 44.9 h
-HEALTH ALERT india: stale 41.5 h
-HEALTH ALERT rwanda: stale 44.7 h
-HEALTH ALERT uganda: stale 44.7 h
-HEALTH ALERT ghana: stale 44.7 h
-HEALTH ALERT malawi: stale 44.7 h
-HEALTH ALERT mozambique: stale 44.7 h
-HEALTH ALERT dubai: stale 44.7 h
-HEALTH ALERT philippines: stale 44.7 h
-HEALTH ALERT importyeti: stale 41.1 h
+HEALTH ALERT ted: stale 48.1 h
+HEALTH ALERT fts: stale 48.1 h
+HEALTH ALERT sam: stale 48.1 h
+HEALTH ALERT canadabuys: stale 48.1 h
+HEALTH ALERT za: stale 45.2 h
+HEALTH ALERT worldbank: stale 44.3 h
+HEALTH ALERT ebrd: stale 48.1 h
+HEALTH ALERT mrgov: stale 44.3 h
+HEALTH ALERT ungm: stale 48.1 h
+HEALTH ALERT undp: stale 48.1 h
+HEALTH ALERT aiib: stale 48.1 h
+HEALTH ALERT isdb: stale 48.1 h
+HEALTH ALERT etimad: stale 48.1 h
+HEALTH ALERT prozorro: stale 48.0 h
+HEALTH ALERT pncp: stale 48.0 h
+HEALTH ALERT secop: stale 48.0 h
+HEALTH ALERT germany: stale 44.7 h
+HEALTH ALERT contractsfinder: stale 48.0 h
+HEALTH ALERT paraguay: stale 44.5 h
+HEALTH ALERT dominican: stale 44.5 h
+HEALTH ALERT austender: stale 48.0 h
+HEALTH ALERT oman: stale 48.0 h
+HEALTH ALERT france: stale 44.5 h
+HEALTH ALERT spain: stale 44.3 h
+HEALTH ALERT kenya: stale 47.9 h
+HEALTH ALERT moldova: stale 48.0 h
+HEALTH ALERT uruguay: stale 48.0 h
+HEALTH ALERT bahrain: stale 86.9 h
+HEALTH ALERT malaysia: stale 48.0 h
+HEALTH ALERT qatar: stale 47.5 h
+HEALTH ALERT israel: stale 46.0 h
+HEALTH ALERT nyc: stale 45.2 h
+HEALTH ALERT us_cities: stale 45.2 h
+HEALTH ALERT wb_pipeline: stale 44.3 h
+HEALTH ALERT ocdr_tenders: stale 48.6 h
+HEALTH ALERT afdb: stale 48.1 h
+HEALTH ALERT iadb: stale 48.1 h
+HEALTH ALERT chile: stale 45.2 h
+HEALTH ALERT simap: stale 48.1 h
+HEALTH ALERT gets: stale 48.1 h
+HEALTH ALERT india: stale 44.7 h
+HEALTH ALERT rwanda: stale 47.9 h
+HEALTH ALERT uganda: stale 47.9 h
+HEALTH ALERT ghana: stale 47.9 h
+HEALTH ALERT malawi: stale 47.9 h
+HEALTH ALERT mozambique: stale 47.9 h
+HEALTH ALERT dubai: stale 47.9 h
+HEALTH ALERT philippines: stale 47.9 h
+HEALTH ALERT importyeti: stale 44.3 h
 health: 49 sources, 49 alerts
 {'source': 'UNGM (IRENA)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794296792831 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794297194096 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793795964515 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793644210212 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794297113197 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794297254698 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794297048821 (ConnectTimeout)
-INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793876924528 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A28%3A13. (ConnectTimeout)
  "timelines": 2677,
  "timelines_multi_event": 789
 }
  ],
  "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 14 projects in this data (recent approvals only, so biased short)"
 }
-registry {'degraded': 67, 'implemented': 2, 'active': 35, 'discovered': 24}
+registry {'degraded': 68, 'implemented': 2, 'active': 34, 'discovered': 24}
