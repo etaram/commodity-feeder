@@ -1,83 +1,82 @@
 {
  "at": "2026-11-13",
- "new_listed_proven": 27499,
+ "new_listed_proven": 27469,
  "was_absent": 0,
- "was_tier_4": 27499,
- "without_contact_yet": 25525,
+ "was_tier_4": 27469,
+ "without_contact_yet": 25506,
  "by_source": {
-  "TED": 17532,
-  "World Bank awards": 3386,
-  "Colombia SECOP": 2875,
-  "Brazil PNCP": 1342,
-  "OCDS registry: Chile: Dirección de Compr": 588,
-  "USAspending": 578,
+  "TED": 18071,
+  "World Bank awards": 3388,
+  "Colombia SECOP": 2872,
+  "Brazil PNCP": 1339,
+  "OCDS registry: Chile: Dirección de Compr": 542,
   "IDB contract awards": 357,
+  "Spain": 256,
   "GeBIZ (Singapore)": 233,
-  "Spain": 228,
-  "UK Contracts Finder": 132,
-  "Prozorro (Ukraine)": 107,
-  "USAspending awards": 93,
-  "awards": 25,
+  "UK Contracts Finder": 134,
+  "USAspending awards": 117,
+  "Prozorro (Ukraine)": 105,
+  "awards": 32,
   "OCDS registry: Argentina: Dirección Gene": 16,
   "Germany": 7
  },
  "by_region": {
-  "Europe": 18188,
-  "Latin America": 5249,
-  "Sub-Saharan Africa": 1969,
-  "North America": 673,
+  "Europe": 18765,
+  "Latin America": 5195,
+  "Sub-Saharan Africa": 1971,
   "Southeast Asia": 365,
   "South Asia": 349,
   "Middle East & North Africa": 247,
   "CIS & Central Asia": 220,
   "East Asia": 145,
+  "North America": 119,
   "Other": 70,
   "Israel": 12,
   "Oceania": 7,
-  "unknown": 5
+  "unknown": 4
  },
  "weak_regions": {
   "Middle East & North Africa": 247,
   "East Asia": 145,
-  "Sub-Saharan Africa": 1969,
-  "Latin America": 5249
+  "Sub-Saharan Africa": 1971,
+  "Latin America": 5195
  },
  "by_role": {
-  "supplier (role to confirm)": 22799,
-  "EPC / contractor": 3871,
-  "trader / distributor": 491,
-  "manufacturer": 338
+  "supplier (role to confirm)": 22749,
+  "EPC / contractor": 3921,
+  "trader / distributor": 480,
+  "manufacturer": 319
  },
  "by_sector": {
-  "Healthcare & pharmaceuticals": 5567,
-  "ICT & telecom": 3640,
-  "Vehicles, rolling stock, ships & aircraft": 3005,
-  "Agriculture & food": 2779,
-  "Power & electrical equipment": 2242,
-  "Water & wastewater": 2166,
-  "Industrial & construction machinery": 2053,
-  "Construction materials & building systems": 1270,
-  "Scientific & measuring instruments": 1237,
-  "Defence & security": 1055,
-  "Energy, fuels & utilities": 1041,
-  "Mining, minerals & metals": 374,
-  "Chemicals & plastics": 365,
-  "Building construction works": 235,
-  "Furniture, appliances & consumer goods": 103
+  "Healthcare & pharmaceuticals": 5638,
+  "ICT & telecom": 3672,
+  "Vehicles, rolling stock, ships & aircraft": 2985,
+  "Agriculture & food": 2747,
+  "Power & electrical equipment": 2272,
+  "Water & wastewater": 2204,
+  "Industrial & construction machinery": 2026,
+  "Construction materials & building systems": 1255,
+  "Scientific & measuring instruments": 1231,
+  "Energy, fuels & utilities": 1038,
+  "Defence & security": 1036,
+  "Mining, minerals & metals": 339,
+  "Chemicals & plastics": 318,
+  "Building construction works": 231,
+  "Furniture, appliances & consumer goods": 109
  },
  "source_by_region": {
   "TED": {
-   "Europe": 17510,
-   "Middle East & North Africa": 19,
+   "Europe": 18050,
+   "Middle East & North Africa": 18,
    "CIS & Central Asia": 3
   },
   "World Bank awards": {
-   "Sub-Saharan Africa": 1962,
+   "Sub-Saharan Africa": 1964,
    "South Asia": 349,
-   "Middle East & North Africa": 224,
+   "Middle East & North Africa": 225,
    "CIS & Central Asia": 217,
-   "Europe": 171,
-   "Latin America": 156,
+   "Europe": 173,
+   "Latin America": 153,
    "East Asia": 145,
    "Southeast Asia": 113,
    "Other": 28,
@@ -86,17 +85,13 @@
    "North America": 2
   },
   "Colombia SECOP": {
-   "Latin America": 2875
+   "Latin America": 2872
   },
   "Brazil PNCP": {
-   "Latin America": 1342
+   "Latin America": 1339
   },
   "OCDS registry: Chile: Dirección de Compr": {
-   "Latin America": 587,
-   "unknown": 1
-  },
-  "USAspending": {
-   "North America": 578
+   "Latin America": 542
   },
   "IDB contract awards": {
    "Latin America": 273,
@@ -106,24 +101,24 @@
    "Sub-Saharan Africa": 7,
    "Middle East & North Africa": 4
   },
+  "Spain": {
+   "Europe": 256
+  },
   "GeBIZ (Singapore)": {
    "Southeast Asia": 233
   },
-  "Spain": {
-   "Europe": 228
-  },
   "UK Contracts Finder": {
-   "Europe": 132
-  },
-  "Prozorro (Ukraine)": {
-   "Europe": 103,
-   "unknown": 4
+   "Europe": 134
   },
   "USAspending awards": {
-   "North America": 93
+   "North America": 117
+  },
+  "Prozorro (Ukraine)": {
+   "Europe": 101,
+   "unknown": 4
   },
   "awards": {
-   "Europe": 25
+   "Europe": 32
   },
   "OCDS registry: Argentina: Dirección Gene": {
    "Latin America": 16
@@ -133,7 +128,7 @@
   }
  },
  "baseline": "award rule only (no earlier build on record)",
- "listed_with_award_evidence": 74236,
+ "listed_with_award_evidence": 71993,
  "promoted_rule": "one award in a focus sector within 730 days, USD 100k or more (leads/universe.py PROVEN_MIN_USD)",
  "queued_for_website_check_and_enrichment": 5000
 }
