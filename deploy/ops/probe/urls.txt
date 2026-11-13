@@ -1,2 +1,2 @@
-# round 23: BuySpeed header and first row cells
-https://www.commbuys.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 100 grep=(<thead.{0,3000}|<tr\sdata-ri="0".{0,2500})
+# round 24: Hong Kong GLD e-Tender Box open data XML
+https://pcms2.gld.gov.hk/iportal/TenderNotice.xml 1500 grep=(<TenderNoticeRecord>.{0,1500})
