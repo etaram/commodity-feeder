@@ -1,5 +1,4 @@
-# round 21: Taiwan PCC open-for-bid variants
-https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&dateType=isSpdt&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
-https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&basicDateType=isSpdt&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
-https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&dateType=isNow&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
-https://web.pcc.gov.tw/prkms/tender/common/noticeDate/readNoticeDate?firstSearch=true&searchType=noticeDate&isBinding=N&isLogIn=N&dateType=isSpdt&pageSize=10 200 grep=(共有<span[^>]*>[^<]*</span>筆)
+# round 22: Taiwan PCC row HTML, paging link, terms, robots
+https://web.pcc.gov.tw/prkms/tender/common/basic/readTenderBasic?firstSearch=true&searchType=basic&isBinding=N&isLogIn=N&level_1=on&orgName=&orgId=&tenderName=&tenderId=&tenderType=TENDER_DECLARATION&tenderWay=TENDER_WAY_ALL_DECLARATION&dateType=isSpdt&tenderStartDate=&tenderEndDate=&radProctrgCate=&policyAdvocacy=&pageSize=10 100 grep=(<tr[^>]*>\s*<td[^>]*>\s*1\s*</td>.{0,1600}|d-49738-p=2[^"]{0,40})
+https://web.pcc.gov.tw/pis/prac/declarationClient/right 1500
+https://web.pcc.gov.tw/robots.txt 800

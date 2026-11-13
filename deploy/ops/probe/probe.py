@@ -51,7 +51,7 @@ def one(line):
         except re.error as e:
             print("   bad grep pattern:", e); found = []
         for m in found:
-            print("   >>" + re.sub(r"\s+", " ", t[max(0, m.start() - 150):m.start() + 350]))
+            print("   >>" + re.sub(r"\s+", " ", t[max(0, m.start() - 150):m.start() + max(350, len(m.group(0)) + 50)]))
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=re.S)
     t = re.sub(r"\s+", " ", t)
     print("   " + t[:n])
