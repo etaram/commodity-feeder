@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-13T17:12Z",
+ "generated": "2026-11-13T19:55Z",
  "open_file": "data/leads/sheet/tenders_open.csv.gz",
- "open_file_sha256": "0bf4c3c61cdc4850de2ef41dad243ae2d05463aec06996d5a46df85ee705cca6",
- "open_file_built": "2026-11-13T17:07Z",
+ "open_file_sha256": "1d79458945f634a1ce49d3cf576d663af95635bc432486c327353ad182ecbe39",
+ "open_file_built": "2026-11-13T19:55Z",
  "published_total": 160704,
  "published_unmatched_sources": {},
  "sources": [
@@ -33,14 +33,14 @@
   {
    "source": "austender",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:02",
    "last_good_at": "2026-11-13T09:02",
    "fetched": 187,
    "snapshot": 187,
    "active": 187,
    "published": 187,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "bahrain",
@@ -76,6 +76,18 @@
    "snapshot": 126,
    "active": 126,
    "published": 125,
+   "warning": ""
+  },
+  {
+   "source": "buyspeed",
+   "enabled": true,
+   "status": "OK",
+   "last_run_at": "",
+   "last_good_at": "",
+   "fetched": 0,
+   "snapshot": 0,
+   "active": 0,
+   "published": 0,
    "warning": ""
   },
   {
@@ -177,14 +189,14 @@
   {
    "source": "dubai",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:05",
    "last_good_at": "2026-11-13T09:05",
    "fetched": 302,
    "snapshot": 302,
    "active": 302,
    "published": 301,
-   "warning": ""
+   "warning": "last good run 10.3 h ago (expected every 8 h)"
   },
   {
    "source": "ebrd",
@@ -273,14 +285,14 @@
   {
    "source": "ghana",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:04",
    "last_good_at": "2026-11-13T09:04",
    "fetched": 105,
    "snapshot": 105,
    "active": 105,
    "published": 101,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "iadb",
@@ -333,14 +345,14 @@
   {
    "source": "kenya",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:02",
    "last_good_at": "2026-11-13T09:02",
    "fetched": 352,
    "snapshot": 352,
    "active": 352,
    "published": 347,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "kkj",
@@ -369,26 +381,26 @@
   {
    "source": "malawi",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:04",
    "last_good_at": "2026-11-13T09:04",
    "fetched": 39,
    "snapshot": 39,
    "active": 39,
    "published": 39,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "malaysia",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:02",
    "last_good_at": "2026-11-13T09:02",
    "fetched": 399,
    "snapshot": 399,
    "active": 399,
    "published": 353,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "moldova",
@@ -405,14 +417,14 @@
   {
    "source": "mozambique",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:05",
    "last_good_at": "2026-11-13T09:05",
    "fetched": 90,
    "snapshot": 90,
    "active": 90,
    "published": 87,
-   "warning": ""
+   "warning": "last good run 10.3 h ago (expected every 8 h)"
   },
   {
    "source": "mrgov",
@@ -453,14 +465,14 @@
   {
    "source": "oman",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:02",
    "last_good_at": "2026-11-13T09:02",
    "fetched": 582,
    "snapshot": 582,
    "active": 582,
    "published": 501,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "paraguay",
@@ -477,14 +489,14 @@
   {
    "source": "philippines",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:15",
    "last_good_at": "2026-11-13T09:15",
    "fetched": 4115,
    "snapshot": 4115,
    "active": 4115,
    "published": 4016,
-   "warning": ""
+   "warning": "last good run 10.2 h ago (expected every 8 h)"
   },
   {
    "source": "pncp",
@@ -513,26 +525,26 @@
   {
    "source": "qatar",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:19",
    "last_good_at": "2026-11-13T09:19",
    "fetched": 328,
    "snapshot": 328,
    "active": 328,
    "published": 305,
-   "warning": ""
+   "warning": "last good run 10.1 h ago (expected every 8 h)"
   },
   {
    "source": "rwanda",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:03",
    "last_good_at": "2026-11-13T09:03",
    "fetched": 268,
    "snapshot": 268,
    "active": 268,
    "published": 267,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "sam",
@@ -583,16 +595,28 @@
    "warning": ""
   },
   {
+   "source": "taiwan",
+   "enabled": true,
+   "status": "DOWN",
+   "last_run_at": "2026-11-13T19:24",
+   "last_good_at": "",
+   "fetched": 0,
+   "snapshot": 0,
+   "active": 0,
+   "published": 0,
+   "warning": "collector failed; the previous snapshot is kept"
+  },
+  {
    "source": "ted",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T11:21",
    "last_good_at": "2026-11-13T11:21",
    "fetched": 39110,
    "snapshot": 39110,
    "active": 39110,
    "published": 33239,
-   "warning": ""
+   "warning": "last good run 8.1 h ago (expected every 8 h)"
   },
   {
    "source": "transnet",
@@ -609,14 +633,14 @@
   {
    "source": "uganda",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:03",
    "last_good_at": "2026-11-13T09:03",
    "fetched": 40,
    "snapshot": 40,
    "active": 40,
    "published": 39,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "undp",
@@ -645,14 +669,14 @@
   {
    "source": "uruguay",
    "enabled": true,
-   "status": "OK",
+   "status": "STALE",
    "last_run_at": "2026-11-13T09:01",
    "last_good_at": "2026-11-13T09:01",
    "fetched": 589,
    "snapshot": 589,
    "active": 589,
    "published": 588,
-   "warning": ""
+   "warning": "last good run 10.4 h ago (expected every 8 h)"
   },
   {
    "source": "us_cities",

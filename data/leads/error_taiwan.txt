@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/run.py", line 821, in main
+    run_source(a.source)
+  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/taiwan.py", line 98, in fetch
+    raise RuntimeError("Taiwan PCC: no rows read; previous snapshot kept")
+RuntimeError: Taiwan PCC: no rows read; previous snapshot kept

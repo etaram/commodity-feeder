@@ -1,7 +1,19 @@
 {
- "generated": "2026-11-13T19:24Z",
- "not_ok": 23,
+ "generated": "2026-11-13T20:03Z",
+ "not_ok": 37,
  "sources": [
+  {
+   "source": "taiwan",
+   "status": "DOWN",
+   "rows": 0,
+   "rows_last_good": 0,
+   "last_good_at": "",
+   "last_run_at": "2026-11-13T19:24",
+   "error_class": "RuntimeError",
+   "warning": "collector failed; the previous snapshot is kept",
+   "cadence_h": 36,
+   "age_h": null
+  },
   {
    "source": "afdb",
    "status": "STALE",
@@ -12,7 +24,7 @@
    "error_class": "",
    "warning": "last good run 8.1 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.8
   },
   {
    "source": "aiib",
@@ -24,7 +36,19 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
+  },
+  {
+   "source": "austender",
+   "status": "STALE",
+   "rows": 187,
+   "rows_last_good": 187,
+   "last_good_at": "2026-11-13T09:02",
+   "last_run_at": "2026-11-13T09:02",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "canadabuys",
@@ -36,7 +60,7 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
   },
   {
    "source": "contractsfinder",
@@ -48,7 +72,19 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.2
+   "age_h": 11.3
+  },
+  {
+   "source": "dubai",
+   "status": "STALE",
+   "rows": 302,
+   "rows_last_good": 302,
+   "last_good_at": "2026-11-13T09:05",
+   "last_run_at": "2026-11-13T09:05",
+   "error_class": "",
+   "warning": "last good run 10.3 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "ebrd",
@@ -60,7 +96,7 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
   },
   {
    "source": "etimad",
@@ -72,7 +108,7 @@
    "error_class": "",
    "warning": "last good run 8.1 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.8
   },
   {
    "source": "fts",
@@ -84,7 +120,7 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
   },
   {
    "source": "gets",
@@ -96,7 +132,19 @@
    "error_class": "",
    "warning": "last good run 8.1 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.8
+  },
+  {
+   "source": "ghana",
+   "status": "STALE",
+   "rows": 105,
+   "rows_last_good": 105,
+   "last_good_at": "2026-11-13T09:04",
+   "last_run_at": "2026-11-13T09:04",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "iadb",
@@ -108,7 +156,7 @@
    "error_class": "",
    "warning": "last good run 8.1 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.8
   },
   {
    "source": "isdb",
@@ -120,7 +168,7 @@
    "error_class": "",
    "warning": "last good run 8.1 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.8
   },
   {
    "source": "israel",
@@ -132,7 +180,43 @@
    "error_class": "",
    "warning": "last good run 37.3 h ago (expected every 36 h)",
    "cadence_h": 36,
-   "age_h": 53.5
+   "age_h": 56.6
+  },
+  {
+   "source": "kenya",
+   "status": "STALE",
+   "rows": 352,
+   "rows_last_good": 352,
+   "last_good_at": "2026-11-13T09:02",
+   "last_run_at": "2026-11-13T09:02",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
+  },
+  {
+   "source": "malawi",
+   "status": "STALE",
+   "rows": 39,
+   "rows_last_good": 39,
+   "last_good_at": "2026-11-13T09:04",
+   "last_run_at": "2026-11-13T09:04",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
+  },
+  {
+   "source": "malaysia",
+   "status": "STALE",
+   "rows": 399,
+   "rows_last_good": 399,
+   "last_good_at": "2026-11-13T09:02",
+   "last_run_at": "2026-11-13T09:02",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "moldova",
@@ -144,7 +228,19 @@
    "error_class": "",
    "warning": "last good run 8.9 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 55.5
+   "age_h": 58.6
+  },
+  {
+   "source": "mozambique",
+   "status": "STALE",
+   "rows": 90,
+   "rows_last_good": 90,
+   "last_good_at": "2026-11-13T09:05",
+   "last_run_at": "2026-11-13T09:05",
+   "error_class": "",
+   "warning": "last good run 10.3 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "ocdr_tenders",
@@ -156,7 +252,31 @@
    "error_class": "",
    "warning": "last good run 36.0 h ago (expected every 36 h)",
    "cadence_h": 36,
-   "age_h": 56.1
+   "age_h": 59.2
+  },
+  {
+   "source": "oman",
+   "status": "STALE",
+   "rows": 582,
+   "rows_last_good": 582,
+   "last_good_at": "2026-11-13T09:02",
+   "last_run_at": "2026-11-13T09:02",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
+  },
+  {
+   "source": "philippines",
+   "status": "STALE",
+   "rows": 4115,
+   "rows_last_good": 4115,
+   "last_good_at": "2026-11-13T09:15",
+   "last_run_at": "2026-11-13T09:15",
+   "error_class": "",
+   "warning": "last good run 10.2 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 10.8
   },
   {
    "source": "pncp",
@@ -168,7 +288,7 @@
    "error_class": "",
    "warning": "last good run 8.3 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.3
+   "age_h": 11.3
   },
   {
    "source": "prozorro",
@@ -180,7 +300,31 @@
    "error_class": "",
    "warning": "last good run 8.5 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.5
+   "age_h": 11.6
+  },
+  {
+   "source": "qatar",
+   "status": "STALE",
+   "rows": 328,
+   "rows_last_good": 328,
+   "last_good_at": "2026-11-13T09:19",
+   "last_run_at": "2026-11-13T09:19",
+   "error_class": "",
+   "warning": "last good run 10.1 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 10.7
+  },
+  {
+   "source": "rwanda",
+   "status": "STALE",
+   "rows": 268,
+   "rows_last_good": 268,
+   "last_good_at": "2026-11-13T09:03",
+   "last_run_at": "2026-11-13T09:03",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "sam",
@@ -192,7 +336,7 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
   },
   {
    "source": "secop",
@@ -204,7 +348,7 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.2
+   "age_h": 11.3
   },
   {
    "source": "simap",
@@ -216,7 +360,31 @@
    "error_class": "",
    "warning": "last good run 8.1 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.8
+  },
+  {
+   "source": "ted",
+   "status": "STALE",
+   "rows": 39110,
+   "rows_last_good": 39110,
+   "last_good_at": "2026-11-13T11:21",
+   "last_run_at": "2026-11-13T11:21",
+   "error_class": "",
+   "warning": "last good run 8.1 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 8.7
+  },
+  {
+   "source": "uganda",
+   "status": "STALE",
+   "rows": 40,
+   "rows_last_good": 40,
+   "last_good_at": "2026-11-13T09:03",
+   "last_run_at": "2026-11-13T09:03",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "undp",
@@ -228,7 +396,7 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
   },
   {
    "source": "ungm",
@@ -240,7 +408,19 @@
    "error_class": "",
    "warning": "last good run 8.2 h ago (expected every 8 h)",
    "cadence_h": 8,
-   "age_h": 8.8
+   "age_h": 11.9
+  },
+  {
+   "source": "uruguay",
+   "status": "STALE",
+   "rows": 589,
+   "rows_last_good": 589,
+   "last_good_at": "2026-11-13T09:01",
+   "last_run_at": "2026-11-13T09:01",
+   "error_class": "",
+   "warning": "last good run 10.4 h ago (expected every 8 h)",
+   "cadence_h": 8,
+   "age_h": 11.0
   },
   {
    "source": "buyspeed",
@@ -276,20 +456,8 @@
    "error_class": "zero_work",
    "warning": "wrote nothing although work was due: scanned 0, due 655",
    "cadence_h": 36,
-   "age_h": 22.9,
+   "age_h": 25.9,
    "kind": "files"
-  },
-  {
-   "source": "austender",
-   "status": "OK",
-   "rows": 187,
-   "rows_last_good": 187,
-   "last_good_at": "2026-11-13T09:02",
-   "last_run_at": "2026-11-13T09:02",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
   },
   {
    "source": "awards",
@@ -302,7 +470,7 @@
    "warning": "",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 11.0
+   "age_h": 14.0
   },
   {
    "source": "bahrain",
@@ -314,7 +482,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.3
+   "age_h": 14.4
   },
   {
    "source": "bidnet",
@@ -326,7 +494,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 2.7
+   "age_h": 5.7
   },
   {
    "source": "bonfire",
@@ -338,7 +506,19 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 0.7
+   "age_h": 3.7
+  },
+  {
+   "source": "buyspeed",
+   "status": "OK",
+   "rows": 0,
+   "rows_last_good": 0,
+   "last_good_at": "",
+   "last_run_at": "",
+   "error_class": "",
+   "warning": "",
+   "cadence_h": 36,
+   "age_h": null
   },
   {
    "source": "cameroon",
@@ -350,7 +530,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.0
+   "age_h": 14.1
   },
   {
    "source": "ccgp",
@@ -362,7 +542,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 0.0
+   "age_h": 14.1
   },
   {
    "source": "chile",
@@ -374,7 +554,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.8
+   "age_h": 14.9
   },
   {
    "source": "csg",
@@ -386,7 +566,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.1
+   "age_h": 14.1
   },
   {
    "source": "dominican",
@@ -398,19 +578,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.1
-  },
-  {
-   "source": "dubai",
-   "status": "OK",
-   "rows": 302,
-   "rows_last_good": 302,
-   "last_good_at": "2026-11-13T09:05",
-   "last_run_at": "2026-11-13T09:05",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 7.9
+   "age_h": 14.2
   },
   {
    "source": "eskom",
@@ -422,7 +590,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 7.4
+   "age_h": 10.5
   },
   {
    "source": "france",
@@ -434,7 +602,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.1
+   "age_h": 14.2
   },
   {
    "source": "germany",
@@ -446,19 +614,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.3
-  },
-  {
-   "source": "ghana",
-   "status": "OK",
-   "rows": 105,
-   "rows_last_good": 105,
-   "last_good_at": "2026-11-13T09:04",
-   "last_run_at": "2026-11-13T09:04",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 7.9
+   "age_h": 14.4
   },
   {
    "source": "grants",
@@ -470,7 +626,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.3,
+   "age_h": 14.4,
    "kind": "files"
   },
   {
@@ -483,19 +639,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.3
-  },
-  {
-   "source": "kenya",
-   "status": "OK",
-   "rows": 352,
-   "rows_last_good": 352,
-   "last_good_at": "2026-11-13T09:02",
-   "last_run_at": "2026-11-13T09:02",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
+   "age_h": 14.4
   },
   {
    "source": "kkj",
@@ -507,7 +651,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 0.7
+   "age_h": 3.7
   },
   {
    "source": "lebanon",
@@ -519,31 +663,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.1
-  },
-  {
-   "source": "malawi",
-   "status": "OK",
-   "rows": 39,
-   "rows_last_good": 39,
-   "last_good_at": "2026-11-13T09:04",
-   "last_run_at": "2026-11-13T09:04",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 7.9
-  },
-  {
-   "source": "malaysia",
-   "status": "OK",
-   "rows": 399,
-   "rows_last_good": 399,
-   "last_good_at": "2026-11-13T09:02",
-   "last_run_at": "2026-11-13T09:02",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
+   "age_h": 14.1
   },
   {
    "source": "markets",
@@ -556,19 +676,7 @@
    "warning": "nothing due this run (caches are fresh)",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 11.0
-  },
-  {
-   "source": "mozambique",
-   "status": "OK",
-   "rows": 90,
-   "rows_last_good": 90,
-   "last_good_at": "2026-11-13T09:05",
-   "last_run_at": "2026-11-13T09:05",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 7.9
+   "age_h": 14.0
   },
   {
    "source": "mrgov",
@@ -580,7 +688,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.0
+   "age_h": 14.0
   },
   {
    "source": "nyc",
@@ -592,19 +700,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.9
-  },
-  {
-   "source": "oman",
-   "status": "OK",
-   "rows": 582,
-   "rows_last_good": 582,
-   "last_good_at": "2026-11-13T09:02",
-   "last_run_at": "2026-11-13T09:02",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
+   "age_h": 14.9
   },
   {
    "source": "paraguay",
@@ -616,43 +712,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.2
-  },
-  {
-   "source": "philippines",
-   "status": "OK",
-   "rows": 4115,
-   "rows_last_good": 4115,
-   "last_good_at": "2026-11-13T09:15",
-   "last_run_at": "2026-11-13T09:15",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 7.8
-  },
-  {
-   "source": "qatar",
-   "status": "OK",
-   "rows": 328,
-   "rows_last_good": 328,
-   "last_good_at": "2026-11-13T09:19",
-   "last_run_at": "2026-11-13T09:19",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 7.7
-  },
-  {
-   "source": "rwanda",
-   "status": "OK",
-   "rows": 268,
-   "rows_last_good": 268,
-   "last_good_at": "2026-11-13T09:03",
-   "last_run_at": "2026-11-13T09:03",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
+   "age_h": 14.2
   },
   {
    "source": "spain",
@@ -664,19 +724,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.1
-  },
-  {
-   "source": "ted",
-   "status": "OK",
-   "rows": 39110,
-   "rows_last_good": 39110,
-   "last_good_at": "2026-11-13T11:21",
-   "last_run_at": "2026-11-13T11:21",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 5.7
+   "age_h": 14.2
   },
   {
    "source": "transnet",
@@ -688,31 +736,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 0.7
-  },
-  {
-   "source": "uganda",
-   "status": "OK",
-   "rows": 40,
-   "rows_last_good": 40,
-   "last_good_at": "2026-11-13T09:03",
-   "last_run_at": "2026-11-13T09:03",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
-  },
-  {
-   "source": "uruguay",
-   "status": "OK",
-   "rows": 589,
-   "rows_last_good": 589,
-   "last_good_at": "2026-11-13T09:01",
-   "last_run_at": "2026-11-13T09:01",
-   "error_class": "",
-   "warning": "",
-   "cadence_h": 8,
-   "age_h": 8.0
+   "age_h": 3.7
   },
   {
    "source": "us_cities",
@@ -724,7 +748,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.8
+   "age_h": 14.9
   },
   {
    "source": "wb_pipeline",
@@ -736,7 +760,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.0
+   "age_h": 14.0
   },
   {
    "source": "worldbank",
@@ -748,7 +772,7 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.0
+   "age_h": 14.0
   },
   {
    "source": "za",
@@ -760,15 +784,15 @@
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.8
+   "age_h": 14.9
   }
  ],
  "merge": {
   "status": "OK",
   "rows": 161441,
   "rows_last_good": 161441,
-  "last_good_at": "2026-11-13T16:21",
-  "last_run_at": "2026-11-13T16:21",
+  "last_good_at": "2026-11-13T19:25",
+  "last_run_at": "2026-11-13T19:25",
   "error_class": "",
   "warning": ""
  }

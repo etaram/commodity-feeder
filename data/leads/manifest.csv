@@ -1,10 +1,11 @@
 source,enabled,status,last_run_at,last_good_at,fetched,snapshot,active,published,warning
 afdb,True,STALE,2026-11-13T08:13,2026-11-13T08:13,86,86,86,82,last good run 8.1 h ago (expected every 8 h)
 aiib,True,STALE,2026-11-13T08:12,2026-11-13T08:12,177,177,177,176,last good run 8.2 h ago (expected every 8 h)
-austender,True,OK,2026-11-13T09:02,2026-11-13T09:02,187,187,187,187,
+austender,True,STALE,2026-11-13T09:02,2026-11-13T09:02,187,187,187,187,last good run 10.4 h ago (expected every 8 h)
 bahrain,True,OK,2026-11-13T05:42,2026-11-13T05:42,19,19,19,19,
 bidnet,False,OK,2026-11-13T14:19,2026-11-13T14:19,3139,3139,0,0,
 bonfire,True,OK,2026-11-13T16:20,2026-11-13T16:20,126,126,126,125,
+buyspeed,True,OK,,,0,0,0,0,
 cameroon,True,OK,2026-11-13T06:00,2026-11-13T06:00,111,111,111,109,
 canadabuys,True,STALE,2026-11-13T08:11,2026-11-13T08:11,848,848,848,841,last good run 8.2 h ago (expected every 8 h)
 ccgp,True,OK,2026-11-13T05:57,2026-11-13T05:57,1007,1007,1007,1005,
@@ -13,7 +14,7 @@ contractsfinder,True,STALE,2026-11-13T08:46,2026-11-13T08:46,105,105,105,102,las
 csg,True,OK,2026-11-13T05:55,2026-11-13T05:55,210,210,210,207,
 dewa,True,DEGRADED,2026-11-13T05:54,,0,0,0,0,returned 0 rows and has no good run on record
 dominican,True,OK,2026-11-13T05:52,2026-11-13T05:52,642,642,642,632,
-dubai,True,OK,2026-11-13T09:05,2026-11-13T09:05,302,302,302,301,
+dubai,True,STALE,2026-11-13T09:05,2026-11-13T09:05,302,302,302,301,last good run 10.3 h ago (expected every 8 h)
 ebrd,True,STALE,2026-11-13T08:11,2026-11-13T08:11,44,44,44,44,last good run 8.2 h ago (expected every 8 h)
 eskom,False,OK,2026-11-13T09:34,2026-11-13T09:34,230,0,0,0,
 etimad,True,STALE,2026-11-13T08:14,2026-11-13T08:14,682,682,682,675,last good run 8.1 h ago (expected every 8 h)
@@ -21,38 +22,39 @@ france,True,OK,2026-11-13T05:52,2026-11-13T05:52,6933,6933,6933,6671,
 fts,True,STALE,2026-11-13T08:11,2026-11-13T08:11,176,176,176,174,last good run 8.2 h ago (expected every 8 h)
 germany,True,OK,2026-11-13T05:42,2026-11-13T05:42,14087,14087,14087,13253,
 gets,True,STALE,2026-11-13T08:13,2026-11-13T08:13,417,417,417,417,last good run 8.1 h ago (expected every 8 h)
-ghana,True,OK,2026-11-13T09:04,2026-11-13T09:04,105,105,105,101,
+ghana,True,STALE,2026-11-13T09:04,2026-11-13T09:04,105,105,105,101,last good run 10.4 h ago (expected every 8 h)
 iadb,True,STALE,2026-11-13T08:13,2026-11-13T08:13,112,112,112,109,last good run 8.1 h ago (expected every 8 h)
 india,True,OK,2026-11-13T05:41,2026-11-13T05:41,58220,58220,58220,56494,
 isdb,True,STALE,2026-11-13T08:13,2026-11-13T08:13,34,34,34,34,last good run 8.1 h ago (expected every 8 h)
 israel,True,STALE,,2026-11-11T11:29,932,932,919,805,last good run 37.3 h ago (expected every 36 h)
-kenya,True,OK,2026-11-13T09:02,2026-11-13T09:02,352,352,352,347,
+kenya,True,STALE,2026-11-13T09:02,2026-11-13T09:02,352,352,352,347,last good run 10.4 h ago (expected every 8 h)
 kkj,True,OK,2026-11-13T16:19,2026-11-13T16:19,1082,1082,1082,1065,
 lebanon,True,OK,2026-11-13T05:57,2026-11-13T05:57,124,124,124,123,
-malawi,True,OK,2026-11-13T09:04,2026-11-13T09:04,39,39,39,39,
-malaysia,True,OK,2026-11-13T09:02,2026-11-13T09:02,399,399,399,353,
+malawi,True,STALE,2026-11-13T09:04,2026-11-13T09:04,39,39,39,39,last good run 10.4 h ago (expected every 8 h)
+malaysia,True,STALE,2026-11-13T09:02,2026-11-13T09:02,399,399,399,353,last good run 10.4 h ago (expected every 8 h)
 moldova,True,STALE,,2026-11-11T09:30,1252,1252,1159,626,last good run 8.9 h ago (expected every 8 h)
-mozambique,True,OK,2026-11-13T09:05,2026-11-13T09:05,90,90,90,87,
+mozambique,True,STALE,2026-11-13T09:05,2026-11-13T09:05,90,90,90,87,last good run 10.3 h ago (expected every 8 h)
 mrgov,True,OK,2026-11-13T06:03,2026-11-13T06:03,187,187,187,187,
 nyc,True,OK,2026-11-13T05:08,2026-11-13T05:08,197,197,197,144,
 ocdr_tenders,True,STALE,,2026-11-11T08:54,1752,1620,1620,1602,last good run 36.0 h ago (expected every 36 h)
-oman,True,OK,2026-11-13T09:02,2026-11-13T09:02,582,582,582,501,
+oman,True,STALE,2026-11-13T09:02,2026-11-13T09:02,582,582,582,501,last good run 10.4 h ago (expected every 8 h)
 paraguay,True,OK,2026-11-13T05:50,2026-11-13T05:50,86,86,86,86,
-philippines,True,OK,2026-11-13T09:15,2026-11-13T09:15,4115,4115,4115,4016,
+philippines,True,STALE,2026-11-13T09:15,2026-11-13T09:15,4115,4115,4115,4016,last good run 10.2 h ago (expected every 8 h)
 pncp,True,STALE,2026-11-13T08:43,2026-11-13T08:43,8262,8262,8262,7739,last good run 8.3 h ago (expected every 8 h)
 prozorro,True,STALE,2026-11-13T08:28,2026-11-13T08:28,2746,2746,2746,2571,last good run 8.5 h ago (expected every 8 h)
-qatar,True,OK,2026-11-13T09:19,2026-11-13T09:19,328,328,328,305,
-rwanda,True,OK,2026-11-13T09:03,2026-11-13T09:03,268,268,268,267,
+qatar,True,STALE,2026-11-13T09:19,2026-11-13T09:19,328,328,328,305,last good run 10.1 h ago (expected every 8 h)
+rwanda,True,STALE,2026-11-13T09:03,2026-11-13T09:03,268,268,268,267,last good run 10.4 h ago (expected every 8 h)
 sam,True,STALE,2026-11-13T08:11,2026-11-13T08:11,8415,8415,8415,6093,last good run 8.2 h ago (expected every 8 h)
 secop,True,STALE,2026-11-13T08:46,2026-11-13T08:46,3547,3547,3547,3206,last good run 8.2 h ago (expected every 8 h)
 simap,True,STALE,2026-11-13T08:13,2026-11-13T08:13,808,808,808,784,last good run 8.1 h ago (expected every 8 h)
 spain,True,OK,2026-11-13T05:54,2026-11-13T05:54,5391,5391,5391,5365,
-ted,True,OK,2026-11-13T11:21,2026-11-13T11:21,39110,39110,39110,33239,
+taiwan,True,DOWN,2026-11-13T19:24,,0,0,0,0,collector failed; the previous snapshot is kept
+ted,True,STALE,2026-11-13T11:21,2026-11-13T11:21,39110,39110,39110,33239,last good run 8.1 h ago (expected every 8 h)
 transnet,True,OK,2026-11-13T16:19,2026-11-13T16:19,99,99,99,99,
-uganda,True,OK,2026-11-13T09:03,2026-11-13T09:03,40,40,40,39,
+uganda,True,STALE,2026-11-13T09:03,2026-11-13T09:03,40,40,40,39,last good run 10.4 h ago (expected every 8 h)
 undp,True,STALE,2026-11-13T08:12,2026-11-13T08:12,18,18,18,13,last good run 8.2 h ago (expected every 8 h)
 ungm,True,STALE,2026-11-13T08:12,2026-11-13T08:12,1201,1201,1201,1188,last good run 8.2 h ago (expected every 8 h)
-uruguay,True,OK,2026-11-13T09:01,2026-11-13T09:01,589,589,589,588,
+uruguay,True,STALE,2026-11-13T09:01,2026-11-13T09:01,589,589,589,588,last good run 10.4 h ago (expected every 8 h)
 us_cities,True,OK,2026-11-13T05:10,2026-11-13T05:10,262,262,262,262,
 wb_pipeline,True,OK,2026-11-13T06:01,2026-11-13T06:01,957,957,957,949,
 worldbank,True,OK,2026-11-13T06:01,2026-11-13T06:01,748,748,748,726,
