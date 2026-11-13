@@ -1,24 +1,28 @@
 {
- "at": "2026-11-13T11:30Z",
+ "at": "2026-11-13T12:06Z",
  "contract_items_in_index": 244189,
- "already_handled": 188250,
- "translated_now": 2560,
- "left": 25508,
- "with_english": 2560,
+ "already_handled": 194918,
+ "translated_now": 9428,
+ "left": 16066,
+ "with_english": 11987,
  "languages_waiting": {
-  "es": 11392,
-  "de": 4410,
-  "fr": 4245,
+  "es": 11375,
+  "fr": 4242,
+  "de": 1850,
   "pt": 1836,
   "uk": 943,
   "cs": 514,
-  "it": 495,
+  "it": 493,
   "mt": 481,
   "lt": 344,
-  "gl": 272
+  "gl": 266
  },
  "no_model_for": [
-  "es"
+  "es",
+  "uk",
+  "cs",
+  "mt",
+  "lt"
  ],
- "seconds": 840
+ "seconds": 841
 }
