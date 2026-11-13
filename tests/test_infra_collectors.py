@@ -187,3 +187,17 @@ def test_taiwan_parse():
     assert r["deadline"] == "2026-11-24" and r["published"] == "2026-11-12" and r["nature"] == "goods"
     assert r["value"] == 1250000 and r["currency"] == "TWD" and r["link"].endswith("tpam?pk=NzEzODUxMjM=")
     assert "corrected" in r["notice_type"]
+
+
+def test_hk_gld_parse():
+    from leads import hk_gld
+    x = ('<TenderNotice><DepartmentEnglish>Government Logistics Department</DepartmentEnglish>'
+         '<TenderNoticeRecord><TenderNo>AD200712025</TenderNo><IssueDateTime>2026-10-02 00:00:00</IssueDateTime>'
+         '<ClosingDateTime>2026-11-17 12:00:00</ClosingDateTime><SubjectEnglish>Supply of mobile libraries</SubjectEnglish>'
+         '<DepartmentEnglish>Electrical and Mechanical Services Department</DepartmentEnglish><Status>I</Status>'
+         '<Link>https://pcms2.gld.gov.hk/iprod/#/STA00303?tenderReferenceNumber=AD200712025</Link></TenderNoticeRecord>'
+         '<TenderNoticeRecord><TenderNo>LC/1</TenderNo><ClosingDateTime>2026-11-17 12:00:00</ClosingDateTime>'
+         '<SubjectEnglish>Tender for the Grant of a Permit to Conduct the Restaurant Business</SubjectEnglish><Status>I</Status></TenderNoticeRecord></TenderNotice>')
+    rows = hk_gld.parse(x, "2026-11-13")
+    assert rows[0]["deadline"] == "2026-11-17" and rows[0]["country"] == "HKG" and rows[0]["stage"] == "tender"
+    assert rows[0]["buyer"].startswith("Electrical") and rows[1]["stage"] == "concession"
