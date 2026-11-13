@@ -370,6 +370,11 @@ jobs:
         run: set -o pipefail; python -m leads.run --merge 2>&1 | tee -a data/leads/run.log || { rc=$?; echo "merge exited with code $rc at $(date -u +%FT%TZ)" > data/leads/error_merge.txt; exit $rc; }
         timeout-minutes: 90
         continue-on-error: true
+      - name: runtime manifest (per source fetched / snapshot / active / published, open-file hash; counts only)
+        if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,') }}
+        continue-on-error: true
+        timeout-minutes: 10
+        run: python -m leads.manifest 2>&1 | tail -3 | tee -a data/leads/run.log
       - name: commodities (normalise, stats; code only)
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',merge,') }}
         env:
