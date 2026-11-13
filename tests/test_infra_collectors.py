@@ -67,3 +67,12 @@ def test_kkj_parse():
     assert r["country"] == "JPN" and r["deadline"] == "2026-12-23" and r["published"] == "2026-11-12"
     assert r["nature"] == "supplies" and r["lang"] == "ja" and r["link"].endswith("koukoku.pdf")
     assert rows[1]["deadline"] == ""          # no date: fetch() does not count it as open
+
+
+def test_kkj_text_deadline():
+    import datetime as dt
+    from leads import kkj
+    desc = "２ 入札参加資格の確認申請期間 公告の日～令和８年１２月７日(月) ３ 入札日時 令和８年１２月２３日(水) 午前１１時３０分"
+    assert kkj.text_deadline(desc, dt.date(2026, 11, 13)) == "2026-12-23"
+    assert kkj.text_deadline("入札日時 令和８年１０月１日", dt.date(2026, 11, 13)) == ""
+    assert kkj.text_deadline("令和８年１２月２３日 only a date, no deadline word", dt.date(2026, 11, 13)) == ""

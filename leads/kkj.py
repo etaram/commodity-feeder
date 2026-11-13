@@ -4,8 +4,9 @@ one public search API over tender notices of national agencies, prefectures and 
 paging, so the collector splits by prefecture (LgCode 01-47), category (1 goods, 2 works, 3 services) and, where a
 slice still has more than 1,000 hits, by halves of the bid-opening date window.
 
-OPEN = a bid-opening date (OpeningTendersEvent) today or later; failing that, the tender-submission date. A notice
-with neither is not counted (owner rule, 13 Nov). Titles are Japanese (lang ja).
+Notices published in the last 75 days are read. OPEN = a bid-opening date (OpeningTendersEvent) today or later;
+failing that, the tender-submission date; failing both (most notices), a date written after a deadline or bid-date
+word in the notice text (令和 era or western year). A notice with no such date is not counted (owner rule, 13 Nov). Titles are Japanese (lang ja).
 Access (checked 2026-11-13 from the server): public API, no key, no sign-in. Gentle pacing (0.4 s between calls)."""
 import datetime as dt
 import re
@@ -17,13 +18,38 @@ from .sectors import classify
 
 API = "https://www.kkj.go.jp/api/"
 CAT = {"1": "goods", "2": "works", "3": "services"}
-HORIZON_DAYS = 240
+LOOKBACK_DAYS = 75     # notices published in the last 75 days; open = a future bid date
 BUDGET_S = 1500
 
 
 def _d(s):
     m = re.match(r"(20\d\d-\d\d-\d\d)", str(s or ""))
     return m.group(1) if m else ""
+
+
+FW = str.maketrans("０１２３４５６７８９", "0123456789")
+# a date written after a deadline / bid-date word in the notice text: 令和８年１２月２３日 or 2026年12月23日
+DUE_WORD = re.compile(r"(入札日時|入札書の提出期限|提出期限|受領期限|締切|締め切り|開札日時|開札の日時|入札期限|申請期限|参加申請|入札及び開札)")
+DATE_JA = re.compile(r"(令和|R)\s*(\d{1,2})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日|(20\d\d)\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日")
+
+
+def text_deadline(desc, today):
+    """Latest date that follows a deadline / bid-date word within 60 characters, if it is today or later
+    (the bid / opening date, not the earlier participation-application date)."""
+    t = (desc or "").translate(FW)
+    best = None
+    for m in DUE_WORD.finditer(t):
+        for d in DATE_JA.finditer(t[m.end():m.end() + 60]):
+            try:
+                y = 2018 + int(d.group(2)) if d.group(1) else int(d.group(5))
+                mo, da = (int(d.group(3)), int(d.group(4))) if d.group(1) else (int(d.group(6)), int(d.group(7)))
+                v = dt.date(y, mo, da)
+            except (TypeError, ValueError):
+                continue
+            if v >= today and (best is None or v > best):
+                best = v
+            break
+    return str(best) if best else ""
 
 
 def parse(xml_text, fetched):
@@ -36,6 +62,7 @@ def parse(xml_text, fetched):
         if not key or not name:
             continue
         opening, submit = _d(g("OpeningTendersEvent")), _d(g("TenderSubmissionDeadline"))
+        in_text = "" if (opening or submit) else text_deadline(g("ProjectDescription"), dt.date.fromisoformat(fetched))
         org, pref = g("OrganizationName"), g("PrefectureName")
         cat = g("Category")
         sector, how = classify(name)
@@ -45,7 +72,7 @@ def parse(xml_text, fetched):
                      "title": name[:300], "notice_type": g("ProcedureType") or "公告", "stage": "tender",
                      "access": "Japanese government bidding qualification (全省庁統一資格 or local) usually required" +
                                (f"; grade {g('Certification')}" if g("Certification") else ""),
-                     "published": _d(g("CftIssueDate")), "deadline": opening or submit, "value": "", "currency": "",
+                     "published": _d(g("CftIssueDate")), "deadline": opening or submit or in_text, "value": "", "currency": "",
                      "link": g("ExternalDocumentURI") or "https://www.kkj.go.jp/", "source_url": "https://www.kkj.go.jp/",
                      "fetched": fetched, "contact": "", "lang": "ja"})
     return rows, hits
@@ -56,7 +83,7 @@ def _slice(s, lg, cat, lo, hi, fetched, out, stats, t0):
         stats["budget_stop"] = 1
         return
     params = {"Query": "入札", "LG_Code": f"{lg:02d}", "Category": cat, "Count": 1000,
-              "Opening_Tenders_Event": f"{lo.isoformat()}/{hi.isoformat()}"}
+              "CFT_Issue_Date": f"{lo.isoformat()}/{hi.isoformat()}"}
     try:
         r = s.get(API, params=params, timeout=60)
         r.raise_for_status()
@@ -85,7 +112,7 @@ def fetch():
     out, stats, t0 = {}, {}, time.time()
     for lg in range(1, 48):
         for cat in CAT:
-            _slice(s, lg, cat, t, t + dt.timedelta(days=HORIZON_DAYS), fetched, out, stats, t0)
+            _slice(s, lg, cat, t - dt.timedelta(days=LOOKBACK_DAYS), t, fetched, out, stats, t0)
     rows, q = quarantine_future(list(out.values()), "kkj")
     rows = [x for x in rows if x["deadline"] and x["deadline"] >= fetched]
     keep, _ = rolling("kkj", rows)
