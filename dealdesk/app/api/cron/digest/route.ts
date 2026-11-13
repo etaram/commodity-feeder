@@ -6,8 +6,7 @@ import { logEvent } from "@/lib/log";
 import { logActivity } from "@/lib/activity";
 import { countryIntel } from "@/lib/country";
 import { links as tgLinks, send as tgSend } from "@/lib/telegram";
-import { a, countryUrl } from "@/lib/links";
-import { getRange } from "@/lib/panel";
+import { morning } from "@/lib/morning";
 import { tgEnv } from "@/lib/tgenv";
 import { pushAll } from "@/lib/push";
 import { notifyTo } from "@/lib/notify";
@@ -16,6 +15,7 @@ import { notifyTo } from "@/lib/notify";
 // last digest (not sent before, not hidden), best first, by email through Resend. No AI. Weekly digests go on Sundays.
 // Vercel sends "Authorization: Bearer <CRON_SECRET>"; any other caller is refused. ?dry=1 returns what would be sent.
 export const maxDuration = 60;
+const MORNING_SENT = new Map<string, string[]>();   // in-process second guard (same day, same instance)
 const esc = (v: string) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 const money = (n: number | null) => (!n ? "" : n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : `$${Math.round(n / 1e3)}K`);
 
@@ -23,24 +23,47 @@ export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ ok: false }, { status: 401 });
   const dry = req.nextUrl.searchParams.get("dry") === "1";
+  // ?preview=morning: the morning message each linked chat would get now, nothing sent or saved (the day key ignored)
+  if (req.nextUrl.searchParams.get("preview") === "morning") {
+    const profiles = new Map((await allProfiles()).map((x) => [x.email, x.p]));
+    const out = [];
+    for (const l of (await tgLinks()).slice(0, 5)) {
+      const p = profiles.get(l.email) || null;
+      const m = await morning(p, l.lang === "he", new Set((p?.sent || []).filter((k) => !k.startsWith("tg-morning:"))));
+      out.push({ lang: l.lang, has_profile: Boolean(p), alerts: l.alerts, chars: m?.text.length || 0, counts: m?.counts || null, text: m?.text || "" });
+    }
+    return NextResponse.json({ ok: true, preview: out });
+  }
   const key = process.env.RESEND_API_KEY;
   const from = process.env.NOTIFY_FROM || "Sinder Deal Desk <onboarding@resend.dev>";
   const origin = req.nextUrl.origin.includes("vercel.app") ? "https://desk.sinder.pro" : req.nextUrl.origin;
   const sunday = new Date().getUTCDay() === 0;
   const active = new Map((await listUsers(true)).filter((u) => u.status === "active").map((u) => [u.email, u]));
   const report: { email: string; items: number; sent: boolean; error?: string }[] = [];
-  // Telegram: the three strongest deal theses of the day to every linked chat with alerts on (no AI)
+  // Telegram: the morning message (lib/morning.ts): what is new and fits each reader, what closes this week, what waits
+  // for them, one rotated deal thesis. Once per chat per day (the day's key is kept in the reader's profile), no AI.
   if (!dry && tgEnv().token) {
     try {
-      const g = await getRange("plays"); const h = g[0] || [];
-      const rows = g.slice(1).map((r) => Object.fromEntries(h.map((k, i) => [k, r[i] ?? ""]))).slice(0, 3);
-      if (rows.length && process.env.VAPID_PRIVATE_KEY) { for (const lg of ["he", "en"] as const) await pushAll({ title: lg === "he" ? "תזות העסקה של הבוקר" : "This morning's deal theses", body: rows.map((p) => `${p.kind}: ${p.title}`).join(" · ").slice(0, 160), url: "/#today", tag: "plays" }, lg); }
-      if (rows.length) for (const l of await tgLinks()) if (l.alerts !== "off") {
+      const profiles = new Map((await allProfiles()).map((x) => [x.email, x.p]));
+      let pushed = false;
+      for (const l of await tgLinks()) if (l.alerts !== "off") {
         const he = l.lang === "he";
-        await tgSend(l.chat_id, (he ? "<b>תזות העסקה של הבוקר</b>\n" : "<b>This morning's deal theses</b>\n") + rows.map((p) => `• <b>${p.kind}</b> ${p.country ? a(countryUrl(p.country), p.country) : ""} · ${p.title}\n  ${String(p.next_step).slice(0, 160)}`).join("\n") + (he ? "\n/plays לעוד" : "\n/plays for more"));
+        const p = profiles.get(l.email) || null;
+        const sentSet = new Set([...(p?.sent || []), ...(MORNING_SENT.get(l.chat_id) || [])]);
+        const m = await morning(p, he, sentSet);
+        if (!m) continue;
+        MORNING_SENT.set(l.chat_id, m.sentKeys);
+        if (p) { p.sent = [...(p.sent || []), ...m.sentKeys].slice(-3000); await saveProfile(l.email, p).catch(() => {}); }
+        await tgSend(l.chat_id, m.text.slice(0, 4000));
+        if (!pushed && process.env.VAPID_PRIVATE_KEY) {
+          pushed = true;
+          for (const lg of ["he", "en"] as const) await pushAll({ title: lg === "he" ? "בוקר טוב" : "Good morning", body: lg === "he" ? `${m.counts.fresh || 0} הזדמנויות חדשות שמתאימות לך, ${m.counts.closing || 0} נסגרות השבוע` : `${m.counts.fresh || 0} new fits, ${m.counts.closing || 0} closing this week`, url: "/#today", tag: "morning" }, lg);
+        }
       }
-    } catch (e) { await logEvent("warn", "telegram", "morning plays failed", String(e).slice(0, 200)); }
+    } catch (e) { await logEvent("warn", "telegram", "morning message failed", String(e).slice(0, 200)); }
   }
+
+  if (req.nextUrl.searchParams.get("only") === "telegram") return NextResponse.json({ ok: true, only: "telegram" });
 
   // The shared team login has no Users row: its digest goes to the owner's address (NOTIFY_EMAIL; no address is kept
   // in the code, so without it that one digest is skipped and one event is logged).
