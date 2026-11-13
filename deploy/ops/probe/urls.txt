@@ -1,17 +1,4 @@
-# url [chars to print]   (round 2, 13 Nov: big-volume markets)
-https://bidplus.gem.gov.in/all-bids 600
-https://bidplus.gem.gov.in/all-bids-data 400
-https://spse.inaproc.id/lkpp/lelang 600
-https://lpse.lkpp.go.id/eproc4/dt/lelang?draw=1&start=0&length=5 600
-https://ekap.kik.gov.tr/EKAP/Ortak/IhaleArama/index.html 400
-https://muasamcong.mpi.gov.vn/ 400
-https://www.p-portal.go.jp/pps-web-biz/UAB03/OAB0301 600
-https://procurement.opengov.com/api/v1/government/ 300
-https://comprasmx.buengobierno.gob.mx/ 300
-https://upcp-compranet.buengobierno.gob.mx/api/ 300
-https://apis.data.go.kr/1230000/ad/BidPublicInfoService/getBidPblancListInfoServc 300
-https://www.bidnetdirect.com/ 200
-https://tenderbulletin.eskom.co.za/webapi/api/Tenders 400
-https://tenderbulletin.eskom.co.za/webapi/api/Tender?pageSize=2&pageNumber=1 400
-https://tenderbulletin.eskom.co.za/webapi/api/Tenders?pageSize=2&pageNumber=1 400
-https://tenderbulletin.eskom.co.za/webapi/api/Tender/GetTenders?pageSize=2&pageNumber=1 400
+# round 3, 13 Nov
+https://tenderbulletin.eskom.co.za/assets/index-vjCwf-xL.js
+POST https://muasamcong.mpi.gov.vn/o/egp-portal-contractor-selection-v2/services/smart/search 1500 [{"pageSize":3,"pageNumber":0,"query":[{"index":"es-contractor-selection","keyWord":"","matchType":"all-1","matchFields":["notifyNo","bidName"],"filters":[{"fieldName":"type","searchType":"in","fieldValues":["es-notify-contractor"]}]}]}]
+https://ekap.kik.gov.tr/EKAP/Ortak/IhaleArama/index.html 2800

@@ -11,10 +11,18 @@ API = re.compile(r'["\'`](/?(?:webapi/)?api/[A-Za-z0-9_/\-]{2,60}|/Home/[A-Za-z0
 
 
 def one(line):
-    parts = line.split()
-    url, n = parts[0], int(parts[1]) if len(parts) > 1 else 500
+    data = None
+    if line.startswith("POST "):                       # POST <url> <chars> <json body>
+        _, url, n, body = line.split(" ", 3)
+        data, n = body.encode(), int(n)
+    else:
+        parts = line.split()
+        url, n = parts[0], int(parts[1]) if len(parts) > 1 else 500
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*", "X-Requested-With": "XMLHttpRequest"})
+        hd = {"User-Agent": UA, "Accept": "*/*", "X-Requested-With": "XMLHttpRequest"}
+        if data:
+            hd["Content-Type"] = "application/json"
+        req = urllib.request.Request(url, data=data, headers=hd)
         with urllib.request.urlopen(req, timeout=40) as r:
             body = r.read(3_000_000)
             st, ct = r.status, r.headers.get("content-type", "")
@@ -27,6 +35,8 @@ def one(line):
     print(f"== {url}\n   {st} {ct} {len(body)} bytes")
     if url.endswith(".js"):
         print("   paths:", sorted(set(API.findall(t)))[:60])
+        for m in list(re.finditer(r"webapi|/api/", t))[:12]:
+            print("   ..." + re.sub(r"\s+", " ", t[max(0, m.start() - 120):m.start() + 160]))
         return
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=re.S)
     t = re.sub(r"\s+", " ", t)
