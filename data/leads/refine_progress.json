@@ -64,28 +64,28 @@
  "email_domains_checked": 6710,
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-13T14:24Z",
+  "at": "2026-11-13T14:39Z",
   "sample": null,
-  "links_checked_this_run": 1392,
-  "links_on_record": 5558,
+  "links_checked_this_run": 1032,
+  "links_on_record": 6590,
   "sites_read_this_run": 150,
-  "registers_this_run": 81,
+  "registers_this_run": 85,
   "buyers": {
    "processed": 3447,
-   "completed": 3131,
+   "completed": 3132,
    "contact_found": 3131,
    "with_conflicts": 0,
-   "with_gaps": 480,
+   "with_gaps": 541,
    "cleaned": 13,
    "duplicates": 74,
-   "verified_identity": 8,
+   "verified_identity": 27,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3298,
+   "reused_unchanged": 3282,
    "gaps": {
     "no official website": 362,
     "no contact channel": 316,
-    "website unreachable": 100,
-    "website name mismatch": 18
+    "website unreachable": 155,
+    "website name mismatch": 24
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -98,17 +98,17 @@
    "completed": 3386,
    "contact_found": 3386,
    "with_conflicts": 0,
-   "with_gaps": 743,
+   "with_gaps": 769,
    "cleaned": 12,
    "duplicates": 0,
-   "verified_identity": 3,
+   "verified_identity": 8,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3932,
+   "reused_unchanged": 3939,
    "gaps": {
     "no official website": 685,
     "no contact channel": 614,
-    "website unreachable": 51,
-    "website name mismatch": 8
+    "website unreachable": 74,
+    "website name mismatch": 11
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -117,15 +117,15 @@
   },
   "tenders": {
    "processed": 130000,
-   "completed": 51596,
+   "completed": 51853,
    "contact_found": 49050,
-   "with_conflicts": 380,
+   "with_conflicts": 382,
    "with_gaps": 114624,
    "cleaned": 96,
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 127943,
+   "reused_unchanged": 129501,
    "gaps": {
     "no estimated value": 102138,
     "no contact in the notice": 80950,
@@ -144,7 +144,7 @@
   },
   "projects": {
    "processed": 2694,
-   "completed": 2614,
+   "completed": 2655,
    "contact_found": 0,
    "with_conflicts": 2,
    "with_gaps": 1947,
@@ -152,7 +152,7 @@
    "duplicates": 1,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 2247,
+   "reused_unchanged": 2653,
    "gaps": {
     "no project value": 1947,
     "no implementing agency": 940
@@ -197,7 +197,7 @@
    "duplicates": 1,
    "verified_identity": 21,
    "closed_by_deadline": 0,
-   "reused_unchanged": 143,
+   "reused_unchanged": 148,
    "gaps": {
     "no contact_url": 8
    },
