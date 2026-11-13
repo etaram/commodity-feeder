@@ -45,11 +45,14 @@ def roc(s):
 
 
 def parse(page, fetched):
-    body = TBODY.search(page)
-    if not body:
+    # the page has several tables (the search form comes first): use the body that holds notice links
+    body = next((b for b in TBODY.findall(page) if "tpam?pk=" in b), None)
+    if body is None:
+        if "共有" in page and re.search(r"共有\s*<span[^>]*>\s*0\s*</span>", page):
+            return []
         raise ValueError("Taiwan PCC: result table not found (page layout changed or error page)")
     rows = []
-    for tr in TR.findall(body.group(1)):
+    for tr in TR.findall(body):
         tds = TD.findall(tr)
         if len(tds) < 9:
             continue

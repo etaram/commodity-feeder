@@ -176,7 +176,7 @@ def test_buyspeed_parse():
 
 def test_taiwan_parse():
     from leads import taiwan
-    page = ('<table><tbody> <tr class="tb_b2"> <td class="no_blank"> 1 </td> <td> 新北市三重區碧華國民小學 </td> '
+    page = ('<table><tbody><tr><td>search form</td></tr></tbody></table><table><tbody> <tr class="tb_b2"> <td class="no_blank"> 1 </td> <td> 新北市三重區碧華國民小學 </td> '
             '<td> BHES1150903<span style="color:red"> (更正公告)</span> <br> <a href="/prkms/urlSelector/common/tpam?pk=NzEzODUxMjM="> <u> '
             '<span id="1"><script>var hw = Geps3.CNS.pageCode2Img("115學年度上學期午餐食材採購");</script></span></u></a> </td>'
             '<td> 01 </td><td> 公開招標 </td><td> 財物類 </td><td> 115/11/12 </td><td> 115/11/24 </td><td> 1,250,000 </td><td></td></tr></tbody></table>')
