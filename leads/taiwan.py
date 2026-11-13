@@ -7,7 +7,7 @@ Access (checked 2026-11-13 from the server): public, no sign-in, no CAPTCHA; 11,
 Rights note: the site's copyright statement allows reproduction for personal non-profit use and asks for consent for
 other use. The owner decided on 13 Nov 2026 (21:04) to collect what is publicly visible; we keep facts only (who
 buys what, by when, budget, official link), read politely (one page of 100 rows every 3 s), and link every row back
-to its official notice. The decision and the statement are recorded in docs/team/rights_decisions.md."""
+to its official notice. The decision is recorded privately."""
 import datetime as dt
 import html
 import re
