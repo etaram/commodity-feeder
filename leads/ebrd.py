@@ -5,6 +5,7 @@ import re
 
 from .common import cffi_get, clean, log, today
 from .sectors import classify
+from .regions import iso3
 from .taxonomy import group_of_text
 
 URL = "https://ecepp.ebrd.com/delta/noticeSearchResults.html"
@@ -43,7 +44,7 @@ def fetch():
             "id": f"EBRD-{link.group(1).split('=')[-1]}", "source": "EBRD", "group": gid or "", "sector": sector, "stage": "tender",
             "nature": "goods" if "Goods" in meta else "works" if "Works" in meta else "services" if "Consult" in meta or "Services" in meta else "",
             "access": "International (EBRD rules)", "lang": "",
-            "country": title.split(":")[0][:40], "buyer": clean(parts[-3] if len(parts) >= 3 else "", 120),
+            "country": iso3(title.split(":")[0].strip()) or title.split(":")[0][:40], "buyer": clean(parts[-3] if len(parts) >= 3 else "", 120),
             "title": title[:300], "classification": "keyword", "notice_type": next((o for o in OPEN if o.lower() in text.lower()), ""),
             "published": str(min(dates) if dates else ""), "deadline": str(dl or ""), "value": "", "currency": "",
             "link": "https://ecepp.ebrd.com/delta/" + link.group(1), "contact": "", "match": "",

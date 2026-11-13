@@ -113,7 +113,7 @@ def fetch():  # leads.run interface
         rows.append({
             "id": it["id"], "source": f"Israel - {TYPE_EN.get(it['body_type'], it['body_type'])}",
             "group": next((k for k, rx in HE_GROUP if re.search(rx, t)), ""), "sector": _sector(t), "nature": "",
-            "cpv": "", "stage": "tender", "access": "Israeli bidders (home market)", "lang": "he", "country": "ISR",
+            "cpv": "", "stage": "exemption" if it["kind"] == "exemption" else "tender",   # a sole-supplier notice is not a tender "access": "Israeli bidders (home market)", "lang": "he", "country": "ISR",
             "buyer": it["body"], "title": t[:300], "classification": "keyword (he)",
             "notice_type": {"call": "קול קורא", "exemption": "הודעת פטור (exemption)"}.get(it["kind"], "מכרז")
             + (f" {it['number']}" if it["number"] else ""),

@@ -69,7 +69,7 @@ def fetch():
             ntype = cells[ci + 3] if len(cells) > ci + 3 else ""
             ref = cells[ci + 4] if len(cells) > ci + 4 else ""
             segs = [clean(html.unescape(x)) for x in re.split(r"<[^>]+>", re.sub(r"<script.*?</script>", "", block, flags=re.S))]
-            segs = [x for x in segs if x]
+            segs = [x for x in segs if x and x != "Open in a new window"]   # the link label is not a country
             country = segs[segs.index(ref) + 1] if ref in segs and segs.index(ref) + 1 < len(segs) else ""
             title = clean(title.replace("Open in a new window", ""))
             if pub and pub < cut:
