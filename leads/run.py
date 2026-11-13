@@ -21,10 +21,10 @@ from . import source_status
 
 TENDER_SOURCES = ["ted", "fts", "sam", "canadabuys", "za", "worldbank", "ebrd", "mrgov", "ungm", "undp", "aiib",
                   "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "paraguay", "dominican", "austender", "oman", "france", "spain",
-                  "kenya", "moldova", "uruguay", "bahrain", "malaysia", "qatar", "israel", "nyc", "us_cities", "wb_pipeline", "ocdr_tenders", "afdb", "iadb", "chile", "simap", "gets", "india", "rwanda", "uganda", "ghana", "malawi", "mozambique", "dubai", "philippines", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "kkj"]  # bidnet, eskom: paused (rights), see PAUSED_SOURCES
+                  "kenya", "moldova", "uruguay", "bahrain", "malaysia", "qatar", "israel", "nyc", "us_cities", "wb_pipeline", "ocdr_tenders", "afdb", "iadb", "chile", "simap", "gets", "india", "rwanda", "uganda", "ghana", "malawi", "mozambique", "dubai", "philippines", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "kkj", "buyspeed"]  # bidnet, eskom: paused (rights), see PAUSED_SOURCES
 NEW_MODULES = {"philippines", "rwanda", "uganda", "malawi", "mozambique", "dubai", "grants", "il_exemptions", "afdb", "iadb", "chile", "simap", "gets", "india", "ocdr_tenders", "israel", "nyc", "us_cities", "wb_pipeline", "ungm", "undp", "aiib", "isdb", "etimad", "prozorro", "pncp", "secop", "germany", "contractsfinder", "qatar",
                "paraguay", "dominican", "oman", "austender", "moldova", "uruguay", "bahrain", "malaysia", "kenya", "france", "spain", "tanzania",
-               "ghana", "zambia", "latam_awards", "wikidata_companies", "listed_companies", "web_contacts", "ext_awards", "prozorro_awards", "ocdr", "commodity_producers", "gebiz_awards", "iadb_awards", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "eskom", "kkj", "bidnet"}
+               "ghana", "zambia", "latam_awards", "wikidata_companies", "listed_companies", "web_contacts", "ext_awards", "prozorro_awards", "ocdr", "commodity_producers", "gebiz_awards", "iadb_awards", "dewa", "csg", "ccgp", "lebanon", "cameroon", "transnet", "bonfire", "eskom", "kkj", "bidnet", "buyspeed"}
 STOP = {"products", "other", "than", "with", "from", "parts", "thereof", "whether", "nonalloy", "including",
         "articles", "prepared", "preserved", "fresh", "chilled", "frozen", "similar", "suitable", "kind", "used"}
 

@@ -152,3 +152,17 @@ def test_ccgp_detail():
     assert ccgp.detail(page) == ("2026-12-08", 1250000, "no")
     assert ccgp.detail("截止时间：2026年12月08日09点00分 预算金额：￥980,000.00元")[:2] == ("2026-12-08", 980000)
     assert ccgp.detail("no dates here") == ("", "", "")
+
+
+def test_buyspeed_parse():
+    from leads import buyspeed
+    page = ('<th role="columnheader"><span>Bid Solicitation #</span></th><th role="columnheader">Organization Name</th>'
+            '<th role="columnheader">Description</th><th role="columnheader">Bid Opening Date</th><th role="columnheader">Status</th>'
+            '<tr data-ri="0" class="ui-widget-content"><td role="gridcell"><a href="/bso/external/bidDetail.sda?docId=BD-27-1&amp;external=true">BD-27-1</a></td>'
+            '<td role="gridcell">Department of Transportation</td><td role="gridcell">Road salt supply</td><td role="gridcell">12/01/2026 02:00:00 PM</td><td role="gridcell">Sent</td></tr>'
+            '<tr data-ri="1"><td>BD-27-2</td><td>X</td><td>Old bid</td><td>11/01/2026</td><td>Cancelled</td></tr>')
+    rows = buyspeed.parse(page, "https://www.commbuys.com", "US-MA", "Commonwealth of Massachusetts", "2026-11-13")
+    assert len(rows) == 1
+    r = rows[0]
+    assert r["deadline"] == "2026-12-01" and r["title"] == "Road salt supply" and r["country"] == "USA"
+    assert r["link"].startswith("https://www.commbuys.com/bso/external/bidDetail.sda?docId=BD-27-1") and r["id"] == "BSO-MA-BD-27-1"
