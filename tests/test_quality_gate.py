@@ -39,3 +39,9 @@ def test_chatgpt_adversarial_cases_row_152():
 def test_self_description_counts():
     ok, fails, facts = gate(dict(OK, roles=[], title="Acme Steel - a leading manufacturer of steel pipes"))
     assert ok and facts["roles"] == ["manufacturer"]
+
+
+def test_award_evidence_role_only_for_goods_winners():
+    ok, _, facts = gate(dict(OK, roles=[], tier=1))
+    assert ok and facts["roles"] == ["supplier"] and facts["role_basis"].startswith("award evidence")
+    assert not gate(dict(OK, roles=[], tier=3))[0] and not gate(dict(OK, roles=[], tier=0))[0]

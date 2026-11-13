@@ -18,7 +18,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-VERSION = "supplier-gate-1.2 (2026-11-13)"
+VERSION = "supplier-gate-1.3 (2026-11-13)"
 FRESH_DAYS = 180
 ISO3 = re.compile(r"^[A-Z]{3}$")
 try:   # the ISO 3166-1 alpha-3 list the app uses (249 codes); a three-letter string alone is not a country
@@ -133,7 +133,14 @@ def roles_of(rec):
     text = " ".join([str(rec.get("title") or ""), str(rec.get("description") or "")])
     text_wo_customers = CUSTOMER_CTX.sub(" ", text)
     r |= {role for role, rx in SELF_ROLE if rx.search(text_wo_customers)}
-    return sorted(r), ("site text (self-description)" if r else "")
+    if r:
+        return sorted(r), "site text (self-description)"
+    # v1.3: official award evidence. Tier 1 in the index = the company won public contracts for GOODS (award notices,
+    # a public record), so it is a proven supplier of goods; the site does not say whether it makes or trades them, and
+    # the role stays exactly that ('supplier', never upgraded to manufacturer)
+    if str(rec.get("tier")) == "1":
+        return ["supplier"], "award evidence (won goods contracts)"
+    return [], ""
 
 
 def gate(rec, today=None):
