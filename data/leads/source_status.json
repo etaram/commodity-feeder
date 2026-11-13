@@ -1,6 +1,6 @@
 {
- "generated": "2026-11-13T17:00Z",
- "not_ok": 22,
+ "generated": "2026-11-13T19:24Z",
+ "not_ok": 23,
  "sources": [
   {
    "source": "afdb",
@@ -243,6 +243,18 @@
    "age_h": 8.8
   },
   {
+   "source": "buyspeed",
+   "status": "DEGRADED",
+   "rows": 0,
+   "rows_last_good": 0,
+   "last_good_at": "",
+   "last_run_at": "2026-11-13T19:02",
+   "error_class": "zero_rows",
+   "warning": "returned 0 rows and has no good run on record",
+   "cadence_h": 36,
+   "age_h": null
+  },
+  {
    "source": "dewa",
    "status": "DEGRADED",
    "rows": 0,
@@ -343,14 +355,14 @@
   {
    "source": "ccgp",
    "status": "OK",
-   "rows": 1007,
-   "rows_last_good": 1007,
-   "last_good_at": "2026-11-13T05:57",
-   "last_run_at": "2026-11-13T05:57",
+   "rows": 1724,
+   "rows_last_good": 1724,
+   "last_good_at": "2026-11-13T19:24",
+   "last_run_at": "2026-11-13T19:24",
    "error_class": "",
    "warning": "",
    "cadence_h": 36,
-   "age_h": 11.1
+   "age_h": 0.0
   },
   {
    "source": "chile",
