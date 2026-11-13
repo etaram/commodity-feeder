@@ -1,130 +1,130 @@
 {
- "at": "2026-11-13T15:57+00:00",
+ "at": "2026-11-13T22:03+00:00",
  "version": "details-1",
  "mode": "run",
- "read_now": 344,
+ "read_now": 343,
  "failed": {
-  "ted: package left for the next run": 40,
+  "ted: package left for the next run": 41,
   "pncp: HTTP 410": 1,
   "boamp: national BOAMP format (not eForms)": 15
  },
- "published_open": 344,
- "store": 360,
+ "published_open": 343,
+ "store": 359,
  "fill_rate_this_run": {
   "items": {
-   "filled": 344,
-   "of": 344,
+   "filled": 343,
+   "of": 343,
    "rate": 1.0
   },
   "technical_standards": {
-   "filled": 9,
-   "of": 344,
-   "rate": 0.026
+   "filled": 8,
+   "of": 343,
+   "rate": 0.023
   },
   "delivery": {
-   "filled": 319,
-   "of": 344,
+   "filled": 318,
+   "of": 343,
    "rate": 0.927
   },
   "bid_security": {
-   "filled": 96,
-   "of": 344,
-   "rate": 0.279
+   "filled": 93,
+   "of": 343,
+   "rate": 0.271
   },
   "performance_guarantee": {
-   "filled": 14,
-   "of": 344,
-   "rate": 0.041
+   "filled": 13,
+   "of": 343,
+   "rate": 0.038
   },
   "eligibility": {
    "filled": 103,
-   "of": 344,
-   "rate": 0.299
+   "of": 343,
+   "rate": 0.3
   },
   "lots": {
-   "filled": 222,
-   "of": 344,
-   "rate": 0.645
+   "filled": 223,
+   "of": 343,
+   "rate": 0.65
   },
   "evaluation": {
-   "filled": 242,
-   "of": 344,
-   "rate": 0.703
+   "filled": 240,
+   "of": 343,
+   "rate": 0.7
   },
   "clarification_deadline": {
-   "filled": 134,
-   "of": 344,
-   "rate": 0.39
+   "filled": 131,
+   "of": 343,
+   "rate": 0.382
   },
   "documents": {
    "filled": 288,
-   "of": 344,
-   "rate": 0.837
+   "of": 343,
+   "rate": 0.84
   },
   "submission_deadline": {
-   "filled": 344,
-   "of": 344,
+   "filled": 343,
+   "of": 343,
    "rate": 1.0
   },
   "submission_url": {
-   "filled": 235,
-   "of": 344,
-   "rate": 0.683
+   "filled": 236,
+   "of": 343,
+   "rate": 0.688
   },
   "duration": {
-   "filled": 215,
-   "of": 344,
-   "rate": 0.625
+   "filled": 216,
+   "of": 343,
+   "rate": 0.63
   },
   "tender_validity": {
-   "filled": 181,
-   "of": 344,
-   "rate": 0.526
+   "filled": 184,
+   "of": 343,
+   "rate": 0.536
   },
   "variants": {
-   "filled": 105,
-   "of": 344,
-   "rate": 0.305
+   "filled": 106,
+   "of": 343,
+   "rate": 0.309
   },
   "framework": {
-   "filled": 97,
-   "of": 344,
-   "rate": 0.282
+   "filled": 101,
+   "of": 343,
+   "rate": 0.294
   },
   "procedure": {
-   "filled": 344,
-   "of": 344,
+   "filled": 343,
+   "of": 343,
    "rate": 1.0
   },
   "quantities": {
-   "filled": 141,
-   "of": 344,
-   "rate": 0.41
+   "filled": 137,
+   "of": 343,
+   "rate": 0.399
   }
  },
  "by_source_this_run": {
   "TED (EU)": {
-   "n": 151,
+   "n": 153,
    "items": 1.0,
    "technical_standards": 0.05,
    "delivery": 0.99,
-   "bid_security": 0.44,
+   "bid_security": 0.42,
    "performance_guarantee": 0.01,
-   "eligibility": 0.38,
+   "eligibility": 0.39,
    "lots": 1.0,
-   "evaluation": 0.79,
-   "clarification_deadline": 0.4,
+   "evaluation": 0.78,
+   "clarification_deadline": 0.39,
    "documents": 1.0,
    "quantities": 0.03
   },
   "Prozorro (Ukraine)": {
-   "n": 33,
+   "n": 32,
    "items": 1.0,
    "technical_standards": 0.03,
    "delivery": 1.0,
-   "bid_security": 0.42,
-   "performance_guarantee": 0.36,
-   "eligibility": 0.73,
+   "bid_security": 0.41,
+   "performance_guarantee": 0.34,
+   "eligibility": 0.72,
    "lots": 1.0,
    "evaluation": 1.0,
    "clarification_deadline": 1.0,
@@ -132,7 +132,7 @@
    "quantities": 1.0
   },
   "PNCP (Brazil)": {
-   "n": 63,
+   "n": 62,
    "items": 1.0,
    "technical_standards": 0.0,
    "delivery": 1.0,
@@ -174,7 +174,7 @@
    "quantities": 0.09
   },
   "ChileCompra": {
-   "n": 35,
+   "n": 34,
    "items": 1.0,
    "technical_standards": 0.0,
    "delivery": 1.0,
@@ -190,119 +190,119 @@
  },
  "fill_rate_published": {
   "items": {
-   "filled": 344,
-   "of": 344,
+   "filled": 343,
+   "of": 343,
    "rate": 1.0
   },
   "technical_standards": {
-   "filled": 9,
-   "of": 344,
-   "rate": 0.026
+   "filled": 8,
+   "of": 343,
+   "rate": 0.023
   },
   "delivery": {
-   "filled": 319,
-   "of": 344,
+   "filled": 318,
+   "of": 343,
    "rate": 0.927
   },
   "bid_security": {
-   "filled": 96,
-   "of": 344,
-   "rate": 0.279
+   "filled": 93,
+   "of": 343,
+   "rate": 0.271
   },
   "performance_guarantee": {
-   "filled": 14,
-   "of": 344,
-   "rate": 0.041
+   "filled": 13,
+   "of": 343,
+   "rate": 0.038
   },
   "eligibility": {
    "filled": 103,
-   "of": 344,
-   "rate": 0.299
+   "of": 343,
+   "rate": 0.3
   },
   "lots": {
-   "filled": 222,
-   "of": 344,
-   "rate": 0.645
+   "filled": 223,
+   "of": 343,
+   "rate": 0.65
   },
   "evaluation": {
-   "filled": 242,
-   "of": 344,
-   "rate": 0.703
+   "filled": 240,
+   "of": 343,
+   "rate": 0.7
   },
   "clarification_deadline": {
-   "filled": 134,
-   "of": 344,
-   "rate": 0.39
+   "filled": 131,
+   "of": 343,
+   "rate": 0.382
   },
   "documents": {
    "filled": 288,
-   "of": 344,
-   "rate": 0.837
+   "of": 343,
+   "rate": 0.84
   },
   "submission_deadline": {
-   "filled": 344,
-   "of": 344,
+   "filled": 343,
+   "of": 343,
    "rate": 1.0
   },
   "submission_url": {
-   "filled": 235,
-   "of": 344,
-   "rate": 0.683
+   "filled": 236,
+   "of": 343,
+   "rate": 0.688
   },
   "duration": {
-   "filled": 215,
-   "of": 344,
-   "rate": 0.625
+   "filled": 216,
+   "of": 343,
+   "rate": 0.63
   },
   "tender_validity": {
-   "filled": 181,
-   "of": 344,
-   "rate": 0.526
+   "filled": 184,
+   "of": 343,
+   "rate": 0.536
   },
   "variants": {
-   "filled": 105,
-   "of": 344,
-   "rate": 0.305
+   "filled": 106,
+   "of": 343,
+   "rate": 0.309
   },
   "framework": {
-   "filled": 97,
-   "of": 344,
-   "rate": 0.282
+   "filled": 101,
+   "of": 343,
+   "rate": 0.294
   },
   "procedure": {
-   "filled": 344,
-   "of": 344,
+   "filled": 343,
+   "of": 343,
    "rate": 1.0
   },
   "quantities": {
-   "filled": 141,
-   "of": 344,
-   "rate": 0.41
+   "filled": 137,
+   "of": 343,
+   "rate": 0.399
   }
  },
  "by_source_published": {
   "TED (EU)": {
-   "n": 151,
+   "n": 153,
    "items": 1.0,
    "technical_standards": 0.05,
    "delivery": 0.99,
-   "bid_security": 0.44,
+   "bid_security": 0.42,
    "performance_guarantee": 0.01,
-   "eligibility": 0.38,
+   "eligibility": 0.39,
    "lots": 1.0,
-   "evaluation": 0.79,
-   "clarification_deadline": 0.4,
+   "evaluation": 0.78,
+   "clarification_deadline": 0.39,
    "documents": 1.0,
    "quantities": 0.03
   },
   "Prozorro (Ukraine)": {
-   "n": 33,
+   "n": 32,
    "items": 1.0,
    "technical_standards": 0.03,
    "delivery": 1.0,
-   "bid_security": 0.42,
-   "performance_guarantee": 0.36,
-   "eligibility": 0.73,
+   "bid_security": 0.41,
+   "performance_guarantee": 0.34,
+   "eligibility": 0.72,
    "lots": 1.0,
    "evaluation": 1.0,
    "clarification_deadline": 1.0,
@@ -310,7 +310,7 @@
    "quantities": 1.0
   },
   "PNCP (Brazil)": {
-   "n": 63,
+   "n": 62,
    "items": 1.0,
    "technical_standards": 0.0,
    "delivery": 1.0,
@@ -352,7 +352,7 @@
    "quantities": 0.09
   },
   "ChileCompra": {
-   "n": 35,
+   "n": 34,
    "items": 1.0,
    "technical_standards": 0.0,
    "delivery": 1.0,
