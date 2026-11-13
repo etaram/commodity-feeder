@@ -18,7 +18,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-VERSION = "supplier-gate-1.3 (2026-11-13)"
+VERSION = "supplier-gate-1.4 (2026-11-13)"
 FRESH_DAYS = 180
 ISO3 = re.compile(r"^[A-Z]{3}$")
 try:   # the ISO 3166-1 alpha-3 list the app uses (249 codes); a three-letter string alone is not a country
@@ -29,6 +29,14 @@ except (OSError, ValueError):
 EMAIL_RX = re.compile(r"^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,}$")
 # second-level labels under which the registrable domain is three labels (acme.co.ke, acme.com.br); a host equal to
 # such a suffix alone ('co.ke') is never a company's own domain
+# v1.4: shared-hosting and marketplace suffixes (a private public-suffix list): under these, each tenant is its own
+# site, so acme.github.io and other.github.io are different companies and never share an 'own domain'
+PRIVATE_SUFFIX = {"github.io", "gitlab.io", "blogspot.com", "wordpress.com", "wixsite.com", "weebly.com", "herokuapp.com",
+                  "netlify.app", "vercel.app", "pages.dev", "web.app", "firebaseapp.com", "azurewebsites.net", "cloudfront.net",
+                  "appspot.com", "myshopify.com", "square.site", "godaddysites.com", "business.site", "webnode.page", "jimdosite.com",
+                  "mystrikingly.com", "tumblr.com", "medium.com", "alibaba.com", "en.alibaba.com", "made-in-china.com", "indiamart.com",
+                  "tradeindia.com", "1688.com", "amazonaws.com", "s3.amazonaws.com", "onrender.com", "fly.dev", "glitch.me", "carrd.co",
+                  "site123.me", "ueniweb.com", "yolasite.com", "webflow.io", "framer.website", "notion.site", "linktr.ee"}
 SLD = {"co", "com", "net", "org", "gov", "ac", "edu", "ltd", "plc", "or", "ne", "go", "gob", "nic", "mil", "info", "biz", "in", "sch"}
 CTA = re.compile(r"^(get|learn|read|contact|discover|explore|view|see|find|latest|our|why|how|what|who|welcome|meet|join|"
                  r"subscribe|follow|download|request|book|call|email|send|click|shop now|buy now|sign|log|back|next|"
@@ -74,6 +82,10 @@ def registrable(host):
     parts = [x for x in (host or "").lower().strip(".").removeprefix("www.").split(".") if x]
     if len(parts) < 2:
         return ""
+    for n in (3, 2):                  # v1.4: tenant of a shared host = one label more than the shared suffix
+        suf = ".".join(parts[-n:])
+        if len(parts) >= n and suf in PRIVATE_SUFFIX:
+            return ".".join(parts[-(n + 1):]) if len(parts) > n else ""
     if len(parts) >= 3 and parts[-2] in SLD and len(parts[-1]) == 2:
         return ".".join(parts[-3:])
     if len(parts) == 2 and parts[0] in SLD and len(parts[1]) == 2:
@@ -115,6 +127,9 @@ SELF_ROLE = [
     ("service", re.compile(r"\b(we (provide|offer|deliver) [a-z ]{0,30}services|(is|are) (a |an |the )?(leading )?[a-z ]{0,20}"
                            r"(consultancy|consulting firm|service provider|services company|logistics company|laboratory))\b", re.I)),
 ]
+# v1.4: sentences about a third party (our partner, our client, our parent company...) never describe this company
+THIRD_PARTY = re.compile(r"\b(our|their|its|his|her)\s+(\w+\s+){0,2}(partners?|clients?|customers?|suppliers?|vendors?|principals?|"
+                         r"parent( company)?|sister compan(y|ies)|affiliates?|subsidiar(y|ies)|members?|competitors?)\b[^.;!?\n]*", re.I)
 CUSTOMER_CTX = re.compile(r"\b(for|to|serving|serve|help(s|ing)?|with)\s+(\w+\s+){0,3}(manufacturers|producers|factories|distributors|contractors)\b", re.I)
 
 
@@ -131,7 +146,7 @@ def roles_of(rec):
     if r:
         return sorted(r), "site role phrase"
     text = " ".join([str(rec.get("title") or ""), str(rec.get("description") or "")])
-    text_wo_customers = CUSTOMER_CTX.sub(" ", text)
+    text_wo_customers = CUSTOMER_CTX.sub(" ", THIRD_PARTY.sub(" ", text))
     r |= {role for role, rx in SELF_ROLE if rx.search(text_wo_customers)}
     if r:
         return sorted(r), "site text (self-description)"
@@ -148,7 +163,9 @@ def gate(rec, today=None):
     today = today or dt.date.today()
     fails = []
     country = str(rec.get("country") or "").upper()
-    if not (rec.get("supplier") and ISO3.match(country) and (not ISO_CODES or country in ISO_CODES)):
+    if not ISO_CODES:                 # v1.4: fail closed when the country reference list is missing or unreadable
+        fails.append("identity: country reference list unavailable")
+    elif not (rec.get("supplier") and ISO3.match(country) and country in ISO_CODES):
         fails.append("identity: no name or no valid ISO 3166 country")
     if rec.get("verdict") != "ok":
         fails.append(f"site: {rec.get('verdict') or 'not read'}")
@@ -178,6 +195,8 @@ def gate(rec, today=None):
 
 
 def run(d):
+    if not ISO_CODES:                 # v1.4: no silent fallback
+        raise SystemExit("quality gate: country reference list unavailable; nothing evaluated")
     d = Path(d)
     n, ok, strong = 0, 0, 0
     first, every = Counter(), Counter()
@@ -209,7 +228,7 @@ def run(d):
             by_role[r] += 1
         keys.append(k)
     (d / "refined.keys").write_text("\n".join(keys), encoding="utf-8")
-    out = {"gate": VERSION, "suppliers_checked": n, "refined": ok, "refined_with_legal_id": strong, "refined_via_discovered_site": discovered_refined,
+    out = {"gate": VERSION, "suppliers_checked": n, "refined": ok, "refined_with_identifier_format_only": strong, "refined_via_discovered_site": discovered_refined,
            "refined_countries": len(by_country), "refined_by_role": dict(by_role.most_common()), "refined_by_role_basis": dict(by_basis),
            "refined_top_countries": dict(by_country.most_common(25)),
            "failing_condition_counts": dict(every.most_common()), "first_failure": dict(first.most_common(25))}

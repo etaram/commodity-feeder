@@ -45,3 +45,29 @@ def test_award_evidence_role_only_for_goods_winners():
     ok, _, facts = gate(dict(OK, roles=[], tier=1))
     assert ok and facts["roles"] == ["supplier"] and facts["role_basis"].startswith("award evidence")
     assert not gate(dict(OK, roles=[], tier=3))[0] and not gate(dict(OK, roles=[], tier=0))[0]
+
+
+def test_chatgpt_row_160_failures_v14():
+    """gate 1.4: the 3 new failures ChatGPT showed on gate 1.2 (row 160), with positive controls"""
+    import leads.quality_gate as q
+    # 1. missing country reference list fails closed
+    saved = set(q.ISO_CODES)
+    try:
+        q.ISO_CODES.clear()
+        ok, fails, _ = q.gate(dict(OK, country="ZZZ"))
+        assert not ok and any("reference list" in f for f in fails)
+        ok, _, _ = q.gate(OK)
+        assert not ok                               # even a good record is not admitted without the reference list
+    finally:
+        q.ISO_CODES.update(saved)
+    assert q.gate(OK)[0]
+    # 2. shared hosting: another tenant's address is not an own-domain contact; the tenant's own is
+    gh = dict(OK, domain="acme.github.io", phones=[])
+    assert not q.gate(dict(gh, emails=[{"email": "sales@other.github.io"}]))[0]
+    assert q.gate(dict(gh, emails=[{"email": "sales@acme.github.io"}]))[0]
+    assert q.registrable("shop.acme.github.io") == "acme.github.io" and q.registrable("github.io") == ""
+    assert q.registrable("www.acmesteel.co.ke") == "acmesteel.co.ke"
+    # 3. a third party described on the page does not give this company its role
+    assert not q.gate(dict(OK, roles=[], title="Acme", description="Our partner is a manufacturer of steel pipes"))[0]
+    assert not q.gate(dict(OK, roles=[], title="Acme", description="Our parent company is a leading producer of cement."))[0]
+    assert q.gate(dict(OK, roles=[], title="Acme", description="We are a supplier of steel pipes. Our partner is a bank."))[0]
