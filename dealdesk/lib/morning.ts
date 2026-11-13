@@ -48,13 +48,23 @@ export async function morning(p: Profile | null, he: boolean, sent: Set<string>)
   };
 
   // 1-2. what fits the profile (or, without a profile, the strongest open opportunities)
-  const fit = p ? (await matches(p, { mode: "focus", limit: 400 })).items
-                : open.slice().sort((a, b) => (b.sc ?? 0) - (a.sc ?? 0)).slice(0, 400).map((r) => ({ id: r.id, t: r.t, c: r.c, b: r.b, v: r.v, dd: r.dd, l: r.l }));
-  const fresh = fit.filter((m) => !sent.has(m.id) && (byId.get(m.id)?.n === 1 || !p)).slice(0, 5);
+  // the reader's focus first; when it gives fewer than 3, the broader profile match; without a profile (or still
+  // nothing), the strongest open opportunities overall
+  const strongest = () => open.slice().sort((a, b) => (b.sc ?? 0) - (a.sc ?? 0)).slice(0, 400).map((r) => ({ id: r.id, t: r.t, c: r.c, b: r.b, v: r.v, dd: r.dd, l: r.l }));
+  let fit: { id: string; t: string; c: string; b: string; v: number | null; dd: number | null; l: string }[] = [];
+  let basis = "profile";
+  if (p) {
+    fit = (await matches(p, { mode: "focus", limit: 400 })).items.filter((m) => m.dd != null && m.dd >= 0);
+    if (fit.length < 3) { fit = (await matches(p, { mode: "broad", limit: 400 })).items.filter((m) => m.dd != null && m.dd >= 0); basis = "broad"; }
+  }
+  if (fit.length < 3) { fit = strongest(); basis = "strongest"; }
+  counts.basis_profile = basis === "profile" ? 1 : 0;
+  const fresh = fit.filter((m) => !sent.has(m.id) && (byId.get(m.id)?.n === 1 || basis === "strongest")).slice(0, 5);
   const fresh2 = fresh.length ? fresh : fit.filter((m) => !sent.has(m.id)).slice(0, 5);      // nothing flagged new: best unsent
   counts.fit = fit.length; counts.fresh = fresh2.length;
   if (fresh2.length) {
-    out.push(`<b>${he ? `הזדמנויות חדשות שמתאימות לך (${fresh2.length} מתוך ${fit.length})` : `New opportunities that fit you (${fresh2.length} of ${fit.length})`}</b>\n${fresh2.map(fmtLine).join("\n")}`);
+    const title = basis === "strongest" ? (he ? "ההזדמנויות החזקות היום" : "Strongest opportunities today") : (he ? `הזדמנויות חדשות שמתאימות לך (${fresh2.length} מתוך ${fit.length})` : `New opportunities that fit you (${fresh2.length} of ${fit.length})`);
+    out.push(`<b>${title}</b>\n${fresh2.map(fmtLine).join("\n")}`);
     keys.push(...fresh2.map((m) => m.id));
   }
   const closing = fit.filter((m) => m.dd != null && m.dd >= 0 && m.dd <= 7 && !fresh2.some((f) => f.id === m.id)).slice(0, 3);
