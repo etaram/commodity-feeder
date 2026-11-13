@@ -6,6 +6,7 @@ Every size is kept (owner, 13 Nov 2026: every segment); the estimated value stay
 """
 import datetime as dt
 import html
+import time
 
 from .common import cache_empty, clean, log, rolling, session, today
 from .sectors import from_cpv, nature_of_cpv
@@ -42,9 +43,16 @@ def _search(s, query, max_pages=200):
         body = {"query": query, "fields": FIELDS, "limit": 250, "paginationMode": "ITERATION"}
         if token:
             body["iterationNextToken"] = token
-        r = s.post(URL, json=body, timeout=120)
+        for attempt in range(7):                 # 13 Nov: the full sweep hit HTTP 429 at page 23; wait and retry
+            r = s.post(URL, json=body, timeout=120)
+            if r.status_code not in (429, 503):
+                break
+            wait = int(r.headers.get("Retry-After") or 0) or 20 * (attempt + 1)
+            log.info("TED %s on page %d, waiting %d s", r.status_code, pages + 1, wait)
+            time.sleep(min(wait, 120))
         if r.status_code != 200:
             log.warning("TED %s: %s", r.status_code, r.text[:300]); break
+        time.sleep(1.0)
         j = r.json(); batch = j.get("notices", []); out += batch; pages += 1
         if pages == 1:
             log.info("TED total matching notices: %s", j.get("totalNoticeCount"))
