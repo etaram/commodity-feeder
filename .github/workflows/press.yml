@@ -5,7 +5,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: repo-data-writes
+  group: press-writes   # own group: GitHub keeps only ONE pending run per group, so sharing it with leads cancelled queued leads runs (13 Nov)
   cancel-in-progress: false
 jobs:
   press:
