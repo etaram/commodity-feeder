@@ -1,5 +1,3 @@
-# round 17: OpenGov procurement public portal (US local governments)
-https://procurement.opengov.com/portal/ocsan 600
-https://procurement.opengov.com/api/v1/government/ocsan/project/public 600
-https://procurement.opengov.com/api/v1/government/ocsan 400
-https://procurement.opengov.com/robots.txt 1000
+# round 18: OpenGov bundle API paths + robots
+https://assets.procurement.opengov.com/pro-client/production/app/v2.714.1/assets/main.49cd16a5e76f79a297ce.js 300 grep=(project/public[^"']{0,80}|/public/[a-z/]{0,60}project[^"']{0,60})
+https://procurement.opengov.com/robots.txt 1500
