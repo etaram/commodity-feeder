@@ -11,13 +11,14 @@ API = re.compile(r'["\'`](/?(?:webapi/)?api/[A-Za-z0-9_/\-]{2,60}|/Home/[A-Za-z0
 
 
 def one(line):
-    data = None
+    data, grep = None, ""
     if line.startswith("POST "):                       # POST <url> <chars> <json body>
         _, url, n, body = line.split(" ", 3)
         data, n = body.encode(), int(n)
     else:
         parts = line.split()
         url, n = parts[0], int(parts[1]) if len(parts) > 1 else 500
+        grep = next((x[5:] for x in parts[2:] if x.startswith("grep=")), "")
     try:
         hd = {"User-Agent": UA, "Accept": "*/*", "X-Requested-With": "XMLHttpRequest"}
         if data:
@@ -41,6 +42,9 @@ def one(line):
             print("   ..." + re.sub(r"\s+", " ", t[max(0, m.start() - 100):m.start() + 400]))
         return
     print("   scripts:", re.findall(r'<script[^>]+src="([^"]+)"', t)[:15])
+    if grep:
+        for m in list(re.finditer(grep, t))[:8]:
+            print("   >>" + re.sub(r"\s+", " ", t[max(0, m.start() - 150):m.start() + 350]))
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=re.S)
     t = re.sub(r"\s+", " ", t)
     print("   " + t[:n])
