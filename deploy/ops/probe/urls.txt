@@ -1,3 +1,8 @@
-# round 18: OpenGov bundle API paths + robots
-https://assets.procurement.opengov.com/pro-client/production/app/v2.714.1/assets/main.49cd16a5e76f79a297ce.js 300 grep=(project/public[^"']{0,80}|/public/[a-z/]{0,60}project[^"']{0,60})
-https://procurement.opengov.com/robots.txt 1500
+# round 19: Periscope BuySpeed state portals (open bids) + Public Purchase
+https://oregonbuys.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|records|bidNumber|captcha|resultsCount|totalRecords|\d+ - \d+ of)
+https://www.commbuys.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|\d+ - \d+ of|captcha)
+https://nevadaepro.com/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|\d+ - \d+ of|captcha)
+https://www.njstart.gov/bso/view/search/external/advancedSearchBid.xhtml?openBids=true 600 grep=(of \d+|\d+ - \d+ of|captcha)
+https://oregonbuys.gov/robots.txt 800
+https://www.publicpurchase.com/gems/bellevue,wa/buyer/public/home 600 grep=(openBids|widget|bid)
+https://www.publicpurchase.com/robots.txt 800
