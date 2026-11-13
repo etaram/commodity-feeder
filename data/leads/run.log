@@ -1,21 +1,516 @@
-Fri Nov 13 20:11:16 UTC 2026
-INFO BuySpeed states: 94 open kept; ma_listed 897, ma_read 25, or_listed 177, or_read 25, nv_listed 29, nv_read 25, nj_listed 19, nj_read 19
+Fri Nov 13 21:12:16 UTC 2026
+INFO TED total matching notices: 6749
+INFO TED fetched 6749 notices (28 pages, window 3) -> 6686 new rows, cache 39110 open (27069850 bytes)
+INFO ted: 39110 rows (OK)
+INFO FTS new 30, open 184 (pages 1)
+INFO fts: 184 rows (OK)
+INFO SAM incremental: fetched 2049, open 8851 (6322 open to foreign firms)
+INFO sam: 8851 rows (OK)
+INFO CanadaBuys rows 887
+INFO canadabuys: 887 rows (OK)
+INFO EBRD rows 45
+INFO ebrd: 45 rows (OK)
+INFO UNGM total active None, new 578, cache 1271 (pages 43)
+INFO ungm: 1271 rows (OK)
+INFO UNDP new 24, open 18
+INFO undp: 18 rows (OK)
+INFO AIIB new 173, kept 177, awards 294
+INFO aiib: 177 rows (OK)
+INFO IsDB new 39, open 34
+INFO isdb: 34 rows (OK)
+INFO AfDB project feed: 20 items
+INFO AfDB corporate feed: 10 items
+INFO AfDB new 30, open 96
+INFO afdb: 96 rows (OK)
+INFO IDB sample keys=['_id', 'category_nm', 'countryname', 'deadline', 'documenturl', 'ezshareid', 'loannumber', 'noticeid', 'noticetitle', 'prcrmnt_mthd_engl_nm', 'process_desc', 'process_id', 'process_nm', 'procurement_id', 'projectname', 'projectnumber', 'projectstatus', 'proyecturl', 'publicationdate', 'publicationyear', 'sector', 'sectorenglnm', 'type'] first={'_id': '1621554', 'noticeid': '39648', 'type': 'EOI', 'countryname': 'ARGENTINA', 'projectnumber': 'AR-L1406', 'proyecturl': 'https://www.iadb.org/en/project/AR-L1406', 'loannumber': '5952/OC-AR', 'noticetitle': 'Contratación de Servicios de Consultoría', 'ezshareid': 'EZIDB0002287-364764641-156', 'documenturl': 'https://idbdocs.iadb.org/wsdocs/getdocum', 'projectname': 'Apoyo a la Transición hacia un Sector El', 'publicationyear': '2026', 'publicationdate': '2026-11-12 08:00:00.000000000', 'deadline': '2026-12-10'}
+INFO IDB dates min=2026-07-20 max=2026-11-12 sample=['2026-11-12 08:00:00.000000000', '2026-11-12 08:00:00.000000000', '2026-11-12 04:00:00.000000000'] deadlines=['2026-12-10', '', '2026-11-24']
+INFO IDB page 0: 1000 recs, 0 old, kept so far 115
+INFO IDB dates min=2026-04-09 max=2026-07-20 sample=['2026-07-20 04:00:00.000000000', '2026-07-20 04:00:00.000000000', '2026-07-20 04:00:00.000000000'] deadlines=['', '', '']
+INFO IDB page 1: 1000 recs, 675 old, kept so far 115
+INFO IDB new 115, open 117
+INFO iadb: 117 rows (OK)
+INFO SIMAP new 240, open 808
+INFO simap: 808 rows (OK)
+INFO GETS new 396, open 417
+INFO gets: 417 rows (OK)
+INFO Etimad new 111, open 694 (pages 11)
+INFO etimad: 694 rows (OK)
+INFO Prozorro feed pages 282, candidates 18341, from feed 0, read one by one 1785, open kept 4518
+INFO prozorro: 4518 rows (OK)
+INFO PNCP fresh lane 42 pages (cut by budget), backfill 20261014..20261113 34 pages (next modality 6 page 175), failed pages 0, new 2146, open 8624, 913s
+INFO pncp: 8624 rows (OK)
+INFO SECOP window 60 days, read 200000, new 3240, open 3547
+INFO secop: 3547 rows (OK)
+INFO Contracts Finder new 37, open 109
+INFO contractsfinder: 109 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-10T21%3A50%3A20. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T08%3A13%3A38. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T09%3A08%3A57. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T10%3A00%3A00. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T11%3A53%3A38. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T13%3A35%3A03. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-11T15%3A27%3A55. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T07%3A23%3A05. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T08%3A30%3A00. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T09%3A41%3A51. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T10%3A53%3A32. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T11%3A58%3A00. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T12%3A46%3A11. (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T13%3A40%3A41. (ConnectTimeout)
+INFO Uruguay new 37, open 626 (fetched 700 of 2332; categories {'tender': 2332, 'award': 8411, 'tenderAmendment': 1989, 'tenderUpdate': 4548, 'awardUpdate': 457, 'tenderCancellation': 30})
+INFO uruguay: 626 rows (OK)
+INFO Malaysia page 1: 100 blocks, 100 new, first T/590/11/2026 
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-12T14%3A40%3A15. (ConnectTimeout)
+INFO Malaysia page 2: 100 blocks, 100 new, first JKR/CKUB/23347/2026 
+INFO Malaysia page 3: 100 blocks, 89 new, first QT260000000031597 
+INFO Malaysia page 4: 100 blocks, 36 new, first UM/FC/FSD/PC/612/16/2026/48 
+INFO Malaysia page 5: 100 blocks, 18 new, first QT260000000029853 
+INFO Malaysia page 6: 100 blocks, 18 new, first QT260000000029665 
+INFO Malaysia page 7: 100 blocks, 32 new, first QT260000000026793 
+INFO Malaysia page 8: 100 blocks, 13 new, first QT260000000028444 
+INFO Malaysia page 9: 100 blocks, 4 new, first MAIWP/T/023/2026 
+INFO Malaysia page 10: 14 blocks, 1 new, first KPKT/JPSPN/BPP/T/6/2026 
+INFO Malaysia new 411, open 411
+INFO malaysia: 411 rows (OK)
+INFO AusTender new 130, open 188
+INFO austender: 188 rows (OK)
+INFO Oman new 50, open 583
+INFO oman: 583 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T06%3A50%3A21. (ConnectTimeout)
+WARNING Kenya 429 page 9
+INFO Kenya new 80, open 352 (pages 9)
+INFO kenya: 352 rows (OK)
+INFO Rwanda new 281, open 281 (pages 10)
+INFO rwanda: 281 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T08%3A02%3A14. (ConnectTimeout)
+INFO Uganda new 36, open 41 (pages 2, titles looked up 1)
+INFO uganda: 41 rows (OK)
+INFO ghana new 102, open 108 (pages 15)
+INFO ghana: 108 rows (OK)
+INFO Malawi new 38, open 50
+INFO malawi: 50 rows (OK)
+INFO Mozambique new 89, open 96
+INFO mozambique: 96 rows (OK)
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T09%3A04%3A36. (ConnectTimeout)
+INFO Dubai new 258, open 302 (pages 4)
+INFO dubai: 302 rows (OK)
+WARNING PhilGEPS: Failed to perform, curl: (47) Maximum (30) redirects followed. See https://curl.se/libcurl/c/libcurl-errors.html first f
+INFO philippines: 4115 rows (OK)
+WARNING AIA monaqasat.mof.gov.qa attempt 1: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
+WARNING AIA monaqasat.mof.gov.qa attempt 2: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
+WARNING AIA monaqasat.mof.gov.qa attempt 3: TLS/SSL connection has been closed (EOF) (_ssl.c:1011)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T10%3A33%3A53. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T12%3A00%3A00. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T13%3A17%3A11. (ConnectTimeout)
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+WARNING Qatar TLS chain incomplete, retrying unverified: Failed to perform, curl: (60) SSL certificate OpenSSL verify result: unable to g
+INFO Qatar new 388, open 328
+INFO qatar: 328 rows (OK)
+INFO BuySpeed states: 94 open kept; ma_listed 891, ma_read 25, or_listed 176, or_read 25, nv_listed 29, nv_read 25, nj_listed 19, nj_read 19
 INFO buyspeed: 94 rows (OK)
-WARNING taiwan: 128 records dated in the future quarantined
-INFO Taiwan PCC: 10581 open kept of 11771 listed (118 pages)
-INFO taiwan: 10581 rows (OK)
 INFO Hong Kong GLD: 52 open invitations (4 concessions labelled)
 INFO hk_gld: 52 rows (OK)
+INFO Transnet: 99 open with a future closing date, 99 kept, 0 quarantined
+INFO transnet: 99 rows (OK)
+WARNING relay https://sedona.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://bouldercolorado.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
+WARNING relay https://scrantonpa.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://mrsc.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://whitehorse.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://victoria.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://fnha.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://portoflosangeles.bonfirehub.com/PublicPortal/getOpen: TypeError: fetch failed
+WARNING relay https://portofseattle.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://dfw.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://austintexas.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://denvergov.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://cityofboise.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://raleighnc.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://nashville.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://tucsonaz.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://phoenix.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://mesaaz.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://saskatoon.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://regina.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://halifax.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://calgary.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://edmonton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://cityofkelowna.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://nanaimo.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://saanich.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://ubc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://bchydro.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://translink.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://metrovancouver.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://cityofmarkham.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://brampton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://mississauga.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://hamilton.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://london.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://waterloo.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://guelph.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://kingston.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://barrie.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://oshawa.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://durham.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://yorkregion.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://peelregion.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://ottawa.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://gatineau.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://fredericton.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://moncton.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://stjohns.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://winnipeg.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://cityofsurrey.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://burnaby.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://richmond.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://coquitlam.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://langley.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T14%3A27%3A45. (ConnectTimeout)
+WARNING relay https://abbotsford.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://kamloops.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://princegeorge.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://lethbridge.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://reddeer.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://medicinehat.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://strathcona.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://airdrie.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://albertahealthservices.bonfirehub.com/PublicPortal/ge: TypeError: fetch failed
+WARNING relay https://epcor.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://enmax.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://ttc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://metrolinx.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://novascotia.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://yukon.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://nwt.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://nunavut.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://detroitmi.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://cityofdetroit.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://pittsburghpa.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://baltimorecity.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://richmondgov.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://norfolk.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://portofhouston.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://portoflongbeach.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
+WARNING relay https://portofoakland.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://portoftacoma.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://portofportland.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://massport.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://mwaa.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://flyontario.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://sandiego.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://sanjoseca.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://sacramento.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://fresno.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://longbeach.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://santaana.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://riversideca.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://lasvegasnevada.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://renonv.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://saltlakecity.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://albuquerque.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://elpasotexas.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://houstontx.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://dallascitynews.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://plano.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://okc.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://tulsa.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://omaha.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://desmoines.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://minneapolis.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://stpaul.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://milwaukee.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://madison.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://indy.bonfirehub.com/PublicPortal/getOpenPublicOpport: TypeError: fetch failed
+WARNING relay https://memphistn.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://knoxville.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://atlanta.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://savannah.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://orlando.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://tampa.bonfirehub.com/PublicPortal/getOpenPublicOppor: TypeError: fetch failed
+WARNING relay https://miamidade.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://fortlauderdale.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://neworleans.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+WARNING relay https://birminghamal.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://charleston-sc.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://greensboro-nc.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://durhamnc.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://virginiabeach.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://providenceri.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://hartford.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://bostonma.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://buffalony.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://rochesterny.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://newarknj.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://jerseycitynj.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://philadelphia.bonfirehub.com/PublicPortal/getOpenPubl: TypeError: fetch failed
+WARNING relay https://anchorage.bonfirehub.com/PublicPortal/getOpenPublicO: TypeError: fetch failed
+WARNING relay https://honolulu.bonfirehub.com/PublicPortal/getOpenPublicOp: TypeError: fetch failed
+WARNING relay https://spokanecity.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://seattle.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://portlandoregon.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://eugene.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://coloradosprings.bonfirehub.com/PublicPortal/getOpenP: TypeError: fetch failed
+WARNING relay https://aurora.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://fortcollins.bonfirehub.com/PublicPortal/getOpenPubli: TypeError: fetch failed
+WARNING relay https://capecod.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://harfordcounty.bonfirehub.com/PublicPortal/getOpenPub: TypeError: fetch failed
+WARNING relay https://vernon.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://nelson.bonfirehub.com/PublicPortal/getOpenPublicOppo: TypeError: fetch failed
+WARNING relay https://mission.bonfirehub.com/PublicPortal/getOpenPublicOpp: TypeError: fetch failed
+WARNING relay https://d11.bonfirehub.com/PublicPortal/getOpenPublicOpportu: TypeError: fetch failed
+WARNING relay https://jordandistrict.bonfirehub.com/PublicPortal/getOpenPu: TypeError: fetch failed
+WARNING relay https://louisville.bonfirehub.com/PublicPortal/getOpenPublic: TypeError: fetch failed
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/run.py", line 835, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/run.py", line 821, in main
+    run_source(a.source)
+  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
+    rows, meta = m.fetch()
+                 ^^^^^^^^^
+  File "/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/bonfire.py", line 345, in fetch
+    raise RuntimeError(f"Bonfire: none of {len(seen)} hubs answered; previous snapshot kept as last-good")
+RuntimeError: Bonfire: none of 211 hubs answered; previous snapshot kept as last-good
+INFO relay used for https://public.mtender.gov.md/tenders/?offset=2026-11-13T22%3A04%3A53. (ConnectTimeout)
 INFO initializing identifier
-2026-11-13 20:35:28 WARNING: Language es package default expects mwt, which has been added
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793262574027 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793099366605 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791872861525 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793349681211 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793951655350 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793022836380 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793281398739 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794228825391 (ConnectTimeout)
+2026-11-13 22:16:16 WARNING: Language es package default expects mwt, which has been added
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378367226 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792404272943 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378492472 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378308996 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793945204271 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793686420160 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378926449 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378702162 (ConnectTimeout)
 WARNING translator es->en crashed (exit -8) in its child process; skipped for this run
-INFO translations: 9430 new, 7690 pending, cache 87049, 909s
-INFO awards 519841 (12m), recent 3000, buyers 60963, competitors 335988
-WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r4/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
-INFO integrity: 207 countries profiled, tenders {'open': 78095, 'caution': 13982, 'no data': 10777, 'high risk': 70016}
+2026-11-13 22:16:24 WARNING: Language uk package default expects mwt, which has been added
+WARNING translator uk->en crashed (exit -8) in its child process; skipped for this run
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793605701450 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378804510 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794379289844 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794379019292 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794379011463 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794378842128 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794322455278 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793973721318 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794379596453 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794379084021 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791372600434 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791359193519 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794379937806 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794323049210 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793375037375 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793373433623 (ConnectTimeout)
+2026-11-13 22:18:31 WARNING: Language cs package default expects mwt, which has been added
+WARNING translator cs->en crashed (exit -8) in its child process; skipped for this run
+WARNING translator ro->en crashed (exit -8) in its child process; skipped for this run
+WARNING translator lt->en crashed (exit -8) in its child process; skipped for this run
+2026-11-13 22:18:52 WARNING: Language fi package default expects mwt, which has been added
+WARNING translator fi->en crashed (exit -8) in its child process; skipped for this run
+WARNING translator hu->en crashed (exit -8) in its child process; skipped for this run
+WARNING translator da->en crashed (exit -8) in its child process; skipped for this run
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793990431434 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794380566304 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794317522010 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794381536836 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791269145267 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794380263128 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794322108242 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794381446698 (ConnectTimeout)
+2026-11-13 22:19:22 WARNING: Language id package default expects mwt, which has been added
+WARNING translator id->en crashed (exit -8) in its child process; skipped for this run
+INFO translations: 792 new, 0 pending, cache 78440, 299s
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794381679127 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792666139132 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793630687344 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382015133 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794381764975 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794380973512 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1707131765840 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793100717429 (ConnectTimeout)
+INFO awards 519981 (12m), recent 3000, buyers 60977, competitors 336085
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794333629471 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382562739 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793606238124 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382687379 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382290576 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382446492 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382574699 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794301114677 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382926681 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382970730 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382928201 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382926962 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793622175939 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382989342 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794230946024 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383106531 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383354304 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792591077841 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382669969 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794315589711 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383156693 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383288557 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794381794354 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382969542 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383424588 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383390073 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794233417947 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793886806605 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793192969748 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383721926 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383585788 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1786534752963 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794232612104 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794234573754 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793882547967 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794235972844 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793193933968 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794316745359 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793974045517 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792511826069 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383248818 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383489618 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384199821 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384312135 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384000727 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384069092 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383711200 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791380088184 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382573149 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384549112 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384151061 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383757575 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384494468 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794382651944 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384865252 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383640796 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384738577 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384771255 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384406420 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384817366 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385035374 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385107305 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384524809 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385076559 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384658024 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385121510 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385037927 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385001938 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385171611 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385232750 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385079485 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385243913 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793864992277 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793873970165 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794381234786 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1770801587556 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385513842 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385095942 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384881228 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385562608 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793946898139 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385269565 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794384860016 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385853972 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385632449 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385596372 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1788352626794 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792676545083 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385664908 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385095138 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385553827 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793280452691 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386085439 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386046586 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385987182 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386298763 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386409659 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386224286 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385600381 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386389991 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794383970271 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386247443 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386468845 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792496895839 (ConnectTimeout)
+WARNING sanctions screen: cannot import name 'screen' from 'leads.sanctions' (/home/runner/r2/_work/commodity-feeder/commodity-feeder/leads/sanctions.py)
+INFO integrity: 207 countries profiled, tenders {'open': 78504, 'caution': 14840, 'no data': 212, 'high risk': 71279}
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794385830631 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386577651 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387024204 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386798639 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386638157 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386298055 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793624556819 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386701224 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386951732 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387021017 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386933321 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386353082 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386785435 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794294410859 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387172716 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387081821 (ConnectTimeout)
 WARNING reddit r/supplychain: HTTP 403
 WARNING reddit: no app credentials and the public listing refused; skipping the rest
 INFO social: 1 items (0 reddit, 1 hn, 0 telegram)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387139445 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387264137 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387322882 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1762508949337 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387216461 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386927312 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387078190 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387267500 (ConnectTimeout)
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
@@ -23,17 +518,57 @@ WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793193465375 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792500209824 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387454923 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387365618 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387404968 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793892429617 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387512527 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792762282021 (ConnectTimeout)
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 WARNING feed https://news.google.com/rss/search: HTTP 503
 INFO briefing: 1 items, 0 news leads
-INFO wb procurement plans: 1115 projects with a plan in the last 90 days
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387159729 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386207739 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387786138 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387628722 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387729362 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387888767 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791385600129 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387955875 (ConnectTimeout)
+INFO wb procurement plans: 1113 projects with a plan in the last 90 days
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387820172 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1789624480325 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387904771 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387756454 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387579737 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388042958 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387190381 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387823459 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387872844 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386956312 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388013804 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387881796 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387881654 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388086067 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387669192 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387979378 (ConnectTimeout)
 INFO wb contract awards: 23025 rows (FY2026-2027)
 INFO plays: 521 (supply the winner=137, arbitrage gap=202, pre-tender approach=63, news lead=0, procurement plan=119)
 INFO gdelt news: 286 headlines for 13 countries
 INFO lei: 0 new lookups, 1784 cached, 450 with an LEI, 186 with a parent
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388155116 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388518344 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388423758 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388502071 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387896720 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388404122 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387368420 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387443214 (ConnectTimeout)
 INFO ecb fx: 15 currencies
 INFO trends rss IL: 10 items
 WARNING trends rss CN: HTTP 400
@@ -43,24 +578,40 @@ INFO trends rss IL: 10 items
 WARNING trends rss SO: HTTP 400
 INFO trends rss UG: 10 items
 INFO trends rss BR: 10 items
-INFO trends rss DO: 10 items
 INFO trends rss MY: 10 items
+INFO trends rss DO: 10 items
 INFO trends rss CO: 10 items
 WARNING trends rss TJ: HTTP 400
 WARNING trends rss MV: HTTP 400
-INFO attention: 30 rows (1 trending, 29 wikipedia)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388478738 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794386911220 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387843197 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389135609 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388929690 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388759967 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388750822 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1788960417854 (ConnectTimeout)
+INFO attention: 31 rows (2 trending, 29 wikipedia)
 INFO market signals rows 2767
-INFO opportunities.csv trimmed for the sheet: 3973 of 21900 rows
-INFO opportunities 21900
-INFO exempt buys: 813 notices
+INFO opportunities.csv trimmed for the sheet: 3961 of 21864 rows
+INFO opportunities 21864
+INFO exempt buys: 829 notices
 INFO archive: 13 closed notices moved to the archive (25260 there in total); 0 closed ones kept because we worked on them
-INFO open list: 172114 notices, 0 past their deadline left out, 743 duplicates of another source's notice left out
-INFO open list file: 172114 notices in sheet/tenders_open.csv.gz (chunks hold 130000)
-INFO hebrew titles: 516 new, 7007 total, 8 pending, 45s
-INFO accounts 41522
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389190340 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793251658955 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388487986 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388943854 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389037230 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389033997 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389176104 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794228691017 (ConnectTimeout)
+INFO open list: 164094 notices, 0 past their deadline left out, 728 duplicates of another source's notice left out
+INFO open list file: 164094 notices in sheet/tenders_open.csv.gz (chunks hold 130000)
+INFO hebrew titles: 267 new, 7007 total, 8 pending, 10s
+INFO accounts 40431
 INFO importers.csv trimmed for the sheet: 3988 of 5700 rows
-INFO tenders 172857, importers 5700, suppliers 3420
-/home/runner/r4/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+INFO tenders 164822, importers 5700, suppliers 3420
+/home/runner/r2/_work/_tool/Python/3.12.16/x64/lib/python3.12/multiprocessing/resource_tracker.py:279: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
   warnings.warn('resource_tracker: There appear to be %d '
 wb_pipeline          OK        fetched    957 snapshot    957 active    957 published    949
 worldbank            OK        fetched    748 snapshot    748 active    748 published    726
@@ -68,14 +619,94 @@ za                   OK        fetched   1316 snapshot   1316 active   1316 publ
 commodity_norm: 3243 rows, 3243 with a known price type {'futures': 57, 'spot': 460, 'index': 2187, 'assessment': 102, 'offer': 437}, physical 1503, futures 57, unit conversions to USD/t 3012, grade stated 1466, origin stated 1398, delivery stated 3168, incoterm stated 943
 pink sheet: 32 series written to pinksheet_monthly.csv
 commodity_stats: 1994 series (49 with Yahoo daily history, 32 Pink Sheet), 215 with a change, 49 with volatility, 32 with seasonality, 74 anomalies {'stale': 62, 'jump15': 12}
-WARNING:leads:relay https://api.gdeltproject.org/api/v2/doc/doc?query=%22%E8%87%: TypeError: fetch failed
-WARNING:leads:gdelt "臺灣銀行股份有限公司": ConnectionError
-WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
-WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
 WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
-INFO:leads:news: 946 deals checked, 5 GDELT queries, 59 linked articles
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388732967 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389189863 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389242063 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389169841 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389268163 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793102947352 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389166688 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389457920 (ConnectTimeout)
+WARNING:leads:gdelt "The Common Services Agency more commonl: HTTP 200 Your query contained a phrase search that was too short or too long: The Common Services Agency more commonly known as N
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389387342 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389005505 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389643961 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389406722 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389441258 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389451200 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389192364 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389596979 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794387520621 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389148505 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389630664 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389502802 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389632252 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389667753 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389913152 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792572445084 (ConnectTimeout)
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389819616 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389955368 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390027840 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389910310 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389994517 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390179902 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389889464 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390024867 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390261599 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390272118 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390080855 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390520098 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1791272755471 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390290949 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390327829 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390020251 (ConnectTimeout)
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 429 Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com for larger queries. All high-traffic us
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390510113 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390758965 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390431538 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390679703 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390634083 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390429227 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1792586950981 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390520035 (ConnectTimeout)
+WARNING:leads:gdelt "Auftraggeber sind die Republik Österrei: HTTP 200 Your query contained a phrase search that was too short or too long: Auftraggeber sind die Republik Österreich Bund , di
+INFO:leads:news: 906 deals checked, 5 GDELT queries, 59 linked articles
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390470527 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390940201 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390801677 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391074319 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390642458 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390879276 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390916605 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390815246 (ConnectTimeout)
 OK 1YSeZ_7GHeSb5RxLk1SmwfWTaFtZOuWbktHLoRlDM83Y Leads Engine - Tenders & Importers
 OK 1crzrRr4qrgt1WpAwNmCNPL4TfIrZUuTyqRGonVvwhuA Sinder - Supplier Universe (A-tier)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390660125 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793187164607 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794389916795 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793883698097 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390993216 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793956319796 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391016000 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794214457746 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794208157554 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793803432292 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391028122 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793884898287 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793971917116 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793973873540 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793280391485 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1793606577291 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391177483 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794225191272 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391055459 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391258489 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391258456 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794251173127 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794388745211 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391470287 (ConnectTimeout)
 wrote 80001 rows x 28 cols to Tenders
 wrote 5001 rows x 16 cols to Repeat Buyers
 wrote 3001 rows x 16 cols to Awards
@@ -83,7 +714,7 @@ wrote 5001 rows x 7 cols to Competitors
 wrote 4001 rows x 16 cols to Accounts
 wrote 5701 rows x 18 cols to Importers
 wrote 317 rows x 9 cols to Sectors
-wrote 229 rows x 5 cols to Countries
+wrote 230 rows x 5 cols to Countries
 wrote 61 rows x 5 cols to Sources
 wrote 2768 rows x 17 cols to Market Signals
 wrote 3421 rows x 18 cols to Suppliers
@@ -95,69 +726,50 @@ wrote 1834 rows x 10 cols to Commodity Prices
 wrote 933 rows x 15 cols to Israel
 wrote 60 rows x 7 cols to Press
 wrote 208 rows x 14 cols to Integrity
-wrote 814 rows x 17 cols to Exempt Buys
+wrote 830 rows x 17 cols to Exempt Buys
 wrote 527 rows x 12 cols to Grants
 wrote 522 rows x 14 cols to Plays
 wrote 287 rows x 5 cols to Country News
 wrote 16 rows x 7 cols to FX
-wrote 31 rows x 7 cols to Attention
-wrote 1116 rows x 9 cols to WB Plans
+wrote 32 rows x 7 cols to Attention
+wrote 1114 rows x 9 cols to WB Plans
 wrote 2 rows x 11 cols to Briefing Items
 wrote 144 rows x 16 cols to IL Exemption Contracts
 wrote 7008 rows x 2 cols to Titles HE
 wrote 3001 rows x 28 cols to Upcoming
 wrote 3 rows x 2 cols to Meta
 wrote 59 rows x 1 cols to Digest
-INFO:leads:web index: 130000 tenders, 86.8 MB raw, 12.7 MB gz
+INFO:leads:web index: 130000 tenders, 87.6 MB raw, 12.7 MB gz
 INFO:leads:web panel static: tenders 1500, titles 7008, repeat 5001, markets 2768, meta 3, upcoming 1500, tot_t 1, fit 59999, 2.1 MB encrypted
 INFO:leads:web panel live: bd 51, accounts 51, intel 115, pursuits 56, jobs 64, contacts 481, projects 1, ptasks 1, approvals 1, stats 43, 0.3 MB encrypted
-SOURCE STALE        afdb               rows 86 (last good 86 at 2026-11-13T08:13) 
-SOURCE STALE        aiib               rows 177 (last good 177 at 2026-11-13T08:12) 
-SOURCE STALE        austender          rows 187 (last good 187 at 2026-11-13T09:02) 
-SOURCE STALE        canadabuys         rows 848 (last good 848 at 2026-11-13T08:11) 
-SOURCE STALE        contractsfinder    rows 105 (last good 105 at 2026-11-13T08:46) 
-SOURCE STALE        dubai              rows 302 (last good 302 at 2026-11-13T09:05) 
-SOURCE STALE        ebrd               rows 44 (last good 44 at 2026-11-13T08:11) 
-SOURCE STALE        etimad             rows 682 (last good 682 at 2026-11-13T08:14) 
-SOURCE STALE        fts                rows 176 (last good 176 at 2026-11-13T08:11) 
-SOURCE STALE        gets               rows 417 (last good 417 at 2026-11-13T08:13) 
-SOURCE STALE        ghana              rows 105 (last good 105 at 2026-11-13T09:04) 
-SOURCE STALE        iadb               rows 112 (last good 112 at 2026-11-13T08:13) 
-SOURCE STALE        isdb               rows 34 (last good 34 at 2026-11-13T08:13) 
+SOURCE DOWN         bonfire            rows 0 (last good 126 at 2026-11-13T16:20) RuntimeError
+SOURCE DOWN         taiwan             rows 0 (last good 0 at -) RuntimeError
 SOURCE STALE        israel             rows 932 (last good 932 at 2026-11-11T11:29) 
-SOURCE STALE        kenya              rows 352 (last good 352 at 2026-11-13T09:02) 
-SOURCE STALE        malawi             rows 39 (last good 39 at 2026-11-13T09:04) 
-SOURCE STALE        malaysia           rows 399 (last good 399 at 2026-11-13T09:02) 
 SOURCE STALE        moldova            rows 1252 (last good 1252 at 2026-11-11T09:30) 
-SOURCE STALE        mozambique         rows 90 (last good 90 at 2026-11-13T09:05) 
 SOURCE STALE        ocdr_tenders       rows 1752 (last good 1752 at 2026-11-11T08:54) 
-SOURCE STALE        oman               rows 582 (last good 582 at 2026-11-13T09:02) 
-SOURCE STALE        philippines        rows 4115 (last good 4115 at 2026-11-13T09:15) 
-SOURCE STALE        pncp               rows 8262 (last good 8262 at 2026-11-13T08:43) 
-SOURCE STALE        prozorro           rows 2746 (last good 2746 at 2026-11-13T08:28) 
-SOURCE STALE        qatar              rows 328 (last good 328 at 2026-11-13T09:19) 
-SOURCE STALE        rwanda             rows 268 (last good 268 at 2026-11-13T09:03) 
-SOURCE STALE        sam                rows 8415 (last good 8415 at 2026-11-13T08:11) 
-SOURCE STALE        secop              rows 3547 (last good 3547 at 2026-11-13T08:46) 
-SOURCE STALE        simap              rows 808 (last good 808 at 2026-11-13T08:13) 
-SOURCE STALE        ted                rows 39110 (last good 39110 at 2026-11-13T11:21) 
-SOURCE STALE        uganda             rows 40 (last good 40 at 2026-11-13T09:03) 
-SOURCE STALE        undp               rows 18 (last good 18 at 2026-11-13T08:12) 
-SOURCE STALE        ungm               rows 1201 (last good 1201 at 2026-11-13T08:12) 
-SOURCE STALE        uruguay            rows 589 (last good 589 at 2026-11-13T09:01) 
 SOURCE DEGRADED     dewa               rows 0 (last good 0 at -) zero_rows
 SOURCE DEGRADED     importyeti         rows 0 (last good 23 at 2026-11-12T18:07) zero_work
-source status: 65 sources, 36 not OK
-HEALTH ALERT moldova: stale 59.7 h
-HEALTH ALERT israel: stale 57.7 h
+source status: 65 sources, 7 not OK
+HEALTH ALERT moldova: stale 61.4 h
+HEALTH ALERT israel: stale 59.4 h
 HEALTH ALERT dewa: EMPTY, zero rows
-HEALTH ALERT importyeti: stale 53.2 h
-health: 60 sources, 4 alerts
+HEALTH ALERT bonfire: error file present
+HEALTH ALERT taiwan: no data, zero rows, error file present
+HEALTH ALERT importyeti: stale 54.9 h
+health: 60 sources, 6 alerts
 {'source': 'India e-procurement (Nagaland)', 'open': 1, 'fresh_7d': 0, 'deadline': 100, 'value': 0, 'buyer': 100, 'title_en': 100, 'expired': 0, 'dup_in': 0, 'mirrored': 0, 'goods': 0, 'flags': ''}
- "timelines": 2686,
- "timelines_multi_event": 808
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391764398 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391483821 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391783914 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794390508137 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391764561 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794392446423 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794391784215 (ConnectTimeout)
+INFO relay used for https://public.mtender.gov.md/tenders/ocds-b3wdp1-MD-1794392112538 (ConnectTimeout)
+ "timelines": 2696,
+ "timelines_multi_event": 809
 }
  ],
  "lag_basis": "empirical p25-p75 of approval -> first plan/notice over 18 projects in this data (recent approvals only, so biased short)"
 }
-registry {'active': 97, 'degraded': 10, 'implemented': 2, 'discovered': 24}
+registry {'active': 96, 'degraded': 11, 'implemented': 2, 'discovered': 24}
