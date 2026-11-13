@@ -34,8 +34,12 @@ export async function morning(p: Profile | null, he: boolean, sent: Set<string>)
   if (sent.has(day)) return null;                       // already sent today to this reader
   const all = await tenders();
   const byId = new Map(all.map((r) => [r.id, r]));
-  const open = all.filter((r) => r.dd == null || r.dd >= 0);
-  const counts: Record<string, number> = { open: open.length, countries: new Set(open.map((r) => r.c)).size };
+  // OPEN = a deadline today or later (owner, 13 Nov: a notice without a deadline is not counted as open). Countries =
+  // distinct ISO 3166 alpha-3 codes on those rows (multi-country rows split; regions and free text are not countries).
+  const open = all.filter((r) => r.dd != null && r.dd >= 0);
+  const iso = new Set<string>();
+  for (const r of open) for (const c of String(r.c || "").split(",")) if (/^[A-Z]{3}$/.test(c.trim())) iso.add(c.trim());
+  const counts: Record<string, number> = { open: open.length, countries: iso.size, no_deadline: all.filter((r) => r.dd == null).length };
   const out: string[] = [];
   const keys: string[] = [day];
   const fmtLine = (m: { id: string; t: string; c: string; b: string; v: number | null; dd: number | null; l: string }) => {
@@ -88,7 +92,7 @@ export async function morning(p: Profile | null, he: boolean, sent: Set<string>)
 
   if (!out.length) return null;
   const date = new Date().toISOString().slice(0, 10).split("-").reverse().join(".");
-  const head = he ? `<b>בוקר טוב · ${date}</b>\n${counts.open.toLocaleString("en")} הזדמנויות פתוחות ב-${counts.countries} מדינות` : `<b>Good morning · ${date}</b>\n${counts.open.toLocaleString("en")} open opportunities in ${counts.countries} countries`;
+  const head = he ? `<b>בוקר טוב · ${date}</b>\n${counts.open.toLocaleString("en")} הזדמנויות פתוחות ב-${counts.countries} מדינות וטריטוריות (עם מועד הגשה עתידי)` : `<b>Good morning · ${date}</b>\n${counts.open.toLocaleString("en")} open opportunities (future deadline) in ${counts.countries} countries and territories`;
   const foot = he ? "/brief תדריך מלא · /plays כל התזות" : "/brief full briefing · /plays all theses";
   return { text: [head, ...out, foot].join("\n\n"), sentKeys: keys, counts };
 }

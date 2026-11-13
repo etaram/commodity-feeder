@@ -6,5 +6,5 @@ set -euo pipefail
 Q="preview=morning"; [ "${SEND:-0}" = "1" ] && Q="only=telegram"
 docker exec -i -e Q="$Q" sinder-server-app node -e '
 fetch("http://127.0.0.1:3000/api/cron/digest?"+process.env.Q,{headers:{authorization:"Bearer "+process.env.CRON_SECRET}})
- .then(async r=>{const j=await r.json(); if(j.preview){for(const p of j.preview) console.log(`chat lang=${p.lang} profile=${p.has_profile} alerts=${p.alerts} chars=${p.chars} sections=${(p.text.match(/\n\n/g)||[]).length+1} counts=${JSON.stringify(p.counts)}`)} else console.log(r.status, JSON.stringify(j).slice(0,200))})
+ .then(async r=>{const j=await r.json(); if(j.preview){for(const p of j.preview) console.log(`chat lang=${p.lang} profile=${p.has_profile} alerts=${p.alerts} chars=${p.chars} sections=${(p.text.match(/\n\n/g)||[]).length+1} counts=${JSON.stringify(p.counts)}`); for(const sec of p.text.split("\n\n")) console.log("  section: "+sec.split("\n")[0].replace(/<[^>]+>/g,"").replace(/[0-9]{3,}/g,"#").slice(0,40)+" | lines "+sec.split("\n").length)} else console.log(r.status, JSON.stringify(j).slice(0,200))})
  .catch(e=>{console.log("ERR "+e.message);process.exit(1)})'
