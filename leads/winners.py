@@ -115,18 +115,22 @@ def build():
     since = (dt.date.today() - dt.timedelta(days=WINDOW)).isoformat()
     today = dt.date.today().isoformat()
     out, seen, n_all = [], set(), 0
-    for r in _rows():
+    from . import team_winners
+    for r in list(_rows()) + team_winners.rows():
         n_all += 1
         d = (r.get("published") or "")[:10]
-        if not (since <= d <= today):
+        # team-researched awards are large projects still buying for years: kept regardless of the 150-day window
+        if not (since <= d <= today) and not (r.get("team") and d and d <= today):
             continue
         title = r.get("title") or ""
         winners = r.get("winners") or []
         if isinstance(winners, str):
             winners = [w.strip() for w in winners.split(";") if w.strip()]
-        if not winners or not title or SERVICES.search(title):
+        if not winners or not title or (SERVICES.search(title) and not r.get("team")):
             continue
         kind, needs, commodity = read(title, r.get("nature") or r.get("sector") or "")
+        if not kind and r.get("team"):
+            kind, needs, commodity = "contractor", [], ""
         if not kind:
             continue
         try:
@@ -136,7 +140,7 @@ def build():
                 usd = val * fx[cur] if fx_col == "usd_per_unit" else val / fx[cur]   # fx.csv holds USD per one unit of the currency
         except (TypeError, ValueError):
             usd = 0
-        if usd and usd < 100_000 or usd > 5e9:   # tiny orders are not worth a call; absurd totals are framework ceilings
+        if not r.get("team") and (usd and usd < 100_000 or usd > 5e9):   # tiny orders are not worth a call; absurd totals are framework ceilings
             continue
         key = (winners[0].lower()[:60], title.lower()[:80])
         if key in seen:
@@ -144,13 +148,13 @@ def build():
         seen.add(key)
         age = (dt.date.today() - dt.date.fromisoformat(d)).days
         # fresher is better (the contractor buys in the first months), then size, then a foreign winner (imports anyway)
-        score = max(0, 60 - age * 0.4) + min(25, (usd or 0) ** 0.5 / 400) + (10 if (r.get("winner_country") or "") not in ("", r.get("country") or "") else 0) + (5 if kind == "contractor" else 0) + (15 if "World Bank" in (r.get("source") or "") or "bank" in (r.get("source") or "").lower() else 0)
+        score = max(0, 60 - age * 0.4) + min(25, (usd or 0) ** 0.5 / 400) + (10 if (r.get("winner_country") or "") not in ("", r.get("country") or "") else 0) + (5 if kind == "contractor" else 0) + (15 if "World Bank" in (r.get("source") or "") or "bank" in (r.get("source") or "").lower() else 0) + (20 if r.get("team") else 0)
         out.append({"d": d, "w": winners[:4], "wc": (r.get("winner_country") or "")[:20], "c": (r.get("country") or "")[:3], "b": (r.get("buyer") or "")[:120], "t": title[:220],
                     "v": round(usd), "k": kind, "n": needs, "cm": commodity, "s": (r.get("source") or ("TED" if r.get("pn") else ""))[:40], "l": (r.get("link") or (f"https://ted.europa.eu/en/notice/-/detail/{r['pn']}" if r.get("pn") else ""))[:200], "e": (r.get("email") or "")[:80], "id": str(r.get("id") or "")[:60], "sc": round(score, 1)})
     out.sort(key=lambda x: -x["sc"])
     per, capped = {}, []
     for x in out:
-        cap = 2500 if "World Bank" in x["s"] else 350
+        cap = 2500 if "World Bank" in x["s"] else 1000 if x["s"].startswith("Team research") else 350
         per[x["s"]] = per.get(x["s"], 0) + 1
         if per[x["s"]] <= cap:
             capped.append(x)
