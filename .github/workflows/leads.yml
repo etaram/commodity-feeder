@@ -7,6 +7,10 @@ on:
         description: "comma-separated steps to run (empty = all; light or heavy = the timed sets)"
         required: false
         default: ""
+      ted_full:
+        description: "1 = TED sweeps every notice with a future deadline in this run (otherwise only the first run after 00:00 UTC)"
+        required: false
+        default: ""
       allow_shrink:
         description: "1 = accept an empty or halved merged list (otherwise the merge fails and the run is red)"
         required: false
@@ -56,6 +60,8 @@ jobs:
       - name: ted
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',ted,') }}
         run: set -o pipefail; python -m leads.run --source ted 2>&1 | tee -a data/leads/run.log
+        env:
+          TED_FULL: ${{ inputs.ted_full }}
         timeout-minutes: 35
         continue-on-error: true
       - name: fts
