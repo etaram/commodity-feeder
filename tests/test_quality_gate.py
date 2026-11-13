@@ -22,3 +22,20 @@ def test_each_condition_fails_alone():
 
 def test_phone_counts_as_official_contact():
     assert gate(dict(OK, emails=[], phones=["+254 20 123 4567"]))[0]
+
+
+def test_chatgpt_adversarial_cases_row_152():
+    """the 8 bad inputs ChatGPT showed gate 1.1 admitting must all be rejected"""
+    bad = [dict(OK, country="ZZZ"), dict(OK, checked="2099-01-01"),
+           dict(OK, emails=["acmesteel.co.ke"], phones=[]), dict(OK, emails=[{"email": "x@co.ke"}], phones=[]),
+           dict(OK, emails=[], phones=["not-a-phone"]), dict(OK, products=["Get in touch", "Latest updates"]),
+           dict(OK, roles=[{"role": "not a manufacturer"}]),
+           dict(OK, roles=[], title="Acme", description="We provide software to manufacturers and factories")]
+    for i, rec in enumerate(bad, 1):
+        ok, fails, facts = gate(rec)
+        assert not ok, (i, facts)
+
+
+def test_self_description_counts():
+    ok, fails, facts = gate(dict(OK, roles=[], title="Acme Steel - a leading manufacturer of steel pipes"))
+    assert ok and facts["roles"] == ["manufacturer"]

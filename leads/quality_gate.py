@@ -18,9 +18,22 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-VERSION = "supplier-gate-1.1 (2026-11-13)"
+VERSION = "supplier-gate-1.2 (2026-11-13)"
 FRESH_DAYS = 180
 ISO3 = re.compile(r"^[A-Z]{3}$")
+try:   # the ISO 3166-1 alpha-3 list the app uses (249 codes); a three-letter string alone is not a country
+    _CN = Path(__file__).resolve().parents[1] / "dealdesk" / "lib" / "countrynames.json"
+    ISO_CODES = set(json.loads(_CN.read_text(encoding="utf-8")))
+except (OSError, ValueError):
+    ISO_CODES = set()
+EMAIL_RX = re.compile(r"^[a-z0-9._%+-]+@([a-z0-9-]+\.)+[a-z]{2,}$")
+# second-level labels under which the registrable domain is three labels (acme.co.ke, acme.com.br); a host equal to
+# such a suffix alone ('co.ke') is never a company's own domain
+SLD = {"co", "com", "net", "org", "gov", "ac", "edu", "ltd", "plc", "or", "ne", "go", "gob", "nic", "mil", "info", "biz", "in", "sch"}
+CTA = re.compile(r"^(get|learn|read|contact|discover|explore|view|see|find|latest|our|why|how|what|who|welcome|meet|join|"
+                 r"subscribe|follow|download|request|book|call|email|send|click|shop now|buy now|sign|log|back|next|"
+                 r"previous|home|news|updates?|testimonials?|reviews?|faq|careers?|blog|events?|gallery|portfolio)\b", re.I)
+NEG = re.compile(r"\b(not|no|non|never|isn't|is not)\b", re.I)
 NAV = re.compile(r"^(home|homepage|about|about us|who we are|contact|contact us|contacts|news|blog|careers?|jobs|privacy|"
                  r"cookie|cookies|terms|login|log in|sign in|register|search|menu|faq|sitemap|our company|company|team|"
                  r"our team|history|mission|vision|gallery|downloads?|media|events?|partners?|clients|references|"
@@ -51,37 +64,76 @@ def product_phrases(rec):
             continue
         if re.search(r"(©|copyright|all rights|cookie|privacy|javascript|\bcall us\b|\bemail us\b)", t, re.I):
             continue
+        if CTA.match(t):        # calls to action and page furniture ('Get in touch', 'Latest updates') are not products
+            continue
         out.append(t)
     return list(dict.fromkeys(out))
 
 
+def registrable(host):
+    parts = [x for x in (host or "").lower().strip(".").removeprefix("www.").split(".") if x]
+    if len(parts) < 2:
+        return ""
+    if len(parts) >= 3 and parts[-2] in SLD and len(parts[-1]) == 2:
+        return ".".join(parts[-3:])
+    if len(parts) == 2 and parts[0] in SLD and len(parts[1]) == 2:
+        return ""                     # 'co.ke' alone is a public suffix, not a company domain
+    return ".".join(parts[-2:])
+
+
+def valid_phone(p):
+    digits = re.sub(r"\D", "", str(p or ""))
+    return 7 <= len(digits) <= 15 and not re.search(r"[A-Za-z]{3,}", str(p))
+
+
 def official_contact(rec):
-    dom = (rec.get("domain") or "").lower().removeprefix("www.")
-    emails = rec.get("emails") or []
-    for e in emails:
-        addr = (e.get("email") if isinstance(e, dict) else str(e)).lower()
-        host = addr.split("@")[-1]
-        if dom and (host == dom or host.endswith("." + dom) or dom.endswith("." + host)):
+    site = registrable(rec.get("domain") or "")
+    for e in rec.get("emails") or []:
+        addr = (e.get("email") if isinstance(e, dict) else str(e)).strip().lower()
+        if not EMAIL_RX.match(addr):
+            continue
+        host = registrable(addr.split("@")[-1])
+        if site and host and host == site:
             return "email on own domain"
-    if [p for p in rec.get("phones") or [] if p]:
+    if any(valid_phone(p) for p in rec.get("phones") or []):
         return "phone on own site"
     return ""
 
 
+# v1.2: site text counts only where the company describes ITSELF (subject wording), never customers or markets
+SELF_ROLE = [
+    ("manufacturer", re.compile(r"\b(we (manufacture|produce|fabricate)|(leading |a |an |the )?(manufacturer|producer|maker) of|"
+                                r"(is|are) (a |an |the )?(leading )?(manufacturer|producer)|our (factory|plant|mill|production)|"
+                                r"fabricante de|fabricant de|hersteller (von|für)|produttore di|productor de|produtor de)\b", re.I)),
+    ("trader", re.compile(r"\b(we (distribute|import|export|supply|trade)|(leading |a |an |the |official |authori[sz]ed )?"
+                          r"(distributor|importer|exporter|wholesaler|stockist|dealer|supplier) (of|for)|(is|are) (a |an |the )?"
+                          r"(leading )?(distributor|importer|exporter|wholesaler|trading company)|trading company|"
+                          r"distribuidor de|importador de|exportador de|proveedor de|fornecedor de|fournisseur de)\b", re.I)),
+    ("contractor", re.compile(r"\b((is|are) (a |an |the )?(leading )?(contractor|construction company|epc contractor)|"
+                              r"(general|main|civil|electrical|mechanical|epc) contractor|construction company|"
+                              r"engineering,? procurement and construction|constructora|construtora)\b", re.I)),
+    ("service", re.compile(r"\b(we (provide|offer|deliver) [a-z ]{0,30}services|(is|are) (a |an |the )?(leading )?[a-z ]{0,20}"
+                           r"(consultancy|consulting firm|service provider|services company|logistics company|laboratory))\b", re.I)),
+]
+CUSTOMER_CTX = re.compile(r"\b(for|to|serving|serve|help(s|ing)?|with)\s+(\w+\s+){0,3}(manufacturers|producers|factories|distributors|contractors)\b", re.I)
+
+
 def roles_of(rec):
+    """(roles, basis). A role field or role phrase from the site analysis counts unless negated; site text counts only
+    when the company describes itself (v1.2), not its customers."""
     r = set()
-    for x in rec.get("roles") or []:
+    for x in (rec.get("roles") or []) + ([{"role": rec["role"]}] if rec.get("role") else []):
         v = (x.get("role") if isinstance(x, dict) else str(x)).lower()
-        for k in ROLE_OK:
-            if k in v:
-                r.add(k)
-    if rec.get("role"):
-        v = str(rec["role"]).lower()
-        r |= {k for k in ROLE_OK if k in v}
-    if not r:
-        text = " ".join([str(rec.get("title") or ""), str(rec.get("description") or "")] + product_phrases(rec)[:15])
-        r |= {role for role, rx in SITE_ROLE if rx.search(text)}
-    return sorted(r)
+        phrase = (x.get("phrase") if isinstance(x, dict) else "") or ""
+        if NEG.search(v) or NEG.search(phrase[:20]):
+            continue
+        r |= {k for k in ROLE_OK if re.search(rf"\b{k}", v)}
+    if r:
+        return sorted(r), "site role phrase"
+    text = " ".join([str(rec.get("title") or ""), str(rec.get("description") or "")])
+    text_wo_customers = CUSTOMER_CTX.sub(" ", text)
+    r |= {role for role, rx in SELF_ROLE if rx.search(text_wo_customers)}
+    return sorted(r), ("site text (self-description)" if r else "")
 
 
 def gate(rec, today=None):
@@ -89,13 +141,13 @@ def gate(rec, today=None):
     today = today or dt.date.today()
     fails = []
     country = str(rec.get("country") or "").upper()
-    if not (rec.get("supplier") and ISO3.match(country)):
-        fails.append("identity: no name or no ISO country")
+    if not (rec.get("supplier") and ISO3.match(country) and (not ISO_CODES or country in ISO_CODES)):
+        fails.append("identity: no name or no valid ISO 3166 country")
     if rec.get("verdict") != "ok":
         fails.append(f"site: {rec.get('verdict') or 'not read'}")
     elif rec.get("name_match") != "high":
         fails.append(f"site: name match {rec.get('name_match') or 'unknown'}")
-    roles = roles_of(rec)
+    roles, basis = roles_of(rec)
     if not roles:
         fails.append("role: not stated on the site")
     prods = product_phrases(rec)
@@ -106,12 +158,15 @@ def gate(rec, today=None):
         fails.append("contact: no email on own domain and no phone")
     try:
         checked = dt.date.fromisoformat(str(rec.get("checked") or rec.get("checked_at") or "")[:10])
-        if (today - checked).days > FRESH_DAYS:
+        if checked > today:
+            fails.append("fresh: check date in the future")
+        elif (today - checked).days > FRESH_DAYS:
             fails.append("fresh: checked more than 180 days ago")
     except ValueError:
         fails.append("fresh: no check date")
-    strong = bool(rec.get("legal_ids"))
-    basis = "site role phrase" if (rec.get("roles") or rec.get("role")) else "site text" if roles else ""
+    # strong identity: an identifier with a scheme and at least 5 digits/characters (VAT, LEI, CNPJ, company number...)
+    strong = any(isinstance(x, dict) and x.get("kind") and len(re.sub(r"\W", "", str(x.get("value") or ""))) >= 5
+                 for x in rec.get("legal_ids") or [])
     return not fails, fails, {"roles": roles, "role_basis": basis, "products": len(prods), "contact": contact, "strong_identity": strong, "country": country}
 
 
