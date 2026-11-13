@@ -1,4 +1,9 @@
-# round 10: TED, how many open notices exist (deadline in the future), by query form
-POST https://api.ted.europa.eu/v3/notices/search 400 {"query":"notice-type IN (cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social) AND deadline-receipt-tender-date-lot>=20261113","fields":["publication-number"],"limit":1}
-POST https://api.ted.europa.eu/v3/notices/search 400 {"query":"notice-type IN (cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social) AND DT>=20261113","fields":["publication-number"],"limit":1}
-POST https://api.ted.europa.eu/v3/notices/search 400 {"query":"notice-type IN (cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social) AND PD>=20260815","fields":["publication-number"],"limit":1}
+# round 11: Japan KKJ, India GeM open data, Indonesia LKPP open data
+https://www.kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&Count=3 1500
+https://www.kkj.go.jp/doc/ja/api_guide.pdf 200
+https://data.inaproc.id/ 500
+https://isb.lkpp.go.id/isb-2/api/ 300
+https://sirup.lkpp.go.id/sirup/ 300
+https://gem.gov.in/ 300
+https://data.gov.in/catalog/government-e-marketplace-gem 400
+https://eprocure.gov.in/cppp/latestactivetendersnew 300
