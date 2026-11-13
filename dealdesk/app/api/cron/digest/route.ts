@@ -49,7 +49,9 @@ export async function GET(req: NextRequest) {
       for (const l of await tgLinks()) if (l.alerts !== "off") {
         const he = l.lang === "he";
         const p = profiles.get(l.email) || null;
-        const sentSet = new Set([...(p?.sent || []), ...(MORNING_SENT.get(l.chat_id) || [])]);
+        // force=1 (ops task morning-send, used once after a fix): today's day key is ignored, item keys still apply
+        const force = req.nextUrl.searchParams.get("force") === "1";
+        const sentSet = new Set([...(p?.sent || []), ...(MORNING_SENT.get(l.chat_id) || [])].filter((k) => !(force && k.startsWith("tg-morning:"))));
         const m = await morning(p, he, sentSet);
         if (!m) continue;
         MORNING_SENT.set(l.chat_id, m.sentKeys);
