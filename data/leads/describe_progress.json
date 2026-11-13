@@ -1,47 +1,47 @@
 {
  "version": "describe-1",
- "at": "2026-11-11",
+ "at": "2026-11-13",
  "roles_reread": 0,
- "checked_sites_usable": 112462,
- "reused": 93559,
- "described_now": 6383,
- "queue_left": 12520,
- "seconds": 1575,
+ "checked_sites_usable": 91468,
+ "reused": 0,
+ "described_now": 4000,
+ "queue_left": 87468,
+ "seconds": 1417,
  "role_basis": {
-  "none": 37844,
-  "description": 21892,
-  "embedding model": 23146,
-  "site phrase": 17064
+  "description": 819,
+  "site phrase": 1138,
+  "embedding model": 637,
+  "none": 1406
  },
- "described": 99946,
- "with_english": 99362,
- "with_commodity_tags": 2136,
- "with_role": 62102,
+ "described": 4000,
+ "with_english": 3862,
+ "with_commodity_tags": 1238,
+ "with_role": 2594,
  "roles": {
-  "unknown": 37844,
-  "trader": 5722,
-  "manufacturer": 13100,
-  "services": 32564,
-  "contractor": 8381,
-  "producer": 2335
+  "trader": 302,
+  "contractor": 243,
+  "unknown": 1406,
+  "producer": 141,
+  "services": 1146,
+  "manufacturer": 762
  },
  "translation": {
-  "argos": 56030,
-  "original": 43332,
-  "none": 584
+  "original": 3649,
+  "argos": 213,
+  "none": 138
  },
  "languages": {
-  "en": 43332,
-  "de": 14194,
-  "fr": 10332,
-  "es": 7534,
-  "pl": 4215,
-  "sv": 3638,
-  "nl": 3315,
-  "ro": 2965,
-  "cs": 2837,
-  "it": 2273,
-  "pt": 1429,
-  "hu": 1315
+  "en": 3649,
+  "fr": 78,
+  "es": 63,
+  "de": 41,
+  "sv": 26,
+  "pl": 17,
+  "cs": 15,
+  "ro": 15,
+  "nl": 11,
+  "pt": 7,
+  "lt": 6,
+  "hu": 5
  }
 }
