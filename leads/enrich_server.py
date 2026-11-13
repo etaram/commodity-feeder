@@ -912,12 +912,78 @@ def discover_run(d, workers=48, limit=0, minutes=0):
     log.info("discover done: %s", dict(stats))
     return dict(stats)
 
+
+def procure_run(d, workers=32, limit=0, minutes=0):
+    """Corporate procurement pages (owner, 13 Nov 2026: companies of medium size and up, not only governments). For
+    companies whose own site was read OK with a high name match, leads/procure_pages.scan looks for a tenders /
+    procurement / suppliers page linked from the home page and extracts open requests (a deadline word and a future
+    date). Refined suppliers first (they have official award evidence or a full site profile), then the rest.
+    Every company tried goes to procure.jsonl (key, website, procurement_pages, notices, why) so nothing is tried twice."""
+    from concurrent.futures import ThreadPoolExecutor
+    from . import procure_pages as pp
+    d = Path(d)
+    tried = set()
+    if (d / "procure.jsonl").exists():
+        for line in open(d / "procure.jsonl", encoding="utf-8"):
+            try:
+                tried.add(json.loads(line)["key"])
+            except (ValueError, KeyError):
+                pass
+    latest = {}
+    for line in open(d / "site.jsonl", encoding="utf-8"):
+        try:
+            r = json.loads(line)
+        except ValueError:
+            continue
+        if r.get("verdict") == "ok" and r.get("name_match") == "high" and r.get("website"):
+            latest[r["key"]] = r
+    refined = set()
+    if (d / "refined.keys").exists():
+        refined = set((d / "refined.keys").read_text(encoding="utf-8").split())
+    todo = [r for k, r in latest.items() if k not in tried]
+    todo.sort(key=lambda r: (r["key"] not in refined, r.get("tier", 3)))
+    if limit:
+        todo = todo[:limit]
+    log.info("procure: %d company sites to scan (%d refined first; %d tried before)", len(todo), len(refined & set(latest)), len(tried))
+    t_end = time.time() + minutes * 60 if minutes else float("inf")
+    lock = threading.Lock()
+    out = open(d / "procure.jsonl", "a", encoding="utf-8")
+    stats = Counter()
+    today_ = datetime.now(timezone.utc).date()
+
+    def one(r):
+        if time.time() > t_end:
+            return
+        try:
+            res = pp.scan(r["website"], today_)
+        except Exception as e:  # noqa: BLE001
+            res = {"procurement_pages": [], "notices": [], "why": f"error {type(e).__name__}"}
+        with lock:
+            out.write(json.dumps({"key": r["key"], "supplier": r.get("supplier") or r.get("name", ""), "country": r.get("country", ""),
+                                  "website": r["website"], **res, "at": now()}, ensure_ascii=False) + "\n"); out.flush()
+            stats["tried"] += 1
+            stats["page"] += bool(res["procurement_pages"])
+            stats["with_open"] += bool(res["notices"])
+            stats["open_notices"] += len(res["notices"])
+            if stats["tried"] % 500 == 0:
+                log.info("procure: %s", dict(stats))
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        list(ex.map(one, todo))
+    out.close()
+    log.info("procure done: %s", dict(stats))
+    return dict(stats)
+
+
 def main(argv):
     import logging
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     a = argv
     opt = lambda k, dflt="": a[a.index(k) + 1] if k in a else dflt  # noqa: E731
     cmd, d = a[0], Path(opt("--dir", "/e"))
+    if cmd == "procure":
+        print(json.dumps(procure_run(d, int(opt("--workers", "32")), int(opt("--limit", "0")), int(opt("--minutes", "0")))))
+        return
     if cmd == "discover":
         print(json.dumps(discover_run(d, int(opt("--workers", "48")), int(opt("--limit", "0")), int(opt("--minutes", "0")))))
         return

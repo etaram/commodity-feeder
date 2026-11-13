@@ -151,6 +151,27 @@ print(dict(c))"
   docker logs --tail 3 enrich-discover 2>&1 | grep -vE "https?://|@" | cut -c1-200
   exit 0
 fi
+if [ "$mode" = procure ]; then   # corporate procurement pages (leads.enrich_server procure)
+  if docker ps --filter name=^enrich-procure$ --format '{{.Names}}' | grep -q .; then
+    echo "procure scan running: $(docker ps --filter name=^enrich-procure$ --format '{{.Status}}')"
+    [ -f "$E/procure.jsonl" ] && python3 -c "
+import json,collections;c=collections.Counter()
+for l in open('$E/procure.jsonl'):
+  try: r=json.loads(l)
+  except ValueError: continue
+  c['tried']+=1; c['procurement page']+=bool(r.get('procurement_pages')); c['with open requests']+=bool(r.get('notices')); c['open requests']+=len(r.get('notices') or [])
+print(dict(c))"
+    exit 0
+  fi
+  venv
+  rm -rf "$E/rcode"; mkdir -p "$E/rcode/dealdesk/lib"; cp -r "$repo/leads" "$E/rcode/leads"; cp "$repo/dealdesk/lib/countrynames.json" "$E/rcode/dealdesk/lib/"; chmod -R go-rwx "$E/rcode"
+  docker rm -f enrich-procure >/dev/null 2>&1 || true
+  docker run -d --name enrich-procure --restart no --cpus 1 --cpu-shares 128 --memory 1500m -e PYTHONUNBUFFERED=1 -v "$E":/e -w /e/rcode "$IMG" \
+    ionice -c 3 nice -n 19 /e/venv/bin/python -m leads.enrich_server procure --dir /e --workers "${PROCURE_WORKERS:-32}" >/dev/null
+  sleep 20; docker ps -a --filter name=^enrich-procure$ --format 'container {{.Names}}: {{.Status}}'
+  docker logs --tail 3 enrich-procure 2>&1 | grep -vE "https?://|@" | cut -c1-200
+  exit 0
+fi
 if [ "$mode" = stop ]; then
   docker stop -t 30 enrich >/dev/null 2>&1 && echo "stopped" || echo "not running"
   docker rm enrich >/dev/null 2>&1 || true
