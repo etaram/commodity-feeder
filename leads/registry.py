@@ -49,6 +49,7 @@ TENDERS = {
     "ccgp": ("China - central and local government (CCGP)", "public list (http)"), "lebanon": ("Lebanon", "public portal (PPA, http)"),
     "cameroon": ("Cameroon", "public portal (ARMP, http)"),
     "transnet": ("South Africa - Transnet (SOE: rail, ports, pipelines)", "public list JSON (http)"),
+    "kkj": ("Japan - national and local government (KKJ portal)", "official search API (http)"),
     "eskom": ("South Africa - Eskom (state electricity utility)", "public bulletin JSON (http)"),
     "bonfire": ("USA and Canada - public bodies on Bonfire portals", "public portal JSON (http)"),
 }
@@ -143,6 +144,7 @@ TERMS = {
     "gleif_bulk": "2026-11-12 api: GLEIF Golden Copy CC0, free of charge (gleif.org/en/about/open-data); goldencopy.gleif.org publish API",
     "mx_check": "2026-11-12 DNS lookups only (MX, NS, A); no mail sent, no SMTP probing",
     "transnet": "2026-11-13 http: public advertised-tenders list, no sign-in; one request per run",
+    "kkj": "2026-11-13 http: public KKJ search API, no key; split by prefecture, category and date so each call stays under 1,000",
     "eskom": "2026-11-13 http: public tender bulletin JSON, no sign-in; one request per run; officer e-mails not kept",
     "bonfire": "2026-11-13 http: public open-opportunities list per hub, no sign-in; one request per hub per run",
     "dewa": "2026-11-12 relay (runner gets a 403 bot challenge): robots.txt allows the tender list; no terms page restricting automated reading found",

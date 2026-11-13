@@ -47,3 +47,23 @@ def test_eskom_rules():
     r = rows[0]
     assert r["deadline"] == "2026-11-30" and r["country"] == "ZAF" and r["buyer"] == "Eskom Holdings SOC Ltd - Distribution"
     assert "eskom.co.za" not in r["contact"] and "e-tendering" in r["notice_type"]
+
+
+KKJ_XML = """<?xml version="1.0" encoding="utf-8" ?><Results><Version>1.0</Version><SearchResults><SearchHits>2</SearchHits>
+<SearchResult><ResultId>1</ResultId><Key><![CDATA[eWFtYW5hc2hpL3lhbWFuYXNoaV9wcmVmLzIwMjYK]]></Key>
+<ExternalDocumentURI><![CDATA[https://www.pref.yamanashi.jp/documents/128542/koukoku.pdf]]></ExternalDocumentURI>
+<ProjectName>ＥＷＳ実習装置に係る一般競争入札の公告</ProjectName><LgCode>19</LgCode><PrefectureName>山梨県</PrefectureName>
+<OrganizationName>山梨県</OrganizationName><CftIssueDate>2026-11-12T00:00:00+09:00</CftIssueDate><Category>物品</Category>
+<ProcedureType>一般競争入札</ProcedureType><OpeningTendersEvent>2026-12-23T11:30:00+09:00</OpeningTendersEvent></SearchResult>
+<SearchResult><ResultId>2</ResultId><Key>abc</Key><ProjectName>期限なし</ProjectName><OrganizationName>X市</OrganizationName></SearchResult>
+</SearchResults></Results>"""
+
+
+def test_kkj_parse():
+    from leads import kkj
+    rows, hits = kkj.parse(KKJ_XML, "2026-11-13")
+    assert hits == 2 and len(rows) == 2
+    r = rows[0]
+    assert r["country"] == "JPN" and r["deadline"] == "2026-12-23" and r["published"] == "2026-11-12"
+    assert r["nature"] == "supplies" and r["lang"] == "ja" and r["link"].endswith("koukoku.pdf")
+    assert rows[1]["deadline"] == ""          # no date: fetch() does not count it as open
