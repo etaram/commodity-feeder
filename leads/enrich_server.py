@@ -840,12 +840,87 @@ def people_metrics(d, review=20):
     return out
 
 
+
+def discover_run(d, workers=48, limit=0, minutes=0):
+    """Website discovery for suppliers with no website on record (owner, 13 Nov 2026: more refined suppliers, quality
+    first). leads/web_contacts.discover tries likely domains (name slug + the country's domain and .com) and accepts a
+    live, non-parked page that names the company; the site is then read and analysed like any other (site_lane), so
+    the name-match check runs a second time on the full pages. Found sites are appended to site.jsonl as a newer record
+    of the same key (website_basis 'discovered'); every attempt goes to discover.jsonl so nothing is tried twice."""
+    from concurrent.futures import ThreadPoolExecutor
+    from . import web_contacts as wc
+    d = Path(d)
+    tried = set()
+    if (d / "discover.jsonl").exists():
+        for line in open(d / "discover.jsonl", encoding="utf-8"):
+            try:
+                tried.add(json.loads(line)["key"])
+            except (ValueError, KeyError):
+                pass
+    todo, has_site = [], set()
+    for line in open(d / "site.jsonl", encoding="utf-8"):
+        try:
+            r = json.loads(line)
+        except ValueError:
+            continue
+        if r.get("website"):
+            has_site.add(r["key"])
+        elif r.get("verdict") == "no website on record" and r["key"] not in tried:
+            todo.append(r)
+    todo = [r for r in todo if r["key"] not in has_site]
+    if limit:
+        todo = todo[:limit]
+    log.info("discover: %d suppliers without a website to try (%d tried before)", len(todo), len(tried))
+    t_end = time.time() + minutes * 60 if minutes else float("inf")
+    lock = threading.Lock()
+    site_fd = os.open(d / "site.jsonl", os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+    dfh = open(d / "discover.jsonl", "a", encoding="utf-8")
+    stats = Counter()
+
+    def one(r):
+        if time.time() > t_end:
+            return
+        name, country = r.get("supplier") or "", r.get("country") or ""
+        try:
+            url = wc.discover_zh(name) if re.search(r"[\u4e00-\u9fff]", name) else wc.discover(name, country)
+        except Exception:  # noqa: BLE001
+            url = None
+        rec = None
+        if url:
+            it = {"key": r["key"], "name": name, "country": country, "website": url, "tier": r.get("tier", 3),
+                  "sector": r.get("record_sector", ""), "sanctions_risk": r.get("sanctions_risk", "")}
+            try:
+                rec = site_lane(it)
+                rec["website_basis"] = "discovered (likely domain, company named on the page)"
+            except Exception as e:  # noqa: BLE001
+                rec = None; stats["read error"] += 1; log.info("discover read %s: %s", r["key"][:40], str(e)[:80])
+        with lock:
+            dfh.write(json.dumps({"key": r["key"], "found": bool(url), "verdict": (rec or {}).get("verdict", ""),
+                                  "name_match": (rec or {}).get("name_match", ""), "at": now()}) + "\n"); dfh.flush()
+            stats["tried"] += 1
+            if url:
+                stats["found"] += 1
+            if rec:
+                os.write(site_fd, (json.dumps(rec, ensure_ascii=False) + "\n").encode("utf-8"))
+                stats["ok_high" if rec.get("verdict") == "ok" and rec.get("name_match") == "high" else "read_not_ok"] += 1
+            if stats["tried"] % 500 == 0:
+                log.info("discover: %s", dict(stats))
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        list(ex.map(one, todo))
+    os.close(site_fd); dfh.close()
+    log.info("discover done: %s", dict(stats))
+    return dict(stats)
+
 def main(argv):
     import logging
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
     a = argv
     opt = lambda k, dflt="": a[a.index(k) + 1] if k in a else dflt  # noqa: E731
     cmd, d = a[0], Path(opt("--dir", "/e"))
+    if cmd == "discover":
+        print(json.dumps(discover_run(d, int(opt("--workers", "48")), int(opt("--limit", "0")), int(opt("--minutes", "0")))))
+        return
     if cmd == "queue":
         q = build_queue(read_index(opt("--index")))
         with open(d / "queue.jsonl.tmp", "w", encoding="utf-8") as f:

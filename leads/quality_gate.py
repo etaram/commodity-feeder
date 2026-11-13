@@ -121,7 +121,7 @@ def run(d):
     first, every = Counter(), Counter()
     by_country, by_role, by_basis = Counter(), Counter(), Counter()
     keys = []
-    seen = set()
+    latest = {}      # the newest record of a key wins (a discovered website is appended later than the first read)
     with open(d / "site.jsonl", encoding="utf-8") as f:
         for line in f:
             try:
@@ -130,22 +130,24 @@ def run(d):
                 every["unreadable line"] += 1
                 continue
             k = rec.get("key")
-            if not k or k in seen:
-                continue
-            seen.add(k); n += 1
-            passed, fails, facts = gate(rec)
-            for x in fails:
-                every[x.split(":")[0]] += 1
-            if fails:
-                first[fails[0].split(":")[0] + ": " + fails[0].split(": ", 1)[-1][:40]] += 1
-                continue
-            ok += 1; strong += facts["strong_identity"]; by_basis[facts["role_basis"]] += 1
-            by_country[facts["country"]] += 1
-            for r in facts["roles"]:
-                by_role[r] += 1
-            keys.append(k)
+            if k:
+                latest[k] = gate(rec) + (rec.get("website_basis", ""),)
+    discovered_refined = 0
+    for k, (passed, fails, facts, wb) in latest.items():
+        n += 1
+        for x in fails:
+            every[x.split(":")[0]] += 1
+        if fails:
+            first[fails[0].split(":")[0] + ": " + fails[0].split(": ", 1)[-1][:40]] += 1
+            continue
+        ok += 1; strong += facts["strong_identity"]; by_basis[facts["role_basis"]] += 1
+        discovered_refined += bool(wb)
+        by_country[facts["country"]] += 1
+        for r in facts["roles"]:
+            by_role[r] += 1
+        keys.append(k)
     (d / "refined.keys").write_text("\n".join(keys), encoding="utf-8")
-    out = {"gate": VERSION, "suppliers_checked": n, "refined": ok, "refined_with_legal_id": strong,
+    out = {"gate": VERSION, "suppliers_checked": n, "refined": ok, "refined_with_legal_id": strong, "refined_via_discovered_site": discovered_refined,
            "refined_countries": len(by_country), "refined_by_role": dict(by_role.most_common()), "refined_by_role_basis": dict(by_basis),
            "refined_top_countries": dict(by_country.most_common(25)),
            "failing_condition_counts": dict(every.most_common()), "first_failure": dict(first.most_common(25))}
