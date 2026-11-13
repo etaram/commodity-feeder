@@ -2,7 +2,7 @@
 
 All open calls for competition (supplies, works, services; every CPV), kept in a rolling cache so each run only
 fetches the last few days. Each notice gets a sector (from its main CPV) and, where it applies, a commodity group.
-Notices with a known estimated value below MIN_EUR are dropped (low value for international bidders).
+Every size is kept (owner, 13 Nov 2026: every segment); the estimated value stays on the row and the panel filters.
 """
 import datetime as dt
 import html
@@ -16,7 +16,6 @@ FIELDS = ["publication-number", "notice-title", "buyer-name", "buyer-country", "
           "publication-date", "notice-type", "deadline-receipt-tender-date-lot", "estimated-value-lot",
           "estimated-value-cur-lot", "contract-nature", "organisation-email-buyer", "organisation-tel-buyer"]
 NOTICE_TYPES = "cn-standard cn-social cn-desg pin-cfc-standard pin-cfc-social"
-MIN_EUR = 100_000
 
 
 def _first(v):
@@ -68,8 +67,6 @@ def _row(n, t):
         except (TypeError, ValueError):
             pass
     cur = _first(n.get("estimated-value-cur-lot")) or ("EUR" if vals else "")
-    if vals and cur == "EUR" and sum(vals) < MIN_EUR:
-        return None
     gid, depth = match_cpv(cpv[:1])
     pn = n.get("publication-number", "")
     nt = n.get("notice-type", "")

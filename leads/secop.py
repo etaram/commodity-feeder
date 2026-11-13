@@ -1,25 +1,35 @@
-"""Colombia: SECOP II processes (datos.gov.co Socrata open data), open processes above MIN_COP published recently.
-UNSPSC category gives the sector."""
+"""Colombia: SECOP II processes (datos.gov.co Socrata open data): every process still open, all sizes (owner,
+13 Nov 2026: every segment; the value stays on the row and the panel filters by it). UNSPSC category gives the
+sector. Paged with $offset; a small cache reads the last 60 days, later runs the last 3."""
 import datetime as dt
 
-from .common import cache_empty, clean, log, rolling, session, today
+from .common import CACHE, cache_empty, clean, log, rolling, session, today
 from .sectors import classify
 
 URL = "https://www.datos.gov.co/resource/p6dx-8zbt.json"
-MIN_COP = 2_000_000_000  # ~ USD 0.5M
+PAGE = 5000
+MAX_PAGES = 40
 
 
 def fetch():
     s, t = session(), today()
-    days = 21 if cache_empty("secop") else 3
+    small = cache_empty("secop") or (CACHE / "secop.jsonl").stat().st_size < 5_000_000
+    days = 60 if small else 3
     since = (t - dt.timedelta(days=days)).isoformat()
-    where = (f"fecha_de_publicacion_del >= '{since}T00:00:00' AND precio_base > {MIN_COP} "
+    where = (f"fecha_de_publicacion_del >= '{since}T00:00:00' "
              f"AND estado_de_apertura_del_proceso = 'Abierto'")
-    r = s.get(URL, params={"$where": where, "$limit": 5000, "$order": "fecha_de_publicacion_del DESC"}, timeout=120)
-    if r.status_code != 200:
-        log.warning("SECOP %s %s", r.status_code, r.text[:200]); return [], {}
+    got = []
+    for page in range(MAX_PAGES):
+        r = s.get(URL, params={"$where": where, "$limit": PAGE, "$offset": page * PAGE,
+                               "$order": "fecha_de_publicacion_del DESC, id_del_proceso"}, timeout=120)
+        if r.status_code != 200:
+            log.warning("SECOP %s %s", r.status_code, r.text[:200]); break
+        batch = r.json()
+        got += batch
+        if len(batch) < PAGE:
+            break
     new = []
-    for n in r.json():
+    for n in got:
         if (n.get("estado_del_procedimiento") or "") in ("Cancelado", "Adjudicado", "Desierto", "Cerrado"):
             continue
         dl = (n.get("fecha_de_recepcion_de") or n.get("fecha_de_apertura_de_respuesta") or "")[:10]
@@ -37,6 +47,6 @@ def fetch():
             "deadline": dl, "value": round(float(n.get("precio_base") or 0)) or "", "currency": "COP",
             "link": url, "contact": "", "lang": "es",
         })
-    rows, _ = rolling("secop", new, max_age_days=90)
-    log.info("SECOP new %d, open %d", len(new), len(rows))
+    rows, _ = rolling("secop", new, max_age_days=120)
+    log.info("SECOP window %d days, read %d, new %d, open %d", days, len(got), len(new), len(rows))
     return rows, {"new": len(new)}

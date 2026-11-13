@@ -1,7 +1,7 @@
 """Chile - Mercado Publico (ChileCompra) open public tenders, official API (api.mercadopublico.cl).
 Needs a ticket (free, request at api.mercadopublico.cl); set the CHILE_TICKET secret. Without it the public demo ticket is
-used, which is rate limited, so only the list is read. Keeps the larger tender types (LE, LP, LQ, LR) that a foreign
-supplier can bid on; small L1 purchases are skipped. Rolling store."""
+used, which is rate limited, so only the list is read. Every tender type is kept (owner, 13 Nov 2026: every segment),
+including small L1 purchases; the type stays on the row. Rolling store."""
 import datetime as dt
 import os
 import re
@@ -11,7 +11,7 @@ from .sectors import classify
 
 API = "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json"
 DEMO = "F8537A18-6766-4DEF-9E59-426B4FEE2844"
-KEEP = re.compile(r"-(LE|LP|LQ|LR)\d{2}$")
+KEEP = re.compile(r".")  # every type (owner, 13 Nov 2026)
 DETAIL_PER_RUN = 120
 
 

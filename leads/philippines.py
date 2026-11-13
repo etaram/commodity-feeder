@@ -3,6 +3,7 @@ Reads the newest pages each run (ASP.NET paging); the rolling cache keeps earlie
 import datetime as dt
 import html
 import re
+import time
 
 from .common import clean, log, polite, rolling, today
 from .sectors import classify
@@ -12,7 +13,8 @@ URL = BASE + "SplashOpportunitiesSearchUI.aspx?menuIndex=3&ClickFrom=OpenOpp&Res
 ROW = re.compile(r'<td[^>]*>(\d\d/\d\d/\d{4})</td><td[^>]*>(\d\d/\d\d/\d{4})[^<]*</td><td class="GridItemTD">\s*'
                  r'<a [^>]*href="SplashBidNoticeAbstractUI\.aspx\?menuIndex=3&amp;refID=(\d+)&amp;Result=3">([^<]+)</a>\s*'
                  r'<span [^>]*>([^<]*)</span>', re.S)
-PAGES = 60
+PAGES = 900   # ~17k open notices at a time, 20 per page; time budget below
+BUDGET_S = 900
 
 
 def _d(s):
@@ -30,6 +32,7 @@ def fetch():
     from curl_cffi import requests as cr
     s = cr.Session(impersonate="chrome")
     t, new, seen = str(today()), [], set()
+    t0 = time.time()
     page = 1
     try:
         r = s.get(URL, timeout=60)
@@ -57,7 +60,7 @@ def fetch():
                 "published": _d(pub), "deadline": dl, "value": "", "currency": "PHP",
                 "link": f"{BASE}SplashBidNoticeAbstractUI.aspx?menuIndex=3&refID={rid}&Result=3", "lang": "", "contact": "",
             })
-        if got == 0 or page >= PAGES:
+        if got == 0 or page >= PAGES or time.time() - t0 > BUDGET_S:
             break
         f = _form(r.text)
         if "__VIEWSTATE" not in f:

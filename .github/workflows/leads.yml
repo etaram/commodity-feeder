@@ -161,12 +161,12 @@ jobs:
       - name: pncp
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',pncp,') }}
         run: set -o pipefail; python -m leads.run --source pncp 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 12
+        timeout-minutes: 20
         continue-on-error: true
       - name: secop
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',secop,') }}
         run: set -o pipefail; python -m leads.run --source secop 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 5
+        timeout-minutes: 10
         continue-on-error: true
       - name: germany
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',germany,') }}
@@ -260,7 +260,7 @@ jobs:
       - name: philippines
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',philippines,') }}
         run: set -o pipefail; python -m leads.run --source philippines 2>&1 | tee -a data/leads/run.log
-        timeout-minutes: 8
+        timeout-minutes: 20
         continue-on-error: true
       - name: qatar
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',qatar,') }}
