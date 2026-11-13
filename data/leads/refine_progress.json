@@ -63,12 +63,12 @@
  "email_domains_checked": 7184,
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-13T01:57Z",
+  "at": "2026-11-13T02:12Z",
   "sample": null,
-  "links_checked_this_run": 470,
-  "links_on_record": 70305,
+  "links_checked_this_run": 92,
+  "links_on_record": 70397,
   "sites_read_this_run": 0,
-  "registers_this_run": 82,
+  "registers_this_run": 81,
   "buyers": {
    "processed": 3463,
    "completed": 3317,
@@ -120,7 +120,7 @@
   },
   "tenders": {
    "processed": 130001,
-   "completed": 124651,
+   "completed": 124712,
    "contact_found": 37175,
    "with_conflicts": 388,
    "with_gaps": 119510,
@@ -128,7 +128,7 @@
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 16137,
-   "reused_unchanged": 129561,
+   "reused_unchanged": 129939,
    "gaps": {
     "no estimated value": 110277,
     "no contact in the notice": 92826,
@@ -215,15 +215,15 @@
   },
   "importers": {
    "processed": 5470,
-   "completed": 1216,
+   "completed": 1231,
    "contact_found": 0,
    "with_conflicts": 9,
    "with_gaps": 5470,
    "cleaned": 5470,
    "duplicates": 2,
-   "verified_identity": 1023,
+   "verified_identity": 1042,
    "closed_by_deadline": 0,
-   "reused_unchanged": 5449,
+   "reused_unchanged": 5450,
    "gaps": {
     "no contact channel (customs records carry none)": 5470,
     "no official website": 5057,
