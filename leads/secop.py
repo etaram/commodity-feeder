@@ -32,8 +32,13 @@ def fetch():
     for n in got:
         if (n.get("estado_del_procedimiento") or "") in ("Cancelado", "Adjudicado", "Desierto", "Cerrado"):
             continue
+        mod = (n.get("modalidad_de_contratacion") or "").lower()
+        # quality (owner, 13 Nov): only competitive processes that take offers. Direct contracting and special-regime
+        # processes without offers are awards to a chosen party, not open opportunities.
+        if ("directa" in mod or "régimen especial" in mod or "regimen especial" in mod) and "con ofertas" not in mod:
+            continue
         dl = (n.get("fecha_de_recepcion_de") or n.get("fecha_de_apertura_de_respuesta") or "")[:10]
-        if dl and dl < str(t):
+        if not dl or dl < str(t):   # an open opportunity needs a future offer deadline
             continue
         text = clean(f"{n.get('nombre_del_procedimiento', '')} - {n.get('descripci_n_del_procedimiento', '')}")
         cat = (n.get("codigo_principal_de_categoria") or "").replace("V1.", "")

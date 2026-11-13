@@ -396,4 +396,4 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add -A data/leads data/web data/registry
           git diff --cached --quiet || git commit -m "leads: $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3; do git pull --rebase -X theirs origin main && git push && break; sleep 5; done
+          for i in 1 2 3; do git pull --rebase --autostash -X theirs origin main && git push && break; sleep 5; done

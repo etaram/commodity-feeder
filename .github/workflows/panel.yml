@@ -32,4 +32,4 @@ jobs:
           git add data/web/panel_*.enc data/web/panel_*.sha 2>/dev/null || true
           git diff --cached --quiet && exit 0
           git commit -m "panel: $(date -u +%Y-%m-%dT%H:%MZ)"
-          for i in 1 2 3 4; do git pull --rebase -X theirs origin main && git push && break; sleep 7; done
+          for i in 1 2 3 4; do git pull --rebase --autostash -X theirs origin main && git push && break; sleep 7; done
