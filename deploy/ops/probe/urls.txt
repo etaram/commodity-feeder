@@ -1,4 +1,5 @@
-# round 3, 13 Nov
+# round 4, 13 Nov
 https://tenderbulletin.eskom.co.za/assets/index-vjCwf-xL.js
-POST https://muasamcong.mpi.gov.vn/o/egp-portal-contractor-selection-v2/services/smart/search 1500 [{"pageSize":3,"pageNumber":0,"query":[{"index":"es-contractor-selection","keyWord":"","matchType":"all-1","matchFields":["notifyNo","bidName"],"filters":[{"fieldName":"type","searchType":"in","fieldValues":["es-notify-contractor"]}]}]}]
-https://ekap.kik.gov.tr/EKAP/Ortak/IhaleArama/index.html 2800
+POST https://muasamcong.mof.gov.vn/o/egp-portal-contractor-selection-v2/services/smart/search 1500 [{"pageSize":3,"pageNumber":0,"query":[{"index":"es-contractor-selection","keyWord":"","matchType":"all-1","matchFields":["notifyNo","bidName"],"filters":[{"fieldName":"type","searchType":"in","fieldValues":["es-notify-contractor"]}]}]}]
+https://ekapv2.kik.gov.tr/ekap/search 300
+https://comprasmx.buengobierno.gob.mx/ 200

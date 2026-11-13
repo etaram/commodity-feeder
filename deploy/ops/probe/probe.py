@@ -35,9 +35,11 @@ def one(line):
     print(f"== {url}\n   {st} {ct} {len(body)} bytes")
     if url.endswith(".js"):
         print("   paths:", sorted(set(API.findall(t)))[:60])
-        for m in list(re.finditer(r"webapi|/api/", t))[:12]:
+        print("   templated:", sorted(set(re.findall(r"\$\{[A-Za-z0-9_$]{1,8}\}(/[A-Za-z0-9_/]{3,60}\??[A-Za-z_=&${}]{0,80})", t)))[:80])
+        for m in list(re.finditer(r"webapi|/api/", t))[:6]:
             print("   ..." + re.sub(r"\s+", " ", t[max(0, m.start() - 120):m.start() + 160]))
         return
+    print("   scripts:", re.findall(r'<script[^>]+src="([^"]+)"', t)[:15])
     t = re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=re.S)
     t = re.sub(r"\s+", " ", t)
     print("   " + t[:n])
