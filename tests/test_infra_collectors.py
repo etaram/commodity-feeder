@@ -76,3 +76,15 @@ def test_kkj_text_deadline():
     assert kkj.text_deadline(desc, dt.date(2026, 11, 13)) == "2026-12-23"
     assert kkj.text_deadline("入札日時 令和８年１０月１日", dt.date(2026, 11, 13)) == ""
     assert kkj.text_deadline("令和８年１２月２３日 only a date, no deadline word", dt.date(2026, 11, 13)) == ""
+
+
+def test_bidnet_parse():
+    from pathlib import Path
+    from leads import bidnet
+    page = (Path(__file__).parent / "samples" / "bidnet_open_p2.html").read_text(encoding="utf-8")
+    rows = bidnet.parse(page, "2026-11-13")
+    assert len(rows) == 4
+    r = rows[0]
+    assert r["title"] == "Concrete Raising" and r["deadline"] == "2026-12-01" and r["published"] == "2026-11-12"
+    assert r["country"] == "USA" and "Texas" in r["buyer"] and r["id"] == "BIDNET-444233674884"
+    assert r["link"].startswith("https://www.bidnetdirect.com/texas/solicitations/open-bids/")
