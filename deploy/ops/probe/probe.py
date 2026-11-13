@@ -37,7 +37,7 @@ def one(line):
         print("   paths:", sorted(set(API.findall(t)))[:60])
         print("   templated:", sorted(set(re.findall(r"\$\{[A-Za-z0-9_$]{1,8}\}(/[A-Za-z0-9_/]{3,60}\??[A-Za-z_=&${}]{0,80})", t)))[:80])
         print("   urls:", sorted(set(re.findall(r"[\"'`](https?://[^\"'`\s]{6,120}|/(?:api|rest|services|ws|b_ihalearama|ihale)[^\"'`\s]{2,100})[\"'`]", t)))[:80])
-        for m in list(re.finditer(r'queryKey:\["tenders"|GetTenders|/search[A-Za-z]*\(|ihaleAra|SearchIhale', t))[:6]:
+        for m in list(re.finditer(r'queryKey:\["tenders"|GetTenders|/search[A-Za-z]*\(|ihaleAra|SearchIhale|apiUrl|baseUrl|procedimientos|whitney', t))[:6]:
             print("   ..." + re.sub(r"\s+", " ", t[max(0, m.start() - 100):m.start() + 400]))
         return
     print("   scripts:", re.findall(r'<script[^>]+src="([^"]+)"', t)[:15])
