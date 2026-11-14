@@ -115,6 +115,63 @@ def collect_global(s):
     return items, meta
 
 
+CURATE_MODEL = "claude-haiku-5-5"   # the web app's cheapest model (dealdesk/lib/anthropic.ts)
+
+
+def curate(rows, top=70):
+    """One small model call per refresh (owner, 14 Nov 2026: the module must help understand what is happening): keeps
+    only items that matter for business, trade, markets or the economy, rewrites each title in clean English and
+    Hebrew, adds one line on why it matters for a cross-border trading firm, and fixes the theme tags. Uses only the
+    item text given; nothing is added. Without ANTHROPIC_API_KEY the machine-translated rows are kept as they are."""
+    import os
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key or not rows:
+        return rows, False
+    cand = rows[:top]
+    items = [{"id": r["id"], "source": r["platform"], "country": r.get("world", ""), "text": r["title"][:220],
+              "machine_en": (r.get("title_en") or "")[:220]} for r in cand]
+    tags = [n for n, _ in TAGS]
+    prompt = ("You curate a business trends feed for Sinder, an Israeli cross-border sourcing and trading firm (commodities, "
+              "infrastructure, energy, defence and health equipment; suppliers in China, India, Turkey; buyers in Africa, the Gulf, Asia, "
+              "Latin America). Below are trending items from Chinese financial wires and hot lists and from Google trending searches in "
+              "many countries, each with its original text and a rough machine translation.\n"
+              "For EACH item return one JSON object: {\"id\", \"keep\": true only if it is about business, trade, markets, prices, the "
+              "economy, companies, projects, energy, commodities, shipping, sanctions or economic policy (not sport, entertainment, "
+              "crime, celebrities, weather, lotteries or generic tech gossip), \"title_en\": a clear English headline, \"title_he\": the "
+              "same headline in natural Hebrew, \"why_en\" and \"why_he\": one short line on why it matters for a trading firm "
+              "(empty if nothing concrete), \"tags\": a subset of " + json.dumps(tags) + "}. Use only what the item says; do not add "
+              "facts, numbers or names. No emojis, no em-dashes. Return ONLY a JSON array.\n\nItems:\n" + json.dumps(items, ensure_ascii=False))
+    try:
+        import requests
+        r = requests.post("https://api.anthropic.com/v1/messages", timeout=180,
+                          headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                          json={"model": os.environ.get("BIZ_TRENDS_MODEL", CURATE_MODEL), "max_tokens": 12000,
+                                "messages": [{"role": "user", "content": prompt}]})
+        r.raise_for_status()
+        txt = "".join(b.get("text", "") for b in r.json().get("content", []) if b.get("type") == "text")
+        arr = json.loads(txt[txt.find("["): txt.rfind("]") + 1])
+    except Exception as e:  # noqa: BLE001
+        log.warning("trends curation failed, machine translations kept: %s", str(e)[:160])
+        return rows, False
+    by = {a.get("id"): a for a in arr if isinstance(a, dict)}
+    out = []
+    for r in cand:
+        a = by.get(r["id"])
+        if not a or not a.get("keep"):
+            continue
+        r = dict(r)
+        r["title_en"] = (a.get("title_en") or r.get("title_en") or "")[:220]
+        r["title_he"] = (a.get("title_he") or "")[:220]
+        r["why_en"], r["why_he"] = (a.get("why_en") or "")[:200], (a.get("why_he") or "")[:200]
+        t = [x for x in (a.get("tags") or []) if x in tags]
+        if t:
+            r["tags"] = ", ".join(t)
+        r["score"] = round(float(r["score"]) + (2 if r["why_en"] else 0), 1)
+        out.append(r)
+    log.info("trends curation: %d of %d kept", len(out), len(cand))
+    return sorted(out, key=lambda x: -x["score"]), True
+
+
 def fetch_trends():
     s, t = session(), str(today())
     items, meta = collect(s)
@@ -177,10 +234,12 @@ def fetch_trends():
             r["title_he"] = he.get(r["id"], "")
     except Exception as e:  # noqa: BLE001
         log.warning("trends translation: %s", e)
+    rows = [r for r in rows if "\u2047" not in (r.get("title_en") or "") and "\u2047" not in (r.get("title_he") or "")]   # "⁇": failed translation
+    rows, curated = curate(rows)
     for r in rows:
         sec, _ = classify(r.get("title_en") or r["title"])
         r["sector"] = SECTORS.get(sec, "") if sec else ""
-    cols = ["score", "platform", "rank", "tags", "sector", "world", "title_en", "title_he", "title", "url", "first_seen", "runs", "spread"]
+    cols = ["score", "platform", "rank", "tags", "sector", "world", "title_en", "title_he", "why_en", "why_he", "title", "url", "first_seen", "runs", "spread"]
     with open(LEADS / "biz_trends.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()

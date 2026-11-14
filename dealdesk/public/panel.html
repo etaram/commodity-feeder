@@ -1983,6 +1983,7 @@ function renderBizTrends() {
     <div class="bt-tiles">${byTag.map(([k, list]) => `<button type="button" class="bt-tile${BT_SEL === k ? " on" : ""}${list.length ? "" : " zero"}" data-bt="${esc(k)}"><div class="l"><i style="background:${BT_TAGS[k][2]}"></i>${esc(tagLbl(k))}</div><div class="n">${list.length}</div><div class="x" dir="auto">${esc(list[0] ? ttl(list[0]) : "")}</div></button>`).join("")}</div>
     <div class="bt-list">${rows.map(r => `<div class="bt-card">
       <a href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener" dir="auto">${esc(ttl(r))}</a>
+      ${(LANG === "he" ? r.why_he : r.why_en) ? `<div style="font-size:13px" dir="auto">${esc(LANG === "he" ? r.why_he : r.why_en)}</div>` : ""}
       ${r.title && ttl(r) !== r.title ? `<div class="o" dir="auto">${esc(r.title)}</div>` : ""}
       <div class="bt-meta">${tags(r).map(k => `<span class="pill" style="border-inline-start:3px solid ${BT_TAGS[k]?.[2] || "var(--line)"}">${esc(tagLbl(k))}</span>`).join("")}</div>
       <div class="bt-meta"><span>${btFlag(r)}${esc(isCn(r) ? r.platform : mt("Searches in ", "חיפושים ב") + (r.world || ""))} #${esc(r.rank)}</span>
