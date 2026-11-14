@@ -2,9 +2,9 @@
 Each dataset is mapped field by field; a dataset joins only when it lists CURRENT bids with a closing date.
 
   Delaware   data.delaware.gov 2hnj-zwix 'Open Bids' (state agencies and school districts; link to mmp.delaware.gov)
+  Montgomery County MD  data.montgomerycountymd.gov eeq6-nnwe 'Solicitations' (status Active)
 
-Checked 2026-11-14. Candidates found through the Socrata catalog and left out: Mesa AZ (no closing date), Montgomery
-County MD (owner decision on its terms pending), New York datasets (history, not open bids)."""
+Checked 2026-11-14. Candidates found through the Socrata catalog and left out: Mesa AZ (no closing date), New York datasets (history, not open bids)."""
 import re
 
 from .common import clean, log, quarantine_future, session, snapshot, today
@@ -13,6 +13,11 @@ from .sectors import classify
 DATASETS = [  # key, url, state, buyer default, field map
     ("de", "https://data.delaware.gov/resource/2hnj-zwix.json", "US-DE", "State of Delaware",
      {"id": "contractnumber", "title": "contracttitle", "pub": "opendate", "deadline": "deadlinedate", "agency": "agencycode", "link": "bidurl"}),
+    # owner approved the county's open-data terms on 14 Nov 2026 (07:16); the dataset has no per-bid link, so rows point
+    # to the county solicitation list and the tender gate counts them as unverified (link)
+    ("mc", "https://data.montgomerycountymd.gov/resource/eeq6-nnwe.json", "US-MD", "Montgomery County, Maryland",
+     {"id": "number", "title": "description", "pub": "issuancedate", "deadline": "closingdate", "agency": "department",
+      "link": "", "default_link": "https://apps.montgomerycountymd.gov/prosolicitation/"}),
 ]
 
 
@@ -25,7 +30,7 @@ def fetch():
     out, meta = [], {}
     for key, url, state, buyer, f in DATASETS:
         try:
-            r = s.get(url, params={"$limit": 5000}, timeout=60)
+            r = s.get(url, params={"$limit": 5000, "$where": f"{f['deadline']} >= '{t}'"}, timeout=60)
             r.raise_for_status()
             items = r.json()
         except Exception as e:  # noqa: BLE001
@@ -44,7 +49,7 @@ def fetch():
                         "notice_type": "Open bid", "stage": "tender", "region_code": state,
                         "access": "State supplier registration usually needed to respond", "published": (x.get(f["pub"]) or "")[:10],
                         "deadline": dl, "deadline_basis": "submission", "value": "", "currency": "",
-                        "link": _link(x.get(f["link"])) or url, "source_url": url, "fetched": t, "contact": "", "lang": "en"})
+                        "link": (_link(x.get(f["link"])) if f["link"] else "") or f.get("default_link") or url, "source_url": url, "fetched": t, "contact": "", "lang": "en"})
             n += 1
         meta[f"{key}_open"] = n
     if not out and any(k.endswith("_failed") for k in meta):

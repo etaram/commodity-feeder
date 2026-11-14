@@ -16,7 +16,7 @@ from .quality_gate import ISO_CODES
 
 VERSION = "tender-gate-1.0 (2026-11-14)"
 GENERIC_LINK = re.compile(r"FrontEndLatestActiveTenders|FrontEndTendersByOrganisation|page=Home\b|portal\.htm$|"
-                          r"/tenders/?$|/opportunities/?$|/bids/?$|advancedSearchBid\.xhtml|/iprod/?$", re.I)
+                          r"/tenders/?$|/opportunities/?$|/bids/?$|advancedSearchBid\.xhtml|/iprod/?$|/prosolicitation/?$", re.I)
 GENERIC_BUYER = re.compile(r"not confirmed|^public agency,|^unknown|^n/?a$|^-+$", re.I)
 OPEN_STAGES = {"tender", ""}
 
