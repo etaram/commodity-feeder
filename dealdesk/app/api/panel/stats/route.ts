@@ -16,9 +16,9 @@ export async function GET() {
   try {
     const { rows } = await allTenders();
     const now = new Date(), t0 = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-    const reg = new Map<string, number>(), sec = new Map<string, number>(), cty = new Map<string, number>();
+    const reg = new Map<string, number>(), vreg = new Map<string, number>(), sec = new Map<string, number>(), cty = new Map<string, number>();
     const days = [0, 0, 0, 0, 0, 0];
-    let open = 0, noDeadline = 0, planned = 0, fresh = 0, value = 0;
+    let open = 0, verified = 0, noDeadline = 0, planned = 0, fresh = 0, value = 0;
     const add = (m: Map<string, number>, k: string) => m.set(k || "-", (m.get(k || "-") || 0) + 1);
     for (const r of rows as unknown as Record<string, string>[]) {
       if (r.stage === "planned") { planned++; continue; }
@@ -27,6 +27,8 @@ export async function GET() {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(dl)) { noDeadline++; continue; }
       if (isClosed(dl)) continue;
       open++;
+      // tender gate (leads/tender_gate.py): deep link, named buyer, ISO3 country, real title, not petty local works
+      if (r.quality === "verified") { verified++; add(vreg, r.region); }
       add(reg, r.region); add(sec, r.sector); add(cty, String(r.country || "").split(",")[0]);
       const d = Math.round((Date.parse(dl) - t0) / 86400000);
       days[d <= 7 ? 0 : d <= 14 ? 1 : d <= 30 ? 2 : d <= 60 ? 3 : d <= 90 ? 4 : 5]++;
@@ -35,7 +37,7 @@ export async function GET() {
     }
     const top = (m: Map<string, number>, n: number) => [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n);
     const countries = [...cty.keys()].filter((c) => /^[A-Z]{3}$/.test(c)).length;
-    return NextResponse.json({ ok: true, at: new Date().toISOString(), open, no_deadline: noDeadline, planned, fresh, value_usd: Math.round(value),
+    return NextResponse.json({ ok: true, at: new Date().toISOString(), open, verified, verified_region: top(vreg, 20), no_deadline: noDeadline, planned, fresh, value_usd: Math.round(value),
       countries, region: top(reg, 20), sector: top(sec, 8), country: top(cty, 10), days });
   } catch (e) {
     return NextResponse.json({ ok: false, error: String(e).slice(0, 200) }, { status: 500 });
