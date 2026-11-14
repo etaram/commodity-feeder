@@ -59,7 +59,11 @@ class _Polite:
 
 def lpse_codes(c):
     r = c.get(HOST + "/robots.txt")
-    r.raise_for_status()
+    if r.status_code != 200:
+        body = " ".join(r.text[:300].split())
+        raise RuntimeError(f"robots.txt HTTP {r.status_code} (server {r.headers.get('server')}, cf-ray "
+                           f"{bool(r.headers.get('cf-ray'))}, cf-mitigated {r.headers.get('cf-mitigated')}): "
+                           f"{body!r}")
     codes = []
     for m in re.finditer(r"(?im)^\s*Allow:\s*/([a-z0-9][a-z0-9_-]*)\s*$", r.text):
         if m.group(1) not in codes:
