@@ -7,6 +7,7 @@ Access (checked 2026-11-14): public JSON, no key, robots.txt sets no rule. One r
 politely (0.5 s apart). OPEN = a contract notice not marked outdated with an offer deadline today or later."""
 import datetime as dt
 import re
+import os
 import time
 
 from .common import clean, log, quarantine_future, session, snapshot, today
@@ -15,6 +16,7 @@ from .sectors import classify
 API = "https://ezamowienia.gov.pl/mo-board/api/v1/Board/Search"
 NOTICE = "https://ezamowienia.gov.pl/mo-board/bzp/notice-details/id/{}"
 DAYS = 60
+BUDGET_S = int(os.environ.get("POLAND_BUDGET_S", "900"))   # the workflow step has 20 minutes
 PAGE = 250
 NATURE = {"Delivery": "goods", "Services": "services", "Works": "works"}
 
@@ -45,11 +47,14 @@ def parse(items, fetched, t):
 def fetch():
     s, t = session(), today()
     ts = str(t)
-    out, calls, failed_days = [], 0, 0
-    for back in range(DAYS, -1, -1):
+    out, calls, failed_days, repeats, cut = [], 0, 0, 0, False
+    t0 = time.time()
+    for back in range(0, DAYS + 1):   # newest day first, so a time cut keeps the freshest notices
+        if time.time() - t0 > BUDGET_S:
+            cut = True; break
         d, d2 = str(t - dt.timedelta(days=back)), str(t - dt.timedelta(days=back - 1))
-        page = 1
-        while page <= 120:
+        page, prev = 1, None
+        while page <= 120 and time.time() - t0 <= BUDGET_S:
             try:
                 r = s.get(API, params={"NoticeType": "ContractNotice", "PublicationDateFrom": d, "PublicationDateTo": d2,
                                        "PageSize": PAGE, "PageNumber": page}, timeout=60)
@@ -60,6 +65,10 @@ def fetch():
                 log.warning("Poland BZP %s page %d: %s", d, page, str(e)[:100]); failed_days += 1; break
             if not isinstance(items, list) or not items:
                 break
+            sig = tuple(str(x.get("bzpNumber") or x.get("objectId") or "") for x in items[:3])
+            if sig == prev:   # the board ignored the page number: stop this day instead of reading it 120 times
+                repeats += 1; break
+            prev = sig
             out += parse(items, ts, ts)
             # the board returns its own page size (not always PageSize): keep paging until a page comes back empty
 
@@ -70,6 +79,6 @@ def fetch():
         raise RuntimeError("Poland BZP: no rows read; previous snapshot kept")
     out, q = quarantine_future(out, "poland")
     keep, _ = snapshot("poland", list({x["id"]: x for x in out}.values()))
-    log.info("Poland BZP: %d open contract notices (%d calls, %d days failed)", len(keep), calls, failed_days)
+    log.info("Poland BZP: %d open contract notices (%d calls, %d days failed, %d repeated pages, %s)", len(keep), calls, failed_days, repeats, "cut at the time budget" if cut else "all days read")
     return keep, {"new": len(keep), "calls": calls, "quarantined": q, "parts_failed": failed_days,
-                  "complete_snapshot": 0 if failed_days else 1}
+                  "complete_snapshot": 0 if failed_days or cut else 1}
