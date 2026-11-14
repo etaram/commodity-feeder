@@ -83,6 +83,26 @@ def denue2():
             print("STREAM ERR", u, type(e).__name__)
 
 
+def traces3():
+    print("== TRACES3")
+    j = get("https://webgate.ec.europa.eu/tracesnt/assets/js/min/establishment-listing.8-2-14-20261210-113641000.min.js")
+    if j is None:
+        return
+    t = j.text
+    for tok in ["view/search", "view/view", "export/spreadsheet", "downloadXls", "streamPdf", "remoteEstablishmentListingContext",
+                "toRemoteUrl", "classificationSectionId", "Restangular", "setBaseUrl", "baseUrl", "sections", "activities", "pageSize", "offset"]:
+        for n, m in enumerate(re.finditer(re.escape(tok), t)):
+            if n >= 3:
+                break
+            print(f"  [{tok}]", t[max(0, m.start() - 350): m.end() + 350].replace("\n", " "))
+    for u in ["https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/view/search/CN/MEAT",
+              "https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/sections",
+              "https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/countries"]:
+        r = get(u)
+        if r is not None:
+            print("   body:", r.text[:400].replace("\n", " "))
+
+
 def traces():
     print("== TRACES")
     robots("https://webgate.ec.europa.eu", ["/tracesnt/directory/publication/establishment/index", "/tracesnt/api/", "/tracesnt/directory/"])
