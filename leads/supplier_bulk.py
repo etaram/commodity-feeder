@@ -185,8 +185,13 @@ def denue(limit=None):
             continue
         seen["51plus"] += 1
         legal = re.sub(r"\s+", " ", r.get("raz_social", "")).strip()
+        if not legal:
+            seen["empty_legal_name"] += 1
         if not legal or not MX_FORM.search(fold(legal)):
-            seen["skipped_no_company_form"] += 1; continue
+            seen["skipped_no_company_form"] += 1
+            if legal and seen["skipped_no_company_form"] <= 25:
+                log.info("BULK denue no-form tail: %s", " ".join(fold(legal).split()[-3:])[-30:])
+            continue
         key = re.sub(r"[^a-z0-9]", "", fold(legal).lower())
         rank = {"51-100": 1, "101-250": 2, "251+": 3}[band]
         f = firms.get(key)
@@ -273,6 +278,9 @@ def prh(limit=None):
         forms = [f for f in (c.get("companyForms") or []) if not f.get("endDate")]
         form = _desc((forms or [{}])[0].get("descriptions"), "3") if forms else ""
         form_fi = _desc((forms or [{}])[0].get("descriptions"), "1") if forms else ""
+        seen[f"form:{(forms or [{}])[0].get('type', '-') if forms else 'none'} {form_fi[:30]}"] += 1
+        if not forms:
+            seen["skipped_no_form"] += 1; continue  # a business without a company form is a sole trader (natural person)
         if PRH_PERSON_FORM.search(f"{form} {form_fi}"):
             seen["skipped_sole_trader"] += 1; continue
         if PRH_SKIP_FORM.search(f"{form} {form_fi}"):
