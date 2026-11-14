@@ -640,6 +640,10 @@ a.lnk{white-space:nowrap}
 .mx-tip div{display:flex;gap:6px;margin-top:4px}.mx-tip div i{flex:none;width:8px;height:8px;border-radius:50%;margin-top:5px}
 .mx-tip .m{color:var(--muted);font-size:11.5px;margin-top:6px}
 @media (hover:none){.mx-tip{display:none}}
+.mx-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:8px;font-size:13px;color:var(--muted)}
+.mx-ctl select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 8px;margin-inline-start:4px}
+.mx-ctl .tg{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--ink)}
+@media (max-width:640px){.mx-ctl{padding-inline:12px}}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -2162,7 +2166,7 @@ const AIS_LL = { "Suez Canal": [32.45, 30.5], "Bab el-Mandeb": [43.3, 12.7], "St
   "Haifa": [35, 32.82], "Ashdod": [34.62, 31.82], "Shanghai (Yangshan)": [122.05, 31], "Mumbai (JNPT)": [72.9, 18.92], "Rotterdam": [4.1, 51.95], "Santos": [-46.32, -23.97] };
 const AIS_A2 = { "Suez Canal": "EG", "Bab el-Mandeb": "DJ", "Strait of Hormuz": "OM", "Panama Canal": "PA", "Singapore Strait": "SG", "Bosphorus": "TR", "Gibraltar": "ES", "Jebel Ali": "AE", "Jeddah": "SA", "Djibouti": "DJ",
   "Mombasa": "KE", "Durban": "ZA", "Lagos (Apapa, Lekki)": "NG", "Haifa": "IL", "Ashdod": "IL", "Shanghai (Yangshan)": "CN", "Mumbai (JNPT)": "IN", "Rotterdam": "NL", "Santos": "BR" };
-const SIG_C = { trend: "var(--accent)", trade: "var(--good)", ship: "var(--info)", shipbad: "var(--bad)", shipnod: "var(--muted)" };
+const SIG_C = { trend: "var(--accent)", trade: "var(--good)", ship: "var(--info)", shipbad: "var(--bad)", shipnod: "var(--muted)", tender: "var(--accent)", upcoming: "var(--accent)", risk: "var(--accent)" };
 const pctTxt = v => v == null ? "" : (v > 0 ? "+" : "") + v.toFixed(0) + "%";
 const pctB = v => v == null ? "" : `<bdi dir="ltr">${pctTxt(v)}</bdi>`;
 const LBL_DY = { "Haifa": -1.3, "Ashdod": 1.3, "Jebel Ali": 1.2, "Strait of Hormuz": -1.0, "Jeddah": 0.8, "Bab el-Mandeb": 0.9, "Djibouti": 1.4, "Suez Canal": -0.6 };
@@ -2204,6 +2208,21 @@ const LANES = [
   { id: "sa", at: [-33, -6], en: "South America - Europe", he: "דרום אמריקה - אירופה", z: ["Santos"], p: [[-46.3, -24.1], [-40, -21], [-34.5, -8], [-28, 2], [-22, 14], [-16, 26], [-9, 34.5], [-5.6, 35.95]] },
   { id: "pa", at: [-55, 27], en: "Panama - Atlantic", he: "פנמה - האוקיינוס האטלנטי", z: ["Panama Canal"], p: [[-79.7, 9.4], [-77, 13], [-72, 17.5], [-65, 21], [-50, 30], [-30, 38], [-12, 44], [-6.5, 48.2]] },
 ];
+/* map layers: what the countries are shaded by, plus overlays the viewer can switch on and off */
+const MAP_MODES = [["all", "All signals", "כל האותות"], ["trends", "Business trends", "טרנדים עסקיים"], ["imports", "Import surges (UN Comtrade)", "זינוק ביבוא (UN Comtrade)"],
+  ["tenders", "Open tenders that fit us", "מכרזים פתוחים שמתאימים לנו"], ["upcoming", "Tenders expected to open", "מכרזים צפויים"], ["risk", "Procurement integrity risk", "סיכון יושרה ברכש"]];
+let MAPL = { mode: "all", lanes: true, ports: true, labels: true };
+try { Object.assign(MAPL, JSON.parse(localStorage.getItem("sinder-mapl") || "{}")); } catch (e) {}
+const saveMapl = () => { try { localStorage.setItem("sinder-mapl", JSON.stringify(MAPL)); } catch (e) {} };
+const a2of = c => { const x = String(c || "").trim().split(/[,;]/)[0].trim(); return x.length === 3 ? ISO[x.toUpperCase()] || "" : x.length === 2 ? x.toUpperCase() : NAME2[x.toLowerCase()] || ""; };
+function layerItems(mode) {
+  const he = LANG === "he", out = [], add = (a2, o) => { const c = WCENT[a2]; if (c) out.push({ a2, lon: c[0], lat: c[1], reg: REGIONS[c[2]], ...o }); };
+  if (mode === "tenders") for (const r of (S.data.tenders || []).filter(r => r.deadline >= today())) add(a2of(r.country), { t: "tender", w: num(r.score) || 1, text: plain(tTitle(r)), sub: `${plain(tr(r.buyer))}${r.deadline ? " · " + mt("deadline ", "הגשה ") + r.deadline : ""}`, url: url(r.link) });
+  if (mode === "upcoming") for (const r of (S.data.upcoming || [])) add(a2of(r.country), { t: "upcoming", w: num(r.est_value_usd) || 1, text: plain(tTitle(r)), sub: `${plain(tr(r.buyer))}${money(r.est_value_usd) ? " · " + money(r.est_value_usd) : ""}`, url: url(r.link) });
+  if (mode === "risk") for (const r of (S.data.integrity || []).filter(r => r.integrity_score !== "")) add(a2of(r.country), { t: "risk", w: 100 - num(r.integrity_score), score: num(r.integrity_score),
+    text: `${mt("Integrity score", "ציון יושרה")} ${num(r.integrity_score).toFixed(0)}/100 · ${mt("single-bid share", "מכרזים עם הצעה אחת")} ${r.single_bid_share !== "" ? Math.round(100 * num(r.single_bid_share)) + "%" : "-"}`, sub: String(r.advice || "").slice(0, 160), url: "" });
+  return out;
+}
 function laneStats(sig) {
   const by = {}; for (const s of sig) if (s.zone) by[s.zone] = s;
   return LANES.map(l => { const zs = l.z.map(z => by[z]).filter(Boolean), ok = zs.filter(z => z.t !== "shipnod");
@@ -2212,13 +2231,30 @@ function laneStats(sig) {
     const stop = ok.length ? Math.round(100 * ok.reduce((a, z) => a + (z.stopped || 0), 0) / Math.max(1, n)) : null;
     return { ...l, n, chg, stop, cov: ok.length, tot: l.z.length, hot: ok.some(z => z.t === "shipbad") }; });
 }
+function modeItems(sig) {
+  const m = MAPL.mode;
+  if (m === "all") return sig.filter(s => !s.t.startsWith("ship"));
+  if (m === "trends") return sig.filter(s => s.t === "trend");
+  if (m === "imports") return sig.filter(s => s.t === "trade");
+  return layerItems(m);
+}
+function mapControls() {
+  const he = LANG === "he";
+  return `<div class="mx-ctl"><label>${esc(mt("Shade countries by", "צביעת מדינות לפי"))} <select id="mx-mode">${MAP_MODES.map(([k, en, h]) => `<option value="${k}"${MAPL.mode === k ? " selected" : ""}>${esc(he ? h : en)}</option>`).join("")}</select></label>
+    ${[["lanes", "Sea lanes", "נתיבי שיט"], ["ports", "Port checkpoints", "נקודות מדידה"], ["labels", "Labels", "תוויות"]].map(([k, en, h]) => `<label class="tg"><input type="checkbox" data-mxl="${k}"${MAPL[k] ? " checked" : ""}> ${esc(he ? h : en)}</label>`).join("")}</div>`;
+}
+function bindMapControls() {
+  const sel = $("#mx-mode"); if (sel) sel.onchange = () => { MAPL.mode = sel.value; saveMapl(); renderMacroHero(); };
+  document.querySelectorAll("[data-mxl]").forEach(b => b.onchange = () => { MAPL[b.dataset.mxl] = b.checked; saveMapl(); renderMacroHero(); });
+}
 function worldMapSvg(sig) {
   const he = LANG === "he", X = lon => (lon + 180) / WMAP.S, Y = lat => (WMAP.LAT0 - lat) / WMAP.S;
   const W = WMAP.W + 2, H = WMAP.H + 1, pX = lon => (100 * (X(lon) + 1) / W).toFixed(2) + "%", pY = lat => (100 * (Y(lat) + 1) / H).toFixed(2) + "%";
   const cn = a2 => { try { return new Intl.DisplayNames([he ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } };
-  const C = {}; for (const s of sig) if (!s.t.startsWith("ship")) { const c = C[s.a2] = C[s.a2] || { a2: s.a2, reg: s.reg, lon: WCENT[s.a2]?.[0], lat: WCENT[s.a2]?.[1], tr: [], td: [] }; (s.t === "trade" ? c.td : c.tr).push(s); }
-  const cs = Object.values(C).filter(c => c.lon != null).map(c => ({ ...c, n: c.tr.length + c.td.length, top: Math.max(0, ...c.td.map(x => x.w)) }))
-    .map(c => ({ ...c, imp: c.tr.length * 2 + c.td.length + c.top / 80 })).sort((a, b) => b.imp - a.imp);
+  const mode = MAPL.mode, items = modeItems(sig);
+  const C = {}; for (const s of items) { const c = C[s.a2] = C[s.a2] || { a2: s.a2, reg: s.reg, lon: WCENT[s.a2]?.[0], lat: WCENT[s.a2]?.[1], tr: [], td: [], ot: [] }; (s.t === "trade" ? c.td : s.t === "trend" ? c.tr : c.ot).push(s); }
+  const cs = Object.values(C).filter(c => c.lon != null).map(c => ({ ...c, n: c.tr.length + c.td.length + c.ot.length, top: Math.max(0, ...c.td.map(x => x.w)), risk: Math.max(0, ...c.ot.map(x => x.t === "risk" ? x.w : 0)) }))
+    .map(c => ({ ...c, n: mode === "imports" ? c.top : mode === "risk" ? c.risk : c.n, imp: mode === "imports" ? c.top : mode === "risk" ? c.risk : c.tr.length * 2 + c.td.length + c.ot.length + c.top / 80 })).sort((a, b) => b.imp - a.imp);
   // magnitude = number of signals: one hue, five steps (quantiles of today's counts)
   const ns = cs.map(c => c.n).sort((a, b) => a - b), q = k => ns[Math.min(ns.length - 1, Math.floor(k * ns.length))] || 1;
   const cuts = [q(0.35), q(0.6), q(0.8), q(0.93)], step = n => 1 + cuts.filter(c => n > c).length;
@@ -2228,7 +2264,7 @@ function worldMapSvg(sig) {
   const land = shapes.map(sh => { const c = byA2[sh.a2]; if (!c) return `<path class="ct" d="${sh.d}"/>`; seen.add(sh.a2);
     return `<path class="ct mk s${step(c.n)}" data-reg="${esc(c.reg)}" data-a2="${esc(c.a2)}" data-zone="" tabindex="0" role="button" aria-label="${esc(cn(c.a2))}" d="${sh.d}"/>`; }).join("");
   // small or missing countries get a dot in the same step colour so they can be seen and pointed at
-  const dots = cs.filter(c => !seen.has(c.a2) || shapes.find(sh => sh.a2 === c.a2)?.small).map(c => `<circle class="mk dt s${step(c.n)}" data-reg="${esc(c.reg)}" data-a2="${esc(c.a2)}" data-zone="" tabindex="0" role="button" aria-label="${esc(cn(c.a2))}" cx="${X(c.lon).toFixed(2)}" cy="${Y(c.lat).toFixed(2)}" r="1"/>`).join("");
+  const dots = cs.filter((c, i) => (!seen.has(c.a2) || shapes.find(sh => sh.a2 === c.a2)?.small) && (i < 30 || c.a2 === "IL")).map(c => `<circle class="mk dt s${step(c.n)}" data-reg="${esc(c.reg)}" data-a2="${esc(c.a2)}" data-zone="" tabindex="0" role="button" aria-label="${esc(cn(c.a2))}" cx="${X(c.lon).toFixed(2)}" cy="${Y(c.lat).toFixed(2)}" r="1"/>`).join("");
   const lanes = laneStats(sig), nmax = Math.max(1, ...lanes.map(l => l.n));
   const lanesSvg = lanes.map(l => { const d = "M" + l.p.map(([lo, la]) => `${X(lo).toFixed(2)} ${Y(la).toFixed(2)}`).join("L");
     const w = l.cov ? (0.22 + 0.5 * Math.sqrt(l.n / nmax)).toFixed(2) : ".2";
@@ -2239,14 +2275,16 @@ function worldMapSvg(sig) {
   const key = (cls, txt) => `<span class="mv"><i class="${cls}"></i>${txt}</span>`;
   const lab = [];
   cs.slice(0, 10).forEach((c, i) => {
-    const parts = (c.td.length ? key("g", `${esc(mt("imports", "יבוא"))} <bdi dir="ltr">+${c.top.toFixed(0)}%</bdi>`) : "") + (c.tr.length ? key("y", `${c.tr.length} ${esc(mt(c.tr.length > 1 ? "trends" : "trend", c.tr.length > 1 ? "טרנדים" : "טרנד"))}`) : "");
+    const parts = mode === "tenders" ? key("y", `${c.ot.length} ${esc(mt("tenders", "מכרזים"))}`) : mode === "upcoming" ? key("y", `${c.ot.length} ${esc(mt("expected", "צפויים"))}`)
+      : mode === "risk" ? key(c.risk >= 50 ? "r" : "y", `${esc(mt("integrity", "יושרה"))} <bdi dir="ltr">${(100 - c.risk).toFixed(0)}/100</bdi>`)
+      : (c.td.length ? key("g", `${esc(mt("imports", "יבוא"))} <bdi dir="ltr">+${c.top.toFixed(0)}%</bdi>`) : "") + (c.tr.length ? key("y", `${c.tr.length} ${esc(mt(c.tr.length > 1 ? "trends" : "trend", c.tr.length > 1 ? "טרנדים" : "טרנד"))}`) : "");
     lab.push(`<div class="ml c" data-pri="${i}" style="left:${pX(c.lon)};top:${pY(c.lat)}" dir="${he ? "rtl" : "ltr"}"><b>${esc(cn(c.a2))}</b><span class="mvs">${parts}</span></div>`); });
   for (const l of lanes.filter(l => l.cov)) { const m = l.at || l.p[Math.floor(l.p.length / 2)];
     lab.push(`<div class="ml ln" data-pri="${-1 + lanes.indexOf(l) / 10}" style="left:${pX(m[0])};top:${pY(m[1])}" dir="${he ? "rtl" : "ltr"}"><b>${esc(he ? l.he : l.en)}</b><span class="mvs">${key(l.hot ? "r" : "b", `<bdi dir="ltr">${l.n}</bdi> ${esc(mt("ships", "אוניות"))}${l.chg != null ? ` <bdi dir="ltr">${pctTxt(l.chg)}</bdi>` : ""}`)}</span></div>`); }
-  return `<div class="mx-map-sc" dir="ltr"><div class="mx-canvas"><svg viewBox="-1 -1 ${W} ${H}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><g class="land">${land}</g>${lanesSvg}${dots}${ships}</svg><div class="mx-ov">${lab.join("")}</div></div></div>`;
+  return `<div class="mx-map-sc" dir="ltr"><div class="mx-canvas"><svg viewBox="-1 -1 ${W} ${H}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><g class="land">${land}</g>${MAPL.lanes ? lanesSvg : ""}${dots}${MAPL.ports ? ships : ""}</svg><div class="mx-ov">${MAPL.labels ? lab.filter(x => MAPL.lanes || !x.includes('class="ml ln"')).join("") : ""}</div></div></div>`;
 }
 function mapLegend() {
-  return `<div class="mx-leg mx-leg2"><span class="seq">${esc(mt("Signals per country", "אותות למדינה"))} <i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i><i class="s5"></i> ${esc(mt("few to many", "מעט עד הרבה"))}</span>
+  return `<div class="mx-leg mx-leg2"><span class="seq">${esc((MAP_MODES.find(m => m[0] === MAPL.mode) || MAP_MODES[0])[LANG === "he" ? 2 : 1])}${MAPL.mode === "risk" ? esc(mt(" (darker = riskier)", " (כהה = סיכון גבוה)")) : ""} <i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i><i class="s5"></i> ${esc(mt("few to many", "מעט עד הרבה"))}</span>
     <span><i class="lk"></i>${esc(mt("Sea lane, width = ships at its AIS checkpoints", "נתיב שיט, עובי = אוניות בנקודות המדידה (AIS)"))}</span>
     <span><i class="lk hot"></i>${esc(mt("More ships waiting than usual", "יותר אוניות ממתינות מהרגיל"))}</span>
     <span><i class="lk nod"></i>${esc(mt("No AIS coverage", "אין כיסוי AIS"))}</span>
@@ -2288,7 +2326,7 @@ function mapDetails(g) {
   const list = mapSignalsFor(g); mapTip(null);
   const c = WCENT[a2], cname = (() => { try { return new Intl.DisplayNames([he ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } })();
   const title = zone ? `${he ? SHIP_HE[zone] || zone : zone} (${cname})` : cname;
-  const kind = { trend: mt("Business trend", "טרנד עסקי"), trade: mt("Import surge", "זינוק ביבוא"), ship: mt("Shipping", "שילוח"), shipbad: mt("Shipping: more ships waiting", "שילוח: יותר אוניות ממתינות"), shipnod: mt("Shipping", "שילוח") };
+  const kind = { trend: mt("Business trend", "טרנד עסקי"), trade: mt("Import surge", "זינוק ביבוא"), ship: mt("Shipping", "שילוח"), shipbad: mt("Shipping: more ships waiting", "שילוח: יותר אוניות ממתינות"), shipnod: mt("Shipping", "שילוח"), tender: mt("Open tender", "מכרז פתוח"), upcoming: mt("Expected tender", "מכרז צפוי"), risk: mt("Procurement integrity", "יושרה ברכש") };
   box.innerHTML = `<div class="mx-det-h"><b>${flag(a2)} ${esc(title)}</b><span class="sub">${list.length} ${esc(mt("signals", "אותות"))}${c ? " · " + esc(he ? REG_HE[REGIONS[c[2]]] || REGIONS[c[2]] : REGIONS[c[2]]) : ""}</span><button type="button" id="mx-det-x">${esc(mt("Close", "סגור"))}</button></div>
     <ul>${list.slice(0, 14).map(s => `<li><i style="background:${SIG_C[s.t]}"></i><div style="min-width:0"><em>${esc(kind[s.t] || "")}${s.sub ? " · " + esc(s.sub) : ""}</em>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener" dir="auto">${esc(s.text)}</a>` : `<span dir="auto">${esc(s.text)}</span>`}${s.why ? `<span class="why" dir="auto">${esc(s.why)}</span>` : ""}</div></li>`).join("")}</ul>
     ${list.length > 14 ? `<div class="sub" style="margin-top:6px">+${list.length - 14}</div>` : ""}`;
@@ -2298,9 +2336,11 @@ function mapDetails(g) {
 }
 function mapSignalsFor(g) {
   const a2 = g.dataset.a2, zone = g.dataset.zone;
-  return MAPSIG.filter(s => zone ? s.zone === zone || (s.a2 === a2 && !s.t.startsWith("ship")) : s.a2 === a2)
+  const pool = zone ? MAPSIG : modeItems(MAPSIG);
+  return pool.filter(s => zone ? s.zone === zone || (s.a2 === a2 && !s.t.startsWith("ship")) : s.a2 === a2)
     .sort((a, b) => (zone ? (b.zone === zone) - (a.zone === zone) : 0) || ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(a.t) - ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(b.t) || b.w - a.w);
 }
+
 function mapTip(g, ev) {
   const map = document.querySelector(".mx-map"); if (!map) return;
   let tip = map.querySelector(".mx-tip"); if (!tip) { tip = document.createElement("div"); tip.className = "mx-tip"; tip.setAttribute("role", "tooltip"); map.appendChild(tip); }
@@ -2384,12 +2424,12 @@ function renderMacroHero() {
       <span class="mx-src">${btFlag(r)}${esc(String(r.platform || "").startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)}</span></a>`).join("")}</div>` : ""}
     ${cnt.length ? `<div class="mx-heat-h">${esc(mt("Today's themes", "הנושאים של היום"))}</div><div class="mx-heat">${cnt.map(([k, v]) => `<i style="flex:${v};background:${col(k)}" title="${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)}: ${v}"></i>`).join("")}</div>
       <div class="mx-heat-l">${cnt.map(([k, v]) => `<span><i style="background:${col(k)}"></i>${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>` : ""}
-    ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("World signal map: trends, import surges and sea lanes", "מפת האותות העולמית: טרנדים, זינוקי יבוא ונתיבי שיט"))}</b><span class="sub">${esc(mapSummary(sig))}</span></div>${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
+    ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("World signal map: trends, import surges and sea lanes", "מפת האותות העולמית: טרנדים, זינוקי יבוא ונתיבי שיט"))}</b><span class="sub">${esc(mapSummary(sig))}</span></div>${mapControls()}${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
       <div id="mx-det" class="mx-det" hidden></div>
       ${laneStrip(sig)}
       ${mapLegend()}</div>` : ""}
   </div>`;
-  MAPSIG = sig; bindMap(); renderTerritories(sig); requestAnimationFrame(() => { placeMapLabels(); mapCentre(); });
+  MAPSIG = sig; bindMap(); bindMapControls(); renderTerritories(sig); requestAnimationFrame(() => { placeMapLabels(); mapCentre(); });
   if (!window.__mxRs) { window.__mxRs = 1; let t; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(placeMapLabels, 150); }); }
 }
 /* geopolitical context: what happened in the world in the last 48 hours and what it changes for us (web sources) */
