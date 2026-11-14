@@ -645,6 +645,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     <div id="mx-hero"></div>
     <div class="section" id="today-biztrends"></div>
     <div class="section" id="mx-trade"></div>
+    <div class="section" id="mx-ship"></div>
     <div class="mx-two">
       <div class="section" id="today-geo"></div>
       <div class="section" id="today-brief"></div>
@@ -979,13 +980,14 @@ const RANGES = {
   plays: [LE, "'Plays'!A1:N400"],
   fx: [LE, "'FX'!A1:D40"],
   attention: [LE, "'Attention'!A1:G400"],
-  biztrends: [LE, "'Biz Trends'!A1:M260"],
+  biztrends: [LE, "'Biz Trends'!A1:O320"],
+  ais: [LE, "'AIS Pulse'!A1:L40"],
   exempt: [LE, "'Exempt Buys'!A1:Q4001"],
   ilex: [LE, "'IL Exemption Contracts'!A1:R3000"],
   integrity: [LE, "'Integrity'!A1:N300"],
   suppliers: [SU, "'Suppliers'!A1:AJ6001"],
 };
-const OPTIONAL = new Set(["plays", "fx", "attention", "biztrends", "grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
+const OPTIONAL = new Set(["plays", "fx", "attention", "biztrends", "ais", "grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
 const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
 const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
 const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60, g: 60 }, he: new Map() };
@@ -1549,7 +1551,7 @@ function fillSelect(sel, values) {
 function renderToday() {
   const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
   haiInit(); try { renderViz(); } catch (e) { console.warn("viz", e); }
-  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderMacroHero(); renderTradePulse(); renderTgToday(); renderAppToday();
+  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderMacroHero(); renderTradePulse(); renderShipPulse(); renderTgToday(); renderAppToday();
   const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (b.new === "NEW") - (a.new === "NEW") || (num(b.score) || 0) - (num(a.score) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   $("#kpis").innerHTML = [
     [ts.length.toLocaleString("en-US"), t("k_open")], [ts.filter(r => r.decision === "Pursue").length, t("k_pursue")],
@@ -2015,6 +2017,24 @@ function renderTradePulse() {
         ${r.new_market ? `<span class="pill">${esc(mt("new market", "שוק חדש"))}</span>` : ""}<span class="pill">${esc(r.group || "")}</span>
         <a href="${esc(oec(r))}" target="_blank" rel="noopener" style="font-weight:600">OEC</a></div></div>`).join("")}</div>
     <p class="note" style="margin-top:10px">${esc(mt("Annual official trade data: it shows lasting demand, not this week's news. A high price over the benchmark with growing volume is a supply opportunity.", "נתוני סחר רשמיים שנתיים: הם מראים ביקוש מתמשך, לא חדשות של השבוע. מחיר גבוה מהייחוס יחד עם נפח שגדל הוא הזדמנות אספקה."))}</p></div>`;
+}
+/* shipping pulse: live AIS counts per chokepoint and port (leads/ais_pulse.py, every 8 hours), stopped vessels against
+   the zone's own 7-day average. Counts only. */
+const SHIP_HE = { "Suez Canal": "תעלת סואץ", "Bab el-Mandeb": "באב אל-מנדב", "Strait of Hormuz": "מצרי הורמוז", "Panama Canal": "תעלת פנמה", "Singapore Strait": "מצר סינגפור",
+  "Bosphorus": "הבוספורוס", "Gibraltar": "גיברלטר", "Jebel Ali": "ג'בל עלי", "Jeddah": "ג'דה", "Djibouti": "ג'יבוטי", "Mombasa": "מומבסה", "Durban": "דרבן", "Lagos (Apapa, Lekki)": "לאגוס",
+  "Haifa": "חיפה", "Ashdod": "אשדוד", "Shanghai (Yangshan)": "שנחאי", "Mumbai (JNPT)": "מומבאי", "Rotterdam": "רוטרדם", "Santos": "סנטוס" };
+function renderShipPulse() {
+  const el = $("#mx-ship"); if (!el) return;
+  const rows = (S.data.ais || []).filter(r => r.zone);
+  if (!rows.length) { el.innerHTML = ""; return; }
+  const nm = r => LANG === "he" ? SHIP_HE[r.zone] || r.zone : r.zone;
+  const chg = v => v === "" || v === undefined ? "" : `<span class="num" style="color:${num(v) > 15 ? "var(--bad)" : num(v) < -15 ? "var(--good)" : "var(--muted)"}">${num(v) > 0 ? "+" : ""}${num(v).toFixed(0)}%</span>`;
+  const card = r => `<div class="mx-pk"><b style="font-size:16px">${esc(nm(r))}</b><span>${r.coverage === "low" ? esc(mt("low AIS coverage", "כיסוי AIS חלש")) : `${esc(r.vessels)} ${esc(mt("vessels", "כלי שיט"))} · ${esc(r.stopped)} ${esc(mt("stopped", "עומדים"))} ${chg(r.chg_stopped_pct)}`}</span></div>`;
+  const ch = rows.filter(r => r.kind === "chokepoint"), po = rows.filter(r => r.kind === "port");
+  el.innerHTML = `<div class="bt"><div class="bt-head"><div><h2>${esc(mt("Shipping pulse: chokepoints and ports", "דופק השילוח: נתיבים ונמלים"))}</h2>
+    <div class="sub">${esc(mt(`Live AIS positions in a ${rows[0].minutes}-minute window at ${rows[0].sampled_utc} UTC; red = more vessels stopped than the 7-day average (congestion).`, `מיקומי AIS חיים בחלון של ${rows[0].minutes} דקות, ${rows[0].sampled_utc} UTC; אדום = יותר כלי שיט עומדים מהממוצע השבועי (עומס).`))}</div></div></div>
+    <h3 style="margin:12px 0 6px;font-size:14px">${esc(mt("Chokepoints", "נתיבי מפתח"))}</h3><div class="mx-pulse">${ch.map(card).join("")}</div>
+    <h3 style="margin:12px 0 6px;font-size:14px">${esc(mt("Ports", "נמלים"))}</h3><div class="mx-pulse">${po.map(card).join("")}</div></div>`;
 }
 /* the macro opening: date, currencies against the shekel, the hottest business story, what the world reads more about */
 function renderMacroHero() {

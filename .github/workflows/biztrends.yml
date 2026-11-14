@@ -14,10 +14,11 @@ concurrency:
 jobs:
   trends:
     runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      AISSTREAM_API_KEY: ${{ secrets.AISSTREAM_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,17 +31,22 @@ jobs:
             ~/.local/cache/argos-translate
             ~/.cache/pip
           key: argos-v1
-      - run: pip install requests pycountry langid argostranslate certifi google-auth
+      - run: pip install requests pycountry langid argostranslate certifi google-auth websockets
       - run: python -m leads.biz_trends
       - run: python -m leads.push tab "Biz Trends" biz_trends
+      - name: shipping pulse (live AIS, 9 minutes)
+        continue-on-error: true
+        run: python -m leads.ais_pulse && { [ -f data/leads/ais_pulse.csv ] && python -m leads.push tab "AIS Pulse" ais_pulse || true; }
       - name: commit
         run: |
           git config user.name "leads-bot"; git config user.email "leads-bot@users.noreply.github.com"
           for i in 1 2 3 4 5; do
             cp data/leads/biz_trends.csv /tmp/bt.csv; cp data/leads/cache/biz_trends_history.json /tmp/bth.json 2>/dev/null || true
+            cp data/leads/ais_pulse.csv /tmp/ais.csv 2>/dev/null || true; cp data/leads/cache/ais_history.json /tmp/aish.json 2>/dev/null || true
             git fetch -q origin main && git reset -q --hard origin/main
             cp /tmp/bt.csv data/leads/biz_trends.csv; mkdir -p data/leads/cache; cp /tmp/bth.json data/leads/cache/biz_trends_history.json 2>/dev/null || true
-            git add data/leads/biz_trends.csv data/leads/cache/biz_trends_history.json
+            cp /tmp/ais.csv data/leads/ais_pulse.csv 2>/dev/null || true; cp /tmp/aish.json data/leads/cache/ais_history.json 2>/dev/null || true
+            git add data/leads/biz_trends.csv data/leads/cache/biz_trends_history.json; git add data/leads/ais_pulse.csv data/leads/cache/ais_history.json 2>/dev/null || true
             git diff --cached --quiet && exit 0
             git commit -q -m "biztrends: business trends refresh" && git push -q origin HEAD:main && exit 0
             sleep $((i * 15))
