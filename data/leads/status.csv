@@ -7,16 +7,16 @@ za,2026-11-13T05:10,1316,OK,
 worldbank,2026-11-13T06:01,748,OK,new=343; cache=748; days=10
 ebrd,2026-11-14T03:11,45,OK,
 mrgov,2026-11-13T06:03,187,OK,
-ungm,2026-11-14T03:13,1173,OK,new=565; pages=42
-undp,2026-11-14T03:13,18,OK,new=24; cache=18
-aiib,2026-11-14T03:13,177,OK,new=173; awards=294
-isdb,2026-11-14T03:13,34,OK,new=39
-etimad,2026-11-14T03:14,680,OK,new=83; pages=7
-prozorro,2026-11-14T03:28,5915,OK,candidates=17662; from_feed=0; fetched=1816
-pncp,2026-11-14T03:43,9440,OK,new=2080; pages=92; backfill=next modality 6 page 252; failed_pages=0
-secop,2026-11-14T03:47,2703,OK,new=2319
-germany,2026-11-13T05:42,14087,OK,new=1630; awards_seen=725; awards_saved=657
-contractsfinder,2026-11-14T03:47,101,OK,new=25
+ungm,2026-11-14T01:21,1173,OK,new=565; pages=42
+undp,2026-11-14T01:21,18,OK,new=24; cache=18
+aiib,2026-11-14T01:21,177,OK,new=173; awards=294
+isdb,2026-11-14T01:21,34,OK,new=39
+etimad,2026-11-14T01:22,680,OK,new=83; pages=7
+prozorro,2026-11-14T01:36,6166,OK,candidates=17660; from_feed=0; fetched=1771
+pncp,2026-11-14T01:51,9036,OK,new=1768; pages=82; backfill=next modality 6 page 224; failed_pages=0
+secop,2026-11-14T01:54,2703,OK,new=2319
+germany,2026-11-14T05:10,15898,OK,new=11463; awards_seen=4971; awards_saved=1212
+contractsfinder,2026-11-14T01:54,101,OK,new=25
 paraguay,2026-11-13T05:50,86,OK,new=1
 dominican,2026-11-13T05:52,642,OK,new=122; listed=1000
 austender,2026-11-14T04:04,188,OK,new=130
@@ -27,15 +27,15 @@ kenya,2026-11-14T04:04,591,OK,new=0
 moldova,2026-11-11T09:30,1252,OK,new=443
 uruguay,2026-11-14T04:03,538,OK,new=0
 bahrain,2026-11-13T05:42,19,OK,new=7
-malaysia,2026-11-14T04:04,396,OK,new=396
-qatar,2026-11-14T04:17,328,OK,new=388
-israel,2026-11-11T11:29,932,OK,bodies_scanned=912; open_notices=932
+malaysia,2026-11-14T02:10,396,OK,new=396
+qatar,2026-11-14T02:17,328,OK,new=388
+israel,2026-11-14T03:55,866,OK,bodies_scanned=912; open_notices=866
 nyc,2026-11-13T05:08,197,OK,open=197
 us_cities,2026-11-13T05:10,262,OK,Los_Angeles=187 | open data API; Chicago=2 | web page ok: https://www.chicago.gov/city/en/depts/dps/isupplier/current-bids.html; Houston=4 | web page ok: https://www.houstontx.gov/obo/current_contract
 wb_pipeline,2026-11-13T06:01,957,OK,projects=957
-ocdr_tenders,2026-11-13T14:50,1620,OK,publications=29; read=29; releases=1143432; open_tenders=1620; countries=6
-afdb,2026-11-14T03:13,96,OK,new=30
-iadb,2026-11-14T03:13,111,OK,new=108
+ocdr_tenders,2026-11-14T02:36,1562,OK,publications=29; read=29; releases=1143432; open_tenders=1562; countries=6
+afdb,2026-11-14T01:21,96,OK,new=30
+iadb,2026-11-14T01:21,111,OK,new=108
 chile,2026-11-13T05:10,4450,OK,new=4418
 simap,2026-11-14T03:14,831,OK,new=240
 gets,2026-11-14T03:14,398,OK,new=396
@@ -55,7 +55,12 @@ cameroon,2026-11-13T06:00,111,OK,new=102; pages=22
 transnet,2026-11-14T04:17,99,OK,new=99; quarantined=0; complete_snapshot=1
 bonfire,2026-11-13T16:20,126,OK,"new=126; quarantined=0; hubs_tried=194; hubs_answered=7; hubs_failed=187; stale_rows=0; complete_snapshot=1 | last error:  none of {len(seen)} hubs answered; previous snapshot kept as last-good"") RuntimeError: Bonfire: none of 211 hubs answered; previous snapshot kept as last-good "
 kkj,2026-11-13T16:19,1082,OK,new=1082; quarantined=0; calls=141
-buyspeed,2026-11-14T04:17,94,OK,ma_listed=891; ma_read=25; or_listed=174; or_read=25; nv_listed=29; nv_read=25; nj_listed=19; nj_read=19; new=94; quarantined=0; parts_failed=0
+buyspeed,2026-11-14T05:10,94,OK,ma_listed=890; ma_read=25; or_listed=174; or_read=25; nv_listed=29; nv_read=25; nj_listed=19; nj_read=19; new=94; quarantined=0; parts_failed=0
 taiwan,2026-11-13T20:19,10581,OK,new=10581; listed=11771; pages=118; quarantined=128; complete_snapshot=0
-hk_gld,2026-11-14T04:17,52,OK,new=52; quarantined=0; complete_snapshot=1
+hk_gld,2026-11-14T02:17,52,OK,new=52; quarantined=0; complete_snapshot=1
+poland,2026-11-14T05:24,109,OK,new=109; calls=61; quarantined=0; parts_failed=0; complete_snapshot=1
+pakistan,,0,no data,
+tenderned,2026-11-14T05:23,229,OK,new=229; pages=90; quarantined=0; complete_snapshot=1
+italy,2026-11-14T05:21,2136,OK,new=2136; calls=1068; quarantined=0; parts_failed=0
+ukregional,,0,no data,
 importyeti,2026-11-11T15:59,1,OK,"1 HS headings cached; this run 0, due 681"

@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-14T04:58Z",
+ "generated": "2026-11-14T06:08Z",
  "open_file": "data/leads/sheet/tenders_open.csv.gz",
- "open_file_sha256": "a8958e35fe974cd92f67e31f058cf3c0853a837747fa2d861fed367e7f74bbd5",
- "open_file_built": "2026-11-14T04:58Z",
- "published_total": 166406,
+ "open_file_sha256": "1693e794ce3abe68b1715d90a57e4e886e3bbd7a225a3f49d335182b31f8aa77",
+ "open_file_built": "2026-11-14T06:07Z",
+ "published_total": 169964,
  "published_unmatched_sources": {},
  "sources": [
   {
@@ -82,8 +82,8 @@
    "source": "buyspeed",
    "enabled": true,
    "status": "OK",
-   "last_run_at": "2026-11-14T04:17",
-   "last_good_at": "2026-11-14T04:17",
+   "last_run_at": "2026-11-14T05:10",
+   "last_good_at": "2026-11-14T05:10",
    "fetched": 94,
    "snapshot": 94,
    "active": 94,
@@ -262,12 +262,12 @@
    "source": "germany",
    "enabled": true,
    "status": "OK",
-   "last_run_at": "2026-11-13T05:42",
-   "last_good_at": "2026-11-13T05:42",
-   "fetched": 14087,
-   "snapshot": 14087,
-   "active": 14087,
-   "published": 13253,
+   "last_run_at": "2026-11-14T05:10",
+   "last_good_at": "2026-11-14T05:10",
+   "fetched": 15898,
+   "snapshot": 15898,
+   "active": 15898,
+   "published": 14915,
    "warning": ""
   },
   {
@@ -310,9 +310,9 @@
    "source": "iadb",
    "enabled": true,
    "status": "OK",
-   "last_run_at": "2026-11-14T03:13",
-   "last_good_at": "2026-11-14T03:13",
-   "fetched": 111,
+   "last_run_at": "2026-11-13T23:03",
+   "last_good_at": "2026-11-13T23:03",
+   "fetched": 117,
    "snapshot": 111,
    "active": 111,
    "published": 107,
@@ -349,10 +349,22 @@
    "last_run_at": "",
    "last_good_at": "2026-11-11T11:29",
    "fetched": 932,
-   "snapshot": 932,
-   "active": 919,
-   "published": 805,
+   "snapshot": 866,
+   "active": 866,
+   "published": 785,
    "warning": "last good run 37.3 h ago (expected every 36 h)"
+  },
+  {
+   "source": "italy",
+   "enabled": true,
+   "status": "OK",
+   "last_run_at": "2026-11-14T05:21",
+   "last_good_at": "2026-11-14T05:21",
+   "fetched": 2136,
+   "snapshot": 2136,
+   "active": 2136,
+   "published": 2088,
+   "warning": ""
   },
   {
    "source": "kenya",
@@ -469,9 +481,9 @@
    "last_run_at": "",
    "last_good_at": "2026-11-11T08:54",
    "fetched": 1752,
-   "snapshot": 1620,
-   "active": 1616,
-   "published": 1599,
+   "snapshot": 1562,
+   "active": 1562,
+   "published": 1544,
    "warning": "last good run 36.0 h ago (expected every 36 h)"
   },
   {
@@ -485,6 +497,18 @@
    "active": 583,
    "published": 502,
    "warning": ""
+  },
+  {
+   "source": "pakistan",
+   "enabled": true,
+   "status": "DOWN",
+   "last_run_at": "2026-11-14T05:23",
+   "last_good_at": "",
+   "fetched": 0,
+   "snapshot": 0,
+   "active": 0,
+   "published": 0,
+   "warning": "collector failed; the previous snapshot is kept"
   },
   {
    "source": "paraguay",
@@ -520,6 +544,18 @@
    "snapshot": 9440,
    "active": 9440,
    "published": 8851,
+   "warning": ""
+  },
+  {
+   "source": "poland",
+   "enabled": true,
+   "status": "OK",
+   "last_run_at": "2026-11-14T05:24",
+   "last_good_at": "2026-11-14T05:24",
+   "fetched": 109,
+   "snapshot": 109,
+   "active": 109,
+   "published": 108,
    "warning": ""
   },
   {
@@ -622,12 +658,24 @@
    "source": "ted",
    "enabled": true,
    "status": "OK",
-   "last_run_at": "2026-11-14T03:09",
-   "last_good_at": "2026-11-14T03:09",
-   "fetched": 37512,
-   "snapshot": 37512,
-   "active": 37512,
-   "published": 32139,
+   "last_run_at": "2026-11-13T23:01",
+   "last_good_at": "2026-11-13T23:01",
+   "fetched": 39110,
+   "snapshot": 37521,
+   "active": 37521,
+   "published": 32143,
+   "warning": ""
+  },
+  {
+   "source": "tenderned",
+   "enabled": true,
+   "status": "OK",
+   "last_run_at": "2026-11-14T05:23",
+   "last_good_at": "2026-11-14T05:23",
+   "fetched": 229,
+   "snapshot": 229,
+   "active": 229,
+   "published": 229,
    "warning": ""
   },
   {
@@ -653,6 +701,18 @@
    "active": 37,
    "published": 36,
    "warning": ""
+  },
+  {
+   "source": "ukregional",
+   "enabled": true,
+   "status": "DOWN",
+   "last_run_at": "2026-11-14T05:10",
+   "last_good_at": "",
+   "fetched": 0,
+   "snapshot": 0,
+   "active": 0,
+   "published": 0,
+   "warning": "collector failed; the previous snapshot is kept"
   },
   {
    "source": "undp",
