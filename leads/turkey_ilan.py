@@ -18,7 +18,7 @@ import time
 
 import requests
 
-from .common import CACHE, clean, log, quarantine_future, rolling, session, today
+from .common import CACHE, chain_session, clean, log, quarantine_future, rolling, today
 from .sectors import classify
 
 BASE = "https://www.ilan.gov.tr"
@@ -37,7 +37,7 @@ WHEN = re.compile(r"(ihale|teklif|son\s+başvuru|son\s+teklif)[^<]{0,120}?(tarih
 
 class _Polite:
     def __init__(self):
-        self.s = session()
+        self.s = chain_session(BASE)   # the site omits its intermediate certificate: fetched via AIA, TLS still verified
         self.s.headers.update({"Accept": "application/json", "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
                                "Referer": BASE + "/ilan/tum-ilanlar"})
         self.last, self.calls = 0.0, 0
