@@ -499,7 +499,7 @@ def write_digest(tenders, buyers):
 SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "country", "region", "buyer", "title_en",
               "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
               "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
-              "buyer_median_award_usd", "incumbent", "why"]
+              "buyer_median_award_usd", "incumbent", "why", "quality"]
 CHUNK, CHUNKS = 2000, 65  # 130k rows; ~2000 rows stay under the IMPORTDATA size limit, so nothing is trimmed
 
 
@@ -521,6 +521,9 @@ def write_sheet_chunks(tenders):
     # the same notice listed twice: computed here on the open notices themselves, so it never depends on an older run
     dupmap = {} if os.environ.get("REFINE_MODULES", "on") == "off" else tender_dups([r for r in tenders if live(r) and r.get("id")])
     dups = 0
+    from collections import Counter
+    from . import tender_gate
+    gate = Counter()
     for r in tenders:
         o = ov.get(r.get("id")) or {}
         d = dupmap.get(r.get("id"))
@@ -539,7 +542,16 @@ def write_sheet_chunks(tenders):
         x["buyer"] = (r.get("buyer") or "")[:90]
         x["contact"] = (r.get("contact") or o.get("contact_email") or "")[:80]  # else the buyer's own address from its other notices
         x["why"] = (r.get("why") or "")[:160]; x["incumbent"] = (r.get("incumbent") or "")[:80]
+        bad = tender_gate.reasons({**r, "title": r.get("title_en") or r.get("title") or ""})
+        x["quality"] = "verified" if not bad else "unverified: " + ",".join(bad)
+        for b in bad:
+            gate[b] += 1
         rows.append(x)
+    from collections import Counter as _C
+    reg = _C(x["region"] for x in rows if x["quality"] == "verified" and x.get("stage") != "planned")
+    log.info("tender gate %s: %d verified of %d open (%s); verified by region: %s", tender_gate.VERSION,
+             sum(1 for x in rows if x["quality"] == "verified"), len(rows), ", ".join(f"{k} {v}" for k, v in gate.most_common()),
+             ", ".join(f"{k} {v}" for k, v in reg.most_common()))
     log.info("open list: %d notices, %d past their deadline left out, %d duplicates of another source's notice left out", len(rows), expired, dups)
     for i in range(CHUNKS):
         write(f"sheet/tenders_{i + 1:02d}.csv", rows[i * CHUNK:(i + 1) * CHUNK], SHEET_COLS)
