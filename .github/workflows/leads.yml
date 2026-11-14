@@ -50,7 +50,7 @@ jobs:
       - run: mkdir -p data/leads && date -u > data/leads/run.log
       - name: plan
         run: |
-          LIGHT="poland,hk_gld,buyspeed,transnet,bonfire,ted,fts,sam,canadabuys,ungm,undp,ebrd,aiib,isdb,afdb,iadb,simap,gets,etimad,prozorro,pncp,secop,contractsfinder,austender,oman,qatar,kenya,rwanda,uganda,ghana,malawi,mozambique,dubai,philippines,moldova,uruguay,malaysia,merge,push,webpanel"
+          LIGHT="pakistan,poland,hk_gld,buyspeed,transnet,bonfire,ted,fts,sam,canadabuys,ungm,undp,ebrd,aiib,isdb,afdb,iadb,simap,gets,etimad,prozorro,pncp,secop,contractsfinder,austender,oman,qatar,kenya,rwanda,uganda,ghana,malawi,mozambique,dubai,philippines,moldova,uruguay,malaysia,merge,push,webpanel"
           HEAVY="taiwan,bidnet,kkj,bahrain,nyc,us_cities,za,chile,india,grants,germany,paraguay,dominican,france,spain,dewa,csg,ccgp,lebanon,cameroon,awards,wb_pipeline,worldbank,mrgov,importyeti,markets,enrich,us_awards,merge,push,webpanel"
           if [ "${{ github.event_name }}" = "schedule" ]; then
             if [ "${{ github.event.schedule }}" = "10 */2 * * *" ]; then echo "ONLY=$LIGHT" >> $GITHUB_ENV; else echo "ONLY=$HEAVY" >> $GITHUB_ENV; fi
@@ -300,6 +300,11 @@ jobs:
         continue-on-error: true
         timeout-minutes: 25
         run: set -o pipefail; python -m leads.run --source taiwan 2>&1 | tee -a data/leads/run.log
+      - name: pakistan
+        if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',pakistan,') }}
+        continue-on-error: true
+        timeout-minutes: 15
+        run: set -o pipefail; python -m leads.run --source pakistan 2>&1 | tee -a data/leads/run.log
       - name: poland
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',poland,') }}
         continue-on-error: true
