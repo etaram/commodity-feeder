@@ -7,7 +7,7 @@ on:
       task:
         description: script in deploy/ops to run
         type: choice
-        options: [status, probe-sources, enrich-procure, enrich-procure-stop, quality-gate, enrich-discover, runners-restart, enrich-probe, enrich-sample, enrich-start, enrich-status, enrich-stop, enrich-review, enrich-people, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners, browser-deps]
+        options: [status, enrich-requeue, probe-sources, enrich-procure, enrich-procure-stop, quality-gate, enrich-discover, runners-restart, enrich-probe, enrich-sample, enrich-start, enrich-status, enrich-stop, enrich-review, enrich-people, harden-ssh, stack-up, backup, bench-llm, install-rclone, data-gateway, gateway-stats, mail-dns, audit-sample, eval-split, serverpanel-install, scheduler-install, schedule-status, runner-priority, add-runners, browser-deps]
         default: status
 permissions:
   contents: read

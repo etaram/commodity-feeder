@@ -79,6 +79,13 @@ if [ "$mode" = sample ]; then
   launch no --only sample --lanes site,press,wikidata --workers 16 --minutes 100
   exit 0
 fi
+# requeue (owner, 14 Nov 2026: the server sat at 9% while the queue was spent): rebuild the queue from the CURRENT
+# supplier index so new suppliers get enriched; keys already read are skipped by the run (site.jsonl), nothing is lost
+if [ "$mode" = requeue ]; then
+  [ -f "$E/queue.jsonl" ] && mv -f "$E/queue.jsonl" "$E/queue.prev.jsonl"
+  venv && queue && echo "queue rebuilt: $(wc -l < "$E/queue.jsonl") suppliers (keys already read are skipped)"
+  mode=start
+fi
 if [ "$mode" = start ]; then
   code; venv
   [ -s "$E/queue.jsonl" ] || queue
