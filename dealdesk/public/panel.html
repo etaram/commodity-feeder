@@ -526,7 +526,8 @@ a.lnk{white-space:nowrap}
 .bt-seg button{border:0;background:transparent;padding:5px 12px;font-size:12.5px;color:var(--muted);cursor:pointer}
 .bt-seg button.on{background:var(--accent);color:var(--accent-ink)}
 .bt-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
-.bt-tile{border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;background:var(--bg);min-width:0;text-align:start;color:var(--ink)}
+.bt-tile{border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;background:var(--bg);min-width:0;text-align:start;color:var(--ink);display:flex;flex-direction:column;align-items:stretch;gap:2px;font:inherit}
+.bt-tile.zero{opacity:.55}
 .bt-tile.on{outline:2px solid var(--accent)}
 .bt-tile .n{font-size:22px;font-weight:800}
 .bt-tile .l{font-size:12.5px;font-weight:700}
@@ -1979,7 +1980,7 @@ function renderBizTrends() {
     <div class="bt-head"><div><h2>${esc(mt("Business trends worldwide", "מגמות עסקיות בעולם"))}</h2>
       <div class="sub">${esc(mt(`What markets and people are talking about now: China's financial press and hot lists, and business searches in ${nCty} countries`, `על מה מדברים עכשיו השווקים והציבור: העיתונות הפיננסית והרשימות החמות בסין, וחיפושים עסקיים ב-${nCty} מדינות`))}</div></div>
       <div class="bt-seg" role="group">${[["all", mt("All", "הכל")], ["cn", mt("China", "סין")], ["world", mt("World", "העולם")]].map(([k, l]) => `<button type="button" class="${BT_SRC === k ? "on" : ""}" data-bts="${k}">${esc(l)}</button>`).join("")}</div></div>
-    <div class="bt-tiles">${byTag.map(([k, list]) => `<button type="button" class="bt-tile${BT_SEL === k ? " on" : ""}" data-bt="${esc(k)}"><div class="l"><i style="background:${BT_TAGS[k][2]}"></i>${esc(tagLbl(k))}</div><div class="n">${list.length}</div><div class="x" dir="auto">${esc(list[0] ? ttl(list[0]) : "")}</div></button>`).join("")}</div>
+    <div class="bt-tiles">${byTag.map(([k, list]) => `<button type="button" class="bt-tile${BT_SEL === k ? " on" : ""}${list.length ? "" : " zero"}" data-bt="${esc(k)}"><div class="l"><i style="background:${BT_TAGS[k][2]}"></i>${esc(tagLbl(k))}</div><div class="n">${list.length}</div><div class="x" dir="auto">${esc(list[0] ? ttl(list[0]) : "")}</div></button>`).join("")}</div>
     <div class="bt-list">${rows.map(r => `<div class="bt-card">
       <a href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener" dir="auto">${esc(ttl(r))}</a>
       ${r.title && ttl(r) !== r.title ? `<div class="o" dir="auto">${esc(r.title)}</div>` : ""}
