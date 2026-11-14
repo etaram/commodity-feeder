@@ -63,29 +63,29 @@
  "email_domains_checked": 16776,
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-14T08:54Z",
+  "at": "2026-11-14T09:10Z",
   "sample": null,
-  "links_checked_this_run": 1234,
-  "links_on_record": 19632,
+  "links_checked_this_run": 1333,
+  "links_on_record": 20965,
   "sites_read_this_run": 150,
-  "registers_this_run": 83,
+  "registers_this_run": 80,
   "buyers": {
    "processed": 3449,
    "completed": 3132,
    "contact_found": 3131,
    "with_conflicts": 0,
-   "with_gaps": 1174,
+   "with_gaps": 1241,
    "cleaned": 13,
    "duplicates": 74,
    "verified_identity": 75,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3301,
+   "reused_unchanged": 3300,
    "gaps": {
-    "website unreachable": 679,
+    "website unreachable": 730,
     "no official website": 364,
     "no contact channel": 318,
-    "website name mismatch": 130,
-    "website blocked by bot protection": 1
+    "website name mismatch": 145,
+    "website blocked by bot protection": 2
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -94,21 +94,21 @@
    }
   },
   "accounts": {
-   "processed": 3995,
-   "completed": 3398,
-   "contact_found": 3395,
+   "processed": 4000,
+   "completed": 3404,
+   "contact_found": 3401,
    "with_conflicts": 0,
-   "with_gaps": 981,
+   "with_gaps": 1007,
    "cleaned": 12,
    "duplicates": 0,
    "verified_identity": 19,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3943,
+   "reused_unchanged": 3931,
    "gaps": {
-    "no official website": 682,
-    "no contact channel": 600,
-    "website unreachable": 263,
-    "website name mismatch": 41,
+    "no official website": 681,
+    "no contact channel": 599,
+    "website unreachable": 284,
+    "website name mismatch": 48,
     "website blocked by bot protection": 1
    },
    "conflicts": {},
@@ -117,25 +117,26 @@
    }
   },
   "tenders": {
-   "processed": 129980,
-   "completed": 62334,
-   "contact_found": 47995,
-   "with_conflicts": 214,
-   "with_gaps": 114864,
+   "processed": 130000,
+   "completed": 64450,
+   "contact_found": 47210,
+   "with_conflicts": 217,
+   "with_gaps": 115297,
    "cleaned": 49,
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 129301,
+   "reused_unchanged": 121999,
    "gaps": {
-    "no estimated value": 93362,
-    "no contact in the notice": 81985,
-    "no deadline": 21355,
-    "no link to the official notice": 411,
+    "no estimated value": 94296,
+    "no contact in the notice": 82790,
+    "no deadline": 21080,
+    "no link to the official notice": 383,
     "no English title": 4
    },
    "conflicts": {
-    "deadline # is more than # years ahead": 175
+    "deadline # is more than # years ahead": 167,
+    "official link returns # (checked #)": 50
    },
    "cleaned_fields": {
     "country": 42,
@@ -143,27 +144,26 @@
    }
   },
   "projects": {
-   "processed": 2672,
-   "completed": 2666,
+   "processed": 2670,
+   "completed": 2664,
    "contact_found": 0,
    "with_conflicts": 2,
-   "with_gaps": 1925,
-   "cleaned": 30,
+   "with_gaps": 1923,
+   "cleaned": 29,
    "duplicates": 1,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 2672,
+   "reused_unchanged": 2651,
    "gaps": {
-    "no project value": 1925,
-    "no implementing agency": 946
+    "no project value": 1923,
+    "no implementing agency": 949
    },
    "conflicts": {
     "project marked dropped but # of its tenders are still open": 1,
     "project marked closed but # of its tenders are still open": 1
    },
    "cleaned_fields": {
-    "country": 29,
-    "open_tenders": 1
+    "country": 29
    }
   },
   "finance": {
@@ -213,15 +213,15 @@
   },
   "importers": {
    "processed": 5700,
-   "completed": 641,
+   "completed": 664,
    "contact_found": 0,
    "with_conflicts": 1,
    "with_gaps": 5700,
    "cleaned": 5700,
    "duplicates": 3,
-   "verified_identity": 227,
+   "verified_identity": 254,
    "closed_by_deadline": 0,
-   "reused_unchanged": 5670,
+   "reused_unchanged": 5673,
    "gaps": {
     "no contact channel (customs records carry none)": 5700,
     "no official website": 5251,
