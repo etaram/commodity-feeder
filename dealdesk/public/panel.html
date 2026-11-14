@@ -660,6 +660,15 @@ a.lnk{white-space:nowrap}
 .pw-y{margin-inline-start:auto;font-size:13px}.pw-y small{color:var(--muted);font-weight:400}
 .pw-card .spk{display:block;width:100%;height:28px;margin:4px 0}
 .pw-f{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted)}.pw-live{font-size:11.5px;color:var(--info);margin-top:5px}
+.xl-bar{display:flex;justify-content:flex-end;padding:4px 6px}.xl-bar button{font-size:12.5px}
+.print-head{display:none}
+@media print{
+  body[data-print] *{visibility:hidden}
+  body[data-print="tdetail"] #tdetail, body[data-print="tdetail"] #tdetail *{visibility:visible}
+  body[data-print] #tdetail{position:absolute;inset:0 auto auto 0;width:100%;background:#fff;color:#111}
+  body[data-print] .print-head{display:block;font-size:12px;border-bottom:1px solid #999;margin-bottom:10px;padding-bottom:6px}
+  body[data-print] .actions, body[data-print] button{display:none!important}
+}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -1854,10 +1863,64 @@ function renderTenderList(rows) {
   }
   autoTx(rows.slice(0, S.limit.t || 60), () => renderTenderList(rows));
 }
+/* ---------- export: Excel for lists, PDF (print) for one item (owner, 14 Nov). Marked confidential, logged; a list
+   exports only what the viewer can see (at most 5,000 rows), never the whole database ---------- */
+S.lastRows = {};
+const XL_COLS = {
+  t: [["fit", "Fit"], ["deadline", "Deadline"], ["days_left", "Days left"], ["country", "Country"], ["buyer", "Buyer"], ["_title", "Title"], ["est_value_usd", "Est. value USD"], ["sector", "Sector"], ["notice_type", "Notice type"], ["quality", "Quality"], ["_juice", "Worth knowing"], ["source", "Source"], ["link", "Official notice"], ["id", "ID"]],
+};
+function loadXlsx() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  return new Promise((res, rej) => { const sc = document.createElement("script"); sc.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; sc.onload = () => res(window.XLSX); sc.onerror = rej; document.head.appendChild(sc); });
+}
+function exportRowsFor(key, rows) {
+  const he = LANG === "he";
+  let cols = XL_COLS[key];
+  if (!cols) {   // other lists: their plain fields, first row decides the order
+    const k0 = Object.keys(rows[0] || {}).filter(k => !/^(details|juice|fit_why|fit_flags|_)/.test(k)).slice(0, 30);
+    cols = k0.map(k => [k, k]);
+  }
+  const val = (r, k) => k === "_title" ? plain(tTitle(r)) : k === "_juice" ? ((juiceOf(r)[0] || [])[he ? 2 : 3] || "") : (r[k] ?? "");
+  return { head: cols.map(c => c[1]), body: rows.slice(0, 5000).map(r => cols.map(([k]) => { const v = val(r, k); const n = Number(String(v).replace(/,/g, "")); return v !== "" && isFinite(n) && /^-?[\d,.]+$/.test(String(v)) ? n : String(v); })) };
+}
+async function exportExcel(key, label) {
+  const rows = S.lastRows[key] || []; if (!rows.length) return;
+  const { head, body } = exportRowsFor(key, rows);
+  const who = (window.DD_ME && window.DD_ME.user) || "";
+  const mark = `Sinder Deal Desk - ${mt("confidential", "חסוי")} - ${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC${who ? " - " + who : ""}`;
+  const name = `Sinder_${label}_${today()}`;
+  track("export", key, `${body.length} rows xlsx`);
+  try {
+    const X = await loadXlsx();
+    const ws = X.utils.aoa_to_sheet([[mark], [], head, ...body]);
+    ws["!cols"] = head.map((h, i) => ({ wch: Math.min(60, Math.max(10, ...body.slice(0, 200).map(r => String(r[i] ?? "").length), h.length)) }));
+    ws["!autofilter"] = { ref: X.utils.encode_range({ s: { r: 2, c: 0 }, e: { r: 2 + body.length, c: head.length - 1 } }) };
+    const wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, label.slice(0, 30));
+    if (he) wb.Workbook = { Views: [{ RTL: true }] };
+    X.writeFile(wb, name + ".xlsx");
+  } catch (e) {   // no library (offline): a CSV that Excel opens
+    const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const csvT = "﻿" + [[mark], [], head, ...body].map(r => r.map(q).join(",")).join("\r\n");
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csvT], { type: "text/csv;charset=utf-8" })); a.download = name + ".csv"; a.click();
+  }
+}
+function printPdf(sel, title) {
+  const el = $(sel); if (!el) return;
+  track("export", sel, "pdf");
+  document.body.dataset.print = sel.replace(/^#/, "");
+  const h = document.createElement("div"); h.className = "print-head"; h.innerHTML = `<b>Sinder Deal Desk</b> · ${esc(title || "")} · ${esc(mt("Confidential", "חסוי"))} · ${esc(new Date().toISOString().slice(0, 10))}`;
+  el.prepend(h);
+  const done = () => { h.remove(); delete document.body.dataset.print; removeEventListener("afterprint", done); };
+  addEventListener("afterprint", done); setTimeout(() => window.print(), 50); setTimeout(done, 60000);
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-xl]"); if (b) exportExcel(b.dataset.xl, b.dataset.xlName || b.dataset.xl);
+  const p = e.target.closest("[data-pdf]"); if (p) printPdf(p.dataset.pdf, p.dataset.pdfT || ""); });
 function listInto(sel, rows, key, tpl, onclick, emptyText, isSel) {
   const el = $(sel), lim = S.limit[key];
   if (!rows.length) { el.innerHTML = `<div class="empty" style="padding:14px">${esc(emptyText)}</div>`; return; }
-  el.innerHTML = rows.slice(0, lim).map((r, i) => `<div class="row" tabindex="0" data-i2="${i}" ${isSel && isSel(r) ? 'aria-current="true"' : ""}>${tpl(r)}</div>`).join("")
+  S.lastRows[key] = rows;
+  const XLN = { t: "Tenders", c: "Suppliers", d: "Deals", g: "Grants" };
+  el.innerHTML = `<div class="xl-bar"><button type="button" class="ghost sm" data-xl="${esc(key)}" data-xl-name="${esc(XLN[key] || key)}">${esc(mt("Export to Excel", "ייצוא לאקסל"))} (${Math.min(rows.length, 5000).toLocaleString("en-US")})</button></div>` + rows.slice(0, lim).map((r, i) => `<div class="row" tabindex="0" data-i2="${i}" ${isSel && isSel(r) ? 'aria-current="true"' : ""}>${tpl(r)}</div>`).join("")
     + (rows.length > lim ? `<div class="more"><button type="button" class="ghost">${esc(t("more", { n: rows.length - lim }))}</button></div>` : "");
   el.querySelectorAll(".row").forEach(n => { const f = () => { el.querySelectorAll(".row").forEach(x => x.removeAttribute("aria-current")); n.setAttribute("aria-current", "true"); onclick(rows[+n.dataset.i2]); }; n.onclick = f; n.onkeydown = e => { if (e.key === "Enter") f(); }; });
   const m = el.querySelector(".more button"); if (m) m.onclick = () => { S.limit[key] += 100; listInto(sel, rows, key, tpl, onclick, emptyText, isSel); };
@@ -1929,7 +1992,7 @@ function openTender(r, keep) {
       <button type="button" id="a-contact">${esc(t("a_contact"))}</button>
       <button type="button" id="a-pur" ${inP ? "disabled" : ""}>${esc(inP ? t("tracked") : t("a_track"))}</button>
       <button type="button" id="a-proj" ${projOf(r.id) ? "disabled" : ""}>${esc(projOf(r.id) ? t("p_open_already") : t("a_proj"))}</button>
-      ${shareHtml(tenderShare(r))}
+      ${shareHtml(tenderShare(r))}<button type="button" data-pdf="#tdetail" data-pdf-t="${esc(plain(tTitle(r)).slice(0, 80))}">PDF</button>
     </div>`}
     <div class="note">${esc(t("t_note"))}</div>
     <div id="more-t" data-jobcard="${esc(r.id)}">${cardHtml(r.id)}</div><div id="more-t-flash"></div>
@@ -2950,7 +3013,7 @@ function tenderSteps(r, inP) {
       ${step(2, "ts_s2", st(r.id), `${B("a-thr", "a_thr", "thr")}`)}
       ${step(3, "ts_s3", "", `${B("a-sup", "a_sup", "sup")}${B("a-epc", "a_epc", "epc")}`)}
       ${step(4, "ts_s4", st("Q:" + r.id), `${B("a-quote", "a_quote", "quote")}${B("a-log", "a_log", "log")}<span class="sub">${esc(t("ts_calc"))}</span>`)}
-      ${step(5, "ts_s5", proj ? `<span class="pill info">${esc(t("p_open_already"))}</span>` : "", `${B("a-pur", inP ? "tracked" : "a_track", "pur", inP ? "disabled" : "")}${B("a-proj", proj ? "p_open_already" : "a_proj", "proj", proj ? "disabled" : "")}${window.DD_DEAL ? B("a-ws", "dw_open", "ws") : ""}${B("a-contact", "a_contact", "contact")}${shareHtml(tenderShare(r))}`)}
+      ${step(5, "ts_s5", proj ? `<span class="pill info">${esc(t("p_open_already"))}</span>` : "", `${B("a-pur", inP ? "tracked" : "a_track", "pur", inP ? "disabled" : "")}${B("a-proj", proj ? "p_open_already" : "a_proj", "proj", proj ? "disabled" : "")}${window.DD_DEAL ? B("a-ws", "dw_open", "ws") : ""}${B("a-contact", "a_contact", "contact")}${shareHtml(tenderShare(r))}<button type="button" data-pdf="#tdetail" data-pdf-t="${esc(plain(tTitle(r)).slice(0, 80))}">PDF</button>`)}
     </ol>`;
 }
 const outLang = () => LANG === "he" ? "Hebrew" : "English";
