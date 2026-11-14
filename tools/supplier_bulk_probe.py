@@ -40,6 +40,49 @@ def robots(base, paths):
         print("  robots head:", " | ".join(r.text.splitlines()[:25])[:900])
 
 
+def traces2():
+    print("== TRACES2")
+    from urllib.parse import urljoin
+    r = get("https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication/index")
+    if r is None:
+        return
+    print("final url:", r.url)
+    srcs = re.findall(r'<script[^>]+src="([^"]+)"', r.text)
+    print("scripts:", srcs[:30])
+    print("html:", re.sub(r"\s+", " ", r.text[:2500]))
+    found = set()
+    for s in srcs:
+        u = urljoin(r.url, s)
+        if "/cas/" in u:
+            continue
+        j = get(u)
+        if j is None or j.status_code != 200:
+            continue
+        for m in re.finditer(r"[\"'`]([^\"'`\s]{0,100}(publication|listing|/api/|download|export|excel|xlsx|search)[^\"'`\s]{0,100})[\"'`]", j.text, re.I):
+            found.add(m.group(1))
+    for f in sorted(found)[:300]:
+        print("  endpoint?", f)
+
+
+def denue2():
+    print("== DENUE2")
+    r = get("https://www.inegi.org.mx/app/descarga/?ti=6")
+    if r is not None:
+        print("scripts:", re.findall(r'<script[^>]+src="([^"]+)"', r.text)[:20])
+        for n, m in enumerate(re.finditer(r"denue|masiva|\.zip|ajax|json", r.text, re.I)):
+            if n > 40:
+                break
+            print("  ctx:", re.sub(r"\s+", " ", r.text[max(0, m.start() - 120): m.end() + 120]))
+    for u in ["https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_31-33_csv.zip"]:
+        try:
+            x = S.get(u, timeout=60, stream=True)
+            b = next(x.iter_content(400))
+            print(f"STREAM {u} -> {x.status_code} {x.headers.get('content-type')} len={x.headers.get('content-length')} first={b[:120]!r}")
+            x.close()
+        except Exception as e:  # noqa: BLE001
+            print("STREAM ERR", u, type(e).__name__)
+
+
 def traces():
     print("== TRACES")
     robots("https://webgate.ec.europa.eu", ["/tracesnt/directory/publication/establishment/index", "/tracesnt/api/", "/tracesnt/directory/"])
