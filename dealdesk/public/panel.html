@@ -1160,7 +1160,7 @@ const L = {
     ask_ph_c: "Ask in your own words: e.g. canned tuna exporters in Ecuador with an e-mail",
     ask_ph_d: "Ask in your own words: e.g. wheat buyers in the Gulf, or steel demand in Saudi Arabia",
     nl_thinking: "Understanding your request…", nl_as: "Searching for:", nl_clear: "Clear", nl_fail: "Could not interpret the request; searching the words as typed.",
-    instant_wait: "Researching now on the web (usually under a minute)…", share_wa: "Share on WhatsApp", share_copy: "Copy text", share_copied: "Copied", days_word: "days", deal_file: "Deal file", c_intel: "Business intelligence", jt_company_intel: "Business intelligence", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
+    instant_wait: "Researching now on the web (usually under a minute)…", share_wa: "Share on WhatsApp", source_word: "Source", share_copy: "Copy text", share_copied: "Copied", days_word: "days", deal_file: "Deal file", c_intel: "Business intelligence", jt_company_intel: "Business intelligence", more_info: "More info", more_note: "Claude researches this on the web and in your sheets. The answer appears here (usually 5 to 15 minutes); you can keep working meanwhile.",
     more_wait: "Researching... the answer will appear here.", more_done: "Research result", more_again: "Research again", more_err: "The research failed:", conn_lost: "the connection to the server dropped before the answer arrived (a long search, or the phone switched apps). Press Research again.",
     a_quote: "Price quote", est_h: "Price estimate", ptw_budget: "the published budget", ptw_median: "this buyer's median award",
     est_ptw: "Price-to-win scenario: {lo} to {mid}. Basis: {src} less a fixed model discount for about {n} bidders ({b}). An assumption, not a finding; the worker's price quote checks it against real prices.",
@@ -1280,7 +1280,7 @@ const L = {
     ask_ph_c: "חיפוש חופשי, למשל: יצואני טונה משומרת מאקוודור",
     ask_ph_d: "חיפוש חופשי, למשל: קוני חיטה במפרץ או ביקוש לפלדה בסעודיה",
     nl_thinking: "מבין את הבקשה…", nl_as: "מחפש:", nl_clear: "נקה", nl_fail: "לא הצלחתי לפרש את הבקשה, מחפש את המילים כפי שנכתבו.",
-    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)…", share_wa: "שתף בוואטסאפ", share_copy: "העתק טקסט", share_copied: "הועתק", days_word: "ימים", deal_file: "תיק עסקה", c_intel: "מודיעין עסקי", jt_company_intel: "מודיעין עסקי", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
+    instant_wait: "מבצע מחקר עכשיו ברשת (בדרך כלל פחות מדקה)…", share_wa: "שתף בוואטסאפ", source_word: "מקור", share_copy: "העתק טקסט", share_copied: "הועתק", days_word: "ימים", deal_file: "תיק עסקה", c_intel: "מודיעין עסקי", jt_company_intel: "מודיעין עסקי", more_info: "עוד מידע", more_note: "Claude חוקר את זה ברשת ובגיליונות שלך. התשובה תופיע כאן (בדרך כלל 5 עד 15 דקות), ואפשר להמשיך לעבוד בינתיים.",
     more_wait: "בתהליך מחקר... התשובה תופיע כאן.", more_done: "תוצאת המחקר", more_again: "חקור שוב", more_err: "המחקר נכשל:", conn_lost: "החיבור לשרת נותק לפני שהתשובה הגיעה (חיפוש ארוך, או שהטלפון עבר לאפליקציה אחרת). לחץ חקור שוב.",
     a_quote: "הצעת מחיר", est_h: "הערכת מחיר", ptw_budget: "התקציב שפורסם", ptw_median: "חציון הזכיות של הקונה",
     est_ptw: "תרחיש מחיר לזכייה: {lo} עד {mid}. בסיס: {src} פחות הנחה קבועה של המודל לכ-{n} מציעים ({b}). זו הנחה, לא ממצא; הצעת המחיר של העובד בודקת זאת מול מחירים אמיתיים.",
@@ -1547,7 +1547,7 @@ function openTenderRow(o) {
   o.days_left = String(dl); return dl >= 0;
 }
 /* share to WhatsApp or copy the text */
-const SITE = "https://sinder-deal-desk.vercel.app";
+const SITE = "https://desk.sinder.pro";
 const plain = x => String(x ?? "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, " ").trim();
 function shareHtml(text) {
   return `<a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">${esc(t("share_wa"))}</a><button type="button" data-copytext="${esc(text)}">${esc(t("share_copy"))}</button>`;
@@ -1563,6 +1563,14 @@ function tenderShare(r) {
   return [`*${plain(tTitle(r))}*`, `${plain(tr(r.buyer))} · ${r.country}${r.sector ? " · " + r.sector : ""}`,
     money(r.est_value_usd) ? `${t("est_value")}: ${money(r.est_value_usd)}` : "", r.deadline ? `${t("deadline")}: ${r.deadline} (${r.days_left} ${t("days_word")})` : "",
     r.decision ? `Sinder: ${r.decision}` : "", r.link ? `${t("notice")}: ${r.link}` : "", `${t("deal_file")}: ${SITE}/deal/${encodeURIComponent(r.id)}`].filter(Boolean).join("\n");
+}
+function intelShare(x) {
+  const H = LANG === "he" ? (x.headline_he || x.headline_en) : (x.headline_en || x.headline_he), W = LANG === "he" ? (x.what_it_means_he || x.what_it_means_en) : (x.what_it_means_en || x.what_it_means_he);
+  return [`*${plain(H)}*`, W ? plain(W) : "", [x.country, x.category, x.date].filter(Boolean).join(" · "), x.url ? `${t("source_word")}: ${x.url}` : "", `Sinder Deal Desk: ${SITE}`].filter(Boolean).join("\n");
+}
+function intelDigest(rows) {
+  const H = x => plain(LANG === "he" ? (x.headline_he || x.headline_en) : (x.headline_en || x.headline_he));
+  return [`*${mt("Sinder intelligence: top signals", "מודיעין Sinder: האותות המובילים")} (${today()})*`, ...rows.slice(0, 6).map((x, i) => `${i + 1}. ${H(x)}${x.country ? ` (${x.country})` : ""}${x.url ? `\n${x.url}` : ""}`), `Sinder Deal Desk: ${SITE}`].join("\n\n");
 }
 function dealShare(head, kv) {
   const lines = kv.slice(0, 8).map(([k, v]) => { const p = plain(v); return p && p !== "-" ? `${t(k)}: ${p}` : ""; }).filter(Boolean);
@@ -3833,6 +3841,8 @@ function renderIntel() {
   const q = $("#iq").value.trim().toLowerCase(), cat = $("#icat").value, reg = $("#iregion").value, hi = $("#ihigh").checked;
   const rows = all.filter(x => (!cat || x.category === cat) && (!reg || x.region === reg) && (!hi || /high/i.test(x.signal)) && (!q || Object.values(x).join(" ").toLowerCase().includes(q)));
   scopeNote("#iscope", esc(t("iscope")));
+  const top = rows.filter(x => /high/i.test(x.signal)).concat(rows.filter(x => !/high/i.test(x.signal)));
+  $("#iscope").insertAdjacentHTML("beforeend", rows.length ? `<div class="actions" style="margin:6px 0 0"><span class="sub">${esc(mt("Share the top signals of this list:", "שיתוף האותות המובילים ברשימה:"))}</span>${shareHtml(intelDigest(top))}</div>` : "");
   const H = x => LANG === "he" ? (x.headline_he || x.headline_en) : (x.headline_en || tr(x.headline_he));
   const W = x => LANG === "he" ? (x.what_it_means_he || x.what_it_means_en) : (x.what_it_means_en || tr(x.what_it_means_he));
   const el = $("#ilist");
@@ -3842,7 +3852,7 @@ function renderIntel() {
       <div class="t">${flag(x.country)}${txt(H(x))}</div>
       <div class="sub" style="margin-top:3px">${txt(W(x))}</div>
       <div class="sub" style="margin-top:3px">${esc(x.country)}${x.commodity_group ? " · " + esc(x.commodity_group) : ""} · ${link(x.url, x.source_name || x.url)}</div>
-      <div class="actions" style="margin:8px 0 0"><button type="button" data-ii="${i}" data-act="deep">${esc(t("more_info"))}</button><button type="button" data-ii="${i}" data-act="sup">${esc(t("a_sup"))}</button><button type="button" data-ii="${i}" data-act="log">${esc(t("a_log"))}</button></div>
+      <div class="actions" style="margin:8px 0 0">${shareHtml(intelShare(x))}<button type="button" data-ii="${i}" data-act="deep">${esc(t("more_info"))}</button><button type="button" data-ii="${i}" data-act="sup">${esc(t("a_sup"))}</button><button type="button" data-ii="${i}" data-act="log">${esc(t("a_log"))}</button></div>
       <div id="intel-card-${i}" data-jobcard="${esc("I:" + x.id)}">${cardHtml("I:" + x.id)}</div><div id="intel-card-${i}-flash"></div><div id="intel-log-${i}" data-jobcard="${esc("LI:" + x.id)}">${cardHtml("LI:" + x.id)}</div><div id="intel-log-${i}-flash"></div><div id="intel-out-${i}"></div>
     </div></div>`).join("");
   el.querySelectorAll("[data-act]").forEach(b => b.onclick = e => {
