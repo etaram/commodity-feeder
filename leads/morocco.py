@@ -23,7 +23,7 @@ from .sectors import classify
 BASE = "https://www.marchespublics.gov.ma"
 LIST = BASE + "/index.php?page=entreprise.EntrepriseAdvancedSearch&AllCons"
 DETAIL = BASE + "/index.php?page=entreprise.EntrepriseDetailsConsultation&refConsultation={}&orgAcronyme={}"
-BUDGET_S = int(os.environ.get("MOROCCO_BUDGET_S", "600"))
+BUDGET_S = int(os.environ.get("MOROCCO_BUDGET_S", "3000"))
 GAP = 1.5
 PAGE_SIZE = "50"
 EMPTY_STOP = 8
@@ -87,7 +87,7 @@ def parse(html, ts):
         buyer = clean((re.search(r"Acheteur public\s*:\s*(.*?)\s*(?:Date limite|$)", text) or [None, ""])[1])
         refno = clean((re.search(r"Référence\s*:\s*(\S+)", text) or [None, ""])[1])
         proc = clean((re.search(r'class="verticalText[^"]*">\s*<span[^>]*title="([^"]*)"', p) or [None, ""])[1])
-        place = clean((re.search(r"Lieu d'exécution\s+(.*?)\s*(?:\.\.\.|Partager|$)", text) or [None, ""])[1])[:60]
+        place = clean((re.search(r'fa-map-marker[^>]*>\s*</i>\s*([^<]+)', p) or [None, ""])[1])[:60]
         est = (re.search(r"Estimation TTC \(en DH\)\s*:\s*([\d\s.,]+)", text) or [None, ""])[1]
         try:
             val = round(float(re.sub(r"\s", "", est).replace(",", "."))) if est.strip() else ""
