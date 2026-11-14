@@ -1,15 +1,15 @@
 country,region,open_notices,total_value_usd,sources
 IND,South Asia,50434,12522077720,AIIB; India e-procurement (Assam); India e-procurement (Central (CPPP)); India e-procurement (Central PSUs); India e-procurement (Chandigarh); India e
 DEU,Europe,19607,8682659014,SAM.gov (USA); TED (EU); UNGM (UNDP); UNGM (UNV); oeffentlichevergabe (Germany)
-FRA,Europe,11020,18862315981,BOAMP (France); SAM.gov (USA); TED (EU); UNGM (COE); UNGM (INTERPOL); UNGM (UNESCO); UNGM (UNHCR)
+FRA,Europe,11018,18862315981,BOAMP (France); SAM.gov (USA); TED (EU); UNGM (COE); UNGM (INTERPOL); UNGM (UNESCO); UNGM (UNHCR)
 TWN,East Asia,10568,12987730009,Taiwan Government e-Procurement (PCC)
-BRA,Latin America,8548,19548587295,AIIB; IDB; PNCP (Brazil); UNGM (ILO); UNGM (PAHO); UNGM (UNDP); UNGM (UNESCO); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); World Bank; World Bank pipel
+BRA,Latin America,8931,19767999313,AIIB; IDB; PNCP (Brazil); UNGM (ILO); UNGM (PAHO); UNGM (UNDP); UNGM (UNESCO); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); World Bank; World Bank pipel
 ESP,Europe,7188,22711847334,PLACSP (Spain); SAM.gov (USA); TED (EU); UNGM (UNDP)
-USA,North America,6295,6689044,Bonfire public portal (amarillo); Bonfire public portal (bendoregon); Bonfire public portal (fortworthtexas); Bonfire public portal (kcmo); Bonfire pu
-UKR,Europe,5910,7668731928,EBRD; Prozorro (Ukraine); TED (EU); UNGM (ILO); UNGM (IOM); UNGM (OSCE); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); World Bank; World Ban
+USA,North America,6332,6689044,Bonfire public portal (amarillo); Bonfire public portal (bendoregon); Bonfire public portal (fortworthtexas); Bonfire public portal (kcmo); Bonfire pu
+UKR,Europe,5672,7664945924,EBRD; Prozorro (Ukraine); TED (EU); UNGM (ILO); UNGM (IOM); UNGM (OSCE); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNOPS); World Bank; World Ban
 POL,Europe,4237,2831616616,TED (EU); World Bank pipeline
 CHL,Latin America,4078,0,ChileCompra; UNGM (FAO); UNGM (ILO); UNGM (UNICEF); UNGM (WIPO)
-PHL,Southeast Asia,3977,10869356560,AIIB; PhilGEPS (Philippines); SAM.gov (USA); UNGM (FAO); UNGM (ILO); UNGM (UN Secretariat); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (WHO); Worl
+PHL,Southeast Asia,3978,10869356560,AIIB; PhilGEPS (Philippines); SAM.gov (USA); UNGM (FAO); UNGM (ILO); UNGM (UN Secretariat); UNGM (UNDP); UNGM (UNICEF); UNGM (UNIDO); UNGM (WHO); Worl
 COL,Latin America,2517,9697296482,SECOP II (Colombia); TED (EU); UNGM (FAO); UNGM (IOM); UNGM (UN Secretariat); UNGM (UNDP); World Bank pipeline
 CHN,East Asia,1927,1467303791,AIIB; China Government Procurement (CCGP); China Southern Power Grid (CSG) bidding; TED (EU); UNGM (ILO); UNGM (UNFPA); UNGM (UNICEF); World Bank; Wor
 ITA,Europe,1479,29898126046,SAM.gov (USA); TED (EU); UNGM (UN Secretariat)
@@ -17,7 +17,7 @@ CHE,Europe,1430,0,TED (EU); UNGM (ILO); UNGM (IOM); UNGM (ITU); UNGM (UN Secreta
 NLD,Europe,1335,12823927036,SAM.gov (USA); TED (EU); UNGM (ICC)
 ZAF,Sub-Saharan Africa,1316,4633820000,Transnet eTenders (South Africa); World Bank pipeline; eTenders (South Africa)
 SWE,Europe,1295,9178970405,TED (EU)
-CZE,Europe,1159,7782799029,TED (EU)
+CZE,Europe,1158,7781995576,TED (EU)
 ISR,Israel,1106,0,Israel - academic institution; Israel - city_association; Israel - cluster of authorities; Israel - company; Israel - drainage authority; Israel - gov
 JPN,East Asia,1097,0,KKJ Japan public procurement portal; SAM.gov (USA); UNGM (ILO)
 ROU,Europe,978,7534176082,EBRD; TED (EU); World Bank pipeline
@@ -28,6 +28,7 @@ MDA,Europe,687,351754090,EBRD; MTender (Moldova); TED (EU); UNGM (IDLO); UNGM (I
 SAU,Middle East & North Africa,681,0,Etimad (Saudi Arabia); IsDB; SAM.gov (USA); UNGM (IOM)
 ECU,Latin America,659,2362097921,IDB; OCDS: Ecuador: Servicio Nacional de Contratación Pública; UNGM (UNDP); UNGM (UNICEF); World Bank pipeline
 BGR,Europe,642,610488368,EBRD; TED (EU); UNGM (IOM)
+KEN,Sub-Saharan Africa,621,5457200000,AIIB; PPIP (Kenya); UNGM (FAO); UNGM (IDLO); UNGM (ILO); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNIDO); World Bank; World Bank pipeline
 FIN,Europe,587,1183738777,TED (EU)
 PRT,Europe,582,2811715495,SAM.gov (USA); TED (EU)
 NOR,Europe,579,3693351554,TED (EU)
@@ -43,8 +44,7 @@ NZL,Oceania,398,0,GETS NZ
 SVN,Europe,360,43270452,TED (EU)
 MYS,Southeast Asia,356,348999591,MyProcurement (Malaysia); UNGM (ILO); UNGM (UNICEF); World Bank pipeline
 IRL,Europe,355,9401286576,SAM.gov (USA); TED (EU)
-KEN,Sub-Saharan Africa,346,5457200000,AIIB; PPIP (Kenya); UNGM (FAO); UNGM (IDLO); UNGM (ILO); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); UNGM (UNIDO); World Bank; World Bank pipeline
-SVK,Europe,338,3041123449,TED (EU)
+SVK,Europe,337,3041042719,TED (EU)
 DNK,Europe,315,4185033446,TED (EU); UNGM (IOM); UNGM (UNDP)
 QAT,Middle East & North Africa,308,0,Monaqasat (Qatar); UNGM (ILO); UNGM (IOM)
 HUN,Europe,294,52118304,TED (EU)
@@ -56,7 +56,7 @@ LUX,Europe,194,111110703,TED (EU)
 AUS,Oceania,192,0,AusTender (Australia); SAM.gov (USA)
 LBN,Middle East & North Africa,154,350000000,PPA (Lebanon); UNGM (ILO); UNGM (UN Secretariat); UNGM (UNDP); UNGM (UNESCO); UNGM (UNICEF); UNGM (UNIDO); UNGM (UNRWA); UNGM (WHO); World Bank; World
 CMR,Sub-Saharan Africa,136,1239257718,ARMP (Cameroon); AfDB; UNGM (FAO); UNGM (ILO); UNGM (UNDP); UNGM (UNHCR); UNGM (UNICEF); World Bank; World Bank pipeline
-MOZ,Sub-Saharan Africa,130,1908500000,AfDB; IsDB; UFSA (Mozambique); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
+MOZ,Sub-Saharan Africa,131,1908500000,AfDB; IsDB; UFSA (Mozambique); UNGM (ILO); UNGM (IOM); UNGM (UNDP); UNGM (UNICEF); World Bank; World Bank pipeline
 MLT,Europe,128,1392459520,TED (EU); World Bank pipeline
 GHA,Sub-Saharan Africa,122,1600000000,AfDB; GHANEPS (Ghana); UNGM (IAEA); UNGM (ILO); UNGM (UNCDF); UNGM (UNDP); UNGM (UNICEF); UNGM (WFP); World Bank; World Bank pipeline
 MKD,Europe,116,2404474199,EBRD; TED (EU); UNGM (ILO); UNGM (UNDP); World Bank pipeline
