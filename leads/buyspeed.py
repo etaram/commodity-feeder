@@ -104,15 +104,18 @@ def fetch_portal(s, key, base, state, buyer, fetched):
     while first < total and first // 25 < MAX_PAGES:
         p = _next_payload(page, first)
         if not p:
+            log.warning("BuySpeed %s: no paging form found (view state or table id missing)", key)
             break
         time.sleep(1.5)
         rr = s.post(base + "/bso/view/search/external/advancedSearchBid.xhtml", data=p, timeout=60,
                     headers={"Faces-Request": "partial/ajax", "X-Requested-With": "XMLHttpRequest"})
         if rr.status_code != 200:
+            log.warning("BuySpeed %s: paging POST %s: %s", key, rr.status_code, rr.text[:200].replace("\n", " "))
             break
         body = html.unescape(rr.text) if "<![CDATA[" in rr.text else rr.text
         got = parse("".join(f'<th scope="col">{h}</th>' for h in heads) + body, base, state, buyer, fetched)
         if not got:
+            log.warning("BuySpeed %s: paging answer had no rows (first=%d): %s", key, first, rr.text[:300].replace("\n", " "))
             break
         rows += got
         first += 25
