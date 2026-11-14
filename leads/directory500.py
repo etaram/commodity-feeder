@@ -1,5 +1,6 @@
 """Directory sweep: the tender pages of ~400 cities, state-owned enterprises and national agencies from the owner's
-'Global Open Procurement 500' list (data/leads/sources/directory500.csv, received 14 Nov 2026; every entry marked
+'Global Open Procurement 500' list and its 1,500 master directory (data/leads/sources/directory500.csv, received 14 Nov 2026,
+batch 2 ids prefixed B2-; every entry marked
 'Not Reviewed' there, so each page is checked here). Entries whose host another collector already reads are skipped.
 
 For each entry: fetch the listed page politely (robots.txt respected, CAPTCHA and bot walls are never passed: they are
@@ -152,15 +153,22 @@ def fetch():
         prev = {r["id"]: r for r in csv.DictReader(open(STATUS, encoding="utf-8"))}
     entries.sort(key=lambda e: (prev.get(e["id"], {}).get("checked", ""), e["id"]))
     start, out, stats = time.time(), [], {}
-    for e in entries:
+
+    def one(e):
         if time.time() - start > BUDGET_S:
-            break
-        mf = e["iso3"] in MONTH_FIRST
+            return e, None, []
         try:
-            st, items = scan(e["url"], t, mf)
+            return (e,) + scan(e["url"], t, e["iso3"] in MONTH_FIRST)
         except Exception as ex:  # noqa: BLE001
-            st, items = "error", []
             log.warning("directory500 %s: %s", e["id"], str(ex)[:80])
+            return e, "error", []
+
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(8) as ex:   # different hosts in parallel; il_web.fetch keeps the per-host gap
+        results = list(ex.map(one, entries))
+    for e, st, items in results:
+        if st is None:
+            continue
         for it in items:
             sector, how = classify(it["title"])
             out.append({"id": "D5-" + e["id"] + "-" + re.sub(r"\W+", "", it["title"].lower())[:50], "source": f"Directory sweep: {e['portal'] or e['entity']}"[:90],
@@ -177,7 +185,7 @@ def fetch():
     with open(STATUS, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["id", "entity", "country", "region", "url", "status", "open_found", "checked"])
         w.writeheader()
-        w.writerows(sorted(prev.values(), key=lambda r: int(r["id"]) if str(r["id"]).isdigit() else 0))
+        w.writerows(sorted(prev.values(), key=lambda r: (str(r["id"]).startswith("B2-"), int(re.sub(r"\D", "", str(r["id"])) or 0))))
     rows, _ = rolling("directory500", out, max_age_days=90)
     log.info("Directory sweep: %d entries read this run (%s); %d open notices found now, %d kept", sum(stats.values()),
              ", ".join(f"{k} {v}" for k, v in sorted(stats.items())), len(out), len(rows))
