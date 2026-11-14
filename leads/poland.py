@@ -49,7 +49,7 @@ def fetch():
     for back in range(DAYS, -1, -1):
         d, d2 = str(t - dt.timedelta(days=back)), str(t - dt.timedelta(days=back - 1))
         page = 1
-        while page <= 40:
+        while page <= 120:
             try:
                 r = s.get(API, params={"NoticeType": "ContractNotice", "PublicationDateFrom": d, "PublicationDateTo": d2,
                                        "PageSize": PAGE, "PageNumber": page}, timeout=60)
@@ -61,8 +61,8 @@ def fetch():
             if not isinstance(items, list) or not items:
                 break
             out += parse(items, ts, ts)
-            if len(items) < PAGE:
-                break
+            # the board returns its own page size (not always PageSize): keep paging until a page comes back empty
+
             page += 1
             time.sleep(0.5)
         time.sleep(0.5)

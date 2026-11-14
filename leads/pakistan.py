@@ -79,6 +79,10 @@ def fetch():
             total = int(m.group(1).replace(",", "")) if m else 0
         got = parse(r.text, t)
         if not got:
+            if p == 1:
+                title = re.search(r"<title>(.*?)</title>", r.text, re.S)
+                log.warning("Pakistan PPRA page 1 had no rows: HTTP %s, %d bytes, title %r, rows marker %s", r.status_code, len(r.text),
+                            (title.group(1).strip()[:80] if title else ""), "cb-rt-main" in r.text)
             break
         out += got
         if p * 50 >= total:

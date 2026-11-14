@@ -108,7 +108,8 @@ def fetch_portal(s, key, base, state, buyer, fetched):
             break
         time.sleep(1.5)
         rr = s.post(base + "/bso/view/search/external/advancedSearchBid.xhtml", data=p, timeout=60,
-                    headers={"Faces-Request": "partial/ajax", "X-Requested-With": "XMLHttpRequest"})
+                    headers={"Faces-Request": "partial/ajax", "X-Requested-With": "XMLHttpRequest", "Referer": base + PATH, "Origin": base,
+                             "Accept": "application/xml, text/xml, */*; q=0.01", "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"})
         if rr.status_code != 200:
             log.warning("BuySpeed %s: paging POST %s: %s", key, rr.status_code, rr.text[:200].replace("\n", " "))
             break

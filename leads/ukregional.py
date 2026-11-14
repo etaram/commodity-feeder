@@ -9,7 +9,7 @@ Notices also published on Find a Tender are folded by the merge's duplicate chec
 import datetime as dt
 import time
 
-from .common import log, quarantine_future, session, snapshot, today
+from .common import chain_session, log, quarantine_future, snapshot, today
 from .ocds import tender_row
 
 PORTALS = [("PCS", "https://api.publiccontractsscotland.gov.uk/v1/Notices", "SC", "Public Contracts Scotland"),
@@ -19,13 +19,14 @@ MONTHS = 3
 
 
 def fetch():
-    s, t = session(), today()
+    t = today()
     ts = str(t)
     months, d = [], t.replace(day=1)
     for _ in range(MONTHS):
         months.append(d.strftime("%m-%Y")); d = (d - dt.timedelta(days=1)).replace(day=1)
     out, meta, calls = [], {}, 0
     for key, url, prefix, name in PORTALS:
+        s = chain_session(url)   # both hosts omit their intermediate certificate (SSLError on the runner)
         got, failed = 0, 0
         for nt in TYPES:
             for m in months:
