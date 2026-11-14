@@ -32,17 +32,25 @@ def vic_date(s):
     return str(d), hm
 
 
-def parse(html, ts):
+def parse(html, ts, diag=None):
     rows = []
-    for m in re.finditer(r'<tr[^>]*?id=["\']tenderRow(\d+)["\'][^>]*?(?:data-tender-code=["\']([^"\']*)["\'])?[^>]*>(.*?)</tr>', html, re.S | re.I):
-        tid, code, body = m.group(1), clean(m.group(2) or ""), m.group(3)
-        title = clean((re.search(r'class="strong tenderRowTitle">(.*?)</a>', body, re.S) or [None, ""])[1])
+    starts = [(m.start(), m.group(1)) for m in re.finditer(r'id=["\']tenderRow(\d+)["\']', html)]
+    for k, (pos, tid) in enumerate(starts):
+        body = html[pos: starts[k + 1][0] if k + 1 < len(starts) else pos + 20000]
+        code = clean((re.search(r'data-tender-code=["\']([^"\']*)', body) or [None, ""])[1])
+        a = re.search(r'<a[^>]*href=["\'][^"\']*tender/view\?id=' + tid + r'[^"\']*["\'][^>]*>(.*?)</a>', body, re.S)
+        title = clean(a.group(1)) if a else ""
+        text = clean(body)
         buyer = clean((re.search(r"Issued by:\s*(.*?)</span>", body, re.S) or [None, ""])[1])
-        state = clean((re.search(r'class="tender-row-state">(.*?)</span>', body, re.S) or [None, ""])[1])
-        typ = clean((re.search(r'tender-row-state">.*?</span>\s*(?:<br>\s*)?([^<]+)', body, re.S) or [None, ""])[1])
+        state = clean((re.search(r'tender-row-state["\'][^>]*>(.*?)</span>', body, re.S) or [None, ""])[1])
+        typ = clean((re.search(r'tender-row-state["\'][^>]*>.*?</span>\s*(?:<br\s*/?>\s*)?([^<]+)', body, re.S) or [None, ""])[1])
         unspsc = clean((re.search(r"UNSPSC:\s*(.*?)</span>", body, re.S) or [None, ""])[1])
-        opened = vic_date(clean((re.search(r'class="opening_date">(.*?)</span>', body, re.S) or [None, ""])[1]))[0]
-        dl, hm = vic_date(clean((re.search(r'class="closing_date">(.*?)</span>', body, re.S) or [None, ""])[1]))
+        op = re.search(r"Opened\s+(.{0,60})", text)
+        cl = re.search(r"Closing\s+(.{0,60})", text)
+        opened = vic_date(op.group(1))[0] if op else ""
+        dl, hm = vic_date(cl.group(1)) if cl else ("", "")
+        if diag is not None and not diag:
+            diag.update({"title": title[:60], "state": state, "closing": cl.group(1)[:40] if cl else "", "text": text[:300]})
         if not title or not dl or dl < ts or (state and state.lower() != "open"):
             continue
         sector, how = classify(title + " " + unspsc)
@@ -72,7 +80,11 @@ def fetch():
         if not ids or ids in seen_pages:
             break
         seen_pages.add(ids)
-        for x in parse(r.text, ts):
+        diag = {}
+        got = parse(r.text, ts, diag)
+        if page == 1 and not got:
+            log.warning("Victoria tenders: page 1 rows not parsed; first row %s", diag)
+        for x in got:
             out[x["id"]] = x
         if f"page={page + 1}" not in r.text:
             break
