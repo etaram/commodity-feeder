@@ -1561,6 +1561,18 @@ const ECODE = { forbidden: "err_forbidden", needs_reauth: "err_reauth", server_n
 const errText = (e, s) => e?.code === "not_approver" ? (LANG === "he" ? "ההודעה לא נשלחה. רק החשבון האישי של הבעלים יכול לאשר שליחה; הכניסה המשותפת של הצוות לא יכולה." : "Not sent. Only the owner's personal account can approve a message; the shared team login cannot.") : t(ECODE[e?.code] || "err_other", { s: e?.server || s }) + ((e?.code === "tool_error" || e?.code === "forbidden") && e.message ? " " + String(e.message).slice(0, 160) : "");
 const SUPS = () => SHEETS + " (" + t("sup_db") + ")";
 
+// TODO(remove after the next server deploy, before the repository goes private): direct public reads
+const RAW_CSV = { biztrends: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/biz_trends.csv", ais: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/ais_pulse.csv" };
+function csvRows(t) {   // RFC 4180: quoted fields, doubled quotes, newlines inside quotes
+  const out = []; let row = [], f = "", q = false;
+  for (let i = 0; i < t.length; i++) { const c = t[i];
+    if (q) { if (c === '"') { if (t[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+    else if (c === '"') q = true; else if (c === ",") { row.push(f); f = ""; }
+    else if (c === "\n" || c === "\r") { if (c === "\r" && t[i + 1] === "\n") i++; row.push(f); f = ""; if (row.length > 1 || row[0] !== "") out.push(row); row = []; }
+    else f += c; }
+  if (f !== "" || row.length) { row.push(f); out.push(row); }
+  return out;
+}
 async function load(key, fresh) {
   const [sid, range] = RANGES[key];
   try {
@@ -1574,6 +1586,10 @@ async function load(key, fresh) {
     if (key === "tot_t" || key === "tot_s") S.data[key + "_raw"] = [(p.values || [[]])[0].slice(-1)[0]];
   } catch (e) {
     if (e?.retryable && !fresh) { await new Promise(r => setTimeout(r, (e.retryAfterMs || 1500) + Math.random() * 800)); return load(key, true); }
+    // tabs the web server does not serve yet (added after its last deploy): read the public file the data run writes
+    if (RAW_CSV[key] && /not available on the web/.test(String(e?.message || ""))) {
+      try { const r = await fetch(RAW_CSV[key], { cache: "no-store" }); if (r.ok) { S.data[key] = toObjects(csvRows(await r.text())); S.at[key] = Date.now(); delete S.err[key]; return; } } catch (e2) {}
+    }
     if (OPTIONAL.has(key)) { S.data[key] = []; return; }
     S.err[key] = e; if (["needs_reauth", "server_not_connected", "not_in_manifest", "blocked_by_policy"].includes(e?.code)) S.data[key] = [];
   }
