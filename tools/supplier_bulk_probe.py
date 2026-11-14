@@ -1,5 +1,6 @@
 """Probe for the bulk supplier sources (leads/supplier_bulk.py): which public download endpoints answer from the runner.
 Prints status codes, sizes, link and endpoint candidates and robots.txt rules only (no records)."""
+import json
 import re
 import sys
 import urllib.robotparser
@@ -117,6 +118,33 @@ def traces4():
                 if n >= 2:
                     break
                 print(f"  [{tok}]", t[max(0, m.start() - 300): m.end() + 400].replace("\n", " "))
+
+
+def traces5():
+    print("== TRACES5")
+    b = "https://webgate.ec.europa.eu/tracesnt/directory/listing/establishment/publication"
+    h = {"Accept": "application/json, text/plain, */*", "X-Requested-With": "XMLHttpRequest"}
+    lst = None
+    for u in [b + "?countryCode=CN", b, b + "?countryCode=MX&classificationSectionId=null"]:
+        r = get(u, headers=h)
+        if r is not None:
+            print("   body:", r.text[:1500].replace("\n", " "))
+            if r.status_code == 200 and lst is None:
+                try:
+                    lst = r.json()
+                except ValueError:
+                    pass
+    if isinstance(lst, list) and lst:
+        print("   n listings:", len(lst), "keys:", list(lst[0]))
+        x = lst[0]
+        summ = x.get("establishmentListingSummary") or x
+        cc = (summ.get("country") or {}).get("code"); sec = (summ.get("classificationSectionId") or summ.get("classificationSection") or {})
+        sec = sec.get("code") if isinstance(sec, dict) else sec
+        print("   first:", json.dumps(x)[:1200])
+        for u in [f"{b}/establishments/{cc}/{sec}", f"{b}/{cc}/{sec}"]:
+            r = get(u, headers=h)
+            if r is not None:
+                print("   body:", r.text[:2500].replace("\n", " "))
 
 
 def traces():
