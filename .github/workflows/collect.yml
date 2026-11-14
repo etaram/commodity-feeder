@@ -9,7 +9,7 @@ on:
       sources:
         description: comma-separated collectors (leads/<name>.py)
         required: true
-        default: directory500,poland,pakistan,victoria,ukregional,buyspeed,india,socrata_us
+        default: directory500,poland,pakistan,victoria,nsw,morocco,ukregional,buyspeed,india,socrata_us
 permissions:
   contents: write
 jobs:

@@ -8,8 +8,9 @@ page's own pager (PRADO form postback), one call at least 1.5 s after the previo
 to its own detail page (EntrepriseDetailsConsultation&refConsultation=...&orgAcronyme=...).
 
 OPEN = a consultation whose 'Date limite de remise des plis' is today or later. The list holds about 100k
-consultations, more than one run reads, so each run reads up to its time budget, newest pages first, and keeps the
-open ones in a rolling cache; a run stops early after several pages in a row without an open consultation."""
+consultations sorted by deadline, latest first (about 5,000 open ones fill the first ~100 pages of 50): a run reads
+until several pages in a row hold no open consultation, then replaces the cache with that complete open set; a run
+cut by its time budget merges into a rolling cache instead."""
 import datetime as dt
 import os
 import re
@@ -17,16 +18,16 @@ import time
 
 import requests
 
-from .common import clean, log, quarantine_future, rolling, session, today
+from .common import clean, log, quarantine_future, rolling, session, snapshot, today
 from .sectors import classify
 
 BASE = "https://www.marchespublics.gov.ma"
 LIST = BASE + "/index.php?page=entreprise.EntrepriseAdvancedSearch&AllCons"
 DETAIL = BASE + "/index.php?page=entreprise.EntrepriseDetailsConsultation&refConsultation={}&orgAcronyme={}"
-BUDGET_S = int(os.environ.get("MOROCCO_BUDGET_S", "3000"))
+BUDGET_S = int(os.environ.get("MOROCCO_BUDGET_S", "1500"))
 GAP = 1.5
 PAGE_SIZE = "50"
-EMPTY_STOP = 8
+EMPTY_STOP = 4
 MONTHS = {"jan": 1, "fev": 2, "fév": 2, "mar": 3, "avr": 4, "mai": 5, "jui": 6, "juin": 6, "juil": 7, "aou": 8, "aoû": 8,
           "sep": 9, "oct": 10, "nov": 11, "dec": 12, "déc": 12}
 PROC = {"AOO": "Appel d'offres ouvert", "AOR": "Appel d'offres restreint", "CNO": "Concours", "AMI": "Appel a manifestation d'interet",
@@ -177,8 +178,11 @@ def fetch():
     if not out:
         raise RuntimeError("Morocco: no open consultation read; cache kept")
     rows, q = quarantine_future(list(out.values()), "morocco")
-    keep, _ = rolling("morocco", rows, max_age_days=120)
+    # the list is sorted by deadline, latest first: once several pages in a row hold no open consultation the whole
+    # open set has been read, and the cache becomes exactly this set (withdrawn ones drop out)
+    complete = empty_run >= EMPTY_STOP and not cut
+    keep, _ = snapshot("morocco", rows) if complete else rolling("morocco", rows, max_age_days=120)
     log.info("Morocco: %d open consultations in the cache (%d read now, %d calls, %s)", len(keep), len(rows), c.calls,
              "cut at the time budget" if cut else "stopped after pages without open consultations" if empty_run >= EMPTY_STOP else "list end")
     return keep, {"new": len(rows), "pages": pages, "calls": c.calls, "quarantined": q, "deep_link": 1,
-                  "complete_snapshot": 0, "note": "robots.txt answers 403 (RFC 9309: unavailable, no restriction)"}
+                  "complete_snapshot": 1 if complete else 0, "note": "robots.txt answers 403 (RFC 9309: unavailable, no restriction)"}
