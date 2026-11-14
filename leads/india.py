@@ -16,6 +16,10 @@ PORTALS = [
     ("Central (CPPP)", "https://eprocure.gov.in/eprocure/app"),
     ("Central PSUs", "https://etenders.gov.in/eprocure/app"),
     ("Defence", "https://defproc.gov.in/nicgep/app"),
+    # 14 Nov 2026 (from the Pipeworx india-tenders pack's source list): large PSU buyers on the same GePNIC software
+    ("Coal India", "https://coalindiatenders.nic.in/nicgep/app"),
+    ("Indian Oil (IOCL)", "https://iocletenders.nic.in/nicgep/app"),
+    ("Delhi", "https://govtprocurement.delhi.gov.in/nicgep/app"),
     ("Maharashtra", "https://mahatenders.gov.in/nicgep/app"),
     ("Tamil Nadu", "https://tntenders.gov.in/nicgep/app"),
     ("Kerala", "https://etenders.kerala.gov.in/nicgep/app"),
