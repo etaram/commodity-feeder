@@ -1,5 +1,5 @@
-"""Business trends: what China's financial press and the big Chinese platforms are pushing right now, filtered to
-business and trade, for the Today panel (owner, 14 Nov 2026: a trends module from TrendRadar with a business and
+"""Business trends worldwide: what China's financial press and big platforms are pushing, plus each major country's
+trending searches with their news headline (Google Trends daily RSS, 40 countries), all filtered to business and trade, for the Today panel (owner, 14 Nov 2026: a trends module from TrendRadar with a business and
 commercial focus).
 
 Source: the hot lists TrendRadar itself reads, through the open-source newsnow API (github.com/ourongxing/newsnow, MIT;
@@ -37,7 +37,21 @@ TAGS = [
     ("policy & macro", r"央行|利率|降准|降息|汇率|人民币|美元|美联储|PPI|CPI|GDP|PMI|财政|国务院|发改委|商务部|工信部|政策|方案|规划|补贴|专项债|stimulus|central bank|rate|inflation"),
     ("companies & markets", r"并购|收购|IPO|上市|融资|增持|减持|股价|涨停|跌停|市值|财报|业绩|营收|利润|产能|扩产|停产|减产|复产|涨价|降价|价格|短缺|供应|merger|acquisition|earnings|shortage|price"),
 ]
+EN_EXTRA = {
+    "commodities": r"|\b(?:silver|nickel|zinc|cocoa|coffee|corn|maize|rice|sugar|cotton|palm oil|cement|rubber|commodit\w*|grain|food prices?)\b",
+    "energy": r"|\b(?:electricity|fuel|petrol|diesel|blackout|load.?shedding|refinery|pipeline|energy|opec|crude)\b",
+    "projects & tenders": r"|\b(?:construction|railway|highway|airport|bridge|dam|metro|megaproject|procurement|bid|awarded|investment deal)\b",
+    "trade & sanctions": r"|\b(?:customs|duties|embargo|trade deal|free trade|quota|dumping)\b",
+    "shipping & logistics": r"|\b(?:logistics|cargo|vessel|suez|red sea|panama canal|strike at port|supply chain)\b",
+    "policy & macro": r"|\b(?:interest rates?|inflation|budget|tax|imf|world bank|recession|economy|gdp|currency|dollar|euro|devaluation|minister of finance)\b",
+    "companies & markets": r"|\b(?:stock|shares|market|ipo|merger|layoffs?|bankrupt\w*|profit|revenue|ceo|takeover|prices?|shortage)\b",
+}
+TAGS = [(n, p + EN_EXTRA.get(n, "")) for n, p in TAGS]
 TAG_RX = [(n, re.compile(p, re.I)) for n, p in TAGS]
+SPORT = re.compile(r"\b(vs\.?|match|league|cup|goal|score|fc|united|real madrid|barcelona|nba|nfl|cricket|ipl|tennis|f1|grand prix|film|movie|series|actor|actress|singer|album|concert|wedding|dies|death|weather|horoscope|lottery)\b", re.I)
+TRENDS_RSS = "https://trends.google.com/trending/rss"
+GEOS = ["US", "CA", "MX", "BR", "AR", "CL", "CO", "PE", "GB", "DE", "FR", "IT", "ES", "PL", "NL", "TR", "IL", "SA", "AE", "EG", "MA", "NG",
+        "KE", "ZA", "GH", "IN", "PK", "ID", "VN", "TH", "MY", "PH", "SG", "JP", "KR", "TW", "HK", "AU", "KZ", "UA"]
 NOISE = re.compile(r"明星|综艺|电影|电视剧|演唱会|恋情|离婚|塌房|网红|偶像|球赛|进球|游戏|动漫|八卦|官宣恋|结婚|热舞|颜值|cp")
 WORLD = re.compile(r"非洲|中东|沙特|阿联酋|以色列|伊朗|印度|东南亚|越南|印尼|巴西|墨西哥|俄罗斯|乌克兰|欧盟|欧洲|美国|日本|韩国|土耳其|埃及|尼日利亚|南非|肯尼亚|埃塞俄比亚|巴基斯坦|哈萨克")
 HIST = CACHE / "biz_trends_history.json"
@@ -72,9 +86,51 @@ def collect(s):
     return items, meta
 
 
+def collect_global(s):
+    """Google Trends daily trending searches per country (official RSS; robots.txt allows it): the search and the
+    news headline attached to it. Kept only when the English translation hits the business vocabulary."""
+    import xml.etree.ElementTree as ET
+    ns = {"ht": "https://trends.google.com/trending/rss"}
+    items, meta = [], {}
+    for g in GEOS:
+        try:
+            r = s.get(TRENDS_RSS, params={"geo": g}, timeout=30)
+            r.raise_for_status()
+            root = ET.fromstring(r.content)
+        except Exception as e:  # noqa: BLE001
+            meta["gt-" + g] = "failed"; log.warning("trends rss %s: %s", g, str(e)[:60]); continue
+        n = 0
+        for rank, it in enumerate(root.iter("item"), 1):
+            term = clean(it.findtext("title") or "")
+            news = it.find("ht:news_item", ns)
+            head = clean((news.findtext("ht:news_item_title", default="", namespaces=ns) if news is not None else "") or "")
+            url = (news.findtext("ht:news_item_url", default="", namespaces=ns) if news is not None else "") or ""
+            traffic = clean(it.findtext("ht:approx_traffic", default="", namespaces=ns) or "")
+            if term:
+                items.append({"platform": f"Google Trends {g}", "platform_id": "gt-" + g, "rank": rank, "title": f"{term}: {head}" if head else term,
+                              "url": url, "tags": [], "world": g, "traffic": traffic, "_global": True})
+                n += 1
+        meta["gt-" + g] = n
+        time.sleep(1)
+    return items, meta
+
+
 def fetch_trends():
     s, t = session(), str(today())
     items, meta = collect(s)
+    gl, gmeta = collect_global(s)
+    meta.update(gmeta)
+    if gl:
+        try:
+            from .translate import translate_rows
+            translate_rows(gl, field="title", budget_sec=300)
+        except Exception as e:  # noqa: BLE001
+            log.warning("trends global translation: %s", e)
+        for x in gl:
+            en = x.get("title_en") or x["title"]
+            x["tags"] = [n for n, rx in TAG_RX if rx.search(en)]
+            if x["tags"] and not SPORT.search(en):
+                items.append(x)
     if not items:
         log.warning("trends: nothing read (%s)", meta)
         return 0
@@ -98,18 +154,24 @@ def fetch_trends():
         hist[k] = h
         sp = len(spread.get(k[:14], ()))
         score = (3 if x["tags"] else 0) + len(x["tags"]) + min(h["runs"], 6) + 2 * (sp - 1) + max(0, 10 - x["rank"]) / 3 + (2 if x["world"] else 0)
-        rows.append({**x, "tags": ", ".join(x["tags"]), "first_seen": h["first"], "runs": h["runs"], "spread": sp,
-                     "score": round(score, 1), "lang": "zh", "id": "BT-" + k[:24]})
+        if x.get("_global"):
+            try:
+                import pycountry
+                x["world"] = pycountry.countries.get(alpha_2=x["world"]).name
+            except Exception:  # noqa: BLE001
+                pass
+        rows.append({**{k: v for k, v in x.items() if k != "_global"}, "tags": ", ".join(x["tags"]), "first_seen": h["first"], "runs": h["runs"], "spread": sp,
+                     "score": round(score, 1), "lang": "" if x.get("platform_id", "").startswith("gt-") else "zh", "id": "BT-" + k[:24]})
     # forget stories not seen for 3 days
     cut = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 3 * 86400))
     hist = {k: v for k, v in hist.items() if v.get("last", "") >= cut}
     HIST.parent.mkdir(parents=True, exist_ok=True)
     HIST.write_text(json.dumps(hist, ensure_ascii=False), encoding="utf-8")
     rows.sort(key=lambda r: -r["score"])
-    rows = rows[:250]
+    rows = rows[:300]
     try:
         from .translate import to_hebrew, translate_rows
-        translate_rows(rows, field="title", budget_sec=300)
+        translate_rows([r for r in rows if not r.get("title_en")], field="title", budget_sec=300)
         he = to_hebrew(rows, limit=250, budget_sec=240)
         for r in rows:
             r["title_he"] = he.get(r["id"], "")

@@ -1927,15 +1927,15 @@ function renderBizTrends() {
   const tagLbl = k => BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k;
   const ttl = r => (LANG === "he" ? r.title_he || r.title_en : r.title_en) || r.title;
   const at = all.reduce((m, r) => r.first_seen > m ? r.first_seen : m, "");
-  el.innerHTML = `<div class="box-head"><h3 style="margin:0">${esc(mt("Business trends: what China's markets are talking about", "מגמות עסקיות: על מה מדברים עכשיו בשווקים בסין"))}</h3>
-      <span class="muted">${esc(mt("Financial wires and hot lists (CLS, Wallstreetcn, Weibo, Baidu...), business items only", "חדשות פיננסיות ורשימות חמות (CLS, Wallstreetcn, Weibo, Baidu ועוד), רק פריטים עסקיים"))}</span></div>
+  el.innerHTML = `<div class="box-head"><h3 style="margin:0">${esc(mt("Business trends worldwide", "מגמות עסקיות בעולם"))}</h3>
+      <span class="muted">${esc(mt("China's financial wires and hot lists, plus trending searches in 40 countries (Google Trends); business items only", "חדשות פיננסיות ורשימות חמות מסין, וחיפושים חמים ב-40 מדינות (Google Trends); רק נושאים עסקיים"))}</span></div>
     <div class="chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px">
       <button type="button" class="pill${BT_SEL ? "" : " on"}" data-bt="">${esc(mt("All", "הכל"))}</button>
       ${Object.keys(BT_TAGS).map(k => `<button type="button" class="pill${BT_SEL === k ? " on" : ""}" data-bt="${esc(k)}">${esc(tagLbl(k))}</button>`).join("")}</div>
     <div class="tbl"><table><thead><tr><th>${esc(mt("Story", "הנושא"))}</th><th>${esc(mt("Tags", "תגיות"))}</th><th>${esc(mt("Where", "איפה"))}</th><th title="${esc(mt("Runs in a row on a hot list / platforms carrying it", "כמה ריצות ברצף ברשימה חמה / בכמה פלטפורמות"))}">${esc(mt("Momentum", "מומנטום"))}</th></tr></thead>
     <tbody>${rows.map(r => `<tr><td dir="auto">${link(r.url, ttl(r))}${r.title && ttl(r) !== r.title ? `<div class="sub" dir="auto">${esc(r.title)}</div>` : ""}</td>
       <td>${String(r.tags || "").split(", ").filter(Boolean).map(k => `<span class="pill">${esc(tagLbl(k))}</span>`).join(" ")}${r.sector ? ` <span class="pill">${esc(r.sector)}</span>` : ""}${r.world ? ` <span class="pill" dir="auto">${esc(r.world)}</span>` : ""}</td>
-      <td class="sub">${esc(r.platform)} #${esc(r.rank)}</td><td class="num">${esc(r.runs)}${+r.spread > 1 ? " · " + esc(r.spread) + " " + esc(mt("platforms", "פלטפורמות")) : ""}</td></tr>`).join("")}</tbody></table></div>
+      <td class="sub">${esc(String(r.platform).startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)} #${esc(r.rank)}</td><td class="num">${esc(r.runs)}${+r.spread > 1 ? " · " + esc(r.spread) + " " + esc(mt("platforms", "פלטפורמות")) : ""}</td></tr>`).join("")}</tbody></table></div>
     <p class="note">${esc(mt("Signals, not verified facts. Use them to spot early moves: a price spike, a shortage, a big project or a policy before it becomes a tender.", "אותות, לא עובדות מאומתות. הם עוזרים לזהות מוקדם: קפיצת מחיר, מחסור, פרויקט גדול או מדיניות חדשה לפני שהם הופכים למכרז."))}${at ? " " + esc(mt("Updated", "עודכן")) + " " + esc(at) + " UTC" : ""}</p>`;
   el.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { BT_SEL = b.dataset.bt; renderBizTrends(); });
 }
