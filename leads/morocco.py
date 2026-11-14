@@ -25,10 +25,14 @@ def fetch():
                          "options %s; result count %r", len(det), det[:2], t.count("Date limite"),
                          "PRADO_PAGESTATE" in t, re.findall(r'<option[^>]*value="(\d+)"[^>]*>\s*\d+\s*</option>', t)[:12],
                          clean((re.search(r"(\d[\d\s]*)\s*r[ée]sultat", t) or [None, ""])[0])[:60])
-                i = t.find("EntrepriseDetailsConsultation")
-                if i > 0:
-                    for k in range(0, 6000, 1500):
-                        log.info("Morocco probe row html %d: %r", k, " ".join(t[i - 2500 + k:i - 1000 + k].split()))
+                i = t.find("p-objet")
+                j = t.find('class="contentColumn" onclick', i)
+                item = " ".join(t[i:j if j > 0 else i + 9000].split())
+                for k in range(0, min(len(item), 9000), 1400):
+                    log.info("Morocco probe item %d: %r", k, item[k:k + 1400])
+                names = re.findall(r'<(?:input|select)[^>]*name="([^"]+)"', t)
+                log.info("Morocco probe form fields (%d): %s", len(names), [n for n in names if re.search(r"(?i)date|prado|page|sort|tri|categ|etat|statut|limit", n)][:60])
+                log.info("Morocco probe sort/ordre links: %s", re.findall(r'id="([^"]*(?:sort|Sort|tri|Tri)[^"]*)"', t)[:20])
         except Exception as e:  # noqa: BLE001
             log.warning("Morocco probe %s: %s %s", u, type(e).__name__, str(e)[:160])
     raise RuntimeError("Morocco: probe only, nothing stored")
