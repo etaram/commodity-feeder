@@ -68,7 +68,9 @@ def form_state(html):
 
 def parse(html, ts):
     rows, n_items, n_open = [], 0, 0
-    parts = re.split(r'(?=<div class="contentColumn" onclick=)', html)
+    parts = re.split(r'(?=<div\s+class="contentColumn"\s+onclick=)', html)
+    if len(parts) < 2:   # layout without the clickable wrapper: one part per detail link
+        parts = re.split(r'(?=<[^>]*EntrepriseDetailsConsultation&(?:amp;)?refConsultation=\d+[^>]*echanges)', html)
     for p in parts[1:]:
         ref = re.search(r"refConsultation=(\d+)&(?:amp;)?orgAcronyme=([A-Za-z0-9_-]+)", p)
         if not ref:
@@ -148,6 +150,9 @@ def fetch():
     while True:
         got, n_items, n_open = parse(html, ts)
         pages += 1
+        if pages == 1 and not n_items:
+            i = html.find("refConsultation=")
+            log.warning("Morocco: page 1 not parsed; around the first link: %r", " ".join(html[max(0, i - 400):i + 200].split()))
         sig = tuple(re.findall(r"refConsultation=(\d+)", html)[:5])
         if pages <= 3:
             firsts.append(re.findall(r"Date limite de remise des plis\s*</span>.*?<span[^>]*>\s*([^<]+?)\s*</span>", html, re.S)[:4])
