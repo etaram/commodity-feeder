@@ -2133,7 +2133,7 @@ function btStrength(r, cn) {
   const hrs = Math.max(8, 8 * num(r.runs || 1));
   const geo = String(r.spread_geo || "").split(" ").filter(Boolean);
   const facts = [
-    `${btFlag(r)}${esc(cn ? r.platform : mt("Searches in ", "חיפושים ב") + (r.world || ""))} · #${esc(r.rank)}`,
+    `${btFlag(r)}${esc(cn ? r.platform : searchedIn(r))} · #${esc(r.rank)}`,
     r.traffic ? `${esc(mt("about", "בערך"))} <bdi dir="ltr">${esc(r.traffic)}</bdi> ${esc(mt("searches", "חיפושים"))}` : "",
     `${esc(mt("on the list for", "ברשימה כבר"))} ${hrs >= 48 ? esc(mt(`${Math.round(hrs / 24)} days`, `${Math.round(hrs / 24)} ימים`)) : esc(mt(`${hrs} hours`, `${hrs} שעות`))}`,
     geo.length > 1 ? `${esc(mt("searched in", "מחפשים ב-"))}${geo.length} ${esc(mt("countries", "מדינות"))} <span class="bt-geos">${geo.slice(0, 6).map(g => flag(g)).join("")}</span>` : num(r.spread) > 1 ? `${esc(r.spread)} ${esc(mt("platforms", "פלטפורמות"))}` : ""
@@ -2176,15 +2176,15 @@ function renderTradePulse() {
   const m = (S.data.markets || []).filter(r => num(r.imports_usd) >= 1e8 && isFinite(num(r.growth_pct)) && num(r.growth_pct) >= 15);
   if (!m.length) { el.innerHTML = ""; return; }
   const top = m.sort((a, b) => num(b.growth_pct) * Math.log10(num(b.imports_usd)) - num(a.growth_pct) * Math.log10(num(a.imports_usd))).slice(0, 10);
-  const yr = top[0].year || "";
+  const yr = String(top[0].year || "").replace(/[^0-9]/g, "");
   const big = v => v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : "$" + Math.round(v / 1e6) + "M";
   const gmax = Math.max(...top.map(r => num(r.growth_pct)));
-  const oec = r => `https://oec.world/en/visualize/tree_map/hs92/import/${String(r.iso3 || "").toLowerCase()}/all/show/${r.year || 2024}`;
+  const oec = r => `https://oec.world/en/visualize/tree_map/hs92/import/${String(r.iso3 || "").toLowerCase()}/all/show/${yearOf(r.year) || 2024}`;
   el.innerHTML = `<div class="bt"><div class="bt-head"><div><h2>${esc(mt("World trade pulse: what countries are buying more", "דופק הסחר העולמי: מה מדינות קונות יותר"))}</h2>
       <div class="sub">${esc(mt(`Fastest-growing imports above $100M in ${yr} (UN Comtrade); price paid vs the benchmark. Explore each country's trade on the OEC.`, `היבוא שצמח הכי מהר מעל 100 מיליון דולר ב-${yr} (UN Comtrade), והמחיר ששולם מול מחיר הייחוס. אפשר לצלול לכל מדינה ב-OEC.`))}</div></div></div>
     <div class="bt-list" style="margin-top:12px">${top.map(r => `<div class="bt-card">
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b dir="auto">${flag(r.iso3)}${esc(r.country)}</b><span class="num" style="color:var(--good);font-weight:800">+${num(r.growth_pct).toFixed(0)}%</span></div>
-      <div dir="auto" style="font-weight:650">${esc(r.product)}</div>
+      <div dir="auto" style="font-weight:650">${esc(prodLabel(r))}</div>
       <div class="bt-meta"><span>${esc(big(num(r.imports_usd)))} ${esc(mt("imports", "יבוא"))}</span><span class="bt-bar"><i style="width:${(100 * num(r.growth_pct) / gmax).toFixed(0)}%;background:var(--good)"></i></span></div>
       <div class="bt-meta">${isFinite(num(r.premium_vs_benchmark_pct)) && r.premium_vs_benchmark_pct !== "" ? `<span class="pill">${esc(mt("pays", "משלמת"))} ${num(r.premium_vs_benchmark_pct) > 0 ? "+" : ""}${num(r.premium_vs_benchmark_pct).toFixed(0)}% ${esc(mt("vs benchmark", "מול מחיר הייחוס"))}</span>` : ""}
         ${r.new_market ? `<span class="pill">${esc(mt("new market", "שוק חדש"))}</span>` : ""}<span class="pill">${esc(r.group || "")}</span>
@@ -2224,11 +2224,11 @@ function worldSignals() {
     const g = String(r.platform || "").match(/^Google Trends ([A-Z]{2})/);
     const subj = String(r.world || "").split(/[,，、]/).map(x => ZH_A2[x.trim()]).filter(Boolean);
     const a2s = g ? [g[1]] : subj.length ? subj : ["CN"];
-    for (const a2 of a2s.slice(0, 2)) add(a2, { t: "trend", why: he ? r.why_he : r.why_en, w: num(r.score) || 1, text: (he ? r.title_he || r.title_en : r.title_en) || r.title, sub: g ? mt("searched in ", "חיפוש ב") + (r.world || a2) : r.platform, url: url(r.url) });
+    for (const a2 of a2s.slice(0, 2)) add(a2, { t: "trend", why: he ? r.why_he : r.why_en, w: num(r.score) || 1, text: (he ? r.title_he || r.title_en : r.title_en) || r.title, sub: g ? mt("searched in ", "חיפוש ב") + cnameOf(g[1]) : r.platform, url: url(r.url) });
   }
   const big = v => v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : "$" + Math.round(v / 1e6) + "M";
   for (const r of (S.data.markets || []).filter(r => num(r.imports_usd) >= 1e8 && num(r.growth_pct) >= 15).sort((a, b) => num(b.growth_pct) - num(a.growth_pct)).slice(0, 40))
-    add(ISO[String(r.iso3 || "").toUpperCase()], { t: "trade", w: num(r.growth_pct), text: `${r.product} +${num(r.growth_pct).toFixed(0)}%`, sub: mt("imports ", "יבוא ") + big(num(r.imports_usd)) + ` (${r.year || ""})`, url: `https://oec.world/en/visualize/tree_map/hs92/import/${String(r.iso3 || "").toLowerCase()}/all/show/${r.year || 2024}` });
+    add(ISO[String(r.iso3 || "").toUpperCase()], { t: "trade", w: num(r.growth_pct), text: `${mt("Imports of", "יבוא של")} ${prodLabel(r)} ${mt("up", "עלה ב-")}${num(r.growth_pct).toFixed(0)}%`, sub: mt("total ", "סה\"כ ") + big(num(r.imports_usd)) + ` ${mt("in", "ב-")}${yearOf(r.year)}`, url: `https://oec.world/en/visualize/tree_map/hs92/import/${String(r.iso3 || "").toLowerCase()}/all/show/${r.year || 2024}` });
   for (const r of (S.data.ais || []).filter(r => r.zone)) {
     const ll = AIS_LL[r.zone]; if (!ll) continue;
     if (r.coverage === "low") { add(AIS_A2[r.zone] || "", { t: "shipnod", lon: ll[0], lat: ll[1], w: 0, zone: r.zone, text: `${he ? SHIP_HE[r.zone] || r.zone : r.zone}: ${mt("no AIS coverage on the free feed", "אין כיסוי AIS בשירות החינמי")}`, sub: "", url: "" }); continue; }
@@ -2268,6 +2268,16 @@ function layerItems(mode) {
     text: `${mt("Integrity score", "ציון יושרה")} ${num(r.integrity_score).toFixed(0)}/100 · ${mt("single-bid share", "מכרזים עם הצעה אחת")} ${r.single_bid_share !== "" ? Math.round(100 * num(r.single_bid_share)) + "%" : "-"}`, sub: String(r.advice || "").slice(0, 160), url: "" });
   return out;
 }
+/* readable labels: country names in the reader's language, import groups in Hebrew, clean years (owner, 14 Nov) */
+const GROUP_HE = { "Sugar, coffee, tea, cocoa & spices": "סוכר, קפה, תה, קקאו ותבלינים", "Dairy & eggs": "מוצרי חלב וביצים", "Meat & livestock": "בשר ובעלי חיים", "Cereals, rice & flour": "דגנים, אורז וקמח",
+  "Iron & steel": "ברזל ופלדה", "Oilseeds, vegetable oils & fats": "זרעי שמן ושמנים", "Minerals, cement, aggregates & glass": "מינרלים, מלט וזכוכית", "Chemicals": "כימיקלים", "Fish & seafood": "דגים ופירות ים",
+  "Wood, pulp & paper": "עץ, תאית ונייר", "Fertilizers": "דשנים", "Plastics & rubber": "פלסטיק וגומי", "Beverages & tobacco": "משקאות וטבק", "Non-ferrous metals": "מתכות לא ברזליות",
+  "Precious metals & stones": "מתכות ואבנים יקרות", "Fruit, vegetables & nuts": "פירות, ירקות ואגוזים", "Fuels & energy": "דלקים ואנרגיה", "Textiles, fibres & hides": "טקסטיל, סיבים ועורות", "Animal feed": "מזון לבעלי חיים" };
+const yearOf = y => String(y || "").replace(/[^0-9]/g, "");
+const cnameOf = a2 => { try { return new Intl.DisplayNames([LANG === "he" ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } };
+const geoOf = r => { const m = String(r.platform || "").match(/Google Trends ([A-Z]{2})/); return m ? m[1] : ""; };
+const searchedIn = r => { const g = geoOf(r); return mt("Searches in ", "חיפושים ב") + (g ? cnameOf(g) : (r.world || "")); };
+const prodLabel = r => { const g = LANG === "he" ? GROUP_HE[r.group] || r.group : r.group; const p = String(r.product || "").split(/[;,(]/)[0].trim(); return LANG === "he" ? `${g}${p ? ` (${p})` : ""}` : `${p}${r.group ? ` (${r.group})` : ""}`; };
 function laneStats(sig) {
   const by = {}; for (const s of sig) if (s.zone) by[s.zone] = s;
   const PW = Object.fromEntries((S.data.portwatch || []).filter(r => r.kind === "chokepoint").map(r => [r.name, r]));
@@ -2495,7 +2505,7 @@ function renderMacroHero() {
     ${top3.length ? `<div class="mx-top">${top3.map((r, i) => `<a class="mx-story${i === 0 ? " lead" : ""}" href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener" style="--c:${col(tg(r)[0])}">
       <span class="mx-k">${tg(r).slice(0, 2).map(k => esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)).join(" · ")}</span>
       <b dir="auto">${esc(ttl(r))}</b>${why(r) ? `<span class="mx-why" dir="auto">${esc(why(r))}</span>` : ""}
-      <span class="mx-src">${btFlag(r)}${esc(String(r.platform || "").startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)}</span></a>`).join("")}</div>` : ""}
+      <span class="mx-src">${btFlag(r)}${esc(String(r.platform || "").startsWith("Google Trends") ? searchedIn(r) : r.platform)}</span></a>`).join("")}</div>` : ""}
     ${cnt.length ? `<div class="mx-heat-h">${esc(mt("Today's themes", "הנושאים של היום"))}</div><div class="mx-heat">${cnt.map(([k, v]) => `<i style="flex:${v};background:${col(k)}" title="${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)}: ${v}"></i>`).join("")}</div>
       <div class="mx-heat-l">${cnt.map(([k, v]) => `<span><i style="background:${col(k)}"></i>${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>` : ""}
 
@@ -3939,7 +3949,7 @@ function openDeal(mode, r) {
     kv = [["country", r.country], ["group", r.group], ["awards_12m", r.awards_12m], ["volume", money(r.total_usd)], ["buying_months", r.award_months], ["last_award", r.last_award], ["current_sup", r.current_suppliers], ["avg_bids", r.avg_bids], ["buyer_email", r.buyer_email], ["last_notice", link(r.last_notice, t("open")), true]];
   } else {
     head = `${r.product}: ${r.country}`; text = `${r.product} ${r.group}`;
-    kv = [["HS", r.hs6], ["imports", `${money(r.imports_usd)} (${r.year}), ${t("prev_year")} ${money(r.prev_year_usd)}`], ["growth", growthHtml(r), true], ["world_share", r.world_share_pct + "%"], ["unit_value", `$${r.unit_value_usd_kg}/kg ${t("vs_bench")} $${r.benchmark_usd_kg}/kg`], ["premium", r.premium_vs_benchmark_pct + "%"], ["source", r.benchmark_source]];
+    kv = [["HS", r.hs6], ["imports", `${money(r.imports_usd)} (${String(r.year || "").replace(/[^0-9]/g, "")}), ${t("prev_year")} ${money(r.prev_year_usd)}`], ["growth", growthHtml(r), true], ["world_share", r.world_share_pct + "%"], ["unit_value", `$${r.unit_value_usd_kg}/kg ${t("vs_bench")} $${r.benchmark_usd_kg}/kg`], ["premium", r.premium_vs_benchmark_pct + "%"], ["source", r.benchmark_source]];
   }
   $("#ddetail").innerHTML = `<h2>${flag(mode === "bd" ? r.market : r.country)}${txt(head)}</h2><dl class="kv">${kvRows(kv)}</dl>
     <div class="actions">${shareHtml(dealShare(head, kv))}</div>
