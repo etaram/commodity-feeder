@@ -2,7 +2,7 @@
 list of current tenders, RFQs, RFPs and EOIs from state agencies and councils.
 
 Access (checked 2026-11-14): robots.txt disallows only /search; the opportunity list is public, server-rendered,
-10 per page (?page=N). We read it page by page, one call a second, no relay. Each row links to its own notice
+10 per page (?page=N, 1-based). We read it page by page, one call a second, no relay. Each row links to its own notice
 (/prcOpportunity/<id>). OPEN = a listed opportunity whose 'Closes' date is today or later."""
 import datetime as dt
 import re
@@ -57,12 +57,12 @@ def parse(html, ts):
 def fetch():
     s, ts = session(), str(today())
     out, calls, total, prev = {}, 0, "?", None
-    for page in range(0, 200):
+    for page in range(1, 200):   # 1-based (?page=0 repeats page 1)
         r = requests.Session.get(s, LIST, params={"page": page}, timeout=60)
         calls += 1
         if r.status_code != 200:
             raise RuntimeError(f"NSW: page {page} HTTP {r.status_code}; previous snapshot kept")
-        if page == 0:
+        if page == 1:
             total = (re.search(r"of\s+(\d+)\s+results", r.text) or [None, "?"])[1]
         ids = tuple(re.findall(r'href="/prcOpportunity/([0-9A-Fa-f-]{20,})"', r.text))
         if not ids or ids == prev:
