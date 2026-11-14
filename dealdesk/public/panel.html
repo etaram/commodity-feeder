@@ -564,11 +564,26 @@ a.lnk{white-space:nowrap}
 .mx-map svg{display:block;width:100%;height:auto;margin-top:6px}
 .mx-map .land{fill:none;stroke:var(--muted);stroke-opacity:.38;stroke-width:.62;stroke-linecap:round}
 .mx-map .mk circle.c{stroke:var(--panel);stroke-width:.25}
-.mx-map .mk circle.r{fill:none;stroke-width:.35;transform-box:fill-box;transform-origin:center;animation:mxp 2.6s ease-out infinite}
+.mx-canvas{position:relative}
+.mx-map .lane{fill:none;stroke:var(--info);stroke-opacity:.5;stroke-linecap:round;stroke-linejoin:round}
+.mx-map .lane.hot{stroke:var(--bad);stroke-opacity:.6}
+.mx-map .lane.nod{stroke:var(--muted);stroke-opacity:.45;stroke-dasharray:.8 .7}
+.mx-map .mk rect.c{stroke:var(--panel);stroke-width:.25}
+.mx-map .mk.nod rect.c{stroke:var(--muted);stroke-width:.3;stroke-dasharray:.4 .3}
+.mx-ov{position:absolute;inset:0;pointer-events:none}
+.ml{position:absolute;white-space:nowrap;font-size:11.5px;line-height:1.3;color:var(--ink);display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-shadow:0 0 3px var(--panel),0 0 3px var(--panel),0 0 2px var(--panel)}
+.ml[data-side=e]{transform:translate(9px,-50%)}.ml[data-side=w]{transform:translate(calc(-100% - 9px),-50%);align-items:flex-end}
+.ml[data-side=s]{transform:translate(-50%,8px);align-items:center}.ml[data-side=n]{transform:translate(-50%,calc(-100% - 8px));align-items:center}
+.ml b{font-size:12px;font-weight:700}.ml.big b{font-size:13.5px}
+.ml .ch{font-size:10.8px;font-weight:700;border-radius:5px;padding:0 5px;text-shadow:none;margin-top:1px}
+.ml .ch.g{background:color-mix(in srgb,var(--good) 22%,var(--panel));color:var(--good)}
+.ml .ch.y{background:color-mix(in srgb,var(--accent) 22%,var(--panel));color:var(--accent)}
+.ml .ch.b{background:color-mix(in srgb,var(--info) 22%,var(--panel));color:var(--info)}
+.ml .ch.r{background:color-mix(in srgb,var(--bad) 22%,var(--panel));color:var(--bad)}
+.ml .hd{font-size:11px;color:var(--muted);max-width:190px;white-space:normal;line-height:1.3}
+.ml.ln b{font-size:11px;color:var(--info);font-weight:700}.ml.z b{font-size:11px}
 .mx-map .mk.dim{opacity:.12}
 .mx-map .mk:hover circle.c{stroke:var(--ink)}
-@keyframes mxp{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
-@media (prefers-reduced-motion:reduce){.mx-map .mk circle.r{animation:none;opacity:.35}}
 .mx-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:6px}
 .mx-leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px;vertical-align:-1px}
 .mx-terr{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:10px}
@@ -586,8 +601,6 @@ a.lnk{white-space:nowrap}
 .mx-tr li a:hover{text-decoration:underline}
 .mx-tr li em{font-style:normal;color:var(--muted)}
 .mx-map-sc{margin-top:6px}
-.mx-map .lbl{font-size:2.05px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:.55px;pointer-events:none}
-.mx-map .lbl.n{display:none}
 .mx-map .mk.nod circle.c{fill:none;stroke:var(--muted);stroke-width:.3;stroke-dasharray:.5 .4}
 .mx-lanes{display:flex;gap:8px;overflow-x:auto;padding:4px 1px 6px;margin-top:8px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
 .mx-lane{flex:none;min-width:132px;background:var(--bg);border:1px solid var(--line);border-inline-start:3px solid var(--c);border-radius:10px;padding:7px 10px}
@@ -600,7 +613,7 @@ a.lnk{white-space:nowrap}
 @media (max-width:640px){
   .mx-map{padding:10px 0 8px}.mx-map-h,.mx-map .mx-leg,.mx-map .mx-lanes,.mx-map .mx-lanes-h{padding-inline:12px}
   .mx-map-sc{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}.mx-map-sc::-webkit-scrollbar{display:none}
-  .mx-map-sc svg{width:760px;max-width:none}
+  .mx-map-sc .mx-canvas{width:820px}.ml .hd{display:none}.mx-map-sc svg{width:100%;max-width:none}
   .mx-hint{display:block!important}
   .hero-ai-row{flex-direction:column}.hero-ai-row button{padding:12px 18px}
   .mx-top{grid-template-columns:1fr}
@@ -608,7 +621,7 @@ a.lnk{white-space:nowrap}
   .mx-terr{grid-template-columns:1fr}
   .mx-hero{padding:14px 12px}.mx-hero h1{font-size:23px}
 }
-.mx-map .mk{cursor:pointer}.mx-map .mk:focus{outline:none}.mx-map .mk:focus circle.c,.mx-map .mk.sel circle.c{stroke:var(--ink);stroke-width:.45}
+.mx-map .mk{cursor:pointer}.mx-map .mk:focus{outline:none}.mx-map .mk:focus .c,.mx-map .mk.sel .c,.mx-map .mk:hover .c{stroke:var(--ink);stroke-width:.45}
 .mx-det{margin:8px 14px 2px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .mx-det-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .mx-det-h b{font-size:16px}
@@ -2165,15 +2178,71 @@ function worldSignals() {
   }
   return out;
 }
+/* main sea lanes (rough sea paths, lon/lat) and the AIS checkpoints on each; activity = ships counted at its checkpoints */
+const LANES = [
+  { id: "ae", at: [66, 9], en: "Asia - Europe via Suez", he: "אסיה - אירופה דרך סואץ", z: ["Shanghai (Yangshan)", "Singapore Strait", "Bab el-Mandeb", "Suez Canal", "Gibraltar", "Rotterdam"],
+    p: [[122.3, 30.6], [121, 25], [114, 15], [109, 8], [104.5, 1.6], [98, 5.5], [88, 5.5], [78, 6], [62, 13], [51, 12.6], [43.4, 12.7], [40, 17], [37, 22.5], [33.8, 27.8], [32.45, 30.5], [32.3, 31.6], [27, 33.8], [20, 35.5], [12, 37.4], [5, 37.6], [-2, 36.4], [-5.6, 35.95], [-9.8, 37.5], [-10, 43], [-6.5, 48.2], [-1.5, 50], [2.5, 51.4], [4, 51.98]] },
+  { id: "em", at: [22, 33.5], en: "Eastern Mediterranean", he: "מזרח הים התיכון", z: ["Bosphorus", "Haifa", "Ashdod"],
+    p: [[29.02, 41.1], [26.4, 40.1], [25.5, 38.2], [26.5, 35.6], [30, 33.6], [33.5, 32.6], [34.62, 31.82]] },
+  { id: "gf", at: [63, 21], en: "Gulf - India", he: "המפרץ הפרסי - הודו", z: ["Jebel Ali", "Strait of Hormuz", "Mumbai (JNPT)"],
+    p: [[55, 25.15], [56.5, 26.4], [58.5, 24.2], [62, 21.5], [67, 19.5], [72.8, 18.9]] },
+  { id: "cp", at: [60, -26], en: "Cape of Good Hope route", he: "מסלול כף התקווה הטובה", z: ["Durban"],
+    p: [[104.5, 1.6], [96, -2], [80, -10], [62, -22], [45, -31], [31.2, -29.9], [24, -35.5], [17, -35], [11, -27], [5, -14], [-6, -2], [-16, 9], [-19, 20], [-14, 31], [-5.6, 35.95]] },
+  { id: "wa", at: [-6, 1], en: "West Africa", he: "מערב אפריקה", z: ["Lagos (Apapa, Lekki)"], p: [[-16, 9], [-8, 4], [3.6, 6.2]] },
+  { id: "ea", at: [50, 3], en: "Red Sea - East Africa", he: "ים סוף - מזרח אפריקה", z: ["Djibouti", "Mombasa"], p: [[43.4, 12.7], [44, 11.5], [51.5, 11.5], [50, 4], [44, -1.5], [39.8, -4.1]] },
+  { id: "sa", at: [-33, -6], en: "South America - Europe", he: "דרום אמריקה - אירופה", z: ["Santos"], p: [[-46.3, -24.1], [-40, -21], [-34.5, -8], [-28, 2], [-22, 14], [-16, 26], [-9, 34.5], [-5.6, 35.95]] },
+  { id: "pa", at: [-55, 27], en: "Panama - Atlantic", he: "פנמה - האוקיינוס האטלנטי", z: ["Panama Canal"], p: [[-79.7, 9.4], [-77, 13], [-72, 17.5], [-65, 21], [-50, 30], [-30, 38], [-12, 44], [-6.5, 48.2]] },
+];
+function laneStats(sig) {
+  const by = {}; for (const s of sig) if (s.zone) by[s.zone] = s;
+  return LANES.map(l => { const zs = l.z.map(z => by[z]).filter(Boolean), ok = zs.filter(z => z.t !== "shipnod");
+    const n = ok.reduce((a, z) => a + (z.vessels || 0), 0), wc = ok.filter(z => z.chg != null);
+    const chg = wc.length ? wc.reduce((a, z) => a + z.chg * z.vessels, 0) / Math.max(1, wc.reduce((a, z) => a + z.vessels, 0)) : null;
+    const stop = ok.length ? Math.round(100 * ok.reduce((a, z) => a + (z.stopped || 0), 0) / Math.max(1, n)) : null;
+    return { ...l, n, chg, stop, cov: ok.length, tot: l.z.length, hot: ok.some(z => z.t === "shipbad") }; });
+}
 function worldMapSvg(sig) {
-  const X = lon => (lon + 180) / WMAP.S, Y = lat => (WMAP.LAT0 - lat) / WMAP.S;
-  const groups = {}; for (const s of sig) { const k = s.t + "|" + (s.t.startsWith("ship") ? s.text : s.a2); (groups[k] = groups[k] || []).push(s); }
-  const mk = Object.values(groups).sort((a, b) => a[0].t.startsWith("ship") - b[0].t.startsWith("ship") || b.length - a.length).map(g => { const s = g[0], r = Math.min(1.9, 0.75 + 0.28 * Math.sqrt(g.length)), col = SIG_C[s.t];
-    const tip = g.slice(0, 4).map(x => x.text).join("\n") + (g.length > 4 ? `\n+${g.length - 4}` : "");
-    const lx = X(s.lon), ly = Y(s.lat), lbl = s.t.startsWith("ship") ? `<text class="lbl${s.t === "shipnod" ? " n" : ""}" x="${(lx + r + 0.6).toFixed(2)}" y="${(ly + 0.7 + (LBL_DY[s.zone] || 0)).toFixed(2)}" text-anchor="start" direction="ltr">${esc(s.t === "shipnod" ? (LANG === "he" ? SHIP_HE[s.zone] || s.zone : s.zone) + " ?" : (LANG === "he" ? SHIP_HE[s.zone] || s.zone : s.zone) + " " + (s.chg != null ? pctTxt(s.chg) : s.vessels))}</text>` : "";
-    if (s.t === "shipnod") return `<g class="mk nod" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.zone || "")}" tabindex="0" role="button" aria-label="${esc(tip)}"><circle class="c" cx="${lx.toFixed(2)}" cy="${ly.toFixed(2)}" r=".9"/>${lbl}</g>`;
-    return `<g class="mk" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.t.startsWith("ship") ? s.zone || "" : "")}" tabindex="0" role="button" aria-label="${esc(tip)}"><circle class="r" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" stroke="${col}" style="animation-delay:${(Math.random() * 2.6).toFixed(2)}s"/><circle class="c" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" fill="${col}"/>${lbl}</g>`; }).join("");
-  return `<div class="mx-map-sc" dir="ltr"><svg viewBox="-1 -1 ${WMAP.W + 2} ${WMAP.H + 1}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><path class="land" d="${WMAP.d}"/>${mk}</svg></div>`;
+  const he = LANG === "he", X = lon => (lon + 180) / WMAP.S, Y = lat => (WMAP.LAT0 - lat) / WMAP.S;
+  const W = WMAP.W + 2, H = WMAP.H + 1, pX = lon => (100 * (X(lon) + 1) / W).toFixed(2) + "%", pY = lat => (100 * (Y(lat) + 1) / H).toFixed(2) + "%";
+  const cn = a2 => { try { return new Intl.DisplayNames([he ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } };
+  // one point per country (trends + import surges), sized by how much is happening there
+  const C = {}; for (const s of sig) if (!s.t.startsWith("ship")) { const c = C[s.a2] = C[s.a2] || { a2: s.a2, reg: s.reg, lon: WCENT[s.a2]?.[0], lat: WCENT[s.a2]?.[1], tr: [], td: [] }; (s.t === "trade" ? c.td : c.tr).push(s); }
+  const cs = Object.values(C).filter(c => c.lon != null).map(c => ({ ...c, n: c.tr.length + c.td.length, top: Math.max(0, ...c.td.map(x => x.w)), imp: c.tr.length * 2 + c.td.length + Math.max(0, ...c.td.map(x => x.w)) / 60 }))
+    .sort((a, b) => (b.a2 === "IL") - (a.a2 === "IL") || b.imp - a.imp);
+  const lanes = laneStats(sig), nmax = Math.max(1, ...lanes.map(l => l.n));
+  const lanesSvg = lanes.map(l => { const d = "M" + l.p.map(([lo, la]) => `${X(lo).toFixed(2)} ${Y(la).toFixed(2)}`).join("L");
+    const w = l.cov ? (0.25 + 0.55 * Math.sqrt(l.n / nmax)).toFixed(2) : ".25";
+    return `<path class="lane${l.cov ? "" : " nod"}${l.hot ? " hot" : ""}" d="${d}" stroke-width="${w}"><title>${esc(he ? l.he : l.en)}</title></path>`; }).join("");
+  const dots = cs.map(c => { const r = Math.min(2.1, 0.6 + 0.32 * Math.sqrt(c.n)), col = c.td.length && (!c.tr.length || c.top >= 40) ? SIG_C.trade : SIG_C.trend;
+    return `<g class="mk" data-reg="${esc(c.reg)}" data-a2="${esc(c.a2)}" data-zone="" tabindex="0" role="button" aria-label="${esc(cn(c.a2))}"><circle class="c" cx="${X(c.lon).toFixed(2)}" cy="${Y(c.lat).toFixed(2)}" r="${r.toFixed(2)}" fill="${col}"/></g>`; }).join("");
+  const ships = sig.filter(s => s.t.startsWith("ship")).map(s => { const x = X(s.lon), y = Y(s.lat), k = 0.85;
+    return `<g class="mk${s.t === "shipnod" ? " nod" : ""}" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.zone || "")}" tabindex="0" role="button" aria-label="${esc(s.text)}"><rect class="c" x="${(x - k).toFixed(2)}" y="${(y - k).toFixed(2)}" width="${2 * k}" height="${2 * k}" transform="rotate(45 ${x.toFixed(2)} ${y.toFixed(2)})" fill="${s.t === "shipnod" ? "none" : SIG_C[s.t]}"/></g>`; }).join("");
+  // labels (HTML over the map so Hebrew renders properly); placed by importance, overlapping ones are dropped
+  const chip = (cls, txt) => `<span class="ch ${cls}">${txt}</span>`;
+  const lab = [];
+  cs.slice(0, 22).forEach((c, i) => { const best = c.tr.slice().sort((a, b) => b.w - a.w)[0];
+    const chips = (c.td.length ? chip("g", `${esc(mt("imports", "יבוא"))} <bdi dir="ltr">+${c.top.toFixed(0)}%</bdi>`) : "") + (c.tr.length ? chip("y", `${c.tr.length} ${esc(mt(c.tr.length > 1 ? "trends" : "trend", c.tr.length > 1 ? "טרנדים" : "טרנד"))}`) : "");
+    const head = i < 6 && best ? `<span class="hd" dir="auto">${esc(String(best.text).slice(0, 58))}${String(best.text).length > 58 ? "…" : ""}</span>` : "";
+    lab.push(`<div class="ml c${i < 6 ? " big" : ""}" data-a2="${esc(c.a2)}" data-pri="${i}" style="left:${pX(c.lon)};top:${pY(c.lat)}" dir="${he ? "rtl" : "ltr"}"><b>${esc(cn(c.a2))}</b>${chips}${head}</div>`); });
+  for (const s of sig.filter(s => s.t.startsWith("ship") && s.t !== "shipnod"))
+    lab.push(`<div class="ml z" data-pri="${30 + (s.vessels > 100 ? 0 : 10)}" style="left:${pX(s.lon)};top:${pY(s.lat)}" dir="${he ? "rtl" : "ltr"}"><b>${esc(he ? SHIP_HE[s.zone] || s.zone : s.zone)}</b>${chip(s.t === "shipbad" ? "r" : "b", `<bdi dir="ltr">${s.vessels}</bdi> ${esc(mt("ships", "אוניות"))}${s.chg != null ? ` <bdi dir="ltr">${pctTxt(s.chg)}</bdi>` : ""}`)}</div>`);
+  for (const l of lanes.filter(l => l.cov)) { const m = l.at || l.p[Math.floor(l.p.length / 2)];
+    lab.push(`<div class="ml ln" data-pri="${-1 + lanes.indexOf(l) / 10}" style="left:${pX(m[0])};top:${pY(m[1])}" dir="${he ? "rtl" : "ltr"}"><b>${esc(he ? l.he : l.en)}</b>${chip(l.hot ? "r" : "b", `<bdi dir="ltr">${l.n}</bdi> ${esc(mt("ships at checkpoints", "אוניות בנקודות המדידה"))}${l.chg != null ? ` <bdi dir="ltr">${pctTxt(l.chg)}</bdi>` : ""}`)}${l.cov < l.tot ? `<span class="hd">${esc(mt(`${l.cov} of ${l.tot} checkpoints covered`, `${l.cov} מתוך ${l.tot} נקודות מכוסות`))}</span>` : ""}</div>`); }
+  return `<div class="mx-map-sc" dir="ltr"><div class="mx-canvas"><svg viewBox="-1 -1 ${W} ${H}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><path class="land" d="${WMAP.d}"/>${lanesSvg}${dots}${ships}</svg><div class="mx-ov">${lab.join("")}</div></div></div>`;
+}
+/* drop labels that would cover a more important one; try the other side first */
+function mapSummary(sig) {
+  const n = new Set(sig.filter(s => !s.t.startsWith("ship")).map(s => s.a2)).size, ls = laneStats(sig).filter(l => l.cov).sort((a, b) => b.n - a.n)[0];
+  return mt(`${sig.filter(s => !s.t.startsWith("ship")).length} signals in ${n} countries` + (ls ? ` · busiest lane: ${ls.en}, ${ls.n} ships at its checkpoints` : ""),
+    `${sig.filter(s => !s.t.startsWith("ship")).length} אותות ב-${n} מדינות` + (ls ? ` · הנתיב העמוס: ${ls.he}, ${ls.n} אוניות בנקודות המדידה` : ""));
+}
+function placeMapLabels() {
+  const ov = document.querySelector(".mx-ov"); if (!ov) return;
+  const ls = [...ov.querySelectorAll(".ml")].sort((a, b) => +a.dataset.pri - +b.dataset.pri), placed = [];
+  const hit = r => placed.some(p => r.left < p.right + 3 && r.right > p.left - 3 && r.top < p.bottom + 2 && r.bottom > p.top - 2);
+  for (const el of ls) { el.hidden = false; let ok = false;
+    for (const side of ["e", "w", "s", "n"]) { el.dataset.side = side; const r = el.getBoundingClientRect(); if (!hit(r)) { placed.push(r); ok = true; break; } }
+    if (!ok) el.hidden = true; }
 }
 function laneStrip(sig) {
   const L = sig.filter(s => s.t.startsWith("ship")).sort((a, b) => (a.t === "shipnod") - (b.t === "shipnod") || (b.t === "shipbad") - (a.t === "shipbad") || b.vessels - a.vessels);
@@ -2291,12 +2360,13 @@ function renderMacroHero() {
       <span class="mx-src">${btFlag(r)}${esc(String(r.platform || "").startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)}</span></a>`).join("")}</div>` : ""}
     ${cnt.length ? `<div class="mx-heat-h">${esc(mt("Today's themes", "הנושאים של היום"))}</div><div class="mx-heat">${cnt.map(([k, v]) => `<i style="flex:${v};background:${col(k)}" title="${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)}: ${v}"></i>`).join("")}</div>
       <div class="mx-heat-l">${cnt.map(([k, v]) => `<span><i style="background:${col(k)}"></i>${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>` : ""}
-    ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("Where the world is moving today", "איפה העולם זז היום"))}</b><span class="sub">${esc(mt(`${sig.length} signals in ${new Set(sig.map(s => s.a2)).size} countries`, `${sig.length} אותות ב-${new Set(sig.map(s => s.a2)).size} מדינות`))}</span></div>${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
+    ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("World signal map: trends, import surges and sea lanes", "מפת האותות העולמית: טרנדים, זינוקי יבוא ונתיבי שיט"))}</b><span class="sub">${esc(mapSummary(sig))}</span></div>${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
       <div id="mx-det" class="mx-det" hidden></div>
       ${laneStrip(sig)}
-      <div class="mx-leg"><span><i style="background:${SIG_C.trend}"></i>${esc(mt("Business trend or news wire", "טרנד עסקי או מבזק"))}</span><span><i style="background:${SIG_C.trade}"></i>${esc(mt("Import surge (UN Comtrade)", "זינוק ביבוא (UN Comtrade)"))}</span><span><i style="background:${SIG_C.ship}"></i>${esc(mt("Sea lane or port (live AIS)", "נתיב שיט או נמל (AIS חי)"))}</span><span><i style="background:${SIG_C.shipbad}"></i>${esc(mt("More ships waiting than usual", "יותר אוניות ממתינות מהרגיל"))}</span></div></div>` : ""}
+      <div class="mx-leg"><span><i style="background:${SIG_C.trend}"></i>${esc(mt("Business trend or news wire", "טרנד עסקי או מבזק"))}</span><span><i style="background:${SIG_C.trade}"></i>${esc(mt("Import surge (UN Comtrade)", "זינוק ביבוא (UN Comtrade)"))}</span><span><i style="background:${SIG_C.ship}"></i>${esc(mt("Sea lane and port checkpoint (live AIS); line width = ships counted", "נתיב שיט ונקודת מדידה (AIS חי); עובי הקו = מספר האוניות"))}</span><span><i style="background:transparent;border:1px dashed var(--muted)"></i>${esc(mt("No AIS coverage", "אין כיסוי AIS"))}</span><span><i style="background:${SIG_C.shipbad}"></i>${esc(mt("More ships waiting than usual", "יותר אוניות ממתינות מהרגיל"))}</span></div></div>` : ""}
   </div>`;
-  MAPSIG = sig; bindMap(); renderTerritories(sig); requestAnimationFrame(mapCentre);
+  MAPSIG = sig; bindMap(); renderTerritories(sig); requestAnimationFrame(() => { placeMapLabels(); mapCentre(); });
+  if (!window.__mxRs) { window.__mxRs = 1; let t; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(placeMapLabels, 150); }); }
 }
 /* geopolitical context: what happened in the world in the last 48 hours and what it changes for us (web sources) */
 let GEO = { loaded: false, data: null };
