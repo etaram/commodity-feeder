@@ -18,6 +18,8 @@ export type Profile = {
   valueMax: number | null;
   mode: "focus" | "broad";
   digest: "daily" | "weekly" | "off";
+  macro: "daily" | "weekly" | "off";   // macro business review by e-mail (world economy, what is scheduled ahead)
+  macroLang: "he" | "en";
   minScore: number;           // focus threshold and alert threshold
   lang: string;               // UI and digest language (en, he; more as translations are added)
   hidden: string[];           // items marked not relevant (ids), newest last
@@ -63,6 +65,8 @@ export function cleanProfile(p: Partial<Profile> & Record<string, unknown>, prev
     valueMax: num(p.valueMax),
     mode: p.mode === "broad" ? "broad" : "focus",
     digest: p.digest === "weekly" || p.digest === "off" ? p.digest : "daily",
+    macro: (["daily", "weekly", "off"] as const).includes((p.macro ?? prev?.macro) as never) ? (p.macro ?? prev?.macro) as Profile["macro"] : "off",
+    macroLang: (p.macroLang ?? prev?.macroLang) === "en" ? "en" : (p.macroLang ?? prev?.macroLang) === "he" ? "he" : (String(p.lang ?? prev?.lang) === "he" ? "he" : "en"),
     minScore: Math.min(95, Math.max(30, Number(p.minScore) || 60)),
     lang: (LANGS as readonly string[]).includes(String(p.lang)) ? String(p.lang) : prev?.lang || "en",
     hidden: strs(p.hidden ?? prev?.hidden, 2000, 120),

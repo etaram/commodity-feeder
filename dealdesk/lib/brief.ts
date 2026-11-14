@@ -97,3 +97,44 @@ Format (Markdown):
   try { await appendRow(TAB, [d, key, full.slice(0, 45000), uniq.length, by]); } catch { /* still returns */ }
   return { date: d, text: full, items: uniq.length, by, cached: false };
 }
+
+// Macro business review (owner, 14 Nov 2026): what moved the world economy and trade, and what is scheduled ahead,
+// written for a cross-border sourcing firm, sent by e-mail once a day or once a week (profile setting 'macro').
+// One web-search call per language and period, cached in the 'Briefs' tab (macro-d-he, macro-w-en ...). The engine's
+// own forward signals (business trends, planned tenders) are given as context; the calendar comes only from sources.
+export function buildMacro(lang: "he" | "en", weekly: boolean, by: string) { return once(`macro-${weekly ? "w" : "d"}-${lang}`, () => buildMacroNow(lang, weekly, by)); }
+async function buildMacroNow(lang: "he" | "en", weekly: boolean, by: string): Promise<{ date: string; text: string; items: number; by: string; cached: boolean }> {
+  const key = `macro-${weekly ? "w" : "d"}-${lang}`;
+  const cached = await readBrief(key);
+  if (cached) return { ...cached, cached: true };
+  const d = today(), he = lang === "he";
+  const trends = (await csv("biz_trends.csv")).slice(0, 25).map((x) => `- ${x.tags}: ${x.title_en || x.title} (${x.platform}${x.world ? ", " + x.world : ""})`).join("\n");
+  const span = weekly ? "the last 7 days" : "the last 24 hours";
+  const ahead = weekly ? "the next 30 days and the rest of the quarter" : "the next 7 days";
+  const prompt = `Date: ${d}. Search the web for ${span}: the most important macroeconomic and business developments worldwide (central bank decisions and inflation data, growth and PMI releases, currencies and the dollar, oil, gas, metals, grains and fertiliser prices, trade policy, tariffs and sanctions, shipping costs and chokepoints, major infrastructure and energy investment decisions, big defence and health spending, sovereign debt and IMF or World Bank programmes), with attention to emerging markets (Africa, the Gulf, South and Southeast Asia, Latin America), China, India, Turkey, Europe, the US and Israel.
+Then search for what is SCHEDULED in ${ahead}: central bank meetings, major data releases, OPEC+ meetings, elections, budget presentations, tariff and sanction deadlines, trade summits, large tenders or project financing decisions announced with a date.
+Write ${he ? "in Hebrew" : "in English"} for Sinder, an Israeli cross-border sourcing and trading firm (commodities, equipment for infrastructure, energy, defence and health; suppliers in China, India and Turkey; buyers in Africa, the Gulf, Asia and Latin America; roles: principal, agent, supplier to tender winners).
+Rules: only what the sources say; no invented numbers, dates or results; mark anything not final as expected or scheduled. Short sentences, no emojis, no em-dashes (hyphens only). No URLs in the text.
+Format (Markdown, headings exactly as given):
+## ${he ? "השורה התחתונה" : "Bottom line"}
+(3 bullets: the most important things for a trading firm ${weekly ? "this week" : "today"})
+## ${he ? "מה קרה בכלכלה העולמית" : "What happened in the world economy"}
+(${weekly ? "6-10" : "4-7"} bullets: "**topic**: what happened and the number if the source gives one")
+## ${he ? "סחורות, מטבעות ושינוע" : "Commodities, currencies and shipping"}
+(3-6 bullets)
+## ${he ? "שווקים מתעוררים" : "Emerging markets"}
+(3-6 bullets by region)
+## ${he ? "מה מתוכנן קדימה" : "What is scheduled ahead"}
+(a dated list, earliest first: "**date** - event - why it matters")
+## ${he ? "מגמות ארוכות טווח" : "Longer-term shifts"}
+(2-4 bullets: structural moves the sources describe, such as supply-chain shifts, new trade corridors, investment programmes)
+## ${he ? "מה זה אומר לנו" : "What it means for us"}
+(3-5 concrete bullets: which products, markets or buyers to watch or approach, and which risks to price in)
+Context from Sinder's own trend engine (Chinese financial wires and 40 countries' trending searches; signals, not facts; use only if a source confirms):
+${trends || "- none today"}`;
+  const { text, sources } = await claude({ max_tokens: weekly ? 4000 : 2800, tools: [{ type: "web_search_20250305", name: "web_search", max_uses: weekly ? 10 : 7 }], messages: [{ role: "user", content: prompt }] }, { job: weekly ? "macro weekly" : "macro daily" });
+  const uniq = [...new Map(sources.filter((x) => x.url).map((x) => [x.url, x])).values()].slice(0, 30);
+  const full = `${text.trim()}\n\n---\n${he ? "מקורות" : "Sources"}:\n${uniq.map((x, i) => `[${i + 1}] ${x.url}`).join("\n")}`;
+  try { await appendRow(TAB, [d, key, full.slice(0, 45000), uniq.length, by]); } catch { /* still returns */ }
+  return { date: d, text: full, items: uniq.length, by, cached: false };
+}

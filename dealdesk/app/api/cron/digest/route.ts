@@ -10,6 +10,7 @@ import { morning } from "@/lib/morning";
 import { tgEnv } from "@/lib/tgenv";
 import { pushAll } from "@/lib/push";
 import { notifyTo } from "@/lib/notify";
+import { buildMacro } from "@/lib/brief";
 
 // Daily digest (Vercel Cron, 05:00 UTC). For every active user whose profile asks for one: the new matches since the
 // last digest (not sent before, not hidden), best first, by email through Resend. No AI. Weekly digests go on Sundays.
@@ -119,5 +120,44 @@ ${watch ? `<h2 style="font-size:15px;margin-top:18px">${he ? "המדינות ב�
     await logActivity({ email, name: u.name, role: u.role }, "digest_sent", "", `${fresh.length} items`);
     report.push({ email, items: fresh.length, sent: true });
   }
-  return NextResponse.json({ ok: true, dry, report });
+  // Macro business review (owner, 14 Nov 2026): world economy, commodities, emerging markets and what is scheduled
+  // ahead, by e-mail. Profiles choose daily, weekly (Sundays) or off, and the language. The owner gets it daily in
+  // Hebrew unless one of the profiles that resolves to the owner's address chose otherwise. On Sundays daily readers get
+  // the longer weekly edition. One AI call per language and edition per day, shared by all readers (cached in Briefs).
+  const macroReport: { to: string; lang: string; weekly: boolean; sent: boolean; error?: string }[] = [];
+  try {
+    const want = new Map<string, { lang: "he" | "en"; freq: string }>();
+    for (const { email, p } of await allProfiles()) {
+      if (!active.has(email) || !p.macro || p.macro === "off") continue;
+      const to = email === team ? owner : email;
+      if (to) want.set(to, { lang: p.macroLang === "en" ? "en" : "he", freq: p.macro });
+    }
+    if (owner && !want.has(owner) && process.env.MACRO_OWNER !== "off") want.set(owner, { lang: process.env.MACRO_OWNER_LANG === "en" ? "en" : "he", freq: "daily" });
+    const md = (txt: string) => esc(txt).replace(/^## (.*)$/gm, '<h3 style="margin:16px 0 6px;color:#1E3A5F">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/^[-*] (.*)$/gm, "<li>$1</li>").replace(/(<li>.*<\/li>\n?)+/g, (m) => `<ul style="margin:0;padding-inline-start:20px">${m}</ul>`)
+      .replace(/^\[(\d+)\] (https?:\S+)$/gm, '<div style="font-size:12px">[$1] <a href="$2">$2</a></div>').replace(/\n{2,}/g, "<br>").replace(/\n/g, " ");
+    const built = new Map<string, string>();
+    for (const [to, w] of want) {
+      const weekly = sunday;
+      if (w.freq === "weekly" && !sunday) continue;
+      const k = `${w.lang}-${weekly ? "w" : "d"}`;
+      if (dry) { macroReport.push({ to, lang: w.lang, weekly, sent: false, error: "dry run" }); continue; }
+      if (!built.has(k)) built.set(k, (await buildMacro(w.lang, weekly, "digest")).text || "");
+      const txt = built.get(k) || "";
+      if (!txt || !key) { macroReport.push({ to, lang: w.lang, weekly, sent: false, error: key ? "empty review" : "no RESEND_API_KEY" }); continue; }
+      const he = w.lang === "he";
+      const html = `<div dir="${he ? "rtl" : "ltr"}" style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#1C2733;max-width:680px">
+<p style="font-size:17px;font-weight:700;margin:0 0 4px">${he ? (weekly ? "הסקירה העסקית השבועית" : "הסקירה העסקית היומית") : (weekly ? "Weekly business review" : "Daily business review")}</p>
+<p style="color:#667385;margin:0 0 10px">${new Date().toLocaleDateString(he ? "he-IL" : "en-GB", { timeZone: "Asia/Jerusalem", day: "numeric", month: "long", year: "numeric" })}</p>
+${md(txt)}
+<p style="color:#667385;font-size:12px;margin-top:16px">${he ? "נכתב אוטומטית מתוך מקורות ברשת שמופיעים למטה; מה שלא סופי מסומן כצפוי. להפסקה או לשינוי תדירות ושפה: הגדרות הפרופיל ב-Deal Desk." : "Written automatically from the web sources listed; anything not final is marked as expected. To stop it or change frequency and language: profile settings in the Deal Desk."} <a href="${origin}/#forme">${he ? "הגדרות" : "Settings"}</a></p></div>`;
+      const r = await fetch("https://api.resend.com/emails", {
+        method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from, to: [to], subject: he ? (weekly ? "Sinder: הסקירה העסקית השבועית" : "Sinder: הסקירה העסקית היומית") : (weekly ? "Sinder: weekly business review" : "Sinder: daily business review"), html }),
+      }).catch((e) => ({ ok: false, status: 0, text: async () => String(e) }) as unknown as Response);
+      if (!r.ok) { const err = (await r.text()).slice(0, 200); macroReport.push({ to, lang: w.lang, weekly, sent: false, error: err }); await logEvent("warn", "digest", `macro review to ${to} failed ${r.status}`, err); continue; }
+      macroReport.push({ to, lang: w.lang, weekly, sent: true });
+    }
+  } catch (e) { await logEvent("warn", "digest", "macro review failed", String(e).slice(0, 200)); }
+  return NextResponse.json({ ok: true, dry, report, macro: macroReport.map((x) => ({ ...x, to: x.to.replace(/^(.).*(@.*)$/, "$1***$2") })) });
 }
