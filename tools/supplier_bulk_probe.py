@@ -103,6 +103,22 @@ def traces3():
             print("   body:", r.text[:400].replace("\n", " "))
 
 
+def traces4():
+    print("== TRACES4")
+    for u in ["https://webgate.ec.europa.eu/tracesnt/assets/js/min/establishment-listing.8-2-14-20261210-113641000.min.js",
+              "https://webgate.ec.europa.eu/tracesnt/assets/js/min/footer.8-2-14-20261210-113641000.min.js"]:
+        j = get(u)
+        if j is None:
+            continue
+        t = j.text
+        for tok in ["establishmentListingRoute\",", "establishmentListingRoute\"", "appliedClassificationSectionRoute", "contextPath:", "contextPath=",
+                    "factory(\"routeService", "allRoute", "restRoute", "/rest/", "\"/api", "streamFile=function", "streamFile:function"]:
+            for n, m in enumerate(re.finditer(re.escape(tok), t)):
+                if n >= 2:
+                    break
+                print(f"  [{tok}]", t[max(0, m.start() - 300): m.end() + 400].replace("\n", " "))
+
+
 def traces():
     print("== TRACES")
     robots("https://webgate.ec.europa.eu", ["/tracesnt/directory/publication/establishment/index", "/tracesnt/api/", "/tracesnt/directory/"])
