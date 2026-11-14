@@ -14,6 +14,13 @@ URL = "https://www.oeffentlichevergabe.de/api/notice-exports"
 def fetch():
     s, t = session(), today()
     days = 14 if cache_empty("germany") else 2
+    try:   # 14 Nov 2026: rows cached before the lot-deadline fix carry no deadline; read the full window again once
+        from .common import CACHE
+        lines = (CACHE / "germany.jsonl").read_text(encoding="utf-8").splitlines()
+        if lines and not any('"deadline": "20' in ln for ln in lines[:3000]):
+            days = 21
+    except OSError:
+        pass
     new, awards, aw = [], 0, []
     for k in range(1, days + 1):
         d = t - dt.timedelta(days=k)

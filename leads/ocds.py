@@ -22,6 +22,10 @@ def tender_row(rel, *, source, prefix, country, lang="", access="National", link
     if not tn or (tn.get("status") and tn["status"] not in ("active", "planned", "planning")):
         return None
     end = ((tn.get("tenderPeriod") or {}).get("endDate") or "")[:10]
+    if not end:   # eForms-based publishers (Germany, EU profile) put the deadline on each lot: take the earliest
+        ends = [((lot.get("tenderPeriod") or {}).get("endDate") or "")[:10] for lot in tn.get("lots") or []]
+        ends = [e for e in ends if len(e) == 10]
+        end = min(ends) if ends else ""
     if end and today_s and end < today_s:
         return None
     cpv, unspsc = codes(tn, "CPV"), codes(tn, "UNSPSC")
