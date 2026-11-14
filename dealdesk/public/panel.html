@@ -507,6 +507,42 @@ a.lnk{white-space:nowrap}
 :root[data-ui="v3"] nav.tabs button[aria-selected="true"]{color:var(--gold);font-weight:650;border-bottom-color:var(--gold) !important}
 :root[data-ui="v3"] nav.tabs button[aria-selected="true"] .count:not(:empty){background:rgba(216,178,90,.18);color:#f3dfa8}
 :root[data-ui="v3"] [data-oc][aria-pressed="true"]{background:var(--gold);color:#1a1200}
+
+/* macro Today (owner, 14 Nov 2026): the opening screen is a world view, not a tender list */
+.mx-hero{background:linear-gradient(135deg,var(--accent-soft),var(--info-soft));border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:12px 0 14px}
+.mx-hero h1{margin:0;font-size:26px;letter-spacing:-.3px;color:var(--ink)}
+.mx-hero .mx-date{color:var(--muted);font-size:13.5px;margin-top:2px}
+.mx-pulse{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
+.mx-pk{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.mx-pk b{display:block;font-size:20px;font-weight:800;color:var(--ink)}
+.mx-pk span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mx-pk .up{color:var(--good)} .mx-pk .down{color:var(--bad)}
+.mx-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px;margin:14px 0}
+.mx-two>.section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.bt{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.bt-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;justify-content:space-between}
+.bt-head h2{margin:0;font-size:20px}
+.bt-seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.bt-seg button{border:0;background:transparent;padding:5px 12px;font-size:12.5px;color:var(--muted);cursor:pointer}
+.bt-seg button.on{background:var(--accent);color:var(--accent-ink)}
+.bt-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.bt-tile{border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;background:var(--bg);min-width:0;text-align:start;color:var(--ink)}
+.bt-tile.on{outline:2px solid var(--accent)}
+.bt-tile .n{font-size:22px;font-weight:800}
+.bt-tile .l{font-size:12.5px;font-weight:700}
+.bt-tile .x{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:4px}
+.bt-tile i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px}
+.bt-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.bt-card{border:1px solid var(--line);border-radius:12px;padding:11px 13px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.bt-card a{color:var(--ink);font-weight:650;text-decoration:none;line-height:1.35}
+.bt-card a:hover{text-decoration:underline}
+.bt-card .o{font-size:12px;color:var(--muted)}
+.bt-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.bt-bar{height:5px;border-radius:3px;background:var(--soft);overflow:hidden;flex:1;min-width:60px}
+.bt-bar i{display:block;height:100%;background:var(--accent)}
+.mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
+.mx-att a b.up{color:var(--good)} .mx-att a b.down{color:var(--bad)}
 .v2only{display:none}
 :root:not([data-ui="classic"]) .v2only{display:block}
 :root:not([data-ui="classic"]) .queue-wrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-box);padding:16px 18px;margin-bottom:18px}
@@ -599,6 +635,22 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
   <div id="palette" hidden role="dialog" aria-modal="true" aria-label="Search"><div class="pal"><input id="pal-q" autocomplete="off" spellcheck="false"><ul id="pal-list" role="listbox"></ul></div></div>
   <section class="view" id="v-today">
     <div class="cmdbar" id="cmdbar" role="button" tabindex="0"><span data-i="cmd_ph">Search or command: tender, supplier, country, thesis…</span><kbd>Ctrl K</kbd></div>
+    <div id="mx-hero"></div>
+    <div class="section" id="today-biztrends"></div>
+    <div class="mx-two">
+      <div class="section" id="today-geo"></div>
+      <div class="section" id="today-brief"></div>
+    </div>
+    <div id="mx-att"></div>
+    <div class="today2">
+      <div class="box"><div class="box-head"><h2 data-i="b_mk">Commodity markets</h2><span class="muted" id="t-mk-upd"></span><button type="button" data-goto="markets" data-i="all_prices">All prices</button></div><div class="mini" id="t-markets"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="tg_sig_h">Signals: trade, shipping, sanctions</h2><span class="muted" data-i="tg_sig_s">From today's sources</span></div><div class="mini" id="tg-sig"></div></div>
+      <div class="box"><div class="box-head"><h2 data-i="tg_news_h">Business news, watched countries</h2><span class="muted" data-i="tg_news_s">Last 7 days</span></div><div class="mini" id="tg-news"></div></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-tenders" hidden>
+    <div class="tn-top">
     <form class="hero-ai" id="hero-ai" role="search" aria-label="AI search">
       <div class="hero-ai-t" data-i="hai_t">Ask the AI: what are you looking for today?</div>
       <div class="hero-ai-row"><input id="hai-q" autocomplete="off" data-ph="hai_ph"><button class="primary" type="submit" data-i="hai_go">Search with AI</button></div>
@@ -612,18 +664,8 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <div class="box"><div class="box-head"><h2 data-i="tg_new_h">Big new tenders open to foreign firms</h2><span class="muted" data-i="tg_new_s">New in this run, $1M+, by value</span></div><div class="mini" id="tg-new"></div></div>
       <div class="box"><div class="box-head"><h2 data-i="tg_close_h">Pursue, closing in 10 days</h2><span class="muted" data-i="tg_close_s">Best fit first</span></div><div class="mini" id="tg-close"></div></div>
     </div>
-    <div class="v2only section" id="today-geo"></div>
-    <div class="v2only section" id="today-biztrends"></div>
-    <div class="v2only section" id="today-brief"></div>
     <div class="v2only section" id="today-plays"></div>
-    <div class="today2">
-      <div class="box"><div class="box-head"><h2 data-i="b_mk">Commodity markets</h2><span class="muted" id="t-mk-upd"></span><button type="button" data-goto="markets" data-i="all_prices">All prices</button></div><div class="mini" id="t-markets"></div></div>
-      <div class="box"><div class="box-head"><h2 data-i="tg_sig_h">Signals: trade, shipping, sanctions</h2><span class="muted" data-i="tg_sig_s">From today's sources</span></div><div class="mini" id="tg-sig"></div></div>
-      <div class="box"><div class="box-head"><h2 data-i="tg_news_h">Business news, watched countries</h2><span class="muted" data-i="tg_news_s">Last 7 days</span></div><div class="mini" id="tg-news"></div></div>
     </div>
-  </section>
-
-  <section class="view" id="v-tenders" hidden>
     <div class="split">
       <div>
         <form class="ask" id="ask-t"><input id="askq-t" data-ph="ask_ph_t" autocomplete="off"><button class="primary" type="submit" data-i="ask_btn">Search</button></form>
@@ -1505,7 +1547,7 @@ function fillSelect(sel, values) {
 function renderToday() {
   const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
   haiInit(); try { renderViz(); } catch (e) { console.warn("viz", e); }
-  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderTgToday(); renderAppToday();
+  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderMacroHero(); renderTgToday(); renderAppToday();
   const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (b.new === "NEW") - (a.new === "NEW") || (num(b.score) || 0) - (num(a.score) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   $("#kpis").innerHTML = [
     [ts.length.toLocaleString("en-US"), t("k_open")], [ts.filter(r => r.decision === "Pursue").length, t("k_pursue")],
@@ -1913,31 +1955,61 @@ function briefHtml(text) {
   return html + (list.length ? `<details class="srcs"><summary>${esc(t("br_sources", { n: list.length }))}</summary><ol>${list.map(([n, u]) => `<li value="${esc(n)}"><a href="${esc(u)}" target="_blank" rel="noopener">${esc(host(u))}</a></li>`).join("")}</ol></details>` : "");
 }
 function host(u) { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; } }
-/* business trends: China's financial wires and big platforms, business items only (leads/biz_trends.py, TrendRadar's
-   sources via newsnow). Signals, not facts: each row links to its source. Tag chips filter the list. */
-const BT_TAGS = { "commodities": ["Commodities", "סחורות"], "energy": ["Energy", "אנרגיה"], "projects & tenders": ["Projects & tenders", "פרויקטים ומכרזים"],
-  "trade & sanctions": ["Trade & sanctions", "סחר וסנקציות"], "shipping & logistics": ["Shipping", "שילוח ולוגיסטיקה"], "policy & macro": ["Policy & macro", "מדיניות ומאקרו"],
-  "companies & markets": ["Companies & markets", "חברות ושווקים"] };
-let BT_SEL = "";
+/* business trends (leads/biz_trends.py, refreshed every 8 hours): China's financial wires and hot lists plus trending
+   searches in 40 countries, business items only. Theme tiles count and filter; cards rank by score with momentum. */
+const BT_TAGS = { "commodities": ["Commodities", "סחורות", "#c9822b"], "energy": ["Energy", "אנרגיה", "#d9534f"], "projects & tenders": ["Projects & tenders", "פרויקטים ומכרזים", "#3a7bd5"],
+  "trade & sanctions": ["Trade & sanctions", "סחר וסנקציות", "#7a5bd1"], "shipping & logistics": ["Shipping", "שילוח ולוגיסטיקה", "#1d9a8a"], "policy & macro": ["Policy & macro", "מדיניות ומאקרו", "#5a6b7f"],
+  "companies & markets": ["Companies & markets", "חברות ושווקים", "#2e9d4f"] };
+let BT_SEL = "", BT_SRC = "all";
+const btFlag = r => { const m = String(r.platform || "").match(/Google Trends ([A-Z]{2})$/); return m ? String.fromCodePoint(...[...m[1]].map(c => 127397 + c.charCodeAt(0))) + " " : String(r.platform || "").match(/CLS|Wallstreet|Gelonghui|Jin10|Xueqiu|36Kr|Toutiao|Baidu|Weibo|Zhihu|Paper|Douyin|Bilibili/) ? "🇨🇳 " : ""; };
 function renderBizTrends() {
   const el = $("#today-biztrends"); if (!el) return;
-  const all = (S.data.biztrends || []).filter(r => r.title);
-  if (!all.length) { el.innerHTML = ""; return; }
-  const rows = all.filter(r => !BT_SEL || String(r.tags || "").split(", ").includes(BT_SEL)).slice(0, 15);
+  const raw = (S.data.biztrends || []).filter(r => r.title);
   const tagLbl = k => BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k;
+  if (!raw.length) { el.innerHTML = `<div class="bt"><div class="bt-head"><h2>${esc(mt("Business trends worldwide", "מגמות עסקיות בעולם"))}</h2></div><p class="note">${esc(mt("The first trend reading is on its way (refreshed every 8 hours).", "קריאת המגמות הראשונה בדרך (מתעדכן כל 8 שעות)."))}</p></div>`; return; }
+  const isCn = r => !String(r.platform || "").startsWith("Google Trends");
+  const pool = raw.filter(r => BT_SRC === "all" || (BT_SRC === "cn" ? isCn(r) : !isCn(r)));
+  const tags = r => String(r.tags || "").split(", ").filter(Boolean);
+  const byTag = Object.keys(BT_TAGS).map(k => [k, pool.filter(r => tags(r).includes(k))]);
+  const rows = pool.filter(r => !BT_SEL || tags(r).includes(BT_SEL)).sort((a, b) => num(b.score) - num(a.score)).slice(0, 12);
   const ttl = r => (LANG === "he" ? r.title_he || r.title_en : r.title_en) || r.title;
-  const at = all.reduce((m, r) => r.first_seen > m ? r.first_seen : m, "");
-  el.innerHTML = `<div class="box-head"><h3 style="margin:0">${esc(mt("Business trends worldwide", "מגמות עסקיות בעולם"))}</h3>
-      <span class="muted">${esc(mt("China's financial wires and hot lists, plus trending searches in 40 countries (Google Trends); business items only", "חדשות פיננסיות ורשימות חמות מסין, וחיפושים חמים ב-40 מדינות (Google Trends); רק נושאים עסקיים"))}</span></div>
-    <div class="chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px">
-      <button type="button" class="pill${BT_SEL ? "" : " on"}" data-bt="">${esc(mt("All", "הכל"))}</button>
-      ${Object.keys(BT_TAGS).map(k => `<button type="button" class="pill${BT_SEL === k ? " on" : ""}" data-bt="${esc(k)}">${esc(tagLbl(k))}</button>`).join("")}</div>
-    <div class="tbl"><table><thead><tr><th>${esc(mt("Story", "הנושא"))}</th><th>${esc(mt("Tags", "תגיות"))}</th><th>${esc(mt("Where", "איפה"))}</th><th title="${esc(mt("Runs in a row on a hot list / platforms carrying it", "כמה ריצות ברצף ברשימה חמה / בכמה פלטפורמות"))}">${esc(mt("Momentum", "מומנטום"))}</th></tr></thead>
-    <tbody>${rows.map(r => `<tr><td dir="auto">${link(r.url, ttl(r))}${r.title && ttl(r) !== r.title ? `<div class="sub" dir="auto">${esc(r.title)}</div>` : ""}</td>
-      <td>${String(r.tags || "").split(", ").filter(Boolean).map(k => `<span class="pill">${esc(tagLbl(k))}</span>`).join(" ")}${r.sector ? ` <span class="pill">${esc(r.sector)}</span>` : ""}${r.world ? ` <span class="pill" dir="auto">${esc(r.world)}</span>` : ""}</td>
-      <td class="sub">${esc(String(r.platform).startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)} #${esc(r.rank)}</td><td class="num">${esc(r.runs)}${+r.spread > 1 ? " · " + esc(r.spread) + " " + esc(mt("platforms", "פלטפורמות")) : ""}</td></tr>`).join("")}</tbody></table></div>
-    <p class="note">${esc(mt("Signals, not verified facts. Use them to spot early moves: a price spike, a shortage, a big project or a policy before it becomes a tender.", "אותות, לא עובדות מאומתות. הם עוזרים לזהות מוקדם: קפיצת מחיר, מחסור, פרויקט גדול או מדיניות חדשה לפני שהם הופכים למכרז."))}${at ? " " + esc(mt("Updated", "עודכן")) + " " + esc(at) + " UTC" : ""}</p>`;
-  el.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { BT_SEL = b.dataset.bt; renderBizTrends(); });
+  const at = raw.reduce((m, r) => (r.first_seen || "") > m ? r.first_seen : m, "");
+  const nCty = new Set(raw.filter(r => !isCn(r)).map(r => r.world)).size;
+  el.innerHTML = `<div class="bt">
+    <div class="bt-head"><div><h2>${esc(mt("Business trends worldwide", "מגמות עסקיות בעולם"))}</h2>
+      <div class="sub">${esc(mt(`What markets and people are talking about now: China's financial press and hot lists, and business searches in ${nCty} countries`, `על מה מדברים עכשיו השווקים והציבור: העיתונות הפיננסית והרשימות החמות בסין, וחיפושים עסקיים ב-${nCty} מדינות`))}</div></div>
+      <div class="bt-seg" role="group">${[["all", mt("All", "הכל")], ["cn", mt("China", "סין")], ["world", mt("World", "העולם")]].map(([k, l]) => `<button type="button" class="${BT_SRC === k ? "on" : ""}" data-bts="${k}">${esc(l)}</button>`).join("")}</div></div>
+    <div class="bt-tiles">${byTag.map(([k, list]) => `<button type="button" class="bt-tile${BT_SEL === k ? " on" : ""}" data-bt="${esc(k)}"><div class="l"><i style="background:${BT_TAGS[k][2]}"></i>${esc(tagLbl(k))}</div><div class="n">${list.length}</div><div class="x" dir="auto">${esc(list[0] ? ttl(list[0]) : "")}</div></button>`).join("")}</div>
+    <div class="bt-list">${rows.map(r => `<div class="bt-card">
+      <a href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener" dir="auto">${esc(ttl(r))}</a>
+      ${r.title && ttl(r) !== r.title ? `<div class="o" dir="auto">${esc(r.title)}</div>` : ""}
+      <div class="bt-meta">${tags(r).map(k => `<span class="pill" style="border-inline-start:3px solid ${BT_TAGS[k]?.[2] || "var(--line)"}">${esc(tagLbl(k))}</span>`).join("")}</div>
+      <div class="bt-meta"><span>${btFlag(r)}${esc(isCn(r) ? r.platform : mt("Searches in ", "חיפושים ב") + (r.world || ""))} #${esc(r.rank)}</span>
+        <span class="bt-bar" title="${esc(mt("Momentum: runs in a row on a hot list", "מומנטום: כמה ריצות ברצף ברשימה חמה"))}"><i style="width:${Math.min(100, 100 * num(r.runs) / 6)}%"></i></span>
+        ${num(r.spread) > 1 ? `<span>${esc(r.spread)} ${esc(mt("platforms", "פלטפורמות"))}</span>` : ""}</div></div>`).join("") || `<div class="empty">${esc(mt("Nothing in this theme right now.", "אין כרגע נושאים בתחום הזה."))}</div>`}</div>
+    <p class="note" style="margin-top:10px">${esc(mt("Signals, not verified facts: use them to spot early moves, a price spike, a shortage, a big project or a new policy, before they reach a tender.", "אותות ולא עובדות מאומתות: הם עוזרים לזהות מוקדם קפיצת מחיר, מחסור, פרויקט גדול או מדיניות חדשה, לפני שהם מגיעים למכרז."))} ${at ? esc(mt("Updated", "עודכן")) + " " + esc(at) + " UTC" : ""}</p></div>`;
+  el.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { BT_SEL = BT_SEL === b.dataset.bt ? "" : b.dataset.bt; renderBizTrends(); });
+  el.querySelectorAll("[data-bts]").forEach(b => b.onclick = () => { BT_SRC = b.dataset.bts; renderBizTrends(); });
+}
+/* the macro opening: date, currencies against the shekel, the hottest business story, what the world reads more about */
+function renderMacroHero() {
+  const el = $("#mx-hero"); if (!el) return;
+  const he = LANG === "he";
+  const d = new Date().toLocaleDateString(he ? "he-IL" : "en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jerusalem" });
+  const fx = S.data.fx || [], ils = fx.find(r => r.currency === "ILS"), usdIls = ils ? 1 / num(ils.usd_per_unit) : NaN;
+  const fxv = c => { const r = fx.find(x => x.currency === c); if (!r) return null; const v = isFinite(num(r.ils_per_unit)) ? num(r.ils_per_unit) : num(r.usd_per_unit) * usdIls; const ch = r.chg_30d_vs_ils_pct !== undefined && r.chg_30d_vs_ils_pct !== "" ? num(r.chg_30d_vs_ils_pct) : NaN; return isFinite(v) ? { v, ch } : null; };
+  const pk = (label, v, ch, unit = "₪") => `<div class="mx-pk"><b>${unit}${v.toFixed(v >= 10 ? 2 : 3)}</b><span>${esc(label)}${isFinite(ch) ? ` · <em class="${ch > 0 ? "up" : ch < 0 ? "down" : ""}" style="font-style:normal">${ch > 0 ? "+" : ""}${ch.toFixed(1)}% ${esc(mt("30d", "ב-30 יום"))}</em>` : ""}</span></div>`;
+  const cards = [];
+  if (isFinite(usdIls)) cards.push(pk(mt("Dollar / shekel", "דולר / שקל"), usdIls, NaN));
+  for (const [c, l] of [["EUR", mt("Euro / shekel", "אירו / שקל")], ["CNY", mt("Yuan / shekel", "יואן / שקל")], ["GBP", mt("Pound / shekel", "לירה שטרלינג / שקל")]]) { const x = fxv(c); if (x) cards.push(pk(l, x.v, x.ch)); }
+  const bt = (S.data.biztrends || []).filter(r => r.title).sort((a, b) => num(b.score) - num(a.score))[0];
+  if (bt) cards.push(`<div class="mx-pk" style="grid-column:span 2"><b style="font-size:14px;line-height:1.35" dir="auto">${esc((he ? bt.title_he || bt.title_en : bt.title_en) || bt.title)}</b><span>${esc(mt("Hottest business story right now", "הנושא העסקי הכי חם עכשיו"))}</span></div>`);
+  el.innerHTML = `<div class="mx-hero"><h1>${esc(mt("The world today", "העולם היום"))}</h1><div class="mx-date">${esc(d)} · ${esc(mt("a macro view for cross-border trade", "מבט מקרו לסחר בינלאומי"))}</div>
+    ${cards.length ? `<div class="mx-pulse">${cards.join("")}</div>` : ""}</div>`;
+  const att = (S.data.attention || []).filter(r => r.kind === "wikipedia attention" && Math.abs(num(r.chg_30d_pct)) >= 10).sort((a, b) => Math.abs(num(b.chg_30d_pct)) - Math.abs(num(a.chg_30d_pct))).slice(0, 12);
+  const ae = $("#mx-att");
+  if (ae) ae.innerHTML = att.length ? `<div class="box"><div class="box-head"><h2>${esc(mt("What the world reads more (or less) about", "על מה העולם קורא יותר (ופחות)"))}</h2><span class="muted">${esc(mt("Wikipedia readers, change over 30 days", "קוראי ויקיפדיה, שינוי ב-30 יום"))}</span></div>
+    <div class="mx-att">${att.map(r => `<a href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener">${esc(r.term)} <b class="${num(r.chg_30d_pct) > 0 ? "up" : "down"}">${num(r.chg_30d_pct) > 0 ? "+" : ""}${num(r.chg_30d_pct).toFixed(0)}%</b></a>`).join("")}</div></div>` : "";
 }
 /* geopolitical context: what happened in the world in the last 48 hours and what it changes for us (web sources) */
 let GEO = { loaded: false, data: null };

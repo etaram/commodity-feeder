@@ -160,6 +160,15 @@ def main():
             width = max(len(r) for r in rows)
             n = sh.replace_tab(LEADS_SHEET, tab, rows, clear_to=col_letter(width))
             print("wrote", n, "rows x", width, "cols to", tab)
+    elif a[:1] == ["tab"]:
+        # python -m leads.push tab "<Tab name>" <csv name in data/leads> : one table only (the 8-hourly trends refresh)
+        from .common import LEADS
+        rows = read_csv(LEADS / f"{a[2]}.csv")
+        if len(rows) >= 2:
+            width = max(len(r) for r in rows)
+            print("wrote", sh.replace_tab(LEADS_SHEET, a[1], rows, clear_to=col_letter(width)), "rows to", a[1])
+        else:
+            print("skip", a[1], "(no data)")
     elif a[:1] == ["batch"]:
         # python -m leads.push batch <spreadsheet id> <requests.json> : Sheets batchUpdate (layout / formatting)
         reqs = json.loads(open(a[2], encoding="utf-8").read())
