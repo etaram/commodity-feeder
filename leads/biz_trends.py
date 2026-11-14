@@ -141,17 +141,25 @@ def curate(rows, top=70):
               "same headline in natural Hebrew, \"why_en\" and \"why_he\": one short line on why it matters for a trading firm "
               "(empty if nothing concrete), \"tags\": a subset of " + json.dumps(tags) + "}. Use only what the item says; do not add "
               "facts, numbers or names. No emojis, no em-dashes. Return ONLY a JSON array.\n\nItems:\n" + json.dumps(items, ensure_ascii=False))
-    try:
-        import requests
-        r = requests.post("https://api.anthropic.com/v1/messages", timeout=180,
-                          headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-                          json={"model": os.environ.get("BIZ_TRENDS_MODEL", CURATE_MODEL), "max_tokens": 12000,
-                                "messages": [{"role": "user", "content": prompt}]})
-        r.raise_for_status()
-        txt = "".join(b.get("text", "") for b in r.json().get("content", []) if b.get("type") == "text")
-        arr = json.loads(txt[txt.find("["): txt.rfind("]") + 1])
-    except Exception as e:  # noqa: BLE001
-        log.warning("trends curation failed, machine translations kept: %s", str(e)[:160])
+    import requests
+    tool = {"name": "curated", "description": "The curated items", "input_schema": {"type": "object", "properties": {"items": {"type": "array", "items": {
+        "type": "object", "properties": {"id": {"type": "string"}, "keep": {"type": "boolean"}, "title_en": {"type": "string"}, "title_he": {"type": "string"},
+                                         "why_en": {"type": "string"}, "why_he": {"type": "string"}, "tags": {"type": "array", "items": {"type": "string"}}},
+        "required": ["id", "keep"]}}}, "required": ["items"]}}
+    arr = []
+    for i in range(0, len(items), 35):   # batches keep each answer small and complete
+        part = prompt.replace(json.dumps(items, ensure_ascii=False), json.dumps(items[i:i + 35], ensure_ascii=False)).replace("Return ONLY a JSON array.", "Answer with the curated tool.")
+        try:
+            r = requests.post("https://api.anthropic.com/v1/messages", timeout=180,
+                              headers={"x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                              json={"model": os.environ.get("BIZ_TRENDS_MODEL", CURATE_MODEL), "max_tokens": 8000, "tools": [tool],
+                                    "tool_choice": {"type": "tool", "name": "curated"}, "messages": [{"role": "user", "content": part}]})
+            r.raise_for_status()
+            arr += next((b.get("input", {}) for b in r.json().get("content", []) if b.get("type") == "tool_use"), {}).get("items", [])
+        except Exception as e:  # noqa: BLE001
+            log.warning("trends curation batch %d failed: %s", i // 35, str(e)[:160])
+    if not arr:
+        log.warning("trends curation failed, machine translations kept")
         return rows, False
     by = {a.get("id"): a for a in arr if isinstance(a, dict)}
     out = []
@@ -236,6 +244,8 @@ def fetch_trends():
         log.warning("trends translation: %s", e)
     rows = [r for r in rows if "\u2047" not in (r.get("title_en") or "") and "\u2047" not in (r.get("title_he") or "")]   # "⁇": failed translation
     rows, curated = curate(rows)
+    if not curated:
+        rows = [r for r in rows if not r.get("platform", "").startswith("Google Trends") or len([t for t in r.get("tags", "").split(", ") if t]) >= 2]
     for r in rows:
         sec, _ = classify(r.get("title_en") or r["title"])
         r["sector"] = SECTORS.get(sec, "") if sec else ""
