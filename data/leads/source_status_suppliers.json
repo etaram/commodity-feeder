@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T03:26Z",
+ "generated": "2026-11-14T10:04Z",
  "not_ok": 2,
  "sources": [
   {
@@ -12,7 +12,7 @@
    "error_class": "ConnectionError",
    "warning": "collector failed; the previous snapshot is kept",
    "cadence_h": 36,
-   "age_h": 24.3,
+   "age_h": 30.9,
    "kind": "files"
   },
   {
@@ -26,7 +26,7 @@
    "warning": "wrote nothing although work was due: files 0, awards 0, contacts 0, failed 0, invalid 0, rejected_lines 0, partial 3, too_large 0, recovered 0, pending 183, tolerated_total 0, failed_tota",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 12.7
+   "age_h": 19.3
   },
   {
    "source": "commodity_producers",
@@ -39,7 +39,7 @@
    "warning": "nothing due this run (caches are fresh)",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 0.7
+   "age_h": 7.4
   },
   {
    "source": "gebiz_awards",
@@ -52,7 +52,7 @@
    "warning": "nothing due this run (caches are fresh)",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 1.3
+   "age_h": 7.9
   },
   {
    "source": "iadb_awards",
@@ -65,7 +65,7 @@
    "warning": "",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 1.3
+   "age_h": 7.9
   },
   {
    "source": "il_exemptions",
@@ -78,7 +78,7 @@
    "warning": "",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 0.8
+   "age_h": 7.4
   },
   {
    "source": "latam_awards",
@@ -91,7 +91,7 @@
    "warning": "",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 1.5
+   "age_h": 8.1
   },
   {
    "source": "listed_companies",
@@ -104,7 +104,7 @@
    "warning": "nothing due this run (caches are fresh)",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 0.5
+   "age_h": 7.1
   },
   {
    "source": "prozorro_awards",
@@ -117,7 +117,7 @@
    "warning": "",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 1.3
+   "age_h": 7.9
   },
   {
    "source": "web_contacts",
@@ -130,7 +130,7 @@
    "warning": "",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 0.0
+   "age_h": 6.6
   },
   {
    "source": "wikidata_companies",
@@ -143,7 +143,7 @@
    "warning": "nothing due this run (caches are fresh)",
    "cadence_h": 36,
    "kind": "files",
-   "age_h": 0.5
+   "age_h": 7.1
   }
  ],
  "merge": {}

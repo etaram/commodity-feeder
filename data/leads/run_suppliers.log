@@ -1,215 +1,23 @@
-Sat Nov 14 01:41:06 UTC 2026
-INFO LatAm awards: Brazil 466 (4 days), Colombia 448
-INFO latam_awards: 0 rows (OK)
-INFO Prozorro awards: 31614 candidates, 2045 read, 2071 awards
-INFO prozorro_awards: 0 rows (OK)
-INFO IDB awards page 0: 9 records
-INFO IDB awards: 9 contracts with a winner (since 2026-11-01), 0 quarantined
-INFO iadb_awards: 0 rows (OK)
-INFO GeBIZ awards: unchanged (18464 records, read 2026-11-13)
-INFO gebiz_awards: 0 rows (OK)
-INFO OCDR 157 BRA 2026: cut by the time budget after 12525 releases; earlier file kept
-INFO OCDR 144 CHL 2026: cut by the time budget after 152045 releases; earlier file kept
-INFO OCDR 22 DOM 2026: cut by the time budget after 9888 releases; earlier file kept
-INFO OCDR {'files': 0, 'awards': 0, 'contacts': 0, 'failed': 0, 'invalid': 0, 'rejected_lines': 0, 'partial': 3, 'too_large': 0, 'recovered': 0, 'pending': 183, 'tolerated_total': 0, 'failed_total': 0, 'partial_total': 3, 'too_large_total': 0}
-WARNING source ocdr: DEGRADED (wrote nothing although work was due: files 0, awards 0, contacts 0, failed 0, invalid 0, rejected_lines 0, partial 3, too_large 0, recovered 0, pending 183, tolerated_total 0, failed_tota)
-INFO ocdr: 0 rows (DEGRADED)
-INFO OCDR tenders 137 ARG 2026: 0 open of 1734 releases
-INFO OCDR tenders 144 CHL 2029: 0 open of 1 releases
-INFO OCDR tenders 110 ECU 2026: 632 open of 124584 releases
-INFO OCDR tenders 142 GTM 2026: 899 open of 375170 releases
-INFO OCDR tenders 122 HND 2026: 6 open of 46752 releases
-INFO OCDR tenders 123 HND 2026: 0 open of 43975 releases
-INFO OCDR tenders 156 LBR 2026: 3 open of 1283 releases
-INFO OCDR tenders 127 NGA 2025: 0 open of 3 releases
-INFO OCDR tenders 64 NGA 2026: 0 open of 281 releases
-INFO OCDR tenders 86 NGA 2025: 0 open of 20 releases
-INFO OCDR tenders 118 NGA 2026: 0 open of 3 releases
-INFO OCDR tenders 125 NGA 2025: 0 open of 122 releases
-INFO OCDR tenders 135 PER 2026: 13 open of 134917 releases
-INFO OCDR tenders 152 TZA 2026: 0 open of 62293 releases
-INFO OCDR tenders 43 URY 2026: 9 open of 64000 releases
-INFO OCDR tenders 3 ZMB 2026: 0 open of 26157 releases
-INFO OCDR tenders 101 IDN 2120: 0 open of 1 releases
-INFO OCDR tenders 160 TWN 2026: 0 open of 8 releases
-INFO OCDR tenders 158 THA 2026: 0 open of 208218 releases
-INFO OCDR tenders 134 ALB 2025: 0 open of 722 releases
-INFO OCDR tenders 52 GEO 2025: 0 open of 10 releases
-INFO OCDR tenders 115 SRB 2026: 0 open of 597 releases
-INFO OCDR tenders 111 MEX 2025: 0 open of 10 releases
-INFO OCDR tenders 83 MEX 2025: 0 open of 26 releases
-INFO OCDR tenders 31 MEX 2025: 0 open of 205 releases
-INFO OCDR tenders 149 MEX 2026: 0 open of 4256 releases
-INFO OCDR tenders 32 MEX 2025: 0 open of 26 releases
-INFO OCDR tenders 132 MEX 2025: 0 open of 702 releases
-INFO OCDR tenders 34 MDA 2026: 0 open of 47356 releases
-INFO OCDR tenders {'publications': 29, 'read': 29, 'releases': 1143432, 'open_tenders': 1562, 'countries': 6}
-INFO ocdr_tenders: 1562 rows (OK)
-INFO IL exemptions: 5000/165705 read, 0 kept
-INFO IL exemptions: 10000/165705 read, 0 kept
-INFO IL exemptions: 15000/165705 read, 0 kept
-INFO IL exemptions: 20000/165705 read, 1 kept
-INFO IL exemptions: 25000/165705 read, 1 kept
-INFO IL exemptions: 30000/165705 read, 1 kept
-INFO IL exemptions: 35000/165705 read, 1 kept
-INFO IL exemptions: 40000/165705 read, 3 kept
-INFO IL exemptions: 45000/165705 read, 5 kept
-INFO IL exemptions: 50000/165705 read, 8 kept
-INFO IL exemptions: 55000/165705 read, 9 kept
-INFO IL exemptions: 60000/165705 read, 24 kept
-INFO IL exemptions: 65000/165705 read, 28 kept
-INFO IL exemptions: 70000/165705 read, 34 kept
-INFO IL exemptions: 75000/165705 read, 51 kept
-INFO IL exemptions: 80000/165705 read, 78 kept
-INFO IL exemptions: 85000/165705 read, 85 kept
-INFO IL exemptions: 90000/165705 read, 90 kept
-INFO IL exemptions: 95000/165705 read, 106 kept
-INFO IL exemptions: 100000/165705 read, 107 kept
-INFO IL exemptions: 105000/165705 read, 108 kept
-INFO IL exemptions: 110000/165705 read, 108 kept
-INFO IL exemptions: 115000/165705 read, 109 kept
-INFO IL exemptions: 120000/165705 read, 111 kept
-INFO IL exemptions: 125000/165705 read, 116 kept
-INFO IL exemptions: 130000/165705 read, 117 kept
-INFO IL exemptions: 135000/165705 read, 117 kept
-INFO IL exemptions: 140000/165705 read, 117 kept
-INFO IL exemptions: 145000/165705 read, 120 kept
-INFO IL exemptions: 150000/165705 read, 122 kept
-INFO IL exemptions: 155000/165705 read, 129 kept
-INFO IL exemptions: 160000/165705 read, 129 kept
-INFO IL exemptions: 165000/165705 read, 142 kept
-INFO IL exemptions: 165705/165705 read, 143 kept
-INFO IL exemptions {'read': 165705, 'kept': 143, 'next 6 months': 58, 'ended - re-procurement due': 2, '6-18 months': 37, 'later': 46}
-INFO il_exemptions: 0 rows (OK)
-INFO USAspending foreign: 10000
-INFO USAspending 11: 2737
-INFO USAspending 21: 311
-INFO USAspending 31: 8000
-Traceback (most recent call last):
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-               ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 540, in _make_request
-    response = conn.getresponse()
-               ^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 638, in getresponse
-    httplib_response = super().getresponse()
-                       ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/http/client.py", line 1478, in getresponse
-    response.begin()
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/http/client.py", line 343, in begin
-    version, status, reason = self._read_status()
-                              ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/http/client.py", line 312, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-http.client.RemoteDisconnected: Remote end closed connection without response
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/requests/adapters.py", line 696, in send
-    resp = conn.urlopen(
-           ^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 847, in urlopen
-    retries = retries.increment(
-              ^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/retry.py", line 510, in increment
-    raise reraise(type(error), error, _stacktrace)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/util/util.py", line 38, in reraise
-    raise value.with_traceback(tb)
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 793, in urlopen
-    response = self._make_request(
-               ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connectionpool.py", line 540, in _make_request
-    response = conn.getresponse()
-               ^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/urllib3/connection.py", line 638, in getresponse
-    httplib_response = super().getresponse()
-                       ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/http/client.py", line 1478, in getresponse
-    response.begin()
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/http/client.py", line 343, in begin
-    version, status, reason = self._read_status()
-                              ^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/http/client.py", line 312, in _read_status
-    raise RemoteDisconnected("Remote end closed connection without"
-urllib3.exceptions.ProtocolError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/run.py", line 835, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/run.py", line 821, in main
-    run_source(a.source)
-  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
-    rows, meta = m.fetch()
-                 ^^^^^^^^^
-  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/ext_awards.py", line 146, in fetch
-    rows = usaspending(s, t_end)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/ext_awards.py", line 130, in usaspending
-    got = _usas_segment(s, flt, budget_end, pages)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/ext_awards.py", line 87, in _usas_segment
-    r = s.post(USAS, json=body, timeout=120)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/requests/sessions.py", line 712, in post
-    return self.request("POST", url, data=data, json=json, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/requests/sessions.py", line 651, in request
-    resp = self.send(prep, **send_kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/requests/sessions.py", line 784, in send
-    r = adapter.send(request, **kwargs)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/r6/_work/_tool/Python/3.12.16/x64/lib/python3.12/site-packages/requests/adapters.py", line 711, in send
-    raise ConnectionError(err, request=request)
-requests.exceptions.ConnectionError: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-INFO commodity_producers: 0 rows (OK)
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-WARNING wikidata 504
-INFO wikidata companies: 0 countries refreshed (0 companies), 52 countries cached
-INFO wikidata_companies: 0 rows (OK)
-INFO listed companies: 0 countries refreshed (0 companies), 202 cached
-INFO listed_companies: 0 rows (OK)
-INFO web profiles: 2432 read, 73 websites discovered of 1500 tried
-INFO web_contacts: 0 rows (OK)
+Sat Nov 14 10:04:50 UTC 2026
 SOURCE DOWN         ext_awards         rows 0 (last good 128496 at 2026-11-13T03:08) ConnectionError
 SOURCE DEGRADED     ocdr               rows 0 (last good 209382 at 2026-11-13T14:47) zero_work
 source status: 11 sources, 2 not OK
-INFO:leads:proven snapshot: 452233 suppliers on record before the build
+INFO:leads:proven snapshot: 0 suppliers on record before the build
+INFO:leads:import bulk-denue: 10468 rows
+INFO:leads:import bulk-prh: 18371 rows
+INFO:leads:import bulk-traces: 23019 rows
 INFO:leads:import china-directory-2026-11-05: 19837 rows
 INFO:leads:import commodity-databases-2026-11-05: 135 rows
 INFO:leads:import global-suppliers-2026-11: 58151 rows
-INFO:leads:imports: 78123 rows, 76393 new suppliers, 1651 merged into existing ones
-INFO:leads:refined layer applied to 452201 suppliers
-INFO:leads:proven by award: {'promoted': 28067, 'duplicate_legal_id': 19, 'duplicate_domain': 586, 'person': 5, 'over_cap': 0}
-INFO:leads:classification check: 24 sectors, 7431 flagged
-INFO:leads:universe {'awards': 824876, 'suppliers': 453312, 'with_email': 73191, 'with_phone': 62036, 'exporters': 41593, 'goods': 222258, 'contacts_matched': 41921, 'customs_exporters': 19030, 'customs_new': 18762, 'tier_A': 345538, 'tier_B_notable': 10846, 'tier_1_strategic': 11580, 'tier_2_proven': 63313, 'tier_3_qualified': 98864, 'tier_4_unproven': 279555, 'with_website': 142830, 'notable_total': 13350, 'notable_with_email': 3348, 'notable_with_phone': 2956, 'notable_with_website': 8578, 'quality_40_plus': 70128, 'with_any_contact': 224877, 'email_mx_ok': 37344, 'email_no_mx': 498, 'email_parked': 46, 'email_disposable': 0, 'with_lei': 147, 'with_lei_parent': 0, 'region: Europe': 244229, 'region: Latin America': 66301, 'region: South Asia': 46625, 'region: East Asia': 41200, 'region: Sub-Saharan Africa': 23706, 'region: Southeast Asia': 13165, 'region: North America': 6013, 'region: Middle East & North Africa': 4573, 'region: CIS & Central Asia': 2503, 'region: Other': 1874, 'region: unknown': 1280, 'region: Oceania': 980, 'region: Israel': 863}
-INFO:leads:proven report: 395 new listed proven suppliers (170 new keys, 225 were tier 4), 116 without contact; weak regions {'Middle East & North Africa': 0, 'East Asia': 0, 'Sub-Saharan Africa': 0, 'Latin America': 106}
-INFO:leads:proven by source: {"Prozorro (Ukraine)": 276, "Brazil PNCP": 93, "UK Contracts Finder": 13, "Colombia SECOP": 12, "IDB contract awards": 1}
-INFO:leads:proven by region: {"Europe": 289, "Latin America": 106}
-INFO:leads:proven by role: {"supplier (role to confirm)": 365, "EPC / contractor": 17, "trader / distributor": 9, "manufacturer": 4}
-wrote 150001 rows to Supplier Universe
-INFO:leads:origin exporters: 1 commodity pages moved to the front of 2 queued
-WARNING:leads:origin exporters: HTTP 403 on /suppliers/category-country/coffee-ethiopia
-WARNING:leads:origin exporters: HTTP 403 on /suppliers/category/agriculture-food
-WARNING:leads:origin exporters: 10 refusals in a row, stopping this run
-INFO:leads:origin exporters: {"pages": 10, "failed": 10, "queued": 2, "suppliers": 0, "countries": 0, "top": []}
+INFO:leads:imports: 129981 rows, 125598 new suppliers, 4212 merged into existing ones
+INFO:leads:proven by award: {'promoted': 40000, 'duplicate_legal_id': 0, 'duplicate_domain': 0, 'person': 4, 'over_cap': 151}
+INFO:leads:classification check: 24 sectors, 4546 flagged
+INFO:leads:universe {'awards': 536275, 'suppliers': 420156, 'with_email': 41885, 'with_phone': 34174, 'exporters': 57808, 'goods': 237277, 'contacts_matched': 0, 'customs_exporters': 19030, 'customs_new': 18776, 'tier_A': 263105, 'tier_B_notable': 10907, 'tier_1_strategic': 10232, 'tier_2_proven': 76854, 'tier_3_qualified': 53898, 'tier_4_unproven': 279172, 'with_website': 49534, 'notable_total': 13350, 'notable_with_email': 193, 'notable_with_phone': 204, 'notable_with_website': 8305, 'quality_40_plus': 38288, 'with_any_contact': 133959, 'email_mx_ok': 0, 'email_no_mx': 0, 'email_parked': 0, 'email_disposable': 0, 'with_lei': 0, 'with_lei_parent': 0, 'region: Europe': 274751, 'region: East Asia': 39991, 'region: South Asia': 39973, 'region: Latin America': 29876, 'region: North America': 16837, 'region: Southeast Asia': 10072, 'region: Middle East & North Africa': 2786, 'region: Sub-Saharan Africa': 1907, 'region: Other': 1503, 'region: Oceania': 1084, 'region: Israel': 691, 'region: CIS & Central Asia': 673, 'region: unknown': 12}
+INFO:leads:proven report: no earlier build on record - counting the suppliers the award rule lists
+INFO:leads:proven report: 40000 new listed proven suppliers (0 new keys, 40000 were tier 4), 39992 without contact; weak regions {'Middle East & North Africa': 25, 'East Asia': 0, 'Sub-Saharan Africa': 8, 'Latin America': 4801}
+INFO:leads:proven by source: {"TED": 33996, "Colombia SECOP": 3029, "Brazil PNCP": 1484, "IDB contract awards": 373, "Spain": 316, "GeBIZ (Singapore)": 230, "UK Contracts Finder": 217, "USAspending awards": 130, "Prozorro (Ukraine)": 128, "awards": 73, "Germany": 24}
+INFO:leads:proven by region: {"Europe": 34736, "Latin America": 4801, "Southeast Asia": 250, "North America": 130, "Other": 42, "Middle East & North Africa": 25, "Sub-Saharan Africa": 8, "unknown": 5, "CIS & Central Asia": 3}
+INFO:leads:proven by role: {"supplier (role to confirm)": 35316, "EPC / contractor": 3644, "trader / distributor": 583, "manufacturer": 457}
 INFO:leads:web index: 36 Ethiopian coffee exporters (official export record and marketplace)
 INFO:leads:web index: 3264 coffee sellers from marketplace profiles
 INFO:leads:web index: 183 Ugandan coffee and cocoa organisations from the official directory
@@ -218,7 +26,7 @@ INFO:leads:web index: 105 from registry_brazil.csv
 INFO:leads:web index: 45 from registry_cameroon.csv
 INFO:leads:web index: 60 from registry_chile.csv
 INFO:leads:web index: 19 from registry_colombia.csv
-INFO:leads:web index: 5606 from registry_india.csv
+INFO:leads:web index: 5600 from registry_india.csv
 INFO:leads:web index: 24 from registry_indonesia.csv
 INFO:leads:web index: 60 from registry_iran.csv
 INFO:leads:web index: 6 from registry_nigeria.csv
@@ -229,24 +37,4 @@ INFO:leads:web index: 16 from registry_philippines.csv
 INFO:leads:web index: 65 from registry_south_africa.csv
 INFO:leads:web index: 25 from registry_ukraine.csv
 INFO:leads:web index: 107 from registry_vietnam.csv
-INFO:leads:web index: 0 origin exporters from directories
-INFO:leads:web index: 212929 suppliers, 18.9 MB encrypted
-INFO:leads:winners: 299550 award rows read, 1594 leads kept since 2026-06-17: {"contractor": 982, "commodity": 612}; sources {"World Bank awards": 870, "TED": 350, "Team research (Grok), official source": 293, "OCDS registry: Dominican Republic: Direc": 81}
-INFO:leads:winners top: 2026-11-13 | Consorcio Barranca Ruta 1 (Bel Ingenierí () -> CRI | Widening and rehabilitation to four lanes of Ruta 1, Barranca–San Gera | USD 121,000,000 | needs: 
-INFO:leads:winners top: 2026-11-13 | Constructora MECO () -> CRI | Widening and rehabilitation to four lanes of Ruta 1, San Gerardo de Ch | USD 141,000,000 | needs: 
-INFO:leads:winners top: 2026-11-13 | European Trans Energy GmbH () -> AUT | ZROOE overhead transmission-line construction, sections 03 and 04 (hig | USD 102,304,094 | needs: 
-INFO:leads:winners top: 2026-11-10 | RR Construction (Pvt) Ltd () -> LKA | Widening and improvement of the Colombo–Ratnapura–Wellawaya–Batticaloa | USD 1,485,790,000 | needs: bitumen, cement, steel rebar, aggregates
-INFO:leads:winners top: 2026-11-10 | RR Construction (Pvt) Ltd () -> LKA | Repair and improvement of the Pelmadulla–Embilipitiya–Nonagama Road (A | USD 3,739,840,000 | needs: bitumen, cement, steel rebar, aggregates
-INFO:leads:winners top: 2026-11-10 | Maga Engineering (Pvt) Ltd () -> LKA | Widening and improvement of the Peradeniya–Halloluwa–Katugastota Road  | USD 3,106,210,000 | needs: bitumen, cement, steel rebar, aggregates
-INFO:leads:winners top: 2026-11-10 | ELS Construction (Pvt) Ltd () -> LKA | Rehabilitation and improvement of three road sections in the Nawalapit | USD 763,980,000 | needs: bitumen, cement, steel rebar, aggregates
-INFO:leads:winners top: 2026-11-09 | Orascom Construction (balance-of-plant c () -> EGY | Niat and Rasgha wind farms, 2 x 250 MW, Ras Ghareb (Red Sea coast) | USD 626,000,000 | needs: 
-INFO:leads:winners top: 2026-11-09 | Ashoka Buildcon Limited () -> IND | Balance work for construction of 8-lane access-controlled expressway f | USD 91,880,649 | needs: cement, steel rebar, roofing sheets, tiles and sanitary ware
-INFO:leads:winners top: 2026-11-06 | Watterson Construction Co. (Anchorage, A () -> USA | Construction of a 320-soldier barracks, Fort Wainwright, Alaska (W911K | USD 123,793,000 | needs: cement, steel rebar, roofing sheets, tiles and sanitary ware
-INFO:leads:winners top: 2026-11-06 | Peab Sverige AB () -> SWE | Development of parts of airport areas (construction work for buildings | USD 3,000,000,000 | needs: cement, steel rebar, roofing sheets, tiles and sanitary ware
-INFO:leads:winners top: 2026-11-05 | Airbus Defence and Space (lead contracto () -> FRA | IRIS military Earth-observation satellite programme — two extremely hi | USD 1,657,800,000 | needs: 
-INFO:leads:winner dossier: 121386 suppliers with a website in the index
-INFO:leads:winner dossier: 250 looked up this run; cache 500 winners, 98 with an official website, 41 with a published contact
-INFO:leads:winners: 1594 leads, 0.19 MB encrypted
-INFO:leads:footprints: 299257 award rows, 87779 companies, 11063 buyers before cuts
-INFO:leads:footprints: kept 47180 companies, 6814 buyers
-INFO:leads:footprints: 32 shards, 8.6 MB encrypted; companies by size {"small": 33945, "mid": 12853, "large": 382}
+INFO:leads:web index: 192022 suppliers, 9.7 MB encrypted

@@ -1,68 +1,108 @@
 {
  "at": "2026-11-14",
- "new_listed_proven": 395,
- "was_absent": 170,
- "was_tier_4": 225,
- "without_contact_yet": 116,
+ "new_listed_proven": 40000,
+ "was_absent": 0,
+ "was_tier_4": 40000,
+ "without_contact_yet": 39992,
  "by_source": {
-  "Prozorro (Ukraine)": 276,
-  "Brazil PNCP": 93,
-  "UK Contracts Finder": 13,
-  "Colombia SECOP": 12,
-  "IDB contract awards": 1
+  "TED": 33996,
+  "Colombia SECOP": 3029,
+  "Brazil PNCP": 1484,
+  "IDB contract awards": 373,
+  "Spain": 316,
+  "GeBIZ (Singapore)": 230,
+  "UK Contracts Finder": 217,
+  "USAspending awards": 130,
+  "Prozorro (Ukraine)": 128,
+  "awards": 73,
+  "Germany": 24
  },
  "by_region": {
-  "Europe": 289,
-  "Latin America": 106
+  "Europe": 34736,
+  "Latin America": 4801,
+  "Southeast Asia": 250,
+  "North America": 130,
+  "Other": 42,
+  "Middle East & North Africa": 25,
+  "Sub-Saharan Africa": 8,
+  "unknown": 5,
+  "CIS & Central Asia": 3
  },
  "weak_regions": {
-  "Middle East & North Africa": 0,
+  "Middle East & North Africa": 25,
   "East Asia": 0,
-  "Sub-Saharan Africa": 0,
-  "Latin America": 106
+  "Sub-Saharan Africa": 8,
+  "Latin America": 4801
  },
  "by_role": {
-  "supplier (role to confirm)": 365,
-  "EPC / contractor": 17,
-  "trader / distributor": 9,
-  "manufacturer": 4
+  "supplier (role to confirm)": 35316,
+  "EPC / contractor": 3644,
+  "trader / distributor": 583,
+  "manufacturer": 457
  },
  "by_sector": {
-  "Healthcare & pharmaceuticals": 77,
-  "ICT & telecom": 56,
-  "Agriculture & food": 54,
-  "Construction materials & building systems": 40,
-  "Power & electrical equipment": 35,
-  "Vehicles, rolling stock, ships & aircraft": 26,
-  "Furniture, appliances & consumer goods": 20,
-  "Energy, fuels & utilities": 20,
-  "Industrial & construction machinery": 14,
-  "Scientific & measuring instruments": 12,
-  "Water & wastewater": 9,
-  "Mining, minerals & metals": 6,
-  "Defence & security": 6,
-  "Building construction works": 5,
-  "Chemicals & plastics": 5
+  "Healthcare & pharmaceuticals": 8487,
+  "ICT & telecom": 5554,
+  "Vehicles, rolling stock, ships & aircraft": 4799,
+  "Power & electrical equipment": 3604,
+  "Agriculture & food": 3213,
+  "Industrial & construction machinery": 2833,
+  "Water & wastewater": 2648,
+  "Scientific & measuring instruments": 2000,
+  "Construction materials & building systems": 1839,
+  "Energy, fuels & utilities": 1636,
+  "Defence & security": 1296,
+  "Chemicals & plastics": 608,
+  "Mining, minerals & metals": 496,
+  "Building construction works": 241,
+  "Furniture, appliances & consumer goods": 185
  },
  "source_by_region": {
-  "Prozorro (Ukraine)": {
-   "Europe": 276
-  },
-  "Brazil PNCP": {
-   "Latin America": 93
-  },
-  "UK Contracts Finder": {
-   "Europe": 13
+  "TED": {
+   "Europe": 33971,
+   "Middle East & North Africa": 21,
+   "CIS & Central Asia": 3,
+   "Sub-Saharan Africa": 1
   },
   "Colombia SECOP": {
-   "Latin America": 12
+   "Latin America": 3029
+  },
+  "Brazil PNCP": {
+   "Latin America": 1484
   },
   "IDB contract awards": {
-   "Latin America": 1
+   "Latin America": 288,
+   "Other": 42,
+   "Southeast Asia": 20,
+   "Europe": 12,
+   "Sub-Saharan Africa": 7,
+   "Middle East & North Africa": 4
+  },
+  "Spain": {
+   "Europe": 316
+  },
+  "GeBIZ (Singapore)": {
+   "Southeast Asia": 230
+  },
+  "UK Contracts Finder": {
+   "Europe": 217
+  },
+  "USAspending awards": {
+   "North America": 130
+  },
+  "Prozorro (Ukraine)": {
+   "Europe": 123,
+   "unknown": 5
+  },
+  "awards": {
+   "Europe": 73
+  },
+  "Germany": {
+   "Europe": 24
   }
  },
- "baseline": "previous build",
- "listed_with_award_evidence": 72355,
+ "baseline": "award rule only (no earlier build on record)",
+ "listed_with_award_evidence": 63295,
  "promoted_rule": "one award in a focus sector within 730 days, USD 100k or more (leads/universe.py PROVEN_MIN_USD)",
  "queued_for_website_check_and_enrichment": 5000
 }
