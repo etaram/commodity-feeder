@@ -1,5 +1,5 @@
 {
-  "finished_utc": "2026-11-13T21:21:04",
+  "finished_utc": "2026-11-14T05:49:51",
   "fx_source": "ECB via Frankfurter 2026-11-13",
   "fx": {
     "EUR": 1.1052044075551772,
@@ -22,7 +22,7 @@
     "yahoo": {
       "ok": true,
       "prices": 33,
-      "sec": 29,
+      "sec": 25,
       "newest_date": "2026-11-13",
       "log": [
         "INFO yahoo: no data for JKM=F",
@@ -33,7 +33,7 @@
       "ok": true,
       "prices": 6,
       "sec": 8,
-      "newest_date": "2026-11-12",
+      "newest_date": "2026-11-13",
       "log": [
         "INFO westmetall: 6 prices"
       ]
@@ -41,8 +41,8 @@
     "em_global": {
       "ok": true,
       "prices": 21,
-      "sec": 34,
-      "newest_date": "2026-11-13",
+      "sec": 50,
+      "newest_date": "2026-11-14",
       "log": [
         "INFO em_global board: 620 rows",
         "INFO em_global: 21 prices"
@@ -51,7 +51,7 @@
     "cn_spot": {
       "ok": true,
       "prices": 52,
-      "sec": 2,
+      "sec": 4,
       "newest_date": "2026-11-13",
       "log": [
         "INFO cn_spot: 52 prices (2026-11-13)"
@@ -82,7 +82,7 @@
     "scrapmonster": {
       "ok": true,
       "prices": 34,
-      "sec": 1,
+      "sec": 0,
       "newest_date": "2026-09-21",
       "log": [
         "INFO scrapmonster: 34 prices, 221 unmapped items"
@@ -91,7 +91,7 @@
     "smi": {
       "ok": true,
       "prices": 5,
-      "sec": 1,
+      "sec": 0,
       "newest_date": "2026-11-13",
       "log": [
         "INFO smi: 5 prices (as of 2026-11-13)"
@@ -100,7 +100,7 @@
     "usda": {
       "ok": true,
       "prices": 54,
-      "sec": 17,
+      "sec": 16,
       "newest_date": "2026-11-13",
       "log": [
         "INFO usda gdt: 8 prices",
@@ -130,7 +130,7 @@
     "comext": {
       "ok": true,
       "prices": 1915,
-      "sec": 109,
+      "sec": 57,
       "newest_date": "2026-09-30",
       "log": [
         "INFO comext using ('DS-045409', 'EU', 'EXT_EU')",
