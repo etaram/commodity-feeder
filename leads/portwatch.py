@@ -100,6 +100,7 @@ def run():
             if not cand:
                 continue
             name = max(cand, key=lambda n: sum(a.get("portcalls") or 0 for a in by[n]))   # the main port of that name
+            log.info("PortWatch %s -> %s (candidates: %s)", zone, name, "; ".join(f"{n} {round(sum(a.get('portcalls') or 0 for a in by[n]) / max(1, len(by[n])), 1)}/day" for n in cand[:6]))
             xs = sorted(by[name], key=lambda a: a["date"])
             st = _stats([(a["date"], a.get("portcalls") or 0) for a in xs])
             if not st:
