@@ -34,6 +34,12 @@ jobs:
           path: data/private
           key: private-none
           restore-keys: private-
+      - name: Latest supplier universe (read-only, saved by the suppliers workflow under its own key)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/private/universe.csv
+          key: universe-none
+          restore-keys: universe-
       - name: Previous checks
         uses: actions/cache@v4
         with:
