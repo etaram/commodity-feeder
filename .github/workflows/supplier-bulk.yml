@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - run: pip install -q requests pycountry phonenumbers cryptography openpyxl google-auth
+      - run: pip install -q requests pycountry phonenumbers cryptography openpyxl google-auth ijson
       - name: probe
         if: ${{ inputs.only == 'probe' || startsWith(inputs.only, 'probe:') }}
         run: python tools/supplier_bulk_probe.py $(echo "${ONLY#probe}" | tr ':,' '  ') 2>&1 | cut -c1-600
