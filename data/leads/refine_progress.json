@@ -64,10 +64,10 @@
  "email_domains_checked": 8868,
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-14T04:48Z",
+  "at": "2026-11-14T05:04Z",
   "sample": null,
-  "links_checked_this_run": 1120,
-  "links_on_record": 7000,
+  "links_checked_this_run": 1024,
+  "links_on_record": 8024,
   "sites_read_this_run": 150,
   "registers_this_run": 86,
   "buyers": {
@@ -75,17 +75,17 @@
    "completed": 3131,
    "contact_found": 3130,
    "with_conflicts": 0,
-   "with_gaps": 546,
+   "with_gaps": 596,
    "cleaned": 13,
    "duplicates": 74,
-   "verified_identity": 27,
+   "verified_identity": 44,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3280,
+   "reused_unchanged": 3283,
    "gaps": {
     "no official website": 363,
     "no contact channel": 317,
-    "website unreachable": 159,
-    "website name mismatch": 24
+    "website unreachable": 201,
+    "website name mismatch": 32
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -98,17 +98,17 @@
    "completed": 3398,
    "contact_found": 3398,
    "with_conflicts": 0,
-   "with_gaps": 766,
+   "with_gaps": 788,
    "cleaned": 12,
    "duplicates": 0,
-   "verified_identity": 7,
+   "verified_identity": 13,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3937,
+   "reused_unchanged": 3930,
    "gaps": {
     "no official website": 681,
     "no contact channel": 602,
-    "website unreachable": 75,
-    "website name mismatch": 11
+    "website unreachable": 94,
+    "website name mismatch": 14
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -117,15 +117,15 @@
   },
   "tenders": {
    "processed": 130000,
-   "completed": 51390,
+   "completed": 51767,
    "contact_found": 48002,
-   "with_conflicts": 196,
+   "with_conflicts": 200,
    "with_gaps": 114487,
    "cleaned": 50,
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 129019,
+   "reused_unchanged": 129445,
    "gaps": {
     "no estimated value": 94041,
     "no contact in the notice": 81998,
@@ -151,7 +151,7 @@
    "duplicates": 1,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 2675,
+   "reused_unchanged": 2686,
    "gaps": {
     "no project value": 1939,
     "no implementing agency": 949
