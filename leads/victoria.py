@@ -34,8 +34,8 @@ def vic_date(s):
 
 def parse(html, ts):
     rows = []
-    for m in re.finditer(r'<tr id="tenderRow(\d+)" data-tender-code="([^"]*)">(.*?)</tr>', html, re.S):
-        tid, code, body = m.group(1), clean(m.group(2)), m.group(3)
+    for m in re.finditer(r'<tr[^>]*?id=["\']tenderRow(\d+)["\'][^>]*?(?:data-tender-code=["\']([^"\']*)["\'])?[^>]*>(.*?)</tr>', html, re.S | re.I):
+        tid, code, body = m.group(1), clean(m.group(2) or ""), m.group(3)
         title = clean((re.search(r'class="strong tenderRowTitle">(.*?)</a>', body, re.S) or [None, ""])[1])
         buyer = clean((re.search(r"Issued by:\s*(.*?)</span>", body, re.S) or [None, ""])[1])
         state = clean((re.search(r'class="tender-row-state">(.*?)</span>', body, re.S) or [None, ""])[1])
@@ -65,7 +65,10 @@ def fetch():
         calls += 1
         if r.status_code != 200:
             raise RuntimeError(f"Victoria tenders: page {page} HTTP {r.status_code}; previous snapshot kept")
-        ids = tuple(re.findall(r'<tr id="tenderRow(\d+)"', r.text))
+        ids = tuple(re.findall(r'id=["\']tenderRow(\d+)', r.text))
+        if page == 1:
+            log.info("Victoria tenders page 1: %d bytes, %d rows, title %r", len(r.content), len(ids),
+                     (re.search(r"<title[^>]*>(.*?)</title>", r.text, re.S) or [None, ""])[1].strip()[:80])
         if not ids or ids in seen_pages:
             break
         seen_pages.add(ids)
