@@ -512,6 +512,23 @@ a.lnk{white-space:nowrap}
 .mx-hero{background:linear-gradient(135deg,var(--accent-soft),var(--info-soft));border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:12px 0 14px}
 .mx-hero h1{margin:0;font-size:26px;letter-spacing:-.3px;color:var(--ink)}
 .mx-hero .mx-date{color:var(--muted);font-size:13.5px;margin-top:2px}
+.mx-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-top:14px}
+@media (max-width:820px){.mx-top{grid-template-columns:1fr}}
+.mx-story{display:flex;flex-direction:column;gap:6px;background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--ink);min-width:0}
+.mx-story:hover{border-color:var(--c)}
+.mx-story b{font-size:15px;line-height:1.4}
+.mx-story.lead b{font-size:19px}
+.mx-k{font-size:11.5px;font-weight:700;color:var(--c);text-transform:uppercase;letter-spacing:.3px}
+.mx-why{font-size:13px;color:var(--muted);line-height:1.45}
+.mx-src{font-size:12px;color:var(--muted);margin-top:auto}
+.mx-heat-h{font-size:12.5px;font-weight:700;color:var(--muted);margin:14px 0 6px}
+.mx-heat{display:flex;height:14px;border-radius:7px;overflow:hidden;gap:2px}
+.mx-heat i{display:block;min-width:6px}
+.mx-heat-l{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;font-size:12px;color:var(--muted)}
+.mx-heat-l i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:5px}
+.mx-srcs{display:flex;flex-wrap:wrap;gap:6px}
+.mx-srcs span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px}
+.mx-srcs b{color:var(--accent)}
 .mx-pulse{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px}
 .mx-pk{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
 .mx-pk b{display:block;font-size:20px;font-weight:800;color:var(--ink)}
@@ -2036,21 +2053,30 @@ function renderShipPulse() {
     <h3 style="margin:12px 0 6px;font-size:14px">${esc(mt("Chokepoints", "נתיבי מפתח"))}</h3><div class="mx-pulse">${ch.map(card).join("")}</div>
     <h3 style="margin:12px 0 6px;font-size:14px">${esc(mt("Ports", "נמלים"))}</h3><div class="mx-pulse">${po.map(card).join("")}</div></div>`;
 }
-/* the macro opening: date, currencies against the shekel, the hottest business story, what the world reads more about */
+/* the macro opening (owner, 14 Nov: no currencies here; visual): the three hottest business stories as large cards,
+   a heat bar of today's themes, and where the stories come from. */
 function renderMacroHero() {
   const el = $("#mx-hero"); if (!el) return;
   const he = LANG === "he";
   const d = new Date().toLocaleDateString(he ? "he-IL" : "en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jerusalem" });
-  const fx = S.data.fx || [], ils = fx.find(r => r.currency === "ILS"), usdIls = ils ? 1 / num(ils.usd_per_unit) : NaN;
-  const fxv = c => { const r = fx.find(x => x.currency === c); if (!r) return null; const v = isFinite(num(r.ils_per_unit)) ? num(r.ils_per_unit) : num(r.usd_per_unit) * usdIls; const ch = r.chg_30d_vs_ils_pct !== undefined && r.chg_30d_vs_ils_pct !== "" ? num(r.chg_30d_vs_ils_pct) : NaN; return isFinite(v) ? { v, ch } : null; };
-  const pk = (label, v, ch, unit = "₪") => `<div class="mx-pk"><b>${unit}${v.toFixed(v >= 10 ? 2 : 3)}</b><span>${esc(label)}${isFinite(ch) ? ` · <em class="${ch > 0 ? "up" : ch < 0 ? "down" : ""}" style="font-style:normal">${ch > 0 ? "+" : ""}${ch.toFixed(1)}% ${esc(mt("30d", "ב-30 יום"))}</em>` : ""}</span></div>`;
-  const cards = [];
-  if (isFinite(usdIls)) cards.push(pk(mt("Dollar / shekel", "דולר / שקל"), usdIls, NaN));
-  for (const [c, l] of [["EUR", mt("Euro / shekel", "אירו / שקל")], ["CNY", mt("Yuan / shekel", "יואן / שקל")], ["GBP", mt("Pound / shekel", "לירה שטרלינג / שקל")]]) { const x = fxv(c); if (x) cards.push(pk(l, x.v, x.ch)); }
-  const bt = (S.data.biztrends || []).filter(r => r.title).sort((a, b) => num(b.score) - num(a.score))[0];
-  if (bt) cards.push(`<div class="mx-pk" style="grid-column:span 2"><b style="font-size:14px;line-height:1.35" dir="auto">${esc((he ? bt.title_he || bt.title_en : bt.title_en) || bt.title)}</b><span>${esc(mt("Hottest business story right now", "הנושא העסקי הכי חם עכשיו"))}</span></div>`);
-  el.innerHTML = `<div class="mx-hero"><h1>${esc(mt("The world today", "העולם היום"))}</h1><div class="mx-date">${esc(d)} · ${esc(mt("a macro view for cross-border trade", "מבט מקרו לסחר בינלאומי"))}</div>
-    ${cards.length ? `<div class="mx-pulse">${cards.join("")}</div>` : ""}</div>`;
+  const bt = (S.data.biztrends || []).filter(r => r.title).sort((a, b) => num(b.score) - num(a.score));
+  const ttl = r => (he ? r.title_he || r.title_en : r.title_en) || r.title, why = r => he ? r.why_he : r.why_en;
+  const tg = r => String(r.tags || "").split(", ").filter(Boolean);
+  const col = k => (BT_TAGS[k] || [])[2] || "var(--accent)";
+  const top3 = bt.slice(0, 3);
+  const cnt = Object.keys(BT_TAGS).map(k => [k, bt.filter(r => tg(r).includes(k)).length]).filter(x => x[1]).sort((a, b) => b[1] - a[1]);
+  const tot = cnt.reduce((a, x) => a + x[1], 0) || 1;
+  const src = {}; for (const r of bt) { const k = btFlag(r) + (String(r.platform || "").startsWith("Google Trends") ? (r.world || "") : (he ? "סין" : "China")); if (k.trim()) src[k] = (src[k] || 0) + 1; }
+  const srcs = Object.entries(src).sort((a, b) => b[1] - a[1]).slice(0, 14);
+  el.innerHTML = `<div class="mx-hero"><h1>${esc(mt("The world today", "העולם היום"))}</h1><div class="mx-date">${esc(d)} · ${esc(mt("what is moving business and trade right now", "מה מזיז עכשיו את העסקים והסחר בעולם"))}</div>
+    ${top3.length ? `<div class="mx-top">${top3.map((r, i) => `<a class="mx-story${i === 0 ? " lead" : ""}" href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener" style="--c:${col(tg(r)[0])}">
+      <span class="mx-k">${tg(r).slice(0, 2).map(k => esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)).join(" · ")}</span>
+      <b dir="auto">${esc(ttl(r))}</b>${why(r) ? `<span class="mx-why" dir="auto">${esc(why(r))}</span>` : ""}
+      <span class="mx-src">${btFlag(r)}${esc(String(r.platform || "").startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)}</span></a>`).join("")}</div>` : ""}
+    ${cnt.length ? `<div class="mx-heat-h">${esc(mt("Today's themes", "הנושאים של היום"))}</div><div class="mx-heat">${cnt.map(([k, v]) => `<i style="flex:${v};background:${col(k)}" title="${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)}: ${v}"></i>`).join("")}</div>
+      <div class="mx-heat-l">${cnt.map(([k, v]) => `<span><i style="background:${col(k)}"></i>${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>` : ""}
+    ${srcs.length ? `<div class="mx-heat-h">${esc(mt("Where the stories come from", "מאיפה מגיעים הנושאים"))}</div><div class="mx-srcs">${srcs.map(([k, v]) => `<span><b>${v}</b> ${esc(k)}</span>`).join("")}</div>` : ""}
+  </div>`;
   const att = (S.data.attention || []).filter(r => r.kind === "wikipedia attention" && Math.abs(num(r.chg_30d_pct)) >= 10).sort((a, b) => Math.abs(num(b.chg_30d_pct)) - Math.abs(num(a.chg_30d_pct))).slice(0, 12);
   const ae = $("#mx-att");
   if (ae) ae.innerHTML = att.length ? `<div class="box"><div class="box-head"><h2>${esc(mt("What the world reads more (or less) about", "על מה העולם קורא יותר (ופחות)"))}</h2><span class="muted">${esc(mt("Wikipedia readers, change over 30 days", "קוראי ויקיפדיה, שינוי ב-30 יום"))}</span></div>
