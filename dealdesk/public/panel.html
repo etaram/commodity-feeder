@@ -644,6 +644,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
     </form>
     <div id="mx-hero"></div>
     <div class="section" id="today-biztrends"></div>
+    <div class="section" id="mx-trade"></div>
     <div class="mx-two">
       <div class="section" id="today-geo"></div>
       <div class="section" id="today-brief"></div>
@@ -1548,7 +1549,7 @@ function fillSelect(sel, values) {
 function renderToday() {
   const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
   haiInit(); try { renderViz(); } catch (e) { console.warn("viz", e); }
-  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderMacroHero(); renderTgToday(); renderAppToday();
+  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderMacroHero(); renderTradePulse(); renderTgToday(); renderAppToday();
   const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (b.new === "NEW") - (a.new === "NEW") || (num(b.score) || 0) - (num(a.score) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   $("#kpis").innerHTML = [
     [ts.length.toLocaleString("en-US"), t("k_open")], [ts.filter(r => r.decision === "Pursue").length, t("k_pursue")],
@@ -1992,6 +1993,28 @@ function renderBizTrends() {
     <p class="note" style="margin-top:10px">${esc(mt("Signals, not verified facts: use them to spot early moves, a price spike, a shortage, a big project or a new policy, before they reach a tender.", "אותות ולא עובדות מאומתות: הם עוזרים לזהות מוקדם קפיצת מחיר, מחסור, פרויקט גדול או מדיניות חדשה, לפני שהם מגיעים למכרז."))} ${at ? esc(mt("Updated", "עודכן")) + " " + esc(at) + " UTC" : ""}</p></div>`;
   el.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { BT_SEL = BT_SEL === b.dataset.bt ? "" : b.dataset.bt; renderBizTrends(); });
   el.querySelectorAll("[data-bts]").forEach(b => b.onclick = () => { BT_SRC = b.dataset.bts; renderBizTrends(); });
+}
+/* world trade pulse: the fastest-growing import flows in the Market Signals layer (UN Comtrade annual, product x
+   country, unit price against the benchmark), each linked to the OEC (oec.world) to explore the country's trade. */
+function renderTradePulse() {
+  const el = $("#mx-trade"); if (!el) return;
+  const m = (S.data.markets || []).filter(r => num(r.imports_usd) >= 1e8 && isFinite(num(r.growth_pct)) && num(r.growth_pct) >= 15);
+  if (!m.length) { el.innerHTML = ""; return; }
+  const top = m.sort((a, b) => num(b.growth_pct) * Math.log10(num(b.imports_usd)) - num(a.growth_pct) * Math.log10(num(a.imports_usd))).slice(0, 10);
+  const yr = top[0].year || "";
+  const big = v => v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : "$" + Math.round(v / 1e6) + "M";
+  const gmax = Math.max(...top.map(r => num(r.growth_pct)));
+  const oec = r => `https://oec.world/en/visualize/tree_map/hs92/import/${String(r.iso3 || "").toLowerCase()}/all/show/${r.year || 2024}`;
+  el.innerHTML = `<div class="bt"><div class="bt-head"><div><h2>${esc(mt("World trade pulse: what countries are buying more", "דופק הסחר העולמי: מה מדינות קונות יותר"))}</h2>
+      <div class="sub">${esc(mt(`Fastest-growing imports above $100M in ${yr} (UN Comtrade); price paid vs the benchmark. Explore each country's trade on the OEC.`, `היבוא שצמח הכי מהר מעל 100 מיליון דולר ב-${yr} (UN Comtrade), והמחיר ששולם מול מחיר הייחוס. אפשר לצלול לכל מדינה ב-OEC.`))}</div></div></div>
+    <div class="bt-list" style="margin-top:12px">${top.map(r => `<div class="bt-card">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b dir="auto">${flag(r.iso3)}${esc(r.country)}</b><span class="num" style="color:var(--good);font-weight:800">+${num(r.growth_pct).toFixed(0)}%</span></div>
+      <div dir="auto" style="font-weight:650">${esc(r.product)}</div>
+      <div class="bt-meta"><span>${esc(big(num(r.imports_usd)))} ${esc(mt("imports", "יבוא"))}</span><span class="bt-bar"><i style="width:${(100 * num(r.growth_pct) / gmax).toFixed(0)}%;background:var(--good)"></i></span></div>
+      <div class="bt-meta">${isFinite(num(r.premium_vs_benchmark_pct)) && r.premium_vs_benchmark_pct !== "" ? `<span class="pill">${esc(mt("pays", "משלמת"))} ${num(r.premium_vs_benchmark_pct) > 0 ? "+" : ""}${num(r.premium_vs_benchmark_pct).toFixed(0)}% ${esc(mt("vs benchmark", "מול מחיר הייחוס"))}</span>` : ""}
+        ${r.new_market ? `<span class="pill">${esc(mt("new market", "שוק חדש"))}</span>` : ""}<span class="pill">${esc(r.group || "")}</span>
+        <a href="${esc(oec(r))}" target="_blank" rel="noopener" style="font-weight:600">OEC</a></div></div>`).join("")}</div>
+    <p class="note" style="margin-top:10px">${esc(mt("Annual official trade data: it shows lasting demand, not this week's news. A high price over the benchmark with growing volume is a supply opportunity.", "נתוני סחר רשמיים שנתיים: הם מראים ביקוש מתמשך, לא חדשות של השבוע. מחיר גבוה מהייחוס יחד עם נפח שגדל הוא הזדמנות אספקה."))}</p></div>`;
 }
 /* the macro opening: date, currencies against the shekel, the hottest business story, what the world reads more about */
 function renderMacroHero() {
