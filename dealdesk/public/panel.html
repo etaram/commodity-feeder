@@ -10,7 +10,7 @@ table.mk th{position:sticky;top:0;background:var(--panel);text-align:start;font-
 table.mk td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:top}
 table.mk td:first-child{white-space:normal;min-width:220px;max-width:340px}
 table.mk tr:last-child td{border-bottom:0}
-.up{color:var(--bad);font-weight:600}.dn{color:var(--good);font-weight:600}.fl{color:var(--muted)}
+.up{color:var(--good);font-weight:600}.dn{color:var(--bad);font-weight:600}.fl{color:var(--muted)}
 .dk-card{border-top:1px solid var(--line);padding:12px 0;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start}
 .dk-card:first-child{border-top:0}
 .dk-rank{font-family:var(--f-mono);color:var(--muted);font-size:13px;padding-top:2px}
@@ -4639,7 +4639,7 @@ function renderMkToday() {
   if (!S.mk) { el.innerHTML = `<div class="empty">${esc(S.mkErr ? mt("Prices are not available right now.", "המחירים אינם זמינים כרגע.") : mt("Loading prices...", "טוען מחירים..."))}</div>`; return; }
   const mv = mkMovers(["T1"]), rows = [...mv.up.slice(0, 3), ...mv.dn.slice(0, 3)];
   $("#t-mk-upd").textContent = mt("updated ", "עודכן ") + mkUpdated();
-  mini("#t-markets", rows, r => [`<span class="pill ${moveOf(r) > 0 ? "bad" : "good"}">${moveOf(r) > 0 ? mt("up", "עלייה") : mt("down", "ירידה")}</span>`, `<div class="t">${esc(shortName(r))}</div><div class="sub num">${esc(px(r.price))} ${esc(r.unit)}</div>`, `<div>${chgTxt(moveOf(r))}</div>`], () => go("markets"), mt("No moves yet.", "אין תנודות עדיין."));
+  mini("#t-markets", rows, r => [`<span class="pill ${moveOf(r) > 0 ? "good" : "bad"}">${moveOf(r) > 0 ? mt("up", "עלייה") : mt("down", "ירידה")}</span>`, `<div class="t">${esc(shortName(r))}</div><div class="sub num">${esc(px(r.price))} ${esc(r.unit)}</div>`, `<div>${chgTxt(moveOf(r))}</div>`], () => go("markets"), mt("No moves yet.", "אין תנודות עדיין."));
 }
 const MK_TSIG = { "rising fast": ["rising fast", "עולה מהר"], rising: ["rising", "עולה"], stable: ["stable", "יציב"], falling: ["falling", "יורד"], "falling fast": ["falling fast", "יורד מהר"] };
 const mkTrendSig = sg => `<span class="pill ${/^rising/.test(sg) ? "bad" : /^falling/.test(sg) ? "good" : "info"}">${esc((MK_TSIG[sg] || [sg, sg])[LANG === "he" ? 1 : 0])}</span>`;
