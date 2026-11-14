@@ -1,0 +1,57 @@
+name: supplier-bulk
+# Bulk supplier registers (leads/supplier_bulk.py): official open lists of manufacturers and producers (EU TRACES approved
+# non-EU establishments, Mexico INEGI DENUE 51+ employees, USDA FSIS inspection directory, Finland PRH manufacturing).
+# Each source is downloaded, filtered to companies (no natural persons), and sealed with the import public key into
+# data/import/bulk-<source>.enc, the same encrypted drop route as leads/importer.py; leads/universe.py merges the drops
+# on its next build, and the refinement (company-check, describe) takes them from there. Public: counts only
+# (data/leads/supplier_bulk_status.json). Weekly, started by the company server (deploy/ops/schedule.tab).
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "comma-separated sources (traces,denue,fsis,prh); empty = all; 'probe' = endpoint probe only"
+        required: false
+        default: ""
+      args:
+        description: "extra arguments (e.g. --limit 500 for a test)"
+        required: false
+        default: ""
+permissions:
+  contents: write
+concurrency:
+  group: supplier-bulk
+  cancel-in-progress: false
+jobs:
+  bulk:
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    timeout-minutes: 150
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      ONLY: ${{ inputs.only }}
+      ARGS: ${{ inputs.args }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q requests pycountry phonenumbers cryptography openpyxl google-auth
+      - name: probe
+        if: ${{ inputs.only == 'probe' || startsWith(inputs.only, 'probe:') }}
+        run: python tools/supplier_bulk_probe.py $(echo "${ONLY#probe}" | tr ':,' '  ') 2>&1 | cut -c1-600
+      - name: import
+        if: ${{ inputs.only != 'probe' && !startsWith(inputs.only, 'probe:') }}
+        run: touch /tmp/bulk-start && sleep 1 && python -m leads.supplier_bulk run "${ONLY:-all}" $ARGS 2>&1 | grep -E "^(BULK|INFO|WARNING|ERROR|Traceback|  File|[A-Za-z]+Error)" | cut -c1-500
+      - name: commit
+        if: ${{ inputs.only != 'probe' && !startsWith(inputs.only, 'probe:') }}
+        run: |
+          git config user.name "commodity-feed-bot"; git config user.email "actions@users.noreply.github.com"
+          rm -rf /tmp/own && mkdir -p /tmp/own
+          # only the sealed drops and the counts this run wrote
+          for f in data/import/bulk-*.enc data/leads/supplier_bulk_status.json; do [ -e "$f" ] && [ "$f" -nt /tmp/bulk-start ] && cp --parents "$f" /tmp/own/; done
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            cp -r /tmp/own/. .
+            git add data/import/bulk-*.enc data/leads/supplier_bulk_status.json 2>/dev/null || true
+            git diff --cached --quiet && break
+            git commit -q -m "supplier bulk: ${ONLY:-all} $(date -u +%Y-%m-%dT%H:%MZ)" && git push -q origin HEAD:main && break
+            sleep $((i * 10))
+          done
