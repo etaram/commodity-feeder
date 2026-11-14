@@ -1,0 +1,95 @@
+name: collect
+# Parallel collection (owner, 14 Nov 2026: the server is mostly idle; collect in parallel). Each source runs in its own
+# job on its own runner at the same time, with no repository writes; one final job copies the results (partial file,
+# rolling cache, directory status) onto the latest main and pushes. The merge into the open list happens in the next
+# leads run (leads.yml owns the merge and the repo-data-writes lock). Nothing here touches source_status.json.
+on:
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: comma-separated collectors (leads/<name>.py)
+        required: true
+        default: directory500,poland,pakistan,ukregional,buyspeed,india,socrata_us
+permissions:
+  contents: write
+jobs:
+  plan:
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    outputs:
+      list: ${{ steps.p.outputs.list }}
+    steps:
+      - id: p
+        run: echo "list=$(echo '${{ inputs.sources }}' | python3 -c 'import sys,json; print(json.dumps([x.strip() for x in sys.stdin.read().split(",") if x.strip()]))')" >> "$GITHUB_OUTPUT"
+  collect:
+    needs: plan
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        source: ${{ fromJSON(needs.plan.outputs.list) }}
+    env:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      DIR_BUDGET_S: "3300"
+      DIR_THREADS: "16"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.local/cache/argos-translate
+            ~/.cache/pip
+          key: argos-v1
+      - run: pip install requests curl_cffi pycountry langid argostranslate aia certifi google-auth openpyxl cryptography phonenumbers beautifulsoup4 lxml
+      - name: collect ${{ matrix.source }}
+        run: |
+          mkdir -p data/leads && set -o pipefail
+          python -m leads.run --source ${{ matrix.source }} 2>&1 | tee data/leads/collect_${{ matrix.source }}.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: out-${{ matrix.source }}
+          path: |
+            data/leads/partial/${{ matrix.source }}.json
+            data/leads/cache/${{ matrix.source }}*.jsonl
+            data/leads/directory500_status.csv
+            data/leads/error_${{ matrix.source }}.txt
+            data/leads/collect_${{ matrix.source }}.log
+          if-no-files-found: ignore
+          retention-days: 3
+  commit:
+    needs: collect
+    if: always()
+    runs-on: ${{ vars.RUNNER_LABEL || 'sinder' }}
+    concurrency:
+      group: collect-commit
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/collect-out
+      - name: copy results onto main and push
+        run: |
+          git config user.name "leads-bot"; git config user.email "leads-bot@users.noreply.github.com"
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            for d in /tmp/collect-out/out-*; do
+              s="${d##*/out-}"
+              [ -f "$d/partial/$s.json" ] || { echo "$s: no result (see its log)"; continue; }
+              mkdir -p data/leads/partial data/leads/cache
+              cp "$d/partial/$s.json" data/leads/partial/
+              cp "$d"/cache/*.jsonl data/leads/cache/ 2>/dev/null || true
+              [ -f "$d/directory500_status.csv" ] && [ "$s" = directory500 ] && cp "$d/directory500_status.csv" data/leads/
+              python3 -c "import json;j=json.load(open('data/leads/partial/$s.json'));print('$s:',len(j.get('rows',[])),'rows',j.get('meta',{}))" | cut -c1-300
+            done
+            git add -A data/leads/partial data/leads/cache data/leads/directory500_status.csv 2>/dev/null || true
+            git diff --cached --quiet && { echo "nothing to commit"; exit 0; }
+            git commit -q -m "collect: parallel collection results (${{ inputs.sources }})" && git push -q origin HEAD:main && exit 0
+            sleep $((i * 20))
+          done
+          exit 1

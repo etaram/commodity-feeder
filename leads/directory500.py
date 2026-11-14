@@ -24,7 +24,9 @@ from .sectors import classify
 
 LIST = LEADS / "sources" / "directory500.csv"
 STATUS = LEADS / "directory500_status.csv"
-BUDGET_S = 2100
+import os
+BUDGET_S = int(os.environ.get("DIR_BUDGET_S", "2100"))
+THREADS = int(os.environ.get("DIR_THREADS", "8"))
 TENDER = re.compile(
     r"\b(tenders?|RFPs?|RFQs?|RFIs?|IFBs?|ITBs?|EOIs?|solicitations?|invitations? (?:to|for) (?:bid|tender)s?|"
     r"requests? for (?:proposals?|quot\w+|qualifications|bids?|information|expressions? of interest)|expressions? of interest|"
@@ -164,7 +166,7 @@ def fetch():
             return e, "error", []
 
     import concurrent.futures as cf
-    with cf.ThreadPoolExecutor(8) as ex:   # different hosts in parallel; il_web.fetch keeps the per-host gap
+    with cf.ThreadPoolExecutor(THREADS) as ex:   # different hosts in parallel; il_web.fetch keeps the per-host gap
         results = list(ex.map(one, entries))
     for e, st, items in results:
         if st is None:

@@ -304,7 +304,7 @@ jobs:
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',directory500,') }}
         continue-on-error: true
         timeout-minutes: 45
-        run: set -o pipefail; python -m leads.run --source directory500 2>&1 | tee -a data/leads/run.log
+        run: set -o pipefail; pip install -q beautifulsoup4 lxml; python -m leads.run --source directory500 2>&1 | tee -a data/leads/run.log
       - name: socrata_us
         if: ${{ env.ONLY == '' || contains(format(',{0},', env.ONLY), ',socrata_us,') }}
         continue-on-error: true
