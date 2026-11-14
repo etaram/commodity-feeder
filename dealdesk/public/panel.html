@@ -636,6 +636,12 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
   <div id="palette" hidden role="dialog" aria-modal="true" aria-label="Search"><div class="pal"><input id="pal-q" autocomplete="off" spellcheck="false"><ul id="pal-list" role="listbox"></ul></div></div>
   <section class="view" id="v-today">
     <div class="cmdbar" id="cmdbar" role="button" tabindex="0"><span data-i="cmd_ph">Search or command: tender, supplier, country, thesis…</span><kbd>Ctrl K</kbd></div>
+    <form class="hero-ai" id="hero-ai" role="search" aria-label="AI search">
+      <div class="hero-ai-t" data-i="hai_t">Ask the AI: what are you looking for today?</div>
+      <div class="hero-ai-row"><input id="hai-q" autocomplete="off" data-ph="hai_ph"><button class="primary" type="submit" data-i="hai_go">Search with AI</button></div>
+      <div class="hero-ai-scope" role="group"><button type="button" data-s="t" aria-pressed="true" data-i="hai_s_t">Tenders</button><button type="button" data-s="c" aria-pressed="false" data-i="hai_s_c">Suppliers</button><button type="button" data-s="d" aria-pressed="false" data-i="hai_s_d">Deals</button>
+      <span class="hero-ai-ex" id="hai-ex"></span></div>
+    </form>
     <div id="mx-hero"></div>
     <div class="section" id="today-biztrends"></div>
     <div class="mx-two">
@@ -652,12 +658,6 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
 
   <section class="view" id="v-tenders" hidden>
     <div class="tn-top">
-    <form class="hero-ai" id="hero-ai" role="search" aria-label="AI search">
-      <div class="hero-ai-t" data-i="hai_t">Ask the AI: what are you looking for today?</div>
-      <div class="hero-ai-row"><input id="hai-q" autocomplete="off" data-ph="hai_ph"><button class="primary" type="submit" data-i="hai_go">Search with AI</button></div>
-      <div class="hero-ai-scope" role="group"><button type="button" data-s="t" aria-pressed="true" data-i="hai_s_t">Tenders</button><button type="button" data-s="c" aria-pressed="false" data-i="hai_s_c">Suppliers</button><button type="button" data-s="d" aria-pressed="false" data-i="hai_s_d">Deals</button>
-      <span class="hero-ai-ex" id="hai-ex"></span></div>
-    </form>
     <div class="viz" id="today-viz"></div>
     <div class="v2only" id="greet"></div><div class="v2only sub" id="greet-sub"></div>
     <div class="pulse" id="tg-pulse"></div>
