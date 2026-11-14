@@ -19,7 +19,7 @@ import time
 from urllib.parse import urljoin, urlparse
 
 from .common import LEADS, clean, log, rolling, today
-from .il_web import fetch, soup
+from .il_web import fetch as web_fetch, soup
 from .sectors import classify
 
 LIST = LEADS / "sources" / "directory500.csv"
@@ -130,7 +130,7 @@ def _subpages(base, text):
 
 
 def scan(url, t, mf):
-    st, final, txt = fetch(url, min_gap=1.5)
+    st, final, txt = web_fetch(url, min_gap=1.5)
     if st != "ok":
         return st, []
     items = extract(final, txt, t, mf)
@@ -139,7 +139,7 @@ def scan(url, t, mf):
     if len(txt) < 3000 or (("<app-root" in txt or 'id="root"' in txt or "__NEXT_DATA__" in txt) and len(re.sub(r"<[^>]+>", "", txt)) < 2500):
         return "js-only", []
     for u in _subpages(final, txt):
-        st2, fin2, txt2 = fetch(u, min_gap=1.5)
+        st2, fin2, txt2 = web_fetch(u, min_gap=1.5)
         got = extract(fin2, txt2, t, mf) if st2 == "ok" else []
         if got:
             return "ok", got

@@ -16,8 +16,8 @@ from .sectors import classify
 BASE = "https://epms.ppra.gov.pk"
 LIST = BASE + "/public/tenders/active-tenders?page={}"
 MAX_PAGES = 80
-MAIN = re.compile(r'<tr class="cb-rt-main">(.*?)</tr>', re.S)
-DETAIL = re.compile(r'<tr class="cb-rt-detail" id="cb-rt-detail-(\d+)">(.*?)</tr>', re.S)
+MAIN = re.compile(r'<tr[^>]*class="cb-rt-main[^"]*"[^>]*>(.*?)</tr>', re.S)
+DETAIL = re.compile(r'<tr[^>]*id="cb-rt-detail-(\d+)"[^>]*>(.*?)</tr>', re.S)
 CELL = re.compile(r'<td[^>]*data-label="([^"]+)"[^>]*>(.*?)</td>', re.S)
 
 
@@ -41,7 +41,7 @@ def parse(page, fetched):
     for tr in MAIN.findall(page):
         c = {k: v for k, v in CELL.findall(tr)}
         did = re.search(r'data-id="(\d+)"', tr)
-        link = re.search(r'href="(https://epms\.ppra\.gov\.pk/public/tenders/tender-details/([\w-]+))"', c.get("Actions", ""))
+        link = re.search(r'href="((?:https://epms\.ppra\.gov\.pk)?/public/tenders/tender-details/([\w-]+))"', c.get("Actions", "") or tr)
         title = re.search(r"<strong>(.*?)</strong>", c.get("Tender Details", ""), re.S)
         if not link or not title:
             continue
@@ -62,7 +62,7 @@ def parse(page, fetched):
                      "stage": "disposal" if disposal else ("tender" if status.lower().startswith("published") or not status else status.lower()),
                      "access": "Pakistan federal procurement (international bidders where the notice says so)",
                      "published": _date(c.get("Advertised", "")), "deadline": _date(c.get("Closing", "")),
-                     "deadline_basis": "submission", "value": "", "currency": "", "link": link.group(1),
+                     "deadline_basis": "submission", "value": "", "currency": "", "link": link.group(1) if link.group(1).startswith("http") else BASE + link.group(1),
                      "source_url": BASE + "/public/tenders/active-tenders", "fetched": fetched, "contact": "", "lang": "en"})
     return rows
 
@@ -81,8 +81,11 @@ def fetch():
         if not got:
             if p == 1:
                 title = re.search(r"<title>(.*?)</title>", r.text, re.S)
-                log.warning("Pakistan PPRA page 1 had no rows: HTTP %s, %d bytes, title %r, rows marker %s", r.status_code, len(r.text),
-                            (title.group(1).strip()[:80] if title else ""), "cb-rt-main" in r.text)
+                log.warning("Pakistan PPRA page 1 had no rows: HTTP %s, %d bytes, title %r, main rows %s", r.status_code, len(r.text),
+                            (title.group(1).strip()[:80] if title else ""), len(MAIN.findall(r.text)))
+                m0 = MAIN.findall(r.text)[:1]
+                if m0:
+                    log.warning("Pakistan first row cells: %s", [k for k, _ in CELL.findall(m0[0])])
             break
         out += got
         if p * 50 >= total:
