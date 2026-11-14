@@ -92,8 +92,34 @@ def search(c, page, dmin, dmax):
     return (r.json().get("result") or {})
 
 
+def probe(c):
+    """What the public, crawler-facing side (robots.txt sitemaps and notice pages) gives the runner."""
+    for u in [BASE + "/robots.txt", BASE + "/sitemap/daily-ads.xml", BASE + "/sitemap/ads.xml"]:
+        try:
+            r = c.get(u)
+            locs = re.findall(r"<loc>([^<]+)</loc>", r.text)
+            log.info("Turkey probe %s: HTTP %s %s %d bytes, %d locs, ihale locs %d, sample %s, head %r", u, r.status_code,
+                     r.headers.get("content-type"), len(r.content), len(locs), sum("ihale" in x for x in locs),
+                     [x for x in locs if "ihale" in x][:3] or locs[:3], " ".join(r.text[:200].split()))
+        except Exception as e:  # noqa: BLE001
+            log.warning("Turkey probe %s: %s", u, e)
+            locs = []
+        for x in [x for x in locs if "ihale" in x][:2]:
+            try:
+                rr = c.get(x)
+                txt = clean(rr.text)
+                i = txt.lower().find("tarih")
+                log.info("Turkey probe page %s: HTTP %s %d bytes, has 'ihale' %s, near 'tarih': %r, ld+json %s",
+                         x[:120], rr.status_code, len(rr.content), "ihale" in txt.lower(), txt[max(0, i - 150):i + 150],
+                         "ld+json" in rr.text)
+            except Exception as e:  # noqa: BLE001
+                log.warning("Turkey probe page: %s", e)
+
+
 def fetch():
     c, t0, t = _Polite(), time.time(), today()
+    if os.environ.get("TURKEY_PROBE", "1") == "1":
+        probe(c)
     ts = str(t)
     state = {}
     if STATE.exists():
