@@ -10,7 +10,7 @@ import time
 
 import requests
 
-from .common import clean, log, quarantine_future, session, snapshot, today
+from .common import clean, log, quarantine_future, rolling, session, snapshot, today
 from .sectors import classify
 
 BASE = "https://buy.nsw.gov.au"
@@ -60,7 +60,14 @@ def fetch():
     for page in range(1, 200):   # 1-based (?page=0 repeats page 1)
         r = requests.Session.get(s, LIST, params={"page": page}, timeout=60)
         calls += 1
+        if r.status_code == 202:   # the site's firewall answers 202 with a browser challenge: wait once, never solve it
+            time.sleep(30)
+            r = requests.Session.get(s, LIST, params={"page": page}, timeout=60)
+            calls += 1
         if r.status_code != 200:
+            if out:
+                log.warning("NSW: page %d HTTP %s (firewall challenge); keeping the %d read so far", page, r.status_code, len(out))
+                break
             raise RuntimeError(f"NSW: page {page} HTTP {r.status_code}; previous snapshot kept")
         if page == 1:
             total = (re.search(r"of\s+(\d+)\s+results", r.text) or [None, "?"])[1]
@@ -72,10 +79,11 @@ def fetch():
             out[x["id"]] = x
         if f"?page={page + 1}" not in r.text and len(out) >= int(total if str(total).isdigit() else 0):
             break
-        time.sleep(1.0)
+        time.sleep(2.0)
     if not out:
         raise RuntimeError("NSW: no open opportunity read; previous snapshot kept")
     rows, q = quarantine_future(list(out.values()), "nsw")
-    keep, _ = snapshot("nsw", rows)
+    complete = str(total).isdigit() and len(out) >= int(total) * 0.9
+    keep, _ = (snapshot if complete else rolling)("nsw", rows)
     log.info("NSW: %d open opportunities (%s listed, %d pages)", len(keep), total, calls)
-    return keep, {"new": len(keep), "listed": total, "calls": calls, "quarantined": q, "complete_snapshot": 1, "deep_link": 1}
+    return keep, {"new": len(keep), "listed": total, "calls": calls, "quarantined": q, "complete_snapshot": 1 if complete else 0, "deep_link": 1}
