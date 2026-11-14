@@ -118,7 +118,7 @@ def collect_global(s):
 CURATE_MODEL = "claude-haiku-5-5"   # the web app's cheapest model (dealdesk/lib/anthropic.ts)
 
 
-def curate(rows, top=70):
+def curate(rows, top=140):
     """One small model call per refresh (owner, 14 Nov 2026: the module must help understand what is happening): keeps
     only items that matter for business, trade, markets or the economy, rewrites each title in clean English and
     Hebrew, adds one line on why it matters for a cross-border trading firm, and fixes the theme tags. Uses only the
