@@ -21,7 +21,7 @@ Sources (each: official, open, automated download allowed, no login, robots.txt 
           is skipped.
   prh     Finland PRH / YTJ open data (avoindata.prh.fi, opendata-ytj-api v3 all_companies bulk file), CC BY 4.0
           (Finnish Patent and Registration Office). Active companies whose main line of business is manufacturing
-          (TOL 2008 divisions 10-33). Sole traders (toiminimi, private traders: natural persons) are skipped.
+          (TOL 2008 divisions 10-32; 33 repair and installation is left out). Sole traders (toiminimi, private traders: natural persons) are skipped.
   fsis    USDA FSIS Meat, Poultry and Egg Product Inspection Directory (public domain, US Government work). The site
           answers 403 to automated clients from the runner (bot protection on fsis.usda.gov, robots.txt included); it is
           not worked around. The source is kept here so it runs once the file is reachable.
@@ -157,6 +157,30 @@ MX_FORM = re.compile(r"\b(S\.?\s?A\.?|S\.?\s?A\.?\s?P\.?\s?I\.?|S\.?\s?A\.?\s?B\
                      r"C\.?\s?V\.?|GMBH|CORPORATION|CORP\.?|COMPANY)\b", re.I)
 
 
+MX_GIVEN = set("""JOSE JUAN MARIA LUIS CARLOS JESUS FRANCISCO ANTONIO MIGUEL PEDRO MANUEL JORGE ALEJANDRO RICARDO ROBERTO FERNANDO JAVIER
+SERGIO RAFAEL DANIEL EDUARDO ARTURO RAUL ENRIQUE ALBERTO MARIO HECTOR GERARDO OSCAR VICTOR GUILLERMO ALFREDO DAVID MARTIN RAMON
+SALVADOR ARMANDO ERNESTO GUADALUPE IGNACIO JAIME ANDRES PABLO RUBEN ALFONSO AGUSTIN FELIPE GABRIEL HUGO ADRIAN RODOLFO GUSTAVO
+LEONARDO JULIO CESAR ISMAEL ABEL ANGEL BENJAMIN TOMAS SANTIAGO EMILIO FIDEL RAMIRO ROGELIO GILBERTO ISIDRO MOISES OCTAVIO
+ANA ROSA PATRICIA LETICIA ELIZABETH VERONICA TERESA MARTHA LAURA GABRIELA SILVIA ALICIA CLAUDIA ADRIANA ANGELICA SANDRA
+MONICA YOLANDA LOURDES BEATRIZ GLORIA ESTHER DOLORES CARMEN LUZ JOSEFINA ELENA LUCIA ROCIO IRMA NORMA SOFIA ALMA EVA
+GRACIELA ARACELI LILIANA KARLA DIANA ANDREA ALEJANDRA MARGARITA JUANA ISABEL CRISTINA SUSANA LORENA MIRIAM BLANCA EDITH""".split())
+MX_BUSINESS = re.compile(r"\b(alimentos?|bebidas?|carnes?|lacteos|cremeria|panificadora|tortilladora|molinos?|harinas?|azucar\w*|ingenio|"
+                         r"empacadora|deshidratadora|procesadora|productora|productos|fabrica\w*|manufactur\w*|maquiladora|industria\w*|"
+                         r"agroindustria\w*|agro\w*|comercializadora|distribuidora|almacenadora|confecciones|textil\w*|bordados|disenos|"
+                         r"grupo|corporativo|corporacion|compania|empresa\w*|internacional|mexican[ao]s?|de mexico|plasticos?|metal\w*|"
+                         r"aceros?|quimic\w*|farmac\w*|laboratorios?|automotri\w*|autopartes|electric\w*|electronic\w*|muebles|"
+                         r"papel\w*|cartón|carton\w*|empaques?|envases?|vidrio|ceramic\w*|cemento\w*|concreto\w*|maderas?|calzado|"
+                         r"servicios|multiservicios|tecnologia\w*|sistemas|soluciones|cooperativa|sociedad|union|asociacion|"
+                         r"impresora|impresos|editorial|graficos?|pinturas?|fundicion|forja|herramientas?|maquinaria|equipos?|"
+                         r"\w+tex|\w+mex|\w+plast)\b", re.I)
+
+
+def mx_person_like(name):
+    """A legal name that reads as a natural person's name (given name first, 3-6 plain words, no business word)."""
+    w = fold(name).upper().replace(".", " ").split()
+    return (3 <= len(w) <= 6 and w[0] in MX_GIVEN and all(t.isalpha() for t in w) and not MX_BUSINESS.search(fold(name)))
+
+
 def _denue_rows(path, limit=None):
     z = zipfile.ZipFile(path)
     name = next(n for n in z.namelist() if n.lower().endswith(".csv") and "conjunto_de_datos" in n.lower() and "diccionario" not in n.lower())
@@ -186,12 +210,11 @@ def denue(limit=None):
         seen["51plus"] += 1
         legal = re.sub(r"\s+", " ", r.get("raz_social", "")).strip()
         if not legal:
-            seen["empty_legal_name"] += 1
-        if not legal or not MX_FORM.search(fold(legal)):
-            seen["skipped_no_company_form"] += 1
-            if legal and seen["skipped_no_company_form"] <= 25:
-                log.info("BULK denue no-form tail: %s", " ".join(fold(legal).split()[-3:])[-30:])
-            continue
+            seen["skipped_empty_legal_name"] += 1; continue
+        if not MX_FORM.search(fold(legal)):
+            seen["no_company_form"] += 1
+            if mx_person_like(legal):
+                seen["skipped_person_like"] += 1; continue
         key = re.sub(r"[^a-z0-9]", "", fold(legal).lower())
         rank = {"51-100": 1, "101-250": 2, "251+": 3}[band]
         f = firms.get(key)
@@ -227,9 +250,9 @@ def denue(limit=None):
             "employees": band_of[f["rank"]], "size_band": band_of[f["rank"]], "role": "manufacturer", "legal_id": "",
             "denue_id": b.get("id", ""), "scian": code, "establishments": f["estabs"],
         })
-    log.info("BULK denue: %d rows read, %d with 51+ persons, %d without a company form skipped, %d companies",
-             seen["rows"], seen["51plus"], seen["skipped_no_company_form"], len(out))
-    return out, {"rows_read": seen["rows"], "establishments_51plus": seen["51plus"], "skipped_natural_person_or_no_form": seen["skipped_no_company_form"],
+    log.info("BULK denue: %s, %d companies", dict(seen), len(out))
+    return out, {"rows_read": seen["rows"], "establishments_51plus": seen["51plus"], "skipped_person_like": seen["skipped_person_like"],
+                 "skipped_empty_legal_name": seen["skipped_empty_legal_name"], "without_form_in_name": seen["no_company_form"],
                  "licence": "INEGI Terminos de libre uso (attribution)", "url": DENUE_URL}
 
 
@@ -272,7 +295,7 @@ def prh(limit=None):
             seen["inactive"] += 1; continue
         mbl = c.get("mainBusinessLine") or {}
         code = str(mbl.get("type") or "")
-        if not (code[:2].isdigit() and 10 <= int(code[:2]) <= 33):
+        if not (code[:2].isdigit() and 10 <= int(code[:2]) <= 32):
             continue
         seen["manufacturing"] += 1
         forms = [f for f in (c.get("companyForms") or []) if not f.get("endDate")]
@@ -322,6 +345,22 @@ TRACES_HDR = {"Accept": "application/json, text/plain, */*"}
 MAKER_ACT = re.compile(r"process|plant|slaughter|cutting|manufactur|production|producer|packing|treatment|establishment|preparation|"
                        r"dairy|collection centre|purification|dispatch|factory|tannery|rendering|game handling|farm", re.I)
 STORE_ACT = re.compile(r"cold store|storage|warehouse|re-?wrapping", re.I)
+TRACES_SKIP = {"ABP-COL", "ABP-DP", "ABP-GT"}  # collectors and handlers of raw by-products, storage of derived products, game trophies
+COMPANY_WORD = re.compile(r"\b(co|ltd|limited|inc|llc|corp\w*|compan\w*|group|s\.?a\.?|s\.?a\.?s|ltda|s\.?r\.?l|srl|gmbh|ag|bv|nv|plc|pty|pvt|"
+                          r"private|public|jsc|ooo|tov|cia|cooperative|co-?op\w*|coop\w*|association|union|federation|industr\w*|"
+                          r"food\w*|foods|seafoods?|fisher\w*|fish\w*|marine|aqua\w*|meat\w*|frigor\w*|dairy|dairies|milk|lact\w*|"
+                          r"poultry|avicola|eggs?|honey|api\w*|casing\w*|gelatin\w*|collagen|pet\s?food|feed\w*|products?|processing|"
+                          r"packers?|packing|export\w*|import\w*|trading|enterprises?|international|holding\w*|farms?|plant|factory|"
+                          r"agro\w*|agri\w*|estancia|establecimiento|granja|matadero|slaughter\w*|abattoir|nutrition|biotech\w*|"
+                          r"pescados?|pesquera|mariscos|conservas?|alimentos|alimentaria|indústria|industria)\b", re.I)
+
+
+def person_like(name):
+    """An operator name that reads as a private person's (2-4 plain words, no company or trade word, Latin script)."""
+    n = fold(name)
+    w = n.replace(",", " ").split()
+    return (2 <= len(w) <= 4 and all(t.replace("-", "").replace("'", "").isalpha() and t.isascii() for t in w)
+            and not COMPANY_WORD.search(n))
 
 
 def _strings(o, keyrx, out):
@@ -359,6 +398,7 @@ def traces(limit=None):
     from .gleif_bulk import iso2_to_3
     ops, seen = {}, Counter()
     first_keys = None
+    today_s = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     secs = Counter()
     only_cc = [c for c in os.environ.get("BULK_COUNTRIES", "").split(",") if c]
     for cc in (only_cc or _countries()):
@@ -382,6 +422,8 @@ def traces(limit=None):
             secs[(chapter, code, sec_name)] += L.get("numberOfEstablishments") or 0
             if re.search(r"vessel", sec_name, re.I):
                 seen["vessel_lists_skipped"] += 1; continue  # a ship, not a company
+            if chapter not in ("Food", "Animal By-Products") or code in TRACES_SKIP:
+                seen["non_producer_lists_skipped"] += 1; continue  # live animals, germinal products, collectors, storage, trophies
             try:
                 e = fetch(f"{TRACES}/establishments/{cc}/{code}", pause=0.8, headers=TRACES_HDR, timeout=120)
                 ests = e.json() if e.status_code == 200 else []
@@ -389,17 +431,21 @@ def traces(limit=None):
                 log.warning("BULK traces %s/%s: %s", cc, code, type(ex).__name__); seen["list_errors"] += 1; continue
             for x in ests or []:
                 seen["establishments"] += 1
-                if first_keys is None or (limit and seen["establishments"] % 97 == 1):
-                    first_keys = sorted(x)
-                    log.info("BULK traces record sample: %s", json.dumps({k: x.get(k) for k in ("operatorActivityTypes", "associatedOperatorActivityTypes", "productTypes", "category1", "category2", "category3", "remarks", "validTo")}, ensure_ascii=False)[:900])
                 if x.get("confidential") or not x.get("operatorName"):
                     seen["confidential_skipped"] += 1; continue
+                acts_l = x.get("operatorActivityTypes") or []
+                if x.get("imoNumber") or any(a.get("fishingVessel") for a in acts_l if isinstance(a, dict)):
+                    seen["vessels_skipped"] += 1; continue
+                if str(x.get("validTo") or "9999")[:10] < today_s:
+                    seen["expired_skipped"] += 1; continue
+                if "particular" in str(x.get("approvalNumber") or "").lower() or person_like(x["operatorName"]):
+                    seen["person_like_skipped"] += 1; continue
                 status = []
                 _strings(x, re.compile(r"status", re.I), status)
                 if any(re.search(r"suspend|withdraw|delist|revoked|inactive", t, re.I) for t in status):
                     seen["suspended_skipped"] += 1; continue
-                acts = []
-                _strings(x, re.compile(r"activit", re.I), acts)
+                acts = [a.get("translation") for a in acts_l if isinstance(a, dict) and a.get("translation")]
+                species = [m.get("translation") for m in (x.get("remarks") or []) if isinstance(m, dict) and m.get("translation") and len(m["translation"]) < 40]
                 k = (cc, str(x.get("operatorId") or x["operatorName"]))
                 o = ops.get(k)
                 if o is None:
@@ -407,13 +453,16 @@ def traces(limit=None):
                     ref = a.get("cityReference") or {}
                     street = ((a.get("street") or {}).get("value") if isinstance(a.get("street"), dict) else a.get("street")) or ""
                     region = ((ref.get("region") or {}).get("translation") if isinstance(ref.get("region"), dict) else "") or ""
-                    o = ops[k] = {"name": x["operatorName"], "cc": cc, "city": ref.get("name") or "", "postal": ref.get("postalCode") or "",
-                                  "street": street, "region": region, "approvals": [], "sections": [], "chapters": [], "acts": []}
+                    o = ops[k] = {"name": re.sub(r"\s*[（(][^)）]*[)）]\s*$", "", x["operatorName"]).strip(), "cc": cc, "city": ref.get("name") or "", "postal": ref.get("postalCode") or "",
+                                  "street": street, "region": region, "approvals": [], "sections": [], "chapters": [], "acts": [], "species": []}
                 if x.get("approvalNumber") and x["approvalNumber"] not in o["approvals"]:
                     o["approvals"].append(x["approvalNumber"])
                 for lst_, v in ((o["sections"], sec_name), (o["chapters"], chapter)):
                     if v and v not in lst_:
                         lst_.append(v)
+                for t in species:
+                    if t not in o["species"]:
+                        o["species"].append(t)
                 for t in acts:
                     if t not in o["acts"] and len(t) < 80 and not re.fullmatch(r"(?i)active|valid|approved|yes|no|true|false|\d+", t):
                         o["acts"].append(t)
@@ -430,7 +479,7 @@ def traces(limit=None):
         out.append({
             "supplier": title_case(o["name"])[:150], "name_local": "", "country": iso2_to_3(cc) or cc, "province": title_case(o["region"]),
             "city": title_case(o["city"]), "industry": "; ".join(dict.fromkeys(o["chapters"]))[:150] or "Food of animal origin",
-            "products": "; ".join(o["sections"])[:300], "website": "", "email": "", "phone": "",
+            "products": "; ".join(o["sections"] + o["species"][:4])[:300], "website": "", "email": "", "phone": "",
             "address": ", ".join(x for x in (title_case(o["street"]), o["postal"], title_case(o["city"])) if x)[:250],
             "source": "EU TRACES approved establishment", "source_url": f"{TRACES_UI}/{cc}",
             "notable": False, "basis": f"EU-approved establishment list ({'; '.join(o['sections'][:3])}), approval {ap}; activities: {acts}"[:300],

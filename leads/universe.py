@@ -923,6 +923,13 @@ def build():
                         x["_site_given"] = True  # from the drop's own source page: kept even when the name is in another script
             if c.get("commodities"):
                 x["import_commodities"] = c["commodities"]
+            # official registers (leads/supplier_bulk.py): register id, export approval and the register's own role, as evidence
+            if c.get("legal_id") and not x["legal_id"]:
+                x["legal_id"] = c["legal_id"]
+            if c.get("export_evidence") and not x.get("_export_ev"):
+                x["_export_ev"] = c["export_evidence"][:120]
+            if c.get("role") in ("manufacturer", "producer"):
+                x["_role_reg"] = c["role"]
             if c.get("province") and not x.get("province"):
                 x["province"] = c["province"]
         log.info("imports: %d rows, %d new suppliers, %d merged into existing ones", len(drops), n_im_new, n_im_merged)
@@ -988,6 +995,7 @@ def build():
             # cross-border evidence: won tenders abroad, verified by the research worker, or a known producer
             "exports": ("won abroad" if any(c and wc and c != wc for c in x["buyer_c"]) else
                         "verified (research)" if "Research" in x["sources"] else
+                        x["_export_ev"] if x.get("_export_ev") else
                         "producer (Wikidata)" if "Wikidata products" in x["sources"] else
                         f"ships to the US ({x.get('ship12', 0)} shipments in 12 months)" if x.get("ship12") else
                         "shipped to the US (customs records)" if x.get("ship_total") else ""),
@@ -1016,6 +1024,8 @@ def build():
             out[-1]["trader"] = "yes"
         elif rr and "manufacturer" not in out[-1]["type"]:
             out[-1]["type"] = (out[-1]["type"] + "; " if out[-1]["type"] else "") + ("manufacturer" if rr == "manufacturer" else "producer") + " (read from its website)"
+        if x.get("_role_reg") and not rr and out[-1]["type"] == "works/services" and not x["works"]:
+            out[-1]["type"] = "goods supplier"  # an official register lists it as a manufacturer / producer (leads/supplier_bulk.py)
     n_ref = apply_refined(out)
     try:  # e-mail domain deliverability (leads/mx_check.py, company-check cache restored read-only): mx_ok / no_mx / parked / disposable
         from .mx_check import load_results, verdict_for
