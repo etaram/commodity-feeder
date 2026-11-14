@@ -38,7 +38,7 @@ WHEN = re.compile(r"(ihale|teklif|son\s+başvuru|son\s+teklif)[^<]{0,120}?(tarih
 class _Polite:
     def __init__(self):
         self.s = chain_session(BASE)   # the site omits its intermediate certificate: fetched via AIA, TLS still verified
-        self.s.headers.update({"Accept": "application/json", "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
+        self.s.headers.update({"Accept": "*/*", "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
                                "Referer": BASE + "/ilan/tum-ilanlar"})
         self.last, self.calls = 0.0, 0
 
@@ -87,6 +87,9 @@ def search(c, page, dmin, dmax):
     if page:
         body["keys"]["currentPage"] = [page + 1]
     r = c.post(SEARCH, data=json.dumps(body), headers={"Content-Type": "application/json"})
+    if r.status_code != 200 and page == 0:
+        log.info("Turkey ilan search HTTP %s headers %s", r.status_code,
+                 {k: v for k, v in r.headers.items() if k.lower() in ("server", "content-type", "x-cache", "via", "set-cookie")})
     if r.status_code != 200:
         raise RuntimeError(f"search HTTP {r.status_code}: {r.text[:120]!r}")
     return (r.json().get("result") or {})
