@@ -97,10 +97,13 @@ def search(c, page, dmin, dmax):
 
 def probe(c):
     """What the public, crawler-facing side (robots.txt sitemaps and notice pages) gives the runner."""
-    for u in [BASE + "/robots.txt", BASE + "/sitemap/daily-ads.xml", BASE + "/sitemap/ads.xml"]:
+    for u in [BASE + "/ilan/tum-ilanlar", BASE + "/ilan/kategori/ihale-duyurulari", BASE + "/ihale-duyurulari",
+              BASE + "/sitemap/categories.xml", BASE + "/sitemap/daily-categories.xml"]:
         try:
             r = c.get(u)
-            locs = re.findall(r"<loc>([^<]+)</loc>", r.text)
+            locs = re.findall(r"<loc>([^<]+)</loc>", r.text) + re.findall(r'href="(/ilan/\d+/[^"]+)"', r.text)
+            log.info("Turkey probe %s: app-shell? %s, ng-state %s, ihale mentions %d", u, "<app-root" in r.text,
+                     "ng-state" in r.text or "serverApp" in r.text, r.text.lower().count("ihale"))
             log.info("Turkey probe %s: HTTP %s %s %d bytes, %d locs, ihale locs %d, sample %s, head %r", u, r.status_code,
                      r.headers.get("content-type"), len(r.content), len(locs), sum("ihale" in x for x in locs),
                      [x for x in locs if "ihale" in x][:3] or locs[:3], " ".join(r.text[:200].split()))
@@ -109,7 +112,7 @@ def probe(c):
             locs = []
         for x in [x for x in locs if "ihale" in x][:2]:
             try:
-                rr = c.get(x)
+                rr = c.get(x if x.startswith("http") else BASE + x)
                 txt = clean(rr.text)
                 i = txt.lower().find("tarih")
                 log.info("Turkey probe page %s: HTTP %s %d bytes, has 'ihale' %s, near 'tarih': %r, ld+json %s",
