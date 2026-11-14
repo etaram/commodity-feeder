@@ -499,7 +499,7 @@ def write_digest(tenders, buyers):
 SHEET_COLS = ["score", "new", "deadline", "days_left", "stage", "sector", "country", "region", "buyer", "title_en",
               "est_value_usd", "source", "access", "notice_type", "contact", "link", "commodity", "title_original", "id",
               "decision", "ev_usd", "p_win_market", "est_bidders", "foreign_win_rate", "buyer_awards_12m",
-              "buyer_median_award_usd", "incumbent", "why", "quality"]
+              "buyer_median_award_usd", "incumbent", "why", "quality", "juice"]
 CHUNK, CHUNKS = 2000, 65  # 130k rows; ~2000 rows stay under the IMPORTDATA size limit, so nothing is trimmed
 
 
@@ -794,6 +794,13 @@ def merge(allow_shrink=False):
     except Exception as e:  # noqa: BLE001
         log.warning("archive skipped: %s", e)
     write("tenders_all.csv", tenders, cols)
+    import os as _os
+    if _os.environ.get("JUICE", "on") != "off":
+        try:
+            from . import juice
+            juice.annotate(tenders)   # what the notice does not say: incumbent, competition, price anchor, re-tender...
+        except Exception as e:  # noqa: BLE001
+            log.warning("juice failed (tenders written without it): %s", str(e)[:200])
     write_sheet_chunks(tenders)
     try:
         from .translate import to_hebrew

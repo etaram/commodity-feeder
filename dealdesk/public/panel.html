@@ -649,6 +649,10 @@ a.lnk{white-space:nowrap}
 .bt-str-h b{font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}.bt-str-h .lv{font-weight:600;color:var(--ink)}
 .bt-str-bar{display:block;height:6px;border-radius:3px;background:var(--soft);margin:4px 0 6px;overflow:hidden}.bt-str-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
 .bt-str-f{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted)}.bt-geos .flag{margin-inline-end:2px}
+.juice .jc{border:1px solid var(--line);border-inline-start:3px solid var(--accent);border-radius:10px;padding:9px 12px;margin-top:8px;background:var(--panel)}
+.juice .jc.s1{border-inline-start-color:var(--line)}.juice .jc.s3{border-inline-start-color:var(--bad)}
+.juice .jk{display:flex;justify-content:space-between;align-items:center;gap:8px}.juice .jst{color:var(--accent);font-size:11px;letter-spacing:1px}
+.juice .jt{font-weight:600;margin-top:4px;line-height:1.45}.juice .js{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.45}.juice .js b{color:var(--ink);font-weight:600}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -1572,7 +1576,7 @@ document.addEventListener("click", async e => {
 function tenderShare(r) {
   return [`*${plain(tTitle(r))}*`, `${plain(tr(r.buyer))} · ${r.country}${r.sector ? " · " + r.sector : ""}`,
     money(r.est_value_usd) ? `${t("est_value")}: ${money(r.est_value_usd)}` : "", r.deadline ? `${t("deadline")}: ${r.deadline} (${r.days_left} ${t("days_word")})` : "",
-    r.decision ? `Sinder: ${r.decision}` : "", r.link ? `${t("notice")}: ${r.link}` : "", `${t("deal_file")}: ${SITE}/deal/${encodeURIComponent(r.id)}`].filter(Boolean).join("\n");
+    r.decision ? `Sinder: ${r.decision}` : "", juiceOf(r)[0] ? `${mt("Worth knowing", "שווה לדעת")}: ${juiceOf(r)[0][LANG === "he" ? 2 : 3]}` : "", r.link ? `${t("notice")}: ${r.link}` : "", `${t("deal_file")}: ${SITE}/deal/${encodeURIComponent(r.id)}`].filter(Boolean).join("\n");
 }
 function intelShare(x) {
   const H = LANG === "he" ? (x.headline_he || x.headline_en) : (x.headline_en || x.headline_he), W = LANG === "he" ? (x.what_it_means_he || x.what_it_means_en) : (x.what_it_means_en || x.what_it_means_he);
@@ -1904,6 +1908,7 @@ function openTender(r, keep) {
       ${r.contact ? `<dt>${esc(t("contact"))}</dt><dd dir="ltr">${esc(r.contact)}</dd>` : ""}
       <dt>${esc(t("notice"))}</dt><dd>${link(r.link, t("open_notice"))}</dd>
     </dl>
+    ${juiceHtml(r)}
     ${tenderDetailsHtml(r)}
     ${V2() ? tenderSteps(r, inP) : `<div class="actions">
       <button class="primary" type="button" id="a-sum">${esc(t("a_sum"))}</button>
@@ -1982,6 +1987,19 @@ function tdVal(v, depth = 0) {
     return Object.entries(v).filter(([, x]) => x !== "" && x != null).map(([k, x]) => { const l = (TD_KEYS[k] || [k, k])[LANG === "he" ? 1 : 0]; return (l ? `<span class="sub">${esc(l)}:</span> ` : "") + tdVal(x, depth + 1); }).join(depth ? ", " : "<br>");
   }
   return esc(String(v));
+}
+/* what the notice does not say (leads/juice.py): patterns found in the buyer's award history and our records */
+const JUICE_K = { incumbent: ["Incumbent", "ספק מכהן"], low_competition: ["Competition", "תחרות"], price_anchor: ["Price anchor", "עוגן מחיר"], foreign: ["Foreign winners", "זוכים זרים"],
+  retender: ["Re-tender", "מכרז חוזר"], amended: ["Amended", "תיקון"], short_window: ["Short window", "חלון קצר"], funded: ["Funder", "מממן"], cadence: ["Frequent buyer", "קונה תדיר"],
+  big_vs_usual: ["Unusual size", "גודל חריג"], integrity: ["Integrity", "יושרה"] };
+function juiceOf(r) { try { return r.juice ? JSON.parse(r.juice) : []; } catch (e) { return []; } }
+function juiceHtml(r) {
+  const J = juiceOf(r); if (!J.length) return "";
+  const he = LANG === "he";
+  return `<div class="section juice"><h3>${esc(mt("What the notice does not say", "מה שלא כתוב במכרז"))}</h3>
+    <p class="sub">${esc(mt("Found in this buyer's award history and our records, not in the notice. Check before relying on it.", "נמצא בהיסטוריית הזכיות של הקונה וברשומות שלנו, לא בהודעה עצמה. לבדוק לפני שמסתמכים."))}</p>
+    ${J.map(([k, st, h, e, sh, se]) => `<div class="jc s${st}"><div class="jk"><span class="pill">${esc(JUICE_K[k] ? mt(JUICE_K[k][0], JUICE_K[k][1]) : k)}</span><span class="jst" title="${esc(mt("strength", "חוזק"))}">${"●".repeat(st)}${"○".repeat(3 - st)}</span></div>
+      <div class="jt" dir="auto">${esc(he ? h : e)}</div>${(he ? sh : se) ? `<div class="js" dir="auto"><b>${esc(mt("So what: ", "מה עושים עם זה: "))}</b>${esc(he ? sh : se)}</div>` : ""}</div>`).join("")}</div>`;
 }
 function tenderDetailsHtml(r) {
   let d = null;
