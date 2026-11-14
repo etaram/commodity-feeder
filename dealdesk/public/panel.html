@@ -653,6 +653,13 @@ a.lnk{white-space:nowrap}
 .juice .jc.s1{border-inline-start-color:var(--line)}.juice .jc.s3{border-inline-start-color:var(--bad)}
 .juice .jk{display:flex;justify-content:space-between;align-items:center;gap:8px}.juice .jst{color:var(--accent);font-size:11px;letter-spacing:1px}
 .juice .jt{font-weight:600;margin-top:4px;line-height:1.45}.juice .js{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.45}.juice .js b{color:var(--ink);font-weight:600}
+.pw-sec{margin:14px 0 6px;font-size:14px}.pw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.pw-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-width:0}
+.pw-h{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.pw-h b{font-size:14.5px}.pw-h .sub{font-size:11px}
+.pw-v{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-top:4px}.pw-v .n{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}.pw-v .u{font-size:12px;color:var(--muted)}
+.pw-y{margin-inline-start:auto;font-size:13px}.pw-y small{color:var(--muted);font-weight:400}
+.pw-card .spk{display:block;width:100%;height:28px;margin:4px 0}
+.pw-f{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--muted)}.pw-live{font-size:11.5px;color:var(--info);margin-top:5px}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -1095,12 +1102,13 @@ const RANGES = {
   attention: [LE, "'Attention'!A1:G400"],
   biztrends: [LE, "'Biz Trends'!A1:S700"],
   ais: [LE, "'AIS Pulse'!A1:L40"],
+  portwatch: [LE, "'Port Watch'!A1:P60"],
   exempt: [LE, "'Exempt Buys'!A1:Q4001"],
   ilex: [LE, "'IL Exemption Contracts'!A1:R3000"],
   integrity: [LE, "'Integrity'!A1:N300"],
   suppliers: [SU, "'Suppliers'!A1:AJ6001"],
 };
-const OPTIONAL = new Set(["plays", "fx", "attention", "biztrends", "ais", "grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
+const OPTIONAL = new Set(["portwatch", "plays", "fx", "attention", "biztrends", "ais", "grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
 const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
 const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
 const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60, g: 60 }, he: new Map() };
@@ -1597,7 +1605,7 @@ const errText = (e, s) => e?.code === "not_approver" ? (LANG === "he" ? "ההו�
 const SUPS = () => SHEETS + " (" + t("sup_db") + ")";
 
 // TODO(remove after the next server deploy, before the repository goes private): direct public reads
-const RAW_CSV = { biztrends: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/biz_trends.csv", ais: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/ais_pulse.csv" };
+const RAW_CSV = { biztrends: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/biz_trends.csv", ais: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/ais_pulse.csv", portwatch: "https://raw.githubusercontent.com/etaram/commodity-feeder/main/data/leads/portwatch.csv" };
 function csvRows(t) {   // RFC 4180: quoted fields, doubled quotes, newlines inside quotes
   const out = []; let row = [], f = "", q = false;
   for (let i = 0; i < t.length; i++) { const c = t[i];
@@ -2232,18 +2240,18 @@ function worldSignals() {
 }
 /* main sea lanes (rough sea paths, lon/lat) and the AIS checkpoints on each; activity = ships counted at its checkpoints */
 const LANES = [
-  { id: "ae", at: [66, 9], en: "Asia - Europe via Suez", he: "אסיה - אירופה דרך סואץ", z: ["Shanghai (Yangshan)", "Singapore Strait", "Bab el-Mandeb", "Suez Canal", "Gibraltar", "Rotterdam"],
+  { id: "ae", pw: ["Malacca Strait", "Bab el-Mandeb Strait", "Suez Canal", "Gibraltar Strait"], at: [66, 9], en: "Asia - Europe via Suez", he: "אסיה - אירופה דרך סואץ", z: ["Shanghai (Yangshan)", "Singapore Strait", "Bab el-Mandeb", "Suez Canal", "Gibraltar", "Rotterdam"],
     p: [[122.3, 30.6], [121, 25], [114, 15], [109, 8], [104.5, 1.6], [98, 5.5], [88, 5.5], [78, 6], [62, 13], [51, 12.6], [43.4, 12.7], [40, 17], [37, 22.5], [33.8, 27.8], [32.45, 30.5], [32.3, 31.6], [27, 33.8], [20, 35.5], [12, 37.4], [5, 37.6], [-2, 36.4], [-5.6, 35.95], [-9.8, 37.5], [-10, 43], [-6.5, 48.2], [-1.5, 50], [2.5, 51.4], [4, 51.98]] },
-  { id: "em", at: [22, 33.5], en: "Eastern Mediterranean", he: "מזרח הים התיכון", z: ["Bosphorus", "Haifa", "Ashdod"],
+  { id: "em", pw: ["Bosporus Strait"], at: [22, 33.5], en: "Eastern Mediterranean", he: "מזרח הים התיכון", z: ["Bosphorus", "Haifa", "Ashdod"],
     p: [[29.02, 41.1], [26.4, 40.1], [25.5, 38.2], [26.5, 35.6], [30, 33.6], [33.5, 32.6], [34.62, 31.82]] },
-  { id: "gf", at: [63, 21], en: "Gulf - India", he: "המפרץ הפרסי - הודו", z: ["Jebel Ali", "Strait of Hormuz", "Mumbai (JNPT)"],
+  { id: "gf", pw: ["Strait of Hormuz"], at: [63, 21], en: "Gulf - India", he: "המפרץ הפרסי - הודו", z: ["Jebel Ali", "Strait of Hormuz", "Mumbai (JNPT)"],
     p: [[55, 25.15], [56.5, 26.4], [58.5, 24.2], [62, 21.5], [67, 19.5], [72.8, 18.9]] },
-  { id: "cp", at: [60, -26], en: "Cape of Good Hope route", he: "מסלול כף התקווה הטובה", z: ["Durban"],
+  { id: "cp", pw: ["Cape of Good Hope"], at: [60, -26], en: "Cape of Good Hope route", he: "מסלול כף התקווה הטובה", z: ["Durban"],
     p: [[104.5, 1.6], [96, -2], [80, -10], [62, -22], [45, -31], [31.2, -29.9], [24, -35.5], [17, -35], [11, -27], [5, -14], [-6, -2], [-16, 9], [-19, 20], [-14, 31], [-5.6, 35.95]] },
   { id: "wa", at: [-6, 1], en: "West Africa", he: "מערב אפריקה", z: ["Lagos (Apapa, Lekki)"], p: [[-16, 9], [-8, 4], [3.6, 6.2]] },
-  { id: "ea", at: [50, 3], en: "Red Sea - East Africa", he: "ים סוף - מזרח אפריקה", z: ["Djibouti", "Mombasa"], p: [[43.4, 12.7], [44, 11.5], [51.5, 11.5], [50, 4], [44, -1.5], [39.8, -4.1]] },
+  { id: "ea", pw: ["Bab el-Mandeb Strait"], at: [50, 3], en: "Red Sea - East Africa", he: "ים סוף - מזרח אפריקה", z: ["Djibouti", "Mombasa"], p: [[43.4, 12.7], [44, 11.5], [51.5, 11.5], [50, 4], [44, -1.5], [39.8, -4.1]] },
   { id: "sa", at: [-33, -6], en: "South America - Europe", he: "דרום אמריקה - אירופה", z: ["Santos"], p: [[-46.3, -24.1], [-40, -21], [-34.5, -8], [-28, 2], [-22, 14], [-16, 26], [-9, 34.5], [-5.6, 35.95]] },
-  { id: "pa", at: [-55, 27], en: "Panama - Atlantic", he: "פנמה - האוקיינוס האטלנטי", z: ["Panama Canal"], p: [[-79.7, 9.4], [-77, 13], [-72, 17.5], [-65, 21], [-50, 30], [-30, 38], [-12, 44], [-6.5, 48.2]] },
+  { id: "pa", pw: ["Panama Canal"], at: [-55, 27], en: "Panama - Atlantic", he: "פנמה - האוקיינוס האטלנטי", z: ["Panama Canal"], p: [[-79.7, 9.4], [-77, 13], [-72, 17.5], [-65, 21], [-50, 30], [-30, 38], [-12, 44], [-6.5, 48.2]] },
 ];
 /* map layers: what the countries are shaded by, plus overlays the viewer can switch on and off */
 const MAP_MODES = [["all", "All signals", "כל האותות"], ["trends", "Business trends", "טרנדים עסקיים"], ["imports", "Import surges (UN Comtrade)", "זינוק ביבוא (UN Comtrade)"],
@@ -2262,7 +2270,13 @@ function layerItems(mode) {
 }
 function laneStats(sig) {
   const by = {}; for (const s of sig) if (s.zone) by[s.zone] = s;
-  return LANES.map(l => { const zs = l.z.map(z => by[z]).filter(Boolean), ok = zs.filter(z => z.t !== "shipnod");
+  const PW = Object.fromEntries((S.data.portwatch || []).filter(r => r.kind === "chokepoint").map(r => [r.name, r]));
+  return LANES.map(l => {
+    const pws = (l.pw || []).map(n => PW[n]).filter(Boolean);
+    if (pws.length) { const n = Math.round(pws.reduce((a, r) => a + num(r.avg7), 0)), wy = pws.filter(r => r.chg_yoy !== "");
+      const chg = wy.length ? wy.reduce((a, r) => a + num(r.chg_yoy) * num(r.avg7), 0) / Math.max(1, wy.reduce((a, r) => a + num(r.avg7), 0)) : null;
+      return { ...l, n, chg, stop: null, cov: pws.length, tot: l.pw.length, hot: chg != null && chg <= -25, pwd: true, date: pws[0].date }; }
+    const zs = l.z.map(z => by[z]).filter(Boolean), ok = zs.filter(z => z.t !== "shipnod");
     const n = ok.reduce((a, z) => a + (z.vessels || 0), 0), wc = ok.filter(z => z.chg != null);
     const chg = wc.length ? wc.reduce((a, z) => a + z.chg * z.vessels, 0) / Math.max(1, wc.reduce((a, z) => a + z.vessels, 0)) : null;
     const stop = ok.length ? Math.round(100 * ok.reduce((a, z) => a + (z.stopped || 0), 0) / Math.max(1, n)) : null;
@@ -2317,21 +2331,21 @@ function worldMapSvg(sig) {
       : (c.td.length ? key("g", `${esc(mt("imports", "יבוא"))} <bdi dir="ltr">+${c.top.toFixed(0)}%</bdi>`) : "") + (c.tr.length ? key("y", `${c.tr.length} ${esc(mt(c.tr.length > 1 ? "trends" : "trend", c.tr.length > 1 ? "טרנדים" : "טרנד"))}`) : "");
     lab.push(`<div class="ml c" data-pri="${i}" style="left:${pX(c.lon)};top:${pY(c.lat)}" dir="${he ? "rtl" : "ltr"}"><b>${esc(cn(c.a2))}</b><span class="mvs">${parts}</span></div>`); });
   for (const l of lanes.filter(l => l.cov)) { const m = l.at || l.p[Math.floor(l.p.length / 2)];
-    lab.push(`<div class="ml ln" data-pri="${-1 + lanes.indexOf(l) / 10}" style="left:${pX(m[0])};top:${pY(m[1])}" dir="${he ? "rtl" : "ltr"}"><b>${esc(he ? l.he : l.en)}</b><span class="mvs">${key(l.hot ? "r" : "b", `<bdi dir="ltr">${l.n}</bdi> ${esc(mt("ships", "אוניות"))}${l.chg != null ? ` <bdi dir="ltr">${pctTxt(l.chg)}</bdi>` : ""}`)}</span></div>`); }
+    lab.push(`<div class="ml ln" data-pri="${-1 + lanes.indexOf(l) / 10}" style="left:${pX(m[0])};top:${pY(m[1])}" dir="${he ? "rtl" : "ltr"}"><b>${esc(he ? l.he : l.en)}</b><span class="mvs">${key(l.hot ? "r" : "b", `<bdi dir="ltr">${l.n}</bdi> ${esc(l.pwd ? mt("ships a day", "אוניות ביום") : mt("ships", "אוניות"))}${l.chg != null ? ` · <bdi dir="ltr">${pctTxt(l.chg)}</bdi> ${esc(l.pwd ? mt("vs last year", "מול שנה שעברה") : "")}` : ""}`)}</span></div>`); }
   return `<div class="mx-map-sc" dir="ltr"><div class="mx-canvas"><svg viewBox="-1 -1 ${W} ${H}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><g class="land">${land}</g>${MAPL.lanes ? lanesSvg : ""}${dots}${MAPL.ports ? ships : ""}</svg><div class="mx-ov">${MAPL.labels ? lab.filter(x => MAPL.lanes || !x.includes('class="ml ln"')).join("") : ""}</div></div></div>`;
 }
 function mapLegend() {
   return `<div class="mx-leg mx-leg2"><span class="seq">${esc((MAP_MODES.find(m => m[0] === MAPL.mode) || MAP_MODES[0])[LANG === "he" ? 2 : 1])}${MAPL.mode === "risk" ? esc(mt(" (darker = riskier)", " (כהה = סיכון גבוה)")) : ""} <i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i><i class="s5"></i> ${esc(mt("few to many", "מעט עד הרבה"))}</span>
-    <span><i class="lk"></i>${esc(mt("Sea lane, width = ships at its AIS checkpoints", "נתיב שיט, עובי = אוניות בנקודות המדידה (AIS)"))}</span>
-    <span><i class="lk hot"></i>${esc(mt("More ships waiting than usual", "יותר אוניות ממתינות מהרגיל"))}</span>
+    <span><i class="lk"></i>${esc(mt("Sea lane, width = ships a day (IMF PortWatch; live AIS where missing)", "נתיב שיט, עובי = אוניות ביום (IMF PortWatch; AIS חי איפה שחסר)"))}</span>
+    <span><i class="lk hot"></i>${esc(mt("Traffic down 25%+ on last year, or more ships waiting", "תנועה ירדה 25%+ מול שנה שעברה, או יותר אוניות ממתינות"))}</span>
     <span><i class="lk nod"></i>${esc(mt("No AIS coverage", "אין כיסוי AIS"))}</span>
     <span><i class="kd"></i>${esc(mt("Port or strait checkpoint", "נקודת מדידה: נמל או מצר"))}</span></div>`;
 }
 /* drop labels that would cover a more important one; try the other side first */
 function mapSummary(sig) {
   const n = new Set(sig.filter(s => !s.t.startsWith("ship")).map(s => s.a2)).size, ls = laneStats(sig).filter(l => l.cov).sort((a, b) => b.n - a.n)[0];
-  return mt(`${sig.filter(s => !s.t.startsWith("ship")).length} signals in ${n} countries` + (ls ? ` · busiest lane: ${ls.en}, ${ls.n} ships at its checkpoints` : ""),
-    `${sig.filter(s => !s.t.startsWith("ship")).length} אותות ב-${n} מדינות` + (ls ? ` · הנתיב העמוס: ${ls.he}, ${ls.n} אוניות בנקודות המדידה` : ""));
+  return mt(`${sig.filter(s => !s.t.startsWith("ship")).length} signals in ${n} countries` + (ls ? ` · busiest lane: ${ls.en}, ${ls.n} ${ls.pwd ? "ships a day" : "ships at its checkpoints"}` : ""),
+    `${sig.filter(s => !s.t.startsWith("ship")).length} אותות ב-${n} מדינות` + (ls ? ` · הנתיב העמוס: ${ls.he}, ${ls.n} ${ls.pwd ? "אוניות ביום" : "אוניות בנקודות המדידה"}` : ""));
 }
 function placeMapLabels() {
   const ov = document.querySelector(".mx-ov"); if (!ov) return;
@@ -2427,18 +2441,38 @@ function renderTerritories(sig) {
     document.querySelectorAll(".mx-map .mk").forEach(m => m.classList.toggle("dim", !!TERR_SEL && m.dataset.reg !== TERR_SEL));
     if (TERR_SEL) $(".mx-map")?.scrollIntoView({ behavior: "smooth", block: "nearest" }); });
 }
+const PW_HE = { "Suez Canal": "תעלת סואץ", "Bab el-Mandeb Strait": "באב אל-מנדב", "Strait of Hormuz": "מצרי הורמוז", "Panama Canal": "תעלת פנמה", "Malacca Strait": "מצר מלקה (סינגפור)",
+  "Bosporus Strait": "הבוספורוס", "Gibraltar Strait": "גיברלטר", "Cape of Good Hope": "כף התקווה הטובה", "Dover Strait": "מצר דובר", "Taiwan Strait": "מצר טייוואן" };
+/* shipping: IMF PortWatch (satellite AIS, daily, about a week behind) for every chokepoint and port, with live AIS
+   (terrestrial, now) added where the free feed sees the area */
+function spark(series, col) {
+  const v = String(series || "").split(" ").map(Number).filter(x => isFinite(x)); if (v.length < 2) return "";
+  const mx = Math.max(...v, 1), w = 120, h = 28, X = i => (i * w / (v.length - 1)).toFixed(1), Y = x => (h - 2 - (h - 4) * x / mx).toFixed(1);
+  return `<svg class="spk" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round" points="${v.map((x, i) => X(i) + "," + Y(x)).join(" ")}"/></svg>`;
+}
 function renderShipPulse() {
   const el = $("#mx-ship"); if (!el) return;
-  const rows = (S.data.ais || []).filter(r => r.zone);
-  if (!rows.length) { el.innerHTML = ""; return; }
-  const nm = r => LANG === "he" ? SHIP_HE[r.zone] || r.zone : r.zone;
-  const chg = v => v === "" || v === undefined ? "" : `<span class="num" style="color:${num(v) > 15 ? "var(--bad)" : num(v) < -15 ? "var(--good)" : "var(--muted)"}">${num(v) > 0 ? "+" : ""}${num(v).toFixed(0)}%</span>`;
-  const card = r => `<div class="mx-pk"><b style="font-size:16px">${esc(nm(r))}</b><span>${r.coverage === "low" ? esc(mt("low AIS coverage", "כיסוי AIS חלש")) : `${esc(r.vessels)} ${esc(mt("vessels", "כלי שיט"))} · ${esc(r.stopped)} ${esc(mt("stopped", "עומדים"))} ${chg(r.chg_stopped_pct)}`}</span></div>`;
-  const ch = rows.filter(r => r.kind === "chokepoint"), po = rows.filter(r => r.kind === "port");
-  el.innerHTML = `<div class="bt"><div class="bt-head"><div><h2>${esc(mt("Shipping pulse: chokepoints and ports", "דופק השילוח: נתיבים ונמלים"))}</h2>
-    <div class="sub">${esc(mt(`Live AIS positions in a ${rows[0].minutes}-minute window at ${rows[0].sampled_utc} UTC; red = more vessels stopped than the 7-day average (congestion).`, `מיקומי AIS חיים בחלון של ${rows[0].minutes} דקות, ${rows[0].sampled_utc} UTC; אדום = יותר כלי שיט עומדים מהממוצע השבועי (עומס).`))}</div></div></div>
-    <h3 style="margin:12px 0 6px;font-size:14px">${esc(mt("Chokepoints", "נתיבי מפתח"))}</h3><div class="mx-pulse">${ch.map(card).join("")}</div>
-    <h3 style="margin:12px 0 6px;font-size:14px">${esc(mt("Ports", "נמלים"))}</h3><div class="mx-pulse">${po.map(card).join("")}</div></div>`;
+  const pw = (S.data.portwatch || []).filter(r => r.name), ais = (S.data.ais || []).filter(r => r.zone);
+  if (!pw.length && !ais.length) { el.innerHTML = ""; return; }
+  const he = LANG === "he", pct = v => v === "" || v === undefined || v === null ? "" : `<bdi dir="ltr">${num(v) > 0 ? "+" : ""}${num(v).toFixed(0)}%</bdi>`;
+  const cls = v => v === "" || v === undefined ? "fl" : num(v) > 5 ? "up" : num(v) < -5 ? "dn" : "fl";
+  const aisOf = z => ais.find(a => a.zone === z && a.coverage !== "low");
+  const AISZ = { "Suez Canal": "Suez Canal", "Bab el-Mandeb Strait": "Bab el-Mandeb", "Strait of Hormuz": "Strait of Hormuz", "Panama Canal": "Panama Canal", "Malacca Strait": "Singapore Strait", "Bosporus Strait": "Bosphorus", "Gibraltar Strait": "Gibraltar" };
+  const live = z => { const a = aisOf(z); return a ? `<div class="pw-live">${esc(mt("Live now", "עכשיו (AIS חי)"))}: ${esc(a.vessels)} ${esc(mt("ships", "אוניות"))}, ${num(a.vessels) ? Math.round(100 * num(a.stopped) / num(a.vessels)) : 0}% ${esc(mt("stopped", "עומדות"))}</div>` : ""; };
+  const card = (r, title, unit, extra, zone) => `<div class="pw-card"><div class="pw-h"><b>${esc(title)}</b><span class="sub">${esc(mt("to", "עד"))} ${esc(r.date)}</span></div>
+      <div class="pw-v"><span class="n">${esc(num(r.avg7).toFixed(0))}</span><span class="u">${esc(unit)}</span><span class="${cls(r.chg_yoy)} pw-y">${pct(r.chg_yoy)} <small>${esc(mt("vs last year", "מול שנה שעברה"))}</small></span></div>
+      ${spark(r.series, "var(--info)")}<div class="pw-f"><span>${esc(mt("week", "שבוע"))} <span class="${cls(r.chg_wow)}">${pct(r.chg_wow)}</span></span><span>${esc(mt("90 days", "90 יום"))} <span class="${cls(r.chg_90)}">${pct(r.chg_90)}</span></span>${extra}</div>${live(zone)}</div>`;
+  const ch = pw.filter(r => r.kind === "chokepoint"), po = pw.filter(r => r.kind === "port");
+  const tk = r => r.tanker_pct !== "" ? `<span>${esc(mt("tankers", "מכליות"))} ${esc(r.tanker_pct)}% · ${esc(mt("containers", "מכולות"))} ${esc(r.container_pct)}% · ${esc(mt("bulk", "צובר"))} ${esc(r.bulk_pct)}%</span>` : "";
+  const kt = v => num(v) >= 1e6 ? (num(v) / 1e6).toFixed(1) + "M" : Math.round(num(v) / 1e3) + "K";
+  const io = r => r.imports_t7 !== "" ? `<span>${esc(mt("7 days: in", "7 ימים: יבוא"))} <bdi dir="ltr">${kt(r.imports_t7)}</bdi> ${esc(mt("t, out", "ט', יצוא"))} <bdi dir="ltr">${kt(r.exports_t7)}</bdi> ${esc(mt("t", "ט'"))}</span>` : "";
+  const aisOnly = ais.filter(a => a.kind === "port" && a.coverage !== "low" && !po.some(p => p.zone === a.zone));
+  el.innerHTML = `<div class="bt"><div class="bt-head"><div><h2>${esc(mt("Shipping pulse: sea lanes and ports", "דופק השילוח: נתיבים ונמלים"))}</h2>
+    <div class="sub">${esc(pw.length ? mt("Ships per day, 7-day average, from IMF PortWatch (satellite AIS; published about a week behind), compared with last year to remove the season. Live AIS where the free feed sees the area.", "אוניות ביום, ממוצע 7 ימים, מ-IMF PortWatch (AIS לווייני; מתפרסם באיחור של כשבוע), בהשוואה לשנה שעברה כדי לנטרל עונתיות. ונתון AIS חי איפה שהשירות החינמי מכסה.") : mt("Live AIS only: IMF PortWatch data arrive with the next refresh.", "AIS חי בלבד: נתוני IMF PortWatch יגיעו ברענון הבא."))}</div></div></div>
+    ${ch.length ? `<h3 class="pw-sec">${esc(mt("Sea lanes and straits", "נתיבים ומצרים"))}</h3><div class="pw-grid">${ch.map(r => card(r, he ? PW_HE[r.name] || r.name : r.name, mt("ships a day", "אוניות ביום"), tk(r), AISZ[r.name])).join("")}</div>` : ""}
+    ${po.length ? `<h3 class="pw-sec">${esc(mt("Ports", "נמלים"))}</h3><div class="pw-grid">${po.map(r => card(r, he ? SHIP_HE[r.zone] || r.name : r.zone || r.name, mt("port calls a day", "כניסות ביום"), io(r), r.zone)).join("")}</div>` : ""}
+    ${!pw.length || aisOnly.length ? `<div class="pw-grid" style="margin-top:8px">${(pw.length ? aisOnly : ais.filter(a => a.coverage !== "low")).map(a => `<div class="pw-card"><div class="pw-h"><b>${esc(he ? SHIP_HE[a.zone] || a.zone : a.zone)}</b><span class="sub">AIS ${esc(a.sampled_utc || "")}</span></div><div class="pw-v"><span class="n">${esc(a.vessels)}</span><span class="u">${esc(mt("ships now", "אוניות עכשיו"))}</span></div><div class="pw-f"><span>${num(a.vessels) ? Math.round(100 * num(a.stopped) / num(a.vessels)) : 0}% ${esc(mt("stopped", "עומדות"))}</span></div></div>`).join("")}</div>` : ""}
+    <p class="note" style="margin-top:8px">${esc(mt("Source: IMF PortWatch (IMF and University of Oxford) and AISStream.", "מקור: IMF PortWatch (קרן המטבע והאוניברסיטה של אוקספורד) ו-AISStream."))}</p></div>`;
 }
 /* the macro opening (owner, 14 Nov: no currencies here; visual): the three hottest business stories as large cards,
    a heat bar of today's themes, and where the stories come from. */
@@ -2455,16 +2489,16 @@ function renderMacroHero() {
   const tot = cnt.reduce((a, x) => a + x[1], 0) || 1;
   const sig = worldSignals();
   el.innerHTML = `<div class="mx-hero"><h1>${esc(mt("The world today", "העולם היום"))}</h1><div class="mx-date">${esc(d)} · ${esc(mt("what is moving business and trade right now", "מה מזיז עכשיו את העסקים והסחר בעולם"))}</div>
+    ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("World signal map: trends, import surges and sea lanes", "מפת האותות העולמית: טרנדים, זינוקי יבוא ונתיבי שיט"))}</b><span class="sub">${esc(mapSummary(sig))}</span></div>${mapControls()}${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
+      <div id="mx-det" class="mx-det" hidden></div>
+      ${mapLegend()}</div>` : ""}
     ${top3.length ? `<div class="mx-top">${top3.map((r, i) => `<a class="mx-story${i === 0 ? " lead" : ""}" href="${esc(url(r.url) || "#")}" target="_blank" rel="noopener" style="--c:${col(tg(r)[0])}">
       <span class="mx-k">${tg(r).slice(0, 2).map(k => esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)).join(" · ")}</span>
       <b dir="auto">${esc(ttl(r))}</b>${why(r) ? `<span class="mx-why" dir="auto">${esc(why(r))}</span>` : ""}
       <span class="mx-src">${btFlag(r)}${esc(String(r.platform || "").startsWith("Google Trends") ? mt("Searches in ", "חיפושים ב") + (r.world || "") : r.platform)}</span></a>`).join("")}</div>` : ""}
     ${cnt.length ? `<div class="mx-heat-h">${esc(mt("Today's themes", "הנושאים של היום"))}</div><div class="mx-heat">${cnt.map(([k, v]) => `<i style="flex:${v};background:${col(k)}" title="${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)}: ${v}"></i>`).join("")}</div>
       <div class="mx-heat-l">${cnt.map(([k, v]) => `<span><i style="background:${col(k)}"></i>${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>` : ""}
-    ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("World signal map: trends, import surges and sea lanes", "מפת האותות העולמית: טרנדים, זינוקי יבוא ונתיבי שיט"))}</b><span class="sub">${esc(mapSummary(sig))}</span></div>${mapControls()}${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
-      <div id="mx-det" class="mx-det" hidden></div>
-      ${laneStrip(sig)}
-      ${mapLegend()}</div>` : ""}
+
   </div>`;
   MAPSIG = sig; bindMap(); bindMapControls(); renderTerritories(sig); requestAnimationFrame(() => { placeMapLabels(); mapCentre(); });
   if (!window.__mxRs) { window.__mxRs = 1; let t; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(placeMapLabels, 150); }); }
