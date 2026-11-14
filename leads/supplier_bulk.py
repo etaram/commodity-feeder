@@ -143,7 +143,15 @@ def title_case(s):
 DENUE_URL = "https://www.inegi.org.mx/contenidos/masiva/denue/denue_00_31-33_csv.zip"
 DENUE_BANDS = {"51 a 100 personas": "51-100", "101 a 250 personas": "101-250", "251 y más personas": "251+",
                "251 y mas personas": "251+"}
-MX_STATE = {}
+SCIAN3 = {"311": "Food manufacturing", "312": "Beverage and tobacco product manufacturing", "313": "Textile mills",
+          "314": "Textile product mills", "315": "Apparel manufacturing", "316": "Leather and allied product manufacturing",
+          "321": "Wood product manufacturing", "322": "Paper manufacturing", "323": "Printing and related support activities",
+          "324": "Petroleum and coal products manufacturing", "325": "Chemical manufacturing", "326": "Plastics and rubber products manufacturing",
+          "327": "Nonmetallic mineral product manufacturing (cement, glass, ceramics)", "331": "Primary metal manufacturing (steel, aluminium, copper)",
+          "332": "Fabricated metal product manufacturing", "333": "Machinery manufacturing",
+          "334": "Computer and electronic product manufacturing", "335": "Electrical equipment, appliance and component manufacturing",
+          "336": "Transportation equipment manufacturing (vehicles, parts)", "337": "Furniture and related product manufacturing",
+          "339": "Miscellaneous manufacturing (medical equipment and supplies, other)"}
 MX_FORM = re.compile(r"\b(S\.?\s?A\.?|S\.?\s?A\.?\s?P\.?\s?I\.?|S\.?\s?A\.?\s?B\.?|S\.?\s?DE\s?R\.?\s?L\.?|S\.?\s?R\.?\s?L\.?|S\.?\s?C\.?|A\.?\s?C\.?|"
                      r"S\.?\s?P\.?\s?R\.?|S\.?\s?C\.?\s?L\.?|S\.?\s?C\.?\s?S\.?|SOCIEDAD|COOPERATIVA|S\.?\s?DE\s?S\.?\s?S\.?|INC\.?|LLC|LTD|"
                      r"C\.?\s?V\.?|GMBH|CORPORATION|CORP\.?|COMPANY)\b", re.I)
@@ -207,7 +215,7 @@ def denue(limit=None):
         out.append({
             "supplier": title_case(f["legal"])[:150], "name_local": title_case(b.get("nom_estab", ""))[:150], "country": "MEX",
             "province": title_case(b.get("entidad", "")), "city": title_case(b.get("municipio", "")),
-            "industry": f"SCIAN {code} {acts[0] if acts else ''}".strip()[:150], "products": "; ".join(acts)[:300],
+            "industry": f"{SCIAN3.get(code[:3], 'Manufacturing')} (SCIAN {code})"[:150], "products": "; ".join(acts)[:300],
             "website": web[:200], "email": f["email"].lower()[:120], "phone": f["phone"][:40], "address": addr[:250],
             "source": "INEGI DENUE (Mexico, manufacturing, 51+ employees)", "source_url": "https://www.inegi.org.mx/app/mapa/denue/",
             "notable": False, "basis": f"DENUE {b.get('id', '')}: SCIAN {code}, {band_of[f['rank']]} persons employed, {f['estabs']} establishment(s) of 51+",
@@ -343,7 +351,9 @@ def traces(limit=None):
     from .gleif_bulk import iso2_to_3
     ops, seen = {}, Counter()
     first_keys = None
-    for cc in _countries():
+    secs = Counter()
+    only_cc = [c for c in os.environ.get("BULK_COUNTRIES", "").split(",") if c]
+    for cc in (only_cc or _countries()):
         try:
             r = fetch(f"{TRACES}?countryCode={cc}", pause=0.6, headers=TRACES_HDR, timeout=60)
         except Exception as e:  # noqa: BLE001
@@ -361,6 +371,7 @@ def traces(limit=None):
             if not code or not L.get("numberOfEstablishments", 1):
                 continue
             seen["lists"] += 1
+            secs[(chapter, code, sec_name)] += L.get("numberOfEstablishments") or 0
             if re.search(r"vessel", sec_name, re.I):
                 seen["vessel_lists_skipped"] += 1; continue  # a ship, not a company
             try:
@@ -370,9 +381,9 @@ def traces(limit=None):
                 log.warning("BULK traces %s/%s: %s", cc, code, type(ex).__name__); seen["list_errors"] += 1; continue
             for x in ests or []:
                 seen["establishments"] += 1
-                if first_keys is None:
+                if first_keys is None or (limit and seen["establishments"] % 97 == 1):
                     first_keys = sorted(x)
-                    log.info("BULK traces record keys: %s", ",".join(first_keys))
+                    log.info("BULK traces record sample: %s", json.dumps({k: x.get(k) for k in ("operatorActivityTypes", "associatedOperatorActivityTypes", "productTypes", "category1", "category2", "category3", "remarks", "validTo")}, ensure_ascii=False)[:900])
                 if x.get("confidential") or not x.get("operatorName"):
                     seen["confidential_skipped"] += 1; continue
                 status = []
@@ -419,6 +430,8 @@ def traces(limit=None):
             "export_evidence": f"EU-approved establishment (TRACES), approval {ap}",
         })
     log.info("BULK traces: %s, %d operators", dict(seen), len(out))
+    for (ch, code, nm), n in secs.most_common(80):
+        log.info("BULK traces section %s | %s | %s | %d", ch, code, nm, n)
     return out, {**dict(seen), "licence": "Commission Decision 2011/833/EU reuse (attribution)", "url": TRACES}
 
 
@@ -497,4 +510,6 @@ if __name__ == "__main__":
         sel = a[1] if len(a) > 1 else "all"
         names = list(SOURCES) if sel in ("all", "") else [x.strip() for x in sel.split(",") if x.strip()]
         lim = int(a[a.index("--limit") + 1]) if "--limit" in a else None
+        if "--countries" in a:
+            os.environ["BULK_COUNTRIES"] = a[a.index("--countries") + 1]
         run(names, lim)
