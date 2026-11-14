@@ -1,139 +1,136 @@
 source,open,fresh_7d,deadline,value,buyer,title_en,expired,dup_in,mirrored,goods,flags
-TED (EU),31475,41,91,37,100,100,0,0,0,12,
-oeffentlichevergabe (Germany),12785,14,0,6,100,100,0,0,0,8,thin parse
-PNCP (Brazil),6740,50,100,73,100,100,0,0,0,6,
-BOAMP (France),6355,7,100,0,100,100,0,0,0,17,
-India e-procurement (Uttar Pradesh),5705,9,100,0,100,100,0,0,0,0,
-India e-procurement (Tamil Nadu),5404,19,100,0,100,100,0,0,0,0,
-PLACSP (Spain),4366,18,98,100,100,100,0,0,0,8,
-India e-procurement (Defence),3668,8,100,0,100,100,0,0,0,0,
-ChileCompra,3588,20,100,0,100,100,0,4,0,0,
-PhilGEPS (Philippines),3265,74,100,0,100,100,0,0,0,0,
-SAM.gov (USA),3144,24,95,0,96,100,0,0,0,48,
-India e-procurement (Madhya Pradesh),2822,9,100,0,100,100,0,0,0,0,
-India e-procurement (Kerala),2805,26,100,0,100,100,0,0,0,0,
-India e-procurement (Jammu and Kashmir),2636,20,100,0,100,100,0,0,0,0,
-India e-procurement (Odisha),2607,23,100,0,100,100,0,0,0,0,
-India e-procurement (West Bengal),2505,5,100,0,100,100,0,0,0,0,
-SECOP II (Colombia),2477,72,79,93,100,100,0,1,0,15,
-Prozorro (Ukraine),2025,58,100,100,100,100,0,21,0,4,duplicates
-India e-procurement (Maharashtra),1945,12,100,0,100,100,0,0,0,0,
-China Government Procurement (CCGP),1659,100,52,51,100,100,0,45,1,20,duplicates
-India e-procurement (Punjab),1453,18,100,0,100,100,0,0,0,0,
-India e-procurement (Central PSUs),1196,15,100,0,100,100,0,0,0,0,
-India e-procurement (Central (CPPP)),1184,13,100,0,100,100,0,0,0,0,
-India e-procurement (Rajasthan),1180,15,100,0,100,100,0,0,0,0,
+TED (EU),30435,36,91,37,100,100,0,0,0,12,
+oeffentlichevergabe (Germany),12793,10,0,6,100,100,0,0,0,7,thin parse
+Taiwan Government e-Procurement (PCC),7547,100,100,99,100,100,0,15,0,4,
+PNCP (Brazil),6238,40,100,73,100,100,0,0,0,6,
+BOAMP (France),6014,5,100,0,100,100,0,0,0,17,
+India e-procurement (Uttar Pradesh),5126,8,100,0,100,100,0,0,0,0,
+India e-procurement (Tamil Nadu),5041,13,100,0,100,100,0,0,0,0,
+PLACSP (Spain),4187,9,98,100,100,100,1,0,0,8,1 expired still listed
+India e-procurement (Defence),3438,5,100,0,100,100,0,0,0,0,
+ChileCompra,3321,11,100,0,100,100,0,4,0,0,
+PhilGEPS (Philippines),3131,72,100,0,100,100,0,0,0,0,
+SAM.gov (USA),3033,21,95,0,96,100,141,0,0,50,141 expired still listed
+India e-procurement (Madhya Pradesh),2557,7,100,0,100,100,0,0,0,0,
+India e-procurement (Kerala),2400,18,100,0,100,100,0,0,0,0,
+India e-procurement (Odisha),2387,15,100,0,100,100,0,0,0,0,
+India e-procurement (Jammu and Kashmir),2275,14,100,0,100,100,0,0,0,0,
+India e-procurement (West Bengal),2155,4,100,0,100,100,0,0,0,0,
+SECOP II (Colombia),2052,66,75,95,100,100,0,1,0,18,
+Prozorro (Ukraine),1859,52,100,100,100,100,0,21,0,4,duplicates
+China Government Procurement (CCGP),1627,100,51,50,100,100,0,46,1,20,duplicates
+India e-procurement (Maharashtra),1413,13,100,0,100,100,0,0,0,0,
+India e-procurement (Punjab),1341,11,100,0,100,100,0,0,0,0,
+India e-procurement (Central PSUs),1107,10,100,0,100,100,0,0,0,0,
+India e-procurement (Central (CPPP)),1084,9,100,0,100,100,0,0,0,0,
+India e-procurement (Rajasthan),1079,14,100,0,100,100,0,0,0,0,
 World Bank pipeline,948,0,0,79,100,100,0,0,0,100,thin parse; nothing new
-CanadaBuys (Canada),828,10,100,0,100,100,0,0,0,0,
-simap.ch,778,18,0,0,100,100,0,0,0,8,thin parse
-KKJ Japan public procurement portal,768,100,100,0,100,100,0,6,0,0,
-eTenders (South Africa),723,24,100,0,100,100,0,0,0,0,
+simap.ch,801,17,0,0,100,100,0,0,0,8,thin parse
+CanadaBuys (Canada),795,5,100,0,100,100,0,0,0,0,
+KKJ Japan public procurement portal,754,100,100,0,100,100,0,6,0,0,
 OCDS: Guatemala: Ministerio de Finanzas Públicas,691,0,0,0,100,100,0,1,0,0,thin parse; nothing new
-India e-procurement (Himachal Pradesh),643,26,100,0,100,100,0,0,0,0,
-MTender (Moldova),626,2,0,100,100,100,0,1,0,100,thin parse
-India e-procurement (Uttarakhand),603,7,100,0,100,100,0,0,0,0,
-ARCE (Uruguay),601,37,100,0,100,100,0,0,0,2,
+eTenders (South Africa),687,14,100,0,100,100,0,0,0,0,
+MTender (Moldova),626,0,0,100,100,100,0,1,0,100,thin parse; nothing new
 OCDS: Ecuador: Servicio Nacional de Contratación Pública,583,0,0,5,100,100,0,2,0,0,thin parse; nothing new
-Etimad (Saudi Arabia),578,14,99,0,100,100,0,0,0,0,
-World Bank,569,11,93,0,100,100,0,0,0,15,
-Tender Board (Oman),416,22,100,0,100,100,0,1,0,0,
-DGCP (Dominican Republic),415,63,100,100,0,100,0,0,0,6,thin parse
-India e-procurement (Assam),375,15,100,0,100,100,0,0,0,0,
-India e-procurement (Jharkhand),357,25,100,0,100,100,0,0,0,0,
-MyProcurement (Malaysia),353,12,100,31,100,100,0,0,0,10,
-GETS NZ,335,6,100,0,100,100,0,0,0,0,
-eSupply (Dubai),277,50,100,0,100,100,0,0,0,0,
-UNGM (UNDP),267,28,100,0,100,100,0,0,0,3,
-Monaqasat (Qatar),263,6,0,0,0,100,0,0,0,0,thin parse
+Etimad (Saudi Arabia),552,9,99,0,100,100,0,0,0,0,
+World Bank,537,4,93,0,100,100,0,0,0,16,
+India e-procurement (Himachal Pradesh),521,29,100,0,100,100,0,0,0,0,
+ARCE (Uruguay),520,28,100,0,100,100,0,0,0,3,
+India e-procurement (Uttarakhand),516,7,100,0,100,100,0,0,0,0,
+Tender Board (Oman),419,11,100,0,100,100,0,1,0,0,
+PPIP (Kenya),381,73,100,0,100,100,0,0,0,0,
+India e-procurement (Assam),366,11,100,0,100,100,0,0,0,0,
+DGCP (Dominican Republic),351,43,100,100,0,100,0,0,0,6,thin parse
+MyProcurement (Malaysia),338,8,100,31,100,100,0,0,0,10,
+India e-procurement (Jharkhand),336,24,100,0,100,100,0,0,0,0,
+GETS NZ,330,5,100,0,100,100,0,0,0,0,
+Monaqasat (Qatar),264,2,0,0,0,100,0,0,0,0,thin parse
 Israel - statutory body,256,0,78,0,100,100,0,0,1,64,nothing new
-India e-procurement (Goa),230,25,100,0,100,100,0,0,0,0,
-Israel - local council,207,2,7,0,100,100,0,0,2,8,thin parse
-India e-procurement (PMGSY rural roads),194,30,100,0,100,100,0,0,0,0,
-PPIP (Kenya),192,31,100,0,100,100,0,0,0,0,
-China Southern Power Grid (CSG) bidding,191,100,0,0,100,100,0,45,5,0,thin parse; duplicates
-Umucyo (Rwanda),186,19,100,0,35,100,0,0,0,1,thin parse
-AusTender (Australia),185,6,0,0,0,100,0,0,0,0,thin parse
-Find a Tender (UK),180,12,100,70,100,100,0,0,0,33,
+UNGM (UNDP),250,20,100,0,100,100,0,0,0,2,
+eSupply (Dubai),220,30,100,0,100,100,0,0,0,0,
+Israel - local council,207,0,7,0,100,100,0,0,2,8,thin parse; nothing new
+China Southern Power Grid (CSG) bidding,191,100,0,0,100,100,0,44,5,0,thin parse; duplicates
+India e-procurement (Goa),186,22,100,0,100,100,0,0,0,0,
+AusTender (Australia),186,3,0,0,0,100,0,0,0,0,thin parse
+India e-procurement (PMGSY rural roads),182,28,100,0,100,100,0,0,0,0,
 AIIB,176,1,7,0,100,100,0,1,0,49,thin parse
-UNGM (UNICEF),166,18,100,0,100,100,0,0,0,5,
-mr.gov.il (Israel),148,11,100,0,100,100,0,0,0,16,
-UNGM (ILO),142,49,100,0,100,100,0,0,0,1,
-India e-procurement (Tripura),141,18,100,0,100,100,0,0,0,0,
-US city - Los Angeles,137,9,99,0,100,100,0,0,0,0,
-UNGM (FAO),135,30,100,0,100,100,0,0,0,2,
-PPA (Lebanon),106,100,100,0,100,100,0,7,0,0,
-Contracts Finder (UK),99,20,100,87,100,100,0,0,0,17,
+Find a Tender (UK),175,9,100,70,100,100,0,0,0,33,
+Umucyo (Rwanda),174,16,100,0,34,100,0,0,0,1,thin parse
+UNGM (UNICEF),166,14,100,0,100,100,0,0,0,4,
+mr.gov.il (Israel),148,8,100,0,100,100,0,0,0,14,
+UNGM (FAO),124,17,100,0,100,100,0,0,0,2,
+US city - Los Angeles,123,4,99,0,100,100,0,0,0,0,
+UNGM (ILO),113,39,100,0,100,100,0,0,0,1,
+India e-procurement (Tripura),113,10,100,0,100,100,0,0,0,0,
+PPA (Lebanon),104,100,100,0,100,100,0,7,0,0,
 Israel - government company,94,0,4,0,100,100,0,1,2,6,thin parse; nothing new
-NYC City Record (USA),94,2,100,0,100,100,0,0,0,0,
-IDB,93,19,90,0,100,100,0,0,0,13,
 ARMP (Cameroon),92,100,58,51,100,100,0,0,0,0,
-AfDB,87,56,0,0,100,100,0,0,0,37,thin parse
+NYC City Record (USA),92,2,100,0,100,100,0,0,0,0,
+Contracts Finder (UK),90,12,100,89,100,100,0,0,0,19,
+IDB,90,13,90,0,100,100,0,0,0,13,
+AfDB,87,26,0,0,100,100,0,0,0,37,thin parse
 Israel - academic institution,86,0,3,0,100,100,0,5,5,21,thin parse; nothing new
-UFSA (Mozambique),86,29,100,0,100,100,0,0,0,0,
-DNCP (Paraguay),80,5,95,96,100,96,0,0,0,11,
-UNGM (IOM),77,34,100,0,100,100,0,0,0,8,
-GHANEPS (Ghana),60,23,100,0,100,100,0,0,0,5,
+UFSA (Mozambique),79,18,100,0,100,100,0,0,0,0,
+UNGM (IOM),70,23,100,0,100,100,0,0,0,6,
+DNCP (Paraguay),65,3,94,95,100,95,0,0,0,11,
+GHANEPS (Ghana),57,12,100,0,100,100,0,0,0,4,
 Bonfire public portal (panynj),54,100,100,0,100,100,0,0,0,0,
-UNGM (UNOPS),52,31,100,0,100,100,0,0,0,2,
-UNGM (UNHCR),51,27,100,0,100,100,0,0,0,2,
 Hong Kong GLD e-Tender Box (open data),50,100,100,0,100,100,0,0,0,0,
+UNGM (UNOPS),49,27,100,0,100,100,0,0,0,2,
 Israel - religious council,48,0,4,0,100,100,0,0,6,4,thin parse; nothing new
-UNGM (WHO),47,21,100,0,100,100,0,0,0,6,
+UNGM (UNHCR),47,21,100,0,100,100,0,0,0,2,
 Israel - regional council,45,0,18,0,100,100,0,0,0,16,thin parse; nothing new
-UNGM (UN Secretariat),45,31,100,0,100,100,0,0,0,4,
-PPDA (Malawi),44,41,100,0,100,100,0,0,0,0,
-mr.gov.il exemption notice (Israel),39,72,100,0,100,100,0,0,0,0,
-EBRD,38,16,100,0,100,100,0,0,0,5,
-IsDB,34,6,100,0,100,100,0,0,0,62,
-India e-procurement (Chandigarh),32,44,100,0,100,100,0,0,0,0,
-UNGM (UNRWA),29,24,100,0,100,100,0,0,0,0,
+UNGM (UN Secretariat),44,11,100,0,100,100,0,0,0,5,
+UNGM (WHO),44,14,100,0,100,100,0,0,0,5,
+mr.gov.il exemption notice (Israel),39,28,100,0,100,100,0,0,0,0,
+EBRD,38,8,100,0,100,100,0,0,0,5,
+PPDA (Malawi),35,43,100,0,100,100,0,0,0,0,
+IsDB,34,3,100,0,100,100,0,0,0,62,
+UNGM (UNRWA),29,17,100,0,100,100,0,0,0,0,
 Transnet eTenders (South Africa),29,100,100,0,100,100,0,0,0,0,
 Israel - municipality,26,0,4,0,100,100,0,0,0,12,thin parse; nothing new
-eGP (Uganda),25,8,100,0,100,100,0,0,0,0,
-UNGM (UN-Women),24,25,100,0,100,100,0,0,0,0,
-UNGM (UNIDO),23,4,100,0,100,100,0,0,0,0,
+India e-procurement (Chandigarh),26,42,100,0,100,100,0,0,0,0,
+eGP (Uganda),23,4,100,0,100,100,0,0,0,0,
 Commonwealth of Massachusetts e-procurement (BuySpeed),20,100,100,0,100,100,0,0,0,0,
 State of Nevada e-procurement (BuySpeed),20,100,100,0,100,100,0,0,0,0,
 UNGM (IAEA),19,5,100,0,100,100,0,0,0,21,
-US city - Charlotte,18,11,100,0,100,100,0,0,0,0,
+UNGM (UNIDO),19,0,100,0,100,100,0,0,0,0,
+UNGM (UN-Women),19,26,100,0,100,100,0,0,0,0,
 Israel - hospital,17,0,0,0,100,100,0,0,0,6,thin parse
 Tender Board (Bahrain),17,12,100,0,100,100,0,0,0,0,
-State of New Jersey e-procurement (BuySpeed),17,100,100,0,100,100,0,0,0,0,
-State of Oregon e-procurement (BuySpeed),16,100,100,0,100,100,0,0,0,0,
-UNGM (UNFPA),15,60,100,0,100,100,0,0,0,0,
+US city - Charlotte,17,6,100,0,100,100,0,0,0,0,
+State of New Jersey e-procurement (BuySpeed),16,100,100,0,100,100,0,0,0,0,
+State of Oregon e-procurement (BuySpeed),15,100,100,0,100,100,0,0,0,0,
 US city - Austin,14,29,93,0,100,100,0,0,0,0,
-UNDP,12,17,100,0,100,100,0,0,0,0,
-UNGM (UNFPA),11,45,100,0,100,100,0,0,0,0,
-UNGM (UNESCO),10,20,100,0,100,100,0,0,0,0,
-State of New Jersey e-procurement (BuySpeed),10,100,100,0,100,100,0,0,0,0,
-Bonfire public portal (fortworthtexas),10,100,100,0,100,100,0,0,0,0,
-US city - Fort Worth,10,0,100,0,100,100,0,0,0,0,
-OCDS: Uruguay: Agencia Reguladora de Compras Estatales (,9,0,100,0,100,100,0,0,0,0,
-UNGM (ITC),8,12,100,0,100,100,0,0,0,12,
-India e-procurement (Manipur),8,0,100,0,100,100,0,0,0,0,
-UNGM (OSCE),6,33,100,0,100,100,0,0,0,0,
+UNGM (UNFPA),13,54,100,0,100,100,0,0,0,0,
+Bonfire public portal (fortworthtexas),13,100,100,0,100,100,0,0,0,0,
+US city - Fort Worth,13,0,100,0,100,100,0,0,0,0,
+UNDP,12,8,100,0,100,100,0,0,0,0,
+UNGM (UNESCO),10,10,100,0,100,100,0,0,0,0,
+OCDS: Peru: Organismo Especializado para las Contratacio,8,0,0,100,100,100,0,0,0,38,thin parse
+UNGM (ITC),7,14,100,0,100,100,0,0,0,14,
+OCDS: Uruguay: Agencia Reguladora de Compras Estatales (,7,0,100,0,100,100,0,0,0,0,
+India e-procurement (Manipur),7,0,100,0,100,100,0,0,0,0,
+UNGM (OSCE),6,0,100,0,100,100,0,0,0,0,
 Israel - company,6,0,0,0,100,100,0,0,0,0,thin parse
+India e-procurement (Meghalaya),6,33,100,0,100,100,0,0,0,0,
 Israel - cluster of authorities,5,0,0,0,100,100,0,0,0,40,thin parse
-UNGM (ITU),5,60,100,0,100,100,0,0,0,40,
-OCDS: Honduras: Oficina Normativa de Contratación y Adqu,5,0,100,0,100,100,0,0,0,40,
+UNGM (ITU),5,0,100,0,100,100,0,0,0,40,
+OCDS: Honduras: Oficina Normativa de Contratación y Adqu,5,0,100,0,100,100,1,0,0,40,1 expired still listed
 Israel - drainage authority,5,0,0,0,100,100,0,0,0,0,thin parse
-India e-procurement (Meghalaya),5,40,100,0,100,100,0,0,0,0,
 Bonfire public portal (bendoregon),5,100,100,0,100,100,0,0,0,0,
+US city - Denver,5,20,0,0,100,100,0,0,0,0,thin parse
+Bonfire public portal (kcmo),5,100,100,0,100,100,0,0,0,0,
 Israel - infrastructure body,4,0,0,0,100,100,0,0,0,0,thin parse
 Israel - municipal company,4,0,0,0,100,100,0,0,0,0,thin parse
 UNGM (IMO),4,25,100,0,100,100,0,0,0,0,
 Bonfire public portal (talgov),4,100,100,0,100,100,0,0,0,0,
 US city - Houston,4,75,0,0,100,100,0,0,0,0,thin parse
-US city - Denver,4,25,0,0,100,100,0,0,0,0,thin parse
-OCDS: Peru: Organismo Especializado para las Contratacio,3,0,0,100,100,100,0,0,0,100,thin parse
-UNGM (WFP),3,33,100,0,100,100,0,0,0,0,
+UNGM (WFP),3,0,100,0,100,100,0,0,0,0,
 UNGM (IDLO),3,0,100,0,100,100,0,0,0,0,
 Bonfire public portal (siouxfalls),3,100,100,0,100,100,0,0,0,0,
 US city - Phoenix,3,67,0,0,100,100,0,0,0,0,thin parse
 UNGM (UNCDF),3,0,100,0,100,100,0,0,0,0,
-Bonfire public portal (kcmo),3,100,100,0,100,100,0,0,0,0,
-UNGM (IDLO),2,0,100,0,100,100,0,0,0,0,
-Bonfire public portal (siouxfalls),2,100,100,0,100,100,0,0,0,0,
 Israel - health fund,1,0,100,0,100,100,0,0,0,0,
 OCDS: Liberia: Public Procurement and Concessions Commis,1,0,100,100,100,100,0,0,0,0,
 Israel - city_association,1,0,0,0,100,100,0,0,0,0,thin parse
@@ -143,9 +140,9 @@ US city - Chicago,1,0,0,0,100,100,0,0,0,0,thin parse
 US city - San Diego,1,0,0,0,100,100,0,0,0,0,thin parse
 US city - Jacksonville,1,0,0,0,100,100,0,0,0,0,thin parse
 US city - Seattle,1,0,0,0,100,100,0,0,0,0,thin parse
-India e-procurement (Mizoram),1,0,100,0,100,100,0,0,0,0,
-UNGM (ICC),1,100,100,0,100,100,0,0,0,0,
+UNGM (ICC),1,0,100,0,100,100,0,0,0,0,
 UNGM (PAHO),1,0,100,0,100,100,0,0,0,0,
+India e-procurement (Mizoram),1,0,100,0,100,100,0,0,0,0,
 UNGM (COE),1,0,100,0,100,100,0,0,0,0,
 UNGM (IFAD),1,100,100,0,100,100,0,0,0,0,
 UNGM (WIPO),1,0,100,0,100,100,0,0,0,0,
