@@ -608,6 +608,18 @@ a.lnk{white-space:nowrap}
   .mx-terr{grid-template-columns:1fr}
   .mx-hero{padding:14px 12px}.mx-hero h1{font-size:23px}
 }
+.mx-map .mk{cursor:pointer}.mx-map .mk:focus{outline:none}.mx-map .mk:focus circle.c,.mx-map .mk.sel circle.c{stroke:var(--ink);stroke-width:.45}
+.mx-det{margin:8px 14px 2px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.mx-det-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.mx-det-h b{font-size:16px}
+.mx-det-h button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:3px 10px;cursor:pointer;font:inherit;font-size:13px}
+.mx-det ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.mx-det li{display:flex;gap:8px;font-size:13.5px;line-height:1.45}
+.mx-det li>i{flex:none;width:9px;height:9px;border-radius:50%;margin-top:6px}
+.mx-det li a,.mx-det li a:visited{color:var(--ink)}
+.mx-det li em{display:block;font-style:normal;color:var(--muted);font-size:12.5px}
+.mx-det li .why{display:block;color:var(--muted);font-size:12.5px}
+@media (max-width:640px){.mx-det{margin:8px 10px 2px}}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -2117,7 +2129,7 @@ function worldSignals() {
     const g = String(r.platform || "").match(/^Google Trends ([A-Z]{2})/);
     const subj = String(r.world || "").split(/[,，、]/).map(x => ZH_A2[x.trim()]).filter(Boolean);
     const a2s = g ? [g[1]] : subj.length ? subj : ["CN"];
-    for (const a2 of a2s.slice(0, 2)) add(a2, { t: "trend", w: num(r.score) || 1, text: (he ? r.title_he || r.title_en : r.title_en) || r.title, sub: g ? mt("searched in ", "חיפוש ב") + (r.world || a2) : r.platform, url: url(r.url) });
+    for (const a2 of a2s.slice(0, 2)) add(a2, { t: "trend", why: he ? r.why_he : r.why_en, w: num(r.score) || 1, text: (he ? r.title_he || r.title_en : r.title_en) || r.title, sub: g ? mt("searched in ", "חיפוש ב") + (r.world || a2) : r.platform, url: url(r.url) });
   }
   const big = v => v >= 1e9 ? "$" + (v / 1e9).toFixed(1) + "B" : "$" + Math.round(v / 1e6) + "M";
   for (const r of (S.data.markets || []).filter(r => num(r.imports_usd) >= 1e8 && num(r.growth_pct) >= 15).sort((a, b) => num(b.growth_pct) - num(a.growth_pct)).slice(0, 40))
@@ -2137,8 +2149,8 @@ function worldMapSvg(sig) {
   const mk = Object.values(groups).sort((a, b) => a[0].t.startsWith("ship") - b[0].t.startsWith("ship") || b.length - a.length).map(g => { const s = g[0], r = Math.min(1.9, 0.75 + 0.28 * Math.sqrt(g.length)), col = SIG_C[s.t];
     const tip = g.slice(0, 4).map(x => x.text).join("\n") + (g.length > 4 ? `\n+${g.length - 4}` : "");
     const lx = X(s.lon), ly = Y(s.lat), lbl = s.t.startsWith("ship") ? `<text class="lbl${s.t === "shipnod" ? " n" : ""}" x="${(lx + r + 0.6).toFixed(2)}" y="${(ly + 0.7 + (LBL_DY[s.zone] || 0)).toFixed(2)}" text-anchor="start" direction="ltr">${esc(s.t === "shipnod" ? (LANG === "he" ? SHIP_HE[s.zone] || s.zone : s.zone) + " ?" : (LANG === "he" ? SHIP_HE[s.zone] || s.zone : s.zone) + " " + (s.chg != null ? pctTxt(s.chg) : s.vessels))}</text>` : "";
-    if (s.t === "shipnod") return `<g class="mk nod" data-reg="${esc(s.reg)}"><title>${esc(tip)}</title><circle class="c" cx="${lx.toFixed(2)}" cy="${ly.toFixed(2)}" r=".9"/>${lbl}</g>`;
-    return `<g class="mk" data-reg="${esc(s.reg)}"><title>${esc(tip)}</title><circle class="r" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" stroke="${col}" style="animation-delay:${(Math.random() * 2.6).toFixed(2)}s"/><circle class="c" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" fill="${col}"/>${lbl}</g>`; }).join("");
+    if (s.t === "shipnod") return `<g class="mk nod" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.zone || "")}" tabindex="0" role="button"><title>${esc(tip)}</title><circle class="c" cx="${lx.toFixed(2)}" cy="${ly.toFixed(2)}" r=".9"/>${lbl}</g>`;
+    return `<g class="mk" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.t.startsWith("ship") ? s.zone || "" : "")}" tabindex="0" role="button"><title>${esc(tip)}</title><circle class="r" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" stroke="${col}" style="animation-delay:${(Math.random() * 2.6).toFixed(2)}s"/><circle class="c" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" fill="${col}"/>${lbl}</g>`; }).join("");
   return `<div class="mx-map-sc" dir="ltr"><svg viewBox="-1 -1 ${WMAP.W + 2} ${WMAP.H + 1}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><path class="land" d="${WMAP.d}"/>${mk}</svg></div>`;
 }
 function laneStrip(sig) {
@@ -2153,6 +2165,28 @@ function laneStrip(sig) {
 }
 /* on a phone the map is wider than the screen: open it centred on the Middle East */
 function mapCentre() { const sc = document.querySelector(".mx-map-sc"); if (!sc || sc.scrollWidth <= sc.clientWidth) return; sc.scrollLeft = Math.max(0, sc.scrollWidth * ((35 + 180) / 2.2 + 1) / (WMAP.W + 2) - sc.clientWidth / 2); }
+let MAPSIG = [];
+function mapDetails(g) {
+  const box = $("#mx-det"); if (!box) return;
+  const a2 = g.dataset.a2, zone = g.dataset.zone, he = LANG === "he";
+  document.querySelectorAll(".mx-map .mk.sel").forEach(x => x.classList.remove("sel")); g.classList.add("sel");
+  const list = MAPSIG.filter(s => zone ? s.zone === zone || (s.a2 === a2 && !s.t.startsWith("ship")) : s.a2 === a2)
+    .sort((a, b) => (zone ? (b.zone === zone) - (a.zone === zone) : 0) || ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(a.t) - ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(b.t) || b.w - a.w);
+  const c = WCENT[a2], cname = (() => { try { return new Intl.DisplayNames([he ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } })();
+  const title = zone ? `${he ? SHIP_HE[zone] || zone : zone} (${cname})` : cname;
+  const kind = { trend: mt("Business trend", "טרנד עסקי"), trade: mt("Import surge", "זינוק ביבוא"), ship: mt("Shipping", "שילוח"), shipbad: mt("Shipping: more ships waiting", "שילוח: יותר אוניות ממתינות"), shipnod: mt("Shipping", "שילוח") };
+  box.innerHTML = `<div class="mx-det-h"><b>${flag(a2)} ${esc(title)}</b><span class="sub">${list.length} ${esc(mt("signals", "אותות"))}${c ? " · " + esc(he ? REG_HE[REGIONS[c[2]]] || REGIONS[c[2]] : REGIONS[c[2]]) : ""}</span><button type="button" id="mx-det-x">${esc(mt("Close", "סגור"))}</button></div>
+    <ul>${list.slice(0, 14).map(s => `<li><i style="background:${SIG_C[s.t]}"></i><div style="min-width:0"><em>${esc(kind[s.t] || "")}${s.sub ? " · " + esc(s.sub) : ""}</em>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener" dir="auto">${esc(s.text)}</a>` : `<span dir="auto">${esc(s.text)}</span>`}${s.why ? `<span class="why" dir="auto">${esc(s.why)}</span>` : ""}</div></li>`).join("")}</ul>
+    ${list.length > 14 ? `<div class="sub" style="margin-top:6px">+${list.length - 14}</div>` : ""}`;
+  box.hidden = false;
+  $("#mx-det-x").onclick = () => { box.hidden = true; g.classList.remove("sel"); };
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+function bindMap() {
+  const svg = document.querySelector(".mx-map svg"); if (!svg) return;
+  svg.addEventListener("click", e => { const g = e.target.closest(".mk"); if (g) mapDetails(g); });
+  svg.addEventListener("keydown", e => { const g = e.target.closest(".mk"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); mapDetails(g); } });
+}
 let TERR_SEL = "";
 function renderTerritories(sig) {
   const el = $("#mx-terr"); if (!el) return;
@@ -2210,10 +2244,11 @@ function renderMacroHero() {
     ${cnt.length ? `<div class="mx-heat-h">${esc(mt("Today's themes", "הנושאים של היום"))}</div><div class="mx-heat">${cnt.map(([k, v]) => `<i style="flex:${v};background:${col(k)}" title="${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)}: ${v}"></i>`).join("")}</div>
       <div class="mx-heat-l">${cnt.map(([k, v]) => `<span><i style="background:${col(k)}"></i>${esc(BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k)} ${Math.round(100 * v / tot)}%</span>`).join("")}</div>` : ""}
     ${sig.length ? `<div class="mx-map"><div class="mx-map-h"><b>${esc(mt("Where the world is moving today", "איפה העולם זז היום"))}</b><span class="sub">${esc(mt(`${sig.length} signals in ${new Set(sig.map(s => s.a2)).size} countries`, `${sig.length} אותות ב-${new Set(sig.map(s => s.a2)).size} מדינות`))}</span></div>${worldMapSvg(sig)}<div class="mx-hint">${esc(mt("Swipe the map sideways to see the Americas and East Asia", "אפשר לגלול את המפה הצידה כדי לראות את אמריקה ומזרח אסיה"))}</div>
+      <div id="mx-det" class="mx-det" hidden></div>
       ${laneStrip(sig)}
       <div class="mx-leg"><span><i style="background:${SIG_C.trend}"></i>${esc(mt("Business trend or news wire", "טרנד עסקי או מבזק"))}</span><span><i style="background:${SIG_C.trade}"></i>${esc(mt("Import surge (UN Comtrade)", "זינוק ביבוא (UN Comtrade)"))}</span><span><i style="background:${SIG_C.ship}"></i>${esc(mt("Sea lane or port (live AIS)", "נתיב שיט או נמל (AIS חי)"))}</span><span><i style="background:${SIG_C.shipbad}"></i>${esc(mt("More ships waiting than usual", "יותר אוניות ממתינות מהרגיל"))}</span></div></div>` : ""}
   </div>`;
-  renderTerritories(sig); requestAnimationFrame(mapCentre);
+  MAPSIG = sig; bindMap(); renderTerritories(sig); requestAnimationFrame(mapCentre);
 }
 /* geopolitical context: what happened in the world in the last 48 hours and what it changes for us (web sources) */
 let GEO = { loaded: false, data: null };
