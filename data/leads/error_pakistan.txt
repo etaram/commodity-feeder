@@ -1,9 +1,9 @@
 Traceback (most recent call last):
-  File "/home/runner/r5/_work/commodity-feeder/commodity-feeder/leads/run.py", line 833, in main
+  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/run.py", line 833, in main
     run_source(a.source)
-  File "/home/runner/r5/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
+  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/run.py", line 66, in run_source
     rows, meta = m.fetch()
                  ^^^^^^^^^
-  File "/home/runner/r5/_work/commodity-feeder/commodity-feeder/leads/pakistan.py", line 88, in fetch
+  File "/home/runner/r6/_work/commodity-feeder/commodity-feeder/leads/pakistan.py", line 92, in fetch
     raise RuntimeError("Pakistan PPRA: no rows read; previous snapshot kept")
 RuntimeError: Pakistan PPRA: no rows read; previous snapshot kept
