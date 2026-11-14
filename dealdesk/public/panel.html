@@ -644,6 +644,11 @@ a.lnk{white-space:nowrap}
 .mx-ctl select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:4px 8px;margin-inline-start:4px}
 .mx-ctl .tg{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--ink)}
 @media (max-width:640px){.mx-ctl{padding-inline:12px}}
+.bt-str{margin-top:8px;border-top:1px solid var(--line);padding-top:8px}
+.bt-str-h{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--muted)}
+.bt-str-h b{font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}.bt-str-h .lv{font-weight:600;color:var(--ink)}
+.bt-str-bar{display:block;height:6px;border-radius:3px;background:var(--soft);margin:4px 0 6px;overflow:hidden}.bt-str-bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+.bt-str-f{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted)}.bt-geos .flag{margin-inline-end:2px}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -1084,7 +1089,7 @@ const RANGES = {
   plays: [LE, "'Plays'!A1:N400"],
   fx: [LE, "'FX'!A1:D40"],
   attention: [LE, "'Attention'!A1:G400"],
-  biztrends: [LE, "'Biz Trends'!A1:O320"],
+  biztrends: [LE, "'Biz Trends'!A1:S700"],
   ais: [LE, "'AIS Pulse'!A1:L40"],
   exempt: [LE, "'Exempt Buys'!A1:Q4001"],
   ilex: [LE, "'IL Exemption Contracts'!A1:R3000"],
@@ -2094,6 +2099,22 @@ const BT_TAGS = { "commodities": ["Commodities", "סחורות", "#c9822b"], "en
   "companies & markets": ["Companies & markets", "חברות ושווקים", "#2e9d4f"] };
 let BT_SEL = "", BT_SRC = "all";
 const btFlag = r => { const m = String(r.platform || "").match(/Google Trends ([A-Z]{2})$/); return m ? String.fromCodePoint(...[...m[1]].map(c => 127397 + c.charCodeAt(0))) + " " : String(r.platform || "").match(/CLS|Wallstreet|Gelonghui|Jin10|Xueqiu|36Kr|Toutiao|Baidu|Weibo|Zhihu|Paper|Douyin|Bilibili/) ? "🇨🇳 " : ""; };
+/* how strong a trend is, in numbers (owner, 14 Nov): the 0-100 strength from the collector, the list position,
+   the approximate search volume (Google), how long it has stayed (8-hour runs) and how many countries carry it */
+function btStrength(r, cn) {
+  const st = r.strength !== undefined && r.strength !== "" ? num(r.strength) : Math.min(100, 20 * num(r.runs));
+  const lvl = st >= 70 ? mt("strong", "חזק") : st >= 45 ? mt("medium", "בינוני") : mt("weak", "חלש");
+  const hrs = Math.max(8, 8 * num(r.runs || 1));
+  const geo = String(r.spread_geo || "").split(" ").filter(Boolean);
+  const facts = [
+    `${btFlag(r)}${esc(cn ? r.platform : mt("Searches in ", "חיפושים ב") + (r.world || ""))} · #${esc(r.rank)}`,
+    r.traffic ? `${esc(mt("about", "בערך"))} <bdi dir="ltr">${esc(r.traffic)}</bdi> ${esc(mt("searches", "חיפושים"))}` : "",
+    `${esc(mt("on the list for", "ברשימה כבר"))} ${hrs >= 48 ? esc(mt(`${Math.round(hrs / 24)} days`, `${Math.round(hrs / 24)} ימים`)) : esc(mt(`${hrs} hours`, `${hrs} שעות`))}`,
+    geo.length > 1 ? `${esc(mt("searched in", "מחפשים ב-"))}${geo.length} ${esc(mt("countries", "מדינות"))} <span class="bt-geos">${geo.slice(0, 6).map(g => flag(g)).join("")}</span>` : num(r.spread) > 1 ? `${esc(r.spread)} ${esc(mt("platforms", "פלטפורמות"))}` : ""
+  ].filter(Boolean);
+  return `<div class="bt-str"><div class="bt-str-h"><span>${esc(mt("Trend strength", "עוצמת הטרנד"))}</span><b>${st.toFixed(0)}</b><span class="lv">${esc(lvl)}</span></div>
+    <span class="bt-str-bar"><i style="width:${Math.max(4, Math.min(100, st))}%"></i></span><div class="bt-str-f">${facts.map(f => `<span>${f}</span>`).join("")}</div></div>`;
+}
 function renderBizTrends() {
   const el = $("#today-biztrends"); if (!el) return;
   const raw = (S.data.biztrends || []).filter(r => r.title);
@@ -2117,9 +2138,7 @@ function renderBizTrends() {
       ${(LANG === "he" ? r.why_he : r.why_en) ? `<div style="font-size:13px" dir="auto">${esc(LANG === "he" ? r.why_he : r.why_en)}</div>` : ""}
       ${r.title && ttl(r) !== r.title ? `<div class="o" dir="auto">${esc(r.title)}</div>` : ""}
       <div class="bt-meta">${tags(r).map(k => `<span class="pill" style="border-inline-start:3px solid ${BT_TAGS[k]?.[2] || "var(--line)"}">${esc(tagLbl(k))}</span>`).join("")}</div>
-      <div class="bt-meta"><span>${btFlag(r)}${esc(isCn(r) ? r.platform : mt("Searches in ", "חיפושים ב") + (r.world || ""))} #${esc(r.rank)}</span>
-        <span class="bt-bar" title="${esc(mt("Momentum: runs in a row on a hot list", "מומנטום: כמה ריצות ברצף ברשימה חמה"))}"><i style="width:${Math.min(100, 100 * num(r.runs) / 6)}%"></i></span>
-        ${num(r.spread) > 1 ? `<span>${esc(r.spread)} ${esc(mt("platforms", "פלטפורמות"))}</span>` : ""}</div></div>`).join("") || `<div class="empty">${esc(mt("Nothing in this theme right now.", "אין כרגע נושאים בתחום הזה."))}</div>`}</div>
+      ${btStrength(r, isCn(r))}</div>`).join("") || `<div class="empty">${esc(mt("Nothing in this theme right now.", "אין כרגע נושאים בתחום הזה."))}</div>`}</div>
     <p class="note" style="margin-top:10px">${esc(mt("Signals, not verified facts: use them to spot early moves, a price spike, a shortage, a big project or a new policy, before they reach a tender.", "אותות ולא עובדות מאומתות: הם עוזרים לזהות מוקדם קפיצת מחיר, מחסור, פרויקט גדול או מדיניות חדשה, לפני שהם מגיעים למכרז."))} ${at ? esc(mt("Updated", "עודכן")) + " " + esc(at) + " UTC" : ""}</p></div>`;
   el.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { BT_SEL = BT_SEL === b.dataset.bt ? "" : b.dataset.bt; renderBizTrends(); });
   el.querySelectorAll("[data-bts]").forEach(b => b.onclick = () => { BT_SRC = b.dataset.bts; renderBizTrends(); });

@@ -12,6 +12,7 @@ translation) and Hebrew title. Momentum = how many consecutive runs the item has
 platforms carry the same story. Output: data/leads/biz_trends.csv (pushed to the 'Biz Trends' tab). Signals, not facts: every
 row links to its source; nothing here is verified."""
 import csv
+import math
 import json
 import re
 import time
@@ -51,7 +52,10 @@ TAG_RX = [(n, re.compile(p, re.I)) for n, p in TAGS]
 SPORT = re.compile(r"\b(vs\.?|match|league|cup|goal|score|fc|united|real madrid|barcelona|nba|nfl|cricket|ipl|tennis|f1|grand prix|film|movie|series|actor|actress|singer|album|concert|wedding|dies|death|weather|horoscope|lottery)\b", re.I)
 TRENDS_RSS = "https://trends.google.com/trending/rss"
 GEOS = ["US", "CA", "MX", "BR", "AR", "CL", "CO", "PE", "GB", "DE", "FR", "IT", "ES", "PL", "NL", "TR", "IL", "SA", "AE", "EG", "MA", "NG",
-        "KE", "ZA", "GH", "IN", "PK", "ID", "VN", "TH", "MY", "PH", "SG", "JP", "KR", "TW", "HK", "AU", "KZ", "UA"]
+        "KE", "ZA", "GH", "IN", "PK", "ID", "VN", "TH", "MY", "PH", "SG", "JP", "KR", "TW", "HK", "AU", "KZ", "UA",
+        # added 14 Nov 2026 (owner: more countries): Gulf, Africa, Europe, South Asia; a country Google does not serve just logs a failure
+        "QA", "KW", "OM", "BH", "JO", "DZ", "TN", "ET", "TZ", "UG", "SN", "CI", "CM", "AO", "BD", "LK", "NZ",
+        "PT", "BE", "SE", "CH", "AT", "IE", "DK", "NO", "FI", "CZ", "RO", "HU", "GR", "VE", "EC", "DO", "GT"]
 NOISE = re.compile(r"明星|综艺|电影|电视剧|演唱会|恋情|离婚|塌房|网红|偶像|球赛|进球|游戏|动漫|八卦|官宣恋|结婚|热舞|颜值|cp")
 WORLD = re.compile(r"非洲|中东|沙特|阿联酋|以色列|伊朗|印度|东南亚|越南|印尼|巴西|墨西哥|俄罗斯|乌克兰|欧盟|欧洲|美国|日本|韩国|土耳其|埃及|尼日利亚|南非|肯尼亚|埃塞俄比亚|巴基斯坦|哈萨克")
 HIST = CACHE / "biz_trends_history.json"
@@ -106,9 +110,10 @@ def collect_global(s):
             head = clean((news.findtext("ht:news_item_title", default="", namespaces=ns) if news is not None else "") or "")
             url = (news.findtext("ht:news_item_url", default="", namespaces=ns) if news is not None else "") or ""
             traffic = clean(it.findtext("ht:approx_traffic", default="", namespaces=ns) or "")
+            tn = re.sub(r"[^\d]", "", traffic.replace("K", "000").replace("M", "000000"))
             if term:
                 items.append({"platform": f"Google Trends {g}", "platform_id": "gt-" + g, "rank": rank, "title": f"{term}: {head}" if head else term,
-                              "url": url, "tags": [], "world": g, "traffic": traffic, "_global": True})
+                              "url": url, "tags": [], "world": g, "geo": g, "term": term, "traffic": traffic, "traffic_n": int(tn) if tn else 0, "_global": True})
                 n += 1
         meta["gt-" + g] = n
         time.sleep(1)
@@ -127,7 +132,14 @@ def curate(rows, top=140):
     key = os.environ.get("ANTHROPIC_API_KEY")
     if not key or not rows:
         return rows, False
-    cand = rows[:top]
+    cn = [r for r in rows if not str(r.get("platform", "")).startswith("Google Trends")][:90]
+    per, gl = {}, []
+    for r in rows:
+        if str(r.get("platform", "")).startswith("Google Trends"):
+            g = r.get("platform")[-2:]
+            if per.get(g, 0) < 5:
+                per[g] = per.get(g, 0) + 1; gl.append(r)
+    cand = cn + gl
     items = [{"id": r["id"], "source": r["platform"], "country": r.get("world", ""), "text": r["title"][:220],
               "machine_en": (r.get("title_en") or "")[:220]} for r in cand]
     tags = [n for n, _ in TAGS]
@@ -191,11 +203,14 @@ def fetch_trends():
             translate_rows(gl, field="title", budget_sec=300)
         except Exception as e:  # noqa: BLE001
             log.warning("trends global translation: %s", e)
-        for x in gl:
+        per = {}
+        for x in sorted(gl, key=lambda x: x["rank"]):
             en = x.get("title_en") or x["title"]
             x["tags"] = [n for n, rx in TAG_RX if rx.search(en)]
-            if x["tags"] and not SPORT.search(en):
-                items.append(x)
+            if SPORT.search(en) or per.get(x["geo"], 0) >= 8:
+                continue
+            per[x["geo"]] = per.get(x["geo"], 0) + 1
+            items.append(x)   # the curator decides what is business; the regex alone kept only 5 countries (14 Nov)
     if not items:
         log.warning("trends: nothing read (%s)", meta)
         return 0
@@ -205,9 +220,11 @@ def fetch_trends():
     except (OSError, ValueError):
         pass
     now = time.strftime("%Y-%m-%d %H:%M", time.gmtime())
-    spread = {}
+    spread, geos = {}, {}
     for x in items:
         spread.setdefault(_norm(x["title"])[:14], set()).add(x["platform_id"])
+        if x.get("term"):
+            geos.setdefault(_norm(x["term"]), set()).add(x["geo"])
     rows, seen = [], set()
     for x in items:
         k = _norm(x["title"])
@@ -217,8 +234,16 @@ def fetch_trends():
         h = hist.get(k) or {"first": now, "runs": 0}
         h["runs"] += 1; h["last"] = now
         hist[k] = h
-        sp = len(spread.get(k[:14], ()))
-        score = (3 if x["tags"] else 0) + len(x["tags"]) + min(h["runs"], 6) + 2 * (sp - 1) + max(0, 10 - x["rank"]) / 3 + (2 if x["world"] else 0)
+        sp = max(len(spread.get(k[:14], ())), len(geos.get(_norm(x.get("term", "")), ())) if x.get("term") else 0)
+        if x.get("term"):
+            x["spread_geo"] = " ".join(sorted(geos.get(_norm(x["term"]), ())))
+        tn = x.get("traffic_n") or 0
+        score = (3 if x["tags"] else 0) + len(x["tags"]) + min(h["runs"], 6) + 2 * (sp - 1) + max(0, 10 - x["rank"]) / 3 + (2 if x["world"] else 0) + (math.log10(tn) - 2 if tn >= 100 else 0)
+        # strength 0-100 (owner, 14 Nov: show how strong a trend is): position on its list, how long it has stayed,
+        # how many countries or platforms carry it, and for Google searches the approximate search volume
+        P = max(0.0, 1 - (x["rank"] - 1) / 25); R = min(h["runs"], 6) / 6; S = min(sp - 1, 4) / 4
+        V = min(1.0, max(0.0, (math.log10(tn) - 2) / 4)) if tn else 0.45
+        x["strength"] = round(100 * (0.3 * P + 0.25 * R + 0.25 * V + 0.2 * S))
         if x.get("_global"):
             try:
                 import pycountry
@@ -233,7 +258,7 @@ def fetch_trends():
     HIST.parent.mkdir(parents=True, exist_ok=True)
     HIST.write_text(json.dumps(hist, ensure_ascii=False), encoding="utf-8")
     rows.sort(key=lambda r: -r["score"])
-    rows = rows[:300]
+    rows = rows[:650]   # up to 8 searches from each of ~74 countries plus the Chinese lists
     try:
         from .translate import to_hebrew, translate_rows
         translate_rows([r for r in rows if not r.get("title_en")], field="title", budget_sec=300)
@@ -245,11 +270,12 @@ def fetch_trends():
     rows = [r for r in rows if "\u2047" not in (r.get("title_en") or "") and "\u2047" not in (r.get("title_he") or "")]   # "⁇": failed translation
     rows, curated = curate(rows)
     if not curated:
-        rows = [r for r in rows if not r.get("platform", "").startswith("Google Trends") or len([t for t in r.get("tags", "").split(", ") if t]) >= 2]
+        rows = [r for r in rows if not r.get("platform", "").startswith("Google Trends") or len([t for t in r.get("tags", "").split(", ") if t]) >= 1]
     for r in rows:
         sec, _ = classify(r.get("title_en") or r["title"])
         r["sector"] = SECTORS.get(sec, "") if sec else ""
-    cols = ["score", "platform", "rank", "tags", "sector", "world", "title_en", "title_he", "why_en", "why_he", "title", "url", "first_seen", "runs", "spread"]
+    cols = ["score", "platform", "rank", "tags", "sector", "world", "title_en", "title_he", "why_en", "why_he", "title", "url", "first_seen", "runs", "spread",
+            "strength", "traffic", "traffic_n", "spread_geo"]
     with open(LEADS / "biz_trends.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
         w.writeheader()
