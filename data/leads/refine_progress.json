@@ -63,29 +63,30 @@
  "email_domains_checked": 16776,
  "modules": {
   "version": "modules-1",
-  "at": "2026-11-14T09:10Z",
+  "at": "2026-11-14T09:29Z",
   "sample": null,
-  "links_checked_this_run": 1333,
-  "links_on_record": 20965,
+  "links_checked_this_run": 1121,
+  "links_on_record": 22086,
   "sites_read_this_run": 150,
-  "registers_this_run": 80,
+  "registers_this_run": 81,
   "buyers": {
    "processed": 3449,
    "completed": 3132,
    "contact_found": 3131,
    "with_conflicts": 0,
-   "with_gaps": 1241,
+   "with_gaps": 1305,
    "cleaned": 13,
    "duplicates": 74,
    "verified_identity": 75,
    "closed_by_deadline": 0,
    "reused_unchanged": 3300,
    "gaps": {
-    "website unreachable": 730,
+    "website unreachable": 780,
     "no official website": 364,
     "no contact channel": 318,
-    "website name mismatch": 145,
-    "website blocked by bot protection": 2
+    "website name mismatch": 158,
+    "website blocked by bot protection": 2,
+    "website parked or placeholder page": 1
    },
    "conflicts": {},
    "cleaned_fields": {
@@ -98,17 +99,18 @@
    "completed": 3404,
    "contact_found": 3401,
    "with_conflicts": 0,
-   "with_gaps": 1007,
+   "with_gaps": 1030,
    "cleaned": 12,
    "duplicates": 0,
    "verified_identity": 19,
    "closed_by_deadline": 0,
-   "reused_unchanged": 3931,
+   "reused_unchanged": 3953,
    "gaps": {
     "no official website": 681,
     "no contact channel": 599,
-    "website unreachable": 284,
-    "website name mismatch": 48,
+    "website unreachable": 304,
+    "website name mismatch": 50,
+    "website parked or placeholder page": 1,
     "website blocked by bot protection": 1
    },
    "conflicts": {},
@@ -118,15 +120,15 @@
   },
   "tenders": {
    "processed": 130000,
-   "completed": 64450,
+   "completed": 64804,
    "contact_found": 47210,
-   "with_conflicts": 217,
+   "with_conflicts": 218,
    "with_gaps": 115297,
    "cleaned": 49,
    "duplicates": 0,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 121999,
+   "reused_unchanged": 129407,
    "gaps": {
     "no estimated value": 94296,
     "no contact in the notice": 82790,
@@ -136,7 +138,7 @@
    },
    "conflicts": {
     "deadline # is more than # years ahead": 167,
-    "official link returns # (checked #)": 50
+    "official link returns # (checked #)": 51
    },
    "cleaned_fields": {
     "country": 42,
@@ -153,7 +155,7 @@
    "duplicates": 1,
    "verified_identity": 0,
    "closed_by_deadline": 0,
-   "reused_unchanged": 2651,
+   "reused_unchanged": 2670,
    "gaps": {
     "no project value": 1923,
     "no implementing agency": 949
@@ -213,15 +215,15 @@
   },
   "importers": {
    "processed": 5700,
-   "completed": 664,
+   "completed": 680,
    "contact_found": 0,
    "with_conflicts": 1,
    "with_gaps": 5700,
    "cleaned": 5700,
    "duplicates": 3,
-   "verified_identity": 254,
+   "verified_identity": 271,
    "closed_by_deadline": 0,
-   "reused_unchanged": 5673,
+   "reused_unchanged": 5682,
    "gaps": {
     "no contact channel (customs records carry none)": 5700,
     "no official website": 5251,
