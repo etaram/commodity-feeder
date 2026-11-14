@@ -613,6 +613,7 @@ form.ask input{flex:1 1 auto;min-width:0;font:14px var(--f-body);padding:10px 12
       <div class="box"><div class="box-head"><h2 data-i="tg_close_h">Pursue, closing in 10 days</h2><span class="muted" data-i="tg_close_s">Best fit first</span></div><div class="mini" id="tg-close"></div></div>
     </div>
     <div class="v2only section" id="today-geo"></div>
+    <div class="v2only section" id="today-biztrends"></div>
     <div class="v2only section" id="today-brief"></div>
     <div class="v2only section" id="today-plays"></div>
     <div class="today2">
@@ -934,12 +935,13 @@ const RANGES = {
   plays: [LE, "'Plays'!A1:N400"],
   fx: [LE, "'FX'!A1:D40"],
   attention: [LE, "'Attention'!A1:G400"],
+  biztrends: [LE, "'Biz Trends'!A1:M260"],
   exempt: [LE, "'Exempt Buys'!A1:Q4001"],
   ilex: [LE, "'IL Exemption Contracts'!A1:R3000"],
   integrity: [LE, "'Integrity'!A1:N300"],
   suppliers: [SU, "'Suppliers'!A1:AJ6001"],
 };
-const OPTIONAL = new Set(["plays", "fx", "attention", "grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
+const OPTIONAL = new Set(["plays", "fx", "attention", "biztrends", "grants", "exempt", "ilex", "integrity", "titles", "tot_t", "tot_s", "meta", "stats", "intel", "upcoming", "contacts", "projects", "ptasks", "approvals"]);
 const SECTORS = ["Agriculture & food", "Energy, fuels & utilities", "Power & electrical equipment", "Mining, minerals & metals", "Chemicals & plastics", "Textiles, apparel & leather", "Construction materials & building systems", "Building construction works", "Transport & civil infrastructure works", "Water & wastewater", "Industrial & construction machinery", "Vehicles, rolling stock, ships & aircraft", "Defence & security", "Healthcare & pharmaceuticals", "Scientific & measuring instruments", "ICT & telecom", "Furniture, appliances & consumer goods", "Repair, maintenance & installation", "Transport & logistics services", "Engineering & architecture services", "Consulting, business & financial services", "Environment, waste & cleaning", "Education, social & hospitality services", "Other"];
 const REGIONS = ["Sub-Saharan Africa", "Latin America", "Middle East & North Africa", "Israel", "Europe", "CIS & Central Asia", "South Asia", "Southeast Asia", "East Asia", "North America", "Oceania"];  // a missing tab here must not show an error
 const S = { nl: { t: null, c: null, d: null }, data: {}, err: {}, at: {}, view: "today", sel: {}, compMode: "sup", dealMode: "bd", limit: { t: 60, c: 60, d: 60, g: 60 }, he: new Map() };
@@ -1503,7 +1505,7 @@ function fillSelect(sel, values) {
 function renderToday() {
   const ts = T(), sup = SUP(), jobs = (S.data.jobs || []);
   haiInit(); try { renderViz(); } catch (e) { console.warn("viz", e); }
-  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderTgToday(); renderAppToday();
+  renderPlaysToday(); renderBriefToday(); renderGeoToday(); renderBizTrends(); renderTgToday(); renderAppToday();
   const pursue = ts.filter(r => r.decision === "Pursue" && num(r.days_left) >= 7).sort((a, b) => (num(b.fit) || 0) - (num(a.fit) || 0) || (b.new === "NEW") - (a.new === "NEW") || (num(b.score) || 0) - (num(a.score) || 0) || (num(b.ev_usd) || 0) - (num(a.ev_usd) || 0));
   $("#kpis").innerHTML = [
     [ts.length.toLocaleString("en-US"), t("k_open")], [ts.filter(r => r.decision === "Pursue").length, t("k_pursue")],
@@ -1911,6 +1913,32 @@ function briefHtml(text) {
   return html + (list.length ? `<details class="srcs"><summary>${esc(t("br_sources", { n: list.length }))}</summary><ol>${list.map(([n, u]) => `<li value="${esc(n)}"><a href="${esc(u)}" target="_blank" rel="noopener">${esc(host(u))}</a></li>`).join("")}</ol></details>` : "");
 }
 function host(u) { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; } }
+/* business trends: China's financial wires and big platforms, business items only (leads/biz_trends.py, TrendRadar's
+   sources via newsnow). Signals, not facts: each row links to its source. Tag chips filter the list. */
+const BT_TAGS = { "commodities": ["Commodities", "סחורות"], "energy": ["Energy", "אנרגיה"], "projects & tenders": ["Projects & tenders", "פרויקטים ומכרזים"],
+  "trade & sanctions": ["Trade & sanctions", "סחר וסנקציות"], "shipping & logistics": ["Shipping", "שילוח ולוגיסטיקה"], "policy & macro": ["Policy & macro", "מדיניות ומאקרו"],
+  "companies & markets": ["Companies & markets", "חברות ושווקים"] };
+let BT_SEL = "";
+function renderBizTrends() {
+  const el = $("#today-biztrends"); if (!el) return;
+  const all = (S.data.biztrends || []).filter(r => r.title);
+  if (!all.length) { el.innerHTML = ""; return; }
+  const rows = all.filter(r => !BT_SEL || String(r.tags || "").split(", ").includes(BT_SEL)).slice(0, 15);
+  const tagLbl = k => BT_TAGS[k] ? mt(BT_TAGS[k][0], BT_TAGS[k][1]) : k;
+  const ttl = r => (LANG === "he" ? r.title_he || r.title_en : r.title_en) || r.title;
+  const at = all.reduce((m, r) => r.first_seen > m ? r.first_seen : m, "");
+  el.innerHTML = `<div class="box-head"><h3 style="margin:0">${esc(mt("Business trends: what China's markets are talking about", "מגמות עסקיות: על מה מדברים עכשיו בשווקים בסין"))}</h3>
+      <span class="muted">${esc(mt("Financial wires and hot lists (CLS, Wallstreetcn, Weibo, Baidu...), business items only", "חדשות פיננסיות ורשימות חמות (CLS, Wallstreetcn, Weibo, Baidu ועוד), רק פריטים עסקיים"))}</span></div>
+    <div class="chips" style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px">
+      <button type="button" class="pill${BT_SEL ? "" : " on"}" data-bt="">${esc(mt("All", "הכל"))}</button>
+      ${Object.keys(BT_TAGS).map(k => `<button type="button" class="pill${BT_SEL === k ? " on" : ""}" data-bt="${esc(k)}">${esc(tagLbl(k))}</button>`).join("")}</div>
+    <div class="tbl"><table><thead><tr><th>${esc(mt("Story", "הנושא"))}</th><th>${esc(mt("Tags", "תגיות"))}</th><th>${esc(mt("Where", "איפה"))}</th><th title="${esc(mt("Runs in a row on a hot list / platforms carrying it", "כמה ריצות ברצף ברשימה חמה / בכמה פלטפורמות"))}">${esc(mt("Momentum", "מומנטום"))}</th></tr></thead>
+    <tbody>${rows.map(r => `<tr><td dir="auto">${link(r.url, ttl(r))}${r.title && ttl(r) !== r.title ? `<div class="sub" dir="auto">${esc(r.title)}</div>` : ""}</td>
+      <td>${String(r.tags || "").split(", ").filter(Boolean).map(k => `<span class="pill">${esc(tagLbl(k))}</span>`).join(" ")}${r.sector ? ` <span class="pill">${esc(r.sector)}</span>` : ""}${r.world ? ` <span class="pill" dir="auto">${esc(r.world)}</span>` : ""}</td>
+      <td class="sub">${esc(r.platform)} #${esc(r.rank)}</td><td class="num">${esc(r.runs)}${+r.spread > 1 ? " · " + esc(r.spread) + " " + esc(mt("platforms", "פלטפורמות")) : ""}</td></tr>`).join("")}</tbody></table></div>
+    <p class="note">${esc(mt("Signals, not verified facts. Use them to spot early moves: a price spike, a shortage, a big project or a policy before it becomes a tender.", "אותות, לא עובדות מאומתות. הם עוזרים לזהות מוקדם: קפיצת מחיר, מחסור, פרויקט גדול או מדיניות חדשה לפני שהם הופכים למכרז."))}${at ? " " + esc(mt("Updated", "עודכן")) + " " + esc(at) + " UTC" : ""}</p>`;
+  el.querySelectorAll("[data-bt]").forEach(b => b.onclick = () => { BT_SEL = b.dataset.bt; renderBizTrends(); });
+}
 /* geopolitical context: what happened in the world in the last 48 hours and what it changes for us (web sources) */
 let GEO = { loaded: false, data: null };
 async function renderGeoToday() {
