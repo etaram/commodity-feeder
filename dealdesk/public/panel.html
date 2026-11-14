@@ -620,6 +620,12 @@ a.lnk{white-space:nowrap}
 .mx-det li em{display:block;font-style:normal;color:var(--muted);font-size:12.5px}
 .mx-det li .why{display:block;color:var(--muted);font-size:12.5px}
 @media (max-width:640px){.mx-det{margin:8px 10px 2px}}
+.mx-tip{position:absolute;z-index:5;max-width:320px;min-width:200px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.28);padding:10px 12px;font-size:12.8px;line-height:1.45;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
+.mx-tip.on{opacity:1;transform:none}
+.mx-tip b{display:block;font-size:14px;margin-bottom:4px}
+.mx-tip div{display:flex;gap:6px;margin-top:4px}.mx-tip div i{flex:none;width:8px;height:8px;border-radius:50%;margin-top:5px}
+.mx-tip .m{color:var(--muted);font-size:11.5px;margin-top:6px}
+@media (hover:none){.mx-tip{display:none}}
 .mx-hint{display:none;font-size:11.5px;color:var(--muted);padding-inline:12px;margin-top:2px}
 .mx-att{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mx-att a{border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--panel)}
@@ -2149,8 +2155,8 @@ function worldMapSvg(sig) {
   const mk = Object.values(groups).sort((a, b) => a[0].t.startsWith("ship") - b[0].t.startsWith("ship") || b.length - a.length).map(g => { const s = g[0], r = Math.min(1.9, 0.75 + 0.28 * Math.sqrt(g.length)), col = SIG_C[s.t];
     const tip = g.slice(0, 4).map(x => x.text).join("\n") + (g.length > 4 ? `\n+${g.length - 4}` : "");
     const lx = X(s.lon), ly = Y(s.lat), lbl = s.t.startsWith("ship") ? `<text class="lbl${s.t === "shipnod" ? " n" : ""}" x="${(lx + r + 0.6).toFixed(2)}" y="${(ly + 0.7 + (LBL_DY[s.zone] || 0)).toFixed(2)}" text-anchor="start" direction="ltr">${esc(s.t === "shipnod" ? (LANG === "he" ? SHIP_HE[s.zone] || s.zone : s.zone) + " ?" : (LANG === "he" ? SHIP_HE[s.zone] || s.zone : s.zone) + " " + (s.chg != null ? pctTxt(s.chg) : s.vessels))}</text>` : "";
-    if (s.t === "shipnod") return `<g class="mk nod" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.zone || "")}" tabindex="0" role="button"><title>${esc(tip)}</title><circle class="c" cx="${lx.toFixed(2)}" cy="${ly.toFixed(2)}" r=".9"/>${lbl}</g>`;
-    return `<g class="mk" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.t.startsWith("ship") ? s.zone || "" : "")}" tabindex="0" role="button"><title>${esc(tip)}</title><circle class="r" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" stroke="${col}" style="animation-delay:${(Math.random() * 2.6).toFixed(2)}s"/><circle class="c" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" fill="${col}"/>${lbl}</g>`; }).join("");
+    if (s.t === "shipnod") return `<g class="mk nod" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.zone || "")}" tabindex="0" role="button" aria-label="${esc(tip)}"><circle class="c" cx="${lx.toFixed(2)}" cy="${ly.toFixed(2)}" r=".9"/>${lbl}</g>`;
+    return `<g class="mk" data-reg="${esc(s.reg)}" data-a2="${esc(s.a2)}" data-zone="${esc(s.t.startsWith("ship") ? s.zone || "" : "")}" tabindex="0" role="button" aria-label="${esc(tip)}"><circle class="r" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" stroke="${col}" style="animation-delay:${(Math.random() * 2.6).toFixed(2)}s"/><circle class="c" cx="${X(s.lon).toFixed(2)}" cy="${Y(s.lat).toFixed(2)}" r="${r.toFixed(2)}" fill="${col}"/>${lbl}</g>`; }).join("");
   return `<div class="mx-map-sc" dir="ltr"><svg viewBox="-1 -1 ${WMAP.W + 2} ${WMAP.H + 1}" role="img" aria-label="${esc(mt("Map of today's signals", "מפת האותות של היום"))}"><path class="land" d="${WMAP.d}"/>${mk}</svg></div>`;
 }
 function laneStrip(sig) {
@@ -2170,8 +2176,7 @@ function mapDetails(g) {
   const box = $("#mx-det"); if (!box) return;
   const a2 = g.dataset.a2, zone = g.dataset.zone, he = LANG === "he";
   document.querySelectorAll(".mx-map .mk.sel").forEach(x => x.classList.remove("sel")); g.classList.add("sel");
-  const list = MAPSIG.filter(s => zone ? s.zone === zone || (s.a2 === a2 && !s.t.startsWith("ship")) : s.a2 === a2)
-    .sort((a, b) => (zone ? (b.zone === zone) - (a.zone === zone) : 0) || ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(a.t) - ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(b.t) || b.w - a.w);
+  const list = mapSignalsFor(g); mapTip(null);
   const c = WCENT[a2], cname = (() => { try { return new Intl.DisplayNames([he ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } })();
   const title = zone ? `${he ? SHIP_HE[zone] || zone : zone} (${cname})` : cname;
   const kind = { trend: mt("Business trend", "טרנד עסקי"), trade: mt("Import surge", "זינוק ביבוא"), ship: mt("Shipping", "שילוח"), shipbad: mt("Shipping: more ships waiting", "שילוח: יותר אוניות ממתינות"), shipnod: mt("Shipping", "שילוח") };
@@ -2182,8 +2187,35 @@ function mapDetails(g) {
   $("#mx-det-x").onclick = () => { box.hidden = true; g.classList.remove("sel"); };
   box.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
+function mapSignalsFor(g) {
+  const a2 = g.dataset.a2, zone = g.dataset.zone;
+  return MAPSIG.filter(s => zone ? s.zone === zone || (s.a2 === a2 && !s.t.startsWith("ship")) : s.a2 === a2)
+    .sort((a, b) => (zone ? (b.zone === zone) - (a.zone === zone) : 0) || ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(a.t) - ["shipbad", "ship", "trade", "trend", "shipnod"].indexOf(b.t) || b.w - a.w);
+}
+function mapTip(g, ev) {
+  const map = document.querySelector(".mx-map"); if (!map) return;
+  let tip = map.querySelector(".mx-tip"); if (!tip) { tip = document.createElement("div"); tip.className = "mx-tip"; tip.setAttribute("role", "tooltip"); map.appendChild(tip); }
+  if (!g) { tip.classList.remove("on"); return; }
+  const he = LANG === "he", a2 = g.dataset.a2, zone = g.dataset.zone, L = mapSignalsFor(g);
+  const cname = (() => { try { return new Intl.DisplayNames([he ? "he" : "en"], { type: "region" }).of(a2); } catch (e) { return a2; } })();
+  tip.innerHTML = `<b>${flag(a2)} ${esc(zone ? `${he ? SHIP_HE[zone] || zone : zone}` : cname)}</b>${L.slice(0, 4).map(s => `<div><i style="background:${SIG_C[s.t]}"></i><span dir="auto">${esc(s.text)}</span></div>`).join("")}
+    <div class="m">${L.length > 4 ? esc(mt(`+${L.length - 4} more · `, `ועוד ${L.length - 4} · `)) : ""}${esc(mt("click for details and links", "לחיצה לפרטים וקישורים"))}</div>`;
+  const mr = map.getBoundingClientRect(), gr = g.getBoundingClientRect();
+  const cx = gr.left + gr.width / 2 - mr.left, cy = gr.top - mr.top;
+  tip.classList.add("on");
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = Math.min(Math.max(8, cx - tw / 2), mr.width - tw - 8), y = cy - th - 10;
+  if (y < 4) y = gr.bottom - mr.top + 10;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
 function bindMap() {
   const svg = document.querySelector(".mx-map svg"); if (!svg) return;
+  let cur = null;
+  svg.addEventListener("mouseover", e => { const g = e.target.closest(".mk"); if (g && g !== cur) { cur = g; mapTip(g, e); } });
+  svg.addEventListener("mouseout", e => { const g = e.target.closest(".mk"); if (g && !g.contains(e.relatedTarget)) { cur = null; mapTip(null); } });
+  svg.addEventListener("focusin", e => { const g = e.target.closest(".mk"); if (g) mapTip(g, e); });
+  svg.addEventListener("focusout", () => mapTip(null));
+  document.querySelector(".mx-map-sc")?.addEventListener("scroll", () => mapTip(null), { passive: true });
   svg.addEventListener("click", e => { const g = e.target.closest(".mk"); if (g) mapDetails(g); });
   svg.addEventListener("keydown", e => { const g = e.target.closest(".mk"); if (g && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); mapDetails(g); } });
 }
